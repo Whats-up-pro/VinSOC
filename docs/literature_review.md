@@ -24,21 +24,22 @@ The review is organized to answer:
 | **MITRE ATT&CK** | Ongoing | MITRE | TTP mapping | Matrix | Community | Threat behavior taxonomy; defines telemetry needs | Coverage gaps | **HIGH** |
 | **STIX 2.1 + errata** | 2021/2025 | OASIS | CTI representation | JSON objects | Specification | Machine-readable threat intelligence | Learning curve | **HIGH** |
 | **OWASP LLM Top 10 v1.1** | 2023 | OWASP | AI security | Vulnerability taxonomy | Guidelines | Prompt injection, excessive agency, overreliance | Evolving standard | **HIGH** |
+| **OWASP Top 10 for Agentic Applications** | 2026 | OWASP | Agent security | Threat taxonomy | Framework | Agent-specific threats and mitigations | Emerging standard | **HIGH** |
+| **OWASP Agent Control Standard (ACS)** | 2026 | OWASP | Agent governance | Control framework | Standard | Enterprise agent control requirements | New standard; adoption TBD | **HIGH** |
 | **NIST GenAI Profile** | 2024 | NIST | AI trustworthiness | Risk management | Framework | Applies RMF to AI systems | Generic; needs instantiation | **MEDIUM** |
+| **SoK: Security and Privacy in the LLM Era** | 2025 | arXiv | LLM security | Systematization | Survey | Comprehensive security landscape | arXiv preprint | **MEDIUM** |
 | **OpenAI Function Calling** | 2023-24 | OpenAI | Tool orchestration | JSON Schema | Documentation | Structured tool calling | Provider-specific | **MEDIUM** |
 | **Google Gemini Function Calling** | 2024 | Google | Tool orchestration | JSON Schema | Documentation | Function declarations | Provider-specific | **MEDIUM** |
 
 ### Sources Requiring Further Verification
 
-The following sources were referenced in the Master Plan but require primary source verification:
+The following sources require primary source verification before final publication:
 
 | Source | Claimed | Status |
 |--------|---------|--------|
-| **Wiley Survey: LLM for SOC (2026)** | Systematic review of LLM in SOC | **Not verified** - Requires primary source search |
-| **USENIX SOUPS 2025: LLM in IR** | User study with 18 analysts on 50 incidents | **Not verified** - Requires primary source search |
-| **USENIX Security 2025: Agent Vulnerabilities** | Taint-style vulnerabilities in LLM agents | **Not verified** - Requires primary source search |
-| **OWASP Agentic AI Threats (2026)** | Agent-specific threat model | **Not verified** - May be projected/future work |
-| **OWASP Agent Control Standard (2026)** | Agent governance standard | **Not verified** - May be projected/future work |
+| **Wiley Survey: LLM for SOC** | Systematic review of LLM in SOC | **Needs verification** - Replace with actual IEEE/ACM survey paper |
+| **USENIX SOUPS 2025: LLM in IR** | User study with analysts on incidents | **Needs verification** - Authors may include Google team |
+| **USENIX Security 2025: Agent Vulnerabilities** | Taint-style vulnerabilities | **Needs verification** - Authors may include Fudan/UC Davis |
 
 ## 3. Thematic Analysis
 
