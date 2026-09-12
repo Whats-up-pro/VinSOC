@@ -1,0 +1,48 @@
+{
+  "case_id": "case_004",
+  "category": "BENIGN",
+  "label": "Business partner domain - trusted external",
+  "description": "Investigation of a domain belonging to a trusted business partner",
+  "initial_indicator": {
+    "type": "domain",
+    "value": "partner.example.com",
+    "context": "Alert: Communication with external partner domain"
+  },
+  "ground_truth": {
+    "verdict": "BENIGN",
+    "expected_tools": ["cti_enrichment", "network_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern"],
+    "expected_risk": "LOW",
+    "expected_confidence": "HIGH",
+    "expected_hypothesis": "Authorized business partner communication over established connection",
+    "known_limitations": []
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "partner.example.com",
+      "indicator_type": "domain",
+      "reputation": "benign",
+      "confidence": "high",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [
+        {"name": "PartnerRegistry", "last_updated": "2024-01-10T00:00:00Z", "reference": "internal:partner_db"}
+      ],
+      "observed_evidence": [
+        {"type": "registered_partner", "value": "true", "context": "Verified business partner"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T09:00:00Z", "dst": "partner.example.com", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 1500},
+        {"timestamp": "2024-01-15T09:05:00Z", "dst": "partner.example.com", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 2000}
+      ],
+      "patterns": ["normal"],
+      "unique_destinations": 1,
+      "unique_ports": 1
+    },
+    "endpoint_data": null
+  },
+  "evaluation_notes": "Known partner domain with normal HTTPS traffic pattern"
+}

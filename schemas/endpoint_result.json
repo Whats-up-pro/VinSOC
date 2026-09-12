@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EndpointResult",
+  "description": "Schema for endpoint investigation process tree analysis",
+  "type": "object",
+  "required": ["host", "query_time_range", "process_tree", "observed_evidence"],
+  "properties": {
+    "host": {
+      "type": "string",
+      "description": "Hostname or identifier of the investigated endpoint"
+    },
+    "query_time_range": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["start", "end"]
+    },
+    "process_tree": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "parent": {
+            "type": "string",
+            "description": "Name of parent process"
+          },
+          "parent_pid": {
+            "type": "integer"
+          },
+          "child": {
+            "type": "string",
+            "description": "Name of child process"
+          },
+          "child_pid": {
+            "type": "integer"
+          },
+          "relationship": {
+            "type": "string",
+            "description": "Optional relationship type"
+          }
+        },
+        "required": ["parent", "child"]
+      },
+      "description": "Process parent-child relationships observed on the endpoint"
+    },
+    "suspicious_relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "parent": {
+            "type": "string"
+          },
+          "child": {
+            "type": "string"
+          },
+          "suspicious": {
+            "type": "boolean"
+          },
+          "suspicious_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mitre_technique": {
+            "type": "string",
+            "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$",
+            "description": "MITRE ATT&CK technique ID if applicable"
+          }
+        },
+        "required": ["parent", "child", "suspicious", "suspicious_reasons"]
+      },
+      "description": "Process relationships flagged as suspicious",
+      "default": []
+    },
+    "observed_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": ["string", "number", "boolean", "array", "object"]
+          },
+          "context": {
+            "type": "string"
+          }
+        },
+        "required": ["type", "value"]
+      },
+      "description": "Raw endpoint observables that support the analysis"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "case_id": "case_014",
+  "category": "SUSPICIOUS_PROCESS",
+  "label": "Browser downloading via certutil",
+  "description": "Investigation of suspicious process: Browser spawning certutil for file download",
+  "initial_indicator": {
+    "type": "hostname",
+    "value": "WS045",
+    "context": "EDR Alert: chrome.exe spawned certutil.exe - possible malware download"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "endpoint_suspicious_process"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "HIGH",
+    "expected_hypothesis": "Likely malware download using LOLBin technique to bypass security controls",
+    "known_limitations": ["Cannot confirm downloaded file type without file analysis"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "WS045",
+      "indicator_type": "hostname",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": []
+    },
+    "network_data": null,
+    "endpoint_data": {
+      "host": "WS045",
+      "process_tree": [
+        {"parent": "chrome.exe", "parent_pid": 2048, "child": "powershell.exe", "child_pid": 4096},
+        {"parent": "powershell.exe", "parent_pid": 4096, "child": "certutil.exe", "child_pid": 5120},
+        {"parent": "certutil.exe", "parent_pid": 5120, "child": "powershell.exe", "child_pid": 6144}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "chrome.exe",
+          "child": "powershell.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Browser spawning PowerShell", "Common attack chain"],
+          "mitre_technique": "T1059.001"
+        },
+        {
+          "parent": "powershell.exe",
+          "child": "certutil.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["certutil used for download", "LOLBin technique to bypass AV"],
+          "mitre_technique": "T1105"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Clear LOLBin attack pattern, certutil commonly used for malware download"
+}

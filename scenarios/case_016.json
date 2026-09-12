@@ -1,0 +1,76 @@
+{
+  "case_id": "case_016",
+  "category": "MULTI_STAGE",
+  "label": "Ransomware delivery and execution",
+  "description": "Ransomware infection chain: malicious document delivers payload, ransomware executes",
+  "initial_indicator": {
+    "type": "hash",
+    "value": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+    "context": "Alert: Suspicious file hash detected on endpoint"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "endpoint_suspicious_process"],
+    "expected_risk": "CRITICAL",
+    "expected_confidence": "HIGH",
+    "expected_hypothesis": "Ransomware infection, immediate containment and recovery procedures required",
+    "known_limitations": ["Cannot determine encryption status without endpoint isolation"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+      "indicator_type": "hash",
+      "reputation": "malicious",
+      "confidence": "high",
+      "related_actors": [],
+      "related_malware": ["LockBit 3.0"],
+      "mitre_techniques": [
+        {"technique_id": "T1566.001", "technique_name": "Phishing: Spearphishing Attachment", "tactics": ["Initial Access"]},
+        {"technique_id": "T1204.002", "technique_name": "User Execution: Malicious File", "tactics": ["Execution"]},
+        {"technique_id": "T1486", "technique_name": "Data Encrypted for Impact", "tactics": ["Impact"]}
+      ],
+      "sources": [
+        {"name": "VirusTotal", "last_updated": "2024-01-15T00:00:00Z", "reference": "https://virustotal.com/example"}
+      ],
+      "observed_evidence": [
+        {"type": "detection_ratio", "value": "58/70", "context": "High detection rate"},
+        {"type": "threat_label", "value": "LockBit.Ransom", "context": "Ransomware family"}
+      ]
+    },
+    "network_data": null,
+    "endpoint_data": {
+      "host": "WORKSTATION-015",
+      "process_tree": [
+        {"parent": "outlook.exe", "parent_pid": 1536, "child": "winword.exe", "child_pid": 2048},
+        {"parent": "winword.exe", "parent_pid": 2048, "child": "powershell.exe", "child_pid": 2560},
+        {"parent": "powershell.exe", "parent_pid": 2560, "child": "rundll32.exe", "child_pid": 3072},
+        {"parent": "rundll32.exe", "parent_pid": 3072, "child": "LOCKBIT.exe", "child_pid": 4096}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "winword.exe",
+          "child": "powershell.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Document macro executing PowerShell"],
+          "mitre_technique": "T1059.001"
+        },
+        {
+          "parent": "powershell.exe",
+          "child": "rundll32.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Process injection technique"],
+          "mitre_technique": "T1055"
+        },
+        {
+          "parent": "rundll32.exe",
+          "child": "LOCKBIT.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Ransomware executable launched"],
+          "mitre_technique": "T1486"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Full ransomware infection chain from phishing to execution"
+}

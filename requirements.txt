@@ -1,0 +1,16 @@
+# Core Dependencies
+pydantic>=2.0.0
+jsonschema>=4.0.0
+rich>=13.0.0
+
+# Optional: LLM Providers
+# OpenAI SDK
+openai>=1.0.0
+
+# Optional: Testing
+pytest>=7.0.0
+
+# Optional: Development
+black>=23.0.0
+ruff>=0.1.0
+mypy>=1.0.0

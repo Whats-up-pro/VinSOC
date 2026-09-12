@@ -1,0 +1,64 @@
+{
+  "case_id": "case_018",
+  "category": "MULTI_STAGE",
+  "label": "Insider threat with external C2",
+  "description": "Internal actor exfiltrating data and communicating with external infrastructure",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "10.0.0.200",
+    "context": "Alert: HR flagged employee under investigation for potential data theft"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern", "endpoint_suspicious_process"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Insider threat activity, employee exfiltrating data using company resources",
+    "known_limitations": ["Cannot determine full scope without comprehensive forensic investigation"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "10.0.0.200",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "10.0.0.0/8", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T17:00:00Z", "dst": "203.0.113.100", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 52428800},
+        {"timestamp": "2024-01-15T17:05:00Z", "dst": "203.0.113.100", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 52428800},
+        {"timestamp": "2024-01-15T17:10:00Z", "dst": "203.0.113.100", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 52428800}
+      ],
+      "patterns": ["data_exfiltration"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 5,
+      "failed_connections": 0
+    },
+    "endpoint_data": {
+      "host": "WS200",
+      "process_tree": [
+        {"parent": "explorer.exe", "parent_pid": 1024, "child": "winrar.exe", "child_pid": 2048},
+        {"parent": "winrar.exe", "parent_pid": 2048, "child": "firefox.exe", "child_pid": 2560}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "winrar.exe",
+          "child": "firefox.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Archive tool interacting with browser", "Possible data packaging for exfil"],
+          "mitre_technique": "T1560"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Internal actor with large data transfer, may not show in external CTI"
+}

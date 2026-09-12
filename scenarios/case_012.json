@@ -1,0 +1,51 @@
+{
+  "case_id": "case_012",
+  "category": "SUSPICIOUS_PROCESS",
+  "label": "Word spawning PowerShell - macro attack",
+  "description": "Investigation of suspicious process relationship: Microsoft Word spawning PowerShell",
+  "initial_indicator": {
+    "type": "hostname",
+    "value": "WS001",
+    "context": "EDR Alert: winword.exe spawned powershell.exe"
+  },
+  "ground_truth": {
+    "verdict": "SUSPICIOUS",
+    "expected_tools": ["cti_enrichment", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "endpoint_suspicious_process"],
+    "expected_risk": "MEDIUM",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Possible malicious macro execution, potentially delivering second-stage payload",
+    "known_limitations": ["Cannot confirm malicious content without macro/file analysis"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "WS001",
+      "indicator_type": "hostname",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": []
+    },
+    "network_data": null,
+    "endpoint_data": {
+      "host": "WS001",
+      "process_tree": [
+        {"parent": "winword.exe", "parent_pid": 2048, "child": "powershell.exe", "child_pid": 4096},
+        {"parent": "powershell.exe", "parent_pid": 4096, "child": "net.exe", "child_pid": 5120}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "winword.exe",
+          "child": "powershell.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Office application spawning PowerShell", "Classic macro-based attack pattern"],
+          "mitre_technique": "T1059.001"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Classic macro attack pattern, but limited external CTI for hostname"
+}

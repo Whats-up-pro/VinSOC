@@ -1,0 +1,70 @@
+{
+  "case_id": "case_005",
+  "category": "MALICIOUS_IOC",
+  "label": "Known malware C2 infrastructure",
+  "description": "Investigation of an IP confirmed as command-and-control for known malware family",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "185.220.101.45",
+    "context": "Alert: Connection to known Tor exit node used by Cobalt Strike"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern", "endpoint_suspicious_process"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "HIGH",
+    "expected_hypothesis": "Likely Cobalt Strike beacon communication to external C2 server",
+    "known_limitations": ["Cannot confirm host compromise without full endpoint memory analysis"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "185.220.101.45",
+      "indicator_type": "ipv4",
+      "reputation": "malicious",
+      "confidence": "high",
+      "related_actors": [],
+      "related_malware": ["Cobalt Strike"],
+      "mitre_techniques": [
+        {"technique_id": "T1071.001", "technique_name": "Application Layer Protocol: Web Protocols", "tactics": ["Command and Control"]}
+      ],
+      "sources": [
+        {"name": "OTX AlienVault", "last_updated": "2024-01-15T00:00:00Z", "reference": "https://otx.alienvault.com/pulse/example"}
+      ],
+      "observed_evidence": [
+        {"type": "pulse_id", "value": "OTX001234", "context": "Confirmed Cobalt Strike C2"},
+        {"type": "threat_type", "value": "command_and_control", "context": "C2 infrastructure"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T08:00:00Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256},
+        {"timestamp": "2024-01-15T08:00:30Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256},
+        {"timestamp": "2024-01-15T08:01:00Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256},
+        {"timestamp": "2024-01-15T08:01:30Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256}
+      ],
+      "patterns": ["beaconing", "high_frequency"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 120,
+      "failed_connections": 0
+    },
+    "endpoint_data": {
+      "host": "WS023",
+      "process_tree": [
+        {"parent": "explorer.exe", "parent_pid": 1024, "child": "powershell.exe", "child_pid": 3456},
+        {"parent": "powershell.exe", "parent_pid": 3456, "child": "certutil.exe", "child_pid": 4096}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "powershell.exe",
+          "child": "certutil.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["LOLBin usage", "Suspicious parent process"],
+          "mitre_technique": "T1105"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Classic Cobalt Strike beacon pattern with regular callback interval"
+}

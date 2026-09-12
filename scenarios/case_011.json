@@ -1,0 +1,51 @@
+{
+  "case_id": "case_011",
+  "category": "NETWORK_ANOMALY",
+  "label": "Data exfiltration pattern",
+  "description": "Investigation of suspicious outbound traffic pattern suggesting data exfiltration",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "10.0.0.100",
+    "context": "Alert: Unusual outbound traffic volume from database server"
+  },
+  "ground_truth": {
+    "verdict": "SUSPICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Possible data exfiltration or unauthorized data transfer from database server",
+    "known_limitations": ["Cannot confirm data contents without packet capture inspection"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "10.0.0.100",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "10.0.0.0/8", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T03:00:00Z", "dst": "185.234.219.47", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 1048576},
+        {"timestamp": "2024-01-15T03:30:00Z", "dst": "185.234.219.47", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 1048576},
+        {"timestamp": "2024-01-15T04:00:00Z", "dst": "185.234.219.47", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 1048576},
+        {"timestamp": "2024-01-15T04:30:00Z", "dst": "185.234.219.47", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 1048576}
+      ],
+      "patterns": ["data_exfiltration"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 8,
+      "failed_connections": 0,
+      "successful_connections": 8
+    },
+    "endpoint_data": null
+  },
+  "evaluation_notes": "Large outbound data transfer at unusual hours to single destination"
+}

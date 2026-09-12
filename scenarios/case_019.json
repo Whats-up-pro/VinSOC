@@ -1,0 +1,54 @@
+{
+  "case_id": "case_019",
+  "category": "AMBIGUOUS",
+  "label": "No data available - investigation blocked",
+  "description": "Investigation cannot be completed due to lack of telemetry data",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "10.0.0.99",
+    "context": "Alert: Connection from unknown internal IP, but asset not found in CMDB"
+  },
+  "ground_truth": {
+    "verdict": "UNKNOWN",
+    "expected_tools": ["cti_enrichment"],
+    "required_evidence": ["cti_reputation"],
+    "expected_risk": "UNKNOWN",
+    "expected_confidence": "LOW",
+    "expected_hypothesis": "Cannot determine - insufficient data available for investigation",
+    "known_limitations": [
+      "No network logs found for this IP",
+      "No endpoint data available",
+      "IP not in asset inventory",
+      "CMDB lookup failed",
+      "Investigation cannot be completed"
+    ]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "10.0.0.99",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "10.0.0.0/8", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [],
+      "patterns": [],
+      "unique_destinations": 0,
+      "unique_ports": 0,
+      "total_connections": 0
+    },
+    "endpoint_data": null,
+    "error_conditions": [
+      "network_log_lookup_failed",
+      "cmdb_asset_not_found"
+    ]
+  },
+  "evaluation_notes": "This case tests graceful handling of insufficient data - agent must correctly identify evidence gaps"
+}

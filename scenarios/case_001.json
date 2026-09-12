@@ -1,0 +1,44 @@
+{
+  "case_id": "case_001",
+  "category": "BENIGN",
+  "label": "Internal DNS server - known infrastructure",
+  "description": "Investigation of an internal DNS server that appears in monitoring alerts due to high query volume",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "10.0.0.53",
+    "context": "Alert: High DNS query volume from internal server"
+  },
+  "ground_truth": {
+    "verdict": "BENIGN",
+    "expected_tools": ["cti_enrichment"],
+    "required_evidence": ["cti_reputation"],
+    "expected_risk": "LOW",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Internal DNS server performing normal name resolution operations",
+    "known_limitations": ["No external CTI correlation possible for private IPs"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "10.0.0.53",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "10.0.0.0/8", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T10:00:00Z", "dst": "8.8.8.8", "dst_port": 53, "protocol": "UDP", "action": "ALLOW", "bytes_out": 512},
+        {"timestamp": "2024-01-15T10:00:01Z", "dst": "8.8.4.4", "dst_port": 53, "protocol": "UDP", "action": "ALLOW", "bytes_out": 512}
+      ],
+      "patterns": ["normal"]
+    },
+    "endpoint_data": null
+  },
+  "evaluation_notes": "Private IP should show unknown/benign reputation; no further investigation needed"
+}

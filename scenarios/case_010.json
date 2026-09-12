@@ -1,0 +1,74 @@
+{
+  "case_id": "case_010",
+  "category": "NETWORK_ANOMALY",
+  "label": "Lateral movement detected",
+  "description": "Investigation of lateral movement pattern from compromised host",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "192.168.1.50",
+    "context": "Alert: Suspicious lateral movement detected from workstation to file server"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern", "endpoint_suspicious_process"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Lateral movement from compromised workstation, possibly using credential-based attack",
+    "known_limitations": ["Cannot confirm initial compromise vector without full forensics"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "192.168.1.50",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "192.168.0.0/16", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T11:00:00Z", "dst": "192.168.1.10", "dst_port": 445, "protocol": "TCP", "action": "ALLOW", "bytes_out": 4096},
+        {"timestamp": "2024-01-15T11:00:10Z", "dst": "192.168.1.11", "dst_port": 445, "protocol": "TCP", "action": "ALLOW", "bytes_out": 4096},
+        {"timestamp": "2024-01-15T11:00:20Z", "dst": "192.168.1.12", "dst_port": 445, "protocol": "TCP", "action": "ALLOW", "bytes_out": 4096},
+        {"timestamp": "2024-01-15T11:00:30Z", "dst": "192.168.1.13", "dst_port": 445, "protocol": "TCP", "action": "ALLOW", "bytes_out": 4096}
+      ],
+      "patterns": ["lateral_movement", "high_frequency"],
+      "unique_destinations": 15,
+      "unique_ports": 1,
+      "total_connections": 100,
+      "failed_connections": 5,
+      "successful_connections": 95
+    },
+    "endpoint_data": {
+      "host": "WS050",
+      "process_tree": [
+        {"parent": "services.exe", "parent_pid": 512, "child": "svchost.exe", "child_pid": 1024},
+        {"parent": "svchost.exe", "parent_pid": 1024, "child": "wmiex.exe", "child_pid": 1536},
+        {"parent": "wmiex.exe", "parent_pid": 1536, "child": "cmd.exe", "child_pid": 2048}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "svchost.exe",
+          "child": "wmiex.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["WMI spawned from svchost", "Possible lateral movement tool"],
+          "mitre_technique": "T1047"
+        },
+        {
+          "parent": "wmiex.exe",
+          "child": "cmd.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Remote WMI spawning cmd", "Classic lateral movement pattern"],
+          "mitre_technique": "T1047"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "WMI lateral movement pattern, SMB traffic to multiple internal hosts"
+}

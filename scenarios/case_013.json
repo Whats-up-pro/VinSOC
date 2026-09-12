@@ -1,0 +1,59 @@
+{
+  "case_id": "case_013",
+  "category": "SUSPICIOUS_PROCESS",
+  "label": "Excel spawning CMD - macro attack",
+  "description": "Investigation of suspicious process relationship: Excel spawning CMD",
+  "initial_indicator": {
+    "type": "hostname",
+    "value": "WS023",
+    "context": "EDR Alert: excel.exe spawned cmd.exe with suspicious arguments"
+  },
+  "ground_truth": {
+    "verdict": "SUSPICIOUS",
+    "expected_tools": ["cti_enrichment", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "endpoint_suspicious_process"],
+    "expected_risk": "MEDIUM",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Possible malicious Excel macro executing system commands",
+    "known_limitations": ["Cannot confirm malicious content without command line analysis"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "WS023",
+      "indicator_type": "hostname",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": []
+    },
+    "network_data": null,
+    "endpoint_data": {
+      "host": "WS023",
+      "process_tree": [
+        {"parent": "excel.exe", "parent_pid": 3072, "child": "cmd.exe", "child_pid": 5632},
+        {"parent": "cmd.exe", "parent_pid": 5632, "child": "whoami.exe", "child_pid": 6144},
+        {"parent": "cmd.exe", "parent_pid": 5632, "child": "ipconfig.exe", "child_pid": 6656}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "excel.exe",
+          "child": "cmd.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Excel spawning CMD", "Often indicates malicious macro"],
+          "mitre_technique": "T1059.003"
+        },
+        {
+          "parent": "cmd.exe",
+          "child": "whoami.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Reconnaissance command", "User enumeration"],
+          "mitre_technique": "T1033"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Suspicious but could be legitimate automated Excel processing"
+}

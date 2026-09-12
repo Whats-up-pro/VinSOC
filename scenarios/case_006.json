@@ -1,0 +1,52 @@
+{
+  "case_id": "case_006",
+  "category": "MALICIOUS_IOC",
+  "label": "Phishing domain - credential harvesting",
+  "description": "Investigation of a domain identified as used in phishing campaigns",
+  "initial_indicator": {
+    "type": "domain",
+    "value": "secure-login-bankind1882.xyz",
+    "context": "Alert: Domain flagged by email security gateway as phishing"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "HIGH",
+    "expected_hypothesis": "Phishing domain used for credential harvesting, may indicate user compromise",
+    "known_limitations": ["Cannot determine if any users were compromised without log analysis"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "secure-login-bankind1882.xyz",
+      "indicator_type": "domain",
+      "reputation": "malicious",
+      "confidence": "high",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [
+        {"technique_id": "T1566.002", "technique_name": "Phishing: Spearphishing Link", "tactics": ["Initial Access"]}
+      ],
+      "sources": [
+        {"name": "PhishTank", "last_updated": "2024-01-15T00:00:00Z", "reference": "https://www.phishtank.com/phish/example"}
+      ],
+      "observed_evidence": [
+        {"type": "phishing", "value": "true", "context": "Verified phishing domain"},
+        {"type": "target_brand", "value": "Major Bank", "context": "Impersonating legitimate bank"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T14:22:00Z", "dst": "secure-login-bankind1882.xyz", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 1024},
+        {"timestamp": "2024-01-15T14:22:30Z", "dst": "secure-login-bankind1882.xyz", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 2048}
+      ],
+      "patterns": ["normal"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 5
+    },
+    "endpoint_data": null
+  },
+  "evaluation_notes": "Phishing domain confirmed, but limited network evidence of actual access"
+}

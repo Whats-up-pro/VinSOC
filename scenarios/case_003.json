@@ -1,0 +1,50 @@
+{
+  "case_id": "case_003",
+  "category": "BENIGN",
+  "label": "Internal workstation - normal user activity",
+  "description": "Investigation of an internal workstation flagged by DLP policy for file access",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "192.168.1.100",
+    "context": "DLP Alert: User workstation accessing sensitive document"
+  },
+  "ground_truth": {
+    "verdict": "BENIGN",
+    "expected_tools": ["cti_enrichment", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "endpoint_process_tree"],
+    "expected_risk": "LOW",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Normal user activity by authorized employee accessing work documents",
+    "known_limitations": ["Internal IP has no external CTI"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "192.168.1.100",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "192.168.0.0/16", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T14:30:00Z", "dst": "file.company.local", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 2048}
+      ],
+      "patterns": ["normal"]
+    },
+    "endpoint_data": {
+      "host": "WS100",
+      "process_tree": [
+        {"parent": "explorer.exe", "parent_pid": 1024, "child": "winword.exe", "child_pid": 2048},
+        {"parent": "winword.exe", "parent_pid": 2048, "child": "excel.exe", "child_pid": 2560}
+      ],
+      "suspicious_relationships": []
+    }
+  },
+  "evaluation_notes": "Legitimate office productivity software usage"
+}

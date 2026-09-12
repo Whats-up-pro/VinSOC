@@ -1,0 +1,68 @@
+{
+  "case_id": "case_017",
+  "category": "MULTI_STAGE",
+  "label": "Supply chain compromise",
+  "description": "Compromised third-party library used to deliver malware",
+  "initial_indicator": {
+    "type": "domain",
+    "value": "libcdn.legitframework.io",
+    "context": "Alert: Suspicious domain flagged in application traffic analysis"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern", "endpoint_suspicious_process"],
+    "expected_risk": "HIGH",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Supply chain compromise, malicious library loaded by legitimate application",
+    "known_limitations": ["Cannot determine how many applications are affected without comprehensive scan"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "libcdn.legitframework.io",
+      "indicator_type": "domain",
+      "reputation": "malicious",
+      "confidence": "medium",
+      "related_actors": [],
+      "related_malware": ["XZ Utils Backdoor"],
+      "mitre_techniques": [
+        {"technique_id": "T1195.001", "technique_name": "Supply Chain Compromise: Software Development Tools", "tactics": ["Initial Access"]},
+        {"technique_id": "T1574.002", "technique_name": "Hijack Execution Flow: DLL Side-Loading", "tactics": ["Persistence", "Privilege Escalation", "Defense Evasion"]}
+      ],
+      "sources": [
+        {"name": "CISA Advisory", "last_updated": "2024-01-14T00:00:00Z", "reference": "https://cisa.gov/example"}
+      ],
+      "observed_evidence": [
+        {"type": "advisory", "value": "CISA AA24-XXX", "context": "Supply chain alert"},
+        {"type": "compromise_type", "value": "Malicious dependency", "context": "Typosquatting or compromised CDN"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T09:00:00Z", "dst": "libcdn.legitframework.io", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 2048},
+        {"timestamp": "2024-01-15T09:00:05Z", "dst": "libcdn.legitframework.io", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 8192}
+      ],
+      "patterns": ["unusual_download"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 10
+    },
+    "endpoint_data": {
+      "host": "DEV-WORKSTATION-08",
+      "process_tree": [
+        {"parent": "devenv.exe", "parent_pid": 2048, "child": "node.exe", "child_pid": 3072},
+        {"parent": "node.exe", "parent_pid": 3072, "child": "powershell.exe", "child_pid": 4096}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "node.exe",
+          "child": "powershell.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Development tool spawning PowerShell", "Possible malicious library execution"],
+          "mitre_technique": "T1059.001"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Supply chain indicator, multiple stages suggest active exploitation"
+}

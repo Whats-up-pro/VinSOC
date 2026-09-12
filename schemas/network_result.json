@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NetworkResult",
+  "description": "Schema for network investigation telemetry analysis",
+  "type": "object",
+  "required": ["indicator", "indicator_type", "query_time_range", "total_connections", "observed_evidence"],
+  "properties": {
+    "indicator": {
+      "type": "string",
+      "description": "The IOC that was investigated"
+    },
+    "indicator_type": {
+      "type": "string",
+      "enum": ["ipv4", "domain"],
+      "description": "Type of indicator investigated"
+    },
+    "query_time_range": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["start", "end"]
+    },
+    "total_connections": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of connections observed"
+    },
+    "unique_destinations": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of unique destination IPs/domains"
+    },
+    "unique_ports": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of unique destination ports"
+    },
+    "failed_connections": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of failed connection attempts"
+    },
+    "successful_connections": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of successful connections"
+    },
+    "patterns_detected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "enum": [
+              "port_scan",
+              "high_frequency",
+              "lateral_movement",
+              "data_exfiltration",
+              "beaconing",
+              "unusual_port",
+              "failed_connection_spike",
+              "normal"
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Specific evidence supporting this pattern detection"
+          }
+        },
+        "required": ["pattern", "confidence"]
+      },
+      "description": "Network patterns detected during investigation",
+      "default": []
+    },
+    "connection_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dst": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "first_seen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["dst", "port"]
+      },
+      "description": "Summary of top connections by destination"
+    },
+    "observed_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": ["string", "number", "boolean", "array", "object"]
+          },
+          "context": {
+            "type": "string"
+          }
+        },
+        "required": ["type", "value"]
+      },
+      "description": "Raw network observables that support the analysis"
+    }
+  }
+}

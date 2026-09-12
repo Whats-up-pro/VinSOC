@@ -1,0 +1,62 @@
+{
+  "case_id": "case_020",
+  "category": "AMBIGUOUS",
+  "label": "Conflicting signals - benign CTI, suspicious network",
+  "description": "CTI shows clean reputation but network shows anomalous traffic pattern",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "203.0.113.25",
+    "context": "Alert: Anomalous traffic pattern to external IP"
+  },
+  "ground_truth": {
+    "verdict": "SUSPICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern"],
+    "expected_risk": "MEDIUM",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Possible staged/rotating C2, newly registered domain not yet in CTI feeds, or legitimate service with unusual traffic",
+    "known_limitations": [
+      "CTI reputation may be outdated or incorrect",
+      "Cannot determine true intent without more evidence",
+      "May be legitimate service with unusual configuration"
+    ]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "203.0.113.25",
+      "indicator_type": "ipv4",
+      "reputation": "benign",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [
+        {"name": "BasicWhois", "last_updated": "2024-01-01T00:00:00Z", "reference": "whois_record"}
+      ],
+      "observed_evidence": [
+        {"type": "whois", "value": "Registered 2024-01-10", "context": "Recently registered domain"},
+        {"type": "reputation_age", "value": "new", "context": "CTI may not have current data"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T03:00:00Z", "dst": "203.0.113.25", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 64},
+        {"timestamp": "2024-01-15T03:00:01Z", "dst": "203.0.113.25", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 64},
+        {"timestamp": "2024-01-15T03:00:02Z", "dst": "203.0.113.25", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 64},
+        {"timestamp": "2024-01-15T03:00:03Z", "dst": "203.0.113.25", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 64}
+      ],
+      "patterns": ["high_frequency", "beaconing"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 500,
+      "failed_connections": 0
+    },
+    "endpoint_data": null,
+    "conflict": {
+      "cti_result": "benign",
+      "network_pattern": "suspicious",
+      "resolution": "Requires manual analysis"
+    }
+  },
+  "evaluation_notes": "Tests agent ability to handle conflicting signals - must not blindly trust CTI over network evidence"
+}

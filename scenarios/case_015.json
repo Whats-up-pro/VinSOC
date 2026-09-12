@@ -1,0 +1,87 @@
+{
+  "case_id": "case_015",
+  "category": "MULTI_STAGE",
+  "label": "Full APT kill chain",
+  "description": "Complete APT intrusion with multiple stages: initial access, execution, persistence, C2",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "91.220.131.77",
+    "context": "Alert: Connection to known APT C2 infrastructure"
+  },
+  "ground_truth": {
+    "verdict": "MALICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation", "endpoint_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern", "endpoint_suspicious_process"],
+    "expected_risk": "CRITICAL",
+    "expected_confidence": "HIGH",
+    "expected_hypothesis": "Advanced persistent threat activity, likely part of multi-stage intrusion requiring immediate response",
+    "known_limitations": ["Cannot determine full scope without enterprise-wide forensic investigation"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "91.220.131.77",
+      "indicator_type": "ipv4",
+      "reputation": "malicious",
+      "confidence": "high",
+      "related_actors": ["APT29", "Cozy Bear"],
+      "related_malware": ["WellMess", "Sneak"],
+      "mitre_techniques": [
+        {"technique_id": "T1566.001", "technique_name": "Phishing: Spearphishing Attachment", "tactics": ["Initial Access"]},
+        {"technique_id": "T1059.001", "technique_name": "Command and Scripting Interpreter: PowerShell", "tactics": ["Execution"]},
+        {"technique_id": "T1547.001", "technique_name": "Boot or Logon Autostart Execution: Registry Run Keys", "tactics": ["Persistence"]},
+        {"technique_id": "T1071.004", "technique_name": "Application Layer Protocol: DNS", "tactics": ["Command and Control"]}
+      ],
+      "sources": [
+        {"name": "Multiple CTI Feeds", "last_updated": "2024-01-15T00:00:00Z", "reference": "aggregated"}
+      ],
+      "observed_evidence": [
+        {"type": "apt_attribution", "value": "APT29", "context": "Multiple high-confidence sources"},
+        {"type": "campaign", "value": "Ongoing operation", "context": "Active threat"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T08:00:00Z", "dst": "91.220.131.77", "dst_port": 53, "protocol": "UDP", "action": "ALLOW", "bytes_out": 128},
+        {"timestamp": "2024-01-15T08:15:00Z", "dst": "91.220.131.77", "dst_port": 53, "protocol": "UDP", "action": "ALLOW", "bytes_out": 128},
+        {"timestamp": "2024-01-15T08:30:00Z", "dst": "91.220.131.77", "dst_port": 53, "protocol": "UDP", "action": "ALLOW", "bytes_out": 128}
+      ],
+      "patterns": ["beaconing", "dns_tunneling"],
+      "unique_destinations": 1,
+      "unique_ports": 1,
+      "total_connections": 100,
+      "failed_connections": 0
+    },
+    "endpoint_data": {
+      "host": "WORKSTATION-042",
+      "process_tree": [
+        {"parent": "outlook.exe", "parent_pid": 1536, "child": "powershell.exe", "child_pid": 2048},
+        {"parent": "powershell.exe", "parent_pid": 2048, "child": "reg.exe", "child_pid": 2560},
+        {"parent": "reg.exe", "parent_pid": 2560, "child": "schtasks.exe", "child_pid": 3072}
+      ],
+      "suspicious_relationships": [
+        {
+          "parent": "outlook.exe",
+          "child": "powershell.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Outlook spawning PowerShell", "Possible spearphishing with macro"],
+          "mitre_technique": "T1059.001"
+        },
+        {
+          "parent": "powershell.exe",
+          "child": "reg.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Registry modification", "Persistence attempt"],
+          "mitre_technique": "T1547.001"
+        },
+        {
+          "parent": "reg.exe",
+          "child": "schtasks.exe",
+          "suspicious": true,
+          "suspicious_reasons": ["Scheduled task creation", "Persistence mechanism"],
+          "mitre_technique": "T1053.005"
+        }
+      ]
+    }
+  },
+  "evaluation_notes": "Complete kill chain observed, multiple stages confirm sophisticated threat actor"
+}

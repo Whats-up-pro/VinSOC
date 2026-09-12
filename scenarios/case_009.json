@@ -1,0 +1,52 @@
+{
+  "case_id": "case_009",
+  "category": "NETWORK_ANOMALY",
+  "label": "Internal port scan detected",
+  "description": "Investigation of an internal host performing port scan behavior",
+  "initial_indicator": {
+    "type": "ipv4",
+    "value": "10.0.0.25",
+    "context": "Alert: Internal host detected performing port scan against other internal servers"
+  },
+  "ground_truth": {
+    "verdict": "SUSPICIOUS",
+    "expected_tools": ["cti_enrichment", "network_investigation"],
+    "required_evidence": ["cti_reputation", "network_pattern"],
+    "expected_risk": "MEDIUM",
+    "expected_confidence": "MEDIUM",
+    "expected_hypothesis": "Possible reconnaissance activity, either unauthorized scanning tool or misconfigured network tool",
+    "known_limitations": ["Cannot determine intent without additional context"]
+  },
+  "test_data": {
+    "cti_response": {
+      "indicator": "10.0.0.25",
+      "indicator_type": "ipv4",
+      "reputation": "unknown",
+      "confidence": "low",
+      "related_actors": [],
+      "related_malware": [],
+      "mitre_techniques": [],
+      "sources": [],
+      "observed_evidence": [
+        {"type": "ip_range", "value": "10.0.0.0/8", "context": "RFC1918 private range"}
+      ]
+    },
+    "network_data": {
+      "connections": [
+        {"timestamp": "2024-01-15T10:00:00Z", "dst": "10.0.1.1", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+        {"timestamp": "2024-01-15T10:00:01Z", "dst": "10.0.1.2", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+        {"timestamp": "2024-01-15T10:00:02Z", "dst": "10.0.1.3", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+        {"timestamp": "2024-01-15T10:00:03Z", "dst": "10.0.1.4", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+        {"timestamp": "2024-01-15T10:00:04Z", "dst": "10.0.1.5", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0}
+      ],
+      "patterns": ["port_scan"],
+      "unique_destinations": 50,
+      "unique_ports": 5,
+      "total_connections": 250,
+      "failed_connections": 240,
+      "successful_connections": 10
+    },
+    "endpoint_data": null
+  },
+  "evaluation_notes": "Clear port scan pattern but internal IP limits external CTI"
+}
