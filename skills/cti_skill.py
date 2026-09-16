@@ -153,22 +153,7 @@ class CTISkill(BaseSkill):
                 evidence_ids=[evidence_id]
             )
 
-    def validate_output(self, data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
-            """Validate CTI output against schema."""
-            from skills.validators import validate_cti_result
-            return validate_cti_result(data)
-
-    def get_contract(self) -> SkillContract:
-            """Return CTI skill contract."""
-            return SkillContract(
-                skill_name=self.skill_name,
-                version=self.skill_version,
-                required_inputs=["indicator"],
-                output_schema="CTIResult",
-                lifecycle_stage="investigate",
-                read_only=True,
-            )
-
+        # Return data from mock
         return SkillResult(
             success=True,
             data={
@@ -183,6 +168,22 @@ class CTISkill(BaseSkill):
                 "observed_evidence": mock_result.get("observed_evidence", [])
             },
             evidence_ids=[evidence_id]
+        )
+
+    def validate_output(self, data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+        """Validate CTI output against schema."""
+        from skills.validators import validate_cti_result
+        return validate_cti_result(data)
+
+    def get_contract(self) -> SkillContract:
+        """Return CTI skill contract."""
+        return SkillContract(
+            skill_name=self.skill_name,
+            version=self.skill_version,
+            required_inputs=["indicator"],
+            output_schema="CTIResult",
+            lifecycle_stage="investigate",
+            read_only=True,
         )
 
 
