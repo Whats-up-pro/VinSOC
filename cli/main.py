@@ -238,6 +238,19 @@ def run_direct_investigation(
     display_case(case)
 
 
+def run_benchmark(limit: Optional[int] = None):
+    """Compare fixed pipeline vs evidence-driven orchestration across scenarios."""
+    from tests.benchmark_runner import run_benchmark_suite
+
+    summary = run_benchmark_suite(limit=limit)
+    console.print("\n[bold cyan]Benchmark Summary[/bold cyan]")
+    console.print(f"Scenarios: {summary['scenarios']}")
+    console.print(f"Evidence-driven match: {summary['evidence_driven_match_rate']:.2%}")
+    console.print(f"Fixed pipeline match: {summary['fixed_pipeline_match_rate']:.2%}")
+    console.print(f"Evidence-driven avg tools: {summary['evidence_driven_avg_tools']:.2f}")
+    console.print(f"Fixed pipeline avg tools: {summary['fixed_pipeline_avg_tools']:.2f}")
+
+
 def list_scenarios():
     """List available scenarios."""
     scenarios_dir = Path(__file__).parent.parent / "scenarios"
@@ -269,36 +282,42 @@ def list_scenarios():
 def test_skills():
     """Test individual skills."""
     console.print("\n[cyan]Testing CTI Skill[/cyan]")
-    cti_skill = CTISkill()
+    cti_skill = CTISkill(mock_data={
+        "185.220.101.45": {"reputation": "malicious", "confidence": "high"}
+    })
     result = cti_skill.execute(indicator="185.220.101.45")
     console.print(f"[green]Success:[/green] {result.success}")
     if result.data:
         console.print(f"[green]Reputation:[/green] {result.data.get('reputation')}")
 
     console.print("\n[cyan]Testing Network Skill[/cyan]")
-    network_skill = NetworkSkill()
-    result = network_skill.execute(
-        indicator="10.0.0.25",
-        mock_data={
+    network_skill = NetworkSkill(mock_data={
+        "10.0.0.25": {
             "connections": [
                 {"timestamp": "2024-01-15T10:00:00Z", "dst": "10.0.1.1", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
                 {"timestamp": "2024-01-15T10:00:01Z", "dst": "10.0.1.2", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+                {"timestamp": "2024-01-15T10:00:02Z", "dst": "10.0.1.3", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
             ]
         }
+    })
+    result = network_skill.execute(
+        indicator="10.0.0.25",
+        indicator_type="ipv4"
     )
     console.print(f"[green]Success:[/green] {result.success}")
     if result.data:
         console.print(f"[green]Total connections:[/green] {result.data.get('total_connections')}")
 
     console.print("\n[cyan]Testing Endpoint Skill[/cyan]")
-    endpoint_skill = EndpointSkill()
-    result = endpoint_skill.execute(
-        host="WS001",
-        mock_data={
+    endpoint_skill = EndpointSkill(mock_data={
+        "WS001": {
             "process_tree": [
                 {"parent": "winword.exe", "parent_pid": 2048, "child": "powershell.exe", "child_pid": 4096}
             ]
         }
+    })
+    result = endpoint_skill.execute(
+        host="WS001"
     )
     console.print(f"[green]Success:[/green] {result.success}")
     if result.data:
@@ -318,14 +337,14 @@ def main():
     investigate_parser.add_argument("indicator", help="IOC to investigate (IP, domain, hash, hostname)")
     investigate_parser.add_argument("--type", "-t", default="ipv4", choices=["ipv4", "domain", "hash", "hostname"], help="Indicator type")
     investigate_parser.add_argument("--context", "-c", help="Investigation context")
-    investigate_parser.add_argument("--provider", "-p", default="mock", choices=["openai", "gemini", "mock"], help="LLM provider")
+    investigate_parser.add_argument("--provider", "-p", default="mock", choices=["openai", "mock"], help="LLM provider")
     investigate_parser.add_argument("--model", "-m", default="gpt-4o", help="Model name")
     investigate_parser.add_argument("--api-key", help="API key (or set env var)")
 
     # Scenario command
     scenario_parser = subparsers.add_parser("scenario", help="Run a predefined scenario")
     scenario_parser.add_argument("scenario", help="Scenario ID or path (e.g., case_001)")
-    scenario_parser.add_argument("--provider", "-p", default="mock", choices=["openai", "gemini", "mock"], help="LLM provider")
+    scenario_parser.add_argument("--provider", "-p", default="mock", choices=["openai", "mock"], help="LLM provider")
     scenario_parser.add_argument("--model", "-m", default="gpt-4o", help="Model name")
 
     # List scenarios command
@@ -333,6 +352,10 @@ def main():
 
     # Test command
     subparsers.add_parser("test", help="Test skill functionality")
+
+    # Benchmark command
+    benchmark_parser = subparsers.add_parser("benchmark", help="Compare evidence-driven vs fixed pipeline")
+    benchmark_parser.add_argument("--limit", type=int, default=None, help="Optional number of scenarios to run")
 
     args = parser.parse_args()
 
@@ -351,6 +374,8 @@ def main():
         list_scenarios()
     elif args.command == "test":
         test_skills()
+    elif args.command == "benchmark":
+        run_benchmark(limit=args.limit)
     else:
         parser.print_help()
 
