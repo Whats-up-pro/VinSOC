@@ -13,7 +13,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from skills.base import BaseSkill, SkillResult
+from skills.base import BaseSkill, SkillContract, SkillResult
 
 
 class CTISkill(BaseSkill):
@@ -151,6 +151,22 @@ class CTISkill(BaseSkill):
                     ]
                 },
                 evidence_ids=[evidence_id]
+            )
+
+    def validate_output(self, data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+            """Validate CTI output against schema."""
+            from skills.validators import validate_cti_result
+            return validate_cti_result(data)
+
+    def get_contract(self) -> SkillContract:
+            """Return CTI skill contract."""
+            return SkillContract(
+                skill_name=self.skill_name,
+                version=self.skill_version,
+                required_inputs=["indicator"],
+                output_schema="CTIResult",
+                lifecycle_stage="investigate",
+                read_only=True,
             )
 
         return SkillResult(

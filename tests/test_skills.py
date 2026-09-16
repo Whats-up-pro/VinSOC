@@ -365,14 +365,16 @@ class TestSkillSecurity:
         skill = CTISkill()
         # Attempt to inject commands
         result = skill.execute(indicator="; rm -rf /")
-        assert result.success  # Should handle gracefully, not execute
+        assert not result.success
+        assert "validation" in (result.error or "").lower()
 
     def test_input_sanitization(self):
         """Test input sanitization."""
         skill = CTISkill()
         # Attempt to inject through domain
         result = skill.execute(indicator="example.com'; DROP TABLE users;--")
-        assert result.success  # Should handle gracefully
+        assert not result.success
+        assert "validation" in (result.error or "").lower()
 
     def test_result_immutability(self):
         """Test that skill results are immutable."""

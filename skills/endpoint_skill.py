@@ -12,7 +12,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Set
 
-from skills.base import BaseSkill, SkillResult
+from skills.base import BaseSkill, SkillContract, SkillResult
 
 
 class EndpointSkill(BaseSkill):
@@ -238,7 +238,43 @@ class EndpointSkill(BaseSkill):
                     "mitre_technique": "T1059"
                 })
 
+            # Heuristic: scripted download/execution chains
+            if parent == "powershell.exe" and child in {"rundll32.exe", "mshta.exe"}:
+                suspicious.append({
+                    "parent": rel.get("parent"),
+                    "child": rel.get("child"),
+                    "suspicious": True,
+                    "suspicious_reasons": ["Script interpreter spawning execution proxy binary"],
+                    "mitre_technique": "T1218",
+                })
+
+            # Heuristic: known ransomware executable launch
+            if "lockbit" in child or "ransom" in child:
+                suspicious.append({
+                    "parent": rel.get("parent"),
+                    "child": rel.get("child"),
+                    "suspicious": True,
+                    "suspicious_reasons": ["Potential ransomware execution chain"],
+                    "mitre_technique": "T1486",
+                })
+
         return suspicious
+
+    def validate_output(self, data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+        """Validate endpoint output against schema."""
+        from skills.validators import validate_endpoint_result
+        return validate_endpoint_result(data)
+
+    def get_contract(self) -> SkillContract:
+        """Return endpoint skill contract."""
+        return SkillContract(
+            skill_name=self.skill_name,
+            version=self.skill_version,
+            required_inputs=["host"],
+            output_schema="EndpointResult",
+            lifecycle_stage="investigate",
+            read_only=True,
+        )
 
 
 # Convenience function
