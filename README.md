@@ -96,7 +96,7 @@ python -m cli.main investigate 185.220.101.45 --type ipv4 --context "Suspicious 
 ```
 1. INPUT: IOC + Context
 2. ORCHESTRATION: LLM selects and coordinates tools
-3. SKILL EXECUTION: CTI → Network → Endpoint
+3. SKILL EXECUTION: Evidence-driven selection of CTI, Network, or Endpoint
 4. EVIDENCE COLLECTION: All results stored
 5. EVALUATION: Agent decides next steps
 6. CORRELATION: Evidence combined

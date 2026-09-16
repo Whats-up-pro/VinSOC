@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TriageResult",
+  "type": "object",
+  "required": ["verdict", "reason", "confidence"],
+  "properties": {
+    "verdict": {"type": "string", "enum": ["BENIGN", "SUSPICIOUS", "NEEDS_INVESTIGATION"]},
+    "reason": {"type": "string"},
+    "confidence": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]}
+  },
+  "additionalProperties": false
+}

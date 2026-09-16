@@ -3,7 +3,7 @@
   "title": "InvestigationCase",
   "description": "Schema for complete investigation case with evidence and assessment",
   "type": "object",
-  "required": ["case_id", "created_at", "initial_indicator", "tool_trace", "evidence", "hypotheses", "risk_level", "confidence", "limitations", "final_assessment"],
+  "required": ["case_id", "created_at", "initial_indicator", "tool_trace", "evidence", "hypotheses", "risk_level", "confidence", "limitations", "final_assessment", "supporting_evidence", "contradicting_evidence", "metadata"],
   "properties": {
     "case_id": {
       "type": "string",
@@ -35,6 +35,9 @@
       "items": {
         "type": "object",
         "properties": {
+          "call_id": {
+            "type": "string"
+          },
           "tool": {
             "type": "string",
             "enum": ["cti_enrichment", "network_investigation", "endpoint_investigation"]
@@ -56,7 +59,7 @@
             }
           }
         },
-        "required": ["tool", "arguments", "timestamp"]
+        "required": ["call_id", "tool", "arguments", "timestamp", "evidence_ids"]
       },
       "description": "Sequence of tool calls made during the investigation"
     },
@@ -80,9 +83,12 @@
           "collected_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "linked_from": {
+            "type": ["string", "null"]
           }
         },
-        "required": ["evidence_id", "source_tool", "type", "collected_at"]
+        "required": ["evidence_id", "source_tool", "type", "data", "collected_at", "linked_from"]
       },
       "description": "All evidence collected during the investigation"
     },
@@ -107,7 +113,7 @@
           },
           "confidence": {
             "type": "string",
-            "enum": ["low", "medium", "high"]
+            "enum": ["LOW", "MEDIUM", "HIGH"]
           }
         },
         "required": ["id", "description", "supporting_evidence", "confidence"]

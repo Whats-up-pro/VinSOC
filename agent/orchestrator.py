@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from agent.provider import LLMProvider, MockProvider, create_provider
 from agent.tools import get_tool_schemas, ToolName
 from agent.evidence import EvidenceStore
+from agent.triage import TriageResult, triage_alert
 
 from skills.cti_skill import CTISkill
 from skills.network_skill import NetworkSkill
@@ -195,6 +196,11 @@ class InvestigationOrchestrator:
         self.investigation_active = True
 
         start_time = datetime.utcnow()
+        triage = triage_alert(indicator, context)
+        if triage.verdict == "BENIGN":
+            case = self._generate_case(indicator, indicator_type, context, 0.0, triage)
+            self.investigation_active = False
+            return case
 
         # Build initial prompt
         initial_prompt = self._build_initial_prompt(indicator, indicator_type, context)
@@ -206,7 +212,7 @@ class InvestigationOrchestrator:
         duration = (end_time - start_time).total_seconds()
 
         # Generate final case
-        case = self._generate_case(indicator, indicator_type, context, duration)
+        case = self._generate_case(indicator, indicator_type, context, duration, triage)
 
         self.investigation_active = False
         return case
@@ -228,7 +234,11 @@ class InvestigationOrchestrator:
 
         prompt += """
 
-Begin the investigation by calling the CTI enrichment tool first to establish threat intelligence context."""
+    Use the available evidence to choose the next read-only skill. Stop when evidence is sufficient."""
+
+        endpoint_hosts = ",".join(self.endpoint_skill.mock_data.keys())
+        if endpoint_hosts:
+            prompt += f"\n**Endpoint pivots**: {endpoint_hosts}"
 
         return prompt
 
@@ -246,10 +256,23 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
             )
 
             # Add response to history
-            self.messages.append({
+            assistant_message = {
                 "role": "assistant",
                 "content": response.content or ""
-            })
+            }
+            if response.tool_calls:
+                assistant_message["tool_calls"] = [
+                    {
+                        "id": call.get("id"),
+                        "type": "function",
+                        "function": {
+                            "name": call["name"],
+                            "arguments": self._format_result_for_llm(call["arguments"]),
+                        },
+                    }
+                    for call in response.tool_calls
+                ]
+            self.messages.append(assistant_message)
 
             # Check for tool calls
             if response.tool_calls:
@@ -267,6 +290,7 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
         """Execute a tool call and add result to conversation."""
         tool_name = tool_call["name"]
         arguments = tool_call["arguments"]
+        tool_call_id = tool_call.get("id") or f"local_{uuid.uuid4().hex[:8]}"
 
         start_time = datetime.utcnow()
 
@@ -290,20 +314,20 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
 
         # Record in evidence store
         if result and result.success:
+            call = self.evidence_store.add_tool_call(
+                tool=tool_name,
+                arguments=arguments,
+                result_summary=self._summarize_result(tool_name, result.data),
+                evidence_ids=[],
+                duration_ms=duration_ms
+            )
             evidence = self.evidence_store.add_evidence(
                 source_tool=tool_name,
                 evidence_type=f"{tool_name}_result",
                 data=result.data,
-                linked_from=tool_call.get("id")
+                linked_from=call.call_id
             )
-
-            self.evidence_store.add_tool_call(
-                tool=tool_name,
-                arguments=arguments,
-                result_summary=self._summarize_result(tool_name, result.data),
-                evidence_ids=[evidence.evidence_id],
-                duration_ms=duration_ms
-            )
+            call.evidence_ids.append(evidence.evidence_id)
 
             # Format result for LLM
             result_text = f"Tool: {tool_name}\n\nResult:\n{self._format_result_for_llm(result.data)}"
@@ -322,7 +346,8 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
         # Add result to messages
         self.messages.append({
             "role": "tool",
-            "content": result_text
+            "content": result_text,
+            "tool_call_id": tool_call_id,
         })
 
     def _summarize_result(self, tool_name: str, data: Dict[str, Any]) -> str:
@@ -381,7 +406,8 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
         indicator: str,
         indicator_type: str,
         context: Optional[str],
-        duration: float
+        duration: float,
+        triage: TriageResult
     ) -> InvestigationCase:
         """Generate final investigation case from evidence."""
         evidence = self.evidence_store.get_all_evidence()
@@ -395,13 +421,28 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
                 break
 
         # Generate hypothesis
-        hypothesis, risk, confidence = self._analyze_evidence(evidence)
+        hypotheses, risk, confidence = self._analyze_evidence(evidence)
+
+        if triage.verdict == "BENIGN" and not evidence:
+            risk = "LOW"
+            confidence = triage.confidence
+            hypotheses = [InvestigationHypothesis(
+                id="triage_1",
+                description="Alert closed as expected activity during triage",
+                supporting_evidence=[],
+                confidence=triage.confidence,
+            )]
 
         # Collect limitations
         limitations = self._identify_limitations(evidence, tool_calls)
 
         # Supporting evidence IDs
-        supporting_ids = [ev.evidence_id for ev in evidence]
+        supporting_ids = [
+            ev.evidence_id
+            for hypothesis in hypotheses
+            for ev in evidence
+            if ev.evidence_id in hypothesis.supporting_evidence
+        ]
 
         return InvestigationCase(
             case_id=self.case_id,
@@ -413,7 +454,7 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
             },
             tool_trace=[tc.to_dict() for tc in tool_calls],
             evidence=[ev.to_dict() for ev in evidence],
-            hypotheses=[h.to_dict() for h in hypothesis] if isinstance(hypothesis, list) else [hypothesis.to_dict()],
+            hypotheses=[hypothesis.to_dict() for hypothesis in hypotheses],
             risk_level=risk,
             confidence=confidence,
             limitations=limitations,
@@ -422,7 +463,8 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
             metadata={
                 "investigation_duration_seconds": duration,
                 "llm_provider": self.provider.get_name(),
-                "total_steps": len(tool_calls)
+                "total_steps": len(tool_calls),
+                "triage": triage.to_dict()
             }
         )
 
@@ -524,6 +566,33 @@ Begin the investigation by calling the CTI enrichment tool first to establish th
                 supporting_evidence=[ev.evidence_id for ev in evidence if ev.source_tool == "endpoint_investigation"],
                 confidence="HIGH"
             ))
+
+        if not hypotheses and cti_reputation == "unknown":
+            is_private_indicator = any(
+                ev.source_tool == "cti_enrichment"
+                and any(item.get("type") in {"private_ip", "ip_range"} for item in ev.data.get("observed_evidence", []))
+                for ev in evidence
+            )
+            has_clean_network = any(
+                ev.source_tool == "network_investigation"
+                and ev.data.get("total_connections", 0) > 0
+                and not ev.data.get("patterns_detected")
+                for ev in evidence
+            )
+            has_clean_endpoint = any(
+                ev.source_tool == "endpoint_investigation"
+                and not ev.data.get("suspicious_relationships")
+                for ev in evidence
+            )
+            if has_clean_endpoint or (is_private_indicator and has_clean_network):
+                risk = "LOW"
+                confidence = "MEDIUM"
+                hypotheses.append(InvestigationHypothesis(
+                    id="h_clean",
+                    description="Available telemetry contains no suspicious activity",
+                    supporting_evidence=[ev.evidence_id for ev in evidence],
+                    confidence="MEDIUM",
+                ))
 
         # Default
         if not hypotheses:
