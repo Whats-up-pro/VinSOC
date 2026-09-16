@@ -37,6 +37,27 @@ class SkillResult:
         return json.dumps(self.to_dict(), indent=2, default=str)
 
 
+@dataclass
+class SkillContract:
+    """Declarative skill contract for lifecycle/tooling mapping."""
+    skill_name: str
+    version: str
+    required_inputs: list[str]
+    output_schema: str
+    lifecycle_stage: str = "investigate"
+    read_only: bool = True
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "skill_name": self.skill_name,
+            "version": self.version,
+            "required_inputs": self.required_inputs,
+            "output_schema": self.output_schema,
+            "lifecycle_stage": self.lifecycle_stage,
+            "read_only": self.read_only,
+        }
+
+
 class BaseSkill(ABC):
     """
     Abstract base class for investigation skills.
@@ -75,6 +96,21 @@ class BaseSkill(ABC):
         """
         pass
 
+    def validate_output(self, data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+        """Validate output payload. Subclasses may override."""
+        return True, None
+
+    def get_contract(self) -> SkillContract:
+        """Return declared contract for this skill."""
+        return SkillContract(
+            skill_name=self.skill_name,
+            version=self.skill_version,
+            required_inputs=[],
+            output_schema="Unknown",
+            lifecycle_stage="investigate",
+            read_only=True,
+        )
+
     def execute(self, **kwargs) -> SkillResult:
         """
         Execute the skill with validation and logging.
@@ -109,6 +145,20 @@ class BaseSkill(ABC):
 
         # Execute skill
         result = self._execute(**kwargs)
+
+        if result.success and result.data is not None:
+            is_valid, validation_error = self.validate_output(result.data)
+            if not is_valid:
+                self.execution_log.append({
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "action": "output_validation_failed",
+                    "error": validation_error,
+                })
+                return SkillResult(
+                    success=False,
+                    error=f"Output validation failed: {validation_error}",
+                    evidence_ids=result.evidence_ids,
+                )
 
         # Calculate execution time
         end_time = datetime.utcnow()

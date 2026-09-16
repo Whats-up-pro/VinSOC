@@ -15,7 +15,7 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Union
 
-from skills.base import BaseSkill, SkillResult
+from skills.base import BaseSkill, SkillContract, SkillResult
 
 
 class NetworkSkill(BaseSkill):
@@ -249,12 +249,12 @@ class NetworkSkill(BaseSkill):
         if total == 0:
             return patterns
 
-        # Port scan detection: many failed connections to different ports/destinations
-        if failed > 10 and len(ports) > 5 and failed / total > 0.5:
+        # Port scan detection: repeated failed probes across multiple destinations/ports
+        if failed >= 3 and (len(ports) >= 1 and len(destinations) >= 3) and failed / total >= 0.5:
             patterns.append({
                 "pattern": "port_scan",
                 "confidence": "high",
-                "evidence": [f"{failed} failed connections to {len(ports)} ports"]
+                "evidence": [f"{failed} failed connections across {len(destinations)} destinations and {len(ports)} ports"]
             })
 
         # High frequency: many connections in short time
@@ -291,6 +291,15 @@ class NetworkSkill(BaseSkill):
                 "evidence": [f"Connections to suspicious ports: {unusual_ports}"]
             })
 
+        # Lateral movement candidate: broad SMB/RDP fan-out to internal hosts
+        lateral_ports = {445, 3389}
+        if any(p in lateral_ports for p in ports) and len(destinations) >= 4 and successful >= 3:
+            patterns.append({
+                "pattern": "lateral_movement",
+                "confidence": "medium",
+                "evidence": [f"Fan-out to {len(destinations)} internal hosts over SMB/RDP"]
+            })
+
         # Default to normal if no patterns detected
         if not patterns:
             patterns.append({
@@ -303,7 +312,7 @@ class NetworkSkill(BaseSkill):
 
     def _detect_beaconing(self, connections: List[Dict[str, Any]]) -> bool:
         """Detect beaconing pattern (regular intervals)."""
-        if len(connections) < 5:
+        if len(connections) < 3:
             return False
 
         try:
@@ -313,7 +322,7 @@ class NetworkSkill(BaseSkill):
                 if ts_str:
                     timestamps.append(datetime.fromisoformat(ts_str.replace("Z", "+00:00")))
 
-            if len(timestamps) < 5:
+            if len(timestamps) < 3:
                 return False
 
             timestamps.sort()
@@ -365,6 +374,22 @@ class NetworkSkill(BaseSkill):
                 })
 
         return summary
+
+    def validate_output(self, data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+        """Validate network output against schema."""
+        from skills.validators import validate_network_result
+        return validate_network_result(data)
+
+    def get_contract(self) -> SkillContract:
+        """Return network skill contract."""
+        return SkillContract(
+            skill_name=self.skill_name,
+            version=self.skill_version,
+            required_inputs=["indicator"],
+            output_schema="NetworkResult",
+            lifecycle_stage="investigate",
+            read_only=True,
+        )
 
 
 # Convenience function

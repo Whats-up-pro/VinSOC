@@ -259,7 +259,7 @@ def create_provider(
     Factory function to create LLM provider.
 
     Args:
-        provider_type: "openai", "gemini", or "mock"
+        provider_type: "openai" or "mock"
         model: Model name
         api_key: API key
         **kwargs: Additional provider-specific arguments

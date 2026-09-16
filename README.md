@@ -37,7 +37,8 @@ This system demonstrates AI-augmented SOC investigation using:
 │   ├── orchestrator.py       # Investigation orchestrator
 │   ├── provider.py           # LLM provider adapters
 │   ├── tools.py              # Tool definitions
-│   └── evidence.py           # Evidence store
+│   ├── evidence.py           # Evidence store
+│   └── integrations.py       # Read-only SOC integration abstraction (SecOps/GTI/SCC)
 ├── /scenarios                # Test scenarios (20 cases)
 │   ├── case_001.json
 │   └── ...
@@ -76,6 +77,12 @@ python -m cli.main list
 python -m cli.main scenario case_001
 ```
 
+### Benchmark Orchestration Modes
+
+```bash
+python -m cli.main benchmark --limit 5
+```
+
 ### Investigate an Indicator Directly
 
 ```bash
@@ -90,6 +97,7 @@ python -m cli.main investigate 185.220.101.45 --type ipv4 --context "Suspicious 
 2. **Evidence as First-Class Citizen**: Every conclusion links to observable evidence
 3. **Strict Separation**: LLM handles orchestration; skills handle deterministic retrieval
 4. **Read-Only Enforcement**: No write capabilities; investigation only
+5. **Lifecycle Control**: Triage → Investigate → Verify → Review with explicit phase trace
 
 ### Investigation Flow
 
