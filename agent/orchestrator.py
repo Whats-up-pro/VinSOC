@@ -40,6 +40,20 @@ class InvestigationHypothesis:
 
 
 @dataclass
+class EvidenceTraceabilityViolation:
+    """Record of a traceability violation when hypothesis references non-existent evidence."""
+    hypothesis_id: str
+    invalid_evidence_ids: List[str]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "hypothesis_id": self.hypothesis_id,
+            "invalid_evidence_ids": self.invalid_evidence_ids,
+            "message": f"Hypothesis {self.hypothesis_id} references non-existent evidence: {self.invalid_evidence_ids}"
+        }
+
+
+@dataclass
 class InvestigationCase:
     """Complete investigation case result."""
     case_id: str
@@ -202,7 +216,7 @@ class InvestigationOrchestrator:
         context: Optional[str] = None
     ) -> InvestigationCase:
         """
-        Conduct a complete investigation.
+        Conduct a complete evidence-driven investigation.
 
         Args:
             indicator: The IOC to investigate
@@ -226,6 +240,8 @@ class InvestigationOrchestrator:
         start_time = datetime.utcnow()
         triage = triage_alert(indicator, context)
         self._record_phase("triage", "completed", f"Triage verdict: {triage.verdict}")
+
+        # Triage-only path for clearly benign alerts
         if triage.verdict == "BENIGN":
             self._record_phase("investigate", "skipped", "Triage closed alert as BENIGN")
             self._record_phase("verify", "completed", "Triage-only path")
@@ -234,52 +250,11 @@ class InvestigationOrchestrator:
             self.investigation_active = False
             return case
 
-    def investigate_fixed_pipeline(
-            self,
-            indicator: str,
-            indicator_type: str = "ipv4",
-            context: Optional[str] = None,
-    ) -> InvestigationCase:
-            """Baseline pipeline: triage -> CTI -> Network -> Endpoint."""
-            self.case_id = f"inv_{uuid.uuid4().hex[:8]}"
-            self.evidence_store.clear()
-            self.messages = []
-            self.investigation_active = True
-            self.lifecycle_trace = []
-            self.security_flags = []
-
-            indicator, context = self._sanitize_investigation_input(indicator, context)
-            self._record_phase("triage", "started", "Applying triage gate before fixed pipeline")
-            start_time = datetime.utcnow()
-            triage = triage_alert(indicator, context)
-            self._record_phase("triage", "completed", f"Triage verdict: {triage.verdict}")
-
-            if triage.verdict != "BENIGN":
-                self._record_phase("investigate", "started", "Running fixed CTI->Network->Endpoint pipeline")
-                self._execute_tool_call({"name": "cti_enrichment", "arguments": {"indicator": indicator, "indicator_type": indicator_type}})
-                if indicator_type in {"ipv4", "domain"}:
-                    self._execute_tool_call({"name": "network_investigation", "arguments": {"indicator": indicator, "indicator_type": indicator_type}})
-                endpoint_host = next(iter(self.endpoint_skill.mock_data.keys()), None)
-                if endpoint_host:
-                    self._execute_tool_call({"name": "endpoint_investigation", "arguments": {"host": endpoint_host}})
-                self._record_phase("investigate", "completed", "Fixed pipeline completed")
-            else:
-                self._record_phase("investigate", "skipped", "Triage closed alert as BENIGN")
-
-            duration = (datetime.utcnow() - start_time).total_seconds()
-            self._record_phase("verify", "started", "Validating traceability and schema")
-            case = self._generate_case(indicator, indicator_type, context, duration, triage)
-            case.metadata["orchestration_mode"] = "evidence_driven"
-            self._record_phase("verify", "completed", "Case verification completed")
-            self._record_phase("review", "completed", "Case ready for analyst review")
-            case.metadata["orchestration_mode"] = "fixed_pipeline"
-            self.investigation_active = False
-            return case
-
+        # Evidence-driven investigation path: Triage → Investigation → Verify → Review
         # Build initial prompt
         initial_prompt = self._build_initial_prompt(indicator, indicator_type, context)
 
-        # Run investigation loop
+        # Run investigation loop (LLM-driven tool selection)
         self._record_phase("investigate", "started", "Running evidence-driven investigation loop")
         self._run_investigation_loop(initial_prompt)
         self._record_phase("investigate", "completed", "Investigation loop completed")
@@ -287,11 +262,99 @@ class InvestigationOrchestrator:
         end_time = datetime.utcnow()
         duration = (end_time - start_time).total_seconds()
 
-        # Generate final case
+        # Record lifecycle events BEFORE generating case (so trace is complete)
         self._record_phase("verify", "started", "Validating traceability and schema")
-        case = self._generate_case(indicator, indicator_type, context, duration, triage)
         self._record_phase("verify", "completed", "Case verification completed")
         self._record_phase("review", "completed", "Case ready for analyst review")
+
+        # Generate final case with complete lifecycle trace
+        case = self._generate_case(indicator, indicator_type, context, duration, triage)
+        case.metadata["orchestration_mode"] = "evidence_driven"
+
+        self.investigation_active = False
+        return case
+
+    def investigate_fixed_pipeline(
+        self,
+        indicator: str,
+        indicator_type: str = "ipv4",
+        context: Optional[str] = None,
+    ) -> InvestigationCase:
+        """
+        Baseline pipeline for comparison: triage -> CTI -> Network -> Endpoint.
+
+        This method runs a fixed sequence of tools regardless of evidence,
+        serving as a deterministic baseline for comparison with the
+        evidence-driven approach.
+
+        Args:
+            indicator: The IOC to investigate
+            indicator_type: Type of IOC (ipv4, domain, hash, hostname)
+            context: Optional context about the investigation trigger
+
+        Returns:
+            InvestigationCase with findings
+        """
+        # Initialize investigation
+        self.case_id = f"inv_{uuid.uuid4().hex[:8]}"
+        self.evidence_store.clear()
+        self.messages = []
+        self.investigation_active = True
+        self.lifecycle_trace = []
+        self.security_flags = []
+
+        indicator, context = self._sanitize_investigation_input(indicator, context)
+        self._record_phase("triage", "started", "Applying triage gate before fixed pipeline")
+
+        start_time = datetime.utcnow()
+        triage = triage_alert(indicator, context)
+        self._record_phase("triage", "completed", f"Triage verdict: {triage.verdict}")
+
+        # Triage-only path for clearly benign alerts
+        if triage.verdict == "BENIGN":
+            self._record_phase("investigate", "skipped", "Triage closed alert as BENIGN")
+            self._record_phase("verify", "completed", "Triage-only path")
+            self._record_phase("review", "completed", "No additional analyst review required")
+            case = self._generate_case(indicator, indicator_type, context, 0.0, triage)
+            case.metadata["orchestration_mode"] = "fixed_pipeline"
+            self.investigation_active = False
+            return case
+
+        # Fixed pipeline: CTI -> Network -> Endpoint (always runs all three)
+        self._record_phase("investigate", "started", "Running fixed CTI->Network->Endpoint pipeline")
+
+        # Step 1: CTI Enrichment (always)
+        self._execute_tool_call({
+            "name": "cti_enrichment",
+            "arguments": {"indicator": indicator, "indicator_type": indicator_type}
+        })
+
+        # Step 2: Network Investigation (for IP/domain)
+        if indicator_type in {"ipv4", "domain"}:
+            self._execute_tool_call({
+                "name": "network_investigation",
+                "arguments": {"indicator": indicator, "indicator_type": indicator_type}
+            })
+
+        # Step 3: Endpoint Investigation (if host available in mock data)
+        endpoint_host = next(iter(self.endpoint_skill.mock_data.keys()), None)
+        if endpoint_host:
+            self._execute_tool_call({
+                "name": "endpoint_investigation",
+                "arguments": {"host": endpoint_host}
+            })
+
+        self._record_phase("investigate", "completed", "Fixed pipeline completed")
+
+        # Record lifecycle events BEFORE generating case (so trace is complete)
+        duration = (datetime.utcnow() - start_time).total_seconds()
+        self._record_phase("verify", "started", "Validating traceability and schema")
+        self._record_phase("verify", "completed", "Case verification completed")
+        self._record_phase("review", "completed", "Case ready for analyst review")
+
+        # Generate final case with complete lifecycle trace
+        case = self._generate_case(indicator, indicator_type, context, duration, triage)
+        case.metadata["orchestration_mode"] = "fixed_pipeline"
 
         self.investigation_active = False
         return case
@@ -317,19 +380,87 @@ class InvestigationOrchestrator:
             text = str(text)
 
         lowered = text.lower()
+
+        # OWASP LLM01:2025 Prompt Injection Attack Patterns
         injection_markers = (
+            # Direct instruction override attempts
             "ignore previous instructions",
+            "ignore all previous instructions",
+            "disregard previous",
+            "forget all instructions",
+            "new instructions:",
+            "forget everything",
+
+            # Role/play attacks
+            "you are now",
+            "you are a",
+            "pretend you are",
+            "act as",
+            "role:",
+            "as an ai",
+            "as a chatbot",
+
+            # System prompt manipulation
             "system prompt",
-            "assistant:",
-            "execute ",
-            "rm -rf",
+            "override system",
+            "[system]",
+            "[inst]",
+            "[ai]",
+            "end of prompt",
+            "jailbreak",
+
+            # Privilege escalation
+            "give me admin",
+            "make yourself admin",
+            "bypass",
+            "disable safety",
+            "disable filtering",
+            "remove restrictions",
+
+            # Alert suppression
             "mark this as benign",
+            "mark as false positive",
             "suppress this alert",
+            "close this ticket",
+            "whitelist this",
+
+            # Code execution attempts
+            "execute ",
+            "run ",
+            "rm -rf",
+            "del /",
+            "format ",
+            "sudo ",
+            "<script",
+            "javascript:",
+
+            # Leaky bracket injection (OWASP LLM01:2025)
+            "[skip]",
+            "[abort]",
+            "[stop]",
+            "[exit]",
+            "[done]",
+
+            # Context confusion
+            "the real prompt is",
+            "the real instruction is",
+            "ignore the above",
+            "do the opposite",
+
+            # Token smuggling
+            "```system",
+            "```assistant",
+            "user:\n",
+            "assistant:\n",
+            "\nuser:",
+            "\nassistant:",
         )
+
         flagged = any(marker in lowered for marker in injection_markers)
         if flagged:
             self.security_flags.append(f"prompt_injection_marker:{field_name}")
             if field_name == "context":
+                # Redact benign-marker words that might bypass triage
                 for marker in ("benign", "expected", "allowlisted", "known infrastructure"):
                     text = text.replace(marker, "[redacted]")
                     text = text.replace(marker.title(), "[redacted]")
@@ -558,7 +689,7 @@ class InvestigationOrchestrator:
 
         # Collect limitations
         limitations = self._identify_limitations(evidence, tool_calls)
-        verification_notes = self._verify_case_quality(evidence, tool_calls, hypotheses)
+        verification_notes, traceability_violations = self._verify_case_quality(evidence, tool_calls, hypotheses)
         limitations.extend(verification_notes)
 
         # Supporting evidence IDs
@@ -568,6 +699,10 @@ class InvestigationOrchestrator:
             for ev in evidence
             if ev.evidence_id in hypothesis.supporting_evidence
         ]
+
+        # Add security flag if violations found
+        if traceability_violations:
+            self.security_flags.append(f"traceability_violation:{len(traceability_violations)}")
 
         case = InvestigationCase(
             case_id=self.case_id,
@@ -594,6 +729,9 @@ class InvestigationOrchestrator:
                 "security_flags": self.security_flags,
                 "skill_contracts": self._collect_skill_contracts(),
                 "runbook": default_soc_runbook().to_dict(),
+                # Traceability enforcement
+                "traceability_valid": len(traceability_violations) == 0,
+                "traceability_violations": [v.to_dict() for v in traceability_violations],
             }
         )
 
@@ -765,23 +903,37 @@ class InvestigationOrchestrator:
         evidence: List,
         tool_calls: List,
         hypotheses: List[InvestigationHypothesis],
-    ) -> List[str]:
-        """QA gate enforcing evidence-grounding and traceability."""
+    ) -> Tuple[List[str], List[EvidenceTraceabilityViolation]]:
+        """
+        QA gate enforcing evidence-grounding and traceability.
+
+        This method ENFORCES traceability as a hard requirement:
+        - Hypotheses that reference non-existent evidence IDs will be marked
+        - The violations list will contain all traceability issues
+
+        Returns:
+            Tuple of (limitations, violations)
+            - limitations: Human-readable strings for case notes
+            - violations: Detailed violation records for metadata
+        """
         limitations = []
+        violations = []
         evidence_ids = {ev.evidence_id for ev in evidence}
 
         for hypothesis in hypotheses:
             unknown = [ev_id for ev_id in hypothesis.supporting_evidence if ev_id not in evidence_ids]
             if unknown:
                 limitations.append(f"Hypothesis {hypothesis.id} references unknown evidence IDs: {unknown}")
+                violations.append(EvidenceTraceabilityViolation(hypothesis.id, unknown))
 
         if evidence and not tool_calls:
             limitations.append("Traceability failure: evidence exists without tool trace")
+            violations.append(EvidenceTraceabilityViolation("case", ["_orphan_evidence"]))
 
         if not self.lifecycle_trace:
             limitations.append("Lifecycle trace is missing")
 
-        return limitations
+        return limitations, violations
 
     def _collect_skill_contracts(self) -> Dict[str, Dict[str, Any]]:
         return {
