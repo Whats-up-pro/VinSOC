@@ -45,10 +45,16 @@ def load_scenario(scenario_path: str) -> Dict[str, Any]:
 
 def load_scenario_test_data(scenario: Dict[str, Any]) -> Dict[str, Any]:
     """Extract test data from scenario for skills."""
+    test_data = scenario.get("test_data", {})
+    indicator = scenario.get("initial_indicator", {}).get("value")
+    cti_response = test_data.get("cti_response")
+    network_response = test_data.get("network_data")
+    endpoint_response = test_data.get("endpoint_data")
+    endpoint_host = endpoint_response.get("host") if endpoint_response else None
     return {
-        "cti_mock_data": scenario.get("test_data", {}).get("cti_response", {}),
-        "network_mock_data": scenario.get("test_data", {}),
-        "endpoint_mock_data": scenario.get("test_data", {}).get("endpoint_data", {})
+        "cti_mock_data": {indicator: cti_response} if indicator and cti_response else {},
+        "network_mock_data": {indicator: network_response} if indicator and network_response else {},
+        "endpoint_mock_data": {endpoint_host: endpoint_response} if endpoint_host and endpoint_response else {},
     }
 
 
