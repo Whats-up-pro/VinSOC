@@ -103,7 +103,7 @@ Network Log Entry:
 3. Natural language interpretation disabled for log content
 4. Evidence stored raw but evaluated through schema only
 
-**Evidence**: OWASP LLM01:2025 (Indirect Prompt Injection)
+**Evidence**: OWASP LLM01:2025 (Indirect Prompt Injection); USENIX Security 2025 (Liu et al., "Make Agent Defeat Agent: Automatic Detection of Taint-Style Vulnerabilities in LLM-based Agents")
 
 ### 4.3 T3: Skill Output Manipulation
 
@@ -152,7 +152,7 @@ Analyst Input:
 3. **Citation Required**: Hypothesis must cite specific evidence IDs
 4. **Unsupported Claim Detection**: System flags claims without evidence support
 
-**Evidence**: USENIX SOUPS 2025 (LLM in IR)
+**Evidence**: USENIX SOUPS 2025 (Kramer et al., "Integrating Large Language Models into Security Incident Response")
 
 ### 4.6 T6: Incorrect Tool Selection
 
