@@ -7,13 +7,23 @@ Enriches Indicators of Compromise (IOCs) with threat intelligence:
 - File hashes (MD5, SHA1, SHA256)
 
 This skill is read-only. It queries CTI sources but does not modify anything.
+
+Data Sources:
+- ThreatFox IOC feed (default): data/cti_lookup.json
+- Mock data for testing
+- External CTI APIs (future)
 """
+import json
+import logging
 import re
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from skills.base import BaseSkill, SkillContract, SkillResult
+
+logger = logging.getLogger(__name__)
 
 
 class CTISkill(BaseSkill):
@@ -24,17 +34,83 @@ class CTISkill(BaseSkill):
     """
 
     skill_name = "cti_enrichment"
-    skill_version = "1.0.0"
+    skill_version = "1.1.0"  # Updated to 1.1.0 for ThreatFox support
 
-    def __init__(self, mock_data: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self,
+        mock_data: Optional[Dict[str, Any]] = None,
+        threatfox_path: Optional[str] = None,
+        threatfox_data: Optional[Dict[str, Any]] = None,
+    ):
         """
         Initialize CTI skill.
 
         Args:
             mock_data: Optional dict for testing. If provided, used instead of real CTI lookup.
+            threatfox_path: Optional path to ThreatFox JSON lookup file.
+                           Default: data/cti_lookup.json
+            threatfox_data: Optional pre-loaded ThreatFox data dict.
+                           Takes precedence over threatfox_path if both provided.
         """
         super().__init__()
         self.mock_data = mock_data or {}
+
+        # ThreatFox data loading
+        self.threatfox_data: Dict[str, Any] = {}
+        if threatfox_data:
+            self.threatfox_data = threatfox_data
+            logger.info(f"Loaded {len(self.threatfox_data):,} IOCs from provided ThreatFox data")
+        elif threatfox_path:
+            self._load_threatfox(threatfox_path)
+        else:
+            # Try default path
+            default_path = Path("data/cti_lookup.json")
+            if default_path.exists():
+                self._load_threatfox(str(default_path))
+
+    def _load_threatfox(self, path: str) -> None:
+        """Load ThreatFox IOC data from JSON file."""
+        logger.info(f"Loading ThreatFox data from {path}...")
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                self.threatfox_data = json.load(f)
+            logger.info(f"Loaded {len(self.threatfox_data):,} IOCs from ThreatFox")
+        except FileNotFoundError:
+            logger.warning(f"ThreatFox file not found: {path}")
+            self.threatfox_data = {}
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse ThreatFox JSON: {e}")
+            self.threatfox_data = {}
+
+    def _lookup_threatfox(self, indicator: str) -> Optional[Dict[str, Any]]:
+        """
+        Look up IOC in ThreatFox data.
+
+        Args:
+            indicator: The IOC to look up
+
+        Returns:
+            ThreatFox entry if found, None otherwise
+        """
+        # Direct match
+        if indicator in self.threatfox_data:
+            return self.threatfox_data[indicator]
+
+        # For URLs, also try without protocol
+        if indicator.startswith(("http://", "https://")):
+            stripped = indicator.split("://", 1)[1]
+            if stripped in self.threatfox_data:
+                return self.threatfox_data[stripped]
+
+        # For ip:port format, also try just the IP
+        if ":ip:port" in indicator or "." in indicator:
+            parts = indicator.replace("ip:port://", "").rsplit(":", 1)
+            if len(parts) == 2 and parts[1].isdigit():
+                ip_part = parts[0]
+                if ip_part in self.threatfox_data:
+                    return self.threatfox_data[ip_part]
+
+        return None
 
     def validate_input(self, **kwargs) -> tuple[bool, Optional[str]]:
         """Validate IOC input parameters."""
@@ -42,7 +118,9 @@ class CTISkill(BaseSkill):
             return False, "Missing required parameter: indicator"
 
         indicator = kwargs["indicator"]
-        indicator_type = kwargs.get("indicator_type", self._detect_indicator_type(indicator))
+        # Use provided type or auto-detect (don't use None explicitly provided)
+        provided_type = kwargs.get("indicator_type")
+        indicator_type = provided_type if provided_type else self._detect_indicator_type(indicator)
 
         # Validate IOC type
         valid_types = ["ipv4", "domain", "hash", "url"]
@@ -113,17 +191,81 @@ class CTISkill(BaseSkill):
             SkillResult with CTI data
         """
         indicator = kwargs["indicator"]
-        indicator_type = kwargs.get("indicator_type") or self._detect_indicator_type(indicator)
+        # Use provided type or auto-detect
+        provided_type = kwargs.get("indicator_type")
+        indicator_type = provided_type if provided_type else self._detect_indicator_type(indicator)
 
-        # Check mock data first
+        # Priority: mock_data > threatfox_data > error
         if self.mock_data:
             return self._build_result_from_mock(indicator, indicator_type)
 
-        # In production, this would call external CTI APIs
-        # For MVP, we use the mock data approach
+        # Check ThreatFox data
+        if self.threatfox_data:
+            return self._build_result_from_threatfox(indicator, indicator_type)
+
+        # No data source configured
         return SkillResult(
             success=False,
-            error="No CTI data source configured. Use mock_data parameter for testing."
+            error="No CTI data source configured. Use mock_data or threatfox_path parameter."
+        )
+
+    def _build_result_from_threatfox(
+        self, indicator: str, indicator_type: str
+    ) -> SkillResult:
+        """
+        Build CTI result from ThreatFox data.
+
+        Args:
+            indicator: The IOC value
+            indicator_type: The IOC type
+
+        Returns:
+            SkillResult with CTI data from ThreatFox
+        """
+        evidence_id = f"cti_{uuid.uuid4().hex[:8]}"
+
+        # Look up in ThreatFox
+        threatfox_entry = self._lookup_threatfox(indicator)
+
+        if not threatfox_entry:
+            # Not found in ThreatFox - return unknown
+            return SkillResult(
+                success=True,
+                data={
+                    "indicator": indicator,
+                    "indicator_type": indicator_type,
+                    "reputation": "unknown",
+                    "confidence": "low",
+                    "related_actors": [],
+                    "related_malware": [],
+                    "mitre_techniques": [],
+                    "sources": [],
+                    "observed_evidence": [
+                        {
+                            "type": "lookup_status",
+                            "value": "not_found",
+                            "context": "IOC not found in ThreatFox database",
+                        }
+                    ],
+                },
+                evidence_ids=[evidence_id],
+            )
+
+        # Return data from ThreatFox
+        return SkillResult(
+            success=True,
+            data={
+                "indicator": indicator,
+                "indicator_type": indicator_type,
+                "reputation": threatfox_entry.get("reputation", "malicious"),
+                "confidence": threatfox_entry.get("confidence", "high"),
+                "related_actors": threatfox_entry.get("related_actors", []),
+                "related_malware": threatfox_entry.get("related_malware", []),
+                "mitre_techniques": threatfox_entry.get("mitre_techniques", []),
+                "sources": threatfox_entry.get("sources", []),
+                "observed_evidence": threatfox_entry.get("observed_evidence", []),
+            },
+            evidence_ids=[evidence_id],
         )
 
     def _build_result_from_mock(self, indicator: str, indicator_type: str) -> SkillResult:
@@ -187,11 +329,12 @@ class CTISkill(BaseSkill):
         )
 
 
-# Convenience function for direct skill execution
+# Convenience functions for direct skill execution
 def check_ip_reputation(
     indicator: str,
     indicator_type: Optional[str] = None,
-    mock_data: Optional[Dict[str, Any]] = None
+    mock_data: Optional[Dict[str, Any]] = None,
+    threatfox_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Check reputation of an indicator.
@@ -200,11 +343,12 @@ def check_ip_reputation(
         indicator: The IOC to check
         indicator_type: Optional type (auto-detected if not provided)
         mock_data: Optional mock data for testing
+        threatfox_path: Optional path to ThreatFox JSON file
 
     Returns:
         Dict with CTI result
     """
-    skill = CTISkill(mock_data=mock_data)
+    skill = CTISkill(mock_data=mock_data, threatfox_path=threatfox_path)
     result = skill.execute(indicator=indicator, indicator_type=indicator_type)
 
     if not result.success:
@@ -215,23 +359,27 @@ def check_ip_reputation(
 
 def check_domain_reputation(
     domain: str,
-    mock_data: Optional[Dict[str, Any]] = None
+    mock_data: Optional[Dict[str, Any]] = None,
+    threatfox_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Check reputation of a domain."""
     return check_ip_reputation(
         indicator=domain,
         indicator_type="domain",
-        mock_data=mock_data
+        mock_data=mock_data,
+        threatfox_path=threatfox_path,
     )
 
 
 def check_hash_reputation(
     hash_val: str,
-    mock_data: Optional[Dict[str, Any]] = None
+    mock_data: Optional[Dict[str, Any]] = None,
+    threatfox_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Check reputation of a file hash."""
     return check_ip_reputation(
         indicator=hash_val,
         indicator_type="hash",
-        mock_data=mock_data
+        mock_data=mock_data,
+        threatfox_path=threatfox_path,
     )

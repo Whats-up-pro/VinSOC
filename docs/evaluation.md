@@ -190,6 +190,26 @@ FPR = False_Alerts / Benign_Cases
 
 **Target**: FPR < 20% on benign cases.
 
+## 3.6 ThreatFox Data Integration
+
+The evaluation framework uses **real threat intelligence** from ThreatFox:
+
+| Data Source | Records | Usage |
+|------------|---------|-------|
+| `data/cti_lookup.json` | 101,596 IOCs | CTI skill lookup |
+| `data/threatfox_samples.json` | 50 samples | Quick testing |
+
+**ThreatFox Integration**:
+- CTI skill loads ThreatFox JSON on initialization
+- IOCs not in ThreatFox return `reputation: unknown`
+- All ThreatFox IOCs have `reputation: malicious`
+- Confidence mapped from ThreatFox score (0-100 → low/medium/high)
+
+**Benefits**:
+- Realistic testing with actual threat data
+- No API keys or external dependencies
+- Repeatable results for benchmark comparison
+
 ## 4. Scenario-Based Benchmark
 
 ### 4.1 Scenario Categories

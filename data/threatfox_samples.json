@@ -1,0 +1,1824 @@
+{
+  "tcpcons.clampe7outback.lat": {
+    "indicator": "tcpcons.clampe7outback.lat",
+    "indicator_type": "domain",
+    "original_ioc": "tcpcons.clampe7outback.lat",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1807894",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1807894",
+      "ioc_type": "domain",
+      "first_seen": "2026-05-06 20:23:10",
+      "last_seen": "2026-06-11 10:05:43",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "threatcat_ch"
+    }
+  },
+  "fhi.uk.com": {
+    "indicator": "fhi.uk.com",
+    "indicator_type": "domain",
+    "original_ioc": "fhi.uk.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Quasar RAT"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "2026-04-14 06:05:43",
+        "reference": "https://tria.ge/260414-cgffzsaw5n"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1785535",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "C2,domain,quasar,rat,triage",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1785535",
+      "ioc_type": "domain",
+      "first_seen": "2026-04-14 06:05:39",
+      "last_seen": "2026-04-14 06:05:43",
+      "confidence_level": 100,
+      "malware_alias": "CinaRAT,QuasarRAT,Yggdrasil",
+      "reporter": "DonPasci"
+    }
+  },
+  "2bb1b024135ef7b0af3141d389530d82": {
+    "indicator": "2bb1b024135ef7b0af3141d389530d82",
+    "indicator_type": "hash",
+    "original_ioc": "2bb1b024135ef7b0af3141d389530d82",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "XWorm"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1868368",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1868368",
+      "ioc_type": "md5_hash",
+      "first_seen": "2026-08-04 16:47:39",
+      "last_seen": "nan",
+      "confidence_level": 95,
+      "malware_alias": "nan",
+      "reporter": "Grim"
+    }
+  },
+  "ukrvarta.online": {
+    "indicator": "ukrvarta.online",
+    "indicator_type": "domain",
+    "original_ioc": "ukrvarta.online",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "nan",
+        "reference": "https://cert.gov.ua/article/6288271"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1792762",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "AgingFly,APT,geo,UKR",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1792762",
+      "ioc_type": "domain",
+      "first_seen": "2026-04-16 12:14:52",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "abuse_ch"
+    }
+  },
+  "cagohufe.com": {
+    "indicator": "cagohufe.com",
+    "indicator_type": "domain",
+    "original_ioc": "cagohufe.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Cobalt Strike"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "2026-09-17 15:22:43",
+        "reference": "https://threatview.io/Downloads/High-Confidence-CobaltstrikeC2_platforms.txt"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1063836",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "CobaltStrike,threatview-io",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1063836",
+      "ioc_type": "domain",
+      "first_seen": "2022-12-30 19:48:10",
+      "last_seen": "2026-09-17 15:22:43",
+      "confidence_level": 75,
+      "malware_alias": "Agentemis,BEACON,CobaltStrike,cobeacon",
+      "reporter": "abuse_ch"
+    }
+  },
+  "za7fmrh-63387.portmap.host": {
+    "indicator": "za7fmrh-63387.portmap.host",
+    "indicator_type": "domain",
+    "original_ioc": "za7fmrh-63387.portmap.host",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "XWorm"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1917694",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "c2,xworm",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1917694",
+      "ioc_type": "domain",
+      "first_seen": "2026-09-14 11:55:51",
+      "last_seen": "nan",
+      "confidence_level": 50,
+      "malware_alias": "nan",
+      "reporter": "juroots"
+    }
+  },
+  "tcp-con.8dorexin.surf": {
+    "indicator": "tcp-con.8dorexin.surf",
+    "indicator_type": "domain",
+    "original_ioc": "tcp-con.8dorexin.surf",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1807397",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "6May2026,ClearFake,Commandline,Windows",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1807397",
+      "ioc_type": "domain",
+      "first_seen": "2026-05-06 02:27:13",
+      "last_seen": "2026-05-06 02:28:01",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "Gi7w0rm"
+    }
+  },
+  "https://nirmalrollingshutter.com/": {
+    "indicator": "https://nirmalrollingshutter.com/",
+    "indicator_type": "url",
+    "original_ioc": "https://nirmalrollingshutter.com/",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "nan",
+        "reference": "https://clickfix.carsonww.com/domains/nirmalrollingshutter.com"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1887568",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClickFix",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1887568",
+      "ioc_type": "url",
+      "first_seen": "2026-08-25 18:00:39",
+      "last_seen": "nan",
+      "confidence_level": 90,
+      "malware_alias": "nan",
+      "reporter": "CarsonWilliams"
+    }
+  },
+  "38.54.105.102": {
+    "indicator": "38.54.105.102",
+    "indicator_type": "ipv4",
+    "original_ioc": "38.54.105.102:443",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Jackskid"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "nan",
+        "reference": "https://github.com/deepfield/public-research/tree/main/jackskid"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1922426",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "botnet,ddos,jackskid,mirai,rctea",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1922426",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-09-17 06:41:27",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "RCtea",
+      "reporter": "deepfield"
+    }
+  },
+  "121.37.200.35": {
+    "indicator": "121.37.200.35",
+    "indicator_type": "ipv4",
+    "original_ioc": "121.37.200.35:8080",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Cobalt Strike"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1818330",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "Agentemis,BEACON,Cobalt Strike,CobaltStrike,cobeacon",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1818330",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-05-25 12:33:04",
+      "last_seen": "2026-06-02 13:56:36",
+      "confidence_level": 50,
+      "malware_alias": "Agentemis,BEACON,CobaltStrike,cobeacon",
+      "reporter": "whoamix302"
+    }
+  },
+  "84a7b7fc20160ebeff25b74bba7066723a72b413": {
+    "indicator": "84a7b7fc20160ebeff25b74bba7066723a72b413",
+    "indicator_type": "hash",
+    "original_ioc": "84a7b7fc20160ebeff25b74bba7066723a72b413",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "WannaCryptor"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1915875",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1915875",
+      "ioc_type": "sha1_hash",
+      "first_seen": "2026-09-12 15:32:34",
+      "last_seen": "2026-09-13 18:51:36",
+      "confidence_level": 95,
+      "malware_alias": "Wana Decrypt0r,WannaCry,WannaCrypt,Wcry",
+      "reporter": "Grim"
+    }
+  },
+  "zipark.goldembr0idery.lat": {
+    "indicator": "zipark.goldembr0idery.lat",
+    "indicator_type": "domain",
+    "original_ioc": "zipark.goldembr0idery.lat",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1806096",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1806096",
+      "ioc_type": "domain",
+      "first_seen": "2026-05-04 18:06:37",
+      "last_seen": "2026-05-04 18:06:45",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "http://172.86.109.6:8888/wraith/wraith_beacon.exe": {
+    "indicator": "http://172.86.109.6:8888/wraith/wraith_beacon.exe",
+    "indicator_type": "url",
+    "original_ioc": "http://172.86.109.6:8888/wraith/wraith_beacon.exe",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1903949",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "whack.sh",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1903949",
+      "ioc_type": "url",
+      "first_seen": "2026-09-08 05:11:57",
+      "last_seen": "nan",
+      "confidence_level": 85,
+      "malware_alias": "nan",
+      "reporter": "whack_sh"
+    }
+  },
+  "1ab28c7288a670a34392f3652280e4167bff3bf5e316e5e355e5906a481b3c17": {
+    "indicator": "1ab28c7288a670a34392f3652280e4167bff3bf5e316e5e355e5906a481b3c17",
+    "indicator_type": "hash",
+    "original_ioc": "1ab28c7288a670a34392f3652280e4167bff3bf5e316e5e355e5906a481b3c17",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1839687",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake,ClickFix,EtherHiding",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1839687",
+      "ioc_type": "sha256_hash",
+      "first_seen": "2026-06-29 13:46:49",
+      "last_seen": "nan",
+      "confidence_level": 90,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "134.209.9.147": {
+    "indicator": "134.209.9.147",
+    "indicator_type": "ipv4",
+    "original_ioc": "134.209.9.147:443",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "2026-08-18 12:01:12",
+        "reference": "https://www.shodan.io/host/134.209.9.147"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1880425",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1880425",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-08-18 11:59:18",
+      "last_seen": "2026-08-18 12:01:12",
+      "confidence_level": 50,
+      "malware_alias": "nan",
+      "reporter": "nan"
+    }
+  },
+  "http://onlinehueplet.com/77_1.exe": {
+    "indicator": "http://onlinehueplet.com/77_1.exe",
+    "indicator_type": "url",
+    "original_ioc": "http://onlinehueplet.com/77_1.exe",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "GCleaner"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1824584",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1824584",
+      "ioc_type": "url",
+      "first_seen": "2026-06-08 06:36:30",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "uwucutecatgirl"
+    }
+  },
+  "dr80gbyv.spectrumprospera.in.net": {
+    "indicator": "dr80gbyv.spectrumprospera.in.net",
+    "indicator_type": "domain",
+    "original_ioc": "dr80gbyv.spectrumprospera.in.net",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1778261",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1778261",
+      "ioc_type": "domain",
+      "first_seen": "2026-03-29 05:26:50",
+      "last_seen": "2026-03-29 05:28:01",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "threatcat_ch"
+    }
+  },
+  "178.16.55.72": {
+    "indicator": "178.16.55.72",
+    "indicator_type": "ipv4",
+    "original_ioc": "178.16.55.72:80",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Stealc"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1793271",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "Stealc",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1793271",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-04-17 09:43:40",
+      "last_seen": "2026-05-04 15:42:49",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "whoamix302"
+    }
+  },
+  "zhrmhqs.patrickschrader.com": {
+    "indicator": "zhrmhqs.patrickschrader.com",
+    "indicator_type": "domain",
+    "original_ioc": "zhrmhqs.patrickschrader.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1868325",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake,win-0x4679,windows",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1868325",
+      "ioc_type": "domain",
+      "first_seen": "2026-08-04 13:59:31",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "34.79.100.34": {
+    "indicator": "34.79.100.34",
+    "indicator_type": "ipv4",
+    "original_ioc": "34.79.100.34:3307",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Sliver"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1811249",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "396982,c2,censys,sliver",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1811249",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-05-12 14:50:16",
+      "last_seen": "nan",
+      "confidence_level": 50,
+      "malware_alias": "nan",
+      "reporter": "sojubear"
+    }
+  },
+  "cdce6c8c32f041f574161f7e2edfd398": {
+    "indicator": "cdce6c8c32f041f574161f7e2edfd398",
+    "indicator_type": "hash",
+    "original_ioc": "cdce6c8c32f041f574161f7e2edfd398",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "ZHtrap"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1838921",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1838921",
+      "ioc_type": "md5_hash",
+      "first_seen": "2026-06-29 01:22:58",
+      "last_seen": "nan",
+      "confidence_level": 95,
+      "malware_alias": "nan",
+      "reporter": "Grim"
+    }
+  },
+  "sysops.digitalcloudsys.lat": {
+    "indicator": "sysops.digitalcloudsys.lat",
+    "indicator_type": "domain",
+    "original_ioc": "sysops.digitalcloudsys.lat",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1806754",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1806754",
+      "ioc_type": "domain",
+      "first_seen": "2026-05-05 06:45:22",
+      "last_seen": "2026-05-05 06:45:45",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "threatcat_ch"
+    }
+  },
+  "185.9.17.210": {
+    "indicator": "185.9.17.210",
+    "indicator_type": "ipv4",
+    "original_ioc": "185.9.17.210:2083",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Cobalt Strike"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1904066",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "9009,c2,censys,cobalt strike",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1904066",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-09-08 05:04:54",
+      "last_seen": "nan",
+      "confidence_level": 50,
+      "malware_alias": "Agentemis,BEACON,CobaltStrike,cobeacon",
+      "reporter": "sojubear"
+    }
+  },
+  "46.225.160.243": {
+    "indicator": "46.225.160.243",
+    "indicator_type": "ipv4",
+    "original_ioc": "46.225.160.243:8443",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Havoc"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1852890",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "drb-ra,Havoc",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1852890",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-07-17 19:45:49",
+      "last_seen": "2026-08-19 08:46:19",
+      "confidence_level": 75,
+      "malware_alias": "Havokiz",
+      "reporter": "abuse_ch"
+    }
+  },
+  "f2bcdcb1db9ea4088d89f96283d54e0f": {
+    "indicator": "f2bcdcb1db9ea4088d89f96283d54e0f",
+    "indicator_type": "hash",
+    "original_ioc": "f2bcdcb1db9ea4088d89f96283d54e0f",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "Vidar"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1856510",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1856510",
+      "ioc_type": "md5_hash",
+      "first_seen": "2026-07-24 01:06:10",
+      "last_seen": "nan",
+      "confidence_level": 95,
+      "malware_alias": "nan",
+      "reporter": "Grim"
+    }
+  },
+  "jmid.sk": {
+    "indicator": "jmid.sk",
+    "indicator_type": "domain",
+    "original_ioc": "jmid.sk",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "Unknown Loader"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1904800",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "etherhiding,Sepolia",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1904800",
+      "ioc_type": "domain",
+      "first_seen": "2026-09-08 06:07:52",
+      "last_seen": "2026-09-08 11:07:12",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "varysz"
+    }
+  },
+  "206.189.1.112": {
+    "indicator": "206.189.1.112",
+    "indicator_type": "ipv4",
+    "original_ioc": "206.189.1.112:31337",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Sliver"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "2026-03-31 07:55:19",
+        "reference": "https://www.shodan.io/host/206.189.1.112"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1559795",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1559795",
+      "ioc_type": "ip:port",
+      "first_seen": "2025-07-23 13:38:23",
+      "last_seen": "2026-03-31 07:55:19",
+      "confidence_level": 50,
+      "malware_alias": "nan",
+      "reporter": "nan"
+    }
+  },
+  "5e58a0e0b4ab711349370567728293cf6e732870aa9ea9def6ae5b59ca7322c3": {
+    "indicator": "5e58a0e0b4ab711349370567728293cf6e732870aa9ea9def6ae5b59ca7322c3",
+    "indicator_type": "hash",
+    "original_ioc": "5e58a0e0b4ab711349370567728293cf6e732870aa9ea9def6ae5b59ca7322c3",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "SalatStealer"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1866179",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1866179",
+      "ioc_type": "sha256_hash",
+      "first_seen": "2026-07-31 12:11:52",
+      "last_seen": "nan",
+      "confidence_level": 95,
+      "malware_alias": "nan",
+      "reporter": "Grim"
+    }
+  },
+  "hirjnqvagnfswonyxw.web-goldalign.com": {
+    "indicator": "hirjnqvagnfswonyxw.web-goldalign.com",
+    "indicator_type": "domain",
+    "original_ioc": "hirjnqvagnfswonyxw.web-goldalign.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1873762",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake,win-0x1ca9,windows",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1873762",
+      "ioc_type": "domain",
+      "first_seen": "2026-08-13 15:18:52",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "dollarswithdon.com": {
+    "indicator": "dollarswithdon.com",
+    "indicator_type": "domain",
+    "original_ioc": "dollarswithdon.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "Unknown Loader"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1889982",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "etherhiding,Sepolia",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1889982",
+      "ioc_type": "domain",
+      "first_seen": "2026-08-28 10:48:11",
+      "last_seen": "2026-09-08 06:06:09",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "varysz"
+    }
+  },
+  "basic-junior.com": {
+    "indicator": "basic-junior.com",
+    "indicator_type": "domain",
+    "original_ioc": "basic-junior.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1894362",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake,ClickFix,EtherHiding",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1894362",
+      "ioc_type": "domain",
+      "first_seen": "2026-09-04 16:25:07",
+      "last_seen": "nan",
+      "confidence_level": 90,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "17601dca3e65a91e23ca9e18f810b36a49af7105": {
+    "indicator": "17601dca3e65a91e23ca9e18f810b36a49af7105",
+    "indicator_type": "hash",
+    "original_ioc": "17601dca3e65a91e23ca9e18f810b36a49af7105",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "DarkMegi"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1866856",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1866856",
+      "ioc_type": "sha1_hash",
+      "first_seen": "2026-08-01 15:26:08",
+      "last_seen": "nan",
+      "confidence_level": 95,
+      "malware_alias": "nan",
+      "reporter": "Grim"
+    }
+  },
+  "manikandan83.mysynology.net": {
+    "indicator": "manikandan83.mysynology.net",
+    "indicator_type": "domain",
+    "original_ioc": "manikandan83.mysynology.net",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "AsyncRAT"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1889189",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1889189",
+      "ioc_type": "domain",
+      "first_seen": "2026-08-27 09:55:33",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "proxylife"
+    }
+  },
+  "http://195.201.194.107:8010/api/validate/": {
+    "indicator": "http://195.201.194.107:8010/api/validate/",
+    "indicator_type": "url",
+    "original_ioc": "http://195.201.194.107:8010/api/validate/",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "nan",
+        "reference": "https://x.com/abh1sek/status/2044260573324685605"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1792046",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "js-logger-pack",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1792046",
+      "ioc_type": "url",
+      "first_seen": "2026-04-15 12:48:45",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "abuse_ch"
+    }
+  },
+  "maevevent.com": {
+    "indicator": "maevevent.com",
+    "indicator_type": "domain",
+    "original_ioc": "maevevent.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "Unknown Loader"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1904891",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "etherhiding,Sepolia",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1904891",
+      "ioc_type": "domain",
+      "first_seen": "2026-09-08 06:08:00",
+      "last_seen": "2026-09-08 12:57:50",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "varysz"
+    }
+  },
+  "bin.softwincli.pics": {
+    "indicator": "bin.softwincli.pics",
+    "indicator_type": "domain",
+    "original_ioc": "bin.softwincli.pics",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1809488",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1809488",
+      "ioc_type": "domain",
+      "first_seen": "2026-05-09 08:07:24",
+      "last_seen": "2026-05-09 08:07:45",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "threatcat_ch"
+    }
+  },
+  "hqwgki.habbofutbol.com": {
+    "indicator": "hqwgki.habbofutbol.com",
+    "indicator_type": "domain",
+    "original_ioc": "hqwgki.habbofutbol.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1871444",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake,win-0x0cd5,windows",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1871444",
+      "ioc_type": "domain",
+      "first_seen": "2026-08-10 01:13:27",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "54.36.182.0": {
+    "indicator": "54.36.182.0",
+    "indicator_type": "ipv4",
+    "original_ioc": "54.36.182.0:3333",
+    "reputation": "malicious",
+    "confidence": "medium",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "nan",
+        "reference": "https://www.shodan.io/host/54.36.182.0"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1775644",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1775644",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-03-25 16:17:56",
+      "last_seen": "nan",
+      "confidence_level": 50,
+      "malware_alias": "nan",
+      "reporter": "nan"
+    }
+  },
+  "c3ca298f41914022b0e3afc68f91a55db401234372ac98baf201472d79b02327": {
+    "indicator": "c3ca298f41914022b0e3afc68f91a55db401234372ac98baf201472d79b02327",
+    "indicator_type": "hash",
+    "original_ioc": "c3ca298f41914022b0e3afc68f91a55db401234372ac98baf201472d79b02327",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "AsyncRAT"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "nan",
+        "reference": "https://github.com/TheRavenFile/IOC/blob/main/AsyncRAT"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1910407",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "asyncrat,rat",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1910407",
+      "ioc_type": "sha256_hash",
+      "first_seen": "2026-09-10 15:39:40",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "TheRavenFile"
+    }
+  },
+  "http://144.48.124.92:8888/supershell/login/": {
+    "indicator": "http://144.48.124.92:8888/supershell/login/",
+    "indicator_type": "url",
+    "original_ioc": "http://144.48.124.92:8888/supershell/login/",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Unknown malware"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1809508",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "AS132839,POWER LINE DATACENTER,supershell",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1809508",
+      "ioc_type": "url",
+      "first_seen": "2026-05-10 18:38:51",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "antiphishorg"
+    }
+  },
+  "208.87.204.23": {
+    "indicator": "208.87.204.23",
+    "indicator_type": "ipv4",
+    "original_ioc": "208.87.204.23:60578",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "VShell"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "2026-04-15 12:40:42",
+        "reference": "https://www.nviso.eu/blog"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1632166",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "C2,NVISO,VShell",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1632166",
+      "ioc_type": "ip:port",
+      "first_seen": "2025-11-03 12:09:38",
+      "last_seen": "2026-04-15 12:40:42",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "0xThiebaut"
+    }
+  },
+  "www.caffechirico.com": {
+    "indicator": "www.caffechirico.com",
+    "indicator_type": "domain",
+    "original_ioc": "www.caffechirico.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "IClickFix"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1883309",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClickFix,etherhiding,nochain",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1883309",
+      "ioc_type": "domain",
+      "first_seen": "2026-08-20 18:13:28",
+      "last_seen": "2026-09-11 23:27:29",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "varysz"
+    }
+  },
+  "luatdainam.com": {
+    "indicator": "luatdainam.com",
+    "indicator_type": "domain",
+    "original_ioc": "luatdainam.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "Unknown Loader"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1904880",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "etherhiding,Sepolia",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1904880",
+      "ioc_type": "domain",
+      "first_seen": "2026-09-08 06:07:59",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "varysz"
+    }
+  },
+  "cloud-safe.cfd": {
+    "indicator": "cloud-safe.cfd",
+    "indicator_type": "domain",
+    "original_ioc": "cloud-safe.cfd",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Vidar"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1817510",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClickFix,ErrTraffic,Vidar",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1817510",
+      "ioc_type": "domain",
+      "first_seen": "2026-05-23 08:58:44",
+      "last_seen": "2026-07-31 16:39:37",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "varysz"
+    }
+  },
+  "https://135.181.224.74/": {
+    "indicator": "https://135.181.224.74/",
+    "indicator_type": "url",
+    "original_ioc": "https://135.181.224.74/",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Vidar"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1824959",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "Vidar",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1824959",
+      "ioc_type": "url",
+      "first_seen": "2026-06-08 09:51:52",
+      "last_seen": "2026-06-09 18:37:30",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "crep1x"
+    }
+  },
+  "120.79.89.234": {
+    "indicator": "120.79.89.234",
+    "indicator_type": "ipv4",
+    "original_ioc": "120.79.89.234:2404",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Remcos"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [
+      {
+        "name": "ThreatFox",
+        "last_updated": "2026-03-31 07:45:14",
+        "reference": "https://search.censys.io/hosts/120.79.89.234"
+      }
+    ],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1324138",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ALIBABA-CN-NET,AS37963,C2,censys,RAT",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1324138",
+      "ioc_type": "ip:port",
+      "first_seen": "2024-09-13 04:00:29",
+      "last_seen": "2026-03-31 07:45:14",
+      "confidence_level": 100,
+      "malware_alias": "RemcosRAT,Remvio,Socmer",
+      "reporter": "DonPasci"
+    }
+  },
+  "wupvgbt.prairiefurnitureshop.com": {
+    "indicator": "wupvgbt.prairiefurnitureshop.com",
+    "indicator_type": "domain",
+    "original_ioc": "wupvgbt.prairiefurnitureshop.com",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload_delivery",
+    "related_malware": [
+      "ClearFake"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1863419",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "ClearFake,win-0x4679,windows",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1863419",
+      "ioc_type": "domain",
+      "first_seen": "2026-07-29 14:24:49",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "anonymous"
+    }
+  },
+  "46.224.87.76": {
+    "indicator": "46.224.87.76",
+    "indicator_type": "ipv4",
+    "original_ioc": "46.224.87.76:443",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "Vidar"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1891780",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "Vidar",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1891780",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-08-31 08:35:39",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "nan",
+      "reporter": "crep1x"
+    }
+  },
+  "137.220.225.117": {
+    "indicator": "137.220.225.117",
+    "indicator_type": "ipv4",
+    "original_ioc": "137.220.225.117:22011",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "botnet_cc",
+    "related_malware": [
+      "ValleyRAT"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1804670",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "RAT,ValleyRAT",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1804670",
+      "ioc_type": "ip:port",
+      "first_seen": "2026-05-02 07:15:36",
+      "last_seen": "nan",
+      "confidence_level": 100,
+      "malware_alias": "Winos",
+      "reporter": "abuse_ch"
+    }
+  },
+  "eee7db42470f6c58dc1e696ee937e87bd72f0cabe8df566021a79880d288e370": {
+    "indicator": "eee7db42470f6c58dc1e696ee937e87bd72f0cabe8df566021a79880d288e370",
+    "indicator_type": "hash",
+    "original_ioc": "eee7db42470f6c58dc1e696ee937e87bd72f0cabe8df566021a79880d288e370",
+    "reputation": "malicious",
+    "confidence": "high",
+    "threat_type": "payload",
+    "related_malware": [
+      "ValleyRAT"
+    ],
+    "related_actors": [],
+    "mitre_techniques": [],
+    "sources": [],
+    "observed_evidence": [
+      {
+        "type": "threatfox_ioc_id",
+        "value": "1852623",
+        "context": "ThreatFox IOC identifier"
+      },
+      {
+        "type": "tags",
+        "value": "nan",
+        "context": "ThreatFox tags"
+      }
+    ],
+    "_raw": {
+      "ioc_id": "1852623",
+      "ioc_type": "sha256_hash",
+      "first_seen": "2026-07-16 19:26:20",
+      "last_seen": "nan",
+      "confidence_level": 95,
+      "malware_alias": "Winos",
+      "reporter": "Grim"
+    }
+  }
+}
