@@ -45,3 +45,11 @@ htmlcov/
 .env
 .env.local
 *.log
+
+# Large data files (download from ThreatFox or run scripts)
+data/full.csv
+data/full.csv.bak
+data/full.parquet
+data/cti_lookup.json
+data/threatfox_clean.csv
+*.zip
