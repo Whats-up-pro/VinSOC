@@ -234,9 +234,10 @@ Investigation scope only.
 │    - URL (if implemented)                               │
 ├────────────────────────────────────────────────────────┤
 │  Data Sources:                                         │
-│    - External CTI/reputation APIs                       │
-│    - Internal threat intel database                     │
-│    - STIX bundle data                                   │
+│    - ThreatFox IOC feed (101k+ real IOCs)            │  ← Primary
+│    - External CTI/reputation APIs                       │  ← Future
+│    - Internal threat intel database                     │  ← Future
+│    - STIX bundle data                                   │  ← Future
 ├────────────────────────────────────────────────────────┤
 │  Output Schema: CTIResult                                │
 │    - Reputation (benign/suspicious/malicious/unknown)   │
