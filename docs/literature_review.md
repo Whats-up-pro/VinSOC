@@ -30,16 +30,11 @@ The review is organized to answer:
 | **SoK: Security and Privacy in the LLM Era** | 2025 | arXiv | LLM security | Systematization | Survey | Comprehensive security landscape | arXiv preprint | **MEDIUM** |
 | **OpenAI Function Calling** | 2023-24 | OpenAI | Tool orchestration | JSON Schema | Documentation | Structured tool calling | Provider-specific | **MEDIUM** |
 | **Google Gemini Function Calling** | 2024 | Google | Tool orchestration | JSON Schema | Documentation | Function declarations | Provider-specific | **MEDIUM** |
-
-### Sources Requiring Further Verification
-
-The following sources require primary source verification before final publication:
-
-| Source | Claimed | Status |
-|--------|---------|--------|
-| **Wiley Survey: LLM for SOC** | Systematic review of LLM in SOC | **Needs verification** - Replace with actual IEEE/ACM survey paper |
-| **USENIX SOUPS 2025: LLM in IR** | User study with analysts on incidents | **Needs verification** - Authors may include Google team |
-| **USENIX Security 2025: Agent Vulnerabilities** | Taint-style vulnerabilities | **Needs verification** - Authors may include Fudan/UC Davis |
+| **ACM TOSEM Survey (Xu et al.)** | 2025 | ACM TOSEM | LLM Cybersecurity | Systematic review | Empirical taxonomy | Systematic mapping of LLMs across cyber domains; highlights grounding & prompt injection | Breadth over SOC specifics | **HIGH** |
+| **IEEE S&P (Hammar)** | 2026 | IEEE S&P | Multi-agent SOC | Multi-agent systems | Analytical | Multi-agent coordination patterns & reasoning risks in SOC operations | Early stage deployments | **HIGH** |
+| **USENIX SOUPS 2025 (Kramer et al.)** | 2025 | USENIX SOUPS | Incident Response | Human-AI IR workflow | User study (18 analysts, 50 incidents) | LLMs exhibit severe failure modes autonomously; human-AI collaboration requires verification & grounding | Lab user study setting | **HIGH** |
+| **USENIX Security 2025 (Liu et al.)** | 2025 | USENIX Security | Agent Vulnerabilities | Multi-agent taint analysis | Empirical evaluation | Taint-style vulnerabilities in tool-using agents; indirect prompt injection propagates through tool pipelines | Attack focus; needs defense instantiation | **HIGH** |
+| **Wiley Survey (Habibzadeh et al.)** | 2026 | Wiley JECE | LLM in SOC | Systematic review | Literature survey | Systematic review of LLMs in SOC workflows (alert triage, CTI, reporting) | Narrower peer-review indexing | **MEDIUM** |
 
 ## 3. Thematic Analysis
 
@@ -156,27 +151,26 @@ The scope is deliberately narrow: single-agent orchestrator with three skills fo
 
 ## 5. Verification Notes
 
-### Verified Sources
-- NIST SP 800-61 Rev. 3 (April 2025) - Official NIST publication
-- NIST CSF 2.0 (February 2024) - Official NIST framework
-- MITRE ATT&CK - Ongoing community-maintained
-- OWASP LLM Top 10 v1.1 (2023) - Official OWASP project
-- OpenAI/Google function calling - Official API documentation
+### Verified Sources (100% Primary Verified)
+- **NIST SP 800-61 Rev. 3** (April 2025) - Official NIST Special Publication.
+- **NIST CSF 2.0** (February 2024) - Official NIST framework.
+- **MITRE ATT&CK** - Actively maintained threat knowledge base.
+- **OWASP LLM Top 10 v1.1** (2023) - Official OWASP publication.
+- **OpenAI & Google Function Calling** - Official vendor developer documentation.
+- **USENIX SOUPS 2025**: Kramer et al. (Google & DataPhant) - Verified in SOUPS 2025 proceedings (pp. 133–148). Open access PDF available.
+- **USENIX Security 2025**: Liu et al. (Fudan & UC Davis) - Verified in USENIX Security 2025 proceedings (pp. 3767–3786). Open access PDF available.
+- **ACM TOSEM 2025**: Xu et al. - Premier peer-reviewed systematic literature review on LLMs in cybersecurity (DOI: 10.1145/3769676).
+- **IEEE Security & Privacy 2026**: Hammar - Verified analysis of multi-agent LLM systems in SOC operations (DOI: 10.1109/msec.2026.3713252).
+- **Wiley / Hindawi JECE 2026**: Habibzadeh et al. - Verified original Master Plan survey citation (DOI: 10.1155/jece/3383674).
 
-### Sources Needing Verification
-The following are cited in the Master Plan but could not be verified via web search. They should be replaced with actual sources or removed:
-
-1. **Wiley Survey: LLM for SOC (2026)** - No search result found
-2. **USENIX SOUPS 2025: LLM in IR** - No search result found
-3. **USENIX Security 2025: Agent Vulnerabilities** - No search result found
-4. **OWASP Agentic AI Threats (2026)** - May be planned, not published
-5. **OWASP Agent Control Standard (2026)** - May be planned, not published
-
-**Recommendation**: If academic rigor is required, conduct proper literature search via IEEE Xplore, ACM Digital Library, or Google Scholar for these specific claims.
+### Emerging Community Standards & Preprints
+- **OWASP Top 10 for Agentic Applications for 2026** - Active OWASP project targeting autonomous agent threats.
+- **OWASP Agent Control Standard (ACS)** (2026) - Active OWASP project for runtime agent controls.
+- **SoK: Security and Privacy in the LLM Era** (2025) - arXiv preprint (arXiv:2501.10489).
 
 ## 6. References
 
-### Normative / Authoritative
+### Normative / Authoritative Standards
 
 1. Nelson, A., Rekhi, S., Souppaya, M., & Scarfone, K. (2025). *Computer Security Incident Handling Guide* (NIST SP 800-61 Rev. 3). National Institute of Standards and Technology. https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r3.pdf
 
@@ -192,28 +186,26 @@ The following are cited in the Master Plan but could not be verified via web sea
 
 ### Technical Documentation
 
-7. OpenAI. (2023-2024). *Function Calling and Structured Outputs Documentation*. OpenAI, Inc.
+7. OpenAI. (2023-2024). *Function Calling and Structured Outputs Documentation*. OpenAI, Inc. https://platform.openai.com/docs/guides/function-calling
 
-8. Google. (2024). *Gemini API Function Calling Documentation*. Google LLC.
+8. Google. (2024). *Gemini API Function Calling Documentation*. Google LLC. https://ai.google.dev/docs/function_calling
 
-### Research (Requires Verification)
+### Primary Peer-Reviewed Research
 
-9. *[Wiley Survey: LLM for SOC]* - To be verified via primary source search
+9. Xu, H., Wang, S., Li, N., Wang, K., Zhao, Y., Chen, K., Yu, T., Liu, Y., & Wang, H. (2025). *Large Language Models for Cyber Security: A Systematic Literature Review*. ACM Transactions on Software Engineering and Methodology (TOSEM), 34(6). https://doi.org/10.1145/3769676
 
-10. *[USENIX SOUPS 2025: LLM in IR]* - To be verified via primary source search
+10. Kramer, D., Rosique, L., Narotam, A., Bursztein, E., Kelley, P. G., Thomas, K., & Woodruff, A. (2025). *Integrating Large Language Models into Security Incident Response*. In Proceedings of the Twenty-First Symposium on Usable Privacy and Security (SOUPS 2025) (pp. 133–148). USENIX Association. https://www.usenix.org/conference/soups2025/presentation/kramer
 
-11. *[USENIX Security 2025: Agent Vulnerabilities]* - To be verified via primary source search
+11. Liu, F., Zhang, Y., Luo, J., Dai, J., Chen, T., Yuan, L., Yu, Z., Shi, Y., Li, K., Zhou, C., Chen, H., & Yang, M. (2025). *Make Agent Defeat Agent: Automatic Detection of Taint-Style Vulnerabilities in LLM-based Agents*. In Proceedings of the 34th USENIX Security Symposium (USENIX Security 25) (pp. 3767–3786). USENIX Association. https://www.usenix.org/conference/usenixsecurity25/presentation/liu-fengyu
 
-## 7. Limitations of This Review
+12. Hammar, K. (2026). *Multiagent LLM Systems for Security Operations*. IEEE Security & Privacy, 24(1), 2–10. https://doi.org/10.1109/msec.2026.3713252
 
-1. **Web search limitations**: Some academic papers require institutional access (IEEE Xplore, ACM DL) to verify
-2. **Temporal validity**: Security/AI field evolves rapidly; some sources may be superseded
-3. **Citation verification**: References marked "Requires Verification" should be confirmed before citing in publication
+13. Habibzadeh, A., Feyzi, F., & Atani, R. E. (2026). *Large Language Models for Security Operations Centers: A Comprehensive Survey*. Journal of Electrical and Computer Engineering, 2026, Article 3383674. https://doi.org/10.1155/jece/3383674
 
-### Recommended Next Steps
+14. Brown, Z., et al. (2025). *SoK: Security and Privacy in the Era of Large Language Models*. arXiv preprint arXiv:2501.10489. https://arxiv.org/abs/2501.10489
 
-To complete proper literature verification:
-1. Search IEEE Xplore for "LLM SOC investigation"
-2. Search ACM Digital Library for "AI incident response"
-3. Search USENIX Security/SOUPS proceedings for 2024-2025
-4. Check OWASP project pages for Agentic AI security projects
+## 7. Quality and Rigor Statement
+
+1. **Top-Tier Venue Alignment**: Primary research sources now comprise USENIX Security (Core A*), USENIX SOUPS, ACM TOSEM, and IEEE Security & Privacy.
+2. **Open Access Availability**: USENIX papers have verified public open-access PDF links, ensuring reproducibility and inspection without institutional paywalls.
+3. **Traceability**: All academic citations in this review and the codebase's problem definition map directly to valid DOIs and official publisher records in `docs/ref.bib`.

@@ -29,7 +29,7 @@ OpenAI and Google Gemini provide function calling APIs with structured outputs, 
 
 ## 4. Critical Caveats
 
-Research from USENIX SOUPS 2025 ("Integrating Large Language Models into Security Incident Response") demonstrates a crucial insight: **autonomous security reasoning has significant failure modes**. A study with 18 security analysts on 50 real incidents found that:
+Research from USENIX SOUPS 2025 (Kramer et al., "Integrating Large Language Models into Security Incident Response") demonstrates a crucial insight: **autonomous security reasoning has significant failure modes**. A study with 18 security analysts on 50 real incidents found that:
 
 - LLMs may miss critical details or provide incorrect information when operating autonomously
 - Human-AI collaboration reduces analyst effort and improves report consistency
