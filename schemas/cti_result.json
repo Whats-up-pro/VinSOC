@@ -3,26 +3,49 @@
   "title": "CTIResult",
   "description": "Schema for Cyber Threat Intelligence enrichment results",
   "type": "object",
-  "required": ["indicator", "indicator_type", "reputation", "confidence"],
+  "required": [
+    "indicator",
+    "indicator_type",
+    "reputation",
+    "confidence"
+  ],
   "properties": {
     "indicator": {
       "type": "string",
       "description": "The original IOC value that was enriched",
-      "examples": ["192.168.1.100", "malware.example.com", "d41d8cd98f00b204e9800998ecf8427e"]
+      "examples": [
+        "192.168.1.100",
+        "malware.example.com",
+        "d41d8cd98f00b204e9800998ecf8427e"
+      ]
     },
     "indicator_type": {
       "type": "string",
-      "enum": ["ipv4", "domain", "hash", "url"],
+      "enum": [
+        "ipv4",
+        "domain",
+        "hash",
+        "url"
+      ],
       "description": "The type of indicator"
     },
     "reputation": {
       "type": "string",
-      "enum": ["benign", "suspicious", "malicious", "unknown"],
+      "enum": [
+        "benign",
+        "suspicious",
+        "malicious",
+        "unknown"
+      ],
       "description": "Reputation assessment from CTI sources"
     },
     "confidence": {
       "type": "string",
-      "enum": ["low", "medium", "high"],
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
       "description": "Confidence level in the reputation assessment"
     },
     "related_actors": {
@@ -60,7 +83,10 @@
             }
           }
         },
-        "required": ["technique_id", "technique_name"]
+        "required": [
+          "technique_id",
+          "technique_name"
+        ]
       },
       "description": "MITRE ATT&CK techniques associated with this indicator",
       "default": []
@@ -82,7 +108,9 @@
             "format": "uri"
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "description": "CTI sources that provided information about this indicator",
       "default": []
@@ -102,13 +130,31 @@
             "type": "string"
           }
         },
-        "required": ["type", "value"]
+        "required": [
+          "type",
+          "value"
+        ]
       },
       "description": "Raw CTI observables that support the reputation assessment"
     },
     "raw_enrichment": {
       "type": "object",
       "description": "Provider-specific raw enrichment data (optional, for debugging)"
+    },
+    "primary_source": {
+      "type": "string",
+      "description": "Primary provider used for normalized enrichment"
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "External intelligence references"
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Provider/query metadata retained for auditability"
     }
   }
 }
