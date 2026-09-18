@@ -13,14 +13,11 @@ from typing import Any, Dict, Optional
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich.syntax import Syntax
-from rich.markdown import Markdown
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from agent.orchestrator import InvestigationOrchestrator
-from agent.provider import create_provider, MockProvider
 from agent.hitl import (
     HumanDecision,
     ScriptedHumanReviewGate,
@@ -31,10 +28,15 @@ from agent.hitl import (
     REVIEW_ESCALATE,
     REVIEW_REJECT,
 )
+from agent.provider import (
+    DEFAULT_OPENROUTER_FREE_MODEL,
+    LLMProvider,
+    MockProvider,
+    create_provider,
+)
 from skills.cti_skill import CTISkill
-from skills.network_skill import NetworkSkill
 from skills.endpoint_skill import EndpointSkill
-
+from skills.network_skill import NetworkSkill
 
 console = Console()
 
@@ -118,10 +120,15 @@ def run_investigation(
     model: str = "gpt-4o",
     api_key: Optional[str] = None,
     test_data: Optional[Dict[str, Any]] = None,
+    fallback_model: Optional[str] = DEFAULT_OPENROUTER_FREE_MODEL,
+    run_mode: str = "evaluation",
+    monthly_budget_usd: Optional[float] = None,
+    budget_ledger_path: str = ".vinsoc/openai_budget.json",
     human_review_gate=None,
 ) -> Dict[str, Any]:
     """Run an investigation and return results."""
     # Create LLM provider
+    llm_provider: LLMProvider
     if provider == "mock":
         llm_provider = MockProvider(model="test")
         # Add mock responses
@@ -129,7 +136,16 @@ def run_investigation(
         llm_provider.add_response("benign", "The indicator appears benign. Let me check if further investigation is needed.")
         llm_provider.add_response("malicious", "This indicator is malicious. I should investigate further with network and endpoint tools.")
     else:
-        llm_provider = create_provider(provider, model, api_key)
+        provider_options: Dict[str, Any] = {}
+        if provider == "routed":
+            provider_options = {
+                "fallback_model": fallback_model,
+                "mode": run_mode,
+                "monthly_budget_usd": monthly_budget_usd,
+                "budget_ledger_path": budget_ledger_path,
+                "free_only": True,
+            }
+        llm_provider = create_provider(provider, model, api_key, **provider_options)
 
     # Create orchestrator
     orchestrator = InvestigationOrchestrator(
@@ -221,7 +237,15 @@ def display_case(case: Dict[str, Any]):
         console.print(f"\n[dim]Investigation completed in {metadata.get('investigation_duration_seconds', 0):.2f}s[/dim]")
 
 
-def run_scenario(scenario_path: str, provider: str = "mock", model: str = "gpt-4o"):
+def run_scenario(
+    scenario_path: str,
+    provider: str = "mock",
+    model: str = "gpt-4o",
+    fallback_model: Optional[str] = DEFAULT_OPENROUTER_FREE_MODEL,
+    run_mode: str = "evaluation",
+    monthly_budget_usd: Optional[float] = None,
+    budget_ledger_path: str = ".vinsoc/openai_budget.json",
+):
     """Run a predefined scenario."""
     console.print(f"\n[cyan]Loading scenario:[/cyan] {scenario_path}")
 
@@ -240,7 +264,7 @@ def run_scenario(scenario_path: str, provider: str = "mock", model: str = "gpt-4
     # Get indicator
     indicator = scenario.get("initial_indicator", {})
 
-    console.print(f"\n[cyan]Running investigation...[/cyan]\n")
+    console.print("\n[cyan]Running investigation...[/cyan]\n")
 
     # Run investigation
     case = run_investigation(
@@ -250,6 +274,10 @@ def run_scenario(scenario_path: str, provider: str = "mock", model: str = "gpt-4
         provider=provider,
         model=model,
         test_data=test_data,
+        fallback_model=fallback_model,
+        run_mode=run_mode,
+        monthly_budget_usd=monthly_budget_usd,
+        budget_ledger_path=budget_ledger_path,
         human_review_gate=ScriptedHumanReviewGate(),
     )
 
@@ -271,7 +299,11 @@ def run_direct_investigation(
     context: Optional[str],
     provider: str,
     model: str,
-    api_key: Optional[str]
+    api_key: Optional[str],
+    fallback_model: Optional[str],
+    run_mode: str,
+    monthly_budget_usd: Optional[float],
+    budget_ledger_path: str,
 ):
     """Run a direct investigation on an indicator."""
     console.print(f"\n[cyan]Investigating:[/cyan] {indicator} ({indicator_type})")
@@ -288,6 +320,10 @@ def run_direct_investigation(
         provider=provider,
         model=model,
         api_key=api_key,
+        fallback_model=fallback_model,
+        run_mode=run_mode,
+        monthly_budget_usd=monthly_budget_usd,
+        budget_ledger_path=budget_ledger_path,
         human_review_gate=ConsoleHumanReviewGate(),
     )
 
@@ -393,15 +429,59 @@ def main():
     investigate_parser.add_argument("indicator", help="IOC to investigate (IP, domain, hash, hostname)")
     investigate_parser.add_argument("--type", "-t", default="ipv4", choices=["ipv4", "domain", "hash", "hostname"], help="Indicator type")
     investigate_parser.add_argument("--context", "-c", help="Investigation context")
-    investigate_parser.add_argument("--provider", "-p", default="mock", choices=["openai", "mock"], help="LLM provider")
+    investigate_parser.add_argument(
+        "--provider",
+        "-p",
+        default="mock",
+        choices=["openai", "openrouter", "routed", "mock"],
+        help="LLM provider",
+    )
     investigate_parser.add_argument("--model", "-m", default="gpt-4o", help="Model name")
     investigate_parser.add_argument("--api-key", help="API key (or set env var)")
+    investigate_parser.add_argument(
+        "--fallback-model",
+        default=DEFAULT_OPENROUTER_FREE_MODEL,
+        help="Pinned OpenRouter :free model for routed mode",
+    )
+    investigate_parser.add_argument(
+        "--run-mode",
+        choices=["evaluation", "development", "demo"],
+        default="evaluation",
+        help="Evaluation disables fallback; development/demo allow controlled fallback",
+    )
+    investigate_parser.add_argument("--monthly-budget-usd", type=float)
+    investigate_parser.add_argument(
+        "--budget-ledger",
+        default=".vinsoc/openai_budget.json",
+        help="Persistent monthly OpenAI cost ledger",
+    )
 
     # Scenario command
     scenario_parser = subparsers.add_parser("scenario", help="Run a predefined scenario")
     scenario_parser.add_argument("scenario", help="Scenario ID or path (e.g., case_001)")
-    scenario_parser.add_argument("--provider", "-p", default="mock", choices=["openai", "mock"], help="LLM provider")
+    scenario_parser.add_argument(
+        "--provider",
+        "-p",
+        default="mock",
+        choices=["openai", "openrouter", "routed", "mock"],
+        help="LLM provider",
+    )
     scenario_parser.add_argument("--model", "-m", default="gpt-4o", help="Model name")
+    scenario_parser.add_argument(
+        "--fallback-model",
+        default=DEFAULT_OPENROUTER_FREE_MODEL,
+        help="Pinned OpenRouter :free model for routed mode",
+    )
+    scenario_parser.add_argument(
+        "--run-mode",
+        choices=["evaluation", "development", "demo"],
+        default="evaluation",
+    )
+    scenario_parser.add_argument("--monthly-budget-usd", type=float)
+    scenario_parser.add_argument(
+        "--budget-ledger",
+        default=".vinsoc/openai_budget.json",
+    )
 
     # List scenarios command
     subparsers.add_parser("list", help="List available scenarios")
@@ -422,10 +502,22 @@ def main():
             context=args.context,
             provider=args.provider,
             model=args.model,
-            api_key=args.api_key
+            api_key=args.api_key,
+            fallback_model=args.fallback_model,
+            run_mode=args.run_mode,
+            monthly_budget_usd=args.monthly_budget_usd,
+            budget_ledger_path=args.budget_ledger,
         )
     elif args.command == "scenario":
-        run_scenario(args.scenario, args.provider, args.model)
+        run_scenario(
+            args.scenario,
+            args.provider,
+            args.model,
+            args.fallback_model,
+            args.run_mode,
+            args.monthly_budget_usd,
+            args.budget_ledger,
+        )
     elif args.command == "list":
         list_scenarios()
     elif args.command == "test":
