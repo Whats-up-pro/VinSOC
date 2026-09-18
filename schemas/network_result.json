@@ -3,7 +3,17 @@
   "title": "NetworkResult",
   "description": "Schema for network investigation telemetry analysis",
   "type": "object",
-  "required": ["indicator", "indicator_type", "query_time_range", "total_connections", "observed_evidence"],
+  "required": [
+    "indicator",
+    "indicator_type",
+    "query_time_range",
+    "total_connections",
+    "observed_evidence",
+    "analytics",
+    "evidence_items",
+    "limitations",
+    "provenance"
+  ],
   "properties": {
     "indicator": {
       "type": "string",
@@ -11,7 +21,10 @@
     },
     "indicator_type": {
       "type": "string",
-      "enum": ["ipv4", "domain"],
+      "enum": [
+        "ipv4",
+        "domain"
+      ],
       "description": "Type of indicator investigated"
     },
     "query_time_range": {
@@ -26,7 +39,10 @@
           "format": "date-time"
         }
       },
-      "required": ["start", "end"]
+      "required": [
+        "start",
+        "end"
+      ]
     },
     "total_connections": {
       "type": "integer",
@@ -64,16 +80,17 @@
               "port_scan",
               "high_frequency",
               "lateral_movement",
-              "data_exfiltration",
               "beaconing",
-              "unusual_port",
-              "failed_connection_spike",
-              "normal"
+              "failed_connection_spike"
             ]
           },
           "confidence": {
             "type": "string",
-            "enum": ["low", "medium", "high"]
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
           },
           "evidence": {
             "type": "array",
@@ -83,7 +100,10 @@
             "description": "Specific evidence supporting this pattern detection"
           }
         },
-        "required": ["pattern", "confidence"]
+        "required": [
+          "pattern",
+          "confidence"
+        ]
       },
       "description": "Network patterns detected during investigation",
       "default": []
@@ -111,7 +131,10 @@
             "format": "date-time"
           }
         },
-        "required": ["dst", "port"]
+        "required": [
+          "dst",
+          "port"
+        ]
       },
       "description": "Summary of top connections by destination"
     },
@@ -124,15 +147,139 @@
             "type": "string"
           },
           "value": {
-            "type": ["string", "number", "boolean", "array", "object"]
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "array",
+              "object"
+            ]
           },
           "context": {
             "type": "string"
           }
         },
-        "required": ["type", "value"]
+        "required": [
+          "type",
+          "value"
+        ]
       },
       "description": "Raw network observables that support the analysis"
+    },
+    "total_alerts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "query_direction": {
+      "type": "string",
+      "enum": [
+        "any",
+        "src",
+        "dst",
+        "outbound",
+        "inbound"
+      ]
+    },
+    "source_summary": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "required": [
+        "periodicity_candidates",
+        "scan_candidates",
+        "transfer_metrics",
+        "service_fanout_candidates"
+      ],
+      "properties": {
+        "periodicity_candidates": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "scan_candidates": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "transfer_metrics": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "service_fanout_candidates": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "evidence_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "local_key",
+          "evidence_class",
+          "type",
+          "source_name",
+          "data"
+        ],
+        "properties": {
+          "local_key": {
+            "type": "string"
+          },
+          "evidence_class": {
+            "type": "string",
+            "enum": [
+              "OBSERVED",
+              "DERIVED"
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "source_name": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "data": {
+            "type": "object"
+          },
+          "provenance": {
+            "type": "object"
+          },
+          "related_local_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "object"
     }
   }
 }
