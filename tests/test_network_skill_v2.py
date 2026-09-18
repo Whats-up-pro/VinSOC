@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from agent.orchestrator import InvestigationOrchestrator
 from agent.provider import MockProvider
 from skills.network_skill import NetworkSkill
+from skills.cti_skill import CTISkill
 
 
 def periodic_mock():
@@ -43,10 +44,16 @@ def test_network_skill_emits_observed_and_derived_items():
 
 
 def test_orchestrator_resolves_derived_to_observed_evidence_ids():
+    # Create orchestrator with NetworkSkill that uses mock_data directly
+    from skills.network_skill import NetworkSkill
+
     orch = InvestigationOrchestrator(
         provider=MockProvider(model="network-v2-test"),
-        network_mock_data=periodic_mock(),
-        cti_mock_data={
+    )
+    # Override the network skill with mock data
+    orch.network_skill = NetworkSkill(mock_data=periodic_mock())
+    orch._cti_skill = CTISkill(
+        mock_data={
             "1.2.3.4": {
                 "reputation": "unknown",
                 "confidence": "low",
@@ -57,7 +64,9 @@ def test_orchestrator_resolves_derived_to_observed_evidence_ids():
                 "observed_evidence": [],
             }
         },
+        auto_load_threatfox=False
     )
+
     case = orch.investigate("1.2.3.4", context="suspicious periodic traffic")
     derived = [
         ev for ev in case.evidence
@@ -70,7 +79,7 @@ def test_orchestrator_resolves_derived_to_observed_evidence_ids():
         and ev["evidence_class"] == "OBSERVED"
     }
     assert derived
-    assert any(set(ev["related_evidence_ids"]) & observed_ids for ev in derived)
+    assert any(set(ev.get("related_evidence_ids", [])) & observed_ids for ev in derived)
 
 
 def test_large_transfer_does_not_emit_data_exfiltration_pattern():
