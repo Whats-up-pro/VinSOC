@@ -212,15 +212,31 @@ class InvestigationOrchestrator:
         self.human_decisions: List[Dict[str, Any]] = []
 
         # Initialize skills
+        from skills.network_skill import NetworkSkill
+        from skills.endpoint_skill import EndpointSkill
+        from skills.cti_skill import CTISkill
+        from vinsoc_data.duckdb_store import DuckDBSnapshot
+        from vinsoc_data.network_source import DuckDBNetworkDataSource
+        from vinsoc_data.domain_queries import DuckDBEndpointRepository
+
         snapshot = DuckDBSnapshot(duckdb_snapshot_path) if duckdb_snapshot_path else None
         self.cti_skill = CTISkill(mock_data=cti_mock_data)
+
+        # Build network skill with data sources
+        network_data_sources = []
+        if snapshot:
+            network_repo = DuckDBNetworkRepository(snapshot)
+            network_data_sources.append(DuckDBNetworkDataSource(network_repo))
         self.network_skill = NetworkSkill(
             mock_data=network_mock_data,
-            repository=DuckDBNetworkRepository(snapshot) if snapshot else None,
+            data_sources=network_data_sources if network_data_sources else None,
         )
+
+        # Build endpoint skill
+        endpoint_repo = DuckDBEndpointRepository(snapshot) if snapshot else None
         self.endpoint_skill = EndpointSkill(
             mock_data=endpoint_mock_data,
-            repository=DuckDBEndpointRepository(snapshot) if snapshot else None,
+            repository=endpoint_repo,
         )
 
         # Evidence store
@@ -727,13 +743,63 @@ class InvestigationOrchestrator:
                 evidence_ids=[],
                 duration_ms=duration_ms
             )
-            evidence = self.evidence_store.add_evidence(
-                source_tool=tool_name,
-                evidence_type=f"{tool_name}_result",
-                data=result.data,
-                linked_from=call.call_id
-            )
-            call.evidence_ids.append(evidence.evidence_id)
+
+            # Handle Evidence V2 structure if present
+            evidence_items = result.data.get("evidence_items", []) if result.data else []
+            if evidence_items:
+                # NetworkSkill V2 returns structured evidence items
+                # First pass: create all OBSERVED evidence
+                local_key_to_id: Dict[str, str] = {}
+                for item in evidence_items:
+                    if item.get("evidence_class") == "OBSERVED":
+                        ev = self.evidence_store.add_evidence(
+                            source_tool=tool_name,
+                            evidence_type=item.get("type", f"{tool_name}_result"),
+                            data=item.get("data", {}),
+                            linked_from=call.call_id,
+                            evidence_class="OBSERVED",
+                            source_name=item.get("source_name"),
+                            observed_at=item.get("observed_at"),
+                            confidence=item.get("confidence"),
+                            provenance=item.get("provenance", {}),
+                            references=item.get("references", []),
+                        )
+                        local_key_to_id[item["local_key"]] = ev.evidence_id
+                        call.evidence_ids.append(ev.evidence_id)
+
+                # Second pass: create DERIVED evidence with parent links
+                for item in evidence_items:
+                    if item.get("evidence_class") == "DERIVED":
+                        related_keys = item.get("related_local_keys", [])
+                        related_ids = [
+                            local_key_to_id[key]
+                            for key in related_keys
+                            if key in local_key_to_id
+                        ]
+                        ev = self.evidence_store.add_evidence(
+                            source_tool=tool_name,
+                            evidence_type=item.get("type", f"{tool_name}_result"),
+                            data=item.get("data", {}),
+                            linked_from=call.call_id,
+                            evidence_class="DERIVED",
+                            source_name=item.get("source_name"),
+                            confidence=item.get("confidence"),
+                            provenance=item.get("provenance", {}),
+                            references=item.get("references", []),
+                            related_evidence_ids=related_ids,
+                        )
+                        call.evidence_ids.append(ev.evidence_id)
+            else:
+                # Legacy single evidence record - mark CTI as EXTERNAL_INTEL
+                evidence_class = "EXTERNAL_INTEL" if tool_name == "cti_enrichment" else "OBSERVED"
+                evidence = self.evidence_store.add_evidence(
+                    source_tool=tool_name,
+                    evidence_type=f"{tool_name}_result",
+                    data=result.data,
+                    linked_from=call.call_id,
+                    evidence_class=evidence_class,
+                )
+                call.evidence_ids.append(evidence.evidence_id)
 
             # Format result for LLM
             result_text = f"Tool: {tool_name}\n\nResult:\n{self._format_result_for_llm(result.data)}"

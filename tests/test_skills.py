@@ -49,24 +49,39 @@ def sample_cti_data():
 
 @pytest.fixture
 def sample_network_data():
-    """Sample network mock data."""
+    """Sample network mock data for NetworkSkill V2."""
+    from datetime import datetime, timedelta, timezone
+    base = datetime(2024, 1, 15, 8, 0, tzinfo=timezone.utc)
+
+    # Beaconing: 6 connections at regular 60-second intervals to 185.220.101.45
+    beacon_connections = [
+        {
+            "timestamp": (base + timedelta(seconds=i * 60)).isoformat(),
+            "src": "10.0.0.100",  # Internal source
+            "dst": "185.220.101.45",
+            "dst_port": 443,
+            "protocol": "TCP",
+            "action": "ALLOW",
+            "bytes_out": 256,
+            "bytes_in": 1024,
+        }
+        for i in range(6)
+    ]
+
+    # Port scan: 3 failed connections FROM 10.0.0.25 to different hosts
+    scan_connections = [
+        {"timestamp": "2024-01-15T10:00:00Z", "src": "10.0.0.25", "dst": "10.0.1.1", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+        {"timestamp": "2024-01-15T10:00:01Z", "src": "10.0.0.25", "dst": "10.0.1.2", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+        {"timestamp": "2024-01-15T10:00:02Z", "src": "10.0.0.25", "dst": "10.0.1.3", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
+    ]
+
     return {
         "185.220.101.45": {
-            "connections": [
-                {"timestamp": "2024-01-15T08:00:00Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256},
-                {"timestamp": "2024-01-15T08:00:30Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256},
-                {"timestamp": "2024-01-15T08:01:00Z", "dst": "185.220.101.45", "dst_port": 443, "protocol": "TCP", "action": "ALLOW", "bytes_out": 256},
-            ],
-            "observed_evidence": [{"type": "beacon", "value": "regular", "context": "Regular callback interval"}]
+            "connections": beacon_connections,
         },
         "10.0.0.25": {
-            "connections": [
-                {"timestamp": "2024-01-15T10:00:00Z", "dst": "10.0.1.1", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
-                {"timestamp": "2024-01-15T10:00:01Z", "dst": "10.0.1.2", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
-                {"timestamp": "2024-01-15T10:00:02Z", "dst": "10.0.1.3", "dst_port": 22, "protocol": "TCP", "action": "DROP", "bytes_out": 0},
-            ],
-            "observed_evidence": [{"type": "port_scan", "value": "detected", "context": "Multiple failed connections"}]
-        }
+            "connections": scan_connections,
+        },
     }
 
 
@@ -196,20 +211,38 @@ class TestNetworkSkill:
 
         assert result.success
         assert result.data is not None
-        assert result.data["total_connections"] == 3
-        # Should detect beaconing or high frequency pattern
+        assert result.data["total_connections"] == 6
+        # Should detect beaconing pattern
         patterns = [p["pattern"] for p in result.data["patterns_detected"]]
-        assert any(p in ["beaconing", "high_frequency"] for p in patterns)
+        assert "beaconing" in patterns
 
     def test_port_scan_detection(self, sample_network_data):
         """Test port scan pattern detection."""
-        skill = NetworkSkill(mock_data=sample_network_data)
+        # Port scan detection requires 8+ unique targets in 60s window
+        # Create scan-like data with enough targets
+        from datetime import datetime, timedelta, timezone
+        base = datetime(2024, 1, 15, 10, 0, tzinfo=timezone.utc)
+        scan_data = {
+            "connections": [
+                {
+                    "timestamp": (base + timedelta(seconds=i)).isoformat(),
+                    "src": "10.0.0.25",
+                    "dst": f"10.0.1.{i % 10}",
+                    "dst_port": 22,
+                    "protocol": "TCP",
+                    "action": "DROP",
+                    "bytes_out": 0,
+                }
+                for i in range(10)  # 10 unique targets
+            ]
+        }
+        skill = NetworkSkill(mock_data={"10.0.0.25": scan_data})
         result = skill.execute(indicator="10.0.0.25")
 
         assert result.success
         assert result.data is not None
-        assert result.data["failed_connections"] == 3
-        # Should detect port scan
+        assert result.data["failed_connections"] == 10
+        # Should detect horizontal scan candidate
         patterns = [p["pattern"] for p in result.data["patterns_detected"]]
         assert "port_scan" in patterns
 
