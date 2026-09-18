@@ -10,25 +10,18 @@
   },
   "ground_truth": {
     "verdict": "SUSPICIOUS",
-    "expected_tools": ["cti_enrichment", "endpoint_investigation"],
-    "required_evidence": ["cti_reputation", "endpoint_suspicious_process"],
+    "expected_tools": ["endpoint_investigation"],
+    "required_evidence": ["endpoint_suspicious_process"],
     "expected_risk": "MEDIUM",
     "expected_confidence": "MEDIUM",
     "expected_hypothesis": "Possible malicious Excel macro executing system commands",
-    "known_limitations": ["Cannot confirm malicious content without command line analysis"]
+    "known_limitations": [
+      "Initial indicator is an endpoint hostname and is not a supported CTI IOC type",
+      "Cannot confirm malicious content without command line analysis"
+    ]
   },
   "test_data": {
-    "cti_response": {
-      "indicator": "WS023",
-      "indicator_type": "hostname",
-      "reputation": "unknown",
-      "confidence": "low",
-      "related_actors": [],
-      "related_malware": [],
-      "mitre_techniques": [],
-      "sources": [],
-      "observed_evidence": []
-    },
+    "cti_response": null,
     "network_data": null,
     "endpoint_data": {
       "host": "WS023",
