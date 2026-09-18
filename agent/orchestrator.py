@@ -27,6 +27,8 @@ from skills.validators import validate_investigation_case
 from skills.cti_skill import CTISkill
 from skills.network_skill import NetworkSkill
 from skills.endpoint_skill import EndpointSkill
+from vinsoc_data.domain_queries import DuckDBEndpointRepository, DuckDBNetworkRepository
+from vinsoc_data.duckdb_store import DuckDBSnapshot
 
 
 @dataclass
@@ -185,6 +187,7 @@ class InvestigationOrchestrator:
         cti_mock_data: Optional[Dict[str, Any]] = None,
         network_mock_data: Optional[Dict[str, Any]] = None,
         endpoint_mock_data: Optional[Dict[str, Any]] = None,
+        duckdb_snapshot_path: Optional[str] = None,
         human_review_gate: Optional[HumanReviewGate] = None,
         max_review_cycles: int = 1,
     ):
@@ -197,6 +200,9 @@ class InvestigationOrchestrator:
             cti_mock_data: Mock data for CTI skill
             network_mock_data: Mock data for network skill
             endpoint_mock_data: Mock data for endpoint skill
+            duckdb_snapshot_path: Optional path to a frozen public-data DuckDB
+                snapshot. When set, network and endpoint tools query it in
+                read-only mode after any test mock data is exhausted.
         """
         self.provider = provider or MockProvider()
         self.max_steps = max_steps
@@ -206,9 +212,16 @@ class InvestigationOrchestrator:
         self.human_decisions: List[Dict[str, Any]] = []
 
         # Initialize skills
+        snapshot = DuckDBSnapshot(duckdb_snapshot_path) if duckdb_snapshot_path else None
         self.cti_skill = CTISkill(mock_data=cti_mock_data)
-        self.network_skill = NetworkSkill(mock_data=network_mock_data)
-        self.endpoint_skill = EndpointSkill(mock_data=endpoint_mock_data)
+        self.network_skill = NetworkSkill(
+            mock_data=network_mock_data,
+            repository=DuckDBNetworkRepository(snapshot) if snapshot else None,
+        )
+        self.endpoint_skill = EndpointSkill(
+            mock_data=endpoint_mock_data,
+            repository=DuckDBEndpointRepository(snapshot) if snapshot else None,
+        )
 
         # Evidence store
         self.evidence_store = EvidenceStore()
