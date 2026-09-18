@@ -41,34 +41,37 @@ class CTISkill(BaseSkill):
         mock_data: Optional[Dict[str, Any]] = None,
         threatfox_path: Optional[str] = None,
         threatfox_data: Optional[Dict[str, Any]] = None,
-        auto_load_threatfox: bool = True,
     ):
         """
         Initialize CTI skill.
 
         Args:
-            mock_data: Optional dict for testing. If provided, used as CTI lookup source.
+            mock_data: Optional dict for testing. If provided, used instead of real CTI lookup.
             threatfox_path: Optional path to ThreatFox JSON lookup file.
-                           If not provided and auto_load_threatfox is True,
-                           defaults to data/cti_lookup.json if it exists.
+                           Default: data/cti_lookup.json
             threatfox_data: Optional pre-loaded ThreatFox data dict.
                            Takes precedence over threatfox_path if both provided.
-            auto_load_threatfox: If True, auto-load from default path if no source
-                                is explicitly configured. Set to False for testing.
         """
         super().__init__()
-        self.mock_data = mock_data or {}
+        self.mock_data = mock_data if mock_data is not None else {}
+        self._mock_source_configured = mock_data is not None
 
         # ThreatFox data loading
         self.threatfox_data: Dict[str, Any] = {}
-        if threatfox_data:
-            self.threatfox_data = threatfox_data
-            logger.info(f"Loaded {len(self.threatfox_data):,} IOCs from provided ThreatFox data")
-        elif threatfox_path:
+        self._threatfox_source_configured = False
+        if threatfox_data is not None:
+            if isinstance(threatfox_data, dict) and all(
+                isinstance(record, dict) for record in threatfox_data.values()
+            ):
+                self.threatfox_data = threatfox_data
+                self._threatfox_source_configured = True
+                logger.info(f"Loaded {len(self.threatfox_data):,} IOCs from provided ThreatFox data")
+            else:
+                logger.error("Provided ThreatFox data must be a mapping")
+        elif threatfox_path is not None:
             self._load_threatfox(threatfox_path)
-        elif auto_load_threatfox:
-            # Only auto-load from default path if explicitly enabled
-            # This prevents silent data loading in tests without explicit configuration
+        else:
+            # Try default path
             default_path = Path("data/cti_lookup.json")
             if default_path.exists():
                 self._load_threatfox(str(default_path))
@@ -78,14 +81,33 @@ class CTISkill(BaseSkill):
         logger.info(f"Loading ThreatFox data from {path}...")
         try:
             with open(path, "r", encoding="utf-8") as f:
-                self.threatfox_data = json.load(f)
+                loaded_data = json.load(f)
+            if not isinstance(loaded_data, dict) or not all(
+                isinstance(record, dict) for record in loaded_data.values()
+            ):
+                logger.error("ThreatFox JSON data must map IOCs to mappings")
+                self.threatfox_data = {}
+                self._threatfox_source_configured = False
+                return
+            self.threatfox_data = loaded_data
+            self._threatfox_source_configured = True
             logger.info(f"Loaded {len(self.threatfox_data):,} IOCs from ThreatFox")
         except FileNotFoundError:
             logger.warning(f"ThreatFox file not found: {path}")
             self.threatfox_data = {}
+            self._threatfox_source_configured = False
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse ThreatFox JSON: {e}")
             self.threatfox_data = {}
+            self._threatfox_source_configured = False
+        except UnicodeDecodeError as e:
+            logger.error(f"Failed to decode ThreatFox JSON: {e}")
+            self.threatfox_data = {}
+            self._threatfox_source_configured = False
+        except OSError as e:
+            logger.error(f"Failed to read ThreatFox JSON: {e}")
+            self.threatfox_data = {}
+            self._threatfox_source_configured = False
 
     def _lookup_threatfox(self, indicator: str) -> Optional[Dict[str, Any]]:
         """
@@ -123,6 +145,8 @@ class CTISkill(BaseSkill):
             return False, "Missing required parameter: indicator"
 
         indicator = kwargs["indicator"]
+        if not isinstance(indicator, str):
+            return False, "Indicator must be a string"
         # Use provided type or auto-detect (don't use None explicitly provided)
         provided_type = kwargs.get("indicator_type")
         indicator_type = provided_type if provided_type else self._detect_indicator_type(indicator)
@@ -201,11 +225,11 @@ class CTISkill(BaseSkill):
         indicator_type = provided_type if provided_type else self._detect_indicator_type(indicator)
 
         # Priority: mock_data > threatfox_data > error
-        if self.mock_data:
+        if self._mock_source_configured:
             return self._build_result_from_mock(indicator, indicator_type)
 
         # Check ThreatFox data
-        if self.threatfox_data:
+        if self._threatfox_source_configured:
             return self._build_result_from_threatfox(indicator, indicator_type)
 
         # No data source configured

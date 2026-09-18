@@ -15,10 +15,7 @@
     "expected_risk": "MEDIUM",
     "expected_confidence": "MEDIUM",
     "expected_hypothesis": "Possible malicious macro execution, potentially delivering second-stage payload",
-    "known_limitations": [
-      "Initial indicator is an endpoint hostname and is not a supported CTI IOC type",
-      "Cannot confirm malicious content without macro/file analysis"
-    ]
+    "known_limitations": ["Cannot confirm malicious content without macro/file analysis", "CTI requires a compatible IOC pivot; none is available in this case."]
   },
   "test_data": {
     "cti_response": null,
@@ -40,5 +37,5 @@
       ]
     }
   },
-  "evaluation_notes": "Classic macro attack pattern, but limited external CTI for hostname"
+  "evaluation_notes": "Classic macro attack pattern. Investigate the endpoint; CTI needs a compatible IOC pivot."
 }
