@@ -44,8 +44,8 @@ Luồng xử lý mục tiêu:
                      ↓                         │
                    Close                       ↓
                                       ┌──────────────────┐
-                                      │ Investigation     │
-                                      │      Agent        │
+                                      │ Investigation    │
+                                      │      Agent       │
                                       └────────┬─────────┘
                                                ↓
                                     Identify Missing Evidence
@@ -55,7 +55,7 @@ Luồng xử lý mục tiêu:
                               └─────────────┬──────────────┘
                                             ↓
                               ┌────────────────────────────┐
-                              │ CTI │ Network │ Endpoint    │
+                              │ CTI │ Network │ Endpoint   │
                               └─────────────┬──────────────┘
                                             ↓
                                     Evidence Correlation
