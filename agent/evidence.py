@@ -11,25 +11,49 @@ from typing import Any, Dict, List, Optional
 import json
 
 
+EVIDENCE_CLASSES = {"OBSERVED", "DERIVED", "EXTERNAL_INTEL"}
+
+
 @dataclass
 class Evidence:
-    """Single piece of evidence from a tool execution."""
+    """Single evidence item with explicit epistemic class and provenance."""
     evidence_id: str
     source_tool: str
     type: str
     data: Dict[str, Any]
     collected_at: str
-    linked_from: Optional[str] = None  # Tool call ID that produced this
+    linked_from: Optional[str] = None
+    evidence_class: str = "OBSERVED"
+    source_name: Optional[str] = None
+    observed_at: Optional[str] = None
+    confidence: Optional[str] = None
+    provenance: Dict[str, Any] = field(default_factory=dict)
+    references: List[str] = field(default_factory=list)
+    related_evidence_ids: List[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        if self.evidence_class not in EVIDENCE_CLASSES:
+            raise ValueError(
+                f"Invalid evidence_class={self.evidence_class}. "
+                f"Expected one of {sorted(EVIDENCE_CLASSES)}"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
         return {
             "evidence_id": self.evidence_id,
             "source_tool": self.source_tool,
+            "source_name": self.source_name or self.source_tool,
+            "evidence_class": self.evidence_class,
             "type": self.type,
             "data": self.data,
             "collected_at": self.collected_at,
-            "linked_from": self.linked_from
+            "observed_at": self.observed_at,
+            "confidence": self.confidence,
+            "provenance": self.provenance,
+            "references": self.references,
+            "related_evidence_ids": self.related_evidence_ids,
+            "linked_from": self.linked_from,
         }
 
 
@@ -82,16 +106,30 @@ class EvidenceStore:
         source_tool: str,
         evidence_type: str,
         data: Dict[str, Any],
-        linked_from: Optional[str] = None
+        linked_from: Optional[str] = None,
+        evidence_class: str = "OBSERVED",
+        source_name: Optional[str] = None,
+        observed_at: Optional[str] = None,
+        confidence: Optional[str] = None,
+        provenance: Optional[Dict[str, Any]] = None,
+        references: Optional[List[str]] = None,
+        related_evidence_ids: Optional[List[str]] = None,
     ) -> Evidence:
         """
         Add evidence to the store.
 
         Args:
             source_tool: Name of tool that produced this evidence
-            evidence_type: Type of evidence (e.g., "cti_result", "network_analysis")
-            data: Evidence data
-            linked_from: Optional ID of tool call that produced this
+            evidence_type: Semantic evidence type (e.g. ioc_reputation, network_connection)
+            data: Evidence payload
+            linked_from: Optional tool-call ID that produced this evidence
+            evidence_class: OBSERVED, DERIVED, or EXTERNAL_INTEL
+            source_name: Concrete source/provider (e.g. zeek, threatfox)
+            observed_at: Timestamp carried by the source event, if available
+            confidence: Source/analytic confidence, if applicable
+            provenance: Structured source metadata used for auditability
+            references: External references/URLs/IDs
+            related_evidence_ids: Parent evidence used to derive/correlate this item
 
         Returns:
             Evidence object
@@ -102,7 +140,14 @@ class EvidenceStore:
             type=evidence_type,
             data=data,
             collected_at=datetime.utcnow().isoformat(),
-            linked_from=linked_from
+            linked_from=linked_from,
+            evidence_class=evidence_class,
+            source_name=source_name or source_tool,
+            observed_at=observed_at,
+            confidence=confidence,
+            provenance=provenance or {},
+            references=references or [],
+            related_evidence_ids=related_evidence_ids or [],
         )
         self.evidence.append(evidence)
         return evidence

@@ -23,6 +23,8 @@ jobs:
       - name: Run HITL and orchestrator regression suite
         run: |
           python -m pytest -q \
+            tests/test_evidence_v2.py \
+            tests/test_cti_providers.py \
             tests/test_hitl.py \
             tests/test_security_attack_vectors.py \
             tests/test_traceability.py \

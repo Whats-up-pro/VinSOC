@@ -714,11 +714,20 @@ class InvestigationOrchestrator:
                 evidence_ids=[],
                 duration_ms=duration_ms
             )
+            evidence_class = "EXTERNAL_INTEL" if tool_name == "cti_enrichment" else "OBSERVED"
+            source_name = result.data.get("primary_source") if isinstance(result.data, dict) else None
+            references = result.data.get("references", []) if isinstance(result.data, dict) else []
+            provenance = result.data.get("provenance", {}) if isinstance(result.data, dict) else {}
             evidence = self.evidence_store.add_evidence(
                 source_tool=tool_name,
                 evidence_type=f"{tool_name}_result",
                 data=result.data,
-                linked_from=call.call_id
+                linked_from=call.call_id,
+                evidence_class=evidence_class,
+                source_name=source_name or tool_name,
+                confidence=result.data.get("confidence") if isinstance(result.data, dict) else None,
+                provenance=provenance,
+                references=references,
             )
             call.evidence_ids.append(evidence.evidence_id)
 

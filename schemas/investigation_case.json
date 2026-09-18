@@ -3,7 +3,21 @@
   "title": "InvestigationCase",
   "description": "Schema for complete investigation case with evidence and assessment",
   "type": "object",
-  "required": ["case_id", "created_at", "initial_indicator", "tool_trace", "evidence", "hypotheses", "risk_level", "confidence", "limitations", "final_assessment", "supporting_evidence", "contradicting_evidence", "metadata"],
+  "required": [
+    "case_id",
+    "created_at",
+    "initial_indicator",
+    "tool_trace",
+    "evidence",
+    "hypotheses",
+    "risk_level",
+    "confidence",
+    "limitations",
+    "final_assessment",
+    "supporting_evidence",
+    "contradicting_evidence",
+    "metadata"
+  ],
   "properties": {
     "case_id": {
       "type": "string",
@@ -19,7 +33,13 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["ipv4", "domain", "hash", "url", "hostname"]
+          "enum": [
+            "ipv4",
+            "domain",
+            "hash",
+            "url",
+            "hostname"
+          ]
         },
         "value": {
           "type": "string"
@@ -28,7 +48,10 @@
           "type": "string"
         }
       },
-      "required": ["type", "value"]
+      "required": [
+        "type",
+        "value"
+      ]
     },
     "tool_trace": {
       "type": "array",
@@ -40,7 +63,11 @@
           },
           "tool": {
             "type": "string",
-            "enum": ["cti_enrichment", "network_investigation", "endpoint_investigation"]
+            "enum": [
+              "cti_enrichment",
+              "network_investigation",
+              "endpoint_investigation"
+            ]
           },
           "arguments": {
             "type": "object"
@@ -59,7 +86,13 @@
             }
           }
         },
-        "required": ["call_id", "tool", "arguments", "timestamp", "evidence_ids"]
+        "required": [
+          "call_id",
+          "tool",
+          "arguments",
+          "timestamp",
+          "evidence_ids"
+        ]
       },
       "description": "Sequence of tool calls made during the investigation"
     },
@@ -85,10 +118,66 @@
             "format": "date-time"
           },
           "linked_from": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_name": {
+            "type": "string"
+          },
+          "evidence_class": {
+            "type": "string",
+            "enum": [
+              "OBSERVED",
+              "DERIVED",
+              "EXTERNAL_INTEL"
+            ]
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "confidence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "provenance": {
+            "type": "object"
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "related_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
-        "required": ["evidence_id", "source_tool", "type", "data", "collected_at", "linked_from"]
+        "required": [
+          "evidence_id",
+          "source_tool",
+          "source_name",
+          "evidence_class",
+          "type",
+          "data",
+          "collected_at",
+          "observed_at",
+          "confidence",
+          "provenance",
+          "references",
+          "related_evidence_ids",
+          "linked_from"
+        ]
       },
       "description": "All evidence collected during the investigation"
     },
@@ -113,21 +202,40 @@
           },
           "confidence": {
             "type": "string",
-            "enum": ["LOW", "MEDIUM", "HIGH"]
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ]
           }
         },
-        "required": ["id", "description", "supporting_evidence", "confidence"]
+        "required": [
+          "id",
+          "description",
+          "supporting_evidence",
+          "confidence"
+        ]
       },
       "description": "Possible explanations based on collected evidence"
     },
     "risk_level": {
       "type": "string",
-      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL", "UNKNOWN"],
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL",
+        "UNKNOWN"
+      ],
       "description": "Overall risk assessment"
     },
     "confidence": {
       "type": "string",
-      "enum": ["LOW", "MEDIUM", "HIGH"],
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
       "description": "Confidence in the overall assessment"
     },
     "limitations": {
