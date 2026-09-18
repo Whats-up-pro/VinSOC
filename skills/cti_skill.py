@@ -22,6 +22,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from skills.base import BaseSkill, SkillContract, SkillResult
+from skills.cti_providers import (
+    AttackSTIXProvider,
+    CTIProvider,
+    providers_from_environment,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +46,7 @@ class CTISkill(BaseSkill):
         mock_data: Optional[Dict[str, Any]] = None,
         threatfox_path: Optional[str] = None,
         threatfox_data: Optional[Dict[str, Any]] = None,
+        providers: Optional[List[CTIProvider]] = None,
     ):
         """
         Initialize CTI skill.
@@ -54,6 +60,9 @@ class CTISkill(BaseSkill):
         """
         super().__init__()
         self.mock_data = mock_data or {}
+        self.providers: List[CTIProvider] = (
+            list(providers) if providers is not None else providers_from_environment()
+        )
 
         # ThreatFox data loading
         self.threatfox_data: Dict[str, Any] = {}
@@ -195,18 +204,150 @@ class CTISkill(BaseSkill):
         provided_type = kwargs.get("indicator_type")
         indicator_type = provided_type if provided_type else self._detect_indicator_type(indicator)
 
-        # Priority: mock_data > threatfox_data > error
+        # Priority: deterministic test data > local ThreatFox index > configured providers.
         if self.mock_data:
             return self._build_result_from_mock(indicator, indicator_type)
 
-        # Check ThreatFox data
         if self.threatfox_data:
             return self._build_result_from_threatfox(indicator, indicator_type)
 
-        # No data source configured
+        if self.providers:
+            return self._build_result_from_providers(indicator, indicator_type)
+
+        # Offline/no-provider mode is a valid investigation state: absence of CTI
+        # is represented as unknown rather than a skill execution failure.
+        return self._unknown_result(
+            indicator,
+            indicator_type,
+            reason="No CTI provider configured",
+        )
+
+    def _unknown_result(self, indicator: str, indicator_type: str, reason: str) -> SkillResult:
+        evidence_id = f"cti_{uuid.uuid4().hex[:8]}"
         return SkillResult(
-            success=False,
-            error="No CTI data source configured. Use mock_data or threatfox_path parameter."
+            success=True,
+            data={
+                "indicator": indicator,
+                "indicator_type": indicator_type,
+                "reputation": "unknown",
+                "confidence": "low",
+                "related_actors": [],
+                "related_malware": [],
+                "mitre_techniques": [],
+                "sources": [],
+                "observed_evidence": [
+                    {"type": "lookup_status", "value": "not_found", "context": reason}
+                ],
+                "primary_source": "cti_enrichment",
+                "references": [],
+                "provenance": {"provider_count": 0, "matched_sources": []},
+            },
+            evidence_ids=[evidence_id],
+        )
+
+    def _build_result_from_providers(
+        self, indicator: str, indicator_type: str
+    ) -> SkillResult:
+        """Query configured read-only providers and fuse their normalized findings."""
+        findings = []
+        attack_provider = None
+        for provider in self.providers:
+            if isinstance(provider, AttackSTIXProvider):
+                attack_provider = provider
+                continue
+            finding = provider.lookup(indicator, indicator_type)
+            findings.append(finding)
+
+        matched = [finding for finding in findings if finding.matched]
+        if not matched:
+            # Keep provider diagnostics as provenance but do not turn provider
+            # unavailability into a false malicious/benign conclusion.
+            result = self._unknown_result(
+                indicator,
+                indicator_type,
+                reason="IOC not matched by configured CTI providers",
+            )
+            result.data["sources"] = [
+                {"name": f.source, "reference": (f.references[0] if f.references else "")}
+                for f in findings
+            ]
+            result.data["provenance"] = {
+                "provider_count": len(findings),
+                "matched_sources": [],
+                "provider_status": {f.source: f.provenance for f in findings},
+            }
+            return result
+
+        malware = sorted({item for f in matched for item in f.malware})
+        actors = sorted({item for f in matched for item in f.actors})
+        techniques = []
+        seen_techniques = set()
+        for f in matched:
+            for technique in f.techniques:
+                key = technique.get("technique_id") or technique.get("technique_name")
+                if key not in seen_techniques:
+                    techniques.append(technique)
+                    seen_techniques.add(key)
+
+        if attack_provider is not None and malware:
+            for technique in attack_provider.map_software(malware):
+                key = technique.get("technique_id") or technique.get("technique_name")
+                if key not in seen_techniques:
+                    techniques.append(technique)
+                    seen_techniques.add(key)
+
+        # Conservative fusion: a malicious match can raise reputation, but the
+        # final investigation still requires environment telemetry/correlation.
+        reputations = {f.reputation for f in matched}
+        reputation = "malicious" if "malicious" in reputations else (
+            "suspicious" if "suspicious" in reputations else "unknown"
+        )
+        confidence_rank = {"low": 1, "medium": 2, "high": 3}
+        confidence = max(
+            (f.confidence for f in matched),
+            key=lambda value: confidence_rank.get(str(value).lower(), 0),
+            default="low",
+        )
+
+        references = []
+        for finding in matched:
+            for ref in finding.references:
+                if ref and ref not in references:
+                    references.append(ref)
+
+        evidence_id = f"cti_{uuid.uuid4().hex[:8]}"
+        return SkillResult(
+            success=True,
+            data={
+                "indicator": indicator,
+                "indicator_type": indicator_type,
+                "reputation": reputation,
+                "confidence": confidence,
+                "related_actors": actors,
+                "related_malware": malware,
+                "mitre_techniques": techniques,
+                "sources": [
+                    {
+                        "name": f.source,
+                        "reference": f.references[0] if f.references else "",
+                    }
+                    for f in matched
+                ],
+                "observed_evidence": [
+                    item
+                    for finding in matched
+                    for item in finding.context
+                ],
+                "primary_source": matched[0].source,
+                "references": references,
+                "provenance": {
+                    "provider_count": len(findings),
+                    "matched_sources": [f.source for f in matched],
+                    "provider_status": {f.source: f.provenance for f in findings},
+                    "attack_mapping": attack_provider is not None,
+                },
+            },
+            evidence_ids=[evidence_id],
         )
 
     def _build_result_from_threatfox(
@@ -247,6 +388,9 @@ class CTISkill(BaseSkill):
                             "context": "IOC not found in ThreatFox database",
                         }
                     ],
+                    "primary_source": "threatfox_local",
+                    "references": [],
+                    "provenance": {"provider": "ThreatFox local index", "matched": false},
                 },
                 evidence_ids=[evidence_id],
             )
@@ -264,6 +408,13 @@ class CTISkill(BaseSkill):
                 "mitre_techniques": threatfox_entry.get("mitre_techniques", []),
                 "sources": threatfox_entry.get("sources", []),
                 "observed_evidence": threatfox_entry.get("observed_evidence", []),
+                "primary_source": "threatfox_local",
+                "references": [
+                    source.get("reference", "")
+                    for source in threatfox_entry.get("sources", [])
+                    if source.get("reference")
+                ],
+                "provenance": {"provider": "ThreatFox local index", "matched": true},
             },
             evidence_ids=[evidence_id],
         )
