@@ -390,7 +390,7 @@ class CTISkill(BaseSkill):
                     ],
                     "primary_source": "threatfox_local",
                     "references": [],
-                    "provenance": {"provider": "ThreatFox local index", "matched": false},
+                    "provenance": {"provider": "ThreatFox local index", "matched": False},
                 },
                 evidence_ids=[evidence_id],
             )
@@ -414,7 +414,7 @@ class CTISkill(BaseSkill):
                     for source in threatfox_entry.get("sources", [])
                     if source.get("reference")
                 ],
-                "provenance": {"provider": "ThreatFox local index", "matched": true},
+                "provenance": {"provider": "ThreatFox local index", "matched": True},
             },
             evidence_ids=[evidence_id],
         )
