@@ -17,7 +17,6 @@ from agent.runbooks import default_soc_runbook
 from agent.hitl import (
     HumanReviewGate,
     TRIAGE_CLOSE,
-    TRIAGE_CONTINUE,
     REVIEW_APPROVE,
     REVIEW_REQUEST_MORE_EVIDENCE,
     REVIEW_ESCALATE,
@@ -215,7 +214,7 @@ class InvestigationOrchestrator:
         self.evidence_store = EvidenceStore()
 
         # Conversation history
-        self.messages: List[Dict[str, str]] = []
+        self.messages: List[Dict[str, Any]] = []
 
         # Investigation state
         self.investigation_active = False
@@ -248,6 +247,7 @@ class InvestigationOrchestrator:
         self.lifecycle_trace = []
         self.security_flags = []
         self.human_decisions = []
+        self.provider.reset_tracking()
 
         indicator, context = self._sanitize_investigation_input(indicator, context)
         self._record_phase("triage", "started", "Applying triage gate before investigation")
@@ -862,6 +862,7 @@ class InvestigationOrchestrator:
             metadata={
                 "investigation_duration_seconds": duration,
                 "llm_provider": self.provider.get_name(),
+                "llm_run": self.provider.get_run_metadata(),
                 "total_steps": len(tool_calls),
                 "triage": triage.to_dict(),
                 "lifecycle_trace": [event.to_dict() for event in self.lifecycle_trace],

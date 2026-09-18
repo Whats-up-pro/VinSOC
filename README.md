@@ -90,6 +90,14 @@ python -m cli.main benchmark --limit 5
 python -m cli.main investigate 185.220.101.45 --type ipv4 --context "Suspicious connection"
 ```
 
+### OpenAI with controlled OpenRouter fallback
+
+Provider fallback is disabled in `evaluation` mode and enabled only for approved
+operational failures in `development` or `demo` mode. The primary and fallback model
+IDs are pinned; the OpenRouter fallback is additionally restricted to zero-price
+endpoints. See [`docs/provider_routing.md`](docs/provider_routing.md) for configuration,
+budget tracking, and reproducibility rules.
+
 ## Architecture
 
 ### Design Principles
