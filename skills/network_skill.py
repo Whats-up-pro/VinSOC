@@ -79,7 +79,8 @@ class NetworkSkill(BaseSkill):
     def _execute(self, **kwargs) -> SkillResult:
         indicator = kwargs["indicator"]
         indicator_type = kwargs.get("indicator_type") or "ipv4"
-        time_range = kwargs.get("time_range") or self._default_time_range()
+        explicit_time_range = kwargs.get("time_range")
+        time_range = explicit_time_range or self._default_time_range()
         direction = kwargs.get("direction", "any")
 
         events = list(
@@ -88,6 +89,7 @@ class NetworkSkill(BaseSkill):
                 indicator_type=indicator_type,
                 time_range=time_range,
                 direction=direction,
+                apply_time_filter=explicit_time_range is not None or not self.mock_data,
             )
         )
         return self._build_result(
@@ -104,12 +106,13 @@ class NetworkSkill(BaseSkill):
         indicator_type: str,
         time_range: Dict[str, str],
         direction: str,
+        apply_time_filter: bool = True,
     ) -> Iterable[NormalizedNetworkEvent]:
         query = NetworkQuery(
             indicator=indicator,
             indicator_type=indicator_type,
-            start=time_range["start"],
-            end=time_range["end"],
+            start=time_range["start"] if apply_time_filter else None,
+            end=time_range["end"] if apply_time_filter else None,
             direction=direction,
             scope=self.scope,
             max_events=self.max_events,
