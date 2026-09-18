@@ -41,16 +41,20 @@ class CTISkill(BaseSkill):
         mock_data: Optional[Dict[str, Any]] = None,
         threatfox_path: Optional[str] = None,
         threatfox_data: Optional[Dict[str, Any]] = None,
+        auto_load_threatfox: bool = True,
     ):
         """
         Initialize CTI skill.
 
         Args:
-            mock_data: Optional dict for testing. If provided, used instead of real CTI lookup.
+            mock_data: Optional dict for testing. If provided, used as CTI lookup source.
             threatfox_path: Optional path to ThreatFox JSON lookup file.
-                           Default: data/cti_lookup.json
+                           If not provided and auto_load_threatfox is True,
+                           defaults to data/cti_lookup.json if it exists.
             threatfox_data: Optional pre-loaded ThreatFox data dict.
                            Takes precedence over threatfox_path if both provided.
+            auto_load_threatfox: If True, auto-load from default path if no source
+                                is explicitly configured. Set to False for testing.
         """
         super().__init__()
         self.mock_data = mock_data or {}
@@ -62,8 +66,9 @@ class CTISkill(BaseSkill):
             logger.info(f"Loaded {len(self.threatfox_data):,} IOCs from provided ThreatFox data")
         elif threatfox_path:
             self._load_threatfox(threatfox_path)
-        else:
-            # Try default path
+        elif auto_load_threatfox:
+            # Only auto-load from default path if explicitly enabled
+            # This prevents silent data loading in tests without explicit configuration
             default_path = Path("data/cti_lookup.json")
             if default_path.exists():
                 self._load_threatfox(str(default_path))
