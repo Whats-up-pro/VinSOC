@@ -649,3 +649,39 @@ The system uses STIX 2.1 concepts for:
 - Observable patterns
 - Threat actor relationships
 - Tool/skill output in STIX-inspired JSON format
+
+
+## 11. Human-in-the-Loop Runtime Control
+
+VinSOC uses bounded autonomy: read-only evidence collection remains automated, while
+decisions that change case disposition are surfaced to the analyst.
+
+```
+Input
+  ↓
+Triage
+  ├─ BENIGN recommendation ──> Human Gate: CLOSE / CONTINUE
+  ↓
+Evidence-driven investigation (read-only)
+  ↓
+Automatic traceability + schema verification
+  ↓
+Human Gate: APPROVE / REQUEST_MORE_EVIDENCE / ESCALATE / REJECT
+  ├─ REQUEST_MORE_EVIDENCE ──> resume investigation with analyst feedback
+  └─ otherwise ──────────────> final disposition
+```
+
+### 11.1 Control semantics
+
+- `awaiting_human` means execution is at a real analyst decision boundary.
+- Analyst decisions are stored in `InvestigationCase.metadata.human_decisions`.
+- `REQUEST_MORE_EVIDENCE` changes control flow and causes another bounded evidence pass.
+- `max_review_cycles` prevents unbounded analyst-agent loops.
+- If no review gate is configured, legacy programmatic behavior remains available and
+  the case records `review_status=not_configured`.
+
+### 11.2 Security rationale
+
+This placement avoids unnecessary approval friction on read-only CTI/network/endpoint
+queries while ensuring the model cannot silently turn an assessment into an operational
+decision. The detailed evidence mapping is documented in `docs/hitl_design.md`.
