@@ -714,22 +714,60 @@ class InvestigationOrchestrator:
                 evidence_ids=[],
                 duration_ms=duration_ms
             )
-            evidence_class = "EXTERNAL_INTEL" if tool_name == "cti_enrichment" else "OBSERVED"
-            source_name = result.data.get("primary_source") if isinstance(result.data, dict) else None
-            references = result.data.get("references", []) if isinstance(result.data, dict) else []
-            provenance = result.data.get("provenance", {}) if isinstance(result.data, dict) else {}
-            evidence = self.evidence_store.add_evidence(
-                source_tool=tool_name,
-                evidence_type=f"{tool_name}_result",
-                data=result.data,
-                linked_from=call.call_id,
-                evidence_class=evidence_class,
-                source_name=source_name or tool_name,
-                confidence=result.data.get("confidence") if isinstance(result.data, dict) else None,
-                provenance=provenance,
-                references=references,
-            )
-            call.evidence_ids.append(evidence.evidence_id)
+            if (
+                tool_name == "network_investigation"
+                and isinstance(result.data, dict)
+                and result.data.get("evidence_items")
+            ):
+                local_to_real = {}
+                for item in result.data.get("evidence_items", []):
+                    evidence = self.evidence_store.add_evidence(
+                        source_tool=tool_name,
+                        evidence_type=item.get("type", "network_evidence"),
+                        data=item.get("data", {}),
+                        linked_from=call.call_id,
+                        evidence_class=item.get("evidence_class", "OBSERVED"),
+                        source_name=item.get("source_name") or tool_name,
+                        observed_at=item.get("observed_at"),
+                        confidence=item.get("confidence"),
+                        provenance=item.get("provenance", {}),
+                        references=item.get("references", []),
+                        related_evidence_ids=[],
+                    )
+                    local_key = item.get("local_key")
+                    if local_key:
+                        local_to_real[local_key] = evidence.evidence_id
+                    call.evidence_ids.append(evidence.evidence_id)
+
+                # Resolve DERIVED -> OBSERVED lineage after every real evidence ID exists.
+                for item, evidence_id in zip(
+                    result.data.get("evidence_items", []),
+                    call.evidence_ids,
+                ):
+                    evidence = self.evidence_store.get_evidence(evidence_id)
+                    if evidence is not None:
+                        evidence.related_evidence_ids = [
+                            local_to_real[key]
+                            for key in item.get("related_local_keys", [])
+                            if key in local_to_real
+                        ]
+            else:
+                evidence_class = "EXTERNAL_INTEL" if tool_name == "cti_enrichment" else "OBSERVED"
+                source_name = result.data.get("primary_source") if isinstance(result.data, dict) else None
+                references = result.data.get("references", []) if isinstance(result.data, dict) else []
+                provenance = result.data.get("provenance", {}) if isinstance(result.data, dict) else {}
+                evidence = self.evidence_store.add_evidence(
+                    source_tool=tool_name,
+                    evidence_type=f"{tool_name}_result",
+                    data=result.data,
+                    linked_from=call.call_id,
+                    evidence_class=evidence_class,
+                    source_name=source_name or tool_name,
+                    confidence=result.data.get("confidence") if isinstance(result.data, dict) else None,
+                    provenance=provenance,
+                    references=references,
+                )
+                call.evidence_ids.append(evidence.evidence_id)
 
             # Format result for LLM
             result_text = f"Tool: {tool_name}\n\nResult:\n{self._format_result_for_llm(result.data)}"
