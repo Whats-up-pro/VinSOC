@@ -957,11 +957,23 @@ class InvestigationOrchestrator:
                 cti_reputation = ev.data.get("reputation", "unknown")
                 cti_confidence = ev.data.get("confidence", "LOW")
 
-        # Check network
+        # Check network DERIVED evidence. NetworkSkill v2 keeps raw telemetry
+        # separate from deterministic analytics, so hypotheses consume evidence
+        # semantics rather than a monolithic patterns_detected blob.
         network_patterns = []
         for ev in evidence:
-            if ev.source_tool == "network_investigation":
-                network_patterns = [p["pattern"] for p in ev.data.get("patterns_detected", [])]
+            if ev.source_tool != "network_investigation" or ev.evidence_class != "DERIVED":
+                continue
+            classification = ev.data.get("classification")
+            if ev.type == "periodicity_candidate" and classification == "periodic_connection_candidate":
+                network_patterns.append("beaconing")
+            elif ev.type == "scan_candidate" and classification in {
+                "horizontal_scan_candidate",
+                "vertical_scan_candidate",
+            }:
+                network_patterns.append("port_scan")
+            elif ev.type == "service_fanout_candidate":
+                network_patterns.append("service_fanout")
 
         # Check endpoint
         suspicious_processes = []
@@ -1027,15 +1039,26 @@ class InvestigationOrchestrator:
                 confidence="MEDIUM"
             ))
 
-        # Network anomalies
-        if any(p in ["port_scan", "beaconing", "data_exfiltration"] for p in network_patterns):
+        # Network analytic candidates strengthen a hypothesis but are not
+        # equivalent to confirmed C2, exfiltration, or compromise.
+        if any(p in ["port_scan", "beaconing", "service_fanout"] for p in network_patterns):
             risk = "HIGH" if risk in ["UNKNOWN", "MEDIUM"] else risk
-            confidence = "HIGH"
+            confidence = "MEDIUM"
             hypotheses.append(InvestigationHypothesis(
                 id="h2",
-                description=f"Network anomalies detected: {network_patterns}",
-                supporting_evidence=[ev.evidence_id for ev in evidence if ev.source_tool == "network_investigation"],
-                confidence="HIGH"
+                description=f"Deterministic network analytic candidates detected: {network_patterns}",
+                supporting_evidence=[
+                    ev.evidence_id
+                    for ev in evidence
+                    if ev.source_tool == "network_investigation"
+                    and ev.evidence_class == "DERIVED"
+                    and ev.type in {
+                        "periodicity_candidate",
+                        "scan_candidate",
+                        "service_fanout_candidate",
+                    }
+                ],
+                confidence="MEDIUM"
             ))
 
         # Suspicious processes
