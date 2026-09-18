@@ -186,3 +186,10 @@ After Milestone C review:
 3. cross-source correlation graph;
 4. attack timeline;
 5. evidence-grounded hypothesis generation.
+
+
+## Implementation note
+
+Scan analytics use separate grouping axes: horizontal candidates are evaluated per
+source/destination-port, while vertical candidates are evaluated per source/destination-host.
+This prevents concurrent scan shapes from masking one another inside the same time window.
