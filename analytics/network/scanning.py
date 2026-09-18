@@ -26,6 +26,8 @@ def analyze_scanning(
     findings = []
     for src_ip, group in by_source.items():
         ordered = sorted(group, key=lambda event: _dt(event.observed_at))
+        found_horizontal = False
+        found_vertical = False
         for start_index, start_event in enumerate(ordered):
             window = []
             start_ts = _dt(start_event.observed_at)
@@ -36,7 +38,7 @@ def analyze_scanning(
 
             targets = {event.dst_ip for event in window}
             ports = {event.dst_port for event in window if event.dst_port is not None}
-            if len(targets) >= min_unique_targets and len(ports) <= 2:
+            if not found_horizontal and len(targets) >= min_unique_targets and len(ports) <= 2:
                 findings.append({
                     "analytic": "scan",
                     "classification": "horizontal_scan_candidate",
@@ -47,9 +49,9 @@ def analyze_scanning(
                     "connection_attempts": len(window),
                     "related_event_ids": [event.event_id for event in window],
                 })
-                break
+                found_horizontal = True
 
-            if len(ports) >= min_unique_ports and len(targets) <= 2:
+            if not found_vertical and len(ports) >= min_unique_ports and len(targets) <= 2:
                 findings.append({
                     "analytic": "scan",
                     "classification": "vertical_scan_candidate",
@@ -60,5 +62,8 @@ def analyze_scanning(
                     "connection_attempts": len(window),
                     "related_event_ids": [event.event_id for event in window],
                 })
+                found_vertical = True
+
+            if found_horizontal and found_vertical:
                 break
     return findings
