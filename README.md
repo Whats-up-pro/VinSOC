@@ -38,6 +38,7 @@ This system demonstrates AI-augmented SOC investigation using:
 │   ├── provider.py           # LLM provider adapters
 │   ├── tools.py              # Tool definitions
 │   ├── evidence.py           # Evidence store
+│   ├── hitl.py               # Human review gate contracts and decisions
 │   └── integrations.py       # Read-only SOC integration abstraction (SecOps/GTI/SCC)
 ├── /scenarios                # Test scenarios (20 cases)
 │   ├── case_001.json
@@ -97,7 +98,8 @@ python -m cli.main investigate 185.220.101.45 --type ipv4 --context "Suspicious 
 2. **Evidence as First-Class Citizen**: Every conclusion links to observable evidence
 3. **Strict Separation**: LLM handles orchestration; skills handle deterministic retrieval
 4. **Read-Only Enforcement**: No write capabilities; investigation only
-5. **Lifecycle Control**: Triage → Investigate → Verify → Review with explicit phase trace
+5. **Lifecycle Control**: Triage → Investigate → Verify → Human Review with explicit phase trace
+6. **Human-in-the-Loop Decisions**: Analyst can confirm benign closure, request more evidence, approve, reject, or escalate assessments
 
 ### Investigation Flow
 
@@ -109,8 +111,29 @@ python -m cli.main investigate 185.220.101.45 --type ipv4 --context "Suspicious 
 5. EVALUATION: Agent decides next steps
 6. CORRELATION: Evidence combined
 7. ASSESSMENT: Risk and confidence assigned
-8. REPORT: Final investigation case generated
+8. REPORT: Evidence-grounded investigation case generated
+9. HUMAN REVIEW: Analyst approves, requests more evidence, rejects, or escalates
+10. FEEDBACK LOOP: Additional analyst questions can resume read-only investigation
 ```
+
+## Human-in-the-Loop Workflow
+
+Direct CLI investigations now use two runtime analyst decision gates:
+
+```
+Triage
+  └─ BENIGN recommendation → analyst CLOSE / CONTINUE
+
+Read-only evidence-driven investigation
+  → automatic verification
+  → analyst APPROVE / REQUEST_MORE_EVIDENCE / ESCALATE / REJECT
+```
+
+`REQUEST_MORE_EVIDENCE` feeds analyst feedback back into the agent and resumes a bounded
+read-only investigation pass before verification and review repeat. Tool calls remain
+autonomous because VinSOC tools are read-only; operational response authority remains human-controlled.
+
+See `docs/hitl_design.md` for the evidence-backed rationale and source mapping.
 
 ## Skills
 
