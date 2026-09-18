@@ -1,235 +1,129 @@
-# SOC AI Investigation System
+# VinSOC
 
-An evidence-grounded, read-only AI-assisted SOC investigation system that orchestrates heterogeneous security skills for faster and more reliable incident analysis.
+VinSOC is a read-only, evidence-grounded SOC investigation project. It uses an LLM to select investigation tools, then returns structured evidence for a human analyst to review. It does not block traffic, change systems, or make autonomous incident decisions.
 
-## Overview
+## Current scope
 
-This system demonstrates AI-augmented SOC investigation using:
-- **Three Investigation Skills**: CTI Enrichment, Network Investigation, Endpoint Investigation
-- **LLM-based Orchestration**: Agent that dynamically selects and coordinates skills
-- **Evidence Grounding**: Every hypothesis must cite specific evidence IDs
-- **Security Boundaries**: Read-only operations with full audit trails
+VinSOC works with three evidence types:
 
-## Project Structure
+| Evidence type | Current source |
+|---|---|
+| External CTI | [ThreatFox](https://threatfox.abuse.ch/) |
+| Network telemetry | [CTU-13](https://www.stratosphereips.org/datasets-ctu13/) and [CICIDS2017](https://www.unb.ca/cic/datasets/ids-2017.html) |
+| Endpoint telemetry | Public Sysmon event logs, using [Microsoft Sysmon](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) event definitions |
 
-```
-/Phase3_VinSOC
-├── /docs                    # Documentation
-│   ├── problem.md           # Problem statement
-│   ├── literature_review.md # Literature survey
-│   ├── architecture.md      # System architecture
-│   ├── threat_model.md      # Security threat model
-│   └── evaluation.md        # Evaluation framework
-├── /schemas                 # JSON schemas
-│   ├── cti_result.json
-│   ├── network_result.json
-│   ├── endpoint_result.json
-│   └── investigation_case.json
-├── /skills                   # Investigation skills
-│   ├── __init__.py
-│   ├── base.py              # Base skill interface
-│   ├── cti_skill.py         # CTI enrichment
-│   ├── network_skill.py      # Network investigation
-│   ├── endpoint_skill.py     # Endpoint investigation
-│   └── validators.py         # Schema validators
-├── /agent                    # Agent orchestration
-│   ├── __init__.py
-│   ├── orchestrator.py       # Investigation orchestrator
-│   ├── provider.py           # LLM provider adapters
-│   ├── tools.py              # Tool definitions
-│   ├── evidence.py           # Evidence store
-│   ├── hitl.py               # Human review gate contracts and decisions
-│   └── integrations.py       # Read-only SOC integration abstraction (SecOps/GTI/SCC)
-├── /scenarios                # Test scenarios (20 cases)
-│   ├── case_001.json
-│   └── ...
-├── /tests                    # Test suite
-│   ├── __init__.py
-│   └── test_skills.py
-├── /cli                      # CLI interface
-│   └── main.py
-├── requirements.txt
-└── README.md
-```
+The project focuses on observed telemetry, derived analytics, CTI enrichment, evidence correlation, and assessment reports. It does not train ML/DL models, perform anomaly detection with ML, or run automated response.
 
-## Quick Start
-
-### Installation
-
-```bash
-pip install -r requirements.txt
-```
-
-### Test Skills
-
-```bash
-python -m cli.main test
-```
-
-### List Available Scenarios
-
-```bash
-python -m cli.main list
-```
-
-### Run a Scenario
-
-```bash
-python -m cli.main scenario case_001
-```
-
-### Benchmark Orchestration Modes
-
-```bash
-python -m cli.main benchmark --limit 5
-```
-
-### Investigate an Indicator Directly
-
-```bash
-python -m cli.main investigate 185.220.101.45 --type ipv4 --context "Suspicious connection"
-```
-
-### OpenAI with controlled OpenRouter fallback
-
-Provider fallback is disabled in `evaluation` mode and enabled only for approved
-operational failures in `development` or `demo` mode. The primary and fallback model
-IDs are pinned; the OpenRouter fallback is additionally restricted to zero-price
-endpoints. See [`docs/provider_routing.md`](docs/provider_routing.md) for configuration,
-budget tracking, and reproducibility rules.
+For CTI, a valid lookup with an available source but no match returns `UNKNOWN`. A missing source, source execution error, or input validation error fails closed.
 
 ## Architecture
 
-### Design Principles
-
-1. **LLM Provider as Adapter**: LLM is the reasoning layer only; skills exist independently
-2. **Evidence as First-Class Citizen**: Every conclusion links to observable evidence
-3. **Strict Separation**: LLM handles orchestration; skills handle deterministic retrieval
-4. **Read-Only Enforcement**: No write capabilities; investigation only
-5. **Lifecycle Control**: Triage → Investigate → Verify → Human Review with explicit phase trace
-6. **Human-in-the-Loop Decisions**: Analyst can confirm benign closure, request more evidence, approve, reject, or escalate assessments
-
-### Investigation Flow
-
-```
-1. INPUT: IOC + Context
-2. ORCHESTRATION: LLM selects and coordinates tools
-3. SKILL EXECUTION: Evidence-driven selection of CTI, Network, or Endpoint
-4. EVIDENCE COLLECTION: All results stored
-5. EVALUATION: Agent decides next steps
-6. CORRELATION: Evidence combined
-7. ASSESSMENT: Risk and confidence assigned
-8. REPORT: Evidence-grounded investigation case generated
-9. HUMAN REVIEW: Analyst approves, requests more evidence, rejects, or escalates
-10. FEEDBACK LOOP: Additional analyst questions can resume read-only investigation
+```text
+Analyst input
+  -> LLM orchestrator
+  -> CTI / network / endpoint tool
+  -> evidence store
+  -> assessment report
+  -> human review
 ```
 
-## Human-in-the-Loop Workflow
+Text-to-SQL uses the approved Option A design:
 
-Direct CLI investigations now use two runtime analyst decision gates:
-
-```
-Triage
-  └─ BENIGN recommendation → analyst CLOSE / CONTINUE
-
-Read-only evidence-driven investigation
-  → automatic verification
-  → analyst APPROVE / REQUEST_MORE_EVIDENCE / ESCALATE / REJECT
+```text
+LLM orchestrator
+  -> domain tool
+  -> internal query layer
+  -> read-only DuckDB snapshot
+  -> normalized evidence
 ```
 
-`REQUEST_MORE_EVIDENCE` feeds analyst feedback back into the agent and resumes a bounded
-read-only investigation pass before verification and review repeat. Tool calls remain
-autonomous because VinSOC tools are read-only; operational response authority remains human-controlled.
+The LLM does not receive raw database access. The database layer is hidden behind `network_investigation` and `endpoint_investigation`.
 
-See `docs/hitl_design.md` for the evidence-backed rationale and source mapping.
+## DuckDB and data integrity
 
-## Skills
+DuckDB is used for a local frozen snapshot because the current project is an offline public-data benchmark with one evaluator. The runtime opens the snapshot in read-only mode and permits only one `SELECT` or `WITH ... SELECT` statement. It hard-rejects writes, schema changes, multi-statement SQL, and database attachment commands.
 
-### CTI Enrichment
+The repository does not ship a benchmark snapshot or download sources automatically. Before loading rows, the snapshot builder requires source provenance: URL, retrieval time, file SHA-256, licence note, and schema version. Do not add synthetic, modified, or training rows to the frozen benchmark.
 
-Enriches IOCs with threat intelligence:
-- Reputation (benign/suspicious/malicious/unknown)
-- Related threat actors
-- Related malware families
-- MITRE ATT&CK techniques
+See [the DuckDB data-layer guide](docs/duckdb_data_layer.md) for the schema and build rules.
 
-### Network Investigation
+## Evaluation
 
-Analyzes network telemetry:
-- Connection frequency and patterns
-- Port patterns and anomalies
-- Failed/success ratios
-- Detection patterns (port scan, beaconing, exfiltration)
+VinSOC has three separate evaluation tracks:
 
-### Endpoint Investigation
+| Track | Question answered | Main metric |
+|---|---|---|
+| Tool calling | Did the model select the right tool with the right arguments? | Tool Precision, Recall, F1; exact call match |
+| Text-to-SQL | Did the query return the correct result from the same frozen snapshot? | Execution accuracy |
+| End-to-end | Did the whole investigation produce grounded evidence and a correct assessment? | Evidence and assessment metrics |
 
-Analyzes process relationships:
-- Parent-child process chains
-- Suspicious spawning patterns
-- LOLBin usage detection
-- MITRE technique mapping
+Text-to-SQL metrics are separated on purpose:
 
-## Evidence Grounding
+- **Syntax validity**: DuckDB can parse the query without executing it.
+- **Execution success**: the query runs on the snapshot.
+- **Execution accuracy**: its result matches an accepted gold SQL result. This is the headline metric.
+- **Safety rejection rate**: unsafe SQL stopped before execution.
 
-Every hypothesis must cite specific evidence IDs:
+The evaluator is in `evaluation/text_to_sql.py`. Each future benchmark case must follow [`schemas/text_to_sql_case.json`](schemas/text_to_sql_case.json). Gold SQL and predicted SQL always run against the same frozen database snapshot.
 
-```
-Evidence:
-- EV001: CTI shows malicious reputation (HIGH confidence)
-- EV002: Network shows beaconing pattern
-- EV003: Endpoint shows winword→powershell relationship
+See [preliminary evaluation results](docs/evaluation_results_preliminary.md) for the current mock integration baseline and test status.
 
-Hypothesis:
-Multi-stage intrusion (Confidence: HIGH)
-Supporting evidence: EV001 + EV002 + EV003
+## Setup
+
+Python 3.11 or newer is required.
+
+```bash
+pip install -r requirements.txt
+python -m pytest -q
 ```
 
-## Evaluation Framework
+## Run the current skill and scenario checks
 
-### 20 Scenario Benchmark
+```bash
+python -m cli.main test
+python -m cli.main list
+python -m cli.main scenario case_001
+python -m cli.main benchmark --limit 5
+```
 
-| Category | Count |
-|----------|------:|
-| Benign | 4 |
-| Malicious IOC | 4 |
-| Network Anomaly | 3 |
-| Suspicious Process | 3 |
-| Multi-stage | 4 |
-| Ambiguous | 2 |
+## Use a frozen DuckDB snapshot
 
-### Metrics
+After a provenance-checked public snapshot is built, pass its path to a direct investigation:
 
-- **Tool Selection Accuracy**: Correct tool calls / Expected calls
-- **Evidence Coverage**: Evidence retrieved / Evidence required
-- **Assessment Quality**: Hypothesis correctness, risk classification
-- **False Positive Rate**: False alerts / Benign cases
-- **Investigation Time**: Comparison with manual workflow
+```bash
+python -m cli.main investigate 185.220.101.45 \
+  --type ipv4 \
+  --duckdb-snapshot data/snapshots/vinsoc_public_v1.duckdb
+```
 
-## Security
+This connects only the network and endpoint skills to the snapshot. CTI remains fail-closed unless an approved ThreatFox source is configured.
 
-### Threat Model
+## Provider policy
 
-- **Prompt Injection**: Log data treated as data, not instructions
-- **Untrusted Content**: All external data sanitized
-- **Privilege Restriction**: Read-only skills only
-- **Audit Trail**: Full tool trace and evidence collection
+OpenAI is the primary provider. OpenRouter is a fallback only when the OpenAI provider has an approved operational failure, and it must use a model with the `:free` suffix. Fallback is disabled in official evaluation mode. The provider layer keeps model, cost, and fallback metadata for reproducibility.
 
-### OWASP Alignment
+See [provider routing](docs/provider_routing.md) for configuration details.
 
-Follows OWASP Agentic AI Threats and Mitigations:
-- Visibility and traceability
-- Runtime controls
-- Least privilege
+## Project layout
 
-## Documentation
+```text
+agent/          LLM orchestration, tools, evidence, HITL
+skills/         CTI, network, and endpoint investigation skills
+vinsoc_data/    DuckDB snapshot boundary and domain query layer
+evaluation/     Text-to-SQL execution evaluator
+schemas/        Output and benchmark schemas
+scenarios/      Existing tool-calling scenarios
+docs/           Architecture, evaluation, safety, and data-layer notes
+tests/          Unit and integration tests
+```
 
-See `/docs` for detailed documentation:
-- `problem.md` - Problem statement and motivation
-- `literature_review.md` - Survey of related work
-- `architecture.md` - System architecture
-- `threat_model.md` - Security threat analysis
-- `evaluation.md` - Evaluation methodology
+## Security boundary
 
-## License
+- All investigation tools are read-only.
+- Telemetry and CTI text are treated as untrusted data, never as instructions.
+- Every report must link claims to evidence IDs.
+- An analyst approves, rejects, requests more evidence, or escalates the final assessment.
 
-This is an academic/research project for SOC investigation automation.
+## Licence
+
+This is an academic and research project for SOC investigation evaluation.

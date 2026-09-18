@@ -82,6 +82,8 @@ Use this tool to analyze:
 - Suspicious patterns (port scan, beaconing, data exfiltration)
 
 This tool analyzes network logs and firewall telemetry.
+When a frozen DuckDB snapshot is configured, the tool uses its internal,
+read-only domain query layer. Do not send SQL in this tool call.
 Call this AFTER CTI enrichment to correlate with network behavior.""",
                 "parameters": {
                     "type": "object",
@@ -121,6 +123,8 @@ Use this tool to analyze:
 - MITRE ATT&CK technique indicators
 
 This tool analyzes endpoint detection and response (EDR) data.
+When a frozen DuckDB snapshot is configured, the tool uses its internal,
+read-only domain query layer. Do not send SQL in this tool call.
 Call this when process relationships are relevant to the investigation.""",
                 "parameters": {
                     "type": "object",

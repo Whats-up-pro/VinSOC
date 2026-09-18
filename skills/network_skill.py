@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Union
 
 from skills.base import BaseSkill, SkillContract, SkillResult
+from vinsoc_data.domain_queries import DuckDBNetworkRepository
 
 
 class NetworkSkill(BaseSkill):
@@ -38,12 +39,17 @@ class NetworkSkill(BaseSkill):
         31337: "Back Orifice",
     }
 
-    def __init__(self, mock_data: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self,
+        mock_data: Optional[Dict[str, Any]] = None,
+        repository: Optional[DuckDBNetworkRepository] = None,
+    ):
         """
         Initialize Network skill.
 
         Args:
-            mock_data: Optional dict for testing. Structure:
+            mock_data: Optional dict for testing. It takes precedence over the
+                repository and is not benchmark data.
                 {
                     "indicator_value": {
                         "connections": [...],
@@ -53,6 +59,7 @@ class NetworkSkill(BaseSkill):
         """
         super().__init__()
         self.mock_data = mock_data or {}
+        self.repository = repository
 
     def validate_input(self, **kwargs) -> tuple[bool, Optional[str]]:
         """Validate network investigation parameters."""
@@ -102,6 +109,45 @@ class NetworkSkill(BaseSkill):
             mock_result = self.mock_data.get(indicator, self.mock_data.get("*", {}))
             if mock_result:
                 return self._build_result_from_mock(indicator, indicator_type, mock_result, time_range, evidence_id)
+
+        if self.repository is not None:
+            try:
+                query_result = self.repository.find_connections(indicator, time_range)
+                connections = query_result.rows
+                query_time_range = time_range or self.repository.coverage_time_range() or self._default_time_range()
+            except Exception as exc:
+                return SkillResult(
+                    success=False,
+                    error=f"Network DuckDB query failed: {exc}",
+                    evidence_ids=[evidence_id],
+                )
+            return self._build_result_from_mock(
+                indicator,
+                indicator_type,
+                {
+                    "connections": connections,
+                    "observed_evidence": [
+                        {
+                            "type": "connection_count",
+                            "value": len(connections),
+                            "context": "Connections returned from the frozen public-data snapshot",
+                        },
+                        *(
+                            [
+                                {
+                                    "type": "query_truncated",
+                                    "value": True,
+                                    "context": "The read-only query reached the configured row limit.",
+                                }
+                            ]
+                            if query_result.truncated
+                            else []
+                        ),
+                    ],
+                },
+                query_time_range,
+                evidence_id,
+            )
 
         # Default empty result
         return self._build_empty_result(indicator, indicator_type, time_range, evidence_id)

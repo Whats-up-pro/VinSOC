@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VinSOCTextToSQLCase",
+  "description": "A Text-to-SQL benchmark case evaluated on one frozen DuckDB snapshot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "question", "database_snapshot", "gold_sql", "result_comparator"],
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1},
+    "database_snapshot": {"type": "string", "minLength": 1},
+    "gold_sql": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "result_comparator": {
+      "type": "string",
+      "enum": ["unordered_rows", "multiset_rows", "scalar", "boolean"]
+    }
+  }
+}

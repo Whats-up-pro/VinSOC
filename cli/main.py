@@ -124,6 +124,7 @@ def run_investigation(
     run_mode: str = "evaluation",
     monthly_budget_usd: Optional[float] = None,
     budget_ledger_path: str = ".vinsoc/openai_budget.json",
+    duckdb_snapshot_path: Optional[str] = None,
     human_review_gate=None,
 ) -> Dict[str, Any]:
     """Run an investigation and return results."""
@@ -153,6 +154,7 @@ def run_investigation(
         cti_mock_data=test_data.get("cti_mock_data") if test_data else None,
         network_mock_data=test_data.get("network_mock_data") if test_data else None,
         endpoint_mock_data=test_data.get("endpoint_mock_data") if test_data else None,
+        duckdb_snapshot_path=duckdb_snapshot_path,
         human_review_gate=human_review_gate,
     )
 
@@ -304,6 +306,7 @@ def run_direct_investigation(
     run_mode: str,
     monthly_budget_usd: Optional[float],
     budget_ledger_path: str,
+    duckdb_snapshot_path: Optional[str],
 ):
     """Run a direct investigation on an indicator."""
     console.print(f"\n[cyan]Investigating:[/cyan] {indicator} ({indicator_type})")
@@ -324,6 +327,7 @@ def run_direct_investigation(
         run_mode=run_mode,
         monthly_budget_usd=monthly_budget_usd,
         budget_ledger_path=budget_ledger_path,
+        duckdb_snapshot_path=duckdb_snapshot_path,
         human_review_gate=ConsoleHumanReviewGate(),
     )
 
@@ -455,6 +459,10 @@ def main():
         default=".vinsoc/openai_budget.json",
         help="Persistent monthly OpenAI cost ledger",
     )
+    investigate_parser.add_argument(
+        "--duckdb-snapshot",
+        help="Path to a frozen, public-data DuckDB snapshot for read-only network and endpoint lookups",
+    )
 
     # Scenario command
     scenario_parser = subparsers.add_parser("scenario", help="Run a predefined scenario")
@@ -507,6 +515,7 @@ def main():
             run_mode=args.run_mode,
             monthly_budget_usd=args.monthly_budget_usd,
             budget_ledger_path=args.budget_ledger,
+            duckdb_snapshot_path=args.duckdb_snapshot,
         )
     elif args.command == "scenario":
         run_scenario(

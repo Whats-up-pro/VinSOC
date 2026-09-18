@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Set
 
 from skills.base import BaseSkill, SkillContract, SkillResult
+from vinsoc_data.domain_queries import DuckDBEndpointRepository
 
 
 class EndpointSkill(BaseSkill):
@@ -71,15 +72,21 @@ class EndpointSkill(BaseSkill):
         "rundll32.exe", "wscript.exe", "cscript.exe"
     }
 
-    def __init__(self, mock_data: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self,
+        mock_data: Optional[Dict[str, Any]] = None,
+        repository: Optional[DuckDBEndpointRepository] = None,
+    ):
         """
         Initialize Endpoint skill.
 
         Args:
-            mock_data: Optional dict for testing.
+            mock_data: Optional dict for testing. It takes precedence over the
+                repository and is not benchmark data.
         """
         super().__init__()
         self.mock_data = mock_data or {}
+        self.repository = repository
 
     def validate_input(self, **kwargs) -> tuple[bool, Optional[str]]:
         """Validate endpoint investigation parameters."""
@@ -120,6 +127,44 @@ class EndpointSkill(BaseSkill):
             mock_result = self.mock_data.get(host, self.mock_data.get("*", {}))
             if mock_result:
                 return self._build_result_from_mock(host, mock_result, time_range, evidence_id)
+
+        if self.repository is not None:
+            try:
+                query_result = self.repository.find_process_relationships(host, time_range)
+                process_tree = query_result.rows
+                query_time_range = time_range or self.repository.coverage_time_range() or self._default_time_range()
+            except Exception as exc:
+                return SkillResult(
+                    success=False,
+                    error=f"Endpoint DuckDB query failed: {exc}",
+                    evidence_ids=[evidence_id],
+                )
+            return self._build_result_from_mock(
+                host,
+                {
+                    "process_tree": process_tree,
+                    "observed_evidence": [
+                        {
+                            "type": "process_relationship_count",
+                            "value": len(process_tree),
+                            "context": "Sysmon Event ID 1 relationships returned from the frozen public-data snapshot",
+                        },
+                        *(
+                            [
+                                {
+                                    "type": "query_truncated",
+                                    "value": True,
+                                    "context": "The read-only query reached the configured row limit.",
+                                }
+                            ]
+                            if query_result.truncated
+                            else []
+                        ),
+                    ],
+                },
+                query_time_range,
+                evidence_id,
+            )
 
         # Default empty result
         return self._build_empty_result(host, time_range, evidence_id)
