@@ -56,7 +56,7 @@ def test_benign_triage_requires_human_close_when_gate_enabled():
         cti_mock_data=_benign_cti(indicator),
     )
 
-    case = orch.investigate(indicator)
+    case = orch.investigate(indicator, context="known infrastructure expected activity")
 
     assert case.metadata["hitl_enabled"] is True
     assert case.metadata["review_status"] == "approved"
@@ -83,7 +83,7 @@ def test_human_can_override_benign_triage_and_continue():
         cti_mock_data=_benign_cti(indicator),
     )
 
-    case = orch.investigate(indicator)
+    case = orch.investigate(indicator, context="known infrastructure expected activity")
 
     assert any(
         d["phase"] == "triage" and d["decision"] == TRIAGE_CONTINUE
