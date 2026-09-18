@@ -21,12 +21,64 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from agent.orchestrator import InvestigationOrchestrator
 from agent.provider import create_provider, MockProvider
+from agent.hitl import (
+    HumanDecision,
+    ScriptedHumanReviewGate,
+    TRIAGE_CLOSE,
+    TRIAGE_CONTINUE,
+    REVIEW_APPROVE,
+    REVIEW_REQUEST_MORE_EVIDENCE,
+    REVIEW_ESCALATE,
+    REVIEW_REJECT,
+)
 from skills.cti_skill import CTISkill
 from skills.network_skill import NetworkSkill
 from skills.endpoint_skill import EndpointSkill
 
 
 console = Console()
+
+
+class ConsoleHumanReviewGate:
+    """Interactive analyst checkpoints for direct CLI investigations."""
+
+    def _choice(self, prompt: str, allowed):
+        allowed_upper = {item.upper(): item for item in allowed}
+        while True:
+            value = console.input(prompt).strip().upper()
+            if value in allowed_upper:
+                return allowed_upper[value]
+            console.print(f"[yellow]Choose one of: {', '.join(allowed)}[/yellow]")
+
+    def review_triage(self, indicator, indicator_type, context, triage):
+        console.print("\n[bold yellow]Human Review Gate — Benign Triage[/bold yellow]")
+        console.print(f"Indicator: {indicator} ({indicator_type})")
+        console.print(f"Machine recommendation: {triage.verdict} / confidence={triage.confidence}")
+        decision = self._choice(
+            "Decision [CLOSE/CONTINUE]: ",
+            [TRIAGE_CLOSE, TRIAGE_CONTINUE],
+        )
+        rationale = console.input("Rationale (optional): ").strip()
+        return HumanDecision(decision=decision, rationale=rationale, analyst="cli-analyst")
+
+    def review_final(self, case):
+        console.print("\n[bold yellow]Human Review Gate — Final Assessment[/bold yellow]")
+        console.print(f"Risk: {case.risk_level} | Confidence: {case.confidence}")
+        console.print(f"Assessment: {case.final_assessment[:600]}")
+        decision = self._choice(
+            "Decision [APPROVE/REQUEST_MORE_EVIDENCE/ESCALATE/REJECT]: ",
+            [REVIEW_APPROVE, REVIEW_REQUEST_MORE_EVIDENCE, REVIEW_ESCALATE, REVIEW_REJECT],
+        )
+        rationale = console.input("Rationale (optional): ").strip()
+        feedback = ""
+        if decision == REVIEW_REQUEST_MORE_EVIDENCE:
+            feedback = console.input("What additional evidence should the agent collect? ").strip()
+        return HumanDecision(
+            decision=decision,
+            rationale=rationale,
+            feedback=feedback,
+            analyst="cli-analyst",
+        )
 
 
 def load_scenario(scenario_path: str) -> Dict[str, Any]:
@@ -65,7 +117,8 @@ def run_investigation(
     provider: str = "mock",
     model: str = "gpt-4o",
     api_key: Optional[str] = None,
-    test_data: Optional[Dict[str, Any]] = None
+    test_data: Optional[Dict[str, Any]] = None,
+    human_review_gate=None,
 ) -> Dict[str, Any]:
     """Run an investigation and return results."""
     # Create LLM provider
@@ -83,7 +136,8 @@ def run_investigation(
         provider=llm_provider,
         cti_mock_data=test_data.get("cti_mock_data") if test_data else None,
         network_mock_data=test_data.get("network_mock_data") if test_data else None,
-        endpoint_mock_data=test_data.get("endpoint_mock_data") if test_data else None
+        endpoint_mock_data=test_data.get("endpoint_mock_data") if test_data else None,
+        human_review_gate=human_review_gate,
     )
 
     # Run investigation
@@ -195,7 +249,8 @@ def run_scenario(scenario_path: str, provider: str = "mock", model: str = "gpt-4
         context=indicator.get("context"),
         provider=provider,
         model=model,
-        test_data=test_data
+        test_data=test_data,
+        human_review_gate=ScriptedHumanReviewGate(),
     )
 
     # Display results
@@ -232,7 +287,8 @@ def run_direct_investigation(
         context=context,
         provider=provider,
         model=model,
-        api_key=api_key
+        api_key=api_key,
+        human_review_gate=ConsoleHumanReviewGate(),
     )
 
     display_case(case)
