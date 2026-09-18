@@ -160,3 +160,10 @@ The HITL implementation should be evaluated separately from model quality:
 
 These metrics should be reported alongside the existing tool-selection, evidence-coverage,
 assessment-quality, and investigation-time metrics.
+
+
+## Validation note
+
+The HITL/orchestrator regression suite is run in GitHub Actions on Python 3.11 and 3.12.
+The repository-wide baseline currently contains two unrelated `CTISkill` tests that fail
+when no CTI data source is configured; this change does not modify that skill behavior.
