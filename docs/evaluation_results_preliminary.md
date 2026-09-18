@@ -27,17 +27,26 @@ python scripts/measure_tool_calling.py
 |---|---:|
 | Scenarios | 20 |
 | Actual tool calls | 42 |
-| True positive / false positive / false negative calls | 39 / 3 / 5 |
-| Tool Precision | 92.86% |
-| Tool Recall | 88.64% |
-| Tool F1 | 90.70% |
-| Tool-set exact match | 60.00% (12/20) |
-| Exact call-sequence match | 60.00% (12/20) |
+| True positive / false positive / false negative calls | 36 / 6 / 5 |
+| Tool Precision | 36/42 = 85.71% |
+| Tool Recall | 36/41 = 87.80% |
+| Tool F1 | 86.75% |
+| Tool-set exact match | 9/20 = 45.00% |
+| Exact call-sequence match | 9/20 = 45.00% |
 | Integration execution success | 92.86% (39/42) |
 
-The eight tool-set mismatches are `case_001`, `case_004`, `case_005`, `case_010`, `case_016`, `case_018`, `case_019`, and `case_020`.
+The 11 tool-set mismatches are `case_001`, `case_004`, `case_005`, `case_010`,
+`case_012`, `case_013`, `case_014`, `case_016`, `case_018`, `case_019`, and
+`case_020`.
 
-The three execution failures are in `case_012` to `case_014`. The mock orchestration sends `WS001`, `WS023`, and `WS045` to `cti_enrichment`. They are host identifiers, not valid IOCs, so CTI validation fails closed as required. This is a useful integration defect to fix, but it is not a ThreatFox availability failure.
+Cases `case_012` to `case_014` now correctly expect endpoint investigation only.
+Their hostname inputs (`WS001`, `WS023`, and `WS045`) have no compatible CTI
+pivot. The unchanged orchestrator still makes an unnecessary `cti_enrichment`
+call for each case. Those calls are false positives and fail validation, which
+explains the three unsuccessful executions. This is an integration limitation,
+not a ThreatFox availability failure. CTI must fail closed when the input is
+invalid, the source is missing or cannot run, or validation fails; with an
+executable source and no match, it succeeds with `UNKNOWN`.
 
 ### What this result does not prove
 
@@ -71,11 +80,13 @@ All 3 checks passed. The corresponding rates on these three test inputs are 66.6
 
 | Check | Result |
 |---|---:|
-| New DuckDB and Text-to-SQL tests | 3 passed |
-| Full repository suite | 114 passed, 2 failed |
-| Lint: new `vinsoc_data`, `evaluation`, and DuckDB test files | passed |
+| Targeted CTI and integration checks | 49/49 passed, 96 warnings |
+| Benchmark and DuckDB checks | 4/4 passed |
+| Full repository suite | 138/138 passed, 828 warnings |
 
-The two full-suite failures are older CTI tests that expect `CTISkill()` without a configured source to return a successful `UNKNOWN` result. They conflict with the approved rule: no source or source execution failure must fail closed. They are not caused by the DuckDB change.
+The earlier two stale no-source CTI test failures are resolved. The 828 warnings
+remain part of the current baseline. Ruff on the changed and related legacy
+files reports 36 pre-existing style and modernization issues; lint is not clean.
 
 ## 4. Conditions before official results
 

@@ -15,10 +15,7 @@
     "expected_risk": "HIGH",
     "expected_confidence": "HIGH",
     "expected_hypothesis": "Likely malware download using LOLBin technique to bypass security controls",
-    "known_limitations": [
-      "Initial indicator is an endpoint hostname and is not a supported CTI IOC type",
-      "Cannot confirm downloaded file type without file analysis"
-    ]
+    "known_limitations": ["Cannot confirm downloaded file type without file analysis", "CTI requires a compatible IOC pivot; none is available in this case."]
   },
   "test_data": {
     "cti_response": null,

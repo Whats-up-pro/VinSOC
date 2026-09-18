@@ -115,9 +115,14 @@ TOOL_SELECTION_ACCURACY = Correct_Tool_Calls / Expected_Tool_Calls
 | Benign IOC | CTI only |
 | Malicious IOC | CTI → Network → Endpoint |
 | Port Scan | CTI → Network |
-| Suspicious Process | CTI → Endpoint |
+| Suspicious Process | Endpoint only |
 | Multi-stage | CTI → Network → Endpoint |
 | Ambiguous | CTI → [Evaluate evidence] |
+
+For a hostname-led suspicious-process alert, endpoint investigation is the expected
+first tool. CTI enrichment needs a compatible pivot: an IP address, domain, URL,
+or file hash. A hostname by itself is not CTI-compatible. If endpoint evidence
+provides a compatible pivot, CTI can be selected after that evidence is collected.
 
 ### 3.3 M3: Evidence Coverage
 
@@ -286,9 +291,9 @@ Each scenario includes:
 
 | ID | Label | Host | Expected Tools | Expected Risk |
 |----|-------|------|----------------|---------------|
-| case_012 | Word → PowerShell | ws001 | CTI → Endpoint | MEDIUM |
-| case_013 | Excel → CMD | ws023 | CTI → Endpoint | MEDIUM |
-| case_014 | Browser → Certutil | ws045 | CTI → Endpoint | HIGH |
+| case_012 | Word → PowerShell | ws001 | Endpoint only | MEDIUM |
+| case_013 | Excel → CMD | ws023 | Endpoint only | MEDIUM |
+| case_014 | Browser → Certutil | ws045 | Endpoint only | HIGH |
 
 #### Multi-stage Incident (4)
 
