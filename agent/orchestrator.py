@@ -14,6 +14,15 @@ from agent.tools import get_tool_schemas
 from agent.evidence import EvidenceStore
 from agent.triage import TriageResult, triage_alert
 from agent.runbooks import default_soc_runbook
+from agent.hitl import (
+    HumanReviewGate,
+    TRIAGE_CLOSE,
+    TRIAGE_CONTINUE,
+    REVIEW_APPROVE,
+    REVIEW_REQUEST_MORE_EVIDENCE,
+    REVIEW_ESCALATE,
+    REVIEW_REJECT,
+)
 from skills.validators import validate_investigation_case
 
 from skills.cti_skill import CTISkill
@@ -176,7 +185,9 @@ class InvestigationOrchestrator:
         max_input_chars: int = 2000,
         cti_mock_data: Optional[Dict[str, Any]] = None,
         network_mock_data: Optional[Dict[str, Any]] = None,
-        endpoint_mock_data: Optional[Dict[str, Any]] = None
+        endpoint_mock_data: Optional[Dict[str, Any]] = None,
+        human_review_gate: Optional[HumanReviewGate] = None,
+        max_review_cycles: int = 1,
     ):
         """
         Initialize the orchestrator.
@@ -191,6 +202,9 @@ class InvestigationOrchestrator:
         self.provider = provider or MockProvider()
         self.max_steps = max_steps
         self.max_input_chars = max_input_chars
+        self.human_review_gate = human_review_gate
+        self.max_review_cycles = max(0, max_review_cycles)
+        self.human_decisions: List[Dict[str, Any]] = []
 
         # Initialize skills
         self.cti_skill = CTISkill(mock_data=cti_mock_data)
@@ -233,6 +247,7 @@ class InvestigationOrchestrator:
         self.investigation_active = True
         self.lifecycle_trace = []
         self.security_flags = []
+        self.human_decisions = []
 
         indicator, context = self._sanitize_investigation_input(indicator, context)
         self._record_phase("triage", "started", "Applying triage gate before investigation")
@@ -241,14 +256,49 @@ class InvestigationOrchestrator:
         triage = triage_alert(indicator, context)
         self._record_phase("triage", "completed", f"Triage verdict: {triage.verdict}")
 
-        # Triage-only path for clearly benign alerts
+        # Triage decision gate: with HITL enabled, a BENIGN verdict is a
+        # recommendation that requires analyst confirmation before closure.
         if triage.verdict == "BENIGN":
-            self._record_phase("investigate", "skipped", "Triage closed alert as BENIGN")
-            self._record_phase("verify", "completed", "Triage-only path")
-            self._record_phase("review", "completed", "No additional analyst review required")
-            case = self._generate_case(indicator, indicator_type, context, 0.0, triage)
-            self.investigation_active = False
-            return case
+            if self.human_review_gate is not None:
+                self._record_phase(
+                    "triage_review",
+                    "awaiting_human",
+                    "Analyst confirmation required before benign closure",
+                )
+                decision = self.human_review_gate.review_triage(
+                    indicator=indicator,
+                    indicator_type=indicator_type,
+                    context=context,
+                    triage=triage,
+                )
+                self._record_human_decision("triage", decision)
+                if decision.decision == TRIAGE_CLOSE:
+                    self._record_phase("triage_review", "completed", "Analyst approved benign closure")
+                    self._record_phase("investigate", "skipped", "Human-approved benign closure")
+                    self._record_phase("verify", "completed", "Triage-only path")
+                    self._record_phase("review", "completed", "Closure approved by analyst")
+                    case = self._generate_case(indicator, indicator_type, context, 0.0, triage)
+                    case.metadata["review_status"] = "approved"
+                    self.investigation_active = False
+                    return case
+                self._record_phase(
+                    "triage_review",
+                    "completed",
+                    "Analyst requested continued investigation",
+                )
+            else:
+                self._record_phase(
+                    "triage_review",
+                    "not_configured",
+                    "No human review gate configured; preserving legacy benign auto-close",
+                )
+                self._record_phase("investigate", "skipped", "Triage closed alert as BENIGN")
+                self._record_phase("verify", "completed", "Triage-only path")
+                self._record_phase("review", "not_configured", "No analyst review gate configured")
+                case = self._generate_case(indicator, indicator_type, context, 0.0, triage)
+                case.metadata["review_status"] = "not_configured"
+                self.investigation_active = False
+                return case
 
         # Evidence-driven investigation path: Triage → Investigation → Verify → Review
         # Build initial prompt
@@ -262,14 +312,27 @@ class InvestigationOrchestrator:
         end_time = datetime.utcnow()
         duration = (end_time - start_time).total_seconds()
 
-        # Record lifecycle events BEFORE generating case (so trace is complete)
+        # Automatic verification happens before analyst judgment. The analyst
+        # reviews the evidence-grounded case, not raw model output.
         self._record_phase("verify", "started", "Validating traceability and schema")
         self._record_phase("verify", "completed", "Case verification completed")
-        self._record_phase("review", "completed", "Case ready for analyst review")
 
-        # Generate final case with complete lifecycle trace
         case = self._generate_case(indicator, indicator_type, context, duration, triage)
         case.metadata["orchestration_mode"] = "evidence_driven"
+
+        if self.human_review_gate is not None:
+            case = self._run_final_human_review(
+                case=case,
+                indicator=indicator,
+                indicator_type=indicator_type,
+                context=context,
+                triage=triage,
+                duration=duration,
+            )
+        else:
+            self._record_phase("review", "not_configured", "No analyst review gate configured")
+            case.metadata["review_status"] = "not_configured"
+            case.metadata["lifecycle_trace"] = [event.to_dict() for event in self.lifecycle_trace]
 
         self.investigation_active = False
         return case
@@ -357,6 +420,81 @@ class InvestigationOrchestrator:
         case.metadata["orchestration_mode"] = "fixed_pipeline"
 
         self.investigation_active = False
+        return case
+
+    def _record_human_decision(self, phase: str, decision) -> None:
+        record = decision.to_dict()
+        record["phase"] = phase
+        record["timestamp"] = datetime.utcnow().isoformat()
+        self.human_decisions.append(record)
+
+    def _run_final_human_review(
+        self,
+        case: InvestigationCase,
+        indicator: str,
+        indicator_type: str,
+        context: Optional[str],
+        triage: TriageResult,
+        duration: float,
+    ) -> InvestigationCase:
+        """Run analyst review with at most max_review_cycles feedback passes."""
+        cycles = 0
+        while True:
+            self._record_phase("review", "awaiting_human", "Case awaiting analyst decision")
+            decision = self.human_review_gate.review_final(case)
+            self._record_human_decision("final_review", decision)
+
+            if decision.decision == REVIEW_APPROVE:
+                self._record_phase("review", "completed", "Analyst approved final assessment")
+                case.metadata["review_status"] = "approved"
+                break
+
+            if decision.decision == REVIEW_REQUEST_MORE_EVIDENCE and cycles < self.max_review_cycles:
+                cycles += 1
+                self._record_phase(
+                    "review",
+                    "feedback_received",
+                    f"Analyst requested additional evidence pass {cycles}",
+                )
+                feedback = decision.feedback or decision.rationale or "Collect additional evidence to address analyst concerns."
+                self.messages.append({
+                    "role": "user",
+                    "content": (
+                        "HUMAN_ANALYST_FEEDBACK\n"
+                        f"{feedback[:2000]}\n"
+                        "Use only read-only investigation skills. Collect additional evidence if available, "
+                        "then produce an updated evidence-grounded assessment."
+                    ),
+                })
+                self._record_phase("investigate", "resumed", "Investigation resumed from analyst feedback")
+                self._run_investigation_loop("")
+                self._record_phase("investigate", "completed", "Analyst-requested investigation pass completed")
+                self._record_phase("verify", "started", "Re-validating case after analyst feedback")
+                self._record_phase("verify", "completed", "Re-verification completed")
+                case = self._generate_case(indicator, indicator_type, context, duration, triage)
+                case.metadata["orchestration_mode"] = "evidence_driven"
+                continue
+
+            if decision.decision == REVIEW_REQUEST_MORE_EVIDENCE:
+                self._record_phase("review", "completed", "Review cycle limit reached; case requires escalation")
+                case.metadata["review_status"] = "escalated"
+                case.limitations.append("Analyst requested more evidence after the configured review-cycle limit.")
+                break
+
+            if decision.decision in {REVIEW_ESCALATE, REVIEW_REJECT}:
+                status = "escalated" if decision.decision == REVIEW_ESCALATE else "rejected"
+                self._record_phase("review", "completed", f"Analyst {status} the assessment")
+                case.metadata["review_status"] = status
+                if decision.rationale:
+                    case.limitations.append(f"Analyst review: {decision.rationale}")
+                break
+
+            self._record_phase("review", "completed", f"Unsupported analyst decision: {decision.decision}")
+            case.metadata["review_status"] = "invalid_decision"
+            break
+
+        case.metadata["human_decisions"] = list(self.human_decisions)
+        case.metadata["lifecycle_trace"] = [event.to_dict() for event in self.lifecycle_trace]
         return case
 
     def _record_phase(self, phase: str, status: str, note: str):
@@ -497,8 +635,9 @@ class InvestigationOrchestrator:
         return prompt
 
     def _run_investigation_loop(self, initial_prompt: str):
-        """Run the investigation loop."""
-        self.messages.append({"role": "user", "content": initial_prompt})
+        """Run or resume the investigation loop."""
+        if initial_prompt:
+            self.messages.append({"role": "user", "content": initial_prompt})
 
         for step in range(self.max_steps):
             # Get LLM response with tools
@@ -729,6 +868,9 @@ class InvestigationOrchestrator:
                 "security_flags": self.security_flags,
                 "skill_contracts": self._collect_skill_contracts(),
                 "runbook": default_soc_runbook().to_dict(),
+                "human_decisions": list(self.human_decisions),
+                "hitl_enabled": self.human_review_gate is not None,
+                "review_status": "pending" if self.human_review_gate is not None else "not_configured",
                 # Traceability enforcement
                 "traceability_valid": len(traceability_violations) == 0,
                 "traceability_violations": [v.to_dict() for v in traceability_violations],
