@@ -16,6 +16,17 @@ from agent.integrations import (
     get_default_integrations,
 )
 from agent.runbooks import InvestigationPersona, InvestigationRunbook, default_soc_runbook
+from agent.hitl import (
+    HumanDecision,
+    HumanReviewGate,
+    ScriptedHumanReviewGate,
+    TRIAGE_CLOSE,
+    TRIAGE_CONTINUE,
+    REVIEW_APPROVE,
+    REVIEW_REQUEST_MORE_EVIDENCE,
+    REVIEW_ESCALATE,
+    REVIEW_REJECT,
+)
 
 __all__ = [
     "InvestigationOrchestrator",
@@ -33,4 +44,13 @@ __all__ = [
     "InvestigationPersona",
     "InvestigationRunbook",
     "default_soc_runbook",
+    "HumanDecision",
+    "HumanReviewGate",
+    "ScriptedHumanReviewGate",
+    "TRIAGE_CLOSE",
+    "TRIAGE_CONTINUE",
+    "REVIEW_APPROVE",
+    "REVIEW_REQUEST_MORE_EVIDENCE",
+    "REVIEW_ESCALATE",
+    "REVIEW_REJECT",
 ]
