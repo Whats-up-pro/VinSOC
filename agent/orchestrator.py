@@ -635,8 +635,9 @@ class InvestigationOrchestrator:
         return prompt
 
     def _run_investigation_loop(self, initial_prompt: str):
-        """Run the investigation loop."""
-        self.messages.append({"role": "user", "content": initial_prompt})
+        """Run or resume the investigation loop."""
+        if initial_prompt:
+            self.messages.append({"role": "user", "content": initial_prompt})
 
         for step in range(self.max_steps):
             # Get LLM response with tools
