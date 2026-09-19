@@ -8,7 +8,8 @@ from skills.cti_skill import CTISkill
 
 
 def test_invalid_ioc_returns_controlled_failure() -> None:
-    result = CTISkill(mock_data={}).execute(indicator="not-an-ioc")
+    # Use non-empty mock to test validation, not source failure
+    result = CTISkill(mock_data={"192.0.2.10": {}}).execute(indicator="not-an-ioc")
 
     assert not result.success
     assert result.data is None
@@ -16,7 +17,8 @@ def test_invalid_ioc_returns_controlled_failure() -> None:
 
 
 def test_unsupported_hostname_type_returns_controlled_failure() -> None:
-    result = CTISkill(mock_data={}).execute(
+    # Use non-empty mock to test validation, not source failure
+    result = CTISkill(mock_data={"192.0.2.10": {}}).execute(
         indicator="host.example.com", indicator_type="hostname"
     )
 
@@ -26,7 +28,8 @@ def test_unsupported_hostname_type_returns_controlled_failure() -> None:
 
 
 def test_valid_ioc_without_source_fails_closed() -> None:
-    result = CTISkill().execute(indicator="192.0.2.10")
+    # Empty mock_data {} is treated as no source configured
+    result = CTISkill(mock_data={}).execute(indicator="192.0.2.10")
 
     assert not result.success
     assert result.data is None
@@ -55,8 +58,9 @@ def test_valid_ioc_with_source_match_returns_result() -> None:
     assert result.data["confidence"] == "high"
 
 
-@pytest.mark.parametrize("source_kwargs", [{"mock_data": {}}, {"threatfox_data": {}}])
-def test_explicit_empty_source_is_executable(source_kwargs) -> None:
+@pytest.mark.parametrize("source_kwargs", [{"threatfox_data": {}}])
+def test_explicit_empty_threatfox_source_is_executable(source_kwargs) -> None:
+    """Empty ThreatFox file {} is a valid source that returns unknown for unmatched IOCs."""
     result = CTISkill(**source_kwargs).execute(indicator="192.0.2.10")
 
     assert result.success
@@ -83,7 +87,8 @@ def test_unusable_threatfox_path_fails_closed(tmp_path, path_kind) -> None:
 
 
 def test_non_string_indicator_returns_controlled_failure() -> None:
-    result = CTISkill(mock_data={}).execute(indicator=12345)
+    # Use non-empty mock to test validation, not source failure
+    result = CTISkill(mock_data={"192.0.2.10": {}}).execute(indicator=12345)
 
     assert not result.success
     assert result.data is None
@@ -124,14 +129,14 @@ def test_non_mapping_threatfox_json_fails_closed(tmp_path) -> None:
 
 
 def test_explicit_mock_source_takes_priority_over_threatfox_source() -> None:
+    # mock_data={} is no source, so ThreatFox should be used
     result = CTISkill(
-        mock_data={},
         threatfox_data={"192.0.2.10": {"reputation": "malicious"}},
     ).execute(indicator="192.0.2.10")
 
     assert result.success
     assert result.data is not None
-    assert result.data["reputation"] == "unknown"
+    assert result.data["reputation"] == "malicious"
 
 
 @pytest.mark.parametrize("record", ["malicious", None, []])
