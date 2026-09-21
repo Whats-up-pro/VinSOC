@@ -1,0 +1,47 @@
+{
+  "case_id": "case_007",
+  "category": "cti_network_endpoint",
+  "difficulty": "advanced",
+  "request": "Investigation of IP associated with LockBit ransomware C2",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "lockbit1234abcd.onion",
+        "indicator_type": "domain"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "lockbit1234abcd.onion"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "FILE-SERVER-01"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Critical severity - multiple indicators of ransomware activity"
+}

@@ -1,0 +1,25 @@
+{
+  "case_id": "case_001",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Investigation of an internal DNS server that appears in monitoring alerts due to high query volume",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "10.0.0.53",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Private IP should show unknown/benign reputation; no further investigation needed"
+}

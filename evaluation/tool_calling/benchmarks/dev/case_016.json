@@ -1,0 +1,36 @@
+{
+  "case_id": "case_016",
+  "category": "hash_led",
+  "difficulty": "intermediate",
+  "request": "Ransomware infection chain: malicious document delivers payload, ransomware executes",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+        "indicator_type": "hash"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "WORKSTATION-015"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Full ransomware infection chain from phishing to execution"
+}

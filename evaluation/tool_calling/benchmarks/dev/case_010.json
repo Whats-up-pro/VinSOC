@@ -1,0 +1,47 @@
+{
+  "case_id": "case_010",
+  "category": "cti_network_endpoint",
+  "difficulty": "advanced",
+  "request": "Investigation of lateral movement pattern from compromised host",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "192.168.1.50",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "192.168.1.50"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "WS050"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "WMI lateral movement pattern, SMB traffic to multiple internal hosts"
+}

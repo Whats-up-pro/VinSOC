@@ -1,0 +1,36 @@
+{
+  "case_id": "case_006",
+  "category": "cti_network",
+  "difficulty": "intermediate",
+  "request": "Investigation of a domain identified as used in phishing campaigns",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "secure-login-bankind1882.xyz",
+        "indicator_type": "domain"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "secure-login-bankind1882.xyz"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Phishing domain confirmed, but limited network evidence of actual access"
+}

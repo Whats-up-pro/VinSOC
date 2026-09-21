@@ -1,0 +1,26 @@
+{
+  "case_id": "case_012",
+  "category": "hostname_led",
+  "difficulty": "basic",
+  "request": "Investigation of suspicious process relationship: Microsoft Word spawning PowerShell",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "WS001"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Classic macro attack pattern. Investigate the endpoint; CTI needs a compatible IOC pivot."
+}
