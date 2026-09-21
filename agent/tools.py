@@ -51,7 +51,7 @@ The tool returns:
 - MITRE ATT&CK techniques
 - Source attribution
 
-Call this FIRST in most investigations to establish initial context.""",
+Note: Do not call this tool for endpoint hostname or process context.""",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -79,12 +79,14 @@ Use this tool to analyze:
 - Connection frequency and patterns
 - Unique destinations and ports contacted
 - Failed vs successful connection ratios
-- Suspicious patterns (port scan, beaconing, data exfiltration)
+- Periodicity candidates (beaconing patterns)
+- Scan candidates (port scanning patterns)
+- Transfer metrics (large data transfers)
+- Service fanout (admin service reachability)
 
-This tool analyzes network logs and firewall telemetry.
+This tool analyzes network logs and IDS/firewall telemetry.
 When a frozen DuckDB snapshot is configured, the tool uses its internal,
-read-only domain query layer. Do not send SQL in this tool call.
-Call this AFTER CTI enrichment to correlate with network behavior.""",
+read-only domain query layer. Do not send SQL in this tool call.""",
                 "parameters": {
                     "type": "object",
                     "properties": {
