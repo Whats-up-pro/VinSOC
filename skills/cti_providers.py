@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from enum import Enum
 import json
 import os
 from pathlib import Path
@@ -14,10 +15,18 @@ from typing import Any, Dict, List, Optional
 from urllib import parse, request
 
 
+class CTIProviderStatus(str, Enum):
+    """Machine-readable provider lookup outcome."""
+    MATCH = "match"
+    NO_MATCH = "no_match"
+    NOT_APPLICABLE = "not_applicable"
+    ERROR = "error"
+
+
 @dataclass
 class CTIFinding:
     source: str
-    matched: bool
+    status: CTIProviderStatus
     reputation: str = "unknown"
     confidence: str = "low"
     malware: List[str] = field(default_factory=list)
@@ -27,9 +36,15 @@ class CTIFinding:
     references: List[str] = field(default_factory=list)
     provenance: Dict[str, Any] = field(default_factory=dict)
 
+    @property
+    def matched(self) -> bool:
+        """Compatibility property - returns True if status is MATCH."""
+        return self.status == CTIProviderStatus.MATCH
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "source": self.source,
+            "status": self.status.value,
             "matched": self.matched,
             "reputation": self.reputation,
             "confidence": self.confidence,
@@ -95,7 +110,7 @@ class ThreatFoxProvider(CTIProvider):
         except Exception as exc:
             return CTIFinding(
                 source=self.name,
-                matched=False,
+                status=CTIProviderStatus.ERROR,
                 provenance={"status": "error", "error_type": type(exc).__name__},
             )
 
@@ -103,7 +118,7 @@ class ThreatFoxProvider(CTIProvider):
         if response.get("query_status") != "ok" or not rows:
             return CTIFinding(
                 source=self.name,
-                matched=False,
+                status=CTIProviderStatus.NO_MATCH,
                 provenance={"query_status": response.get("query_status", "unknown")},
             )
 
@@ -127,7 +142,7 @@ class ThreatFoxProvider(CTIProvider):
         ]
         return CTIFinding(
             source=self.name,
-            matched=True,
+            status=CTIProviderStatus.MATCH,
             reputation="malicious",
             confidence="high",
             malware=malware,
@@ -153,7 +168,11 @@ class MalwareBazaarProvider(CTIProvider):
 
     def lookup(self, indicator: str, indicator_type: str) -> CTIFinding:
         if indicator_type != "hash":
-            return CTIFinding(source=self.name, matched=False, provenance={"status": "not_applicable"})
+            return CTIFinding(
+                source=self.name,
+                status=CTIProviderStatus.NOT_APPLICABLE,
+                provenance={"status": "not_applicable", "reason": "MalwareBazaar only supports hash indicators"},
+            )
 
         try:
             response = _post_form(
@@ -165,7 +184,7 @@ class MalwareBazaarProvider(CTIProvider):
         except Exception as exc:
             return CTIFinding(
                 source=self.name,
-                matched=False,
+                status=CTIProviderStatus.ERROR,
                 provenance={"status": "error", "error_type": type(exc).__name__},
             )
 
@@ -173,7 +192,7 @@ class MalwareBazaarProvider(CTIProvider):
         if response.get("query_status") != "ok" or not rows:
             return CTIFinding(
                 source=self.name,
-                matched=False,
+                status=CTIProviderStatus.NO_MATCH,
                 provenance={"query_status": response.get("query_status", "unknown")},
             )
 
@@ -194,7 +213,7 @@ class MalwareBazaarProvider(CTIProvider):
             })
         return CTIFinding(
             source=self.name,
-            matched=True,
+            status=CTIProviderStatus.MATCH,
             reputation="malicious",
             confidence="high",
             malware=malware,
@@ -240,14 +259,18 @@ class URLhausLocalProvider(CTIProvider):
     def lookup(self, indicator: str, indicator_type: str) -> CTIFinding:
         row = self.index.get(indicator)
         if not row:
-            return CTIFinding(source=self.name, matched=False, provenance={"dataset": str(self.path)})
+            return CTIFinding(
+                source=self.name,
+                status=CTIProviderStatus.NO_MATCH,
+                provenance={"dataset": str(self.path)},
+            )
         malware = []
         for key in ("signature", "malware", "threat"):
             if row.get(key):
                 malware.append(str(row[key]))
         return CTIFinding(
             source=self.name,
-            matched=True,
+            status=CTIProviderStatus.MATCH,
             reputation="malicious",
             confidence="medium",
             malware=sorted(set(malware)),
@@ -280,7 +303,11 @@ class AttackSTIXProvider(CTIProvider):
     def lookup(self, indicator: str, indicator_type: str) -> CTIFinding:
         # Direct IOC lookup is intentionally unsupported; ATT&CK is a knowledge
         # base, not an IOC reputation feed.
-        return CTIFinding(source=self.name, matched=False, provenance={"status": "knowledge_only"})
+        return CTIFinding(
+            source=self.name,
+            status=CTIProviderStatus.NOT_APPLICABLE,
+            provenance={"status": "knowledge_only", "reason": "ATT&CK is a knowledge base, not an IOC feed"},
+        )
 
     def map_software(self, software_names: List[str]) -> List[Dict[str, Any]]:
         wanted = {name.lower() for name in software_names if name}

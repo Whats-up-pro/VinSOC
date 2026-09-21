@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "NetworkResult",
-  "description": "Schema for network investigation telemetry analysis",
+  "description": "Schema for network investigation telemetry analysis - V2 with analytics candidates",
   "type": "object",
-  "required": ["indicator", "indicator_type", "query_time_range", "total_connections", "observed_evidence"],
+  "required": ["indicator", "indicator_type", "total_connections"],
   "properties": {
     "indicator": {
       "type": "string",
@@ -15,23 +15,31 @@
       "description": "Type of indicator investigated"
     },
     "query_time_range": {
-      "type": "object",
+      "type": ["object", "null"],
       "properties": {
         "start": {
-          "type": "string",
+          "type": ["string", "null"],
           "format": "date-time"
         },
         "end": {
-          "type": "string",
+          "type": ["string", "null"],
           "format": "date-time"
         }
-      },
-      "required": ["start", "end"]
+      }
+    },
+    "query_direction": {
+      "type": ["string", "null"],
+      "enum": ["any", "src", "dst", "outbound", "inbound", null]
     },
     "total_connections": {
       "type": "integer",
       "minimum": 0,
       "description": "Total number of connections observed"
+    },
+    "total_alerts": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of IDS alerts"
     },
     "unique_destinations": {
       "type": "integer",
@@ -53,86 +61,114 @@
       "minimum": 0,
       "description": "Number of successful connections"
     },
+    "source_summary": {
+      "type": "object",
+      "description": "Event counts by data source"
+    },
+    "analytics": {
+      "type": "object",
+      "description": "V2 analytics with candidate signals, not attack verdicts",
+      "properties": {
+        "periodicity_candidates": {
+          "type": "array",
+          "description": "Periodic communication candidates requiring analyst review",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["periodic_connection_candidate", "beaconing_candidate"]
+              },
+              "interval_mean": {"type": "number"},
+              "interval_std": {"type": "number"},
+              "coefficient_of_variation": {"type": "number"},
+              "sample_count": {"type": "integer"},
+              "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+              "classification": {"type": "string"}
+            }
+          }
+        },
+        "scan_candidates": {
+          "type": "array",
+          "description": "Scanning pattern candidates requiring analyst review"
+        },
+        "transfer_metrics": {
+          "type": "array",
+          "description": "Data transfer metrics and large transfer candidates"
+        },
+        "service_fanout_candidates": {
+          "type": "array",
+          "description": "Service fanout candidates requiring analyst review"
+        }
+      }
+    },
     "patterns_detected": {
       "type": "array",
+      "description": "V1 compatibility - pattern names from network analytics",
       "items": {
         "type": "object",
         "properties": {
           "pattern": {
             "type": "string",
-            "enum": [
-              "port_scan",
-              "high_frequency",
-              "lateral_movement",
-              "data_exfiltration",
-              "beaconing",
-              "unusual_port",
-              "failed_connection_spike",
-              "normal"
-            ]
+            "description": "Pattern name: beaconing, port_scan, etc."
           },
-          "confidence": {
-            "type": "string",
-            "enum": ["low", "medium", "high"]
-          },
-          "evidence": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Specific evidence supporting this pattern detection"
-          }
-        },
-        "required": ["pattern", "confidence"]
-      },
-      "description": "Network patterns detected during investigation",
-      "default": []
+          "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
     },
     "connection_summary": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "dst": {
-            "type": "string"
-          },
-          "port": {
-            "type": "integer"
-          },
-          "count": {
-            "type": "integer"
-          },
-          "first_seen": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "last_seen": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": ["dst", "port"]
-      },
-      "description": "Summary of top connections by destination"
+          "dst": {"type": "string"},
+          "port": {"type": "integer"},
+          "count": {"type": "integer"},
+          "first_seen": {"type": "string", "format": "date-time"},
+          "last_seen": {"type": "string", "format": "date-time"}
+        }
+      }
     },
     "observed_evidence": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "type": {
-            "type": "string"
+          "type": {"type": "string"},
+          "value": {"type": ["string", "number", "boolean", "array", "object"]},
+          "context": {"type": "string"}
+        }
+      }
+    },
+    "evidence_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "V2 evidence items with evidence_class",
+        "properties": {
+          "local_key": {"type": "string"},
+          "evidence_class": {
+            "type": "string",
+            "enum": ["OBSERVED", "DERIVED"]
           },
-          "value": {
-            "type": ["string", "number", "boolean", "array", "object"]
-          },
-          "context": {
-            "type": "string"
-          }
-        },
-        "required": ["type", "value"]
-      },
-      "description": "Raw network observables that support the analysis"
+          "type": {"type": "string"},
+          "source_name": {"type": "string"},
+          "observed_at": {"type": "string", "format": "date-time"},
+          "confidence": {"type": "string", "enum": ["low", "medium", "high", null]},
+          "data": {"type": "object"},
+          "provenance": {"type": "object"},
+          "references": {"type": "array", "items": {"type": "string"}},
+          "related_evidence_ids": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "provenance": {
+      "type": "object"
     }
   }
 }
