@@ -8,10 +8,11 @@ Enriches Indicators of Compromise (IOCs) with threat intelligence:
 
 This skill is read-only. It queries CTI sources but does not modify anything.
 
-Data Sources:
-- ThreatFox IOC feed (default): data/cti_lookup.json
-- Mock data for testing
-- External CTI APIs (future)
+Data Sources (in priority order):
+1. mock_data: Explicit mock/test data
+2. threatfox_path/threatfox_data: Local ThreatFox data
+3. providers: Runtime CTI providers (ThreatFox, MalwareBazaar, etc.)
+4. No source: FAIL
 """
 import json
 import logging
@@ -34,13 +35,14 @@ class CTISkill(BaseSkill):
     """
 
     skill_name = "cti_enrichment"
-    skill_version = "1.1.0"  # Updated to 1.1.0 for ThreatFox support
+    skill_version = "1.2.0"  # Updated to 1.2.0 for provider runtime support
 
     def __init__(
         self,
         mock_data: Optional[Dict[str, Any]] = None,
         threatfox_path: Optional[str] = None,
         threatfox_data: Optional[Dict[str, Any]] = None,
+        providers: Optional[List[Any]] = None,
         auto_load_threatfox: bool = True,
     ):
         """
@@ -53,6 +55,7 @@ class CTISkill(BaseSkill):
                            defaults to data/cti_lookup.json if it exists.
             threatfox_data: Optional pre-loaded ThreatFox data dict.
                            Takes precedence over threatfox_path if both provided.
+            providers: Optional list of CTIProvider instances for runtime lookup.
             auto_load_threatfox: If True, auto-load from default path if no source
                                 is explicitly configured. Set to False for testing.
         """
@@ -86,6 +89,10 @@ class CTISkill(BaseSkill):
             default_path = Path("data/cti_lookup.json")
             if default_path.exists():
                 self._load_threatfox(str(default_path))
+
+        # Runtime providers
+        self.providers = providers or []
+        self._providers_configured = providers is not None and len(providers) > 0
 
     def _load_threatfox(self, path: str) -> None:
         """Load ThreatFox IOC data from JSON file."""
@@ -223,6 +230,12 @@ class CTISkill(BaseSkill):
         """
         Execute CTI enrichment.
 
+        Priority:
+        1. mock_data (if configured)
+        2. threatfox_data (if configured)
+        3. providers (if configured)
+        4. FAIL (no source)
+
         Args:
             indicator: The IOC to enrich
             indicator_type: Optional type override (auto-detected if not provided)
@@ -235,18 +248,158 @@ class CTISkill(BaseSkill):
         provided_type = kwargs.get("indicator_type")
         indicator_type = provided_type if provided_type else self._detect_indicator_type(indicator)
 
-        # Priority: mock_data > threatfox_data > error
+        # Priority 1: mock_data
         if self._mock_source_configured:
             return self._build_result_from_mock(indicator, indicator_type)
 
-        # Check ThreatFox data
+        # Priority 2: threatfox_data
         if self._threatfox_source_configured:
             return self._build_result_from_threatfox(indicator, indicator_type)
+
+        # Priority 3: providers
+        if self._providers_configured:
+            return self._execute_with_providers(indicator, indicator_type)
 
         # No data source configured
         return SkillResult(
             success=False,
-            error="No CTI data source configured. Use mock_data or threatfox_path parameter."
+            error="No CTI data source configured. Use mock_data, threatfox_path, or providers parameter."
+        )
+
+    def _execute_with_providers(self, indicator: str, indicator_type: str) -> SkillResult:
+        """
+        Execute CTI lookup using runtime providers.
+
+        Aggregation logic:
+        - If any applicable provider has ERROR → FAIL (fail-closed)
+        - If no provider is applicable for this IOC type → FAIL
+        - If at least one MATCH and no ERROR → SUCCESS (enriched)
+        - If all applicable providers are NO_MATCH → SUCCESS UNKNOWN
+        """
+        from skills.cti_providers import CTIProviderStatus
+
+        applicable_findings = []
+        has_match = False
+        has_error = False
+
+        for provider in self.providers:
+            finding = provider.lookup(indicator, indicator_type)
+
+            # Skip NOT_APPLICABLE - they don't count as applicable
+            if finding.status == CTIProviderStatus.NOT_APPLICABLE:
+                continue
+
+            applicable_findings.append(finding)
+
+            if finding.status == CTIProviderStatus.MATCH:
+                has_match = True
+            elif finding.status == CTIProviderStatus.ERROR:
+                has_error = True
+
+        # Decision table
+        if has_error:
+            return SkillResult(
+                success=False,
+                error="CTI provider error during lookup. Check provider configuration."
+            )
+
+        if not applicable_findings:
+            return SkillResult(
+                success=False,
+                error="No applicable CTI provider for this indicator type."
+            )
+
+        if has_match:
+            # Enrich from all findings
+            return self._build_result_from_findings(indicator, indicator_type, applicable_findings)
+
+        # All applicable providers returned NO_MATCH
+        return SkillResult(
+            success=True,
+            data={
+                "indicator": indicator,
+                "indicator_type": indicator_type,
+                "reputation": "unknown",
+                "confidence": "low",
+                "related_actors": [],
+                "related_malware": [],
+                "mitre_techniques": [],
+                "sources": [{"name": f.source} for f in applicable_findings],
+                "observed_evidence": [
+                    {
+                        "type": "lookup_status",
+                        "value": "no_match",
+                        "context": "IOC not found in any CTI provider"
+                    }
+                ]
+            },
+            evidence_ids=[f"cti_{uuid.uuid4().hex[:8]}"],
+        )
+
+    def _build_result_from_findings(
+        self, indicator: str, indicator_type: str, findings: List[Any]
+    ) -> SkillResult:
+        """Build enriched result from provider findings."""
+        evidence_id = f"cti_{uuid.uuid4().hex[:8]}"
+
+        # Aggregate malware, actors, techniques from all findings
+        all_malware = []
+        all_actors = []
+        all_techniques = []
+        all_sources = []
+        all_context = []
+        all_references = []
+        provenance_details = {}
+
+        # Track highest confidence
+        confidence_order = {"high": 3, "medium": 2, "low": 1}
+        highest_confidence = "low"
+        has_malicious = False
+
+        for finding in findings:
+            # Convert source string to proper object format for schema
+            all_sources.append({
+                "name": finding.source,
+                "reference": finding.references[0] if finding.references else None,
+            })
+            all_malware.extend(finding.malware)
+            all_actors.extend(finding.actors)
+            all_techniques.extend(finding.techniques)
+            all_context.extend(finding.context)
+            all_references.extend(finding.references)
+
+            if finding.confidence in confidence_order:
+                if confidence_order.get(finding.confidence, 0) > confidence_order.get(highest_confidence, 0):
+                    highest_confidence = finding.confidence
+
+            if finding.reputation == "malicious":
+                has_malicious = True
+
+            provenance_details[finding.source] = finding.provenance
+
+        # Determine final reputation
+        reputation = "unknown"
+        if has_malicious:
+            reputation = "malicious"
+        elif any(f.reputation == "suspicious" for f in findings):
+            reputation = "suspicious"
+        elif any(f.reputation == "benign" for f in findings):
+            reputation = "benign"
+
+        return SkillResult(
+            success=True,
+            data={
+                "indicator": indicator,
+                "indicator_type": indicator_type,
+                "reputation": reputation,
+                "confidence": highest_confidence,
+                "related_actors": list(set(all_actors)),
+                "related_malware": list(set(all_malware)),
+                "mitre_techniques": all_techniques,
+                "sources": all_sources,
+                "observed_evidence": all_context,
+            },
+            evidence_ids=[evidence_id],
         )
 
     def _build_result_from_threatfox(
