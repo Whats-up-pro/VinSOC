@@ -1,8 +1,9 @@
 {
-  "run_id": "a2_integration_20260921_185154",
+  "run_id": "r1_integration_dev_20260921_190758",
   "mode": "integration",
+  "split": "dev",
   "aggregate": {
-    "run_id": "a2_integration_20260921_185154",
+    "run_id": "r1_integration_dev_20260921_190758",
     "case_count": 20,
     "tool_precision": 0.8065,
     "tool_recall": 0.6098,
@@ -17,8 +18,8 @@
     "forbidden_tool_rate": 0.0,
     "ordering_accuracy": null,
     "trajectory_success_rate": 0.0,
-    "mean_latency_ms": 61.45,
-    "p95_latency_ms": 114.24
+    "mean_latency_ms": 28.54,
+    "p95_latency_ms": 40.37
   },
   "error_summary": {
     "MISSING_TOOL": 14,
