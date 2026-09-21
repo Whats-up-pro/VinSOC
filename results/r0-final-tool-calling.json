@@ -1,0 +1,134 @@
+{
+  "measurement": "mock integration; tool names matched as multisets",
+  "scenario_count": 20,
+  "actual_tool_calls": 42,
+  "true_positive": 36,
+  "false_positive": 6,
+  "false_negative": 5,
+  "tool_precision": 0.8571428571428571,
+  "tool_recall": 0.8780487804878049,
+  "tool_f1": 0.8674698795180722,
+  "tool_set_exact_match_rate": 0.45,
+  "exact_sequence_rate": 0.45,
+  "integration_execution_success_rate": 0.9285714285714286,
+  "mismatches": [
+    {
+      "case_id": "case_001",
+      "expected_tools": [
+        "cti_enrichment"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "network_investigation"
+      ]
+    },
+    {
+      "case_id": "case_004",
+      "expected_tools": [
+        "cti_enrichment",
+        "network_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment"
+      ]
+    },
+    {
+      "case_id": "case_005",
+      "expected_tools": [
+        "cti_enrichment",
+        "network_investigation",
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "network_investigation"
+      ]
+    },
+    {
+      "case_id": "case_010",
+      "expected_tools": [
+        "cti_enrichment",
+        "network_investigation",
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "endpoint_investigation"
+      ]
+    },
+    {
+      "case_id": "case_012",
+      "expected_tools": [
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "endpoint_investigation"
+      ]
+    },
+    {
+      "case_id": "case_013",
+      "expected_tools": [
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "endpoint_investigation"
+      ]
+    },
+    {
+      "case_id": "case_014",
+      "expected_tools": [
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "endpoint_investigation"
+      ]
+    },
+    {
+      "case_id": "case_016",
+      "expected_tools": [
+        "cti_enrichment",
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "network_investigation",
+        "endpoint_investigation"
+      ]
+    },
+    {
+      "case_id": "case_018",
+      "expected_tools": [
+        "cti_enrichment",
+        "network_investigation",
+        "endpoint_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "endpoint_investigation"
+      ]
+    },
+    {
+      "case_id": "case_019",
+      "expected_tools": [
+        "cti_enrichment"
+      ],
+      "actual_tools": [
+        "cti_enrichment",
+        "network_investigation"
+      ]
+    },
+    {
+      "case_id": "case_020",
+      "expected_tools": [
+        "cti_enrichment",
+        "network_investigation"
+      ],
+      "actual_tools": [
+        "cti_enrichment"
+      ]
+    }
+  ]
+}
