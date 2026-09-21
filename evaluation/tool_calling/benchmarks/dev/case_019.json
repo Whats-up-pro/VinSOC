@@ -1,0 +1,25 @@
+{
+  "case_id": "case_019",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Investigation cannot be completed due to lack of telemetry data",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "10.0.0.99",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "This case tests graceful handling of insufficient data - agent must correctly identify evidence gaps"
+}

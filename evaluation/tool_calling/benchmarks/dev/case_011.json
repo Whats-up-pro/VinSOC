@@ -1,0 +1,36 @@
+{
+  "case_id": "case_011",
+  "category": "cti_network",
+  "difficulty": "intermediate",
+  "request": "Investigation of suspicious outbound traffic pattern suggesting data exfiltration",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "10.0.0.100",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "10.0.0.100"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Large outbound data transfer at unusual hours to single destination"
+}

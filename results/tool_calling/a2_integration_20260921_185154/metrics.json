@@ -1,0 +1,326 @@
+{
+  "run_id": "a2_integration_20260921_185154",
+  "mode": "integration",
+  "aggregate": {
+    "run_id": "a2_integration_20260921_185154",
+    "case_count": 20,
+    "tool_precision": 0.8065,
+    "tool_recall": 0.6098,
+    "tool_f1": 0.6944,
+    "exact_call_precision": 0.8065,
+    "exact_call_recall": 0.6098,
+    "exact_call_f1": 0.6944,
+    "argument_field_accuracy": 0.1905,
+    "critical_argument_accuracy": 1.0,
+    "tool_set_exact_match_rate": 0.15,
+    "no_tool_accuracy": null,
+    "forbidden_tool_rate": 0.0,
+    "ordering_accuracy": null,
+    "trajectory_success_rate": 0.0,
+    "mean_latency_ms": 61.45,
+    "p95_latency_ms": 114.24
+  },
+  "error_summary": {
+    "MISSING_TOOL": 14,
+    "EXTRA_TOOL": 6
+  },
+  "case_results": [
+    {
+      "case_id": "case_001",
+      "expected_call_count": 1,
+      "predicted_call_count": 2,
+      "true_positives": 1,
+      "false_positives": 1,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "EXTRA_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_002",
+      "expected_call_count": 1,
+      "predicted_call_count": 2,
+      "true_positives": 1,
+      "false_positives": 1,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "EXTRA_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_003",
+      "expected_call_count": 2,
+      "predicted_call_count": 1,
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_004",
+      "expected_call_count": 2,
+      "predicted_call_count": 1,
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_005",
+      "expected_call_count": 3,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_006",
+      "expected_call_count": 2,
+      "predicted_call_count": 1,
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_007",
+      "expected_call_count": 3,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_008",
+      "expected_call_count": 3,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_009",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": []
+    },
+    {
+      "case_id": "case_010",
+      "expected_call_count": 3,
+      "predicted_call_count": 1,
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 2,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_011",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": []
+    },
+    {
+      "case_id": "case_012",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "true_positives": 0,
+      "false_positives": 1,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "EXTRA_TOOL",
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_013",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "true_positives": 0,
+      "false_positives": 1,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "EXTRA_TOOL",
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_014",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "true_positives": 0,
+      "false_positives": 1,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "EXTRA_TOOL",
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_015",
+      "expected_call_count": 3,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_016",
+      "expected_call_count": 2,
+      "predicted_call_count": 1,
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_017",
+      "expected_call_count": 3,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_018",
+      "expected_call_count": 3,
+      "predicted_call_count": 1,
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 2,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "MISSING_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_019",
+      "expected_call_count": 1,
+      "predicted_call_count": 2,
+      "true_positives": 1,
+      "false_positives": 1,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": [
+        "EXTRA_TOOL"
+      ]
+    },
+    {
+      "case_id": "case_020",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": []
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "case_id": "case_008",
+  "category": "cti_network_endpoint",
+  "difficulty": "advanced",
+  "request": "Investigation of IP associated with APT29/Cozy Bear infrastructure",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "91.220.131.77",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "91.220.131.77"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "WORKSTATION-042"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Critical - multiple high-confidence APT indicators"
+}

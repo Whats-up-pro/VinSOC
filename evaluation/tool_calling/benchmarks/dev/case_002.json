@@ -1,0 +1,25 @@
+{
+  "case_id": "case_002",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Investigation of an IP address identified as belonging to a trusted software vendor",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "203.0.113.50",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Whitelisted vendor IP should be identified as benign"
+}

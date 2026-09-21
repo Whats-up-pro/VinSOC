@@ -1,0 +1,47 @@
+{
+  "case_id": "case_005",
+  "category": "cti_network_endpoint",
+  "difficulty": "advanced",
+  "request": "Investigation of an IP confirmed as command-and-control for known malware family",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "185.220.101.45",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "185.220.101.45"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "WS023"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Classic Cobalt Strike beacon pattern with regular callback interval"
+}

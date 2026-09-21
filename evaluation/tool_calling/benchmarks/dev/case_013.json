@@ -1,0 +1,26 @@
+{
+  "case_id": "case_013",
+  "category": "hostname_led",
+  "difficulty": "basic",
+  "request": "Investigation of suspicious process relationship: Excel spawning CMD",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "WS023"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Suspicious but could be legitimate automated Excel processing"
+}

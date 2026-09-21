@@ -1,0 +1,36 @@
+{
+  "case_id": "case_020",
+  "category": "cti_network",
+  "difficulty": "intermediate",
+  "request": "CTI shows clean reputation but network shows anomalous traffic pattern",
+  "reference_time": "2026-09-22T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "203.0.113.25",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "203.0.113.25"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Tests agent ability to handle conflicting signals - must not blindly trust CTI over network evidence"
+}
