@@ -12,6 +12,7 @@ import pytest
 from skills.cti_providers import (
     CTIFinding,
     CTIProvider,
+    CTIProviderStatus,
     ThreatFoxProvider,
     MalwareBazaarProvider,
     URLhausLocalProvider,
@@ -27,7 +28,7 @@ class FakeThreatProvider(CTIProvider):
     def lookup(self, indicator: str, indicator_type: str) -> CTIFinding:
         return CTIFinding(
             source=self.name,
-            matched=True,
+            status=CTIProviderStatus.MATCH,
             reputation="malicious",
             confidence="high",
             malware=["TestRAT"],
@@ -47,7 +48,7 @@ class FakeNoMatchProvider(CTIProvider):
     def lookup(self, indicator: str, indicator_type: str) -> CTIFinding:
         return CTIFinding(
             source=self.name,
-            matched=False,
+            status=CTIProviderStatus.NO_MATCH,
             provenance={"query_status": "no_result"},
         )
 
@@ -60,7 +61,7 @@ class FakeErrorProvider(CTIProvider):
     def lookup(self, indicator: str, indicator_type: str) -> CTIFinding:
         return CTIFinding(
             source=self.name,
-            matched=False,
+            status=CTIProviderStatus.ERROR,
             provenance={"status": "error", "error_type": "NetworkError"},
         )
 
@@ -142,6 +143,16 @@ class TestCTIProviderIntegration:
 class TestCTIProviderStatus:
     """Tests for provider status handling."""
 
+    def test_provider_error_is_not_no_match(self):
+        """RED test: Provider error should have ERROR status, not NO_MATCH."""
+        finding = FakeErrorProvider().lookup("1.2.3.4", "ipv4")
+        assert finding.status == CTIProviderStatus.ERROR
+
+    def test_provider_valid_lookup_without_record_is_no_match(self):
+        """RED test: Valid provider lookup with no record should be NO_MATCH."""
+        finding = FakeNoMatchProvider().lookup("8.8.8.8", "ipv4")
+        assert finding.status == CTIProviderStatus.NO_MATCH
+
     def test_hostname_is_rejected(self):
         """
         Test: hostname indicator type → FAIL validation
@@ -173,8 +184,8 @@ class TestCTIProviderStatus:
         finding = provider.lookup("8.8.8.8", "ipv4")
 
         # MalwareBazaar should return not_applicable for non-hash
+        assert finding.status == CTIProviderStatus.NOT_APPLICABLE
         assert not finding.matched
-        assert finding.provenance.get("status") == "not_applicable"
 
 
 class TestThreatFoxLocalProvider:
@@ -220,3 +231,90 @@ class TestCTISourcePriority:
 
         assert result.success
         assert result.data["reputation"] == "benign"
+
+
+class TestProviderRuntimeIntegration:
+    """Tests for CTISkill with providers parameter."""
+
+    def test_providers_lookup_success(self):
+        """Test: Provider MATCH → SUCCESS with enriched data."""
+        skill = CTISkill(
+            providers=[FakeThreatProvider()],
+            auto_load_threatfox=False
+        )
+        result = skill.execute(indicator="1.2.3.4", indicator_type="ipv4")
+
+        assert result.success
+        assert result.data["reputation"] == "malicious"
+        assert "TestRAT" in result.data["related_malware"]
+
+    def test_providers_no_match_returns_unknown(self):
+        """Test: All providers return NO_MATCH → SUCCESS / UNKNOWN."""
+        skill = CTISkill(
+            providers=[FakeNoMatchProvider()],
+            auto_load_threatfox=False
+        )
+        result = skill.execute(indicator="8.8.8.8", indicator_type="ipv4")
+
+        assert result.success
+        assert result.data["reputation"] == "unknown"
+
+    def test_match_plus_provider_error_fails_closed(self):
+        """Test: MATCH + ERROR → FAIL (fail-closed contract)."""
+        from skills.cti_providers import CTIProviderStatus
+
+        class PartialErrorProvider:
+            name = "partial_error"
+
+            def lookup(self, indicator, indicator_type):
+                if indicator == "error":
+                    from skills.cti_providers import CTIFinding
+                    return CTIFinding(
+                        source=self.name,
+                        status=CTIProviderStatus.ERROR,
+                        provenance={"status": "error"}
+                    )
+                from skills.cti_providers import CTIFinding
+                return CTIFinding(
+                    source=self.name,
+                    status=CTIProviderStatus.MATCH,
+                    reputation="malicious"
+                )
+
+        skill = CTISkill(
+            providers=[PartialErrorProvider(), FakeThreatProvider()],
+            auto_load_threatfox=False
+        )
+        # Even though FakeThreatProvider matches, PartialErrorProvider errors
+        result = skill.execute(indicator="error", indicator_type="ipv4")
+
+        assert not result.success, "Match + Error should fail closed"
+
+    def test_no_applicable_provider_fails(self):
+        """Test: No applicable provider for IOC type → FAIL."""
+        from skills.cti_providers import CTIProviderStatus
+
+        class HashOnlyProvider:
+            name = "hash_only"
+
+            def lookup(self, indicator, indicator_type):
+                from skills.cti_providers import CTIFinding
+                if indicator_type == "hash":
+                    return CTIFinding(
+                        source=self.name,
+                        status=CTIProviderStatus.MATCH,
+                        reputation="malicious"
+                    )
+                return CTIFinding(
+                    source=self.name,
+                    status=CTIProviderStatus.NOT_APPLICABLE
+                )
+
+        skill = CTISkill(
+            providers=[HashOnlyProvider()],
+            auto_load_threatfox=False
+        )
+        result = skill.execute(indicator="192.168.1.1", indicator_type="ipv4")
+
+        assert not result.success
+        assert "no applicable" in result.error.lower()
