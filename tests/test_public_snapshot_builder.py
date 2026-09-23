@@ -9,6 +9,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -275,24 +276,23 @@ def test_build_snapshot_verifies_sources_and_writes_exact_manifest(tmp_path):
             }
         ],
     )
-    endpoint = tmp_path / "endpoint.jsonl"
-    endpoint.write_text(
-        json.dumps(
-            {
-                "@timestamp": "2020-04-29T20:07:43Z",
-                "winlog": {
-                    "event_id": 1,
-                    "computer_name": "HOST01",
-                    "event_data": {"Image": "cmd.exe", "ProcessId": "99"},
-                },
-            }
-        ),
-        encoding="utf-8",
+    endpoint = tmp_path / "endpoint.zip"
+    endpoint_record = json.dumps(
+        {
+            "@timestamp": "2020-04-29T20:07:43Z",
+            "winlog": {
+                "event_id": 1,
+                "computer_name": "HOST01",
+                "event_data": {"Image": "cmd.exe", "ProcessId": "99"},
+            },
+        }
     )
+    with zipfile.ZipFile(endpoint, "w") as archive:
+        archive.writestr("export/events.jsonl", endpoint_record)
     sources = [
-        ("threatfox", threatfox, "threatfox_csv"),
-        ("ctu13", network, "ctu13_binetflow"),
-        ("otrf", endpoint, "sysmon_jsonl"),
+        ("threatfox", threatfox, "threatfox_csv", None),
+        ("ctu13", network, "ctu13_binetflow", None),
+        ("otrf", endpoint, "sysmon_zip_jsonl", "export/events.jsonl"),
     ]
     dataset_manifest = tmp_path / "dataset_manifest.json"
     dataset_manifest.write_text(
@@ -309,8 +309,9 @@ def test_build_snapshot_verifies_sources_and_writes_exact_manifest(tmp_path):
                         "license_note": "Test-only source-format fixture; not benchmark data.",
                         "format": source_format,
                         "path": str(path),
+                        "archive_member": archive_member,
                     }
-                    for dataset_id, path, source_format in sources
+                    for dataset_id, path, source_format, archive_member in sources
                 ],
             }
         ),
@@ -333,6 +334,17 @@ def test_build_snapshot_verifies_sources_and_writes_exact_manifest(tmp_path):
     assert snapshot.query("SELECT source_dataset, source_row_id FROM network_flows").rows == [
         {"source_dataset": "ctu13", "source_row_id": "line:2"}
     ]
+    assert snapshot.query(
+        "SELECT source_dataset, source_row_id FROM sysmon_process_events"
+    ).rows == [
+        {
+            "source_dataset": "otrf",
+            "source_row_id": "export/events.jsonl:line:1",
+        }
+    ]
+    assert snapshot.query(
+        "SELECT file_sha256 FROM dataset_provenance WHERE dataset_id = 'otrf'"
+    ).rows == [{"file_sha256": _sha256(endpoint)}]
 
 
 def test_build_snapshot_fails_closed_on_hash_mismatch(tmp_path):
@@ -353,6 +365,7 @@ def test_build_snapshot_fails_closed_on_hash_mismatch(tmp_path):
                         "license_note": "Test-only fixture.",
                         "format": "threatfox_csv",
                         "path": str(source),
+                        "archive_member": None,
                     }
                 ],
             }
@@ -361,6 +374,43 @@ def test_build_snapshot_fails_closed_on_hash_mismatch(tmp_path):
     )
 
     with pytest.raises(ValueError, match="Source SHA-256 mismatch"):
+        build_snapshot(
+            dataset_manifest,
+            tmp_path / "snapshot.duckdb",
+            tmp_path / "snapshot_manifest.json",
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("source_url", "not-a-url", "HTTPS URL"),
+        ("retrieved_at", "2026-09-23 00:00:00", "UTC date-time"),
+        ("retrieved_at", "2026-09-23T01:00:00+01:00", "UTC date-time"),
+    ],
+)
+def test_build_snapshot_rejects_invalid_public_provenance(tmp_path, field, value, message):
+    source = tmp_path / "source.csv"
+    source.write_text("ioc_id,ioc_value,ioc_type\n1,example.test,domain\n", encoding="utf-8")
+    source_entry = {
+        "dataset_id": "threatfox",
+        "source_name": "ThreatFox",
+        "source_url": "https://example.invalid/source.csv",
+        "retrieved_at": "2026-09-23T00:00:00Z",
+        "file_sha256": _sha256(source),
+        "license_note": "Test-only fixture.",
+        "format": "threatfox_csv",
+        "path": str(source),
+        "archive_member": None,
+    }
+    source_entry[field] = value
+    dataset_manifest = tmp_path / "dataset_manifest.json"
+    dataset_manifest.write_text(
+        json.dumps({"schema_version": "1", "sources": [source_entry]}),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match=message):
         build_snapshot(
             dataset_manifest,
             tmp_path / "snapshot.duckdb",
