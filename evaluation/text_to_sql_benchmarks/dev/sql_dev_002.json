@@ -5,5 +5,7 @@
   "gold_sql": [
     "SELECT count(DISTINCT src_ip) AS total FROM network_flows"
   ],
+  "category": "distinct",
+  "difficulty": "basic",
   "result_comparator": "scalar"
 }

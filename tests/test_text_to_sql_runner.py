@@ -113,6 +113,8 @@ def test_r2_runner_uses_schema_context_and_execution_accuracy(tmp_path):
         question="How many network flows are present?",
         database_snapshot="r2.duckdb",
         gold_sql=("SELECT count(*) AS total FROM network_flows",),
+        category="aggregation",
+        difficulty="basic",
         result_comparator="scalar",
     )
     provider = FakeSQLProvider("SELECT count(*) AS n FROM network_flows")
@@ -136,6 +138,8 @@ def test_r2_runner_cannot_bypass_read_only_safety(tmp_path):
         question="Remove all network flows.",
         database_snapshot="r2.duckdb",
         gold_sql=("SELECT count(*) AS total FROM network_flows",),
+        category="filter",
+        difficulty="basic",
         result_comparator="scalar",
     )
     runner = TextToSQLRunner(
@@ -156,6 +160,8 @@ def test_execution_accuracy_rejects_semantically_wrong_query_on_counterexample(t
         question="How many distinct destination IPs are present?",
         database_snapshot="r2.duckdb",
         gold_sql=("SELECT count(DISTINCT dst_ip) AS total FROM network_flows",),
+        category="distinct",
+        difficulty="basic",
         result_comparator="scalar",
     )
 
@@ -182,6 +188,42 @@ def test_r2_benchmark_splits_are_nonempty_and_disjoint():
     assert dev_ids.isdisjoint(frozen_ids)
 
 
+def test_r2_benchmark_cases_have_valid_category_and_difficulty():
+    runner = TextToSQLRunner.__new__(TextToSQLRunner)
+    runner.benchmarks_dir = __import__("pathlib").Path("evaluation/text_to_sql_benchmarks")
+    allowed_categories = {
+        "filter",
+        "time_range",
+        "aggregation",
+        "distinct",
+        "ordering_limit",
+        "cti",
+        "network",
+        "endpoint",
+    }
+    allowed_difficulties = {"basic", "intermediate", "advanced"}
+
+    cases = runner.load_cases("dev") + runner.load_cases("frozen")
+
+    assert cases
+    for case in cases:
+        assert case.category in allowed_categories
+        assert case.difficulty in allowed_difficulties
+
+
+def test_sql_case_loader_rejects_missing_coverage_metadata():
+    with pytest.raises(ValueError, match="category and difficulty"):
+        SQLBenchmarkCase.from_dict(
+            {
+                "case_id": "missing_metadata",
+                "question": "How many rows?",
+                "database_snapshot": "snapshot.duckdb",
+                "gold_sql": ["SELECT count(*) FROM network_flows"],
+                "result_comparator": "scalar",
+            }
+        )
+
+
 def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
     snapshot = _snapshot(tmp_path)
     benchmarks = tmp_path / "benchmarks"
@@ -191,9 +233,11 @@ def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
         """{
           "case_id": "sql_001",
           "question": "How many network flows are present?",
-          "database_snapshot": "SNAPSHOT_PATH",
-          "gold_sql": ["SELECT count(*) AS total FROM network_flows"],
-          "result_comparator": "scalar"
+              "database_snapshot": "SNAPSHOT_PATH",
+              "gold_sql": ["SELECT count(*) AS total FROM network_flows"],
+              "category": "aggregation",
+              "difficulty": "basic",
+              "result_comparator": "scalar"
         }""".replace("SNAPSHOT_PATH", str(snapshot.database_path)),
         encoding="utf-8",
     )
@@ -224,6 +268,14 @@ def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
     assert report["snapshot_id"] == snapshot.database_path.stem
     assert report["snapshot_sha256"] == sha256_file(snapshot.database_path)
     assert report["metrics"]["execution_accuracy"] == 1.0
+    assert report["category_metrics"] == {
+        "aggregation": {
+            "case_count": 1,
+            "syntax_validity_rate": 1.0,
+            "execution_success_rate": 1.0,
+            "execution_accuracy": 1.0,
+        }
+    }
     assert report["error_summary"] == {"OK": 1}
     assert report["cases"][0]["case_id"] == "sql_001"
 
@@ -265,6 +317,8 @@ def test_ordered_rows_comparator_detects_wrong_top_k_order(tmp_path):
         question="Return source IPs ordered by bytes_out descending.",
         database_snapshot="r2.duckdb",
         gold_sql=("SELECT src_ip FROM network_flows ORDER BY bytes_out DESC",),
+        category="ordering_limit",
+        difficulty="intermediate",
         result_comparator="ordered_rows",
     )
 
@@ -275,4 +329,73 @@ def test_ordered_rows_comparator_detects_wrong_top_k_order(tmp_path):
     )
 
     assert result.execution_success is True
+    assert result.execution_accurate is False
+
+
+def test_boundary_operator_semantic_trap(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    case = SQLBenchmarkCase(
+        case_id="boundary_001",
+        question="How many flows sent more than 100 bytes?",
+        database_snapshot="r2.duckdb",
+        gold_sql=("SELECT count(*) FROM network_flows WHERE bytes_out > 100",),
+        category="filter",
+        difficulty="basic",
+        result_comparator="scalar",
+    )
+
+    result = evaluate_sql_case(
+        case,
+        "SELECT count(*) FROM network_flows WHERE bytes_out >= 100",
+        snapshot,
+    )
+
+    assert result.execution_accurate is False
+
+
+def test_boolean_predicate_semantic_trap(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    case = SQLBenchmarkCase(
+        case_id="boolean_001",
+        question="How many TCP flows used destination port 443?",
+        database_snapshot="r2.duckdb",
+        gold_sql=(
+            "SELECT count(*) FROM network_flows "
+            "WHERE protocol = 'TCP' AND dst_port = 443",
+        ),
+        category="filter",
+        difficulty="intermediate",
+        result_comparator="scalar",
+    )
+
+    result = evaluate_sql_case(
+        case,
+        "SELECT count(*) FROM network_flows WHERE protocol = 'TCP' OR dst_port = 443",
+        snapshot,
+    )
+
+    assert result.execution_accurate is False
+
+
+def test_top_k_correct_rows_in_wrong_order_is_inaccurate(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    case = SQLBenchmarkCase(
+        case_id="top_k_order_001",
+        question="Return the two highest-byte source IPs in descending order.",
+        database_snapshot="r2.duckdb",
+        gold_sql=(
+            "SELECT src_ip FROM network_flows ORDER BY bytes_out DESC LIMIT 2",
+        ),
+        category="ordering_limit",
+        difficulty="intermediate",
+        result_comparator="ordered_rows",
+    )
+
+    result = evaluate_sql_case(
+        case,
+        "SELECT src_ip FROM network_flows "
+        "WHERE src_ip IN ('10.0.0.1', '10.0.0.2') ORDER BY bytes_out ASC",
+        snapshot,
+    )
+
     assert result.execution_accurate is False

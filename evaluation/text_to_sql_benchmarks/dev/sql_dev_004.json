@@ -5,5 +5,7 @@
   "gold_sql": [
     "SELECT min(event_time) AS earliest, max(event_time) AS latest FROM network_flows"
   ],
+  "category": "time_range",
+  "difficulty": "intermediate",
   "result_comparator": "scalar"
 }

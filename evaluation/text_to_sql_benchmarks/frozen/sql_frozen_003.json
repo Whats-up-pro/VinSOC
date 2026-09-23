@@ -5,5 +5,7 @@
   "gold_sql": [
     "SELECT src_ip, sum(COALESCE(bytes_out, 0)) AS total_bytes_out FROM network_flows GROUP BY src_ip ORDER BY total_bytes_out DESC, src_ip ASC LIMIT 10"
   ],
+  "category": "ordering_limit",
+  "difficulty": "intermediate",
   "result_comparator": "ordered_rows"
 }

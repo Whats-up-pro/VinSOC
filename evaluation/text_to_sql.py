@@ -18,6 +18,29 @@ from evaluation.text_to_sql_snapshot import (
 from vinsoc_data.duckdb_store import DuckDBSnapshot, QuerySafetyError
 
 ComparatorName = Literal["unordered_rows", "ordered_rows", "multiset_rows", "scalar", "boolean"]
+CategoryName = Literal[
+    "filter",
+    "time_range",
+    "aggregation",
+    "distinct",
+    "ordering_limit",
+    "cti",
+    "network",
+    "endpoint",
+]
+DifficultyName = Literal["basic", "intermediate", "advanced"]
+
+VALID_CATEGORIES = {
+    "filter",
+    "time_range",
+    "aggregation",
+    "distinct",
+    "ordering_limit",
+    "cti",
+    "network",
+    "endpoint",
+}
+VALID_DIFFICULTIES = {"basic", "intermediate", "advanced"}
 
 
 @dataclass(frozen=True)
@@ -28,6 +51,8 @@ class SQLBenchmarkCase:
     question: str
     database_snapshot: str
     gold_sql: tuple[str, ...]
+    category: CategoryName
+    difficulty: DifficultyName
     result_comparator: ComparatorName = "unordered_rows"
 
     @classmethod
@@ -37,11 +62,17 @@ class SQLBenchmarkCase:
             gold = [gold]
         if not payload.get("case_id") or not payload.get("question") or not gold:
             raise ValueError("SQL benchmark case requires case_id, question, and gold_sql")
+        category = payload.get("category")
+        difficulty = payload.get("difficulty")
+        if category not in VALID_CATEGORIES or difficulty not in VALID_DIFFICULTIES:
+            raise ValueError("SQL benchmark case requires valid category and difficulty")
         return cls(
             case_id=payload["case_id"],
             question=payload["question"],
             database_snapshot=payload.get("database_snapshot", ""),
             gold_sql=tuple(gold),
+            category=category,
+            difficulty=difficulty,
             result_comparator=payload.get("result_comparator", "unordered_rows"),
         )
 
@@ -113,6 +144,7 @@ class SQLCaseRun:
     """One model generation plus its deterministic execution evaluation."""
 
     case_id: str
+    category: CategoryName
     generated_sql: str | None
     evaluation: SQLEvaluationResult
     error_category: str
@@ -194,6 +226,7 @@ class TextToSQLRunner:
             )
             return SQLCaseRun(
                 case_id=case.case_id,
+                category=case.category,
                 generated_sql=None,
                 evaluation=evaluation,
                 error_category="PROVIDER_ERROR",
@@ -205,6 +238,7 @@ class TextToSQLRunner:
         metadata = response.metadata or {}
         return SQLCaseRun(
             case_id=case.case_id,
+            category=case.category,
             generated_sql=generated_sql,
             evaluation=evaluation,
             error_category=_sql_error_category(evaluation),
@@ -280,6 +314,18 @@ def run_text_to_sql_benchmark(
     runs = [runner.run_case(case) for case in cases]
     evaluations = [run.evaluation for run in runs]
     error_summary = dict(Counter(run.error_category for run in runs))
+    category_metrics = {}
+    for category in sorted({run.category for run in runs}):
+        category_evaluations = [
+            run.evaluation for run in runs if run.category == category
+        ]
+        aggregated = aggregate_sql_metrics(category_evaluations)
+        category_metrics[category] = {
+            "case_count": len(category_evaluations),
+            "syntax_validity_rate": aggregated["syntax_validity_rate"],
+            "execution_success_rate": aggregated["execution_success_rate"],
+            "execution_accuracy": aggregated["execution_accuracy"],
+        }
     return {
         "mode": "text_to_sql",
         "split": split,
@@ -294,6 +340,7 @@ def run_text_to_sql_benchmark(
             "temperature": runner.config.temperature,
         },
         "metrics": aggregate_sql_metrics(evaluations),
+        "category_metrics": category_metrics,
         "error_summary": error_summary,
         "cases": [
             {
