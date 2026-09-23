@@ -96,6 +96,8 @@ def test_a1_uses_native_tool_calls_and_production_schemas():
     assert result.input_tokens == 17
     assert result.output_tokens == 9
     assert result.trajectory_success is True
+    assert result.exact_call_match is True
+    assert result.tool_set_match is True
     assert "NOT_IMPLEMENTED" not in result.errors
 
 
