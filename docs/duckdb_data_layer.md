@@ -58,35 +58,49 @@ The model-generation runner exposes only schema context, never telemetry rows, a
 # Development benchmark
 python -m evaluation.text_to_sql evaluate \
   --snapshot data/snapshots/vinsoc_public_v1.duckdb \
+  --manifest evaluation/text_to_sql_benchmarks/snapshot_manifest.json \
   --split dev \
   --provider openai --model <PINNED_MODEL> --temperature 0
 
 # Final holdout; run only after the development configuration is frozen
 python -m evaluation.text_to_sql evaluate \
   --snapshot data/snapshots/vinsoc_public_v1.duckdb \
+  --manifest evaluation/text_to_sql_benchmarks/snapshot_manifest.json \
   --split frozen \
   --provider openai --model <PINNED_MODEL> --temperature 0
 ```
 
 Benchmark case definitions live in `evaluation/text_to_sql_benchmarks/{dev,frozen}/`.
 
-## Build a snapshot
+## Reproducible snapshot build
 
-Create an empty schema first. Do not register or insert rows until the exact public file, its checksum, retrieval time, and licence note are known.
+`scripts/build_vinsoc_public_snapshot.py` consumes local files only. It never downloads data, and it verifies every source checksum before creating a database. The accepted source formats are `threatfox_csv`, `ctu13_binetflow`, and `sysmon_jsonl`.
 
-```python
-from vinsoc_data.duckdb_store import SocSnapshotBuilder
+Before ingestion, create `dataset_manifest.json` conforming to [`dataset_manifest.schema.json`](../evaluation/text_to_sql_benchmarks/dataset_manifest.schema.json). Every source entry must contain the exact source URL, UTC retrieval time, downloaded-file SHA-256, source-specific licence/usage note, stable dataset ID, local path, and format. Do not create an entry until every value is known; a placeholder hash is invalid.
 
-builder = SocSnapshotBuilder("data/snapshots/vinsoc_public_v1.duckdb")
-builder.create_empty_snapshot()
-builder.register_provenance(
-    dataset_id="ctu13-scenario-name",
-    source_name="CTU-13",
-    source_url="https://mcfp.felk.cvut.cz/publicDatasets/CTU-13-Dataset/",
-    retrieved_at="2026-09-18T00:00:00Z",
-    file_sha256="<sha256-of-downloaded-file>",
-    license_note="<licence or usage note from the source>",
-)
+The currently selected public inputs are:
+
+| Domain | Exact public input | Usage basis | Build format |
+|---|---|---|---|
+| CTI | ThreatFox full CSV export from `https://threatfox.abuse.ch/export/` | ThreatFox terms shown on the export service; current downloads require an Auth-Key | `threatfox_csv` |
+| Network | CTU-13 Scenario 3 `capture20110812.binetflow` from `https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-44/detailed-bidirectional-flow-labels/capture20110812.binetflow` | Malware Capture Facility permits use with project/author attribution | `ctu13_binetflow` |
+| Endpoint | OTRF Security-Datasets APT29 Day 1 host archive `https://github.com/OTRF/Security-Datasets/blob/master/datasets/compound/apt29/day1/apt29_evals_day1_manual.zip` | Repository MIT License; record that licence and the exact archive hash | Extract event records to JSONL, then use `sysmon_jsonl` |
+
+The endpoint JSONL adapter accepts the OTRF/Elastic `winlog.event_id`, `winlog.computer_name`, and `winlog.event_data` layout. Preserve source order during archive extraction so `line:<n>` remains a stable `source_row_id`. Do not filter or synthesize rows to make gold queries pass.
+
+Build only after all three verified files and their provenance are available:
+
+```bash
+python scripts/build_vinsoc_public_snapshot.py \
+  --dataset-manifest dataset_manifest.json \
+  --snapshot data/snapshots/vinsoc_public_v1.duckdb \
+  --snapshot-manifest evaluation/text_to_sql_benchmarks/snapshot_manifest.json
+
+python -c 'from pathlib import Path; from evaluation.text_to_sql_snapshot import load_snapshot_manifest, verify_snapshot; p=Path("data/snapshots/vinsoc_public_v1.duckdb"); verify_snapshot(p, load_snapshot_manifest(Path("evaluation/text_to_sql_benchmarks/snapshot_manifest.json")))'
 ```
 
-The next data-preparation step is to map the chosen public files to these normalized tables. It must preserve `source_row_id` and register provenance first.
+The builder registers provenance before rows, requires every benchmark table to be non-empty, checks source identity columns, executes every development gold query, reopens through the read-only boundary, and writes the exact snapshot SHA-256. It refuses to overwrite an existing snapshot or manifest. Raw downloads and the DuckDB file are ignored by Git; only reproducibility code and manifests with real hashes belong in version control.
+
+## Current official-snapshot blocker
+
+As of 2026-09-23, this runtime has no `THREATFOX_AUTH_KEY`. ThreatFox's current full export requires that credential. Therefore no official `dataset_manifest.json`, DuckDB snapshot, or `snapshot_manifest.json` has been generated or committed. Existing `data/threatfox_samples.json` is not an acceptable substitute because it does not establish the required source-file provenance. R2 official model runs must remain blocked until the exact ThreatFox export is retrieved and all three source hashes are recorded.
