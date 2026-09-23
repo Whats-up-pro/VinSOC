@@ -797,9 +797,9 @@ Verify:
 Before running, export the exact evaluation configuration once and reuse it unchanged:
 ```bash
 export VINSOC_EVAL_PROVIDER=openai
-export VINSOC_EVAL_MODEL="<exact-model-id-selected-by-project>"
+test -n "$VINSOC_EVAL_MODEL" || { echo "Set VINSOC_EVAL_MODEL to the exact project-selected model ID"; exit 2; }
 ```
-The orchestrator must replace the example model value with the project-selected exact model ID before execution and record that resolved value in the run artifact.
+If `VINSOC_EVAL_MODEL` has not already been selected by the project, baseline execution is blocked; the agent must report that blocker rather than choose a model implicitly. The resolved value must be recorded in the run artifact.
 
 Pin:
 - provider;
