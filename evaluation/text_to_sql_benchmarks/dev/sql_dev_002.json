@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_002",
+  "question": "How many distinct source IP addresses appear in network flows?",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT count(DISTINCT src_ip) AS total FROM network_flows"
+  ],
+  "result_comparator": "scalar"
+}

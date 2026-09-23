@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_003",
+  "question": "Return each network protocol and its flow count.",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT protocol, count(*) AS flow_count FROM network_flows GROUP BY protocol"
+  ],
+  "result_comparator": "unordered_rows"
+}
