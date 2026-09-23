@@ -54,24 +54,26 @@ def check_required_args(
     predicted_args: Dict[str, Any],
     expected_call: ExpectedCall,
 ) -> Tuple[bool, List[str], List[str]]:
-    """
-    Check if all required arguments are present.
+    """Check that every required argument is present and value-correct.
 
     Returns:
-        (all_present, present_args, missing_args)
+        (all_match, matched_args, mismatched_or_missing_args)
     """
-    present = []
-    missing = []
+    matched = []
+    mismatched = []
 
     for arg_name, expected_value in expected_call.required_arguments.items():
-        predicted_value = predicted_args.get(arg_name)
+        if arg_name not in predicted_args:
+            mismatched.append(arg_name)
+            continue
 
-        if predicted_value is not None:
-            present.append(arg_name)
+        predicted_value = predicted_args[arg_name]
+        if compare_values(expected_value, predicted_value):
+            matched.append(arg_name)
         else:
-            missing.append(arg_name)
+            mismatched.append(arg_name)
 
-    return len(missing) == 0, present, missing
+    return len(mismatched) == 0, matched, mismatched
 
 
 def match_single_call(
@@ -305,9 +307,11 @@ def match_case(
     # FP: no match or tool-only
     false_positives = sum(1 for m in matches if not m.is_match)
 
-    # FN: expected calls not matched (optional calls don't count against)
+    # Tool-level FN: expected calls with no tool-name-compatible prediction.
     required_expected = [c for c in expected_case.expected_calls if not c.optional]
-    matched_expected = sum(1 for m in matches if m.is_match and m.expected_call and not m.expected_call.optional)
+    matched_expected = sum(
+        1 for m in matches if m.is_match and m.expected_call and not m.expected_call.optional
+    )
     false_negatives = len(required_expected) - matched_expected
 
     return matches, tool_tp, exact_tp, false_positives, false_negatives, partial_tp
