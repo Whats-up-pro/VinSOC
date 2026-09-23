@@ -1,7 +1,12 @@
 """R2 Text-to-SQL generation runner tests."""
 
 from agent.provider import LLMResponse
-from evaluation.text_to_sql import SQLBenchmarkCase, TextToSQLRunner
+from evaluation.text_to_sql import (
+    SQLBenchmarkCase,
+    TextToSQLRunner,
+    evaluate_sql_case,
+    run_text_to_sql_benchmark,
+)
 from vinsoc_data.duckdb_store import DuckDBSnapshot, SocSnapshotBuilder
 
 
@@ -48,20 +53,36 @@ def _snapshot(tmp_path):
     )
     builder.insert_rows(
         "network_flows",
-        [{
-            "source_dataset": "test-r2",
-            "source_row_id": "flow-1",
-            "event_time": "2026-09-23T00:00:00",
-            "src_ip": "10.0.0.1",
-            "src_port": 12345,
-            "dst_ip": "198.51.100.7",
-            "dst_port": 443,
-            "protocol": "TCP",
-            "action": "ALLOW",
-            "bytes_out": 100,
-            "bytes_in": 50,
-            "label": "test",
-        }],
+        [
+            {
+                "source_dataset": "test-r2",
+                "source_row_id": "flow-1",
+                "event_time": "2026-09-23T00:00:00",
+                "src_ip": "10.0.0.1",
+                "src_port": 12345,
+                "dst_ip": "198.51.100.7",
+                "dst_port": 443,
+                "protocol": "TCP",
+                "action": "ALLOW",
+                "bytes_out": 100,
+                "bytes_in": 50,
+                "label": "test",
+            },
+            {
+                "source_dataset": "test-r2",
+                "source_row_id": "flow-2",
+                "event_time": "2026-09-23T00:01:00",
+                "src_ip": "10.0.0.2",
+                "src_port": 12346,
+                "dst_ip": "198.51.100.7",
+                "dst_port": 443,
+                "protocol": "TCP",
+                "action": "ALLOW",
+                "bytes_out": 120,
+                "bytes_in": 60,
+                "label": "test",
+            },
+        ],
         source_dataset="test-r2",
     )
     return DuckDBSnapshot(path)
@@ -108,3 +129,65 @@ def test_r2_runner_cannot_bypass_read_only_safety(tmp_path):
 
     assert run.evaluation.safety_rejected is True
     assert run.error_category == "SAFETY_REJECTION"
+
+
+def test_execution_accuracy_rejects_semantically_wrong_query_on_counterexample(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    case = SQLBenchmarkCase(
+        case_id="semantic_trap_001",
+        question="How many distinct destination IPs are present?",
+        database_snapshot="r2.duckdb",
+        gold_sql=("SELECT count(DISTINCT dst_ip) AS total FROM network_flows",),
+        result_comparator="scalar",
+    )
+
+    result = evaluate_sql_case(
+        case,
+        "SELECT count(*) AS total FROM network_flows",
+        snapshot,
+    )
+
+    assert result.syntax_valid is True
+    assert result.execution_success is True
+    assert result.execution_accurate is False
+
+
+def test_r2_benchmark_splits_are_nonempty_and_disjoint():
+    runner = TextToSQLRunner.__new__(TextToSQLRunner)
+    runner.benchmarks_dir = __import__("pathlib").Path("evaluation/text_to_sql_benchmarks")
+
+    dev_ids = {case.case_id for case in runner.load_cases("dev")}
+    frozen_ids = {case.case_id for case in runner.load_cases("frozen")}
+
+    assert dev_ids
+    assert frozen_ids
+    assert dev_ids.isdisjoint(frozen_ids)
+
+
+def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    benchmarks = tmp_path / "benchmarks"
+    dev = benchmarks / "dev"
+    dev.mkdir(parents=True)
+    (dev / "sql_001.json").write_text(
+        """{
+          "case_id": "sql_001",
+          "question": "How many network flows are present?",
+          "database_snapshot": "r2.duckdb",
+          "gold_sql": ["SELECT count(*) AS total FROM network_flows"],
+          "result_comparator": "scalar"
+        }""",
+        encoding="utf-8",
+    )
+
+    report = run_text_to_sql_benchmark(
+        snapshot_path=snapshot.database_path,
+        split="dev",
+        provider=FakeSQLProvider("SELECT count(*) AS n FROM network_flows"),
+        benchmarks_dir=benchmarks,
+    )
+
+    assert report["case_count"] == 1
+    assert report["metrics"]["execution_accuracy"] == 1.0
+    assert report["error_summary"] == {"OK": 1}
+    assert report["cases"][0]["case_id"] == "sql_001"
