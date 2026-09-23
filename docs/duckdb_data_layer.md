@@ -50,7 +50,25 @@ It rejects multiple statements and keywords such as `INSERT`, `UPDATE`, `DELETE`
 
 For each case, it runs the predicted query and every accepted gold query against the same frozen snapshot. It reports syntax validity rate, execution success rate, execution accuracy, and safety rejection rate.
 
-Execution accuracy means the returned values match an accepted gold result. It is the main correctness metric. The evaluator ignores SQL aliases, supports unordered or multiset rows, and supports scalar and Boolean results.
+Execution accuracy means the returned values match an accepted gold result. It is the main correctness metric. The evaluator ignores SQL aliases where appropriate and supports unordered rows, ordered rows (for top-k/timeline tasks), multisets, scalar values, and Boolean results.
+
+The model-generation runner exposes only schema context, never telemetry rows, and every generated query passes through the same `DuckDBSnapshot` parser/read-only boundary before execution.
+
+```bash
+# Development benchmark
+python -m evaluation.text_to_sql evaluate \
+  --snapshot data/snapshots/vinsoc_public_v1.duckdb \
+  --split dev \
+  --provider openai --model <PINNED_MODEL> --temperature 0
+
+# Final holdout; run only after the development configuration is frozen
+python -m evaluation.text_to_sql evaluate \
+  --snapshot data/snapshots/vinsoc_public_v1.duckdb \
+  --split frozen \
+  --provider openai --model <PINNED_MODEL> --temperature 0
+```
+
+Benchmark case definitions live in `evaluation/text_to_sql_benchmarks/{dev,frozen}/`.
 
 ## Build a snapshot
 
