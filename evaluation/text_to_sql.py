@@ -12,7 +12,7 @@ from typing import Any, Literal
 from agent.provider import LLMProvider, ProviderError, create_provider
 from vinsoc_data.duckdb_store import DuckDBSnapshot, QuerySafetyError
 
-ComparatorName = Literal["unordered_rows", "multiset_rows", "scalar", "boolean"]
+ComparatorName = Literal["unordered_rows", "ordered_rows", "multiset_rows", "scalar", "boolean"]
 
 
 @dataclass(frozen=True)
@@ -244,6 +244,56 @@ def _sql_error_category(result: SQLEvaluationResult) -> str:
         return "RESULT_MISMATCH"
     return "OK"
 
+def run_text_to_sql_benchmark(
+    snapshot_path: str | Path,
+    split: str = "dev",
+    config: SQLGenerationConfig | None = None,
+    provider: LLMProvider | None = None,
+    benchmarks_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Run one reproducible Text-to-SQL split and return a JSON-ready report."""
+    snapshot = DuckDBSnapshot(snapshot_path)
+    runner = TextToSQLRunner(
+        snapshot=snapshot,
+        config=config,
+        provider=provider,
+        benchmarks_dir=benchmarks_dir,
+    )
+    runs = runner.run_suite(split)
+    evaluations = [run.evaluation for run in runs]
+    error_summary = dict(Counter(run.error_category for run in runs))
+    return {
+        "mode": "text_to_sql",
+        "split": split,
+        "case_count": len(runs),
+        "provider": runner.provider.get_name(),
+        "provider_metadata": runner.provider.get_run_metadata(),
+        "config": {
+            "provider": runner.config.provider,
+            "model": runner.config.model,
+            "temperature": runner.config.temperature,
+        },
+        "metrics": aggregate_sql_metrics(evaluations),
+        "error_summary": error_summary,
+        "cases": [
+            {
+                "case_id": run.case_id,
+                "generated_sql": run.generated_sql,
+                "error_category": run.error_category,
+                "syntax_valid": run.evaluation.syntax_valid,
+                "execution_success": run.evaluation.execution_success,
+                "execution_accurate": run.evaluation.execution_accurate,
+                "safety_rejected": run.evaluation.safety_rejected,
+                "error": run.evaluation.error,
+                "latency_ms": run.latency_ms,
+                "input_tokens": run.input_tokens,
+                "output_tokens": run.output_tokens,
+            }
+            for run in runs
+        ],
+    }
+
+
 def aggregate_sql_metrics(results: Sequence[SQLEvaluationResult]) -> dict[str, float]:
     """Return the three headline rates plus the hard safety rejection rate."""
     total = len(results)
@@ -287,6 +337,8 @@ def _equivalent(
     gold_rows = _canonical_rows(gold)
     if comparator in {"scalar", "boolean"}:
         return pred_rows == gold_rows
+    if comparator == "ordered_rows":
+        return pred_rows == gold_rows
     if comparator == "multiset_rows":
         return Counter(pred_rows) == Counter(gold_rows)
     if comparator == "unordered_rows":
@@ -302,3 +354,43 @@ def _has_valid_syntax(sql: str) -> bool:
         return len(duckdb.extract_statements(sql)) == 1
     except duckdb.ParserException:
         return False
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI entry point for the R2 benchmark."""
+    import argparse
+    import json
+
+    parser = argparse.ArgumentParser(description="VinSOC R2 Text-to-SQL benchmark")
+    parser.add_argument("evaluate", nargs="?")
+    parser.add_argument("--snapshot", required=True)
+    parser.add_argument("--split", choices=["dev", "frozen"], default="dev")
+    parser.add_argument("--provider", default="openai")
+    parser.add_argument("--model", default="gpt-4o")
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--benchmarks-dir", default="evaluation/text_to_sql_benchmarks")
+    parser.add_argument("--output")
+    args = parser.parse_args(argv)
+
+    config = SQLGenerationConfig(
+        provider=args.provider,
+        model=args.model,
+        temperature=args.temperature,
+    )
+    report = run_text_to_sql_benchmark(
+        snapshot_path=args.snapshot,
+        split=args.split,
+        config=config,
+        benchmarks_dir=Path(args.benchmarks_dir),
+    )
+    rendered = json.dumps(report, indent=2)
+    if args.output:
+        output = Path(args.output)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered + "\n", encoding="utf-8")
+    else:
+        print(rendered)
+    return 0 if report["case_count"] else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
