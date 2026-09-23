@@ -13,8 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from agent.orchestrator import InvestigationOrchestrator
-from agent.provider import MockProvider
+from agent.provider import LLMProvider, ProviderError, create_provider
+from agent.tools import get_tool_schemas
 from evaluation.tool_calling.models import (
     CaseResult,
     ExpectedCall,
@@ -49,9 +49,22 @@ class DecisionRunner:
         self,
         config: Optional[A1Config] = None,
         benchmarks_dir: Optional[Path] = None,
+        provider: Optional[LLMProvider] = None,
     ):
         self.config = config or A1Config()
         self.benchmarks_dir = benchmarks_dir or Path("evaluation/tool_calling/benchmarks")
+        if provider is not None:
+            self.provider = provider
+        else:
+            provider_kwargs: Dict[str, Any] = {}
+            if self.config.provider == "routed":
+                # Evaluation must stay on the pinned provider/model.
+                provider_kwargs["mode"] = "evaluation"
+            self.provider = create_provider(
+                provider_type=self.config.provider,
+                model=self.config.model,
+                **provider_kwargs,
+            )
 
     def load_case(self, case_id: str, split: str = "dev") -> ToolCallCase:
         """Load a benchmark case."""
@@ -73,55 +86,6 @@ class DecisionRunner:
             cases.append(ToolCallCase.from_dict(data))
         return cases
 
-    def parse_tool_calls(self, llm_response: str) -> List[PredictedCall]:
-        """
-        Parse tool calls from LLM response.
-
-        Handles multiple formats:
-        - JSON with tool_calls array
-        - Natural language description
-        """
-        # Try JSON parsing first
-        try:
-            # Look for JSON in response
-            if "```json" in llm_response:
-                json_str = llm_response.split("```json")[1].split("```")[0]
-            elif "{" in llm_response:
-                start = llm_response.find("{")
-                end = llm_response.rfind("}") + 1
-                json_str = llm_response[start:end]
-            else:
-                json_str = llm_response
-
-            data = json.loads(json_str)
-
-            calls = []
-            if isinstance(data, list):
-                for item in data:
-                    if isinstance(item, dict) and "tool" in item:
-                        tool = item["tool"]
-                        args = item.get("arguments", {})
-                        calls.append(PredictedCall(tool=tool, arguments=args))
-            elif isinstance(data, dict) and "tool_calls" in data:
-                for item in data["tool_calls"]:
-                    if isinstance(item, dict):
-                        tool = item.get("tool") or item.get("name")
-                        args = item.get("arguments", {})
-                        calls.append(PredictedCall(tool=tool, arguments=args))
-
-            return calls
-
-        except (json.JSONDecodeError, KeyError):
-            pass
-
-        # Fallback: regex extraction
-        calls = []
-        for tool_name in ["cti_enrichment", "network_investigation", "endpoint_investigation"]:
-            if tool_name in llm_response.lower():
-                calls.append(PredictedCall(tool=tool_name, arguments={}))
-
-        return calls
-
     def build_prompt(
         self,
         case: ToolCallCase,
@@ -132,31 +96,15 @@ class DecisionRunner:
 
         Returns (system_prompt, user_prompt).
         """
-        from agent.tools import get_tool_schemas
-
         if system_prompt is None:
-            # Default system prompt from orchestrator
             system_prompt = """You are a SOC analyst assistant.
 
-Given an investigation request, determine which tools to call.
+Select only the investigation tools needed to satisfy the user's request.
+Use the provided tool schemas as the source of truth for tool names and arguments.
+Do not invent tools, arguments, indicators, hosts, or evidence.
+If no tool is needed, do not call one."""
 
-Tools available:
-- cti_enrichment: Look up threat intelligence for IP, domain, hash, or URL
-- network_investigation: Analyze network telemetry for an indicator
-- endpoint_investigation: Investigate endpoint process relationships
-
-Choose ONLY the tools necessary for this investigation.
-Do not call tools that are not relevant."""
-
-        user_prompt = f"""Investigation Request:
-{case.request}
-
-Initial indicator: {case.case_id.split('_')[1] if '_' in case.case_id else case.case_id}
-
-What tools should be called?
-Provide the tool calls in JSON format."""
-
-        return system_prompt, user_prompt
+        return system_prompt, case.request
 
     def run_decision(
         self,
@@ -172,21 +120,40 @@ Provide the tool calls in JSON format."""
         )
 
         try:
-            # Build prompt
             system_prompt, user_prompt = self.build_prompt(case, self.config.system_prompt)
+            response = self.provider.generate(
+                messages=[{"role": "user", "content": user_prompt}],
+                tools=get_tool_schemas(),
+                system_prompt=system_prompt,
+                temperature=self.config.temperature,
+            )
 
-            # Call LLM
-            # For now, use a simple mock
-            # TODO: Implement actual LLM call
-            raise NotImplementedError("A1 LLM integration not yet implemented")
+            predicted_calls: List[PredictedCall] = []
+            for tool_call in response.tool_calls:
+                tool_name = tool_call.get("name")
+                raw_arguments = tool_call.get("arguments", {})
+                if not tool_name or not isinstance(raw_arguments, dict):
+                    result.errors.append("INVALID_TOOL_CALL")
+                    continue
+                predicted_calls.append(
+                    PredictedCall(
+                        tool=tool_name,
+                        arguments=normalize_arguments(tool_name, raw_arguments),
+                        raw_arguments=raw_arguments,
+                    )
+                )
+            result.predicted_calls = predicted_calls
 
-        except NotImplementedError:
-            # Mock response for testing
-            result.error_message = "A1 LLM integration not implemented"
-            result.errors.append("NOT_IMPLEMENTED")
+            metadata = response.metadata or {}
+            result.latency_ms = float(metadata.get("latency_ms", 0.0) or 0.0)
+            result.input_tokens = int(metadata.get("input_tokens", 0) or 0)
+            result.output_tokens = int(metadata.get("output_tokens", 0) or 0)
 
-        except Exception as e:
-            result.error_message = str(e)
+        except ProviderError as exc:
+            result.error_message = str(exc)
+            result.errors.append("PROVIDER_ERROR")
+        except Exception as exc:
+            result.error_message = str(exc)
             result.errors.append("EXECUTION_ERROR")
 
         # Compute metrics
@@ -259,6 +226,13 @@ def run_a1_benchmark(
         "mode": "decision",
         "split": split,
         "case_count": len(cases),
+        "provider": runner.provider.get_name(),
+        "provider_metadata": runner.provider.get_run_metadata(),
+        "config": {
+            "provider": runner.config.provider,
+            "model": runner.config.model,
+            "temperature": runner.config.temperature,
+        },
         "aggregate": aggregate.to_dict(),
         "error_summary": error_summary,
     }
