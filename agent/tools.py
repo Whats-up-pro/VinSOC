@@ -37,6 +37,7 @@ def get_tool_schemas() -> List[Dict[str, Any]]:
             "type": "function",
             "function": {
                 "name": "cti_enrichment",
+                "strict": True,
                 "description": """Enrich an Indicator of Compromise (IOC) with Cyber Threat Intelligence.
 
 Use this tool to get threat intelligence about:
@@ -60,12 +61,13 @@ Note: Do not call this tool for endpoint hostname or process context.""",
                             "description": "The IOC value to investigate (IP, domain, or hash)"
                         },
                         "indicator_type": {
-                            "type": "string",
-                            "enum": ["ipv4", "domain", "hash", "url"],
+                            "type": ["string", "null"],
+                            "enum": ["ipv4", "domain", "hash", "url", None],
                             "description": "The type of IOC. Auto-detected if not provided."
                         }
                     },
-                    "required": ["indicator"]
+                    "required": ["indicator", "indicator_type"],
+                    "additionalProperties": False
                 }
             }
         },
@@ -73,6 +75,7 @@ Note: Do not call this tool for endpoint hostname or process context.""",
             "type": "function",
             "function": {
                 "name": "network_investigation",
+                "strict": True,
                 "description": """Investigate network telemetry for an indicator.
 
 Use this tool to analyze:
@@ -95,20 +98,23 @@ read-only domain query layer. Do not send SQL in this tool call.""",
                             "description": "The IP address or domain to investigate"
                         },
                         "indicator_type": {
-                            "type": "string",
-                            "enum": ["ipv4", "domain"],
+                            "type": ["string", "null"],
+                            "enum": ["ipv4", "domain", None],
                             "description": "The type of indicator. Auto-detected if not provided."
                         },
                         "time_range": {
-                            "type": "object",
+                            "type": ["object", "null"],
                             "properties": {
                                 "start": {"type": "string", "description": "Start time in ISO8601 format"},
                                 "end": {"type": "string", "description": "End time in ISO8601 format"}
                             },
+                            "required": ["start", "end"],
+                            "additionalProperties": False,
                             "description": "Optional time range for the investigation. Defaults to last 24 hours."
                         }
                     },
-                    "required": ["indicator"]
+                    "required": ["indicator", "indicator_type", "time_range"],
+                    "additionalProperties": False
                 }
             }
         },
@@ -116,6 +122,7 @@ read-only domain query layer. Do not send SQL in this tool call.""",
             "type": "function",
             "function": {
                 "name": "endpoint_investigation",
+                "strict": True,
                 "description": """Investigate endpoint telemetry for suspicious process relationships.
 
 Use this tool to analyze:
@@ -136,15 +143,18 @@ Call this when process relationships are relevant to the investigation.""",
                             "description": "The hostname or identifier of the endpoint to investigate"
                         },
                         "time_range": {
-                            "type": "object",
+                            "type": ["object", "null"],
                             "properties": {
                                 "start": {"type": "string", "description": "Start time in ISO8601 format"},
                                 "end": {"type": "string", "description": "End time in ISO8601 format"}
                             },
+                            "required": ["start", "end"],
+                            "additionalProperties": False,
                             "description": "Optional time range for the investigation. Defaults to last 24 hours."
                         }
                     },
-                    "required": ["host"]
+                    "required": ["host", "time_range"],
+                    "additionalProperties": False
                 }
             }
         }
