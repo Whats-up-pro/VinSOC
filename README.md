@@ -7,7 +7,7 @@ VinSOC uses an LLM to select investigation tools and return structured evidence 
 | | |
 |---|---|
 | **Python** | 3.11+ |
-| **Tests** | 197 passed |
+| **Tests** | 212 passed (Python 3.11 / 3.12 CI) |
 | **License** | Research |
 
 ---
@@ -68,29 +68,31 @@ python -m cli.main investigate 185.220.101.45 --type ipv4
 
 ### Tool Calling (R1) 🔄
 
-Measure LLM tool selection accuracy.
+Measure whether a pinned LLM selects the correct production tool schemas and argument values.
 
 ```bash
+# A1: real-model decision benchmark
+python -m evaluation.tool_calling benchmarks dev --mode decision \
+  --provider openai --model <PINNED_MODEL> --temperature 0
+
+# A2: integration/regression benchmark through the production orchestrator
 python -m evaluation.tool_calling benchmarks dev --mode integration
 ```
 
-**Current Baseline:**
+R1 now has 20 visible development cases and 8 separate frozen holdout cases. The evaluator reports tool-level P/R/F1, exact-call P/R/F1, required/critical argument accuracy, tool-set exact match, no-tool accuracy, forbidden-tool rate, trajectory success, latency and provider metadata. The previous MockProvider/A2 numbers are historical regression results and are **not** an official real-model accuracy baseline after the evaluator hardening.
 
-| Metric | Value |
-|--------|-------|
-| Tool Precision | 80.65% |
-| Tool Recall | 59.38% |
-| Tool F1 | 68.22% |
-| Exact Call F1 | 68.22% |
-| Trajectory Success | 0.00% |
+### Text-to-SQL (R2) 🔄
 
-### Text-to-SQL (R2) ⏳
-
-Measure SQL generation accuracy against frozen snapshots.
+Measure generated SQL with execution-based accuracy on the same frozen, read-only DuckDB snapshot used by gold SQL.
 
 ```bash
-python -m evaluation.text_to_sql evaluate --snapshot data/snapshots/v1.duckdb
+python -m evaluation.text_to_sql evaluate \
+  --snapshot data/snapshots/vinsoc_public_v1.duckdb \
+  --split dev \
+  --provider openai --model <PINNED_MODEL> --temperature 0
 ```
+
+R2 has 8 development cases and 6 frozen holdout cases. Execution Accuracy is the headline correctness metric; syntax validity, execution success, safety rejection and deterministic error categories are diagnostics. An official score requires a provenance-recorded public-data snapshot built according to `docs/duckdb_data_layer.md`; the repository intentionally does not fabricate that snapshot.
 
 ---
 
@@ -136,8 +138,9 @@ VinSOC/
 │   └── endpoint_skill.py
 │
 ├── evaluation/         # Evaluation framework
-│   ├── tool_calling/ # R1 benchmark
-│   └── text_to_sql.py
+│   ├── tool_calling/          # R1 benchmark + dev/frozen cases
+│   ├── text_to_sql.py         # R2 runner/evaluator/CLI
+│   └── text_to_sql_benchmarks/ # R2 dev/frozen cases
 │
 ├── schemas/          # JSON schemas
 ├── scenarios/        # Test scenarios
@@ -185,7 +188,9 @@ export OPENAI_API_KEY=sk-...
 
 ## Benchmark Cases
 
-**20 development cases** in `evaluation/tool_calling/benchmarks/dev/`
+**R1:** 20 development + 8 frozen holdout cases in `evaluation/tool_calling/benchmarks/`
+
+**R2:** 8 development + 6 frozen holdout cases in `evaluation/text_to_sql_benchmarks/`
 
 | Category | Description |
 |----------|-------------|
@@ -216,7 +221,7 @@ export OPENAI_API_KEY=sk-...
 |-------|-------|--------|
 | R0 | Runtime & semantic integrity | ✅ |
 | R1 | Tool Calling Evaluation | 🔄 |
-| R2 | Text-to-SQL Benchmark | ⏳ |
+| R2 | Text-to-SQL Benchmark | 🔄 evaluator/cases ready; official snapshot baseline pending |
 | R3 | End-to-End Investigation | ⏳ |
 
 ---
