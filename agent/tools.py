@@ -25,6 +25,15 @@ class InvestigationTool:
     output_schema_description: str
 
 
+def sanitize_tool_arguments_for_execution(
+    tool_name: str,
+    arguments: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Restore omitted-field semantics for nullable strict-schema arguments."""
+    del tool_name
+    return {key: value for key, value in arguments.items() if value is not None}
+
+
 def get_tool_schemas() -> List[Dict[str, Any]]:
     """
     Get tool schemas for LLM function calling.

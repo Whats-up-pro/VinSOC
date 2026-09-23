@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from agent.provider import LLMProvider, MockProvider
-from agent.tools import get_tool_schemas
+from agent.tools import get_tool_schemas, sanitize_tool_arguments_for_execution
 from agent.evidence import EvidenceStore
 from agent.triage import TriageResult, triage_alert
 from agent.runbooks import default_soc_runbook
@@ -711,7 +711,10 @@ class InvestigationOrchestrator:
     def _execute_tool_call(self, tool_call: Dict[str, Any]):
         """Execute a tool call and add result to conversation."""
         tool_name = tool_call["name"]
-        arguments = tool_call["arguments"]
+        arguments = sanitize_tool_arguments_for_execution(
+            tool_name,
+            tool_call["arguments"],
+        )
         tool_call_id = tool_call.get("id") or f"local_{uuid.uuid4().hex[:8]}"
 
         start_time = datetime.utcnow()
