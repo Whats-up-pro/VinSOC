@@ -5,6 +5,7 @@ One-to-one matching between predicted and expected calls.
 """
 from __future__ import annotations
 
+from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
 from evaluation.tool_calling.models import (
@@ -347,13 +348,40 @@ def compute_case_metrics(
         if m.expected_call and not m.critical_arg_match
     )
 
-    # Trajectory success: all required calls matched EXACTLY, no forbidden, critical args correct
+    # Per-case exact-call success: every required call is exact and every
+    # prediction is exact. Optional expected calls may be omitted.
     required_calls = [c for c in expected_case.expected_calls if not c.optional]
+    exact_required_ids = {
+        m.expected_call.call_id
+        for m in matches
+        if (
+            m.match_type == MatchType.EXACT
+            and m.expected_call is not None
+            and not m.expected_call.optional
+        )
+    }
+    exact_call_match = (
+        len(exact_required_ids) == len(required_calls)
+        and all(m.match_type == MatchType.EXACT for m in matches)
+    )
+
+    required_tools = Counter(call.tool for call in required_calls)
+    optional_tools = Counter(
+        call.tool for call in expected_case.expected_calls if call.optional
+    )
+    predicted_tools = Counter(call.tool for call in predicted_calls)
+    allowed_tools = required_tools + optional_tools
+    tool_set_match = (
+        all(predicted_tools[tool] >= count for tool, count in required_tools.items())
+        and all(predicted_tools[tool] <= allowed_tools[tool] for tool in predicted_tools)
+        and all(tool in allowed_tools for tool in predicted_tools)
+    )
+
     trajectory_success = (
-        exact_tp >= len(required_calls) and
-        len(forbidden_violations) == 0 and
-        crit_errors == 0 and
-        len(ordering_violations) == 0
+        exact_call_match
+        and len(forbidden_violations) == 0
+        and crit_errors == 0
+        and len(ordering_violations) == 0
     )
 
     return {
@@ -363,6 +391,8 @@ def compute_case_metrics(
         "partial_tp": partial_tp,  # Partial TP
         "fp": fp,
         "fn": fn,
+        "exact_call_match": exact_call_match,
+        "tool_set_match": tool_set_match,
         "forbidden_violations": forbidden_violations,
         "duplicates": duplicates,
         "ordering_violations": ordering_violations,
