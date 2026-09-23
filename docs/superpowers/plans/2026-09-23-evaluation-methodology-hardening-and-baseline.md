@@ -794,6 +794,13 @@ Verify:
 
 **Prerequisite:** valid provider credentials.
 
+Before running, export the exact evaluation configuration once and reuse it unchanged:
+```bash
+export VINSOC_EVAL_PROVIDER=openai
+export VINSOC_EVAL_MODEL="<exact-model-id-selected-by-project>"
+```
+The orchestrator must replace the example model value with the project-selected exact model ID before execution and record that resolved value in the run artifact.
+
 Pin:
 - provider;
 - exact model ID;
@@ -807,8 +814,8 @@ Run:
 ```bash
 python -m evaluation.tool_calling benchmarks dev \
   --mode decision \
-  --provider <PINNED_PROVIDER> \
-  --model <PINNED_MODEL> \
+  --provider $VINSOC_EVAL_PROVIDER \
+  --model $VINSOC_EVAL_MODEL \
   --temperature 0
 ```
 
@@ -847,8 +854,8 @@ python -m evaluation.text_to_sql evaluate \
   --snapshot data/snapshots/vinsoc_public_v1.duckdb \
   --manifest evaluation/text_to_sql_benchmarks/snapshot_manifest.json \
   --split dev \
-  --provider <PINNED_PROVIDER> \
-  --model <PINNED_MODEL> \
+  --provider $VINSOC_EVAL_PROVIDER \
+  --model $VINSOC_EVAL_MODEL \
   --temperature 0 \
   --output results/text_to_sql/r2_dev_baseline.json
 ```
