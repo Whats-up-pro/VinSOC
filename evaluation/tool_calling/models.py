@@ -313,6 +313,8 @@ class AggregateResult:
     forbidden_tool_rate: float = 0.0
     ordering_accuracy: float = 0.0
     trajectory_success_rate: float = 0.0
+    provider_error_rate: float = 0.0
+    execution_error_rate: float = 0.0
 
     # Cost/latency
     total_cost_usd: float = 0.0
@@ -340,6 +342,8 @@ class AggregateResult:
             "forbidden_tool_rate": round(self.forbidden_tool_rate, 4),
             "ordering_accuracy": round(self.ordering_accuracy, 4) if self.ordering_accuracy > 0 else None,
             "trajectory_success_rate": round(self.trajectory_success_rate, 4),
+            "provider_error_rate": round(self.provider_error_rate, 4),
+            "execution_error_rate": round(self.execution_error_rate, 4),
             "mean_latency_ms": round(self.mean_latency_ms, 2),
             "p95_latency_ms": round(self.p95_latency_ms, 2),
         }

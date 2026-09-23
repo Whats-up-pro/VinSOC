@@ -60,9 +60,9 @@ python -m evaluation.tool_calling benchmarks dev --mode decision
 - Measures whether both tool AND arguments are correct
 - Stricter than tool-only metrics
 
-### Trajectory Success
+### Single-Turn Case Success
 - All required calls exact + no forbidden + critical args correct
-- The most stringent metric
+- A single-turn R1 case metric, not BFCL V4 multi-turn trajectory evaluation
 
 ### Error Categories
 | Error | Meaning |

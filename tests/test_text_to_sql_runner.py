@@ -176,6 +176,23 @@ def test_execution_accuracy_rejects_semantically_wrong_query_on_counterexample(t
     assert result.execution_accurate is False
 
 
+def test_unordered_rows_preserves_duplicate_multiplicity(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    case = SQLBenchmarkCase(
+        case_id="unordered_multiplicity_001",
+        question="Return each protocol once.",
+        database_snapshot="r2.duckdb",
+        gold_sql=("SELECT DISTINCT protocol FROM network_flows",),
+        category="distinct",
+        difficulty="basic",
+        result_comparator="unordered_rows",
+    )
+
+    result = evaluate_sql_case(case, "SELECT protocol FROM network_flows", snapshot)
+
+    assert result.execution_accurate is False
+
+
 def test_r2_benchmark_splits_are_nonempty_and_disjoint():
     runner = TextToSQLRunner.__new__(TextToSQLRunner)
     runner.benchmarks_dir = __import__("pathlib").Path("evaluation/text_to_sql_benchmarks")
