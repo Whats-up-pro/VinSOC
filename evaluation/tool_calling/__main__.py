@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from evaluation.tool_calling.integration_runner import IntegrationRunner
-from evaluation.tool_calling.decision_runner import DecisionRunner
+from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
 from evaluation.tool_calling.metrics import aggregate_case_results, generate_error_summary
 
 
@@ -42,8 +42,17 @@ def run_benchmark(args):
         results = runner.run_suite(case_ids)
 
     elif mode == "decision":
-        runner = DecisionRunner()
-        print(f"Running decision benchmark (split: {split})...")
+        config = A1Config(
+            provider=getattr(args, "provider", "openai"),
+            model=getattr(args, "model", "gpt-4o"),
+            temperature=float(getattr(args, "temperature", 0.0)),
+        )
+        runner = DecisionRunner(config=config)
+        print(
+            f"Running decision benchmark (split: {split}, "
+            f"provider: {config.provider}, model: {config.model}, "
+            f"temperature: {config.temperature})..."
+        )
         results = runner.run_suite(split=split, case_ids=cases)
         if not results:
             print(f"No cases found in split '{split}'")
@@ -119,6 +128,9 @@ def main():
     bench_parser.add_argument("split", choices=["dev", "frozen"], default="dev")
     bench_parser.add_argument("--cases", nargs="+", help="Specific case IDs")
     bench_parser.add_argument("--mode", choices=["integration", "decision"], default="integration")
+    bench_parser.add_argument("--provider", default="openai")
+    bench_parser.add_argument("--model", default="gpt-4o")
+    bench_parser.add_argument("--temperature", type=float, default=0.0)
     bench_parser.set_defaults(func=run_benchmark)
 
     # list command
@@ -131,6 +143,9 @@ def main():
     run_parser.add_argument("--mode", choices=["integration", "decision"], default="integration")
     run_parser.add_argument("--split", default="dev")
     run_parser.add_argument("--cases", nargs="+")
+    run_parser.add_argument("--provider", default="openai")
+    run_parser.add_argument("--model", default="gpt-4o")
+    run_parser.add_argument("--temperature", type=float, default=0.0)
     run_parser.set_defaults(func=run_benchmark)
 
     args = parser.parse_args()
