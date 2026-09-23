@@ -16,7 +16,7 @@ from evaluation.tool_calling.models import (
     MatchType,
     PredictedCall,
 )
-from evaluation.tool_calling.matching import compute_case_metrics
+from evaluation.tool_calling.matching import compute_case_metrics, tool_multiset_matches
 
 
 def compute_tool_prf(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
@@ -106,22 +106,16 @@ def compute_argument_accuracy(case_results: List[CaseResult]) -> tuple[float, fl
 
 
 def compute_tool_set_em(case_results: List[CaseResult]) -> float:
-    """
-    Compute tool set exact match rate.
+    """Compute case-level tool multiset exact match with optional-call semantics."""
+    if not case_results:
+        return 0.0
 
-    A case has exact match if:
-    - predicted tool multiset == expected tool multiset
-    """
-    exact_matches = 0
-
-    for result in case_results:
-        expected_tools = {c.tool for c in result.expected_calls}
-        predicted_tools = {c.tool for c in result.predicted_calls}
-
-        if expected_tools == predicted_tools:
-            exact_matches += 1
-
-    return exact_matches / len(case_results) if case_results else 0.0
+    exact_matches = sum(
+        1
+        for result in case_results
+        if tool_multiset_matches(result.expected_calls, result.predicted_calls)
+    )
+    return exact_matches / len(case_results)
 
 
 def compute_no_tool_accuracy(case_results: List[CaseResult]) -> float | None:
