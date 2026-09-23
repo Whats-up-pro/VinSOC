@@ -94,6 +94,18 @@ def run_benchmark(args):
         "error_summary": error_summary,
         "case_results": [r.to_dict() for r in results],
     }
+    if mode == "decision":
+        result_dict.update(
+            {
+                "provider": runner.provider.get_name(),
+                "provider_metadata": runner.provider.get_run_metadata(),
+                "config": {
+                    "provider": runner.config.provider,
+                    "model": runner.config.model,
+                    "temperature": runner.config.temperature,
+                },
+            }
+        )
 
     with open(output_dir / "metrics.json", "w") as f:
         json.dump(result_dict, f, indent=2)
