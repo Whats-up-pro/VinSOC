@@ -28,16 +28,30 @@ def compute_tool_prf(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
 
 
 def compute_exact_call_prf(case_results: List[CaseResult]) -> tuple[float, float, float]:
-    """
-    Compute exact call precision/recall/F1.
+    """Compute exact-call precision/recall/F1 independently of tool-name PRF.
 
-    A call is correct only if:
-    - tool correct
-    - all required args correct
+    A prediction is an exact TP only when the tool and all required argument
+    values match. A partial tool match therefore contributes one exact FP and,
+    for a required expected call, one exact FN.
     """
-    total_tp = sum(r.true_positives for r in case_results)
-    total_fp = sum(r.false_positives for r in case_results)
-    total_fn = sum(r.false_negatives for r in case_results)
+    total_tp = 0
+    total_fp = 0
+    total_fn = 0
+
+    for result in case_results:
+        exact_matches = [
+            match
+            for match in result.matches
+            if match.expected_call is not None and match.match_type == MatchType.EXACT
+        ]
+        exact_required = sum(
+            1 for match in exact_matches if match.expected_call and not match.expected_call.optional
+        )
+        required_expected = sum(1 for call in result.expected_calls if not call.optional)
+
+        total_tp += len(exact_matches)
+        total_fp += max(0, len(result.predicted_calls) - len(exact_matches))
+        total_fn += max(0, required_expected - exact_required)
 
     return compute_tool_prf(total_tp, total_fp, total_fn)
 
@@ -71,10 +85,12 @@ def compute_argument_accuracy(case_results: List[CaseResult]) -> tuple[float, fl
             if match.expected_call is None:
                 continue
 
-            # Count required argument fields
-            for arg_name in match.expected_call.required_arguments:
+            # Count required argument fields by value, not merely presence.
+            for arg_name, expected_value in match.expected_call.required_arguments.items():
                 total_fields += 1
-                if match.required_arg_match:
+                predicted_value = match.predicted_call.arguments.get(arg_name)
+                from evaluation.tool_calling.arguments import compare_values
+                if compare_values(expected_value, predicted_value):
                     total_correct += 1
 
             # Count critical argument fields
