@@ -2,7 +2,7 @@
   "case_id": "case_010",
   "category": "cti_network_endpoint",
   "difficulty": "advanced",
-  "request": "Investigation of lateral movement pattern from compromised host",
+  "request": "Investigation of lateral movement pattern from compromised host\nIndicator: 192.168.1.50\nIndicator type: ipv4\nContext: Alert: Suspicious lateral movement detected from workstation to file server\nEndpoint pivot: WS050",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

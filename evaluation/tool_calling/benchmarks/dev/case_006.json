@@ -2,7 +2,7 @@
   "case_id": "case_006",
   "category": "cti_network",
   "difficulty": "intermediate",
-  "request": "Investigation of a domain identified as used in phishing campaigns",
+  "request": "Investigation of a domain identified as used in phishing campaigns\nIndicator: secure-login-bankind1882.xyz\nIndicator type: domain\nContext: Alert: Domain flagged by email security gateway as phishing",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

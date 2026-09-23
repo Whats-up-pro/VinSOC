@@ -2,7 +2,7 @@
   "case_id": "case_015",
   "category": "cti_network_endpoint",
   "difficulty": "advanced",
-  "request": "Complete APT intrusion with multiple stages: initial access, execution, persistence, C2",
+  "request": "Complete APT intrusion with multiple stages: initial access, execution, persistence, C2\nIndicator: 91.220.131.77\nIndicator type: ipv4\nContext: Alert: Connection to known APT C2 infrastructure\nEndpoint pivot: WORKSTATION-042",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

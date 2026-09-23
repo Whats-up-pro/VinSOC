@@ -2,7 +2,7 @@
   "case_id": "case_017",
   "category": "cti_network_endpoint",
   "difficulty": "advanced",
-  "request": "Compromised third-party library used to deliver malware",
+  "request": "Compromised third-party library used to deliver malware\nIndicator: libcdn.legitframework.io\nIndicator type: domain\nContext: Alert: Suspicious domain flagged in application traffic analysis\nEndpoint pivot: DEV-WORKSTATION-08",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

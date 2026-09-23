@@ -2,7 +2,7 @@
   "case_id": "case_020",
   "category": "cti_network",
   "difficulty": "intermediate",
-  "request": "CTI shows clean reputation but network shows anomalous traffic pattern",
+  "request": "CTI shows clean reputation but network shows anomalous traffic pattern\nIndicator: 203.0.113.25\nIndicator type: ipv4\nContext: Alert: Anomalous traffic pattern to external IP",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

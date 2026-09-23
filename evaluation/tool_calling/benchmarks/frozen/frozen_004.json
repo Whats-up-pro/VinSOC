@@ -1,0 +1,39 @@
+{
+  "case_id": "frozen_004",
+  "category": "cti_network",
+  "difficulty": "intermediate",
+  "request": "Investigate domain sync-update.example.net using both threat intelligence and network telemetry. Indicator: sync-update.example.net. Indicator type: domain.",
+  "expected_calls": [
+    {
+      "call_id": "cti_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "sync-update.example.net",
+        "indicator_type": "domain"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "net_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "sync-update.example.net",
+        "indicator_type": "domain"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Two independent tools share an observable domain.",
+  "reference_time": "2026-09-23T00:00:00Z"
+}

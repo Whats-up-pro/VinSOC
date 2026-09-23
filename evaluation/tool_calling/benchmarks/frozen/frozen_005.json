@@ -1,0 +1,16 @@
+{
+  "case_id": "frozen_005",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "Explain the difference between OBSERVED and DERIVED evidence conceptually. Do not query any investigation data.",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Relevance/no-tool holdout.",
+  "reference_time": "2026-09-23T00:00:00Z"
+}

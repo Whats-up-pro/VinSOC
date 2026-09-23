@@ -2,7 +2,7 @@
   "case_id": "case_002",
   "category": "cti_only",
   "difficulty": "basic",
-  "request": "Investigation of an IP address identified as belonging to a trusted software vendor",
+  "request": "Investigation of an IP address identified as belonging to a trusted software vendor\nIndicator: 203.0.113.50\nIndicator type: ipv4\nContext: Alert: Connection to external IP from internal workstation",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

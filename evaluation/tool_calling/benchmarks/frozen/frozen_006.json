@@ -1,0 +1,28 @@
+{
+  "case_id": "frozen_006",
+  "category": "hash_led",
+  "difficulty": "basic",
+  "request": "Check threat intelligence for SHA1 0123456789abcdef0123456789abcdef01234567. Indicator: 0123456789abcdef0123456789abcdef01234567. Indicator type: hash.",
+  "expected_calls": [
+    {
+      "call_id": "cti_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "0123456789abcdef0123456789abcdef01234567",
+        "indicator_type": "hash"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Hash-led CTI holdout.",
+  "reference_time": "2026-09-23T00:00:00Z"
+}
