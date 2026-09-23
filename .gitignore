@@ -54,4 +54,5 @@ data/full.csv.bak
 data/full.parquet
 data/cti_lookup.json
 data/threatfox_clean.csv
+data/snapshots/*.duckdb
 *.zip
