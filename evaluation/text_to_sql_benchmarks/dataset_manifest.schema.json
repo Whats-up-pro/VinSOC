@@ -25,7 +25,8 @@
           "file_sha256",
           "license_note",
           "format",
-          "path"
+          "path",
+          "archive_member"
         ],
         "properties": {
           "dataset_id": {
@@ -38,7 +39,8 @@
           },
           "source_url": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "pattern": "^https://"
           },
           "retrieved_at": {
             "type": "string",
@@ -56,12 +58,19 @@
             "enum": [
               "threatfox_csv",
               "ctu13_binetflow",
-              "sysmon_jsonl"
+              "sysmon_jsonl",
+              "sysmon_zip_jsonl"
             ]
           },
           "path": {
             "type": "string",
             "minLength": 1
+          },
+          "archive_member": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       }

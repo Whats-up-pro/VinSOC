@@ -8,15 +8,18 @@ from __future__ import annotations
 
 import argparse
 import csv
+import io
 import ipaddress
 import json
 import os
 import re
 import tempfile
+import zipfile
 from collections.abc import Callable, Iterable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from evaluation.text_to_sql_snapshot import sha256_file
 from vinsoc_data.duckdb_store import DuckDBSnapshot, SocSnapshotBuilder
@@ -30,8 +33,14 @@ _SOURCE_FIELDS = {
     "license_note",
     "format",
     "path",
+    "archive_member",
 }
-_SOURCE_FORMATS = {"threatfox_csv", "ctu13_binetflow", "sysmon_jsonl"}
+_SOURCE_FORMATS = {
+    "threatfox_csv",
+    "ctu13_binetflow",
+    "sysmon_jsonl",
+    "sysmon_zip_jsonl",
+}
 _SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -193,71 +202,100 @@ def _nested(payload: dict[str, Any], *path: str) -> Any:
     return current
 
 
-def normalize_sysmon_jsonl(path: Path, dataset_id: str) -> list[dict[str, Any]]:
-    """Normalize OTRF-style JSONL Windows/Sysmon event records."""
+def _normalize_sysmon_lines(
+    lines: Iterable[str], dataset_id: str, *, source_prefix: str | None = None
+) -> list[dict[str, Any]]:
     normalized: list[dict[str, Any]] = []
-    with Path(path).open("r", encoding="utf-8-sig") as handle:
-        for line_number, line in enumerate(handle, start=1):
-            if not line.strip():
-                continue
-            try:
-                payload = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            if not isinstance(payload, dict):
-                continue
-            winlog = payload.get("winlog") if isinstance(payload.get("winlog"), dict) else {}
-            event_data = winlog.get("event_data")
-            if not isinstance(event_data, dict):
-                event_data = payload.get("EventData")
-            if not isinstance(event_data, dict):
-                event_data = {}
-            event_time = _timestamp(payload.get("@timestamp") or payload.get("UtcTime"))
-            host = _text(
-                winlog.get("computer_name")
-                or _nested(payload, "host", "name")
-                or payload.get("Computer")
-            )
-            event_id = _integer(
-                winlog.get("event_id")
-                or _nested(payload, "event", "code")
-                or payload.get("EventID"),
-                minimum=0,
-            )
-            if event_time is None or host is None or event_id is None:
-                continue
-            normalized.append(
-                {
-                    "source_dataset": dataset_id,
-                    "source_row_id": f"line:{line_number}",
-                    "event_time": event_time,
-                    "host": host,
-                    "event_id": event_id,
-                    "parent_image": _text(
-                        event_data.get("ParentImage")
-                        or _nested(payload, "process", "parent", "executable")
-                    ),
-                    "parent_pid": _integer(
-                        event_data.get("ParentProcessId")
-                        or _nested(payload, "process", "parent", "pid"),
-                        minimum=0,
-                    ),
-                    "image": _text(
-                        event_data.get("Image") or _nested(payload, "process", "executable")
-                    ),
-                    "process_id": _integer(
-                        event_data.get("ProcessId") or _nested(payload, "process", "pid"), minimum=0
-                    ),
-                    "command_line": _text(
-                        event_data.get("CommandLine") or _nested(payload, "process", "command_line")
-                    ),
-                    "user_name": _text(event_data.get("User") or _nested(payload, "user", "name")),
-                }
-            )
+    for line_number, line in enumerate(lines, start=1):
+        if not line.strip():
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        winlog = payload.get("winlog") if isinstance(payload.get("winlog"), dict) else {}
+        event_data = winlog.get("event_data")
+        if not isinstance(event_data, dict):
+            event_data = payload.get("EventData")
+        if not isinstance(event_data, dict):
+            event_data = {}
+        event_time = _timestamp(payload.get("@timestamp") or payload.get("UtcTime"))
+        host = _text(
+            winlog.get("computer_name")
+            or _nested(payload, "host", "name")
+            or payload.get("Computer")
+        )
+        event_id = _integer(
+            winlog.get("event_id") or _nested(payload, "event", "code") or payload.get("EventID"),
+            minimum=0,
+        )
+        if event_time is None or host is None or event_id is None:
+            continue
+        row_id = f"line:{line_number}"
+        if source_prefix:
+            row_id = f"{source_prefix}:{row_id}"
+        normalized.append(
+            {
+                "source_dataset": dataset_id,
+                "source_row_id": row_id,
+                "event_time": event_time,
+                "host": host,
+                "event_id": event_id,
+                "parent_image": _text(
+                    event_data.get("ParentImage")
+                    or _nested(payload, "process", "parent", "executable")
+                ),
+                "parent_pid": _integer(
+                    event_data.get("ParentProcessId")
+                    or _nested(payload, "process", "parent", "pid"),
+                    minimum=0,
+                ),
+                "image": _text(
+                    event_data.get("Image") or _nested(payload, "process", "executable")
+                ),
+                "process_id": _integer(
+                    event_data.get("ProcessId") or _nested(payload, "process", "pid"), minimum=0
+                ),
+                "command_line": _text(
+                    event_data.get("CommandLine") or _nested(payload, "process", "command_line")
+                ),
+                "user_name": _text(event_data.get("User") or _nested(payload, "user", "name")),
+            }
+        )
     return normalized
 
 
-def _load_dataset_manifest(path: Path) -> list[dict[str, str]]:
+def normalize_sysmon_jsonl(path: Path, dataset_id: str) -> list[dict[str, Any]]:
+    """Normalize OTRF-style JSONL Windows/Sysmon event records."""
+    with Path(path).open("r", encoding="utf-8-sig") as handle:
+        return _normalize_sysmon_lines(handle, dataset_id)
+
+
+def normalize_sysmon_zip_jsonl(
+    path: Path, dataset_id: str, archive_member: str
+) -> list[dict[str, Any]]:
+    """Normalize one explicitly named JSONL member from a verified ZIP archive."""
+    try:
+        with zipfile.ZipFile(path) as archive:
+            info = archive.getinfo(archive_member)
+            if info.is_dir():
+                raise ValueError(f"Sysmon ZIP member is a directory: {archive_member}")
+            with (
+                archive.open(info, "r") as raw_handle,
+                io.TextIOWrapper(raw_handle, encoding="utf-8-sig") as text_handle,
+            ):
+                return _normalize_sysmon_lines(
+                    text_handle, dataset_id, source_prefix=archive_member
+                )
+    except KeyError as exc:
+        raise ValueError(f"Sysmon ZIP member does not exist: {archive_member}") from exc
+    except zipfile.BadZipFile as exc:
+        raise ValueError(f"Invalid Sysmon ZIP archive: {path}") from exc
+
+
+def _load_dataset_manifest(path: Path) -> list[dict[str, Any]]:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or set(payload) != {"schema_version", "sources"}:
         raise ValueError("Dataset manifest must contain exactly schema_version and sources")
@@ -265,13 +303,14 @@ def _load_dataset_manifest(path: Path) -> list[dict[str, str]]:
         raise ValueError("Unsupported dataset manifest schema_version or sources type")
     if not payload["sources"]:
         raise ValueError("Dataset manifest must contain at least one source")
-    sources: list[dict[str, str]] = []
+    sources: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
     for source in payload["sources"]:
         if not isinstance(source, dict) or set(source) != _SOURCE_FIELDS:
             raise ValueError("Each dataset source must contain exactly the required fields")
+        string_fields = _SOURCE_FIELDS - {"archive_member"}
         if not all(
-            isinstance(source[field], str) and source[field].strip() for field in _SOURCE_FIELDS
+            isinstance(source[field], str) and source[field].strip() for field in string_fields
         ):
             raise ValueError("Dataset source fields must be non-empty strings")
         if source["format"] not in _SOURCE_FORMATS:
@@ -280,14 +319,31 @@ def _load_dataset_manifest(path: Path) -> list[dict[str, str]]:
             raise ValueError("Dataset source file_sha256 must be 64 lowercase hex characters")
         if source["dataset_id"] in seen_ids:
             raise ValueError(f"Duplicate dataset_id: {source['dataset_id']}")
-        if _timestamp(source["retrieved_at"]) is None:
-            raise ValueError(f"Invalid retrieved_at for {source['dataset_id']}")
+        parsed_url = urlparse(source["source_url"])
+        if parsed_url.scheme != "https" or not parsed_url.netloc:
+            raise ValueError(f"Source must use an absolute HTTPS URL: {source['dataset_id']}")
+        try:
+            retrieved_at = datetime.fromisoformat(source["retrieved_at"])
+        except ValueError as exc:
+            raise ValueError(
+                f"retrieved_at must be an ISO 8601 UTC date-time: {source['dataset_id']}"
+            ) from exc
+        if retrieved_at.tzinfo is None or retrieved_at.utcoffset() != timedelta(0):
+            raise ValueError(
+                f"retrieved_at must be an ISO 8601 UTC date-time: {source['dataset_id']}"
+            )
+        archive_member = source["archive_member"]
+        if source["format"] == "sysmon_zip_jsonl":
+            if not isinstance(archive_member, str) or not archive_member.strip():
+                raise ValueError("sysmon_zip_jsonl requires a non-empty archive_member")
+        elif archive_member is not None:
+            raise ValueError("archive_member is allowed only for sysmon_zip_jsonl")
         seen_ids.add(source["dataset_id"])
         sources.append(source)
     return sources
 
 
-def _validate_sources(sources: list[dict[str, str]]) -> None:
+def _validate_sources(sources: list[dict[str, Any]]) -> None:
     for source in sources:
         path = Path(source["path"])
         if not path.is_file():
@@ -365,8 +421,14 @@ def build_snapshot(
                 file_sha256=source["file_sha256"],
                 license_note=source["license_note"],
             )
-            table, adapter = adapters[source["format"]]
-            rows = adapter(Path(source["path"]), source["dataset_id"])
+            if source["format"] == "sysmon_zip_jsonl":
+                table = "sysmon_process_events"
+                rows = normalize_sysmon_zip_jsonl(
+                    Path(source["path"]), source["dataset_id"], source["archive_member"]
+                )
+            else:
+                table, adapter = adapters[source["format"]]
+                rows = adapter(Path(source["path"]), source["dataset_id"])
             builder.insert_rows(table, rows, source_dataset=source["dataset_id"])
         counts = _validate_built_snapshot(temporary_snapshot, len(sources))
         os.replace(temporary_snapshot, snapshot_path)

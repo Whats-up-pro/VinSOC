@@ -74,7 +74,7 @@ Benchmark case definitions live in `evaluation/text_to_sql_benchmarks/{dev,froze
 
 ## Reproducible snapshot build
 
-`scripts/build_vinsoc_public_snapshot.py` consumes local files only. It never downloads data, and it verifies every source checksum before creating a database. The accepted source formats are `threatfox_csv`, `ctu13_binetflow`, and `sysmon_jsonl`.
+`scripts/build_vinsoc_public_snapshot.py` consumes local files only. It never downloads data, and it verifies every source checksum before creating a database. The accepted source formats are `threatfox_csv`, `ctu13_binetflow`, `sysmon_jsonl`, and `sysmon_zip_jsonl`.
 
 Before ingestion, create `dataset_manifest.json` conforming to [`dataset_manifest.schema.json`](../evaluation/text_to_sql_benchmarks/dataset_manifest.schema.json). Every source entry must contain the exact source URL, UTC retrieval time, downloaded-file SHA-256, source-specific licence/usage note, stable dataset ID, local path, and format. Do not create an entry until every value is known; a placeholder hash is invalid.
 
@@ -84,9 +84,9 @@ The currently selected public inputs are:
 |---|---|---|---|
 | CTI | ThreatFox full CSV export from `https://threatfox.abuse.ch/export/` | ThreatFox terms shown on the export service; current downloads require an Auth-Key | `threatfox_csv` |
 | Network | CTU-13 Scenario 3 `capture20110812.binetflow` from `https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-44/detailed-bidirectional-flow-labels/capture20110812.binetflow` | Malware Capture Facility permits use with project/author attribution | `ctu13_binetflow` |
-| Endpoint | OTRF Security-Datasets APT29 Day 1 host archive `https://github.com/OTRF/Security-Datasets/blob/master/datasets/compound/apt29/day1/apt29_evals_day1_manual.zip` | Repository MIT License; record that licence and the exact archive hash | Extract event records to JSONL, then use `sysmon_jsonl` |
+| Endpoint | OTRF Security-Datasets APT29 Day 1 host archive `https://github.com/OTRF/Security-Datasets/blob/master/datasets/compound/apt29/day1/apt29_evals_day1_manual.zip` | Repository MIT License; record that licence and the exact archive hash | `sysmon_zip_jsonl` with the exact JSONL `archive_member` |
 
-The endpoint JSONL adapter accepts the OTRF/Elastic `winlog.event_id`, `winlog.computer_name`, and `winlog.event_data` layout. Preserve source order during archive extraction so `line:<n>` remains a stable `source_row_id`. Do not filter or synthesize rows to make gold queries pass.
+The endpoint adapters accept the OTRF/Elastic `winlog.event_id`, `winlog.computer_name`, and `winlog.event_data` layout. For the selected OTRF ZIP, record the downloaded ZIP as `path`, its exact SHA-256 as `file_sha256`, and the exact internal JSONL path as `archive_member`; the builder streams that member without extracting it. Its stable row IDs use `<archive_member>:line:<n>`. Direct JSONL sources use `archive_member: null`. Do not auto-discover an archive member, filter rows, or synthesize rows to make gold queries pass.
 
 Build only after all three verified files and their provenance are available:
 
