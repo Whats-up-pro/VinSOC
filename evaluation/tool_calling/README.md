@@ -42,17 +42,21 @@ python -m evaluation.tool_calling benchmarks dev --mode integration
 
 ## Metrics
 
-| Metric | Description |
-|--------|-------------|
-| Tool Precision | Of predicted tools, % correct |
-| Tool Recall | Of required tools, % predicted |
-| Tool F1 | Harmonic mean of tool-level precision/recall |
-| Exact Call F1 | Tool + required argument values correct |
-| Argument Field Accuracy | Required argument values correct |
-| Critical Argument Accuracy | Critical argument values correct |
-| Tool Set Exact Match | Predicted tool multiset matches allowed required/optional set |
-| No-Tool Accuracy | Correctly abstains on no-tool requests |
-| Trajectory Success | Required calls exact, no non-exact predictions, no forbidden/order violations |
+### Headline metrics
+
+| Question | Metric field | Meaning |
+|----------|--------------|---------|
+| Tool Selection Accuracy | `tool_set_exact_match_rate` | Predicted tool multiset exactly matches the allowed required/optional set |
+| Exact Call Correctness | `exact_call_precision`, `exact_call_recall`, `exact_call_f1` | Tool name and required argument values are correct |
+| Required Argument Accuracy | `argument_field_accuracy` | Required argument values are correct |
+| Critical Argument Accuracy | `critical_argument_accuracy` | Critical argument values are correct |
+| No-Tool Accuracy | `no_tool_accuracy` | Model correctly abstains on requests that need no investigation tool |
+| Case Success | `trajectory_success_rate` | Single-turn case success: all required calls are exact, with no non-exact prediction, forbidden tool, or ordering violation |
+
+`trajectory_success_rate` is retained for backward compatibility. In R1 A1 it means
+single-turn case success; it is **not** BFCL V4 multi-turn trajectory evaluation.
+Tool Precision, Tool Recall, and Tool F1 remain diagnostic tool-name metrics and
+must not be reported as overall system accuracy.
 
 ## Baseline Status
 
@@ -70,7 +74,7 @@ evaluation/tool_calling/
 ├── integration_runner.py # A2: Mock integration
 ├── __main__.py       # CLI
 ├── benchmarks/
-│   ├── dev/         # 20 development cases
+│   ├── dev/         # 24 development cases, including four no-tool cases
 │   └── frozen/      # Holdout cases
 └── results/         # Benchmark outputs
 ```

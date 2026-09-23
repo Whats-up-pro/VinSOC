@@ -1,0 +1,16 @@
+{
+  "case_id": "case_021",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "Explain why evidence provenance matters in a SOC investigation report. Answer conceptually without inspecting indicators or telemetry.",
+  "reference_time": "2026-09-23T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Development relevance case: conceptual explanation requires no investigation data."
+}

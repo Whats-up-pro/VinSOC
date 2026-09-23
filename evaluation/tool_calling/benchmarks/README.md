@@ -4,7 +4,7 @@
 
 ```
 benchmarks/
-├── dev/           # Development cases (20 converted from scenarios)
+├── dev/           # Development cases (20 converted + 4 no-tool relevance cases)
 ├── frozen/        # Frozen holdout cases (for official evaluation)
 └── README.md
 ```
@@ -49,6 +49,7 @@ Each case is a JSON file with:
 | `hostname_led` | Starts with hostname (no CTI until IOC pivot) |
 | `hash_led` | Starts with file hash |
 | `url_led` | Starts with URL |
+| `no_tool` | The correct decision is to abstain from all investigation tools |
 
 ## Difficulty
 

@@ -1,0 +1,16 @@
+{
+  "case_id": "case_022",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "Describe which input types the VinSOC CTI, network, and endpoint investigation tools support. This is a capability question only; do not perform a lookup.",
+  "reference_time": "2026-09-23T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Development relevance case: documentation request requires no tool execution."
+}

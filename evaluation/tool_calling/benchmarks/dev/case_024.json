@@ -1,0 +1,16 @@
+{
+  "case_id": "case_024",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "What does the acronym CPU stand for?",
+  "reference_time": "2026-09-23T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Development relevance case: unrelated informational request."
+}
