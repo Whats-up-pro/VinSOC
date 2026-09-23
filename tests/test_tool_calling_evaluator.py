@@ -430,3 +430,67 @@ class TestGoldenEvaluatorTests:
         assert metrics["critical_arg_errors"] == 1
         # Trajectory fails due to wrong arg
         assert metrics["trajectory_success"] is False
+
+
+class TestMetricRegressionCoverage:
+    """Regression tests for mentor-facing Tool Calling accuracy semantics."""
+
+    def test_wrong_required_value_is_partial_not_exact(self):
+        """A required field with the wrong value must invalidate exact-call correctness."""
+        expected = ExpectedCall(
+            call_id="cti_1",
+            tool="cti_enrichment",
+            required_arguments={"indicator": "1.2.3.4", "indicator_type": "ipv4"},
+            critical_arguments=["indicator"],
+        )
+        predicted = PredictedCall(
+            tool="cti_enrichment",
+            arguments={"indicator": "1.2.3.4", "indicator_type": "domain"},
+        )
+
+        match = match_single_call(predicted, expected)
+
+        assert match.match_type == MatchType.PARTIAL
+        assert match.required_arg_match is False
+
+    def test_exact_call_prf_and_argument_accuracy_are_value_sensitive(self):
+        """Tool-name accuracy may be perfect while exact-call and argument accuracy are not."""
+        from evaluation.tool_calling.metrics import aggregate_case_results
+        from evaluation.tool_calling.models import CaseResult
+
+        expected = ExpectedCall(
+            call_id="cti_1",
+            tool="cti_enrichment",
+            required_arguments={"indicator": "1.2.3.4", "indicator_type": "ipv4"},
+            critical_arguments=["indicator"],
+        )
+        predicted = PredictedCall(
+            tool="cti_enrichment",
+            arguments={"indicator": "1.2.3.4", "indicator_type": "domain"},
+        )
+        case = ToolCallCase(
+            case_id="regression_metric_001",
+            category=CaseCategory.CTI_ONLY,
+            difficulty=CaseDifficulty.BASIC,
+            request="Investigate 1.2.3.4",
+            reference_time="2026-09-23T00:00:00Z",
+            expected_calls=[expected],
+        )
+        metrics = compute_case_metrics(case, [predicted])
+        result = CaseResult(
+            case_id=case.case_id,
+            expected_calls=case.expected_calls,
+            predicted_calls=[predicted],
+            matches=metrics["matches"],
+            true_positives=metrics["tp"],
+            false_positives=metrics["fp"],
+            false_negatives=metrics["fn"],
+        )
+
+        aggregate = aggregate_case_results("regression", [result])
+
+        assert aggregate.tool_precision == 1.0
+        assert aggregate.tool_recall == 1.0
+        assert aggregate.exact_call_precision == 0.0
+        assert aggregate.exact_call_recall == 0.0
+        assert aggregate.argument_field_accuracy == 0.5
