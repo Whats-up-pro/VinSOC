@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import Any, Literal
 
 from agent.provider import LLMProvider, ProviderError, create_provider
+from evaluation.text_to_sql_snapshot import (
+    load_snapshot_manifest,
+    sha256_file,
+    verify_snapshot,
+)
 from vinsoc_data.duckdb_store import DuckDBSnapshot, QuerySafetyError
 
 ComparatorName = Literal["unordered_rows", "ordered_rows", "multiset_rows", "scalar", "boolean"]
@@ -246,25 +251,40 @@ def _sql_error_category(result: SQLEvaluationResult) -> str:
 
 def run_text_to_sql_benchmark(
     snapshot_path: str | Path,
+    manifest_path: str | Path,
     split: str = "dev",
     config: SQLGenerationConfig | None = None,
     provider: LLMProvider | None = None,
     benchmarks_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Run one reproducible Text-to-SQL split and return a JSON-ready report."""
-    snapshot = DuckDBSnapshot(snapshot_path)
+    resolved_snapshot_path = Path(snapshot_path)
+    manifest = load_snapshot_manifest(Path(manifest_path))
+    verify_snapshot(resolved_snapshot_path, manifest)
+    actual_snapshot_sha256 = sha256_file(resolved_snapshot_path)
+
+    snapshot = DuckDBSnapshot(resolved_snapshot_path)
     runner = TextToSQLRunner(
         snapshot=snapshot,
         config=config,
         provider=provider,
         benchmarks_dir=benchmarks_dir,
     )
-    runs = runner.run_suite(split)
+    cases = runner.load_cases(split)
+    expected_case_snapshot = str(Path(manifest.path))
+    for case in cases:
+        if str(Path(case.database_snapshot)) != expected_case_snapshot:
+            raise ValueError(
+                f"{case.case_id}: database_snapshot does not match manifest path"
+            )
+    runs = [runner.run_case(case) for case in cases]
     evaluations = [run.evaluation for run in runs]
     error_summary = dict(Counter(run.error_category for run in runs))
     return {
         "mode": "text_to_sql",
         "split": split,
+        "snapshot_id": manifest.snapshot_id,
+        "snapshot_sha256": actual_snapshot_sha256,
         "case_count": len(runs),
         "provider": runner.provider.get_name(),
         "provider_metadata": runner.provider.get_run_metadata(),
@@ -363,6 +383,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="VinSOC R2 Text-to-SQL benchmark")
     parser.add_argument("evaluate", nargs="?")
     parser.add_argument("--snapshot", required=True)
+    parser.add_argument(
+        "--manifest",
+        default="evaluation/text_to_sql_benchmarks/snapshot_manifest.json",
+    )
     parser.add_argument("--split", choices=["dev", "frozen"], default="dev")
     parser.add_argument("--provider", default="openai")
     parser.add_argument("--model", default="gpt-4o")
@@ -378,6 +402,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     report = run_text_to_sql_benchmark(
         snapshot_path=args.snapshot,
+        manifest_path=args.manifest,
         split=args.split,
         config=config,
         benchmarks_dir=Path(args.benchmarks_dir),
