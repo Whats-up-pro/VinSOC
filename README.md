@@ -7,7 +7,7 @@ VinSOC uses an LLM to select investigation tools and return structured evidence 
 | | |
 |---|---|
 | **Python** | 3.11+ |
-| **Tests** | 212 passed (Python 3.11 / 3.12 CI) |
+| **Tests** | 214 passed (Python 3.11 / 3.12 CI) |
 | **License** | Research |
 
 ---
