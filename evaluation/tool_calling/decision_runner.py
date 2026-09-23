@@ -163,6 +163,8 @@ If no tool is needed, do not call one."""
         result.false_positives = metrics["fp"]
         result.false_negatives = metrics["fn"]
         result.trajectory_success = metrics["trajectory_success"]
+        result.exact_call_match = metrics["exact_call_match"]
+        result.tool_set_match = metrics["tool_set_match"]
 
         return result
 
