@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_005",
+  "question": "Return the five destination ports with the highest number of network flows, highest count first and port ascending as a tie breaker.",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT dst_port, count(*) AS flow_count FROM network_flows GROUP BY dst_port ORDER BY flow_count DESC, dst_port ASC LIMIT 5"
+  ],
+  "result_comparator": "ordered_rows"
+}

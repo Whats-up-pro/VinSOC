@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_frozen_002",
+  "question": "Return network actions and the number of flows for each action.",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT action, count(*) AS flow_count FROM network_flows GROUP BY action"
+  ],
+  "result_comparator": "unordered_rows"
+}

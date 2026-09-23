@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_frozen_003",
+  "question": "Return the ten source IPs with the greatest total outbound bytes, highest total first and source IP ascending as a tie breaker.",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT src_ip, sum(COALESCE(bytes_out, 0)) AS total_bytes_out FROM network_flows GROUP BY src_ip ORDER BY total_bytes_out DESC, src_ip ASC LIMIT 10"
+  ],
+  "result_comparator": "ordered_rows"
+}

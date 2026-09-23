@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_007",
+  "question": "Return each endpoint host and the number of Sysmon process events recorded for it.",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT host, count(*) AS event_count FROM sysmon_process_events GROUP BY host"
+  ],
+  "result_comparator": "unordered_rows"
+}

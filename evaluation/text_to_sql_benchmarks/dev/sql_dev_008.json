@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_008",
+  "question": "Return the number of CTI indicators for each indicator type.",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT indicator_type, count(*) AS indicator_count FROM cti_indicators GROUP BY indicator_type"
+  ],
+  "result_comparator": "unordered_rows"
+}

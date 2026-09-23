@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_006",
+  "question": "How many Sysmon process-create events (event_id 1) are in the snapshot?",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT count(*) AS total FROM sysmon_process_events WHERE event_id = 1"
+  ],
+  "result_comparator": "scalar"
+}

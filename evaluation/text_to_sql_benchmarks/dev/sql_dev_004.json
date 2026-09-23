@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_dev_004",
+  "question": "What are the earliest and latest network event timestamps?",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT min(event_time) AS earliest, max(event_time) AS latest FROM network_flows"
+  ],
+  "result_comparator": "scalar"
+}

@@ -1,0 +1,9 @@
+{
+  "case_id": "sql_frozen_001",
+  "question": "How many distinct destination IP addresses appear in network flows?",
+  "database_snapshot": "data/snapshots/vinsoc_public_v1.duckdb",
+  "gold_sql": [
+    "SELECT count(DISTINCT dst_ip) AS total FROM network_flows"
+  ],
+  "result_comparator": "scalar"
+}
