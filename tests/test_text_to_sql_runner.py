@@ -1,5 +1,9 @@
 """R2 Text-to-SQL generation runner tests."""
 
+import json
+
+import pytest
+
 from agent.provider import LLMResponse
 from evaluation.text_to_sql import (
     SQLBenchmarkCase,
@@ -187,24 +191,71 @@ def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
         """{
           "case_id": "sql_001",
           "question": "How many network flows are present?",
-          "database_snapshot": "r2.duckdb",
+          "database_snapshot": "SNAPSHOT_PATH",
           "gold_sql": ["SELECT count(*) AS total FROM network_flows"],
           "result_comparator": "scalar"
-        }""",
+        }""".replace("SNAPSHOT_PATH", str(snapshot.database_path)),
+        encoding="utf-8",
+    )
+    from evaluation.text_to_sql_snapshot import sha256_file
+
+    manifest = tmp_path / "snapshot_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "snapshot_id": snapshot.database_path.stem,
+                "path": str(snapshot.database_path),
+                "sha256": sha256_file(snapshot.database_path),
+                "schema_version": "1",
+            }
+        ),
         encoding="utf-8",
     )
 
     report = run_text_to_sql_benchmark(
         snapshot_path=snapshot.database_path,
+        manifest_path=manifest,
         split="dev",
         provider=FakeSQLProvider("SELECT count(*) AS n FROM network_flows"),
         benchmarks_dir=benchmarks,
     )
 
     assert report["case_count"] == 1
+    assert report["snapshot_id"] == snapshot.database_path.stem
+    assert report["snapshot_sha256"] == sha256_file(snapshot.database_path)
     assert report["metrics"]["execution_accuracy"] == 1.0
     assert report["error_summary"] == {"OK": 1}
     assert report["cases"][0]["case_id"] == "sql_001"
+
+
+def test_snapshot_verification_fails_before_provider_call(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    benchmarks = tmp_path / "benchmarks"
+    (benchmarks / "dev").mkdir(parents=True)
+    provider = FakeSQLProvider("SELECT count(*) FROM network_flows")
+    manifest = tmp_path / "snapshot_manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "snapshot_id": snapshot.database_path.stem,
+                "path": str(snapshot.database_path),
+                "sha256": "0" * 64,
+                "schema_version": "1",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="SHA-256"):
+        run_text_to_sql_benchmark(
+            snapshot_path=snapshot.database_path,
+            manifest_path=manifest,
+            split="dev",
+            provider=provider,
+            benchmarks_dir=benchmarks,
+        )
+
+    assert provider.last_call is None
 
 
 def test_ordered_rows_comparator_detects_wrong_top_k_order(tmp_path):
