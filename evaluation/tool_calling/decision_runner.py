@@ -165,6 +165,12 @@ If no tool is needed, do not call one."""
         result.trajectory_success = metrics["trajectory_success"]
         result.exact_call_match = metrics["exact_call_match"]
         result.tool_set_match = metrics["tool_set_match"]
+        if result.errors:
+            # A provider/execution/response failure is never evidence that the
+            # model correctly abstained on a no-tool case.
+            result.trajectory_success = False
+            result.exact_call_match = False
+            result.tool_set_match = False
 
         return result
 

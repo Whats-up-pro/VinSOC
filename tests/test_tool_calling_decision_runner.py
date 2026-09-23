@@ -3,6 +3,7 @@
 from agent.provider import LLMResponse, ProviderError, ProviderFailureKind
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
+from evaluation.tool_calling.metrics import aggregate_case_results
 from evaluation.tool_calling.models import (
     CaseCategory,
     CaseDifficulty,
@@ -120,3 +121,38 @@ def test_a1_provider_error_is_explicit_and_does_not_fallback():
     assert result.predicted_calls == []
     assert result.errors == ["PROVIDER_ERROR"]
     assert "rate limited" in result.error_message
+
+
+def test_a1_provider_error_on_no_tool_case_cannot_score_as_correct():
+    case = ToolCallCase(
+        case_id="a1_no_tool_provider_error",
+        category=CaseCategory.NO_TOOL,
+        difficulty=CaseDifficulty.BASIC,
+        request="Explain what the tool schemas mean without calling a tool.",
+        reference_time="2026-09-23T00:00:00Z",
+        expected_calls=[],
+    )
+    provider = FakeProvider(
+        error=ProviderError(
+            "rate limited",
+            kind=ProviderFailureKind.RATE_LIMIT,
+            provider="fake",
+            model="fake-model",
+        )
+    )
+    runner = DecisionRunner(
+        config=A1Config(provider="fake", model="fake-model"),
+        provider=provider,
+    )
+
+    result = runner.run_decision(case)
+    aggregate = aggregate_case_results("provider-error", [result])
+
+    assert result.tool_set_match is False
+    assert result.exact_call_match is False
+    assert result.trajectory_success is False
+    assert aggregate.tool_set_exact_match_rate == 0.0
+    assert aggregate.no_tool_accuracy == 0.0
+    assert aggregate.trajectory_success_rate == 0.0
+    assert aggregate.provider_error_rate == 1.0
+    assert aggregate.to_dict()["provider_error_rate"] == 1.0

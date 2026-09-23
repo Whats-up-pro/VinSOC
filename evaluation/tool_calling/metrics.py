@@ -113,7 +113,8 @@ def compute_tool_set_em(case_results: List[CaseResult]) -> float:
     exact_matches = sum(
         1
         for result in case_results
-        if tool_multiset_matches(result.expected_calls, result.predicted_calls)
+        if not result.errors
+        and tool_multiset_matches(result.expected_calls, result.predicted_calls)
     )
     return exact_matches / len(case_results)
 
@@ -125,7 +126,9 @@ def compute_no_tool_accuracy(case_results: List[CaseResult]) -> float | None:
     if not no_tool_cases:
         return None
 
-    correct = sum(1 for r in no_tool_cases if len(r.predicted_calls) == 0)
+    correct = sum(
+        1 for r in no_tool_cases if not r.errors and len(r.predicted_calls) == 0
+    )
     return correct / len(no_tool_cases)
 
 
@@ -215,6 +218,13 @@ def aggregate_case_results(
     # Trajectory success
     traj_success = compute_trajectory_success_rate(case_results)
 
+    provider_error_rate = sum(
+        "PROVIDER_ERROR" in result.errors for result in case_results
+    ) / len(case_results)
+    execution_error_rate = sum(
+        "EXECUTION_ERROR" in result.errors for result in case_results
+    ) / len(case_results)
+
     # Latency
     mean_lat, p50_lat, p95_lat = compute_latency_stats(case_results)
 
@@ -233,6 +243,8 @@ def aggregate_case_results(
         no_tool_accuracy=no_tool_acc,
         forbidden_tool_rate=forbidden_rate,
         trajectory_success_rate=traj_success,
+        provider_error_rate=provider_error_rate,
+        execution_error_rate=execution_error_rate,
         mean_latency_ms=mean_lat,
         p50_latency_ms=p50_lat,
         p95_latency_ms=p95_lat,
@@ -296,7 +308,9 @@ def generate_report(
         f"|--------|-------|",
         f"| Tool Set Exact Match | {aggregate.tool_set_exact_match_rate:.2%} |",
         f"| Forbidden Tool Rate | {aggregate.forbidden_tool_rate:.2%} |",
-        f"| Trajectory Success | {aggregate.trajectory_success_rate:.2%} |",
+        f"| Single-Turn Case Success | {aggregate.trajectory_success_rate:.2%} |",
+        f"| Provider Error Rate | {aggregate.provider_error_rate:.2%} |",
+        f"| Execution Error Rate | {aggregate.execution_error_rate:.2%} |",
     ]
 
     if aggregate.no_tool_accuracy is not None:

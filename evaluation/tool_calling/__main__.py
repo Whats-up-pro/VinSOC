@@ -75,7 +75,9 @@ def run_benchmark(args):
     print(f"  Tool F1: {aggregate.tool_f1:.2%}")
     print(f"  Exact Call F1: {aggregate.exact_call_f1:.2%}")
     print(f"  Tool Set EM: {aggregate.tool_set_exact_match_rate:.2%}")
-    print(f"  Trajectory Success: {aggregate.trajectory_success_rate:.2%}")
+    print(f"  Single-Turn Case Success: {aggregate.trajectory_success_rate:.2%}")
+    print(f"  Provider Error Rate: {aggregate.provider_error_rate:.2%}")
+    print(f"  Execution Error Rate: {aggregate.execution_error_rate:.2%}")
 
     if error_summary:
         print(f"\nError Summary:")

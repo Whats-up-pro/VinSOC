@@ -406,10 +406,10 @@ def _equivalent(
         return pred_rows == gold_rows
     if comparator == "ordered_rows":
         return pred_rows == gold_rows
-    if comparator == "multiset_rows":
+    if comparator in {"multiset_rows", "unordered_rows"}:
+        # SQL result bags preserve duplicate multiplicity even when row order
+        # is irrelevant. A set comparison would over-credit missing DISTINCT.
         return Counter(pred_rows) == Counter(gold_rows)
-    if comparator == "unordered_rows":
-        return set(pred_rows) == set(gold_rows)
     raise ValueError(f"Unsupported result comparator: {comparator}")
 
 
