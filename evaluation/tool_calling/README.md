@@ -8,7 +8,11 @@ Formal evaluation framework for measuring LLM tool selection accuracy in SOC inv
 # List available cases
 python -m evaluation.tool_calling list dev
 
-# Run integration benchmark (A2)
+# Run real-model decision benchmark (A1)
+python -m evaluation.tool_calling benchmarks dev --mode decision \
+  --provider openai --model <PINNED_MODEL> --temperature 0
+
+# Run integration/regression benchmark (A2)
 python -m evaluation.tool_calling benchmarks dev --mode integration
 ```
 
@@ -42,18 +46,17 @@ python -m evaluation.tool_calling benchmarks dev --mode integration
 |--------|-------------|
 | Tool Precision | Of predicted tools, % correct |
 | Tool Recall | Of required tools, % predicted |
-| Tool F1 | Harmonic mean |
-| Exact Call F1 | Tool + arguments correct |
-| Trajectory Success | All required exact + no forbidden |
+| Tool F1 | Harmonic mean of tool-level precision/recall |
+| Exact Call F1 | Tool + required argument values correct |
+| Argument Field Accuracy | Required argument values correct |
+| Critical Argument Accuracy | Critical argument values correct |
+| Tool Set Exact Match | Predicted tool multiset matches allowed required/optional set |
+| No-Tool Accuracy | Correctly abstains on no-tool requests |
+| Trajectory Success | Required calls exact, no non-exact predictions, no forbidden/order violations |
 
-## Current Results
+## Baseline Status
 
-| Metric | Value |
-|--------|-------|
-| Tool Precision | 80.65% |
-| Tool Recall | 59.38% |
-| Tool F1 | 68.22% |
-| Trajectory Success | 0.00% |
+The historical A2/MockProvider regression results are not treated as the official LLM accuracy baseline after metric hardening. Run A1 with a pinned provider/model/config on `dev`, perform controlled improvements, then run the frozen split once for the final holdout result.
 
 ## Directory Structure
 
@@ -116,6 +119,8 @@ evaluation/tool_calling/
 ```bash
 python -m evaluation.tool_calling list dev
 python -m evaluation.tool_calling benchmarks dev --mode integration
+python -m evaluation.tool_calling benchmarks dev --mode decision --provider openai --model <PINNED_MODEL> --temperature 0
+python -m evaluation.tool_calling benchmarks frozen --mode decision --provider openai --model <PINNED_MODEL> --temperature 0
 python -m evaluation.tool_calling benchmarks dev --cases case_001
 ```
 
