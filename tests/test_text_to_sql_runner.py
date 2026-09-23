@@ -82,6 +82,20 @@ def _snapshot(tmp_path):
                 "bytes_in": 60,
                 "label": "test",
             },
+            {
+                "source_dataset": "test-r2",
+                "source_row_id": "flow-3",
+                "event_time": "2026-09-23T00:02:00",
+                "src_ip": "10.0.0.3",
+                "src_port": 12347,
+                "dst_ip": "203.0.113.8",
+                "dst_port": 80,
+                "protocol": "TCP",
+                "action": "ALLOW",
+                "bytes_out": 90,
+                "bytes_in": 40,
+                "label": "test",
+            },
         ],
         source_dataset="test-r2",
     )
@@ -191,3 +205,23 @@ def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
     assert report["metrics"]["execution_accuracy"] == 1.0
     assert report["error_summary"] == {"OK": 1}
     assert report["cases"][0]["case_id"] == "sql_001"
+
+
+def test_ordered_rows_comparator_detects_wrong_top_k_order(tmp_path):
+    snapshot = _snapshot(tmp_path)
+    case = SQLBenchmarkCase(
+        case_id="ordered_001",
+        question="Return source IPs ordered by bytes_out descending.",
+        database_snapshot="r2.duckdb",
+        gold_sql=("SELECT src_ip FROM network_flows ORDER BY bytes_out DESC",),
+        result_comparator="ordered_rows",
+    )
+
+    result = evaluate_sql_case(
+        case,
+        "SELECT src_ip FROM network_flows ORDER BY bytes_out ASC",
+        snapshot,
+    )
+
+    assert result.execution_success is True
+    assert result.execution_accurate is False
