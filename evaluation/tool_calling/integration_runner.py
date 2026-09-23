@@ -197,6 +197,8 @@ class IntegrationRunner:
         result.ordering_violations = metrics["ordering_violations"]
         result.critical_arg_errors = metrics["critical_arg_errors"]
         result.trajectory_success = metrics["trajectory_success"]
+        result.exact_call_match = metrics["exact_call_match"]
+        result.tool_set_match = metrics["tool_set_match"]
 
         # Build error list
         if result.trajectory_success:
