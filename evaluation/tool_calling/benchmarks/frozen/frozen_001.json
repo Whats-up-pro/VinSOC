@@ -1,0 +1,27 @@
+{
+  "case_id": "frozen_001",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Enrich IPv4 198.51.100.77 with threat intelligence only. Indicator: 198.51.100.77. Indicator type: ipv4.",
+  "expected_calls": [
+    {
+      "call_id": "cti_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "198.51.100.77",
+        "indicator_type": "ipv4"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Single CTI lookup.",
+  "reference_time": "2026-09-23T00:00:00Z"
+}

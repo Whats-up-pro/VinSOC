@@ -2,7 +2,7 @@
   "case_id": "case_001",
   "category": "cti_only",
   "difficulty": "basic",
-  "request": "Investigation of an internal DNS server that appears in monitoring alerts due to high query volume",
+  "request": "Investigation of an internal DNS server that appears in monitoring alerts due to high query volume\nIndicator: 10.0.0.53\nIndicator type: ipv4\nContext: Alert: High DNS query volume from internal server",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

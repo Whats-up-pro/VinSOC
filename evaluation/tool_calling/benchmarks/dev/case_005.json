@@ -2,7 +2,7 @@
   "case_id": "case_005",
   "category": "cti_network_endpoint",
   "difficulty": "advanced",
-  "request": "Investigation of an IP confirmed as command-and-control for known malware family",
+  "request": "Investigation of an IP confirmed as command-and-control for known malware family\nIndicator: 185.220.101.45\nIndicator type: ipv4\nContext: Alert: Connection to known Tor exit node used by Cobalt Strike\nEndpoint pivot: WS023",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

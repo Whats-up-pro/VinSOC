@@ -2,7 +2,7 @@
   "case_id": "case_012",
   "category": "hostname_led",
   "difficulty": "basic",
-  "request": "Investigation of suspicious process relationship: Microsoft Word spawning PowerShell",
+  "request": "Investigation of suspicious process relationship: Microsoft Word spawning PowerShell\nIndicator: WS001\nIndicator type: hostname\nContext: EDR Alert: winword.exe spawned powershell.exe\nEndpoint pivot: WS001",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

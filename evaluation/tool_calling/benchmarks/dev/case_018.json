@@ -2,7 +2,7 @@
   "case_id": "case_018",
   "category": "cti_network_endpoint",
   "difficulty": "advanced",
-  "request": "Internal actor exfiltrating data and communicating with external infrastructure",
+  "request": "Internal actor exfiltrating data and communicating with external infrastructure\nIndicator: 10.0.0.200\nIndicator type: ipv4\nContext: Alert: HR flagged employee under investigation for potential data theft\nEndpoint pivot: WS200",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

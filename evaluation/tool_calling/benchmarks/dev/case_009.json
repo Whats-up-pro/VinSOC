@@ -2,7 +2,7 @@
   "case_id": "case_009",
   "category": "cti_network",
   "difficulty": "intermediate",
-  "request": "Investigation of an internal host performing port scan behavior",
+  "request": "Investigation of an internal host performing port scan behavior\nIndicator: 10.0.0.25\nIndicator type: ipv4\nContext: Alert: Internal host detected performing port scan against other internal servers",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

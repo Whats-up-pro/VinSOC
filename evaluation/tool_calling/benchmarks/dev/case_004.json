@@ -2,7 +2,7 @@
   "case_id": "case_004",
   "category": "cti_network",
   "difficulty": "intermediate",
-  "request": "Investigation of a domain belonging to a trusted business partner",
+  "request": "Investigation of a domain belonging to a trusted business partner\nIndicator: partner.example.com\nIndicator type: domain\nContext: Alert: Communication with external partner domain",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

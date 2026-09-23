@@ -2,7 +2,7 @@
   "case_id": "case_003",
   "category": "cti_endpoint",
   "difficulty": "intermediate",
-  "request": "Investigation of an internal workstation flagged by DLP policy for file access",
+  "request": "Investigation of an internal workstation flagged by DLP policy for file access\nIndicator: 192.168.1.100\nIndicator type: ipv4\nContext: DLP Alert: User workstation accessing sensitive document\nEndpoint pivot: WS100",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

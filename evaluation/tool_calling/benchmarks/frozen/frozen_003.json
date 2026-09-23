@@ -1,0 +1,26 @@
+{
+  "case_id": "frozen_003",
+  "category": "endpoint_only",
+  "difficulty": "basic",
+  "request": "Investigate suspicious process relationships on endpoint FIN-WS-07. Endpoint pivot: FIN-WS-07.",
+  "expected_calls": [
+    {
+      "call_id": "ep_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "FIN-WS-07"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Hostname-led endpoint request.",
+  "reference_time": "2026-09-23T00:00:00Z"
+}

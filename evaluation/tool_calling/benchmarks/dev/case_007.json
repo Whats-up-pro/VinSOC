@@ -2,7 +2,7 @@
   "case_id": "case_007",
   "category": "cti_network_endpoint",
   "difficulty": "advanced",
-  "request": "Investigation of IP associated with LockBit ransomware C2",
+  "request": "Investigation of IP associated with LockBit ransomware C2\nIndicator: lockbit1234abcd.onion\nIndicator type: domain\nContext: Alert: DNS query to known ransomware C2 domain\nEndpoint pivot: FILE-SERVER-01",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

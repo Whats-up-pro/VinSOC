@@ -2,7 +2,7 @@
   "case_id": "case_019",
   "category": "cti_only",
   "difficulty": "basic",
-  "request": "Investigation cannot be completed due to lack of telemetry data",
+  "request": "Investigation cannot be completed due to lack of telemetry data\nIndicator: 10.0.0.99\nIndicator type: ipv4\nContext: Alert: Connection from unknown internal IP, but asset not found in CMDB",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {

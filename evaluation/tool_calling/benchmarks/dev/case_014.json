@@ -2,7 +2,7 @@
   "case_id": "case_014",
   "category": "hostname_led",
   "difficulty": "basic",
-  "request": "Investigation of suspicious process: Browser spawning certutil for file download",
+  "request": "Investigation of suspicious process: Browser spawning certutil for file download\nIndicator: WS045\nIndicator type: hostname\nContext: EDR Alert: chrome.exe spawned certutil.exe - possible malware download\nEndpoint pivot: WS045",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
