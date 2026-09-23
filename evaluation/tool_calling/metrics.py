@@ -124,16 +124,12 @@ def compute_tool_set_em(case_results: List[CaseResult]) -> float:
     return exact_matches / len(case_results) if case_results else 0.0
 
 
-def compute_no_tool_accuracy(case_results: List[CaseResult]) -> float:
-    """
-    Compute no-tool case accuracy.
-
-    Some cases should have no tool calls.
-    """
+def compute_no_tool_accuracy(case_results: List[CaseResult]) -> float | None:
+    """Compute no-tool accuracy, preserving the distinction between N/A and 0%."""
     no_tool_cases = [r for r in case_results if len(r.expected_calls) == 0]
 
     if not no_tool_cases:
-        return 0.0
+        return None
 
     correct = sum(1 for r in no_tool_cases if len(r.predicted_calls) == 0)
     return correct / len(no_tool_cases)
@@ -309,7 +305,7 @@ def generate_report(
         f"| Trajectory Success | {aggregate.trajectory_success_rate:.2%} |",
     ]
 
-    if aggregate.no_tool_accuracy > 0:
+    if aggregate.no_tool_accuracy is not None:
         lines.extend([
             f"| No-Tool Accuracy | {aggregate.no_tool_accuracy:.2%} |",
         ])
