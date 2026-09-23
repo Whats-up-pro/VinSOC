@@ -5,5 +5,7 @@
   "gold_sql": [
     "SELECT action, count(*) AS flow_count FROM network_flows GROUP BY action"
   ],
+  "category": "aggregation",
+  "difficulty": "intermediate",
   "result_comparator": "unordered_rows"
 }

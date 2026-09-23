@@ -5,5 +5,7 @@
   "gold_sql": [
     "SELECT threat_type, count(*) AS indicator_count FROM cti_indicators GROUP BY threat_type"
   ],
+  "category": "aggregation",
+  "difficulty": "intermediate",
   "result_comparator": "unordered_rows"
 }

@@ -109,6 +109,8 @@ def test_text_to_sql_uses_execution_equivalence_and_hard_safety_gate(snapshot_pa
         question="Count flows to the indicator.",
         database_snapshot="test_soc.duckdb",
         gold_sql=("SELECT count(*) AS total FROM network_flows WHERE dst_ip = '185.220.101.45'",),
+        category="filter",
+        difficulty="basic",
         result_comparator="scalar",
     )
 

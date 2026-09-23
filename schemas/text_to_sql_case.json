@@ -9,6 +9,8 @@
     "question",
     "database_snapshot",
     "gold_sql",
+    "category",
+    "difficulty",
     "result_comparator"
   ],
   "properties": {
@@ -31,6 +33,27 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "filter",
+        "time_range",
+        "aggregation",
+        "distinct",
+        "ordering_limit",
+        "cti",
+        "network",
+        "endpoint"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "intermediate",
+        "advanced"
+      ]
     },
     "result_comparator": {
       "type": "string",

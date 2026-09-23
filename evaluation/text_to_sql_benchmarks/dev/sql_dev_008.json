@@ -5,5 +5,7 @@
   "gold_sql": [
     "SELECT indicator_type, count(*) AS indicator_count FROM cti_indicators GROUP BY indicator_type"
   ],
+  "category": "aggregation",
+  "difficulty": "intermediate",
   "result_comparator": "unordered_rows"
 }
