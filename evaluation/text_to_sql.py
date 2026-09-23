@@ -6,8 +6,10 @@ from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
+from pathlib import Path
 from typing import Any, Literal
 
+from agent.provider import LLMProvider, ProviderError, create_provider
 from vinsoc_data.duckdb_store import DuckDBSnapshot, QuerySafetyError
 
 ComparatorName = Literal["unordered_rows", "multiset_rows", "scalar", "boolean"]
@@ -90,6 +92,157 @@ def evaluate_sql_case(
     )
     return SQLEvaluationResult(case.case_id, True, True, accurate, False)
 
+
+
+@dataclass(frozen=True)
+class SQLGenerationConfig:
+    """Pinned provider settings for one Text-to-SQL benchmark run."""
+
+    provider: str = "openai"
+    model: str = "gpt-4o"
+    temperature: float = 0.0
+
+
+@dataclass(frozen=True)
+class SQLCaseRun:
+    """One model generation plus its deterministic execution evaluation."""
+
+    case_id: str
+    generated_sql: str | None
+    evaluation: SQLEvaluationResult
+    error_category: str
+    latency_ms: float = 0.0
+    input_tokens: int = 0
+    output_tokens: int = 0
+    provider_error: str | None = None
+
+
+class TextToSQLRunner:
+    """Generate SQL with a pinned model and evaluate it on a frozen snapshot."""
+
+    def __init__(
+        self,
+        snapshot: DuckDBSnapshot,
+        config: SQLGenerationConfig | None = None,
+        provider: LLMProvider | None = None,
+        benchmarks_dir: Path | None = None,
+    ):
+        self.snapshot = snapshot
+        self.config = config or SQLGenerationConfig()
+        self.benchmarks_dir = benchmarks_dir or Path("evaluation/text_to_sql_benchmarks")
+        if provider is not None:
+            self.provider = provider
+        else:
+            provider_kwargs: dict[str, Any] = {}
+            if self.config.provider == "routed":
+                provider_kwargs["mode"] = "evaluation"
+            self.provider = create_provider(
+                provider_type=self.config.provider,
+                model=self.config.model,
+                **provider_kwargs,
+            )
+
+    def schema_context(self) -> str:
+        """Return deterministic schema-only context; no telemetry rows are exposed."""
+        result = self.snapshot.query(
+            """
+            SELECT table_name, column_name, data_type
+            FROM information_schema.columns
+            WHERE table_schema = 'main'
+              AND table_name <> 'dataset_provenance'
+            ORDER BY table_name, ordinal_position
+            """
+        )
+        grouped: dict[str, list[str]] = {}
+        for row in result.rows:
+            grouped.setdefault(str(row["table_name"]), []).append(
+                f'{row["column_name"]} {row["data_type"]}'
+            )
+        return "\n".join(
+            f"{table}({', '.join(columns)})" for table, columns in grouped.items()
+        )
+
+    def run_case(self, case: SQLBenchmarkCase) -> SQLCaseRun:
+        """Generate one SQL statement and score it through the existing safety gate."""
+        system_prompt = (
+            "You generate DuckDB SQL for the VinSOC SOC benchmark. "
+            "Return exactly one read-only SELECT statement (WITH ... SELECT is allowed). "
+            "Do not write data, attach databases, install extensions, or emit prose.\n\n"
+            "Database schema:\n"
+            + self.schema_context()
+        )
+        try:
+            response = self.provider.generate(
+                messages=[{"role": "user", "content": case.question}],
+                tools=None,
+                system_prompt=system_prompt,
+                temperature=self.config.temperature,
+            )
+        except ProviderError as exc:
+            evaluation = SQLEvaluationResult(
+                case_id=case.case_id,
+                syntax_valid=False,
+                execution_success=False,
+                execution_accurate=False,
+                safety_rejected=False,
+                error=str(exc),
+            )
+            return SQLCaseRun(
+                case_id=case.case_id,
+                generated_sql=None,
+                evaluation=evaluation,
+                error_category="PROVIDER_ERROR",
+                provider_error=str(exc),
+            )
+
+        generated_sql = _extract_sql(response.content)
+        evaluation = evaluate_sql_case(case, generated_sql, self.snapshot)
+        metadata = response.metadata or {}
+        return SQLCaseRun(
+            case_id=case.case_id,
+            generated_sql=generated_sql,
+            evaluation=evaluation,
+            error_category=_sql_error_category(evaluation),
+            latency_ms=float(metadata.get("latency_ms", 0.0) or 0.0),
+            input_tokens=int(metadata.get("input_tokens", 0) or 0),
+            output_tokens=int(metadata.get("output_tokens", 0) or 0),
+        )
+
+    def load_cases(self, split: str = "dev") -> list[SQLBenchmarkCase]:
+        split_dir = self.benchmarks_dir / split
+        if not split_dir.exists():
+            return []
+        import json
+
+        cases: list[SQLBenchmarkCase] = []
+        for path in sorted(split_dir.glob("*.json")):
+            cases.append(SQLBenchmarkCase.from_dict(json.loads(path.read_text(encoding="utf-8"))))
+        return cases
+
+    def run_suite(self, split: str = "dev") -> list[SQLCaseRun]:
+        return [self.run_case(case) for case in self.load_cases(split)]
+
+
+def _extract_sql(content: str) -> str:
+    """Accept raw SQL or a single fenced SQL block without changing semantics."""
+    text = (content or "").strip()
+    if text.startswith("```") and text.endswith("```"):
+        lines = text.splitlines()
+        if len(lines) >= 3:
+            return "\n".join(lines[1:-1]).strip()
+    return text
+
+
+def _sql_error_category(result: SQLEvaluationResult) -> str:
+    if result.safety_rejected:
+        return "SAFETY_REJECTION"
+    if not result.syntax_valid:
+        return "SYNTAX_ERROR"
+    if not result.execution_success:
+        return "EXECUTION_ERROR"
+    if not result.execution_accurate:
+        return "RESULT_MISMATCH"
+    return "OK"
 
 def aggregate_sql_metrics(results: Sequence[SQLEvaluationResult]) -> dict[str, float]:
     """Return the three headline rates plus the hard safety rejection rate."""
