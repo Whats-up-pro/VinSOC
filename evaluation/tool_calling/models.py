@@ -309,7 +309,7 @@ class AggregateResult:
 
     # Other metrics
     tool_set_exact_match_rate: float = 0.0
-    no_tool_accuracy: float = 0.0
+    no_tool_accuracy: Optional[float] = None
     forbidden_tool_rate: float = 0.0
     ordering_accuracy: float = 0.0
     trajectory_success_rate: float = 0.0
@@ -336,7 +336,7 @@ class AggregateResult:
             "argument_field_accuracy": round(self.argument_field_accuracy, 4),
             "critical_argument_accuracy": round(self.critical_argument_accuracy, 4),
             "tool_set_exact_match_rate": round(self.tool_set_exact_match_rate, 4),
-            "no_tool_accuracy": round(self.no_tool_accuracy, 4) if self.no_tool_accuracy > 0 else None,
+            "no_tool_accuracy": round(self.no_tool_accuracy, 4) if self.no_tool_accuracy is not None else None,
             "forbidden_tool_rate": round(self.forbidden_tool_rate, 4),
             "ordering_accuracy": round(self.ordering_accuracy, 4) if self.ordering_accuracy > 0 else None,
             "trajectory_success_rate": round(self.trajectory_success_rate, 4),
