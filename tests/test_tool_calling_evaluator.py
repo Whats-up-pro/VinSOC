@@ -510,3 +510,37 @@ def test_zero_no_tool_accuracy_is_serialized_as_zero_not_null():
 
     assert aggregate.no_tool_accuracy == 0.0
     assert aggregate.to_dict()["no_tool_accuracy"] == 0.0
+
+
+def test_tool_set_exact_match_is_multiset_aware():
+    from evaluation.tool_calling.metrics import compute_tool_set_em
+    from evaluation.tool_calling.models import CaseResult
+
+    expected = [
+        ExpectedCall(call_id="net_1", tool="network_investigation"),
+        ExpectedCall(call_id="net_2", tool="network_investigation"),
+    ]
+    result = CaseResult(
+        case_id="duplicate_required_001",
+        expected_calls=expected,
+        predicted_calls=[PredictedCall(tool="network_investigation", arguments={})],
+    )
+
+    assert compute_tool_set_em([result]) == 0.0
+
+
+def test_tool_set_exact_match_allows_omitting_optional_calls():
+    from evaluation.tool_calling.metrics import compute_tool_set_em
+    from evaluation.tool_calling.models import CaseResult
+
+    expected = [
+        ExpectedCall(call_id="cti_1", tool="cti_enrichment"),
+        ExpectedCall(call_id="net_optional", tool="network_investigation", optional=True),
+    ]
+    result = CaseResult(
+        case_id="optional_001",
+        expected_calls=expected,
+        predicted_calls=[PredictedCall(tool="cti_enrichment", arguments={})],
+    )
+
+    assert compute_tool_set_em([result]) == 1.0
