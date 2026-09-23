@@ -37,3 +37,21 @@ def test_frozen_split_is_nonempty_and_disjoint_from_dev():
     assert dev_ids
     assert frozen_ids
     assert dev_ids.isdisjoint(frozen_ids)
+
+
+def test_dev_has_meaningful_no_tool_coverage():
+    runner = DecisionRunner.__new__(DecisionRunner)
+    runner.benchmarks_dir = Path("evaluation/tool_calling/benchmarks")
+    no_tool_cases = [
+        case for case in runner.load_cases("dev") if case.category.value == "no_tool"
+    ]
+    production_tools = {
+        "cti_enrichment",
+        "network_investigation",
+        "endpoint_investigation",
+    }
+
+    assert len(no_tool_cases) >= 4
+    for case in no_tool_cases:
+        assert case.expected_calls == []
+        assert set(case.forbidden_tools) == production_tools
