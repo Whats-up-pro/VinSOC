@@ -494,3 +494,19 @@ class TestMetricRegressionCoverage:
         assert aggregate.exact_call_precision == 0.0
         assert aggregate.exact_call_recall == 0.0
         assert aggregate.argument_field_accuracy == 0.5
+
+
+def test_zero_no_tool_accuracy_is_serialized_as_zero_not_null():
+    from evaluation.tool_calling.metrics import aggregate_case_results
+    from evaluation.tool_calling.models import CaseResult
+
+    result = CaseResult(
+        case_id="no_tool_wrong_001",
+        expected_calls=[],
+        predicted_calls=[PredictedCall(tool="cti_enrichment", arguments={"indicator": "1.2.3.4"})],
+    )
+
+    aggregate = aggregate_case_results("no-tool-zero", [result])
+
+    assert aggregate.no_tool_accuracy == 0.0
+    assert aggregate.to_dict()["no_tool_accuracy"] == 0.0
