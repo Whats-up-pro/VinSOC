@@ -214,6 +214,25 @@ def detect_duplicates(
     return duplicates
 
 
+def tool_multiset_matches(
+    expected_calls: List[ExpectedCall],
+    predicted_calls: List[PredictedCall],
+) -> bool:
+    """Match required tool multiplicity while allowing omission of optional calls."""
+    required_tools = Counter(call.tool for call in expected_calls if not call.optional)
+    optional_tools = Counter(call.tool for call in expected_calls if call.optional)
+    predicted_tools = Counter(call.tool for call in predicted_calls)
+    allowed_tools = required_tools + optional_tools
+
+    if any(predicted_tools[tool] < count for tool, count in required_tools.items()):
+        return False
+    if any(tool not in allowed_tools for tool in predicted_tools):
+        return False
+    if any(predicted_tools[tool] > allowed_tools[tool] for tool in predicted_tools):
+        return False
+    return True
+
+
 def check_forbidden_tools(
     predicted_calls: List[PredictedCall],
     forbidden_tools: List[str],
@@ -365,17 +384,7 @@ def compute_case_metrics(
         and all(m.match_type == MatchType.EXACT for m in matches)
     )
 
-    required_tools = Counter(call.tool for call in required_calls)
-    optional_tools = Counter(
-        call.tool for call in expected_case.expected_calls if call.optional
-    )
-    predicted_tools = Counter(call.tool for call in predicted_calls)
-    allowed_tools = required_tools + optional_tools
-    tool_set_match = (
-        all(predicted_tools[tool] >= count for tool, count in required_tools.items())
-        and all(predicted_tools[tool] <= allowed_tools[tool] for tool in predicted_tools)
-        and all(tool in allowed_tools for tool in predicted_tools)
-    )
+    tool_set_match = tool_multiset_matches(expected_case.expected_calls, predicted_calls)
 
     trajectory_success = (
         exact_call_match
