@@ -26,6 +26,7 @@ jobs:
           import json
           import os
           import subprocess
+          import hashlib
           from collections import defaultdict
           from datetime import datetime, timezone
           from pathlib import Path
@@ -34,7 +35,7 @@ jobs:
           from agent.tools import get_tool_schemas
           from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
           from evaluation.tool_calling.metrics import aggregate_case_results, generate_error_summary
-          from evaluation.tool_calling.provenance import build_a1_provenance
+          from evaluation.tool_calling.provenance import build_a1_provenance, canonical_sha256
 
           MODEL = 'gpt-4.1-mini-2025-04-14'
           INPUT_RATE = 0.40
@@ -91,6 +92,16 @@ jobs:
           case_ids = [case.case_id for case in cases]
           assert len(cases) == len(set(case_ids)) == 24, 'expected 24 unique dev cases'
           runner._run_cases = cases
+          split_dir = Path('evaluation/tool_calling/benchmarks/dev')
+          split_data = {p.name: json.loads(p.read_text(encoding='utf-8'))
+                        for p in sorted(split_dir.glob('*.json'))}
+          lock = json.loads((split_dir / 'VERSION.lock').read_text(encoding='utf-8'))
+          assert lock['version'] == 'r1_a1_dev_v2' and lock['case_count'] == len(split_data) == 24
+          assert canonical_sha256(split_data) == lock['benchmark_split_sha256']
+          scorer_hashes = {p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                           for p in lock['scorer_files']}
+          assert scorer_hashes == lock['scorer_file_sha256']
+          assert canonical_sha256(scorer_hashes) == lock['scorer_sha256']
 
           # Build the exact prompt, tool schema and request fields that DecisionRunner
           # and OpenAIProvider will send. UTF-8 request bytes plus a 4096-token
@@ -140,6 +151,10 @@ jobs:
                           'checked_utc': datetime.now(timezone.utc).isoformat(),
                           'calculated_cost_usd': 0.0, 'usage_complete': True},
               'evaluator_commit_sha': sha,
+              'benchmark_version': lock['version'],
+              'benchmark_split_sha256': lock['benchmark_split_sha256'],
+              'scorer_sha256': lock['scorer_sha256'],
+              'scorer_file_sha256': scorer_hashes,
           }
           save(report)
 
@@ -203,6 +218,7 @@ jobs:
           report['pricing']['usage_complete'] = True
           save(report)
           assert len(calls) == len(results) == len(set(report['case_ids'])) == 24
+          assert report['provenance']['benchmark_split_sha256'] == lock['benchmark_split_sha256']
           assert report['provenance']['official_eligible'], report['provenance']['ineligible_reasons']
           print(f'Completed 24 distinct dev cases; calculated_cost_usd={actual_spend:.6f}; '
                 'official_eligible=true')
