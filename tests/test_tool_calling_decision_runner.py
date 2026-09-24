@@ -11,7 +11,7 @@ import pytest
 import evaluation.tool_calling.decision_runner as decision_module
 import evaluation.tool_calling.__main__ as cli_module
 import evaluation.tool_calling.provenance as provenance_module
-from agent.provider import LLMResponse, ProviderError, ProviderFailureKind
+from agent.provider import LLMResponse, OpenAIProvider, ProviderError, ProviderFailureKind
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
 from evaluation.tool_calling.metrics import aggregate_case_results
@@ -70,7 +70,8 @@ def _case():
     )
 
 
-def test_a1_openai_chat_completion_request_has_output_token_cap(monkeypatch):
+@pytest.mark.parametrize("provider_name", ["openai", "OpenAI", "OPENAI"])
+def test_a1_openai_chat_completion_request_has_output_token_cap(monkeypatch, provider_name):
     requests = []
 
     def create_completion(**kwargs):
@@ -87,7 +88,7 @@ def test_a1_openai_chat_completion_request_has_output_token_cap(monkeypatch):
     ))
     monkeypatch.setitem(sys.modules, "openai", SimpleNamespace(OpenAI=lambda **kwargs: client))
     runner = DecisionRunner(config=A1Config(
-        provider="openai", model="gpt-4.1-2025-04-14", max_tokens=1000,
+        provider=provider_name, model="gpt-4.1-2025-04-14", max_tokens=1000,
     ))
 
     result = runner.run_decision(_case())
@@ -97,6 +98,38 @@ def test_a1_openai_chat_completion_request_has_output_token_cap(monkeypatch):
     assert requests[0]["model"] == "gpt-4.1-2025-04-14"
     assert requests[0]["max_completion_tokens"] == 1000
     assert requests[0]["tools"] == get_tool_schemas()
+    assert runner.config.provider == "openai"
+    assert runner.applied_max_completion_tokens == 1000
+
+
+def test_a1_injected_openai_provider_gets_output_token_cap(monkeypatch):
+    requests = []
+
+    def create_completion(**kwargs):
+        requests.append(kwargs)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content="", tool_calls=[]))],
+            model="gpt-4.1-2025-04-14",
+            usage=SimpleNamespace(prompt_tokens=20, completion_tokens=0, total_tokens=20),
+            model_dump=lambda: {},
+        )
+
+    client = SimpleNamespace(chat=SimpleNamespace(
+        completions=SimpleNamespace(create=create_completion)
+    ))
+    monkeypatch.setitem(sys.modules, "openai", SimpleNamespace(OpenAI=lambda **kwargs: client))
+    provider = OpenAIProvider(model="gpt-4.1-2025-04-14")
+    runner = DecisionRunner(
+        config=A1Config(provider="OpenAI", model="gpt-4.1-2025-04-14"),
+        provider=provider,
+    )
+
+    result = runner.run_decision(_case())
+
+    assert result.errors == []
+    assert len(requests) == 1
+    assert requests[0]["max_completion_tokens"] == 1000
+    assert runner.applied_max_completion_tokens == 1000
 
 
 @pytest.mark.parametrize("invalid", [0, -1, 1.5, "1000", True, None])
@@ -496,19 +529,22 @@ def test_a1_helper_and_cli_report_cap_used_by_openai_request(monkeypatch, tmp_pa
     helper_path = tmp_path / "helper.json"
     helper = decision_module.run_a1_benchmark(
         split="dev", output_path=helper_path,
-        config=A1Config(provider="openai", model="gpt-4.1-2025-04-14"),
+        config=A1Config(provider="OpenAI", model="gpt-4.1-2025-04-14"),
     )
     cli_module.run_benchmark(SimpleNamespace(
         mode="decision", split="dev", cases=None,
-        provider="openai", model="gpt-4.1-2025-04-14", temperature=0.0,
+        provider="OpenAI", model="gpt-4.1-2025-04-14", temperature=0.0,
     ))
     cli_path = next((tmp_path / "results" / "tool_calling").glob("*/metrics.json"))
 
     assert len(requests) == 2
     assert [request["max_completion_tokens"] for request in requests] == [1000, 1000]
+    assert helper["config"]["provider"] == "openai"
     assert helper["config"]["max_completion_tokens"] == 1000
     assert json.loads(helper_path.read_text(encoding="utf-8"))["config"]["max_completion_tokens"] == 1000
-    assert json.loads(cli_path.read_text(encoding="utf-8"))["config"]["max_completion_tokens"] == 1000
+    cli_config = json.loads(cli_path.read_text(encoding="utf-8"))["config"]
+    assert cli_config["provider"] == "openai"
+    assert cli_config["max_completion_tokens"] == 1000
 
 
 def test_a1_provenance_hashes_captured_prompt_schema_and_logical_split(monkeypatch, tmp_path):
