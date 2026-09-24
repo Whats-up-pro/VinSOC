@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from evaluation.tool_calling.integration_runner import IntegrationRunner
 from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
 from evaluation.tool_calling.metrics import aggregate_case_results, generate_error_summary
+from evaluation.tool_calling.provenance import build_a1_provenance
 
 
 def run_benchmark(args):
@@ -106,6 +107,7 @@ def run_benchmark(args):
                     "model": runner.config.model,
                     "temperature": runner.config.temperature,
                 },
+                "provenance": build_a1_provenance(runner, split, results),
             }
         )
 

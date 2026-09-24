@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import uuid
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -24,6 +25,7 @@ from evaluation.tool_calling.models import (
 from evaluation.tool_calling.arguments import normalize_arguments
 from evaluation.tool_calling.matching import compute_case_metrics
 from evaluation.tool_calling.metrics import aggregate_case_results, generate_error_summary
+from evaluation.tool_calling.provenance import build_a1_provenance
 
 
 @dataclass
@@ -53,6 +55,8 @@ class DecisionRunner:
     ):
         self.config = config or A1Config()
         self.benchmarks_dir = benchmarks_dir or Path("evaluation/tool_calling/benchmarks")
+        self._input_records: List[Dict[str, Any]] = []
+        self._run_cases: List[ToolCallCase] = []
         if provider is not None:
             self.provider = provider
         else:
@@ -121,9 +125,19 @@ If no tool is needed, do not call one."""
 
         try:
             system_prompt, user_prompt = self.build_prompt(case, self.config.system_prompt)
+            messages = [{"role": "user", "content": user_prompt}]
+            schemas = get_tool_schemas()
+            self._input_records.append({
+                "prompt": {
+                    "case_id": case.case_id,
+                    "system_prompt": system_prompt,
+                    "messages": deepcopy(messages),
+                },
+                "tool_schemas": deepcopy(schemas),
+            })
             response = self.provider.generate(
-                messages=[{"role": "user", "content": user_prompt}],
-                tools=get_tool_schemas(),
+                messages=messages,
+                tools=schemas,
                 system_prompt=system_prompt,
                 temperature=self.config.temperature,
             )
@@ -191,6 +205,7 @@ If no tool is needed, do not call one."""
         else:
             cases = [self.load_case(cid, split) for cid in case_ids]
 
+        self._run_cases = cases
         results = []
         for case in cases:
             result = self.run_decision(case)
@@ -221,6 +236,7 @@ def run_a1_benchmark(
             "split": split,
         }
 
+    runner._run_cases = cases
     # Run evaluation
     case_results = []
     for case in cases:
@@ -247,6 +263,7 @@ def run_a1_benchmark(
         "aggregate": aggregate.to_dict(),
         "error_summary": error_summary,
         "case_results": [result.to_dict() for result in case_results],
+        "provenance": build_a1_provenance(runner, split, case_results),
     }
 
     if output_path:
