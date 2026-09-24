@@ -56,11 +56,21 @@ class DecisionRunner:
         self.config = config or A1Config()
         if type(self.config.max_tokens) is not int or self.config.max_tokens <= 0:
             raise ValueError("max_tokens must be a positive integer")
+        if not isinstance(self.config.provider, str):
+            raise ValueError("provider must be a string")
+        self.config.provider = self.config.provider.lower()
         self.benchmarks_dir = benchmarks_dir or Path("evaluation/tool_calling/benchmarks")
         self._input_records: List[Dict[str, Any]] = []
         self._run_cases: List[ToolCallCase] = []
         if provider is not None:
             self.provider = provider
+            if (self.config.provider == "openai"
+                    and isinstance(provider, OpenAIProvider)
+                    and provider.provider_name == "openai"):
+                provider.request_overrides = {
+                    **provider.request_overrides,
+                    "max_completion_tokens": self.config.max_tokens,
+                }
         else:
             provider_kwargs: Dict[str, Any] = {}
             if self.config.provider == "openai":
