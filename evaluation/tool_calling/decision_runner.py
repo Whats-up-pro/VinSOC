@@ -246,6 +246,7 @@ def run_a1_benchmark(
         },
         "aggregate": aggregate.to_dict(),
         "error_summary": error_summary,
+        "case_results": [result.to_dict() for result in case_results],
     }
 
     if output_path:
