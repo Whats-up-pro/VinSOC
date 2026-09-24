@@ -303,17 +303,91 @@ def match_case(
     Returns:
         (matches, tool_tp, exact_tp, false_positives, false_negatives, partial_tp)
     """
-    matches: List[CallMatch] = []
-    used_expected: set[str] = set()
+    # Optimize the whole assignment: an early partial prediction must not
+    # consume a gold call that a later prediction matches exactly.
+    unique_expected = {}
+    for expected in expected_case.expected_calls:
+        unique_expected.setdefault(expected.call_id, expected)
+    gold = sorted(unique_expected.values(), key=lambda call: call.call_id)
+    n, m = len(predicted_calls), len(gold)
+    base = min(n, m) + 1  # Every higher-priority count dominates all lower counts.
+    candidates = [
+        [match_single_call(predicted, expected) for expected in gold]
+        for predicted in predicted_calls
+    ]
+    weights: List[List[int]] = []
+    for row in candidates:
+        row_weights = []
+        for match in row:
+            if not match.is_match:
+                row_weights.append(-1)
+                continue
+            exact = match.match_type == MatchType.EXACT
+            required = not match.expected_call.optional
+            row_weights.append(
+                (base ** 3 if exact and required else 0)
+                + (base ** 2 if exact else 0)
+                + (base if required else 0)
+                + 1
+            )
+        weights.append(row_weights + [0] * n)  # One dummy slot per extra call.
 
-    # Match each predicted call
-    for predicted_call in predicted_calls:
-        match = find_best_match(
-            predicted_call,
-            expected_case.expected_calls,
-            used_expected
+    # Rectangular Hungarian assignment (n predictions, m+n gold/dummy slots).
+    # Iterating sorted gold IDs and then dummies resolves equal scores stably.
+    columns = m + n
+    u, v = [0] * (n + 1), [0] * (columns + 1)
+    owner, previous = [0] * (columns + 1), [0] * (columns + 1)
+    for row_index in range(1, n + 1):
+        owner[0] = row_index
+        col = 0
+        minimum = [float("inf")] * (columns + 1)
+        visited = [False] * (columns + 1)
+        while True:
+            visited[col] = True
+            active_row = owner[col]
+            delta, next_col = float("inf"), 0
+            for candidate_col in range(1, columns + 1):
+                if visited[candidate_col]:
+                    continue
+                reduced_cost = (
+                    -weights[active_row - 1][candidate_col - 1]
+                    - u[active_row] - v[candidate_col]
+                )
+                if reduced_cost < minimum[candidate_col]:
+                    minimum[candidate_col] = reduced_cost
+                    previous[candidate_col] = col
+                if minimum[candidate_col] < delta:
+                    delta, next_col = minimum[candidate_col], candidate_col
+            for candidate_col in range(columns + 1):
+                if visited[candidate_col]:
+                    u[owner[candidate_col]] += delta
+                    v[candidate_col] -= delta
+                else:
+                    minimum[candidate_col] -= delta
+            col = next_col
+            if owner[col] == 0:
+                break
+        while col:
+            previous_col = previous[col]
+            owner[col] = owner[previous_col]
+            col = previous_col
+
+    assigned = [None] * n
+    for col in range(1, columns + 1):
+        if owner[col] and col <= m:
+            assigned[owner[col] - 1] = col - 1
+    matches = [
+        candidates[index][gold_index]
+        if gold_index is not None and candidates[index][gold_index].is_match
+        else CallMatch(
+            predicted_call=predicted,
+            expected_call=None,
+            match_type=MatchType.NO_MATCH,
+            critical_arg_match=False,
+            required_arg_match=False,
         )
-        matches.append(match)
+        for index, (predicted, gold_index) in enumerate(zip(predicted_calls, assigned))
+    ]
 
     # Tool-level TP: any tool match (EXACT or PARTIAL)
     tool_tp = sum(1 for m in matches if m.is_match)

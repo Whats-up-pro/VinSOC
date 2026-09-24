@@ -3,6 +3,8 @@ R1 Tool Calling Evaluator - Unit Tests
 
 Tests the argument normalization, call matching, and metrics engine.
 """
+from itertools import permutations
+
 import pytest
 from evaluation.tool_calling.arguments import (
     normalize_ip,
@@ -215,6 +217,85 @@ class TestCallMatching:
         violations = check_forbidden_tools(predicted, forbidden)
         assert len(violations) == 1
         assert violations[0] == "endpoint_investigation"
+
+
+class TestGlobalCallMatching:
+    """One-to-one matching must preserve exact calls across prediction orders."""
+
+    @staticmethod
+    def case(expected_calls):
+        return ToolCallCase(
+            case_id="global_match",
+            category=CaseCategory.CTI_ONLY,
+            difficulty=CaseDifficulty.BASIC,
+            request="Match repeated CTI calls",
+            reference_time="2026-09-24T00:00:00Z",
+            expected_calls=expected_calls,
+        )
+
+    @staticmethod
+    def call(indicator):
+        return PredictedCall(tool="cti_enrichment", arguments={"indicator": indicator})
+
+    def test_wrong_call_cannot_consume_gold_needed_by_two_exact_predictions(self):
+        case = self.case(
+            [
+                ExpectedCall(
+                    call_id=indicator,
+                    tool="cti_enrichment",
+                    required_arguments={"indicator": indicator},
+                    critical_arguments=["indicator"],
+                )
+                for indicator in ("A", "B")
+            ]
+        )
+        for order in permutations(("X", "A", "B")):
+            predicted = [self.call(indicator) for indicator in order]
+            result = compute_case_metrics(case, predicted)
+            assert (result["exact_tp"], result["tp"], result["fp"], result["fn"]) == (
+                2, 2, 1, 0
+            )
+            assert result["trajectory_success"] is False
+            assert [m.predicted_call for m in result["matches"]] == predicted
+            assert [m.expected_call.call_id for m in result["matches"] if m.is_match] == [
+                indicator for indicator in order if indicator != "X"
+            ]
+
+    def test_required_exact_takes_priority_over_optional_exact(self):
+        case = self.case(
+            [
+                ExpectedCall(
+                    call_id="optional", tool="cti_enrichment",
+                    required_arguments={"indicator": "A"}, optional=True,
+                ),
+                ExpectedCall(
+                    call_id="required", tool="cti_enrichment",
+                    required_arguments={"indicator": "A"},
+                ),
+            ]
+        )
+        result = compute_case_metrics(case, [self.call("A")])
+        assert result["exact_tp"] == 1
+        assert result["matches"][0].expected_call.call_id == "required"
+        assert result["fn"] == 0
+        assert result["trajectory_success"] is True
+
+    def test_duplicate_and_empty_prediction_semantics(self):
+        case = self.case(
+            [ExpectedCall(
+                call_id="required", tool="cti_enrichment",
+                required_arguments={"indicator": "A"},
+            )]
+        )
+        duplicate = compute_case_metrics(case, [self.call("A"), self.call("A")])
+        assert (duplicate["exact_tp"], duplicate["tp"], duplicate["fp"], duplicate["fn"]) == (
+            1, 1, 1, 0
+        )
+        assert len(duplicate["duplicates"]) == 1
+        assert duplicate["trajectory_success"] is False
+        empty = compute_case_metrics(case, [])
+        assert (empty["exact_tp"], empty["tp"], empty["fp"], empty["fn"]) == (0, 0, 0, 1)
+        assert empty["matches"] == []
 
 
 class TestMetricsComputation:
