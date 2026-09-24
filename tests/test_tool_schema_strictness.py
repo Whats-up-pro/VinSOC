@@ -46,6 +46,9 @@ def test_optional_business_fields_are_required_but_nullable():
     assert network["indicator"]["type"] == "string"
     assert network["indicator_type"]["type"] == ["string", "null"]
     assert None in network["indicator_type"]["enum"]
+    assert network["indicator_type"]["enum"] == ["ipv4", None]
+    assert "domain-only lookup is unavailable" in network["indicator"]["description"].lower()
+    assert "pattern" in network["indicator"]
     assert network["time_range"]["type"] == ["object", "null"]
 
     endpoint = schemas["endpoint_investigation"]["properties"]

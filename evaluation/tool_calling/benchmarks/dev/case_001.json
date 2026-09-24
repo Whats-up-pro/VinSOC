@@ -1,16 +1,15 @@
 {
   "case_id": "case_001",
-  "category": "cti_only",
+  "category": "network_only",
   "difficulty": "basic",
-  "request": "Investigation of an internal DNS server that appears in monitoring alerts due to high query volume\nIndicator: 10.0.0.53\nIndicator type: ipv4\nContext: Alert: High DNS query volume from internal server",
+  "request": "Investigate connection and flow volume for internal DNS server 10.0.0.53.\nIndicator: 10.0.0.53\nIndicator type: ipv4\nContext: Flow alert shows unusually frequent connections from this server. Analyze connection frequency and destination IPs using flow telemetry.",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
       "call_id": "call_1",
-      "tool": "cti_enrichment",
+      "tool": "network_investigation",
       "required_arguments": {
-        "indicator": "10.0.0.53",
-        "indicator_type": "ipv4"
+        "indicator": "10.0.0.53"
       },
       "critical_arguments": [
         "indicator"
@@ -21,5 +20,5 @@
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "Private IP should show unknown/benign reputation; no further investigation needed"
+  "notes": "Connection/flow frequency only; DNS request counts are not observable by the current network tool."
 }

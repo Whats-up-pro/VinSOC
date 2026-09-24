@@ -1,0 +1,21 @@
+{
+  "version": "r1_a1_dev_v2",
+  "case_count": 24,
+  "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+  "scorer_files": [
+    "evaluation/tool_calling/arguments.py",
+    "evaluation/tool_calling/matching.py",
+    "evaluation/tool_calling/metrics.py",
+    "evaluation/tool_calling/models.py"
+  ],
+  "scorer_file_sha256": {
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f"
+  },
+  "scorer_sha256": "271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149",
+  "baseline_v1_commit": "1fd3843e462aad6b954f1abe7b8a0b1dfa87adb0",
+  "baseline_v1_case_success": "15/24",
+  "policy": "CTI for RFC 1918 only when request explicitly asks for CTI; network requires IPv4 flow indicator; extra tool calls penalized."
+}

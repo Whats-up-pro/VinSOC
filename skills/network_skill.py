@@ -7,6 +7,7 @@ The skill does not classify hosts as compromised or declare C2/exfiltration.
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from ipaddress import IPv4Address
 from typing import Any, Dict, Iterable, List, Optional
 import uuid
 
@@ -44,8 +45,14 @@ class NetworkSkill(BaseSkill):
             return False, "Missing required parameter: indicator"
 
         indicator_type = kwargs.get("indicator_type") or "ipv4"
-        if indicator_type not in {"ipv4", "domain"}:
-            return False, "indicator_type must be ipv4 or domain"
+        if indicator_type != "ipv4":
+            return False, "flow-only network lookup requires IPv4; domain lookup is unavailable"
+        if not isinstance(kwargs["indicator"], str):
+            return False, "flow-only network lookup requires a string IPv4 address"
+        try:
+            IPv4Address(kwargs["indicator"])
+        except (ValueError, TypeError):
+            return False, "flow-only network lookup requires a valid IPv4 address"
 
         direction = kwargs.get("direction", "any")
         if direction not in {"any", "src", "dst", "outbound", "inbound"}:

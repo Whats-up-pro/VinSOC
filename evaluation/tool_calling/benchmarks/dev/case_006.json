@@ -1,8 +1,8 @@
 {
   "case_id": "case_006",
-  "category": "cti_network",
-  "difficulty": "intermediate",
-  "request": "Investigation of a domain identified as used in phishing campaigns\nIndicator: secure-login-bankind1882.xyz\nIndicator type: domain\nContext: Alert: Domain flagged by email security gateway as phishing",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Check threat intelligence for phishing domain secure-login-bankind1882.xyz.\nIndicator: secure-login-bankind1882.xyz\nIndicator type: domain\nContext: Email security gateway flagged the domain; no connection or resolved IPv4 telemetry is supplied.",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
@@ -16,21 +16,10 @@
         "indicator"
       ],
       "optional": false
-    },
-    {
-      "call_id": "call_2",
-      "tool": "network_investigation",
-      "required_arguments": {
-        "indicator": "secure-login-bankind1882.xyz"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
     }
   ],
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "Phishing domain confirmed, but limited network evidence of actual access"
+  "notes": "Email detection is not evidence of network access; network flow lookup requires IPv4."
 }

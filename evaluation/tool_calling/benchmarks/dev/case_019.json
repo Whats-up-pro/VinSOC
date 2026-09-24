@@ -1,25 +1,16 @@
 {
   "case_id": "case_019",
-  "category": "cti_only",
+  "category": "no_tool",
   "difficulty": "basic",
-  "request": "Investigation cannot be completed due to lack of telemetry data\nIndicator: 10.0.0.99\nIndicator type: ipv4\nContext: Alert: Connection from unknown internal IP, but asset not found in CMDB",
+  "request": "Explain the evidence gap for an unverified internal IP without running an investigation.\nIndicator: 10.0.0.99\nIndicator type: ipv4\nContext: Asset is absent from CMDB, and no endpoint or network telemetry is available. This internal address cannot identify a public CTI source.\nDo not call any tool; state what evidence is missing and what would be needed before investigation.",
   "reference_time": "2026-09-22T00:00:00Z",
-  "expected_calls": [
-    {
-      "call_id": "call_1",
-      "tool": "cti_enrichment",
-      "required_arguments": {
-        "indicator": "10.0.0.99",
-        "indicator_type": "ipv4"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
-    }
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
   ],
-  "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "This case tests graceful handling of insufficient data - agent must correctly identify evidence gaps"
+  "notes": "Evidence-gap reasoning only; no available source can support a useful investigation call."
 }

@@ -1,8 +1,8 @@
 {
   "case_id": "case_017",
-  "category": "cti_network_endpoint",
-  "difficulty": "advanced",
-  "request": "Compromised third-party library used to deliver malware\nIndicator: libcdn.legitframework.io\nIndicator type: domain\nContext: Alert: Suspicious domain flagged in application traffic analysis\nEndpoint pivot: DEV-WORKSTATION-08",
+  "category": "cti_endpoint",
+  "difficulty": "intermediate",
+  "request": "Investigate suspicious library domain and the developer workstation.\nIndicator: libcdn.legitframework.io\nIndicator type: domain\nContext: Application traffic analysis flagged the domain, but no resolved IPv4 flow indicator is supplied.\nEndpoint pivot: DEV-WORKSTATION-08",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
@@ -19,17 +19,6 @@
     },
     {
       "call_id": "call_2",
-      "tool": "network_investigation",
-      "required_arguments": {
-        "indicator": "libcdn.legitframework.io"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
-    },
-    {
-      "call_id": "call_3",
       "tool": "endpoint_investigation",
       "required_arguments": {
         "host": "DEV-WORKSTATION-08"
@@ -43,5 +32,5 @@
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "Supply chain indicator, multiple stages suggest active exploitation"
+  "notes": "CTI domain and endpoint investigation are supported; network flow lookup requires IPv4."
 }
