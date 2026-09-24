@@ -54,6 +54,8 @@ class DecisionRunner:
         provider: Optional[LLMProvider] = None,
     ):
         self.config = config or A1Config()
+        if type(self.config.max_tokens) is not int or self.config.max_tokens <= 0:
+            raise ValueError("max_tokens must be a positive integer")
         self.benchmarks_dir = benchmarks_dir or Path("evaluation/tool_calling/benchmarks")
         self._input_records: List[Dict[str, Any]] = []
         self._run_cases: List[ToolCallCase] = []
@@ -61,6 +63,10 @@ class DecisionRunner:
             self.provider = provider
         else:
             provider_kwargs: Dict[str, Any] = {}
+            if self.config.provider == "openai":
+                provider_kwargs["request_overrides"] = {
+                    "max_completion_tokens": self.config.max_tokens,
+                }
             if self.config.provider == "routed":
                 # Evaluation must stay on the pinned provider/model.
                 provider_kwargs["mode"] = "evaluation"
@@ -259,6 +265,7 @@ def run_a1_benchmark(
             "provider": runner.config.provider,
             "model": runner.config.model,
             "temperature": runner.config.temperature,
+            "max_completion_tokens": runner.config.max_tokens,
         },
         "aggregate": aggregate.to_dict(),
         "error_summary": error_summary,
