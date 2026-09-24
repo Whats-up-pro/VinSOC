@@ -1,0 +1,221 @@
+name: R1 A1 dev baseline (one run)
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/r1-a1-dev-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  dev:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      VINSOC_EVAL_MODEL: gpt-4.1-mini-2025-04-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install evaluation dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Evaluate dev with preflight and per-case budget gates
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from collections import defaultdict
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          from agent.provider import OpenAIProvider
+          from agent.tools import get_tool_schemas
+          from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
+          from evaluation.tool_calling.metrics import aggregate_case_results, generate_error_summary
+          from evaluation.tool_calling.provenance import build_a1_provenance
+
+          MODEL = 'gpt-4.1-mini-2025-04-14'
+          INPUT_RATE = 0.40
+          OUTPUT_RATE = 1.60
+          CAP = 1000
+          LIMIT = 1.00
+          # Padding for Chat Completions message/tool framing beyond serialized request.
+          FRAMING_TOKENS = 4096
+          OUT = Path(os.environ['RUNNER_TEMP']) / 'r1-a1-dev-once' / 'report.json'
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+
+          def cost(input_tokens, output_tokens):
+              return (input_tokens * INPUT_RATE + output_tokens * OUTPUT_RATE) / 1_000_000
+
+          def save(report):
+              temporary = OUT.with_suffix('.tmp')
+              temporary.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding='utf-8')
+              temporary.replace(OUT)
+
+          def breakdown(results, cases):
+              by_id = {case.case_id: case for case in cases}
+              groups = {'category': defaultdict(list), 'difficulty': defaultdict(list),
+                        'no_tool': defaultdict(list)}
+              for result in results:
+                  case = by_id[result.case_id]
+                  groups['category'][case.category.value].append(result)
+                  groups['difficulty'][case.difficulty.value].append(result)
+                  groups['no_tool']['yes' if not case.expected_calls else 'no'].append(result)
+              return {
+                  dimension: {
+                      group: {
+                          'case_ids': [r.case_id for r in subset],
+                          'aggregate': aggregate_case_results('r1_a1_dev_' + group, subset).to_dict(),
+                      }
+                      for group, subset in sorted(values.items())
+                  }
+                  for dimension, values in groups.items()
+              }
+
+          assert os.environ.get('OPENAI_API_KEY'), 'OPENAI_API_KEY unavailable; no API calls made'
+          assert os.environ.get('VINSOC_EVAL_MODEL') == MODEL, 'pinned model unavailable'
+          assert os.environ.get('GITHUB_REF') == 'refs/heads/master', 'wrong branch'
+          sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          assert sha == os.environ['GITHUB_SHA'], 'commit mismatch'
+          assert not subprocess.check_output(['git', 'status', '--porcelain']).strip(), 'dirty checkout'
+
+          runner = DecisionRunner(config=A1Config(
+              provider='openai', model=MODEL, temperature=0, max_tokens=CAP))
+          assert isinstance(runner.provider, OpenAIProvider)
+          assert runner.provider.provider_name == 'openai'
+          assert runner.provider.request_overrides.get('max_completion_tokens') == CAP
+          runner.provider.client = runner.provider.client.with_options(max_retries=0)
+          cases = runner.load_cases('dev')
+          case_ids = [case.case_id for case in cases]
+          assert len(cases) == len(set(case_ids)) == 24, 'expected 24 unique dev cases'
+          runner._run_cases = cases
+
+          # Build the exact prompt, tool schema and request fields that DecisionRunner
+          # and OpenAIProvider will send. UTF-8 request bytes plus a 4096-token
+          # allowance bound the input conservatively for this text-only benchmark.
+          bounds = []
+          for case in cases:
+              system_prompt, user_prompt = runner.build_prompt(case, runner.config.system_prompt)
+              request = {
+                  'model': MODEL,
+                  'messages': [
+                      {'role': 'system', 'content': system_prompt},
+                      {'role': 'user', 'content': user_prompt},
+                  ],
+                  'tools': get_tool_schemas(),
+                  'temperature': 0,
+                  'max_completion_tokens': CAP,
+              }
+              request_bytes = len(json.dumps(request, ensure_ascii=True).encode('utf-8'))
+              input_bound = request_bytes + FRAMING_TOKENS
+              assert input_bound + CAP <= 1_047_576, 'model context exceeded'
+              bounds.append({'case_id': case.case_id, 'request_utf8_bytes': request_bytes,
+                             'input_token_bound': input_bound,
+                             'max_cost_usd': cost(input_bound, CAP)})
+
+          worst_case = sum(entry['max_cost_usd'] for entry in bounds)
+          assert worst_case < LIMIT, '24-case worst-case spend exceeds $1; no API calls made'
+          print(f'Preflight: {len(cases)} unique dev cases; '
+                f'input_bound_tokens={sum(b["input_token_bound"] for b in bounds)}; '
+                f'output_bound_tokens={len(cases) * CAP}; '
+                f'cost_ceiling_usd={worst_case:.6f} < {LIMIT:.2f}; retries=0')
+
+          results = []
+          actual_spend = 0.0
+          report = {
+              'mode': 'decision', 'split': 'dev', 'run_status': 'preflight_complete',
+              'case_count': 0, 'case_ids': [], 'expected_case_ids': case_ids,
+              'config': {'provider': 'openai', 'model': MODEL, 'temperature': 0,
+                         'max_completion_tokens': runner.applied_max_completion_tokens,
+                         'max_retries': 0},
+              'preflight': {'method': 'serialized actual request UTF-8 bytes + 4096 framing tokens per case; '
+                          'full output cap charged for every case; zero retries',
+                            'bounds': bounds, 'cost_ceiling_usd': worst_case,
+                            'budget_limit_usd': LIMIT},
+              'pricing': {'input_usd_per_million': INPUT_RATE,
+                          'output_usd_per_million': OUTPUT_RATE,
+                          'source': 'https://developers.openai.com/api/docs/models/gpt-4.1-mini',
+                          'checked_utc': datetime.now(timezone.utc).isoformat(),
+                          'calculated_cost_usd': 0.0, 'usage_complete': True},
+              'evaluator_commit_sha': sha,
+          }
+          save(report)
+
+          for position, (case, bound) in enumerate(zip(cases, bounds), start=1):
+              if actual_spend + bound['max_cost_usd'] >= LIMIT:
+                  report['run_status'] = 'stopped_before_budget_limit'
+                  save(report)
+                  raise SystemExit('Budget gate stopped before next request; partial artifact saved')
+
+              result = runner.run_decision(case)
+              results.append(result)
+              telemetry = runner.provider.get_run_metadata()
+              calls = telemetry.get('calls', [])
+              record = calls[-1] if len(calls) == position else {}
+              valid = (record.get('status') == 'succeeded'
+                       and record.get('actual_provider') == 'openai'
+                       and record.get('actual_model') == MODEL
+                       and record.get('fallback_triggered') is False
+                       and type(record.get('input_tokens')) is int
+                       and record['input_tokens'] > 0
+                       and type(record.get('output_tokens')) is int
+                       and 0 <= record['output_tokens'] <= CAP
+                       and 'PROVIDER_ERROR' not in result.errors
+                       and 'EXECUTION_ERROR' not in result.errors)
+              if valid:
+                  input_tokens = record['input_tokens']
+                  valid = input_tokens <= bound['input_token_bound']
+              if valid:
+                  actual_spend += cost(record['input_tokens'], record['output_tokens'])
+
+              report.update({
+                  'run_status': 'in_progress' if valid else 'stopped_telemetry_or_provider_error',
+                  'case_count': len(results), 'case_ids': [r.case_id for r in results],
+                  'provider': runner.provider.get_name(),
+                  'provider_metadata': telemetry,
+                  'aggregate': aggregate_case_results('r1_a1_dev_once', results).to_dict(),
+                  'error_summary': generate_error_summary(results),
+                  'case_results': [r.to_dict() for r in results],
+                  'case_metadata': {c.case_id: {'category': c.category.value,
+                                               'difficulty': c.difficulty.value,
+                                               'no_tool': not bool(c.expected_calls)}
+                                    for c in cases},
+                  'breakdown': breakdown(results, cases),
+                  'provenance': build_a1_provenance(runner, 'dev', results),
+              })
+              report['pricing']['calculated_cost_usd'] = actual_spend if valid else None
+              report['pricing']['known_cost_usd'] = actual_spend
+              report['pricing']['usage_complete'] = valid
+              save(report)
+              print(f'Case {position}/24: {case.case_id}; API={record.get("status", "missing")}; '
+                    f'actual_model={record.get("actual_model") or "unavailable"}; '
+                    f'usage={record.get("input_tokens", "unknown")}/'
+                    f'{record.get("output_tokens", "unknown")}; '
+                    f'known_cost_usd={actual_spend:.6f}; '
+                    f'exact={result.exact_call_match}')
+              if not valid or actual_spend >= LIMIT:
+                  raise SystemExit('Telemetry, model, provider or budget gate failed; partial artifact saved')
+
+          report['run_status'] = 'completed'
+          report['pricing']['calculated_cost_usd'] = actual_spend
+          report['pricing']['usage_complete'] = True
+          save(report)
+          assert len(calls) == len(results) == len(set(report['case_ids'])) == 24
+          assert report['provenance']['official_eligible'], report['provenance']['ineligible_reasons']
+          print(f'Completed 24 distinct dev cases; calculated_cost_usd={actual_spend:.6f}; '
+                'official_eligible=true')
+          PY
+      - name: Preserve full or partial report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r1-a1-dev-once-report
+          path: ${{ runner.temp }}/r1-a1-dev-once/report.json
+          if-no-files-found: warn
+          retention-days: 30
