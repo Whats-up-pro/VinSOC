@@ -20,17 +20,18 @@ The first independent review found two critical score defects and two important 
 
 | Track | Dev baseline | Error analysis | Controlled improvements | Frozen holdout |
 |---|---|---|---|---|
-| R1 / A1 | Blocked: `VINSOC_EVAL_MODEL` and provider credential unset | Pending real dev output | Pending error analysis | Unopened |
-| R2 | Blocked: verified official DuckDB snapshot/manifest and provider configuration absent | Pending real dev output | Pending error analysis | Unopened |
+| R1 / A1 | OpenAI selected; blocked: exact `VINSOC_EVAL_MODEL` and `OPENAI_API_KEY` unset | Pending real dev output | Pending error analysis | Unopened |
+| R2 | OpenAI selected; blocked: verified official DuckDB snapshot/manifest, exact model ID, and `OPENAI_API_KEY` absent | Pending real dev output | Pending error analysis | Unopened |
 
 The historical A2 MockProvider regression artifact is an integration check and is not an official A1 model score. No percentage, improvement, or before/after comparison is inferred from test fixtures.
 
 ## External prerequisites and coverage gaps
 
-1. ThreatFox full CSV export currently requires an Auth-Key. This runtime has no `THREATFOX_AUTH_KEY`; no official `dataset_manifest.json`, `vinsoc_public_v1.duckdb`, or `snapshot_manifest.json` has been created. Existing ThreatFox samples have insufficient source-file provenance.
-2. Network access/runtime also prevented inspection of the chosen OTRF ZIP member. The builder requires an exact JSONL member; its identity must be checked against actual archive bytes. The CTU-13 source file also needs retrieval, exact SHA-256, and a validated source-format mapping before official use.
+1. A ThreatFox Auth-Key has been supplied privately, but direct HTTPS access to `threatfox.abuse.ch` times out in this runtime. The key is not stored in the repository or in a manifest. No official `dataset_manifest.json`, `vinsoc_public_v1.duckdb`, or `snapshot_manifest.json` has been created. Existing ThreatFox samples have insufficient source-file provenance.
+2. Direct HTTPS access to `mcfp.felk.cvut.cz` and `github.com` also timed out. The chosen OTRF ZIP member must be inspected against downloaded archive bytes before ingestion. The CTU-13 source file likewise needs retrieval, exact SHA-256, and a validated source-format mapping before official use.
 3. The current R2 benchmark references one snapshot. Multiple dev/frozen source-session snapshots, as preferred by the master evaluation prompt, are not yet implemented. A one-snapshot execution score can over-credit semantically wrong SQL that coincidentally returns the same rows.
 4. Current frozen sets remain unused. Challenge/OOD sets have no cases and are excluded from primary metrics.
+5. The evaluation provider is OpenAI. The runtime has no `OPENAI_API_KEY` or project-pinned `VINSOC_EVAL_MODEL`, so no paid model call or official R1/R2 development run was attempted.
 
 ## Reproducibility identifiers
 
