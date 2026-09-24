@@ -3,6 +3,17 @@ from datetime import datetime, timedelta, timezone
 from agent.orchestrator import InvestigationOrchestrator
 from agent.provider import MockProvider
 from skills.network_skill import NetworkSkill
+
+
+def test_flow_only_network_tool_rejects_domain_even_if_type_omitted():
+    skill = NetworkSkill()
+    for arguments in ({'indicator': 'example.com', 'indicator_type': 'domain'},
+                      {'indicator': 'example.com'}, {'indicator': '999.0.0.1'},
+                      {'indicator': 123}):
+        valid, error = skill.validate_input(**arguments)
+        assert not valid and error
+    valid, error = skill.validate_input(indicator='10.0.0.25', indicator_type='ipv4')
+    assert valid and error is None
 from skills.cti_skill import CTISkill
 
 

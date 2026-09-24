@@ -1,24 +1,12 @@
 {
   "case_id": "case_003",
-  "category": "cti_endpoint",
-  "difficulty": "intermediate",
-  "request": "Investigation of an internal workstation flagged by DLP policy for file access\nIndicator: 192.168.1.100\nIndicator type: ipv4\nContext: DLP Alert: User workstation accessing sensitive document\nEndpoint pivot: WS100",
+  "category": "endpoint_only",
+  "difficulty": "basic",
+  "request": "Investigate local file access on internal workstation WS100 after a DLP alert.\nIndicator: 192.168.1.100\nIndicator type: ipv4\nContext: DLP flagged access to a sensitive document; no network activity is indicated.\nEndpoint pivot: WS100",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
       "call_id": "call_1",
-      "tool": "cti_enrichment",
-      "required_arguments": {
-        "indicator": "192.168.1.100",
-        "indicator_type": "ipv4"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
-    },
-    {
-      "call_id": "call_2",
       "tool": "endpoint_investigation",
       "required_arguments": {
         "host": "WS100"
@@ -32,5 +20,5 @@
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "Legitimate office productivity software usage"
+  "notes": "Endpoint evidence is relevant; network activity is not indicated. An extra network call must be penalized."
 }

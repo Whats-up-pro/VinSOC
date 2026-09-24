@@ -1,24 +1,12 @@
 {
   "case_id": "case_018",
-  "category": "cti_network_endpoint",
-  "difficulty": "advanced",
+  "category": "network_endpoint",
+  "difficulty": "intermediate",
   "request": "Internal actor exfiltrating data and communicating with external infrastructure\nIndicator: 10.0.0.200\nIndicator type: ipv4\nContext: Alert: HR flagged employee under investigation for potential data theft\nEndpoint pivot: WS200",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
       "call_id": "call_1",
-      "tool": "cti_enrichment",
-      "required_arguments": {
-        "indicator": "10.0.0.200",
-        "indicator_type": "ipv4"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
-    },
-    {
-      "call_id": "call_2",
       "tool": "network_investigation",
       "required_arguments": {
         "indicator": "10.0.0.200"
@@ -29,7 +17,7 @@
       "optional": false
     },
     {
-      "call_id": "call_3",
+      "call_id": "call_2",
       "tool": "endpoint_investigation",
       "required_arguments": {
         "host": "WS200"
@@ -43,5 +31,5 @@
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "Internal actor with large data transfer, may not show in external CTI"
+  "notes": "Insider exfiltration needs network and endpoint evidence; external infrastructure IOC is absent for CTI."
 }

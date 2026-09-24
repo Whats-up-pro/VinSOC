@@ -85,7 +85,7 @@ Note: Do not call this tool for endpoint hostname or process context.""",
             "function": {
                 "name": "network_investigation",
                 "strict": True,
-                "description": """Investigate network telemetry for an indicator.
+                "description": """Investigate flow telemetry for an IPv4 address.
 
 Use this tool to analyze:
 - Connection frequency and patterns
@@ -96,7 +96,9 @@ Use this tool to analyze:
 - Transfer metrics (large data transfers)
 - Service fanout (admin service reachability)
 
-This tool analyzes network logs and IDS/firewall telemetry.
+This tool analyzes IP-based network logs and IDS/firewall telemetry.
+Domain-only lookup is unavailable with current flow telemetry; obtain a
+concrete IPv4 address before calling this tool.
 When a frozen DuckDB snapshot is configured, the tool uses its internal,
 read-only domain query layer. Do not send SQL in this tool call.""",
                 "parameters": {
@@ -104,12 +106,13 @@ read-only domain query layer. Do not send SQL in this tool call.""",
                     "properties": {
                         "indicator": {
                             "type": "string",
-                            "description": "The IP address or domain to investigate"
+                            "description": "IPv4 address to investigate; domain-only lookup is unavailable",
+                            "pattern": "^[0-9]{1,3}(\\.[0-9]{1,3}){3}$"
                         },
                         "indicator_type": {
                             "type": ["string", "null"],
-                            "enum": ["ipv4", "domain", None],
-                            "description": "The type of indicator. Auto-detected if not provided."
+                            "enum": ["ipv4", None],
+                            "description": "IPv4 or null for automatic IPv4 validation; domains are unsupported."
                         },
                         "time_range": {
                             "type": ["object", "null"],

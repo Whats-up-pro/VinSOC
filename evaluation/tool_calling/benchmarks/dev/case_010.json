@@ -1,24 +1,12 @@
 {
   "case_id": "case_010",
-  "category": "cti_network_endpoint",
-  "difficulty": "advanced",
+  "category": "network_endpoint",
+  "difficulty": "intermediate",
   "request": "Investigation of lateral movement pattern from compromised host\nIndicator: 192.168.1.50\nIndicator type: ipv4\nContext: Alert: Suspicious lateral movement detected from workstation to file server\nEndpoint pivot: WS050",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
       "call_id": "call_1",
-      "tool": "cti_enrichment",
-      "required_arguments": {
-        "indicator": "192.168.1.50",
-        "indicator_type": "ipv4"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
-    },
-    {
-      "call_id": "call_2",
       "tool": "network_investigation",
       "required_arguments": {
         "indicator": "192.168.1.50"
@@ -29,7 +17,7 @@
       "optional": false
     },
     {
-      "call_id": "call_3",
+      "call_id": "call_2",
       "tool": "endpoint_investigation",
       "required_arguments": {
         "host": "WS050"
@@ -43,5 +31,5 @@
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "WMI lateral movement pattern, SMB traffic to multiple internal hosts"
+  "notes": "Internal lateral movement calls for network and endpoint evidence; no CTI objective for the private IP."
 }

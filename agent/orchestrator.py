@@ -421,8 +421,8 @@ class InvestigationOrchestrator:
             "arguments": {"indicator": indicator, "indicator_type": indicator_type}
         })
 
-        # Step 2: Network Investigation (for IP/domain)
-        if indicator_type in {"ipv4", "domain"}:
+        # Step 2: Flow lookup supports IPv4 only (domain lookup is deferred).
+        if indicator_type == "ipv4":
             self._execute_tool_call({
                 "name": "network_investigation",
                 "arguments": {"indicator": indicator, "indicator_type": indicator_type}

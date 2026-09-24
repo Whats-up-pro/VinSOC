@@ -1,8 +1,8 @@
 {
   "case_id": "case_004",
-  "category": "cti_network",
-  "difficulty": "intermediate",
-  "request": "Investigation of a domain belonging to a trusted business partner\nIndicator: partner.example.com\nIndicator type: domain\nContext: Alert: Communication with external partner domain",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Check threat intelligence reputation for partner.example.com, a domain reported in a partner-communication alert.\nIndicator: partner.example.com\nIndicator type: domain\nContext: Only the domain is supplied; flow telemetry does not resolve domain-only lookups.",
   "reference_time": "2026-09-22T00:00:00Z",
   "expected_calls": [
     {
@@ -16,21 +16,10 @@
         "indicator"
       ],
       "optional": false
-    },
-    {
-      "call_id": "call_2",
-      "tool": "network_investigation",
-      "required_arguments": {
-        "indicator": "partner.example.com"
-      },
-      "critical_arguments": [
-        "indicator"
-      ],
-      "optional": false
     }
   ],
   "forbidden_tools": [],
   "ordering_constraints": [],
   "acceptable_trajectories": [],
-  "notes": "Known partner domain with normal HTTPS traffic pattern"
+  "notes": "Domain CTI only; no resolvable IPv4 address is supplied for flow investigation."
 }
