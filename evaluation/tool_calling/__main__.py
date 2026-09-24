@@ -106,7 +106,9 @@ def run_benchmark(args):
                     "provider": runner.config.provider,
                     "model": runner.config.model,
                     "temperature": runner.config.temperature,
-                    "max_completion_tokens": runner.config.max_tokens,
+                    **({"max_completion_tokens": runner.applied_max_completion_tokens}
+                       if getattr(runner, "applied_max_completion_tokens", None) is not None
+                       else {}),
                 },
                 "provenance": build_a1_provenance(runner, split, results),
             }

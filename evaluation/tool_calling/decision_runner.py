@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from agent.provider import LLMProvider, ProviderError, create_provider
+from agent.provider import LLMProvider, OpenAIProvider, ProviderError, create_provider
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.models import (
     CaseResult,
@@ -75,6 +75,13 @@ class DecisionRunner:
                 model=self.config.model,
                 **provider_kwargs,
             )
+        self.applied_max_completion_tokens = (
+            self.provider.request_overrides.get("max_completion_tokens")
+            if self.config.provider == "openai"
+            and isinstance(self.provider, OpenAIProvider)
+            and self.provider.provider_name == "openai"
+            else None
+        )
 
     def load_case(self, case_id: str, split: str = "dev") -> ToolCallCase:
         """Load a benchmark case."""
@@ -265,7 +272,8 @@ def run_a1_benchmark(
             "provider": runner.config.provider,
             "model": runner.config.model,
             "temperature": runner.config.temperature,
-            "max_completion_tokens": runner.config.max_tokens,
+            **({"max_completion_tokens": runner.applied_max_completion_tokens}
+               if runner.applied_max_completion_tokens is not None else {}),
         },
         "aggregate": aggregate.to_dict(),
         "error_summary": error_summary,
