@@ -1,11 +1,7 @@
 name: R1 A1 dev baseline (one run)
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - .github/workflows/r1-a1-dev-once.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
