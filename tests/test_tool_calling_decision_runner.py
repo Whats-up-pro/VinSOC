@@ -156,3 +156,48 @@ def test_a1_provider_error_on_no_tool_case_cannot_score_as_correct():
     assert aggregate.trajectory_success_rate == 0.0
     assert aggregate.provider_error_rate == 1.0
     assert aggregate.to_dict()["provider_error_rate"] == 1.0
+
+
+def test_a1_forbidden_tool_updates_case_error_and_aggregate_rate():
+    case = _case()
+    case.forbidden_tools = ["endpoint_investigation"]
+    violation_response = LLMResponse(
+        content="",
+        tool_calls=[
+            {
+                "id": "call_1",
+                "name": "cti_enrichment",
+                "arguments": {"indicator": "1.2.3.4"},
+            },
+            {
+                "id": "call_2",
+                "name": "endpoint_investigation",
+                "arguments": {"host": "WS001"},
+            },
+        ],
+        raw={},
+        metadata={},
+    )
+    clean_response = LLMResponse(
+        content="",
+        tool_calls=[
+            {
+                "id": "call_3",
+                "name": "cti_enrichment",
+                "arguments": {"indicator": "1.2.3.4"},
+            }
+        ],
+        raw={},
+        metadata={},
+    )
+    violation = DecisionRunner(provider=FakeProvider(response=violation_response)).run_decision(case)
+    clean = DecisionRunner(provider=FakeProvider(response=clean_response)).run_decision(case)
+    aggregate = aggregate_case_results("forbidden-rate", [violation, clean])
+
+    assert violation.forbidden_tool_violations == ["endpoint_investigation"]
+    assert violation.errors == ["FORBIDDEN_TOOL"]
+    assert violation.trajectory_success is False
+    assert clean.forbidden_tool_violations == []
+    assert clean.errors == []
+    assert aggregate.forbidden_tool_rate == 0.5
+    assert aggregate.to_dict()["forbidden_tool_rate"] == 0.5
