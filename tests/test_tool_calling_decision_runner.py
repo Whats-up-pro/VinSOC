@@ -1,5 +1,8 @@
 """A1 decision-only runner regression tests."""
 
+import json
+
+import evaluation.tool_calling.decision_runner as decision_module
 from agent.provider import LLMResponse, ProviderError, ProviderFailureKind
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
@@ -201,3 +204,70 @@ def test_a1_forbidden_tool_updates_case_error_and_aggregate_rate():
     assert clean.errors == []
     assert aggregate.forbidden_tool_rate == 0.5
     assert aggregate.to_dict()["forbidden_tool_rate"] == 0.5
+
+
+def test_two_forbidden_calls_in_one_case_count_as_one_violating_case():
+    case = _case()
+    case.forbidden_tools = ["endpoint_investigation", "network_investigation"]
+    response = LLMResponse(
+        content="",
+        tool_calls=[
+            {"id": "call_1", "name": "endpoint_investigation", "arguments": {"host": "WS001"}},
+            {"id": "call_2", "name": "network_investigation", "arguments": {"src_ip": "1.2.3.4"}},
+        ],
+        raw={},
+        metadata={},
+    )
+    result = DecisionRunner(provider=FakeProvider(response=response)).run_decision(case)
+    aggregate = aggregate_case_results("two-calls-one-case", [result])
+
+    assert result.forbidden_tool_violations == [
+        "endpoint_investigation", "network_investigation"
+    ]
+    assert result.errors.count("FORBIDDEN_TOOL") == 1
+    assert aggregate.case_count == 1
+    assert aggregate.forbidden_tool_rate == 1.0
+
+
+def test_clean_case_set_has_zero_forbidden_tool_rate():
+    response = LLMResponse(content="", tool_calls=[], raw={}, metadata={})
+    cases = [_case(), _case()]
+    for case in cases:
+        case.forbidden_tools = ["endpoint_investigation"]
+    cases[1].case_id = "a1_test_002"
+    results = [
+        DecisionRunner(provider=FakeProvider(response=response)).run_decision(case)
+        for case in cases
+    ]
+
+    assert all(result.forbidden_tool_violations == [] for result in results)
+    assert aggregate_case_results("clean", results).forbidden_tool_rate == 0.0
+
+
+def test_forbidden_tool_name_is_present_in_case_and_json_report(monkeypatch, tmp_path):
+    case = _case()
+    case.forbidden_tools = ["endpoint_investigation"]
+    response = LLMResponse(
+        content="",
+        tool_calls=[
+            {"id": "call_1", "name": "endpoint_investigation", "arguments": {"host": "WS001"}}
+        ],
+        raw={},
+        metadata={},
+    )
+    monkeypatch.setattr(
+        decision_module, "create_provider", lambda **kwargs: FakeProvider(response=response)
+    )
+    monkeypatch.setattr(DecisionRunner, "load_cases", lambda self, split: [case])
+    path = tmp_path / "report.json"
+
+    result = DecisionRunner(provider=FakeProvider(response=response)).run_decision(case)
+    assert result.to_dict()["forbidden_tool_violations"] == ["endpoint_investigation"]
+    returned = decision_module.run_a1_benchmark(split="dev", output_path=path)
+    written = json.loads(path.read_text(encoding="utf-8"))
+    for report in (returned, written):
+        assert report["case_results"][0]["forbidden_tool_violations"] == [
+            "endpoint_investigation"
+        ]
+        assert report["aggregate"]["forbidden_tool_rate"] == 1.0
+    assert written == returned
