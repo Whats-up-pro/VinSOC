@@ -448,8 +448,8 @@ def test_a1_helper_and_cli_share_captured_input_provenance(monkeypatch, tmp_path
 
     assert helper_report == helper
     assert cli_report["provenance"] == helper["provenance"]
-    assert helper_report["config"]["max_completion_tokens"] == 1000
-    assert cli_report["config"]["max_completion_tokens"] == 1000
+    assert "max_completion_tokens" not in helper_report["config"]  # FakeProvider sends no cap.
+    assert "max_completion_tokens" not in cli_report["config"]
     provenance = helper["provenance"]
     assert provenance["git"]["commit_sha"]
     assert isinstance(provenance["git"]["working_tree_clean"], bool)
@@ -463,6 +463,52 @@ def test_a1_helper_and_cli_share_captured_input_provenance(monkeypatch, tmp_path
     assert provenance["official_eligible"] is False  # FakeProvider has no actual model telemetry.
     assert helper["config"] == cli_report["config"]
     assert helper["provider_metadata"] == cli_report["provider_metadata"]
+
+
+def test_a1_helper_and_cli_report_cap_used_by_openai_request(monkeypatch, tmp_path):
+    requests = []
+
+    def create_completion(**kwargs):
+        requests.append(kwargs)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content="", tool_calls=[]))],
+            model="gpt-4.1-2025-04-14",
+            usage=SimpleNamespace(prompt_tokens=20, completion_tokens=0, total_tokens=20),
+            model_dump=lambda: {},
+        )
+
+    client = SimpleNamespace(chat=SimpleNamespace(
+        completions=SimpleNamespace(create=create_completion)
+    ))
+    monkeypatch.setitem(sys.modules, "openai", SimpleNamespace(OpenAI=lambda **kwargs: client))
+    benchmark_dir = tmp_path / "benchmarks"
+    split_dir = benchmark_dir / "dev"
+    split_dir.mkdir(parents=True)
+    (split_dir / "case.json").write_text(json.dumps(_case().to_dict()), encoding="utf-8")
+    original_runner = DecisionRunner
+
+    def make_runner(config=None):
+        return original_runner(config=config, benchmarks_dir=benchmark_dir)
+
+    monkeypatch.setattr(decision_module, "DecisionRunner", make_runner)
+    monkeypatch.setattr(cli_module, "DecisionRunner", make_runner)
+    monkeypatch.chdir(tmp_path)
+    helper_path = tmp_path / "helper.json"
+    helper = decision_module.run_a1_benchmark(
+        split="dev", output_path=helper_path,
+        config=A1Config(provider="openai", model="gpt-4.1-2025-04-14"),
+    )
+    cli_module.run_benchmark(SimpleNamespace(
+        mode="decision", split="dev", cases=None,
+        provider="openai", model="gpt-4.1-2025-04-14", temperature=0.0,
+    ))
+    cli_path = next((tmp_path / "results" / "tool_calling").glob("*/metrics.json"))
+
+    assert len(requests) == 2
+    assert [request["max_completion_tokens"] for request in requests] == [1000, 1000]
+    assert helper["config"]["max_completion_tokens"] == 1000
+    assert json.loads(helper_path.read_text(encoding="utf-8"))["config"]["max_completion_tokens"] == 1000
+    assert json.loads(cli_path.read_text(encoding="utf-8"))["config"]["max_completion_tokens"] == 1000
 
 
 def test_a1_provenance_hashes_captured_prompt_schema_and_logical_split(monkeypatch, tmp_path):
