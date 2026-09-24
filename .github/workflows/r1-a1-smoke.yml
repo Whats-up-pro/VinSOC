@@ -1,0 +1,104 @@
+name: R1 A1 single dev smoke
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/r1-a1-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      VINSOC_EVAL_MODEL: gpt-4.1-mini-2025-04-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install evaluation dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run exactly one capped dev case
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          from agent.provider import OpenAIProvider
+          from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
+          from evaluation.tool_calling.metrics import aggregate_case_results
+          from evaluation.tool_calling.provenance import build_a1_provenance
+
+          output = Path('r1-a1-smoke-artifact/report.json')
+          output.parent.mkdir(exist_ok=True)
+          model = 'gpt-4.1-mini-2025-04-14'
+          key = os.environ.get('OPENAI_API_KEY')
+          assert key, 'OPENAI_API_KEY is absent'
+          assert os.environ.get('VINSOC_EVAL_MODEL') == model
+          assert os.environ.get('GITHUB_REF') == 'refs/heads/master'
+          assert not subprocess.check_output(['git', 'status', '--porcelain']).strip()
+
+          config = A1Config(provider='openai', model=model, temperature=0, max_tokens=1000)
+          runner = DecisionRunner(config=config)
+          assert isinstance(runner.provider, OpenAIProvider)
+          assert runner.provider.provider_name == 'openai'
+          assert runner.provider.request_overrides.get('max_completion_tokens') == 1000
+          # A single API attempt; SDK must not retry a failed request behind the runner.
+          runner.provider.client = runner.provider.client.with_options(max_retries=0)
+          case = runner.load_case('case_001', 'dev')
+          assert len(runner.load_cases('dev')) == 24
+          runner._run_cases = [case]
+
+          # Official model page: $0.40/M input, $1.60/M output, context 1,047,576.
+          # Even the full context plus 1000 output tokens is < $1 for ONE attempt.
+          upper_cost = (1_047_576 * 0.40 + 1000 * 1.60) / 1_000_000
+          assert upper_cost < 1.00
+          print(f'Preflight: one dev case, zero retries, 1000 output tokens; conservative model-context ceiling ${upper_cost:.6f} < $1')
+
+          result = runner.run_decision(case)
+          telemetry = runner.provider.get_run_metadata()
+          calls = telemetry.get('calls', [])
+          record = calls[0] if len(calls) == 1 else {}
+          usage_known = (record.get('status') == 'succeeded' and record.get('actual_model') == model
+                         and record.get('input_tokens', 0) > 0)
+          cost = ((record['input_tokens'] * 0.40 + record['output_tokens'] * 1.60) / 1_000_000
+                  if usage_known else None)
+          report = {
+              'mode': 'decision', 'split': 'dev', 'purpose': 'single-case smoke; not official full-split baseline',
+              'case_count': 1, 'case_ids': [case.case_id],
+              'config': {'provider': 'openai', 'model': model, 'temperature': 0,
+                         'max_completion_tokens': runner.applied_max_completion_tokens, 'max_retries': 0},
+              'pricing': {'input_usd_per_million': 0.40, 'output_usd_per_million': 1.60,
+                          'source': 'https://developers.openai.com/api/docs/models/gpt-4.1-mini',
+                          'checked_utc': datetime.now(timezone.utc).isoformat(),
+                          'upper_bound_usd': upper_cost, 'calculated_cost_usd': cost},
+              'api_outcome': record.get('status', 'no_provider_record'),
+              'provider_metadata': telemetry,
+              'aggregate': aggregate_case_results('r1_a1_single_smoke', [result]).to_dict(),
+              'case_results': [result.to_dict()],
+              'provenance': build_a1_provenance(runner, 'dev', [result]),
+          }
+          output.write_text(json.dumps(report, indent=2), encoding='utf-8')
+          print(f"API outcome: {report['api_outcome']}; actual model: {record.get('actual_model') or 'unavailable'}")
+          print(f"Usage: input={record.get('input_tokens', 'unavailable')}, output={record.get('output_tokens', 'unavailable')}; calculated cost: {cost if cost is not None else 'null'}")
+          print(f"Scoring: exact_call_match={result.exact_call_match}, trajectory_success={result.trajectory_success}; official_eligible={report['provenance']['official_eligible']}")
+          if not usage_known or result.errors or runner.applied_max_completion_tokens != 1000:
+              raise SystemExit('Smoke failed; inspect uploaded artifact. Do not run the full suite.')
+          PY
+      - name: Preserve diagnostic report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r1-a1-single-dev-smoke
+          path: r1-a1-smoke-artifact/report.json
+          if-no-files-found: warn
+          retention-days: 30
