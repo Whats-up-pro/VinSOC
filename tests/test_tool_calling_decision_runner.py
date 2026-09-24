@@ -1,10 +1,13 @@
 """A1 decision-only runner regression tests."""
 
 import json
+import subprocess
+from types import SimpleNamespace
 from pathlib import Path
 
 import evaluation.tool_calling.decision_runner as decision_module
 import evaluation.tool_calling.__main__ as cli_module
+import evaluation.tool_calling.provenance as provenance_module
 from agent.provider import LLMResponse, ProviderError, ProviderFailureKind
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
@@ -13,6 +16,7 @@ from evaluation.tool_calling.models import (
     CaseCategory,
     CaseDifficulty,
     ExpectedCall,
+    CaseResult,
     ToolCallCase,
 )
 from evaluation.tool_calling.provenance import canonical_sha256
@@ -380,3 +384,124 @@ def test_a1_provenance_hashes_captured_prompt_schema_and_logical_split(monkeypat
     reversed_read_order = run()
     assert both_cases["benchmark_split_sha256"] == reversed_read_order["benchmark_split_sha256"]
     assert both_cases["prompt_sha256"] == reversed_read_order["prompt_sha256"]
+
+
+def test_official_eligibility_checks_requested_provider_and_actual_telemetry(monkeypatch, tmp_path):
+    case = _case()
+    split = tmp_path / "dev"
+    split.mkdir()
+    (split / "case.json").write_text(json.dumps(case.to_dict()), encoding="utf-8")
+    call = {
+        "actual_provider": "openai", "actual_model": "pinned-model",
+        "fallback_triggered": False,
+    }
+    runner = SimpleNamespace(
+        benchmarks_dir=tmp_path,
+        _run_cases=[case],
+        _input_records=[{
+            "prompt": {"case_id": case.case_id, "system_prompt": "prompt",
+                       "messages": [{"role": "user", "content": case.request}]},
+            "tool_schemas": [{"name": "cti_enrichment"}],
+        }],
+        provider=SimpleNamespace(get_run_metadata=lambda: {"calls": [call]}),
+        config=SimpleNamespace(provider="openai", model="pinned-model"),
+    )
+    results = [CaseResult(case_id=case.case_id,
+                          expected_calls=case.expected_calls, predicted_calls=[])]
+    monkeypatch.setattr(provenance_module, "_git_identity", lambda: {
+        "commit_sha": "a" * 40, "branch": "master", "working_tree_clean": True,
+    })
+
+    def provenance():
+        return provenance_module.build_a1_provenance(runner, "dev", results)
+
+    assert provenance()["official_eligible"] is True
+    call["actual_provider"] = "openrouter"
+    assert "actual_provider_mismatch" in provenance()["ineligible_reasons"]
+    call["actual_provider"] = "openai"
+    runner.config.provider = "routed"
+    assert "routed_provider_not_official" in provenance()["ineligible_reasons"]
+    runner.config.provider = "openai"
+    call["fallback_triggered"] = True
+    assert "fallback_triggered" in provenance()["ineligible_reasons"]
+    call["fallback_triggered"] = False
+    call.pop("actual_provider")
+    assert "actual_provider_missing" in provenance()["ineligible_reasons"]
+
+
+def test_repeated_cli_reports_do_not_dirty_git_but_tracked_inputs_do(monkeypatch, tmp_path):
+    root = tmp_path
+    (root / ".gitignore").write_text(
+        (Path(__file__).resolve().parents[1] / ".gitignore").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (root / "evaluation" / "tool_calling").mkdir(parents=True)
+    (root / "code.py").write_text("value = 1\n", encoding="utf-8")
+    case = _case()
+    benchmark_dir = root / "benchmarks"
+    split_dir = benchmark_dir / "dev"
+    split_dir.mkdir(parents=True)
+    case_file = split_dir / "case.json"
+    case_file.write_text(json.dumps(case.to_dict()), encoding="utf-8")
+
+    def git(*args):
+        return subprocess.run(["git", *args], cwd=root, check=True,
+                              capture_output=True, text=True).stdout.strip()
+
+    git("init", "-q", "-b", "master")
+    git("add", ".")
+    git("-c", "user.name=Test", "-c", "user.email=test@example.com",
+        "commit", "-qm", "initial")
+    monkeypatch.setattr(
+        provenance_module, "__file__",
+        str(root / "evaluation" / "tool_calling" / "provenance.py"),
+    )
+
+    class TelemetryProvider(FakeProvider):
+        def __init__(self):
+            super().__init__(response=LLMResponse(content="", tool_calls=[], raw={}, metadata={}))
+            self.calls = []
+
+        def generate(self, *args, **kwargs):
+            self.calls.append({
+                "actual_provider": "openai", "actual_model": "pinned-model",
+                "fallback_triggered": False,
+            })
+            return super().generate(*args, **kwargs)
+
+        def get_name(self):
+            return "openai pinned-model"
+
+        def get_run_metadata(self):
+            return {"calls": self.calls, "total_calls": len(self.calls)}
+
+    original_runner = DecisionRunner
+    monkeypatch.setattr(cli_module, "DecisionRunner", lambda config: original_runner(
+        config=config, benchmarks_dir=benchmark_dir, provider=TelemetryProvider(),
+    ))
+    monkeypatch.chdir(root)
+    args = SimpleNamespace(mode="decision", split="dev", cases=None,
+                           provider="openai", model="pinned-model", temperature=0.0)
+    for index in (1, 2):
+        cli_module.run_benchmark(args)
+        output_dir = next((root / "results" / "tool_calling").iterdir())
+        report = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+        assert report["provenance"]["official_eligible"] is True
+        assert git("status", "--porcelain") == ""
+        output_dir.rename(output_dir.with_name(f"run_{index}"))
+
+    (root / "code.py").write_text("value = 2\n", encoding="utf-8")
+    cli_module.run_benchmark(args)
+    output_dir = next(path for path in (root / "results" / "tool_calling").iterdir()
+                      if path.name not in ("run_1", "run_2"))
+    report = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert "evaluator_git_identity_unavailable_or_dirty" in report["provenance"]["ineligible_reasons"]
+
+    (root / "code.py").write_text("value = 1\n", encoding="utf-8")
+    output_dir.rename(output_dir.with_name("run_3"))
+    case_file.write_text(json.dumps({**case.to_dict(), "request": "changed"}), encoding="utf-8")
+    cli_module.run_benchmark(args)
+    output_dir = next(path for path in (root / "results" / "tool_calling").iterdir()
+                      if path.name not in ("run_1", "run_2", "run_3"))
+    report = json.loads((output_dir / "metrics.json").read_text(encoding="utf-8"))
+    assert "evaluator_git_identity_unavailable_or_dirty" in report["provenance"]["ineligible_reasons"]
