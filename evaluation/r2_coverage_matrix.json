@@ -1,0 +1,50 @@
+{
+  "benchmark_version": "v1",
+  "track": "R2",
+  "implementation_commit": "4ecc6f3f2da601a22d9a9cf76b8fd8ec61ed902c",
+  "snapshot_contract": "data/snapshots/vinsoc_public_v1.duckdb",
+  "primary_metric": "execution_accuracy",
+  "splits": {
+    "dev": {
+      "cases": 8,
+      "sha256": "8f268d92330711f15c0077c5107553e9c47f836cde37bceb4cf15fe6bb31dd29",
+      "categories": {
+        "aggregation": 4,
+        "distinct": 1,
+        "filter": 1,
+        "ordering_limit": 1,
+        "time_range": 1
+      },
+      "difficulty": {
+        "basic": 3,
+        "intermediate": 5,
+        "advanced": 0
+      }
+    },
+    "frozen": {
+      "cases": 6,
+      "sha256": "a7360094101b86939a3069bf1d55f54f9a823cd4db864b08cf604592c059cf1b",
+      "categories": {
+        "aggregation": 3,
+        "distinct": 2,
+        "ordering_limit": 1
+      },
+      "difficulty": {
+        "basic": 2,
+        "intermediate": 4,
+        "advanced": 0
+      }
+    },
+    "challenge": {
+      "cases": 0,
+      "status": "not_authored"
+    }
+  },
+  "semantic_trap_tests": [
+    "distinct_multiplicity",
+    "boundary_operator",
+    "boolean_predicate",
+    "ordering_direction",
+    "top_k_order"
+  ]
+}

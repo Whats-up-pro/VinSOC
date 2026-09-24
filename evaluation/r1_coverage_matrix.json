@@ -1,0 +1,49 @@
+{
+  "benchmark_version": "v1",
+  "track": "R1",
+  "implementation_commit": "4ecc6f3f2da601a22d9a9cf76b8fd8ec61ed902c",
+  "splits": {
+    "dev": {
+      "cases": 24,
+      "sha256": "20b6b4514c3d7a56b9ccd2e6789c2d0b6450c16196f1b0bf75638482337ad8ba",
+      "categories": {
+        "cti_endpoint": 1,
+        "cti_network": 5,
+        "cti_network_endpoint": 7,
+        "cti_only": 3,
+        "hash_led": 1,
+        "hostname_led": 3,
+        "no_tool": 4
+      },
+      "difficulty": {
+        "basic": 10,
+        "intermediate": 7,
+        "advanced": 7
+      }
+    },
+    "frozen": {
+      "cases": 8,
+      "sha256": "3bbcd3fb125b80a54a187549e1b6912b461d1db36a2acb67c3f000142487c2f4",
+      "categories": {
+        "cti_network": 1,
+        "cti_only": 1,
+        "endpoint_only": 1,
+        "hash_led": 1,
+        "network_alert": 1,
+        "network_only": 1,
+        "no_tool": 1,
+        "url_led": 1
+      },
+      "difficulty": {
+        "basic": 6,
+        "intermediate": 2,
+        "advanced": 0
+      }
+    },
+    "challenge": {
+      "cases": 0,
+      "status": "not_authored"
+    }
+  },
+  "tool_schema_sha256": "58f4b334b365994092e8d10c0247c4374151204c7423809a092814a6bb078ebf"
+}
