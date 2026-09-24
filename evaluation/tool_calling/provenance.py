@@ -79,11 +79,25 @@ def build_a1_provenance(runner: Any, split: str, case_results: list[Any]) -> dic
 
     metadata = runner.provider.get_run_metadata()
     calls = metadata.get("calls", [])
-    if (len(calls) != len(case_results)
-            or any(not call.get("actual_model") or not call.get("actual_provider")
-                   or call.get("fallback_triggered") for call in calls)):
-        reasons.append("actual_provider_model_or_fallback_not_verified")
-    requested_model = getattr(getattr(runner, "config", None), "model", None)
+    config = getattr(runner, "config", None)
+    requested_provider = getattr(config, "provider", None)
+    if requested_provider == "routed":
+        reasons.append("routed_provider_not_official")
+    elif not requested_provider:
+        reasons.append("requested_provider_missing")
+    if len(calls) != len(case_results):
+        reasons.append("provider_call_telemetry_incomplete")
+    if any(not call.get("actual_provider") for call in calls):
+        reasons.append("actual_provider_missing")
+    elif requested_provider and any(
+        call["actual_provider"] != requested_provider for call in calls
+    ):
+        reasons.append("actual_provider_mismatch")
+    if any(call.get("fallback_triggered") for call in calls):
+        reasons.append("fallback_triggered")
+    if any(not call.get("actual_model") for call in calls):
+        reasons.append("actual_model_missing")
+    requested_model = getattr(config, "model", None)
     if not requested_model or any(
         call.get("actual_model") != requested_model for call in calls
     ):
