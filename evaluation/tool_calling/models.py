@@ -221,6 +221,7 @@ class CallMatch:
         return {
             "predicted_tool": self.predicted_call.tool,
             "expected_tool": self.expected_call.tool if self.expected_call else None,
+            "expected_call_id": self.expected_call.call_id if self.expected_call else None,
             "match_type": self.match_type.value,
             "critical_arg_match": self.critical_arg_match,
             "required_arg_match": self.required_arg_match,
@@ -272,6 +273,8 @@ class CaseResult:
             "case_id": self.case_id,
             "expected_call_count": len(self.expected_calls),
             "predicted_call_count": len(self.predicted_calls),
+            "predicted_calls": [call.to_dict() for call in self.predicted_calls],
+            "matches": [match.to_dict() for match in self.matches],
             "true_positives": self.true_positives,
             "false_positives": self.false_positives,
             "false_negatives": self.false_negatives,

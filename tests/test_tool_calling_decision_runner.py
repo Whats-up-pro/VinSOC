@@ -168,6 +168,74 @@ def test_a1_provider_error_on_no_tool_case_cannot_score_as_correct():
     assert aggregate.to_dict()["provider_error_rate"] == 1.0
 
 
+def test_wrong_ioc_trace_exposes_normalized_argument_and_partial_gold_match():
+    response = LLMResponse(
+        content="",
+        tool_calls=[{"id": "call_1", "name": "cti_enrichment",
+                     "arguments": {"indicator": "8.8.8.8"}}],
+        raw={}, metadata={},
+    )
+    result = DecisionRunner(provider=FakeProvider(response=response)).run_decision(_case())
+    trace = result.to_dict()
+
+    assert trace["predicted_calls"] == [
+        {"tool": "cti_enrichment", "arguments": {"indicator": "8.8.8.8"}}
+    ]
+    assert len(trace["matches"]) == 1
+    assert trace["matches"][0]["expected_call_id"] == "cti_1"
+    assert trace["matches"][0]["match_type"] == "partial"
+    assert trace["matches"][0]["mismatched_critical_args"] == ["indicator"]
+    assert result.exact_call_match is False
+
+
+def test_two_same_tool_calls_trace_distinct_gold_ids_in_prediction_order():
+    case = _case()
+    case.expected_calls.append(ExpectedCall(
+        call_id="cti_2", tool="cti_enrichment",
+        required_arguments={"indicator": "8.8.8.8"}, critical_arguments=["indicator"],
+    ))
+    response = LLMResponse(
+        content="",
+        tool_calls=[
+            {"id": "call_1", "name": "cti_enrichment",
+             "arguments": {"indicator": "8.8.8.8"}},
+            {"id": "call_2", "name": "cti_enrichment",
+             "arguments": {"indicator": "1.2.3.4"}},
+        ],
+        raw={}, metadata={},
+    )
+    trace = DecisionRunner(provider=FakeProvider(response=response)).run_decision(case).to_dict()
+
+    assert [call["arguments"]["indicator"] for call in trace["predicted_calls"]] == [
+        "8.8.8.8", "1.2.3.4"
+    ]
+    assert [match["expected_call_id"] for match in trace["matches"]] == [
+        "cti_2", "cti_1"
+    ]
+    assert [match["match_type"] for match in trace["matches"]] == ["exact", "exact"]
+
+
+def test_no_tool_and_provider_error_serialize_empty_trace_without_false_score():
+    case = _case()
+    case.expected_calls = []
+    empty_response = LLMResponse(content="", tool_calls=[], raw={}, metadata={})
+    no_tool = DecisionRunner(provider=FakeProvider(response=empty_response)).run_decision(case)
+    error = ProviderError(
+        "rate limited", kind=ProviderFailureKind.RATE_LIMIT,
+        provider="fake", model="fake-model",
+    )
+    provider_error = DecisionRunner(provider=FakeProvider(error=error)).run_decision(case)
+
+    for result in (no_tool, provider_error):
+        trace = result.to_dict()
+        assert trace["predicted_calls"] == []
+        assert trace["matches"] == []
+    assert no_tool.trajectory_success is True
+    assert provider_error.to_dict()["errors"] == ["PROVIDER_ERROR"]
+    assert provider_error.trajectory_success is False
+    assert aggregate_case_results("provider-error", [provider_error]).no_tool_accuracy == 0.0
+
+
 def test_a1_forbidden_tool_updates_case_error_and_aggregate_rate():
     case = _case()
     case.forbidden_tools = ["endpoint_investigation"]
@@ -227,10 +295,15 @@ def test_two_forbidden_calls_in_one_case_count_as_one_violating_case():
     )
     result = DecisionRunner(provider=FakeProvider(response=response)).run_decision(case)
     aggregate = aggregate_case_results("two-calls-one-case", [result])
+    trace = result.to_dict()
 
     assert result.forbidden_tool_violations == [
         "endpoint_investigation", "network_investigation"
     ]
+    assert [call["tool"] for call in trace["predicted_calls"]] == [
+        "endpoint_investigation", "network_investigation"
+    ]
+    assert [match["expected_call_id"] for match in trace["matches"]] == [None, None]
     assert result.errors.count("FORBIDDEN_TOOL") == 1
     assert aggregate.case_count == 1
     assert aggregate.forbidden_tool_rate == 1.0
@@ -273,9 +346,15 @@ def test_forbidden_tool_name_is_present_in_case_and_json_report(monkeypatch, tmp
     returned = decision_module.run_a1_benchmark(split="dev", output_path=path)
     written = json.loads(path.read_text(encoding="utf-8"))
     for report in (returned, written):
-        assert report["case_results"][0]["forbidden_tool_violations"] == [
+        case_trace = report["case_results"][0]
+        assert case_trace["forbidden_tool_violations"] == [
             "endpoint_investigation"
         ]
+        assert case_trace["predicted_calls"] == [
+            {"tool": "endpoint_investigation", "arguments": {"host": "ws001"}}
+        ]
+        assert case_trace["matches"][0]["match_type"] == "no_match"
+        assert case_trace["matches"][0]["expected_call_id"] is None
         assert report["aggregate"]["forbidden_tool_rate"] == 1.0
     assert written == returned
 
