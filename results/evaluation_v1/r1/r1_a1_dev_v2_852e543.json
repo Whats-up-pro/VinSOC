@@ -1,0 +1,2609 @@
+{
+  "mode": "decision",
+  "split": "dev",
+  "run_status": "completed",
+  "case_count": 24,
+  "case_ids": [
+    "case_001",
+    "case_002",
+    "case_003",
+    "case_004",
+    "case_005",
+    "case_006",
+    "case_007",
+    "case_008",
+    "case_009",
+    "case_010",
+    "case_011",
+    "case_012",
+    "case_013",
+    "case_014",
+    "case_015",
+    "case_016",
+    "case_017",
+    "case_018",
+    "case_019",
+    "case_020",
+    "case_021",
+    "case_022",
+    "case_023",
+    "case_024"
+  ],
+  "expected_case_ids": [
+    "case_001",
+    "case_002",
+    "case_003",
+    "case_004",
+    "case_005",
+    "case_006",
+    "case_007",
+    "case_008",
+    "case_009",
+    "case_010",
+    "case_011",
+    "case_012",
+    "case_013",
+    "case_014",
+    "case_015",
+    "case_016",
+    "case_017",
+    "case_018",
+    "case_019",
+    "case_020",
+    "case_021",
+    "case_022",
+    "case_023",
+    "case_024"
+  ],
+  "config": {
+    "provider": "openai",
+    "model": "gpt-4.1-mini-2025-04-14",
+    "temperature": 0,
+    "max_completion_tokens": 1000,
+    "max_retries": 0
+  },
+  "preflight": {
+    "method": "serialized actual request UTF-8 bytes + 4096 framing tokens per case; full output cap charged for every case; zero retries",
+    "bounds": [
+      {
+        "case_id": "case_001",
+        "request_utf8_bytes": 4541,
+        "input_token_bound": 8637,
+        "max_cost_usd": 0.0050548
+      },
+      {
+        "case_id": "case_002",
+        "request_utf8_bytes": 4476,
+        "input_token_bound": 8572,
+        "max_cost_usd": 0.0050288
+      },
+      {
+        "case_id": "case_003",
+        "request_utf8_bytes": 4514,
+        "input_token_bound": 8610,
+        "max_cost_usd": 0.005044
+      },
+      {
+        "case_id": "case_004",
+        "request_utf8_bytes": 4538,
+        "input_token_bound": 8634,
+        "max_cost_usd": 0.0050536
+      },
+      {
+        "case_id": "case_005",
+        "request_utf8_bytes": 4502,
+        "input_token_bound": 8598,
+        "max_cost_usd": 0.005039200000000001
+      },
+      {
+        "case_id": "case_006",
+        "request_utf8_bytes": 4524,
+        "input_token_bound": 8620,
+        "max_cost_usd": 0.005048
+      },
+      {
+        "case_id": "case_007",
+        "request_utf8_bytes": 4519,
+        "input_token_bound": 8615,
+        "max_cost_usd": 0.005046
+      },
+      {
+        "case_id": "case_008",
+        "request_utf8_bytes": 4511,
+        "input_token_bound": 8607,
+        "max_cost_usd": 0.0050428
+      },
+      {
+        "case_id": "case_009",
+        "request_utf8_bytes": 4476,
+        "input_token_bound": 8572,
+        "max_cost_usd": 0.0050288
+      },
+      {
+        "case_id": "case_010",
+        "request_utf8_bytes": 4496,
+        "input_token_bound": 8592,
+        "max_cost_usd": 0.0050368
+      },
+      {
+        "case_id": "case_011",
+        "request_utf8_bytes": 4473,
+        "input_token_bound": 8569,
+        "max_cost_usd": 0.0050276
+      },
+      {
+        "case_id": "case_012",
+        "request_utf8_bytes": 4484,
+        "input_token_bound": 8580,
+        "max_cost_usd": 0.005032
+      },
+      {
+        "case_id": "case_013",
+        "request_utf8_bytes": 4485,
+        "input_token_bound": 8581,
+        "max_cost_usd": 0.005032399999999999
+      },
+      {
+        "case_id": "case_014",
+        "request_utf8_bytes": 4505,
+        "input_token_bound": 8601,
+        "max_cost_usd": 0.0050404
+      },
+      {
+        "case_id": "case_015",
+        "request_utf8_bytes": 4504,
+        "input_token_bound": 8600,
+        "max_cost_usd": 0.00504
+      },
+      {
+        "case_id": "case_016",
+        "request_utf8_bytes": 4528,
+        "input_token_bound": 8624,
+        "max_cost_usd": 0.0050496000000000004
+      },
+      {
+        "case_id": "case_017",
+        "request_utf8_bytes": 4550,
+        "input_token_bound": 8646,
+        "max_cost_usd": 0.005058399999999999
+      },
+      {
+        "case_id": "case_018",
+        "request_utf8_bytes": 4506,
+        "input_token_bound": 8602,
+        "max_cost_usd": 0.0050408
+      },
+      {
+        "case_id": "case_019",
+        "request_utf8_bytes": 4657,
+        "input_token_bound": 8753,
+        "max_cost_usd": 0.005101200000000001
+      },
+      {
+        "case_id": "case_020",
+        "request_utf8_bytes": 4452,
+        "input_token_bound": 8548,
+        "max_cost_usd": 0.005019200000000001
+      },
+      {
+        "case_id": "case_021",
+        "request_utf8_bytes": 4411,
+        "input_token_bound": 8507,
+        "max_cost_usd": 0.0050028
+      },
+      {
+        "case_id": "case_022",
+        "request_utf8_bytes": 4431,
+        "input_token_bound": 8527,
+        "max_cost_usd": 0.0050108
+      },
+      {
+        "case_id": "case_023",
+        "request_utf8_bytes": 4412,
+        "input_token_bound": 8508,
+        "max_cost_usd": 0.005003200000000001
+      },
+      {
+        "case_id": "case_024",
+        "request_utf8_bytes": 4313,
+        "input_token_bound": 8409,
+        "max_cost_usd": 0.0049636
+      }
+    ],
+    "cost_ceiling_usd": 0.12084480000000002,
+    "budget_limit_usd": 1.0
+  },
+  "pricing": {
+    "input_usd_per_million": 0.4,
+    "output_usd_per_million": 1.6,
+    "source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini",
+    "checked_utc": "2026-09-24T08:29:52.139095+00:00",
+    "calculated_cost_usd": 0.010131199999999998,
+    "usage_complete": true,
+    "known_cost_usd": 0.010131199999999998
+  },
+  "evaluator_commit_sha": "852e543b971b6d0c565fbab5f885178c17f8b8eb",
+  "benchmark_version": "r1_a1_dev_v2",
+  "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+  "scorer_sha256": "271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149",
+  "scorer_file_sha256": {
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f"
+  },
+  "provider": "openai gpt-4.1-mini-2025-04-14",
+  "provider_metadata": {
+    "calls": [
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 766,
+        "output_tokens": 33,
+        "total_tokens": 799,
+        "estimated_cost_usd": null,
+        "latency_ms": 1776.040595999973,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 750,
+        "output_tokens": 33,
+        "total_tokens": 783,
+        "estimated_cost_usd": null,
+        "latency_ms": 1125.525089000007,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 762,
+        "output_tokens": 22,
+        "total_tokens": 784,
+        "estimated_cost_usd": null,
+        "latency_ms": 1570.6597989999977,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 755,
+        "output_tokens": 23,
+        "total_tokens": 778,
+        "estimated_cost_usd": null,
+        "latency_ms": 942.7234530000419,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 760,
+        "output_tokens": 100,
+        "total_tokens": 860,
+        "estimated_cost_usd": null,
+        "latency_ms": 1316.847934000009,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 755,
+        "output_tokens": 27,
+        "total_tokens": 782,
+        "estimated_cost_usd": null,
+        "latency_ms": 790.6532989999846,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 759,
+        "output_tokens": 68,
+        "total_tokens": 827,
+        "estimated_cost_usd": null,
+        "latency_ms": 1015.3969099999927,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 763,
+        "output_tokens": 102,
+        "total_tokens": 865,
+        "estimated_cost_usd": null,
+        "latency_ms": 1674.0505139999868,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 749,
+        "output_tokens": 33,
+        "total_tokens": 782,
+        "estimated_cost_usd": null,
+        "latency_ms": 1226.5859539999724,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 754,
+        "output_tokens": 71,
+        "total_tokens": 825,
+        "estimated_cost_usd": null,
+        "latency_ms": 1054.1865609999945,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 749,
+        "output_tokens": 33,
+        "total_tokens": 782,
+        "estimated_cost_usd": null,
+        "latency_ms": 1202.987640999993,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 749,
+        "output_tokens": 22,
+        "total_tokens": 771,
+        "estimated_cost_usd": null,
+        "latency_ms": 612.3330080000073,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 748,
+        "output_tokens": 22,
+        "total_tokens": 770,
+        "estimated_cost_usd": null,
+        "latency_ms": 739.3967739999994,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 753,
+        "output_tokens": 22,
+        "total_tokens": 775,
+        "estimated_cost_usd": null,
+        "latency_ms": 676.557412999955,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 763,
+        "output_tokens": 74,
+        "total_tokens": 837,
+        "estimated_cost_usd": null,
+        "latency_ms": 1247.847930999967,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 789,
+        "output_tokens": 101,
+        "total_tokens": 890,
+        "estimated_cost_usd": null,
+        "latency_ms": 1237.3701719999985,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 761,
+        "output_tokens": 70,
+        "total_tokens": 831,
+        "estimated_cost_usd": null,
+        "latency_ms": 1002.3626029999946,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 756,
+        "output_tokens": 71,
+        "total_tokens": 827,
+        "estimated_cost_usd": null,
+        "latency_ms": 1042.6102240000432,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 787,
+        "output_tokens": 312,
+        "total_tokens": 1099,
+        "estimated_cost_usd": null,
+        "latency_ms": 2864.75893100004,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 749,
+        "output_tokens": 77,
+        "total_tokens": 826,
+        "estimated_cost_usd": null,
+        "latency_ms": 1073.1316139999763,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 727,
+        "output_tokens": 222,
+        "total_tokens": 949,
+        "estimated_cost_usd": null,
+        "latency_ms": 2166.3648020000323,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 738,
+        "output_tokens": 98,
+        "total_tokens": 836,
+        "estimated_cost_usd": null,
+        "latency_ms": 1327.412857000013,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 731,
+        "output_tokens": 166,
+        "total_tokens": 897,
+        "estimated_cost_usd": null,
+        "latency_ms": 2501.809092999963,
+        "error_kind": null
+      },
+      {
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-4.1-mini-2025-04-14",
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "status": "succeeded",
+        "fallback_triggered": false,
+        "fallback_reason": null,
+        "input_tokens": 715,
+        "output_tokens": 8,
+        "total_tokens": 723,
+        "estimated_cost_usd": null,
+        "latency_ms": 551.442107000014,
+        "error_kind": null
+      }
+    ],
+    "total_calls": 24,
+    "estimated_cost_usd": 0,
+    "cost_complete": false
+  },
+  "aggregate": {
+    "run_id": "r1_a1_dev_once",
+    "case_count": 24,
+    "tool_precision": 0.9667,
+    "tool_recall": 0.9355,
+    "tool_f1": 0.9508,
+    "exact_call_precision": 0.9667,
+    "exact_call_recall": 0.9355,
+    "exact_call_f1": 0.9508,
+    "argument_field_accuracy": 1.0,
+    "critical_argument_accuracy": 1.0,
+    "tool_set_exact_match_rate": 0.9167,
+    "no_tool_accuracy": 1.0,
+    "forbidden_tool_rate": 0.0,
+    "ordering_accuracy": null,
+    "trajectory_success_rate": 0.9167,
+    "provider_error_rate": 0.0,
+    "execution_error_rate": 0.0,
+    "mean_latency_ms": 1280.79,
+    "p95_latency_ms": 2501.81
+  },
+  "error_summary": {},
+  "case_results": [
+    {
+      "case_id": "case_001",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "10.0.0.53",
+            "indicator_type": "ipv4"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_002",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "203.0.113.50",
+            "indicator_type": "ipv4"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": null,
+          "expected_call_id": null,
+          "match_type": "no_match",
+          "critical_arg_match": false,
+          "required_arg_match": false,
+          "matched_critical_args": [],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 0,
+      "false_positives": 1,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": []
+    },
+    {
+      "case_id": "case_003",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws100"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_004",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "partner.example.com",
+            "indicator_type": "domain"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_005",
+      "expected_call_count": 3,
+      "predicted_call_count": 3,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "185.220.101.45",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "185.220.101.45",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws023"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_3",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 3,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_006",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "secure-login-bankind1882.xyz",
+            "indicator_type": "domain"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_007",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "lockbit1234abcd.onion",
+            "indicator_type": "domain"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "file-server-01"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_008",
+      "expected_call_count": 3,
+      "predicted_call_count": 3,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "workstation-042"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_3",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 3,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_009",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "10.0.0.25",
+            "indicator_type": "ipv4"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_010",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "192.168.1.50",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws050"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_011",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "10.0.0.100",
+            "indicator_type": "ipv4"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_012",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws001"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_013",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws023"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_014",
+      "expected_call_count": 1,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws045"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_015",
+      "expected_call_count": 3,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "workstation-042"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_3",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": false,
+      "exact_call_match": false,
+      "errors": []
+    },
+    {
+      "case_id": "case_016",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+            "indicator_type": "hash"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "workstation-015"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_017",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "libcdn.legitframework.io",
+            "indicator_type": "domain"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "dev-workstation-08"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_018",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "10.0.0.200",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "endpoint_investigation",
+          "arguments": {
+            "host": "ws200"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "endpoint_investigation",
+          "expected_tool": "endpoint_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_019",
+      "expected_call_count": 0,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "matches": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_020",
+      "expected_call_count": 2,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "tool": "cti_enrichment",
+          "arguments": {
+            "indicator": "203.0.113.25",
+            "indicator_type": "ipv4"
+          }
+        },
+        {
+          "tool": "network_investigation",
+          "arguments": {
+            "indicator": "203.0.113.25",
+            "indicator_type": "ipv4"
+          }
+        }
+      ],
+      "matches": [
+        {
+          "predicted_tool": "cti_enrichment",
+          "expected_tool": "cti_enrichment",
+          "expected_call_id": "call_1",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        },
+        {
+          "predicted_tool": "network_investigation",
+          "expected_tool": "network_investigation",
+          "expected_call_id": "call_2",
+          "match_type": "exact",
+          "critical_arg_match": true,
+          "required_arg_match": true,
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": []
+        }
+      ],
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_021",
+      "expected_call_count": 0,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "matches": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_022",
+      "expected_call_count": 0,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "matches": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_023",
+      "expected_call_count": 0,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "matches": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    },
+    {
+      "case_id": "case_024",
+      "expected_call_count": 0,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "matches": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "forbidden_tool_violations": [],
+      "critical_arg_errors": 0,
+      "trajectory_success": true,
+      "exact_call_match": true,
+      "errors": []
+    }
+  ],
+  "case_metadata": {
+    "case_001": {
+      "category": "network_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_002": {
+      "category": "cti_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_003": {
+      "category": "endpoint_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_004": {
+      "category": "cti_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_005": {
+      "category": "cti_network_endpoint",
+      "difficulty": "advanced",
+      "no_tool": false
+    },
+    "case_006": {
+      "category": "cti_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_007": {
+      "category": "cti_endpoint",
+      "difficulty": "intermediate",
+      "no_tool": false
+    },
+    "case_008": {
+      "category": "cti_network_endpoint",
+      "difficulty": "advanced",
+      "no_tool": false
+    },
+    "case_009": {
+      "category": "network_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_010": {
+      "category": "network_endpoint",
+      "difficulty": "intermediate",
+      "no_tool": false
+    },
+    "case_011": {
+      "category": "network_only",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_012": {
+      "category": "hostname_led",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_013": {
+      "category": "hostname_led",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_014": {
+      "category": "hostname_led",
+      "difficulty": "basic",
+      "no_tool": false
+    },
+    "case_015": {
+      "category": "cti_network_endpoint",
+      "difficulty": "advanced",
+      "no_tool": false
+    },
+    "case_016": {
+      "category": "hash_led",
+      "difficulty": "intermediate",
+      "no_tool": false
+    },
+    "case_017": {
+      "category": "cti_endpoint",
+      "difficulty": "intermediate",
+      "no_tool": false
+    },
+    "case_018": {
+      "category": "network_endpoint",
+      "difficulty": "intermediate",
+      "no_tool": false
+    },
+    "case_019": {
+      "category": "no_tool",
+      "difficulty": "basic",
+      "no_tool": true
+    },
+    "case_020": {
+      "category": "cti_network",
+      "difficulty": "intermediate",
+      "no_tool": false
+    },
+    "case_021": {
+      "category": "no_tool",
+      "difficulty": "basic",
+      "no_tool": true
+    },
+    "case_022": {
+      "category": "no_tool",
+      "difficulty": "basic",
+      "no_tool": true
+    },
+    "case_023": {
+      "category": "no_tool",
+      "difficulty": "basic",
+      "no_tool": true
+    },
+    "case_024": {
+      "category": "no_tool",
+      "difficulty": "basic",
+      "no_tool": true
+    }
+  },
+  "breakdown": {
+    "category": {
+      "cti_endpoint": {
+        "case_ids": [
+          "case_007",
+          "case_017"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_cti_endpoint",
+          "case_count": 2,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1008.88,
+          "p95_latency_ms": 1015.4
+        }
+      },
+      "cti_network": {
+        "case_ids": [
+          "case_020"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_cti_network",
+          "case_count": 1,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1073.13,
+          "p95_latency_ms": 1073.13
+        }
+      },
+      "cti_network_endpoint": {
+        "case_ids": [
+          "case_005",
+          "case_008",
+          "case_015"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_cti_network_endpoint",
+          "case_count": 3,
+          "tool_precision": 1.0,
+          "tool_recall": 0.8889,
+          "tool_f1": 0.9412,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 0.8889,
+          "exact_call_f1": 0.9412,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 0.6667,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 0.6667,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1412.92,
+          "p95_latency_ms": 1674.05
+        }
+      },
+      "cti_only": {
+        "case_ids": [
+          "case_002",
+          "case_004",
+          "case_006"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_cti_only",
+          "case_count": 3,
+          "tool_precision": 0.6667,
+          "tool_recall": 0.6667,
+          "tool_f1": 0.6667,
+          "exact_call_precision": 0.6667,
+          "exact_call_recall": 0.6667,
+          "exact_call_f1": 0.6667,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 0.6667,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 0.6667,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 952.97,
+          "p95_latency_ms": 1125.53
+        }
+      },
+      "endpoint_only": {
+        "case_ids": [
+          "case_003"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_endpoint_only",
+          "case_count": 1,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1570.66,
+          "p95_latency_ms": 1570.66
+        }
+      },
+      "hash_led": {
+        "case_ids": [
+          "case_016"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_hash_led",
+          "case_count": 1,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1237.37,
+          "p95_latency_ms": 1237.37
+        }
+      },
+      "hostname_led": {
+        "case_ids": [
+          "case_012",
+          "case_013",
+          "case_014"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_hostname_led",
+          "case_count": 3,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 676.1,
+          "p95_latency_ms": 739.4
+        }
+      },
+      "network_endpoint": {
+        "case_ids": [
+          "case_010",
+          "case_018"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_network_endpoint",
+          "case_count": 2,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1048.4,
+          "p95_latency_ms": 1054.19
+        }
+      },
+      "network_only": {
+        "case_ids": [
+          "case_001",
+          "case_009",
+          "case_011"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_network_only",
+          "case_count": 3,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1401.87,
+          "p95_latency_ms": 1776.04
+        }
+      },
+      "no_tool": {
+        "case_ids": [
+          "case_019",
+          "case_021",
+          "case_022",
+          "case_023",
+          "case_024"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_no_tool",
+          "case_count": 5,
+          "tool_precision": 0.0,
+          "tool_recall": 0.0,
+          "tool_f1": 0.0,
+          "exact_call_precision": 0.0,
+          "exact_call_recall": 0.0,
+          "exact_call_f1": 0.0,
+          "argument_field_accuracy": 0.0,
+          "critical_argument_accuracy": 0.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": 1.0,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1882.36,
+          "p95_latency_ms": 2864.76
+        }
+      }
+    },
+    "difficulty": {
+      "advanced": {
+        "case_ids": [
+          "case_005",
+          "case_008",
+          "case_015"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_advanced",
+          "case_count": 3,
+          "tool_precision": 1.0,
+          "tool_recall": 0.8889,
+          "tool_f1": 0.9412,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 0.8889,
+          "exact_call_f1": 0.9412,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 0.6667,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 0.6667,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1412.92,
+          "p95_latency_ms": 1674.05
+        }
+      },
+      "basic": {
+        "case_ids": [
+          "case_001",
+          "case_002",
+          "case_003",
+          "case_004",
+          "case_006",
+          "case_009",
+          "case_011",
+          "case_012",
+          "case_013",
+          "case_014",
+          "case_019",
+          "case_021",
+          "case_022",
+          "case_023",
+          "case_024"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_basic",
+          "case_count": 15,
+          "tool_precision": 0.9,
+          "tool_recall": 0.9,
+          "tool_f1": 0.9,
+          "exact_call_precision": 0.9,
+          "exact_call_recall": 0.9,
+          "exact_call_f1": 0.9,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 0.9333,
+          "no_tool_accuracy": 1.0,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 0.9333,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1338.35,
+          "p95_latency_ms": 2864.76
+        }
+      },
+      "intermediate": {
+        "case_ids": [
+          "case_007",
+          "case_010",
+          "case_016",
+          "case_017",
+          "case_018",
+          "case_020"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_intermediate",
+          "case_count": 6,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "exact_call_f1": 1.0,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1070.84,
+          "p95_latency_ms": 1237.37
+        }
+      }
+    },
+    "no_tool": {
+      "no": {
+        "case_ids": [
+          "case_001",
+          "case_002",
+          "case_003",
+          "case_004",
+          "case_005",
+          "case_006",
+          "case_007",
+          "case_008",
+          "case_009",
+          "case_010",
+          "case_011",
+          "case_012",
+          "case_013",
+          "case_014",
+          "case_015",
+          "case_016",
+          "case_017",
+          "case_018",
+          "case_020"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_no",
+          "case_count": 19,
+          "tool_precision": 0.9667,
+          "tool_recall": 0.9355,
+          "tool_f1": 0.9508,
+          "exact_call_precision": 0.9667,
+          "exact_call_recall": 0.9355,
+          "exact_call_f1": 0.9508,
+          "argument_field_accuracy": 1.0,
+          "critical_argument_accuracy": 1.0,
+          "tool_set_exact_match_rate": 0.8947,
+          "no_tool_accuracy": null,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 0.8947,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1122.49,
+          "p95_latency_ms": 1776.04
+        }
+      },
+      "yes": {
+        "case_ids": [
+          "case_019",
+          "case_021",
+          "case_022",
+          "case_023",
+          "case_024"
+        ],
+        "aggregate": {
+          "run_id": "r1_a1_dev_yes",
+          "case_count": 5,
+          "tool_precision": 0.0,
+          "tool_recall": 0.0,
+          "tool_f1": 0.0,
+          "exact_call_precision": 0.0,
+          "exact_call_recall": 0.0,
+          "exact_call_f1": 0.0,
+          "argument_field_accuracy": 0.0,
+          "critical_argument_accuracy": 0.0,
+          "tool_set_exact_match_rate": 1.0,
+          "no_tool_accuracy": 1.0,
+          "forbidden_tool_rate": 0.0,
+          "ordering_accuracy": null,
+          "trajectory_success_rate": 1.0,
+          "provider_error_rate": 0.0,
+          "execution_error_rate": 0.0,
+          "mean_latency_ms": 1882.36,
+          "p95_latency_ms": 2864.76
+        }
+      }
+    }
+  },
+  "provenance": {
+    "format": "r1_a1_provenance_v1",
+    "canonicalization": "UTF-8 JSON, sorted object keys, compact separators; split files sorted by filename; prompts sorted by case_id",
+    "git": {
+      "commit_sha": "852e543b971b6d0c565fbab5f885178c17f8b8eb",
+      "branch": "master",
+      "working_tree_clean": true
+    },
+    "benchmark_split": "dev",
+    "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+    "benchmark_files_sha256": {
+      "case_001.json": "15458444433285f21ebfe41d62faa333a3a2b0cced6fee8b57e9ec97c9847435",
+      "case_002.json": "5b7c8f39bbc8b6d1e8641cdf0e2dccc42cc8a6dc84e6df41c756f0cdcd2788a8",
+      "case_003.json": "9990ecd6a1fbe0cca685e6b4ee7e89de13504221945fe56febde54ee81c0bdaf",
+      "case_004.json": "6e52b6fb0dd80b1b3a5d8cebaaecd986f66b59fd51277041c59ec4575b66c3f0",
+      "case_005.json": "044b4a459e005793594c9cb3554690d87da92f544c22f7669af6d6435d217aa6",
+      "case_006.json": "76e5510b20479a4f72ece0183eb060e7bd6835153770e3161d833940c24503b6",
+      "case_007.json": "ac14231427c9e2d868563bdaf6f807ecb99f0ab2bd2e41d0dc4571f657f78125",
+      "case_008.json": "000f3518367db9b84ccc49070d9d648630e120c8529bdcfeaec708d04c7e9373",
+      "case_009.json": "5fc0f0d0e082803740ce054a31ff9d0bdaa811f88a821151c1e8a012acfc9836",
+      "case_010.json": "5ae2917795e4712e0ff4eb4b326a7f802865e7e070f3b2af86b202f5f17537eb",
+      "case_011.json": "daad241d7c2aa7cacc6a8e38046eca6e5362eee928a0220d1e3b76793f61c3df",
+      "case_012.json": "06ab4d327c0e2bfec36a97a327d01b7f94070a6e5a9536b0b828b0f3566d3f9b",
+      "case_013.json": "211cea942b118029f01eb2669d6c529d58fea6b1406e8f97d6d7c75fac5cce56",
+      "case_014.json": "0dc513cf3f5ab741800a8acd04492c8c8806bbb77d283056c8c6acc56562aad1",
+      "case_015.json": "1b60ddd1b467b6a8d1bc51bd1caf4c99b623035d760cf35abbb25ce6e7b56f29",
+      "case_016.json": "5446cc2a24a012b20b774d9bb804e1767c20fd2c963b31fde7e41e03a5ab0f21",
+      "case_017.json": "a56861f39d438a58c9ff3cf50f9c3ee61d7436e238952990ece2552bce1f487c",
+      "case_018.json": "f3f0d4b04ee0031fb29197a14682243834c4837ce9727fd68f581e7afe48554e",
+      "case_019.json": "dba8afd2e3d48ea06324dda9af9512d87654070378923d9b70545835e9704480",
+      "case_020.json": "505c0eb29558dbcf057ad85bba788b7f3ecc01c431a8bd57239ddfc83d70aa32",
+      "case_021.json": "90d5a02868e7004e8aa6cca7bdeaa3672ece0321e55c2f9869d03fc0304d785d",
+      "case_022.json": "c42e52067dd001bd18316e966ef7b270e39da4b0920c0bf5e34d665e44c4e33c",
+      "case_023.json": "ab852f4805394879cf1d682c694a46c48e88186de6587e2f0940dae5d04c508d",
+      "case_024.json": "be2109c0b424ce034ae8ac13683d5a03791ba32c72baf41f1d3575595cac2843"
+    },
+    "evaluated_cases_sha256": "98cef62a9e74bae86b3abd0b6c3239483f1704e8f295fc610e4f0156f0fb5808",
+    "prompt_sha256": "21f87b197c1bf1206d4a36e111853bddf6ea623bab58a5da311ccbcb61d7780b",
+    "prompts": [
+      {
+        "case_id": "case_001",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigate connection and flow volume for internal DNS server 10.0.0.53.\nIndicator: 10.0.0.53\nIndicator type: ipv4\nContext: Flow alert shows unusually frequent connections from this server. Analyze connection frequency and destination IPs using flow telemetry."
+          }
+        ]
+      },
+      {
+        "case_id": "case_002",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of an IP address identified as belonging to a trusted software vendor\nIndicator: 203.0.113.50\nIndicator type: ipv4\nContext: Alert: Connection to external IP from internal workstation"
+          }
+        ]
+      },
+      {
+        "case_id": "case_003",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigate local file access on internal workstation WS100 after a DLP alert.\nIndicator: 192.168.1.100\nIndicator type: ipv4\nContext: DLP flagged access to a sensitive document; no network activity is indicated.\nEndpoint pivot: WS100"
+          }
+        ]
+      },
+      {
+        "case_id": "case_004",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Check threat intelligence reputation for partner.example.com, a domain reported in a partner-communication alert.\nIndicator: partner.example.com\nIndicator type: domain\nContext: Only the domain is supplied; flow telemetry does not resolve domain-only lookups."
+          }
+        ]
+      },
+      {
+        "case_id": "case_005",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of an IP confirmed as command-and-control for known malware family\nIndicator: 185.220.101.45\nIndicator type: ipv4\nContext: Alert: Connection to known Tor exit node used by Cobalt Strike\nEndpoint pivot: WS023"
+          }
+        ]
+      },
+      {
+        "case_id": "case_006",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Check threat intelligence for phishing domain secure-login-bankind1882.xyz.\nIndicator: secure-login-bankind1882.xyz\nIndicator type: domain\nContext: Email security gateway flagged the domain; no connection or resolved IPv4 telemetry is supplied."
+          }
+        ]
+      },
+      {
+        "case_id": "case_007",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigate reported ransomware C2 domain and endpoint process activity.\nIndicator: lockbit1234abcd.onion\nIndicator type: domain\nContext: DNS alert on the domain; no resolved IPv4 flow indicator is provided.\nEndpoint pivot: FILE-SERVER-01"
+          }
+        ]
+      },
+      {
+        "case_id": "case_008",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of IP associated with APT29/Cozy Bear infrastructure\nIndicator: 91.220.131.77\nIndicator type: ipv4\nContext: Alert: Connection to IP flagged by threat intelligence as APT infrastructure\nEndpoint pivot: WORKSTATION-042"
+          }
+        ]
+      },
+      {
+        "case_id": "case_009",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of an internal host performing port scan behavior\nIndicator: 10.0.0.25\nIndicator type: ipv4\nContext: Alert: Internal host detected performing port scan against other internal servers"
+          }
+        ]
+      },
+      {
+        "case_id": "case_010",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of lateral movement pattern from compromised host\nIndicator: 192.168.1.50\nIndicator type: ipv4\nContext: Alert: Suspicious lateral movement detected from workstation to file server\nEndpoint pivot: WS050"
+          }
+        ]
+      },
+      {
+        "case_id": "case_011",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of suspicious outbound traffic pattern suggesting data exfiltration\nIndicator: 10.0.0.100\nIndicator type: ipv4\nContext: Alert: Unusual outbound traffic volume from database server"
+          }
+        ]
+      },
+      {
+        "case_id": "case_012",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of suspicious process relationship: Microsoft Word spawning PowerShell\nIndicator: WS001\nIndicator type: hostname\nContext: EDR Alert: winword.exe spawned powershell.exe\nEndpoint pivot: WS001"
+          }
+        ]
+      },
+      {
+        "case_id": "case_013",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of suspicious process relationship: Excel spawning CMD\nIndicator: WS023\nIndicator type: hostname\nContext: EDR Alert: excel.exe spawned cmd.exe with suspicious arguments\nEndpoint pivot: WS023"
+          }
+        ]
+      },
+      {
+        "case_id": "case_014",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigation of suspicious process: Browser spawning certutil for file download\nIndicator: WS045\nIndicator type: hostname\nContext: EDR Alert: chrome.exe spawned certutil.exe - possible malware download\nEndpoint pivot: WS045"
+          }
+        ]
+      },
+      {
+        "case_id": "case_015",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Complete APT intrusion with multiple stages: initial access, execution, persistence, C2\nIndicator: 91.220.131.77\nIndicator type: ipv4\nContext: Alert: Connection to known APT C2 infrastructure\nEndpoint pivot: WORKSTATION-042"
+          }
+        ]
+      },
+      {
+        "case_id": "case_016",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Ransomware infection chain: malicious document delivers payload, ransomware executes\nIndicator: a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\nIndicator type: hash\nContext: Alert: Suspicious file hash detected on endpoint\nEndpoint pivot: WORKSTATION-015"
+          }
+        ]
+      },
+      {
+        "case_id": "case_017",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Investigate suspicious library domain and the developer workstation.\nIndicator: libcdn.legitframework.io\nIndicator type: domain\nContext: Application traffic analysis flagged the domain, but no resolved IPv4 flow indicator is supplied.\nEndpoint pivot: DEV-WORKSTATION-08"
+          }
+        ]
+      },
+      {
+        "case_id": "case_018",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Internal actor exfiltrating data and communicating with external infrastructure\nIndicator: 10.0.0.200\nIndicator type: ipv4\nContext: Alert: HR flagged employee under investigation for potential data theft\nEndpoint pivot: WS200"
+          }
+        ]
+      },
+      {
+        "case_id": "case_019",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Explain the evidence gap for an unverified internal IP without running an investigation.\nIndicator: 10.0.0.99\nIndicator type: ipv4\nContext: Asset is absent from CMDB, and no endpoint or network telemetry is available. This internal address cannot identify a public CTI source.\nDo not call any tool; state what evidence is missing and what would be needed before investigation."
+          }
+        ]
+      },
+      {
+        "case_id": "case_020",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "CTI shows clean reputation but network shows anomalous traffic pattern\nIndicator: 203.0.113.25\nIndicator type: ipv4\nContext: Alert: Anomalous traffic pattern to external IP"
+          }
+        ]
+      },
+      {
+        "case_id": "case_021",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Explain why evidence provenance matters in a SOC investigation report. Answer conceptually without inspecting indicators or telemetry."
+          }
+        ]
+      },
+      {
+        "case_id": "case_022",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Describe which input types the VinSOC CTI, network, and endpoint investigation tools support. This is a capability question only; do not perform a lookup."
+          }
+        ]
+      },
+      {
+        "case_id": "case_023",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Do not call any tool or query investigation data. Draft a short checklist an analyst can use before starting an incident investigation."
+          }
+        ]
+      },
+      {
+        "case_id": "case_024",
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one.",
+        "messages": [
+          {
+            "role": "user",
+            "content": "What does the acronym CPU stand for?"
+          }
+        ]
+      }
+    ],
+    "production_schema_sha256": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+    "production_schemas_by_sha256": {
+      "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0": [
+        {
+          "type": "function",
+          "function": {
+            "name": "cti_enrichment",
+            "strict": true,
+            "description": "Enrich an Indicator of Compromise (IOC) with Cyber Threat Intelligence.\n\nUse this tool to get threat intelligence about:\n- IPv4 addresses\n- Domain names\n- File hashes (MD5, SHA1, SHA256)\n\nThe tool returns:\n- Reputation (benign/suspicious/malicious/unknown)\n- Related threat actors (if known)\n- Related malware families (if known)\n- MITRE ATT&CK techniques\n- Source attribution\n\nNote: Do not call this tool for endpoint hostname or process context.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "indicator": {
+                  "type": "string",
+                  "description": "The IOC value to investigate (IP, domain, or hash)"
+                },
+                "indicator_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "ipv4",
+                    "domain",
+                    "hash",
+                    "url",
+                    null
+                  ],
+                  "description": "The type of IOC. Auto-detected if not provided."
+                }
+              },
+              "required": [
+                "indicator",
+                "indicator_type"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "network_investigation",
+            "strict": true,
+            "description": "Investigate flow telemetry for an IPv4 address.\n\nUse this tool to analyze:\n- Connection frequency and patterns\n- Unique destinations and ports contacted\n- Failed vs successful connection ratios\n- Periodicity candidates (beaconing patterns)\n- Scan candidates (port scanning patterns)\n- Transfer metrics (large data transfers)\n- Service fanout (admin service reachability)\n\nThis tool analyzes IP-based network logs and IDS/firewall telemetry.\nDomain-only lookup is unavailable with current flow telemetry; obtain a\nconcrete IPv4 address before calling this tool.\nWhen a frozen DuckDB snapshot is configured, the tool uses its internal,\nread-only domain query layer. Do not send SQL in this tool call.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "indicator": {
+                  "type": "string",
+                  "description": "IPv4 address to investigate; domain-only lookup is unavailable",
+                  "pattern": "^[0-9]{1,3}(\\.[0-9]{1,3}){3}$"
+                },
+                "indicator_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "ipv4",
+                    null
+                  ],
+                  "description": "IPv4 or null for automatic IPv4 validation; domains are unsupported."
+                },
+                "time_range": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "description": "Start time in ISO8601 format"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "End time in ISO8601 format"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Optional time range for the investigation. Defaults to last 24 hours."
+                }
+              },
+              "required": [
+                "indicator",
+                "indicator_type",
+                "time_range"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "endpoint_investigation",
+            "strict": true,
+            "description": "Investigate endpoint telemetry for suspicious process relationships.\n\nUse this tool to analyze:\n- Parent-child process chains\n- Suspicious application spawning (e.g., Word spawning PowerShell)\n- LOLBin usage patterns\n- MITRE ATT&CK technique indicators\n\nThis tool analyzes endpoint detection and response (EDR) data.\nWhen a frozen DuckDB snapshot is configured, the tool uses its internal,\nread-only domain query layer. Do not send SQL in this tool call.\nCall this when process relationships are relevant to the investigation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string",
+                  "description": "The hostname or identifier of the endpoint to investigate"
+                },
+                "time_range": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "description": "Start time in ISO8601 format"
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "End time in ISO8601 format"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Optional time range for the investigation. Defaults to last 24 hours."
+                }
+              },
+              "required": [
+                "host",
+                "time_range"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "case_schema_sha256": {
+      "case_001": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_002": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_003": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_004": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_005": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_006": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_007": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_008": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_009": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_010": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_011": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_012": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_013": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_014": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_015": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_016": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_017": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_018": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_019": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_020": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_021": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_022": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_023": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_024": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0"
+    },
+    "official_eligible": true,
+    "ineligible_reasons": []
+  }
+}

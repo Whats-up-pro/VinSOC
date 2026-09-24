@@ -1,6 +1,6 @@
 # VinSOC Evaluation V1 — Verification and Result Status
 
-**Status as of 2026-09-24:** implementation and local tests pass; official development and frozen model benchmarks have not run. No model accuracy score or improvement delta is available.
+**Status as of 2026-09-24:** R1 A1 has one real-model run on the original `dev` benchmark (15/24 at `1fd3843`) and [one on the adjudicated `dev v2` benchmark](r1_a1_dev_v2_results.md) (22/24 at `852e543`). The benchmark and production tool schema changed between runs; the difference is not a model improvement delta. No frozen or R2 model evaluation has run.
 
 ## Verified implementation
 
@@ -20,8 +20,8 @@ The first independent review found two critical score defects and two important 
 
 | Track | Dev baseline | Error analysis | Controlled improvements | Frozen holdout |
 |---|---|---|---|---|
-| R1 / A1 | OpenAI selected; blocked: exact `VINSOC_EVAL_MODEL` and `OPENAI_API_KEY` unset | Pending real dev output | Pending error analysis | Unopened |
-| R2 | OpenAI selected; blocked: verified official DuckDB snapshot/manifest, exact model ID, and `OPENAI_API_KEY` absent | Pending real dev output | Pending error analysis | Unopened |
+| R1 / A1 | Pinned `gpt-4.1-mini-2025-04-14`: original 15/24 and versioned `dev v2` 22/24, single run each; [v2 artifact and per-case review](r1_a1_dev_v2_results.md) | v2 failures `002`, `015` pending separate analysis | No controlled model improvement | Unopened |
+| R2 | Blocked: verified official DuckDB snapshot and source provenance are absent | Pending verified snapshot | Pending error analysis | Unopened |
 
 The historical A2 MockProvider regression artifact is an integration check and is not an official A1 model score. No percentage, improvement, or before/after comparison is inferred from test fixtures.
 
@@ -31,7 +31,7 @@ The historical A2 MockProvider regression artifact is an integration check and i
 2. Direct HTTPS access to `mcfp.felk.cvut.cz` and `github.com` also timed out. The chosen OTRF ZIP member must be inspected against downloaded archive bytes before ingestion. The CTU-13 source file likewise needs retrieval, exact SHA-256, and a validated source-format mapping before official use.
 3. The current R2 benchmark references one snapshot. Multiple dev/frozen source-session snapshots, as preferred by the master evaluation prompt, are not yet implemented. A one-snapshot execution score can over-credit semantically wrong SQL that coincidentally returns the same rows.
 4. Current frozen sets remain unused. Challenge/OOD sets have no cases and are excluded from primary metrics.
-5. The evaluation provider is OpenAI. The runtime has no `OPENAI_API_KEY` or project-pinned `VINSOC_EVAL_MODEL`, so no paid model call or official R1/R2 development run was attempted.
+5. The local runtime has no evaluation credential or complete test dependencies. R1 A1 runs used the GitHub Actions secret and pinned model; the secret is absent from artifacts and this repository. No R2 model call was attempted.
 
 ## Reproducibility identifiers
 
