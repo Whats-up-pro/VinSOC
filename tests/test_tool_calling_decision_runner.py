@@ -2,8 +2,11 @@
 
 import json
 import subprocess
+import sys
 from types import SimpleNamespace
 from pathlib import Path
+
+import pytest
 
 import evaluation.tool_calling.decision_runner as decision_module
 import evaluation.tool_calling.__main__ as cli_module
@@ -65,6 +68,57 @@ def _case():
             )
         ],
     )
+
+
+def test_a1_openai_chat_completion_request_has_output_token_cap(monkeypatch):
+    requests = []
+
+    def create_completion(**kwargs):
+        requests.append(kwargs)
+        return SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content="", tool_calls=[]))],
+            model="gpt-4.1-2025-04-14",
+            usage=SimpleNamespace(prompt_tokens=20, completion_tokens=0, total_tokens=20),
+            model_dump=lambda: {},
+        )
+
+    client = SimpleNamespace(chat=SimpleNamespace(
+        completions=SimpleNamespace(create=create_completion)
+    ))
+    monkeypatch.setitem(sys.modules, "openai", SimpleNamespace(OpenAI=lambda **kwargs: client))
+    runner = DecisionRunner(config=A1Config(
+        provider="openai", model="gpt-4.1-2025-04-14", max_tokens=1000,
+    ))
+
+    result = runner.run_decision(_case())
+
+    assert result.errors == []
+    assert len(requests) == 1
+    assert requests[0]["model"] == "gpt-4.1-2025-04-14"
+    assert requests[0]["max_completion_tokens"] == 1000
+    assert requests[0]["tools"] == get_tool_schemas()
+
+
+@pytest.mark.parametrize("invalid", [0, -1, 1.5, "1000", True, None])
+def test_a1_rejects_invalid_token_cap_before_provider_creation(monkeypatch, invalid):
+    calls = []
+    monkeypatch.setattr(
+        decision_module, "create_provider", lambda **kwargs: calls.append(kwargs)
+    )
+
+    with pytest.raises(ValueError, match="max_tokens"):
+        DecisionRunner(config=A1Config(provider="openai", max_tokens=invalid))
+
+    assert calls == []
+
+
+def test_a1_rejects_invalid_token_cap_with_fake_provider():
+    provider = FakeProvider(response=LLMResponse(content="", tool_calls=[], raw={}))
+
+    with pytest.raises(ValueError, match="max_tokens"):
+        DecisionRunner(config=A1Config(provider="fake", max_tokens=0), provider=provider)
+
+    assert provider.last_call is None
 
 
 def test_a1_uses_native_tool_calls_and_production_schemas():
@@ -394,6 +448,8 @@ def test_a1_helper_and_cli_share_captured_input_provenance(monkeypatch, tmp_path
 
     assert helper_report == helper
     assert cli_report["provenance"] == helper["provenance"]
+    assert helper_report["config"]["max_completion_tokens"] == 1000
+    assert cli_report["config"]["max_completion_tokens"] == 1000
     provenance = helper["provenance"]
     assert provenance["git"]["commit_sha"]
     assert isinstance(provenance["git"]["working_tree_clean"], bool)
