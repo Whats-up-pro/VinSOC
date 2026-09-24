@@ -1,8 +1,10 @@
 """A1 decision-only runner regression tests."""
 
 import json
+from pathlib import Path
 
 import evaluation.tool_calling.decision_runner as decision_module
+import evaluation.tool_calling.__main__ as cli_module
 from agent.provider import LLMResponse, ProviderError, ProviderFailureKind
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.decision_runner import A1Config, DecisionRunner
@@ -13,6 +15,7 @@ from evaluation.tool_calling.models import (
     ExpectedCall,
     ToolCallCase,
 )
+from evaluation.tool_calling.provenance import canonical_sha256
 
 
 class FakeProvider:
@@ -271,3 +274,109 @@ def test_forbidden_tool_name_is_present_in_case_and_json_report(monkeypatch, tmp
         ]
         assert report["aggregate"]["forbidden_tool_rate"] == 1.0
     assert written == returned
+
+
+def test_a1_helper_and_cli_share_captured_input_provenance(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    benchmark_dir = tmp_path / "benchmarks"
+    split_dir = benchmark_dir / "dev"
+    split_dir.mkdir(parents=True)
+    case = _case()
+    (split_dir / "case_001.json").write_text(json.dumps(case.to_dict()), encoding="utf-8")
+    response = LLMResponse(content="", tool_calls=[], raw={}, metadata={})
+    original_runner = DecisionRunner
+
+    def fake_runner(config=None):
+        return original_runner(
+            config=config, benchmarks_dir=benchmark_dir,
+            provider=FakeProvider(response=response),
+        )
+
+    monkeypatch.setattr(decision_module, "DecisionRunner", fake_runner)
+    monkeypatch.setattr(cli_module, "DecisionRunner", fake_runner)
+    monkeypatch.chdir(tmp_path)
+    output = tmp_path / "helper.json"
+    helper = decision_module.run_a1_benchmark(
+        split="dev", output_path=output,
+        config=A1Config(provider="fake", model="fake-model", temperature=0.0),
+    )
+    cli_module.run_benchmark(SimpleNamespace(
+        mode="decision", split="dev", cases=None,
+        provider="fake", model="fake-model", temperature=0.0,
+    ))
+    cli_output = next((tmp_path / "results" / "tool_calling").glob("*/metrics.json"))
+    cli_report = json.loads(cli_output.read_text(encoding="utf-8"))
+    helper_report = json.loads(output.read_text(encoding="utf-8"))
+
+    assert helper_report == helper
+    assert cli_report["provenance"] == helper["provenance"]
+    provenance = helper["provenance"]
+    assert provenance["git"]["commit_sha"]
+    assert isinstance(provenance["git"]["working_tree_clean"], bool)
+    assert provenance["benchmark_split_sha256"]
+    assert provenance["production_schema_sha256"]
+    assert provenance["prompt_sha256"] == canonical_sha256(provenance["prompts"])
+    assert provenance["prompts"][0]["messages"] == [
+        {"role": "user", "content": case.request}
+    ]
+    assert provenance["prompts"][0]["system_prompt"]
+    assert provenance["official_eligible"] is False  # FakeProvider has no actual model telemetry.
+    assert helper["config"] == cli_report["config"]
+    assert helper["provider_metadata"] == cli_report["provider_metadata"]
+
+
+def test_a1_provenance_hashes_captured_prompt_schema_and_logical_split(monkeypatch, tmp_path):
+    benchmark_dir = tmp_path / "benchmarks"
+    split_dir = benchmark_dir / "dev"
+    split_dir.mkdir(parents=True)
+    case = _case()
+    path = split_dir / "case_001.json"
+    path.write_text(json.dumps(case.to_dict()), encoding="utf-8")
+    schemas = [{"function": {"name": "cti_enrichment", "parameters": {"type": "object"}}}]
+    monkeypatch.setattr(decision_module, "get_tool_schemas", lambda: schemas)
+    response = LLMResponse(content="", tool_calls=[], raw={}, metadata={})
+
+    def run(prompt=None):
+        runner = DecisionRunner(
+            config=A1Config(provider="fake", model="fake-model", system_prompt=prompt),
+            benchmarks_dir=benchmark_dir, provider=FakeProvider(response=response),
+        )
+        cases = runner.load_cases("dev")
+        runner._run_cases = cases
+        results = [runner.run_decision(item) for item in cases]
+        from evaluation.tool_calling.provenance import build_a1_provenance
+        return build_a1_provenance(runner, "dev", results)
+
+    original = run()
+    changed_prompt = run("A different system prompt")
+    assert original["prompt_sha256"] != changed_prompt["prompt_sha256"]
+    assert original["production_schema_sha256"] == changed_prompt["production_schema_sha256"]
+
+    schemas[0]["function"]["parameters"]["additionalProperties"] = False
+    changed_schema = run()
+    assert original["production_schema_sha256"] != changed_schema["production_schema_sha256"]
+    assert original["prompt_sha256"] == changed_schema["prompt_sha256"]
+    schemas[0]["function"]["parameters"] = dict(
+        reversed(list(schemas[0]["function"]["parameters"].items()))
+    )
+    assert changed_schema["production_schema_sha256"] == run()["production_schema_sha256"]
+
+    reordered = dict(reversed(list(case.to_dict().items())))
+    path.write_text(json.dumps(reordered, indent=4), encoding="utf-8")
+    assert changed_schema["benchmark_split_sha256"] == run()["benchmark_split_sha256"]
+    reordered["request"] = "Different investigation request"
+    path.write_text(json.dumps(reordered), encoding="utf-8")
+    assert changed_schema["benchmark_split_sha256"] != run()["benchmark_split_sha256"]
+
+    second = _case()
+    second.case_id = "a1_test_002"
+    (split_dir / "case_002.json").write_text(json.dumps(second.to_dict()), encoding="utf-8")
+    both_cases = run()
+    original_glob = Path.glob
+    monkeypatch.setattr(
+        Path, "glob", lambda self, pattern: reversed(list(original_glob(self, pattern)))
+    )
+    reversed_read_order = run()
+    assert both_cases["benchmark_split_sha256"] == reversed_read_order["benchmark_split_sha256"]
+    assert both_cases["prompt_sha256"] == reversed_read_order["prompt_sha256"]
