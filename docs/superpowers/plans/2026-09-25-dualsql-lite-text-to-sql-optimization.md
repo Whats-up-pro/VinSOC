@@ -1216,7 +1216,7 @@ git push origin master
 
 **Interfaces:**
 - Consumes: AgenticCase, optional LinkedSchemaResult, ToolRuntime, provider, enable_database_tools.
-- Produces: run_sql_generator(...) -> AgentStageResult with final_sql.
+- Produces: run_sql_generator(case: AgenticCase, *, snapshot: DuckDBSnapshot, catalog: ValueCatalog, provider: LLMProvider, linked_schema: LinkedSchemaResult | None, mode: Literal["baseline_one_shot", "linked_static", "agentic"]) -> AgentStageResult with final_sql.
 - E0 has one provider call with no tool schema.
 - E1 uses submit_final_sql only and one provider turn.
 - E2/E3 use database tools plus submit_final_sql through bounded loop.
@@ -1421,9 +1421,9 @@ git push origin master
 
 **Interfaces:**
 - Produces: canonical_sha256(value) -> str.
-- Produces: build_agentic_provenance(...) -> dict.
-- Produces: preflight_experiment(...) -> dict.
-- Produces: ensure_remaining_budget(...) -> None.
+- Produces: build_agentic_provenance(*, git_sha: str, benchmark_version: str, benchmark_split_sha256: str, snapshot_binary_sha256: str, snapshot_content_sha256: str, scorer_file_sha256: dict[str, str], model: str, experiment: ExperimentContract, prompt_hashes: dict[str, str], tool_schema_sha256: str, tool_implementation_sha256: dict[str, str], catalog_metadata: dict[str, Any], pricing: dict[str, Any], preflight: dict[str, Any]) -> dict[str, Any].
+- Produces: preflight_experiment(*, experiment_id: ExperimentId, initial_request_payloads: list[dict[str, Any]], case_count: int, input_usd_per_million: float, output_usd_per_million: float, budget_usd: float) -> dict[str, Any].
+- Produces: ensure_remaining_budget(known_cost_usd: float, remaining_max_cost_usd: float, budget_limit_usd: float) -> None.
 
 - [ ] **Step 1: Implement canonical hashing tests**
 
@@ -1548,7 +1548,7 @@ git push origin master
 - Modify: tests/test_text_to_sql_agentic_runner.py
 
 **Interfaces:**
-- Produces: run_experiment(...) -> dict.
+- Produces: run_experiment(*, experiment_id: ExperimentId, cases: list[SQLBenchmarkCase], snapshot: DuckDBSnapshot, catalog: ValueCatalog, provider: LLMProvider, provenance: dict[str, Any], preflight: dict[str, Any], progress_callback: Callable[[dict[str, Any]], None] | None = None) -> dict[str, Any].
 - Inner inference consumes AgenticCase only.
 - Full SQLBenchmarkCase enters only after final_sql has been fixed for post-hoc evaluation.
 
@@ -1597,11 +1597,43 @@ def infer_case(
     case: AgenticCase,
     *,
     experiment_id: str,
-    snapshot,
-    catalog,
-    provider,
+    snapshot: DuckDBSnapshot,
+    catalog: ValueCatalog,
+    provider: LLMProvider,
 ) -> tuple[AgentStageResult | None, AgentStageResult]:
-    ...
+    contract = EXPERIMENTS[experiment_id]
+    linker_result = None
+
+    if contract.use_linker:
+        runtime = ToolRuntime(snapshot=snapshot, catalog=catalog)
+        linker_result = run_schema_linker(case, runtime, provider)
+        if linker_result.status != "completed" or linker_result.linked_schema is None:
+            failed_generator = AgentStageResult(
+                stage="sql_generator",
+                status="skipped_after_linker_failure",
+                turns=0,
+                database_tool_calls=0,
+                error_category="LINKER_FORMAT_OR_LIMIT_FAILURE",
+            )
+            return linker_result, failed_generator
+
+    if experiment_id == "E0":
+        mode = "baseline_one_shot"
+    elif experiment_id == "E1":
+        mode = "linked_static"
+    else:
+        mode = "agentic"
+
+    runtime = ToolRuntime(snapshot=snapshot, catalog=catalog)
+    generator_result = run_sql_generator(
+        case,
+        snapshot=snapshot,
+        catalog=catalog,
+        provider=provider,
+        linked_schema=linker_result.linked_schema if linker_result else None,
+        mode=mode,
+    )
+    return linker_result, generator_result
 ~~~
 
 Outer scoring function:
@@ -1962,25 +1994,37 @@ Record the chosen experiment and rule in the config document.
 
 - [ ] **Step 2: Freeze the machine-readable configuration**
 
-Write exact JSON in the document containing measured winner values:
+Generate the exact JSON from the selected report and the already-defined EXPERIMENTS contract:
 
-~~~json
-{
-  "experiment_id": "selected from E0-E3",
-  "provider": "openai",
-  "model": "gpt-4.1-mini-2025-04-14",
-  "temperature": 0,
-  "max_completion_tokens": 1000,
-  "max_retries": 0,
-  "linker_enabled": true,
-  "linker_tools_enabled": true,
-  "generator_tools_enabled": true,
-  "max_turns_per_stage": 5,
-  "max_database_tool_calls_per_stage": 5
+~~~python
+rank = {"E0": 0, "E1": 1, "E2": 2, "E3": 3}
+selected = min(
+    reports,
+    key=lambda report: (
+        -report["aggregate_metrics"]["execution_accuracy"],
+        report["total_cost_usd"],
+        report["aggregate_metrics"]["total_model_calls"],
+        report["aggregate_metrics"]["total_latency_ms"],
+        rank[report["experiment_id"]],
+    ),
+)
+contract = EXPERIMENTS[selected["experiment_id"]]
+frozen_config = {
+    "experiment_id": selected["experiment_id"],
+    "provider": "openai",
+    "model": "gpt-4.1-mini-2025-04-14",
+    "temperature": 0,
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "linker_enabled": contract.use_linker,
+    "linker_tools_enabled": contract.linker_tools,
+    "generator_tools_enabled": contract.generator_tools,
+    "max_turns_per_stage": 5,
+    "max_database_tool_calls_per_stage": 5,
 }
 ~~~
 
-Replace the three boolean fields with the actual selected experiment contract. The phrase "selected from E0-E3" is explanatory text in this plan; the committed result document must contain the exact experiment ID, not that phrase.
+Serialize frozen_config with sorted keys into the config document. This guarantees the booleans correspond to the measured winning experiment rather than being edited manually.
 
 Also record:
 - implementation git SHA;
