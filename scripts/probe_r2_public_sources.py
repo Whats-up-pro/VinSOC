@@ -46,16 +46,22 @@ def copy_and_hash(source, target) -> tuple[int, str]:
     return length, digest.hexdigest()
 
 
+def label_group(label: str) -> str:
+    return label.removeprefix("flow=").split("-", 1)[0]
+
+
 def _flow_samples(path: Path) -> dict:
     samples: list[dict] = []
     distribution: Counter[str] = Counter()
+    sampled_groups: Counter[str] = Counter()
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         fieldnames = reader.fieldnames
         for line, row in enumerate(reader, start=2):
-            label = (row.get("Label") or "").split("-")[0]
+            label = label_group(row.get("Label") or "")
             distribution[label] += 1
-            if label in ("From", "Normal", "Botnet") and len(samples) < 80:
+            if label in ("From", "To", "Normal", "Background") and sampled_groups[label] < 20:
+                sampled_groups[label] += 1
                 samples.append({"line": line, **{key: row.get(key) for key in (
                     "StartTime", "SrcAddr", "Sport", "DstAddr", "Dport", "Proto", "Label"
                 )}})

@@ -5,7 +5,7 @@ from __future__ import annotations
 import io
 from hashlib import sha256
 
-from scripts.probe_r2_public_sources import SOURCES, copy_and_hash
+from scripts.probe_r2_public_sources import SOURCES, copy_and_hash, label_group
 
 
 def test_probe_downloads_only_scenario_5_7_and_otrf_day1():
@@ -22,3 +22,9 @@ def test_hash_covers_full_downloaded_bytes():
     assert length == len(payload)
     assert digest == sha256(payload).hexdigest()
     assert target.getvalue() == payload
+
+
+def test_ctu_flow_prefix_is_removed_before_evidence_sampling():
+    assert label_group("flow=From-Botnet-V42-TCP") == "From"
+    assert label_group("flow=To-Botnet-V42-TCP") == "To"
+    assert label_group("flow=Background") == "Background"
