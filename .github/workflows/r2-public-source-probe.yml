@@ -1,4 +1,5 @@
 name: R2 public source probe (no model)
+# Re-run only after explicit edits to this workflow; the job never calls a model.
 
 on:
   push:
