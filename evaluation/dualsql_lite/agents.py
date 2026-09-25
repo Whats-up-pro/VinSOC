@@ -19,14 +19,18 @@ from evaluation.dualsql_lite.tools import DatabaseTools, SnapshotOnlyDuckDBSnaps
 
 MAX_TURNS = 5
 MAX_TOOL_CALLS = 5
-LINKER_PROMPT_VERSION = "dualsql_linker_v1"
+LINKER_PROMPT_VERSION = "dualsql_linker_v2"
 GENERATOR_PROMPT_VERSION = "dualsql_generator_v1"
 LINKER_INSTRUCTIONS = (
-    "Link the question to the evaluation database. Use database tools for uncertain values. "
-    "Submit one JSON object with exactly tables and grounded_values. "
+    "You are the Schema Linker, not the SQL Generator. Link the question to the evaluation database. "
+    "Use database_profiler and value_search to inspect uncertain schema or literals. "
+    "SQL probe is available only for inspecting data; never return SQL in your final answer. "
+    "Your final answer MUST be one JSON object with exactly tables and grounded_values. "
     "tables is a list of {table, columns} with real table/column names. "
     "grounded_values is a list of {table, column, value, tool_call_id} drawn exactly "
-    "from a database tool result. Do not return SQL or reasoning."
+    "from a database_profiler or value_search result. If none are verified, use an empty list. "
+    "Example shape: {\"tables\":[{\"table\":\"network_flows\",\"columns\":[\"label\"]}],"
+    "\"grounded_values\":[]}. Do not return SQL, Markdown or reasoning."
 )
 GENERATOR_INSTRUCTIONS = (
     "Generate exactly one read-only DuckDB SELECT statement for the question. "
@@ -128,6 +132,8 @@ class DualSQLCaseRunner:
             request = {"model": self.model, "temperature": self.temperature,
                        "max_completion_tokens": self.cap, "messages": messages,
                        "tools": TOOL_SCHEMAS if enabled else None}
+            if role == "linker":
+                request["response_format"] = {"type": "json_object"}
             if self.before_call:
                 self.before_call(request)
             start = time.monotonic()
@@ -195,8 +201,8 @@ class DualSQLCaseRunner:
             if linker.content:
                 try:
                     linked = validate_linked_schema(linker.content, self.tools, linker.trajectory)
-                except (ValueError, KeyError, TypeError, json.JSONDecodeError):
-                    linker.error = "INVALID_LINKED_SCHEMA"
+                except (ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+                    linker.error = f"INVALID_LINKED_SCHEMA: {str(exc)[:200]}"
             if linked is None:
                 return self._result(case, experiment, linker, _RoleResult(None, 0, 0, 0, [], []),
                                     None, None, "LINKER_FORMAT_OR_LIMIT_FAILURE", 0)
@@ -237,6 +243,7 @@ class DualSQLCaseRunner:
         return {"case_id": case.case_id, "question_sha256": _hash(case.question),
                 "category": case.category, "difficulty": case.difficulty,
                 "experiment": experiment, "linked_schema": linked,
+                "linker_submission": linker.content, "linker_error": linker.error,
                 "trajectory": linker.trajectory + generator.trajectory,
                 "linker_turns": linker.turns, "linker_tool_calls": linker.tool_count,
                 "generator_turns": generator.turns, "generator_tool_calls": generator.tool_count,
