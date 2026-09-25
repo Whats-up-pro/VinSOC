@@ -1,3 +1,9 @@
+> **NOT AUTHORIZED FOR EXECUTION**
+>
+> The project owner requested a specification-only handoff. Do not execute this implementation plan.
+> Authoritative handoff document: docs/superpowers/specs/2026-09-25-dualsql-lite-agent-handoff-spec.md
+> This plan is retained only as historical planning material.
+
 # DualSQL-Lite Text-to-SQL Optimization Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking.
