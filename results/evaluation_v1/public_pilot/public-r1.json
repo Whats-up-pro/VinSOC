@@ -1,0 +1,1598 @@
+{
+  "aggregate": {
+    "argument_field_accuracy": 1.0,
+    "case_count": 20,
+    "critical_argument_accuracy": 1.0,
+    "exact_call_f1": 1.0,
+    "exact_call_precision": 1.0,
+    "exact_call_recall": 1.0,
+    "execution_error_rate": 0.0,
+    "forbidden_tool_rate": 0.0,
+    "mean_latency_ms": 0.0,
+    "no_tool_accuracy": 1.0,
+    "ordering_accuracy": null,
+    "p95_latency_ms": 0.0,
+    "provider_error_rate": 0.0,
+    "run_id": "r1_public_dev_v1",
+    "tool_f1": 1.0,
+    "tool_precision": 1.0,
+    "tool_recall": 1.0,
+    "tool_set_exact_match_rate": 1.0,
+    "trajectory_success_rate": 1.0
+  },
+  "benchmark_split_sha256": "f488c33903fe311ea50ddeca16388c30d19a9a7e14ea8e9e5c41a08ea0597b29",
+  "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+  "breakdown": {
+    "category": {
+      "endpoint_only": {
+        "case_ids": [
+          "public_r1_009",
+          "public_r1_010",
+          "public_r1_011",
+          "public_r1_012",
+          "public_r1_013",
+          "public_r1_014",
+          "public_r1_015",
+          "public_r1_016"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 1.0,
+          "case_count": 8,
+          "critical_argument_accuracy": 1.0,
+          "exact_call_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": null,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "categoryendpoint_only",
+          "tool_f1": 1.0,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      },
+      "network_only": {
+        "case_ids": [
+          "public_r1_001",
+          "public_r1_002",
+          "public_r1_003",
+          "public_r1_004",
+          "public_r1_005",
+          "public_r1_006",
+          "public_r1_007",
+          "public_r1_008"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 1.0,
+          "case_count": 8,
+          "critical_argument_accuracy": 1.0,
+          "exact_call_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": null,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "categorynetwork_only",
+          "tool_f1": 1.0,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      },
+      "no_tool": {
+        "case_ids": [
+          "public_r1_017",
+          "public_r1_018",
+          "public_r1_019",
+          "public_r1_020"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 0.0,
+          "case_count": 4,
+          "critical_argument_accuracy": 0.0,
+          "exact_call_f1": 0.0,
+          "exact_call_precision": 0.0,
+          "exact_call_recall": 0.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": 1.0,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "categoryno_tool",
+          "tool_f1": 0.0,
+          "tool_precision": 0.0,
+          "tool_recall": 0.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      }
+    },
+    "difficulty": {
+      "advanced": {
+        "case_ids": [
+          "public_r1_003",
+          "public_r1_006",
+          "public_r1_009",
+          "public_r1_012",
+          "public_r1_015"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 1.0,
+          "case_count": 5,
+          "critical_argument_accuracy": 1.0,
+          "exact_call_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": null,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "difficultyadvanced",
+          "tool_f1": 1.0,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      },
+      "basic": {
+        "case_ids": [
+          "public_r1_001",
+          "public_r1_004",
+          "public_r1_007",
+          "public_r1_010",
+          "public_r1_013",
+          "public_r1_016",
+          "public_r1_017",
+          "public_r1_019"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 1.0,
+          "case_count": 8,
+          "critical_argument_accuracy": 1.0,
+          "exact_call_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": 1.0,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "difficultybasic",
+          "tool_f1": 1.0,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      },
+      "intermediate": {
+        "case_ids": [
+          "public_r1_002",
+          "public_r1_005",
+          "public_r1_008",
+          "public_r1_011",
+          "public_r1_014",
+          "public_r1_018",
+          "public_r1_020"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 1.0,
+          "case_count": 7,
+          "critical_argument_accuracy": 1.0,
+          "exact_call_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": 1.0,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "difficultyintermediate",
+          "tool_f1": 1.0,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      }
+    },
+    "no_tool": {
+      "no": {
+        "case_ids": [
+          "public_r1_001",
+          "public_r1_002",
+          "public_r1_003",
+          "public_r1_004",
+          "public_r1_005",
+          "public_r1_006",
+          "public_r1_007",
+          "public_r1_008",
+          "public_r1_009",
+          "public_r1_010",
+          "public_r1_011",
+          "public_r1_012",
+          "public_r1_013",
+          "public_r1_014",
+          "public_r1_015",
+          "public_r1_016"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 1.0,
+          "case_count": 16,
+          "critical_argument_accuracy": 1.0,
+          "exact_call_f1": 1.0,
+          "exact_call_precision": 1.0,
+          "exact_call_recall": 1.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": null,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "no_toolno",
+          "tool_f1": 1.0,
+          "tool_precision": 1.0,
+          "tool_recall": 1.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      },
+      "yes": {
+        "case_ids": [
+          "public_r1_017",
+          "public_r1_018",
+          "public_r1_019",
+          "public_r1_020"
+        ],
+        "metrics": {
+          "argument_field_accuracy": 0.0,
+          "case_count": 4,
+          "critical_argument_accuracy": 0.0,
+          "exact_call_f1": 0.0,
+          "exact_call_precision": 0.0,
+          "exact_call_recall": 0.0,
+          "execution_error_rate": 0.0,
+          "forbidden_tool_rate": 0.0,
+          "mean_latency_ms": 0.0,
+          "no_tool_accuracy": 1.0,
+          "ordering_accuracy": null,
+          "p95_latency_ms": 0.0,
+          "provider_error_rate": 0.0,
+          "run_id": "no_toolyes",
+          "tool_f1": 0.0,
+          "tool_precision": 0.0,
+          "tool_recall": 0.0,
+          "tool_set_exact_match_rate": 1.0,
+          "trajectory_success_rate": 1.0
+        }
+      }
+    }
+  },
+  "case_count": 20,
+  "case_ids": [
+    "public_r1_001",
+    "public_r1_002",
+    "public_r1_003",
+    "public_r1_004",
+    "public_r1_005",
+    "public_r1_006",
+    "public_r1_007",
+    "public_r1_008",
+    "public_r1_009",
+    "public_r1_010",
+    "public_r1_011",
+    "public_r1_012",
+    "public_r1_013",
+    "public_r1_014",
+    "public_r1_015",
+    "public_r1_016",
+    "public_r1_017",
+    "public_r1_018",
+    "public_r1_019",
+    "public_r1_020"
+  ],
+  "case_results": [
+    {
+      "case_id": "public_r1_001",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "74.125.232.195",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-16T00:00:00",
+              "start": "2011-08-15T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_002",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "94.63.149.150",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-16T00:00:00",
+              "start": "2011-08-15T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_003",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "advanced",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "94.63.149.152",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-16T00:00:00",
+              "start": "2011-08-15T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_004",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "94.63.150.52",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-16T00:00:00",
+              "start": "2011-08-15T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_005",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "74.125.232.201",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-17T00:00:00",
+              "start": "2011-08-16T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_006",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "advanced",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "65.55.56.40",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-17T00:00:00",
+              "start": "2011-08-16T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_007",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "61.135.188.210",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-17T00:00:00",
+              "start": "2011-08-16T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_008",
+      "category": "network_only",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "61.135.188.212",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2011-08-17T00:00:00",
+              "start": "2011-08-16T00:00:00"
+            }
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_009",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "advanced",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "scranton.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_010",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "scranton.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_011",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "nashua.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_012",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "advanced",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "nashua.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_013",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "newyork.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_014",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "newyork.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_015",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "advanced",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "utica.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_016",
+      "category": "endpoint_only",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "utica.dmevals.local",
+            "time_range": {
+              "end": "2020-05-03T00:00:00",
+              "start": "2020-05-02T00:00:00"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "case_id": "public_r1_017",
+      "category": "no_tool",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [],
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    },
+    {
+      "case_id": "public_r1_018",
+      "category": "no_tool",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [],
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    },
+    {
+      "case_id": "public_r1_019",
+      "category": "no_tool",
+      "critical_arg_errors": 0,
+      "difficulty": "basic",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [],
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    },
+    {
+      "case_id": "public_r1_020",
+      "category": "no_tool",
+      "critical_arg_errors": 0,
+      "difficulty": "intermediate",
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "matches": [],
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    }
+  ],
+  "config": {
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "model": "gpt-4.1-mini-2025-04-14",
+    "provider": "openai",
+    "temperature": 0
+  },
+  "evaluator_commit_sha": "8d0df8262025b100a6e171b166a1df14d0e39304",
+  "expected_case_ids": [
+    "public_r1_001",
+    "public_r1_002",
+    "public_r1_003",
+    "public_r1_004",
+    "public_r1_005",
+    "public_r1_006",
+    "public_r1_007",
+    "public_r1_008",
+    "public_r1_009",
+    "public_r1_010",
+    "public_r1_011",
+    "public_r1_012",
+    "public_r1_013",
+    "public_r1_014",
+    "public_r1_015",
+    "public_r1_016",
+    "public_r1_017",
+    "public_r1_018",
+    "public_r1_019",
+    "public_r1_020"
+  ],
+  "gold_validation": {
+    "public_sql_001": [
+      {
+        "result_sha256": "efb2df7901882d7bba9600b8e6eeb14f25637401ee3f981cb59753087afc00de",
+        "row_count": 1
+      }
+    ],
+    "public_sql_002": [
+      {
+        "result_sha256": "cbdd2b19aa44cec38ba50bdc36d06288abc4632ddc0cab87a7d7db826f29fb35",
+        "row_count": 17
+      }
+    ],
+    "public_sql_003": [
+      {
+        "result_sha256": "346df59631ff81ec8cd348c62edc2561b1e8bc72b8da30a36f94bff63cf443aa",
+        "row_count": 1
+      }
+    ],
+    "public_sql_004": [
+      {
+        "result_sha256": "fe19f170e3b5326ff3fb053403b5ccbddd0ecaeccaa12dac9fe739b3eec05934",
+        "row_count": 1
+      }
+    ],
+    "public_sql_005": [
+      {
+        "result_sha256": "33b0cd86e04ebd85ae9d5e321b32a01f7edf8f9dedd46fc6c6933a0289489f03",
+        "row_count": 4
+      }
+    ],
+    "public_sql_006": [
+      {
+        "result_sha256": "4b42fa19cab0103e24df380d84e60a8817c2c62c9fc5c9c4cea5b4b916466265",
+        "row_count": 1
+      }
+    ],
+    "public_sql_007": [
+      {
+        "result_sha256": "f0d8423f3ac7a2165808533394e9c3f5ce480abffaa9bdcbf2eb5bfffd58c81e",
+        "row_count": 5
+      }
+    ],
+    "public_sql_008": [
+      {
+        "result_sha256": "4189c28962fffec704e1a57b35b6870995b48a3cb13fb9ff9e5a8ceecff99313",
+        "row_count": 1
+      }
+    ]
+  },
+  "ineligible_reasons": [],
+  "official_eligible": false,
+  "official_ineligible_reasons": [
+    "public_dev_pilot_is_distinct_from_official_benchmarks"
+  ],
+  "pilot_eligible": true,
+  "preflight": {
+    "all_case_ids": [
+      "public_r1_001",
+      "public_r1_002",
+      "public_r1_003",
+      "public_r1_004",
+      "public_r1_005",
+      "public_r1_006",
+      "public_r1_007",
+      "public_r1_008",
+      "public_r1_009",
+      "public_r1_010",
+      "public_r1_011",
+      "public_r1_012",
+      "public_r1_013",
+      "public_r1_014",
+      "public_r1_015",
+      "public_r1_016",
+      "public_r1_017",
+      "public_r1_018",
+      "public_r1_019",
+      "public_r1_020",
+      "public_sql_001",
+      "public_sql_002",
+      "public_sql_003",
+      "public_sql_004",
+      "public_sql_005",
+      "public_sql_006",
+      "public_sql_007",
+      "public_sql_008"
+    ],
+    "bounds": [
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8552,
+        "max_cost_usd": 0.005020800000000001,
+        "request_utf8_bytes": 4456
+      },
+      {
+        "input_token_bound": 8552,
+        "max_cost_usd": 0.005020800000000001,
+        "request_utf8_bytes": 4456
+      },
+      {
+        "input_token_bound": 8551,
+        "max_cost_usd": 0.0050203999999999995,
+        "request_utf8_bytes": 4455
+      },
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8551,
+        "max_cost_usd": 0.0050203999999999995,
+        "request_utf8_bytes": 4455
+      },
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8496,
+        "max_cost_usd": 0.0049984,
+        "request_utf8_bytes": 4400
+      },
+      {
+        "input_token_bound": 8491,
+        "max_cost_usd": 0.0049964,
+        "request_utf8_bytes": 4395
+      },
+      {
+        "input_token_bound": 8506,
+        "max_cost_usd": 0.0050024,
+        "request_utf8_bytes": 4410
+      },
+      {
+        "input_token_bound": 8501,
+        "max_cost_usd": 0.0050003999999999995,
+        "request_utf8_bytes": 4405
+      },
+      {
+        "input_token_bound": 8497,
+        "max_cost_usd": 0.0049988,
+        "request_utf8_bytes": 4401
+      },
+      {
+        "input_token_bound": 8497,
+        "max_cost_usd": 0.0049988,
+        "request_utf8_bytes": 4401
+      },
+      {
+        "input_token_bound": 8495,
+        "max_cost_usd": 0.004998,
+        "request_utf8_bytes": 4399
+      },
+      {
+        "input_token_bound": 8494,
+        "max_cost_usd": 0.0049976000000000005,
+        "request_utf8_bytes": 4398
+      },
+      {
+        "input_token_bound": 8354,
+        "max_cost_usd": 0.0049416,
+        "request_utf8_bytes": 4258
+      },
+      {
+        "input_token_bound": 8359,
+        "max_cost_usd": 0.0049436,
+        "request_utf8_bytes": 4263
+      },
+      {
+        "input_token_bound": 8339,
+        "max_cost_usd": 0.0049356,
+        "request_utf8_bytes": 4243
+      },
+      {
+        "input_token_bound": 8338,
+        "max_cost_usd": 0.004935200000000001,
+        "request_utf8_bytes": 4242
+      },
+      {
+        "input_token_bound": 5049,
+        "max_cost_usd": 0.0036196,
+        "request_utf8_bytes": 953
+      },
+      {
+        "input_token_bound": 5106,
+        "max_cost_usd": 0.0036424,
+        "request_utf8_bytes": 1010
+      },
+      {
+        "input_token_bound": 5131,
+        "max_cost_usd": 0.0036524,
+        "request_utf8_bytes": 1035
+      },
+      {
+        "input_token_bound": 5090,
+        "max_cost_usd": 0.003636,
+        "request_utf8_bytes": 994
+      },
+      {
+        "input_token_bound": 5120,
+        "max_cost_usd": 0.003648,
+        "request_utf8_bytes": 1024
+      },
+      {
+        "input_token_bound": 5095,
+        "max_cost_usd": 0.003638,
+        "request_utf8_bytes": 999
+      },
+      {
+        "input_token_bound": 5123,
+        "max_cost_usd": 0.0036492000000000004,
+        "request_utf8_bytes": 1027
+      },
+      {
+        "input_token_bound": 5141,
+        "max_cost_usd": 0.0036564,
+        "request_utf8_bytes": 1045
+      }
+    ],
+    "budget_limit_usd": 1.0,
+    "cost_ceiling_usd": 0.12905600000000003,
+    "method": "serialized full request UTF-8 bytes + 4096 framing tokens; 1000 output tokens per call; zero retries"
+  },
+  "pricing": {
+    "calculated_cost_usd": 0.008157600000000001,
+    "checked_utc": "2026-09-25T04:41:42.929546+00:00",
+    "input_usd_per_million": 0.4,
+    "known_cost_usd": 0.008157600000000001,
+    "output_usd_per_million": 1.6,
+    "source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini",
+    "usage_complete": true
+  },
+  "prompt_sha256": "2699cdfb083a552933c40029baa34cb53e44e190284a2ad35378355abf3c06fd",
+  "provider_metadata": {
+    "calls": [
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_001",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_002",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_003",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_004",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_005",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_006",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_007",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_008",
+        "category": "network_only",
+        "cost_usd": 0.0004208000000000001,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 808,
+        "output_tokens": 61,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_009",
+        "category": "endpoint_only",
+        "cost_usd": 0.000402,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 785,
+        "output_tokens": 55,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_010",
+        "category": "endpoint_only",
+        "cost_usd": 0.0004024,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 786,
+        "output_tokens": 55,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_011",
+        "category": "endpoint_only",
+        "cost_usd": 0.00040320000000000004,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 788,
+        "output_tokens": 55,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_012",
+        "category": "endpoint_only",
+        "cost_usd": 0.00040280000000000003,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 787,
+        "output_tokens": 55,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_013",
+        "category": "endpoint_only",
+        "cost_usd": 0.000404,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 790,
+        "output_tokens": 55,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_014",
+        "category": "endpoint_only",
+        "cost_usd": 0.000404,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 790,
+        "output_tokens": 55,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_015",
+        "category": "endpoint_only",
+        "cost_usd": 0.000402,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 789,
+        "output_tokens": 54,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_016",
+        "category": "endpoint_only",
+        "cost_usd": 0.0004,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 784,
+        "output_tokens": 54,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_017",
+        "category": "no_tool",
+        "cost_usd": 0.0003492,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 733,
+        "output_tokens": 35,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_018",
+        "category": "no_tool",
+        "cost_usd": 0.00030639999999999997,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 730,
+        "output_tokens": 9,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_019",
+        "category": "no_tool",
+        "cost_usd": 0.00032920000000000003,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 731,
+        "output_tokens": 23,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_r1_020",
+        "category": "no_tool",
+        "cost_usd": 0.000586,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 729,
+        "output_tokens": 184,
+        "status": "succeeded"
+      }
+    ],
+    "total_calls": 20
+  },
+  "row_counts": {
+    "network_flows": 243906,
+    "sysmon_process_events": 143884
+  },
+  "run_status": "completed",
+  "schema_sha256": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+  "scorer_file_sha256": {
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+    "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+    "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+    "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+    "vinsoc_data/duckdb_store.py": "31e6a3f03ed885ebbccd20260584ec1ba7d89e7b1ec2828d4b6e04afc4b7f86e"
+  },
+  "scorer_sha256": "e116736b2ccf86a5cf28724e7fad2eace604edbc654e33a3c2bd5818bcbf03ca",
+  "snapshot_content_sha256": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+  "snapshot_sha256": "7c99d4a3e9706c01960426744b8ed0d0e0807259dba496336a0a8ade5d89d42c",
+  "source_file_sha256": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+    "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+  },
+  "split": "public_dev",
+  "track": "r1"
+}
