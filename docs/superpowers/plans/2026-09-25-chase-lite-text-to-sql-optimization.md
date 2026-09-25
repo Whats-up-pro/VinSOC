@@ -1,3 +1,9 @@
+> **SUPERSEDED - DO NOT IMPLEMENT**
+>
+> The active VinSOC R2 optimization direction changed on 2026-09-25 after adopting DualSQL (arXiv:2609.18135v1) as the primary architecture reference.
+> Active design: docs/superpowers/specs/2026-09-25-dualsql-lite-text-to-sql-optimization-design.md
+> This file is retained only for design history and CHASE-SQL comparison.
+
 # CHASE-Lite Text-to-SQL Optimization Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
