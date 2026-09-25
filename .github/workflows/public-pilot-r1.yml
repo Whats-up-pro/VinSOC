@@ -1,9 +1,6 @@
 name: Public pilot R1 A1 (one-shot)
 
 on:
-  push:
-    branches: [codex/r2-public-eval]
-    paths: [evaluation/public_pilot/markers/r1.trigger]
   workflow_dispatch:
 
 permissions:
