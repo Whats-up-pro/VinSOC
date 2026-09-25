@@ -65,12 +65,13 @@ def test_e1_linker_grounding_then_static_generator(snapshot):
 
     linked = {"tables": [{"table": "network_flows", "columns": ["source_dataset", "label"]}],
               "grounded_values": [{"table": "network_flows", "column": "source_dataset",
-                                   "value": "ctu13_s5", "tool_call_id": "tc_1"}]}
+                                   "value": "ctu13_s5"}]}
     client = FakeClient(response(calls=[("value_search", {"query": "scenario 5"})]),
                         response(json.dumps(linked)),
                         response("SELECT count(*) FROM network_flows"))
     result = DualSQLCaseRunner(snapshot, client).run_case(case(), "E1")
-    assert result["linked_schema"] == linked
+    assert result["linked_schema"] == {**linked, "grounded_values": [
+        {**linked["grounded_values"][0], "tool_call_id": "tc_1"}]}
     assert result["linker_tool_calls"] == 1 and result["generator_tool_calls"] == 0
     assert client.requests[0]["tools"] and client.requests[1]["tools"]
     assert client.requests[0]["response_format"] == {"type": "json_object"}
@@ -101,7 +102,7 @@ def test_e2_generator_can_probe_but_e3_can_recover_after_link(snapshot):
     {"tables": [{"table": "network_flows", "columns": ["invented"]}], "grounded_values": []},
     {"tables": [{"table": "network_flows", "columns": ["label"]}],
      "grounded_values": [{"table": "network_flows", "column": "label",
-                          "value": "GOLD_ONLY_SENTINEL", "tool_call_id": "tc_1"}]},
+                          "value": "GOLD_ONLY_SENTINEL"}]},
 ])
 def test_invalid_link_is_model_failure_without_generator(snapshot, bad_link):
     from evaluation.dualsql_lite.agents import DualSQLCaseRunner

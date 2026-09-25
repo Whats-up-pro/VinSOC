@@ -27,7 +27,7 @@ from evaluation.text_to_sql_snapshot import sha256_file
 
 
 CONDITIONS = ("E0", "E1", "E2", "E3")
-SERIES_VERSION = "dualsql_lite_public_dev_v2"
+SERIES_VERSION = "dualsql_lite_public_dev_v3"
 PRICING_SOURCE = "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
 
 

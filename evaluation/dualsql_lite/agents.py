@@ -19,7 +19,7 @@ from evaluation.dualsql_lite.tools import DatabaseTools, SnapshotOnlyDuckDBSnaps
 
 MAX_TURNS = 5
 MAX_TOOL_CALLS = 5
-LINKER_PROMPT_VERSION = "dualsql_linker_v2"
+LINKER_PROMPT_VERSION = "dualsql_linker_v3"
 GENERATOR_PROMPT_VERSION = "dualsql_generator_v1"
 LINKER_INSTRUCTIONS = (
     "You are the Schema Linker, not the SQL Generator. Link the question to the evaluation database. "
@@ -27,8 +27,10 @@ LINKER_INSTRUCTIONS = (
     "SQL probe is available only for inspecting data; never return SQL in your final answer. "
     "Your final answer MUST be one JSON object with exactly tables and grounded_values. "
     "tables is a list of {table, columns} with real table/column names. "
-    "grounded_values is a list of {table, column, value, tool_call_id} drawn exactly "
-    "from a database_profiler or value_search result. If none are verified, use an empty list. "
+    "grounded_values is a list of {table, column, value} copied exactly from a "
+    "database_profiler example or value_search match. The validator attaches provenance. "
+    "Do not include a tool ID or values copied only from the question, a SQL probe, "
+    "or an empty/failed tool response. If none are verified, use an empty list. "
     "Example shape: {\"tables\":[{\"table\":\"network_flows\",\"columns\":[\"label\"]}],"
     "\"grounded_values\":[]}. Do not return SQL, Markdown or reasoning."
 )
@@ -80,7 +82,7 @@ def validate_linked_schema(raw: str, tools: DatabaseTools,
                        for col in columns)):
             raise ValueError("Invented table or column")
         selected[table] = set(columns)
-    observed: dict[str, set[tuple[str, str, str]]] = {}
+    observed: dict[tuple[str, str, str], str] = {}
     for call in trajectory:
         result = call["result"]
         if not result.get("ok"):
@@ -92,15 +94,19 @@ def validate_linked_schema(raw: str, tools: DatabaseTools,
             for col in table.get("columns", []):
                 grounded.update((table["name"], col["name"], str(example))
                                 for example in col.get("examples", []))
-        observed[call["tool_call_id"]] = grounded
+        for triple in grounded:
+            observed.setdefault(triple, call["tool_call_id"])
+    verified = []
     for item in value["grounded_values"]:
-        if not isinstance(item, dict) or set(item) != {"table", "column", "value", "tool_call_id"}:
+        if not isinstance(item, dict) or set(item) != {"table", "column", "value"}:
             raise ValueError("Malformed grounded value")
         table, col = item["table"], item["column"]
+        key = (table, col, str(item["value"]))
         if (table not in selected or col not in selected[table]
-                or (table, col, str(item["value"])) not in observed.get(item["tool_call_id"], set())):
+                or key not in observed):
             raise ValueError("Invented or untraceable grounded value")
-    return value
+        verified.append({**item, "tool_call_id": observed[key]})
+    return {**value, "grounded_values": verified}
 
 
 class DualSQLCaseRunner:

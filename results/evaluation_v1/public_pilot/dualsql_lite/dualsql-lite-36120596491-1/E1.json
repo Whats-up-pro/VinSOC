@@ -1,0 +1,1709 @@
+{
+  "average_turns": 4.0,
+  "breakdown": {
+    "category": {
+      "aggregation": {
+        "correct": 0,
+        "total": 1
+      },
+      "distinct": {
+        "correct": 0,
+        "total": 1
+      },
+      "endpoint": {
+        "correct": 0,
+        "total": 2
+      },
+      "network": {
+        "correct": 0,
+        "total": 2
+      },
+      "ordering_limit": {
+        "correct": 0,
+        "total": 1
+      },
+      "time_range": {
+        "correct": 0,
+        "total": 1
+      }
+    },
+    "difficulty": {
+      "advanced": {
+        "correct": 0,
+        "total": 3
+      },
+      "basic": {
+        "correct": 0,
+        "total": 2
+      },
+      "intermediate": {
+        "correct": 0,
+        "total": 3
+      }
+    }
+  },
+  "case_count": 8,
+  "case_results": [
+    {
+      "case_id": "public_sql_001",
+      "category": "network",
+      "cost_usd": 0.0019428,
+      "difficulty": "basic",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 4053,
+      "latency_ms": 4813.609,
+      "linked_schema": null,
+      "linker_error": "INVALID_LINKED_SCHEMA: Invented or untraceable grounded value",
+      "linker_submission": "{\"tables\":[{\"table\":\"network_flows\",\"columns\":[\"source_dataset\",\"label\"]}],\"grounded_values\":[{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"value\":\"ctu13_s5\",\"tool_call_id\":\"7\"},{\"table\":\"network_flows\",\"column\":\"label\",\"value\":\"flow=From-Botnet-V46-TCP-Attempt\",\"tool_call_id\":\"5\"}]}",
+      "linker_tool_calls": 4,
+      "linker_turns": 5,
+      "malformed_agent_outputs": 0,
+      "model_calls": 5,
+      "output_tokens": 201,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00018680000000000001,
+          "input_tokens": 399,
+          "latency_ms": 653.701,
+          "output_tokens": 17,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003168,
+          "input_tokens": 684,
+          "latency_ms": 1411.611,
+          "output_tokens": 27,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000406,
+          "input_tokens": 899,
+          "latency_ms": 736.41,
+          "output_tokens": 29,
+          "role": "linker",
+          "turn": 3
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00047,
+          "input_tokens": 995,
+          "latency_ms": 789.653,
+          "output_tokens": 45,
+          "role": "linker",
+          "turn": 4
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0005632,
+          "input_tokens": 1076,
+          "latency_ms": 1222.234,
+          "output_tokens": 83,
+          "role": "linker",
+          "turn": 5
+        }
+      ],
+      "question_sha256": "23992610c4439491eeccf73c725525adf63bde52bb583dbe23fb9ccc12420efb",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "ctu13_s5",
+                      "ctu13_s7"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [],
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows",
+                "row_count": 243906
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_VEhDWa22FUct5WZzONuIqUwA",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "column": "label",
+            "query": "From-Botnet",
+            "table": "network_flows"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Background-CVUT-Proxy"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt-SPAM"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_7yzDdTS6jp7MqDxOy9dcCzIT",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "column": "source_dataset",
+            "query": "ctu13_s5",
+            "table": "network_flows"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s5"
+              },
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s7"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_sykKrgoTtfWfAqpotEDP6tzL",
+          "turn": 3
+        },
+        {
+          "arguments": {
+            "sql": "SELECT COUNT(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s5' AND label LIKE 'flow=From-Botnet%'"
+          },
+          "result": {
+            "columns": [
+              "flow_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "flow_count": 901
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_g1tEuWSLrKqV5m2pZlpFfjQ4",
+          "turn": 4
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_002",
+      "category": "distinct",
+      "cost_usd": 0.0015036,
+      "difficulty": "intermediate",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 2743,
+      "latency_ms": 4061.91,
+      "linked_schema": null,
+      "linker_error": "INVALID_LINKED_SCHEMA: Invented or untraceable grounded value",
+      "linker_submission": "{\"tables\":[{\"table\":\"network_flows\",\"columns\":[\"dst_ip\",\"label\",\"source_dataset\"]}],\"grounded_values\":[{\"table\":\"network_flows\",\"column\":\"label\",\"value\":\"flow=From-Botnet-V46-TCP-Attempt\",\"tool_call_id\":\"value_search\"},{\"table\":\"network_flows\",\"column\":\"label\",\"value\":\"flow=From-Botnet-V46-TCP-Attempt-SPAM\",\"tool_call_id\":\"value_search\"},{\"table\":\"network_flows\",\"column\":\"label\",\"value\":\"flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted\",\"tool_call_id\":\"value_search\"},{\"table\":\"network_flows\",\"column\":\"label\",\"value\":\"flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted\",\"tool_call_id\":\"value_search\"},{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"value\":\"ctu13_s7\",\"tool_call_id\":\"value_search\"}]}",
+      "linker_tool_calls": 3,
+      "linker_turns": 4,
+      "malformed_agent_outputs": 0,
+      "model_calls": 4,
+      "output_tokens": 254,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000192,
+          "input_tokens": 412,
+          "latency_ms": 649.332,
+          "output_tokens": 17,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00027719999999999996,
+          "input_tokens": 617,
+          "latency_ms": 652.245,
+          "output_tokens": 19,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000294,
+          "input_tokens": 667,
+          "latency_ms": 647.412,
+          "output_tokens": 17,
+          "role": "linker",
+          "turn": 3
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0007404000000000001,
+          "input_tokens": 1047,
+          "latency_ms": 2112.921,
+          "output_tokens": 201,
+          "role": "linker",
+          "turn": 4
+        }
+      ],
+      "question_sha256": "eedc30c6659bbc4e0f8ea38ea98add56cb90c0a1fdf0819b61e1ee198f605647",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "query": "From-Botnet"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Background-CVUT-Proxy"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt-SPAM"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_uGRgD6O2rUEIRXcLO9wtUSb4",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "query": "CTU-13-7"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_Ub1Jk5fDUlyYZh9h5i3ESsxF",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "query": "CTU-13"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s5"
+              },
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s7"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "101.13.163.229"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "101.142.13.164"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "107.5.13.148"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "108.13.139.181"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "108.13.176.161"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.13.19.185"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.169.13.153"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.169.13.204"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.169.13.205"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.169.13.212"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=Background-google-analytics13"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_QFObbUGbPFhSWgG2rEc3f9LE",
+          "turn": 3
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_003",
+      "category": "time_range",
+      "cost_usd": 0.0018452000000000002,
+      "difficulty": "intermediate",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 3725,
+      "latency_ms": 4058.063,
+      "linked_schema": null,
+      "linker_error": "INVALID_LINKED_SCHEMA: Invented or untraceable grounded value",
+      "linker_submission": "{\"tables\":[{\"table\":\"network_flows\",\"columns\":[\"source_dataset\",\"src_ip\",\"event_time\"]}],\"grounded_values\":[{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"value\":\"ctu13_s5\",\"tool_call_id\":6},{\"table\":\"network_flows\",\"column\":\"src_ip\",\"value\":\"147.32.84.165\",\"tool_call_id\":7}]}",
+      "linker_tool_calls": 4,
+      "linker_turns": 5,
+      "malformed_agent_outputs": 0,
+      "model_calls": 5,
+      "output_tokens": 222,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0001988,
+          "input_tokens": 429,
+          "latency_ms": 597.973,
+          "output_tokens": 17,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000308,
+          "input_tokens": 714,
+          "latency_ms": 691.605,
+          "output_tokens": 14,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00034520000000000004,
+          "input_tokens": 759,
+          "latency_ms": 654.045,
+          "output_tokens": 26,
+          "role": "linker",
+          "turn": 3
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0004736,
+          "input_tokens": 852,
+          "latency_ms": 1112.881,
+          "output_tokens": 83,
+          "role": "linker",
+          "turn": 4
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0005196,
+          "input_tokens": 971,
+          "latency_ms": 1001.559,
+          "output_tokens": 82,
+          "role": "linker",
+          "turn": 5
+        }
+      ],
+      "question_sha256": "f8fac2f5fedf73c3fc5bd4f2e6ba5ad5f25856959f942d12ca2eeaa8ac221638",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "ctu13_s5",
+                      "ctu13_s7"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [],
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows",
+                "row_count": 243906
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_dOJ3iYHxB7Akx9b5ODx2Swlu",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "query": "5"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_MeZ65Sowx7RYl8j1GKp6EGD9",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "column": "source_dataset",
+            "query": "s5",
+            "table": "network_flows"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s5"
+              },
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s7"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_beE7bYVdnBJwqeLvTEMCLQOP",
+          "turn": 3
+        },
+        {
+          "arguments": {
+            "sql": "SELECT COUNT(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s5' AND src_ip = '147.32.84.165' AND event_time >= '2011-08-15 16:52:50' AND event_time < '2011-08-15 16:53:00'"
+          },
+          "result": {
+            "columns": [
+              "flow_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "flow_count": 3
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_v45JGMLmVyREZ6NlUJ6EVC7J",
+          "turn": 4
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_004",
+      "category": "network",
+      "cost_usd": 0.0015056000000000002,
+      "difficulty": "advanced",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 3448,
+      "latency_ms": 3135.058,
+      "linked_schema": null,
+      "linker_error": "TURN_LIMIT",
+      "linker_submission": null,
+      "linker_tool_calls": 5,
+      "linker_turns": 5,
+      "malformed_agent_outputs": 1,
+      "model_calls": 5,
+      "output_tokens": 79,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00018960000000000003,
+          "input_tokens": 406,
+          "latency_ms": 608.898,
+          "output_tokens": 17,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003020000000000001,
+          "input_tokens": 691,
+          "latency_ms": 606.13,
+          "output_tokens": 16,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003192,
+          "input_tokens": 738,
+          "latency_ms": 641.12,
+          "output_tokens": 15,
+          "role": "linker",
+          "turn": 3
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000336,
+          "input_tokens": 784,
+          "latency_ms": 687.054,
+          "output_tokens": 14,
+          "role": "linker",
+          "turn": 4
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003588,
+          "input_tokens": 829,
+          "latency_ms": 591.856,
+          "output_tokens": 17,
+          "role": "linker",
+          "turn": 5
+        }
+      ],
+      "question_sha256": "32674b9d5b95657dee4b505acfd4d5635b9015c680a52b473133f3944bc82505",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "ctu13_s5",
+                      "ctu13_s7"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [],
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows",
+                "row_count": 243906
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_c5E5Q2sjJmMqF34cth9RrtMb",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "query": "scenario 7"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_gbckyHvEDyvz1MBUGGREv3us",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "query": "s7"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_Mi8G0tLL57CGL9TMc5Rvswnp",
+          "turn": 3
+        },
+        {
+          "arguments": {
+            "query": "7"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_ah9TuUmVzokk9OOcxttgrcbW",
+          "turn": 4
+        },
+        {
+          "arguments": {
+            "query": "From-Botnet"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Background-CVUT-Proxy"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt-SPAM"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_JkMyf4jwjerOgyHyRD0AGtrd",
+          "turn": 5
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_005",
+      "category": "aggregation",
+      "cost_usd": 0.0005548,
+      "difficulty": "intermediate",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 1119,
+      "latency_ms": 1475.024,
+      "linked_schema": null,
+      "linker_error": "INVALID_LINKED_SCHEMA: Invented or untraceable grounded value",
+      "linker_submission": "{\"tables\":[{\"table\":\"sysmon_process_events\",\"columns\":[\"host\",\"event_id\"]}],\"grounded_values\":[{\"table\":\"sysmon_process_events\",\"column\":\"event_id\",\"value\":1,\"tool_call_id\":\"1\"}]}",
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 67,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00019280000000000002,
+          "input_tokens": 410,
+          "latency_ms": 652.396,
+          "output_tokens": 18,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000362,
+          "input_tokens": 709,
+          "latency_ms": 822.628,
+          "output_tokens": 49,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "4ba2134e0b19597c915f9667fcddc9a9f3f80ea30f8199f229ea69268432cfdc",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "otrf_apt29_day1"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [
+                      "NASHUA.dmevals.local",
+                      "NEWYORK.dmevals.local",
+                      "SCRANTON.dmevals.local",
+                      "UTICA.dmevals.local"
+                    ],
+                    "name": "host",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_id",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_pid",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "process_id",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "command_line",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "user_name",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "sysmon_process_events",
+                "row_count": 143884
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_bNrsfjK7ZgyJPWDFmhoSnqph",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_006",
+      "category": "endpoint",
+      "cost_usd": 0.002046,
+      "difficulty": "basic",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 4331,
+      "latency_ms": 4559.298,
+      "linked_schema": null,
+      "linker_error": "TURN_LIMIT",
+      "linker_submission": null,
+      "linker_tool_calls": 5,
+      "linker_turns": 5,
+      "malformed_agent_outputs": 1,
+      "model_calls": 5,
+      "output_tokens": 196,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00019600000000000002,
+          "input_tokens": 418,
+          "latency_ms": 1230.464,
+          "output_tokens": 18,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000362,
+          "input_tokens": 717,
+          "latency_ms": 828.06,
+          "output_tokens": 47,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0004536,
+          "input_tokens": 998,
+          "latency_ms": 737.482,
+          "output_tokens": 34,
+          "role": "linker",
+          "turn": 3
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0004908000000000001,
+          "input_tokens": 1063,
+          "latency_ms": 739.341,
+          "output_tokens": 41,
+          "role": "linker",
+          "turn": 4
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0005436,
+          "input_tokens": 1135,
+          "latency_ms": 1023.951,
+          "output_tokens": 56,
+          "role": "linker",
+          "turn": 5
+        }
+      ],
+      "question_sha256": "7a2c1613c4a1332a6e9fbd0d93d8ac45bccfe7b22a44a1d689e63f6ae32e78ef",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "otrf_apt29_day1"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [
+                      "NASHUA.dmevals.local",
+                      "NEWYORK.dmevals.local",
+                      "SCRANTON.dmevals.local",
+                      "UTICA.dmevals.local"
+                    ],
+                    "name": "host",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_id",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_pid",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "process_id",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "command_line",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "user_name",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "sysmon_process_events",
+                "row_count": 143884
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_1wbDwbc77tqK9Xh7DMNMioBS",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "column": "source_row_id",
+            "query": "apt29_evals_day1_manual_2020-05-01225525.json:line:828",
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "source_row_id",
+                "table": "sysmon_process_events",
+                "value": "apt29_evals_day1_manual_2020-05-01225525.json:line:1"
+              },
+              {
+                "column": "source_row_id",
+                "table": "sysmon_process_events",
+                "value": "apt29_evals_day1_manual_2020-05-01225525.json:line:10"
+              },
+              {
+                "column": "source_row_id",
+                "table": "sysmon_process_events",
+                "value": "apt29_evals_day1_manual_2020-05-01225525.json:line:100"
+              },
+              {
+                "column": "source_row_id",
+                "table": "sysmon_process_events",
+                "value": "apt29_evals_day1_manual_2020-05-01225525.json:line:1000"
+              },
+              {
+                "column": "source_row_id",
+                "table": "sysmon_process_events",
+                "value": "apt29_evals_day1_manual_2020-05-01225525.json:line:100001"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_KZACNdhoIzBffiRxhhUIxiZg",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "query": "apt29_evals_day1_manual_2020-05-01225525.json:line:828"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_zyuSeboiH4w2zqeWuqrSKSZu",
+          "turn": 3
+        },
+        {
+          "arguments": {
+            "query": "apt29_evals_day1_manual_2020-05-01225525.json:line:828",
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_7mKX1DDuYFOGRm7BzyOTgadw",
+          "turn": 4
+        },
+        {
+          "arguments": {
+            "sql": "SELECT host, image, parent_image FROM sysmon_process_events WHERE source_row_id = 'apt29_evals_day1_manual_2020-05-01225525.json:line:828' LIMIT 1"
+          },
+          "result": {
+            "columns": [
+              "host",
+              "image",
+              "parent_image"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "host": "SCRANTON.dmevals.local",
+                "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "parent_image": "C:\\Windows\\System32\\cmd.exe"
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_UgXHWAWGhQWXHJF08AXkdt5K",
+          "turn": 5
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_007",
+      "category": "ordering_limit",
+      "cost_usd": 0.0017576,
+      "difficulty": "advanced",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 3778,
+      "latency_ms": 3974.93,
+      "linked_schema": null,
+      "linker_error": "INVALID_LINKED_SCHEMA: Invented or untraceable grounded value",
+      "linker_submission": "{\"tables\":[{\"table\":\"sysmon_process_events\",\"columns\":[\"host\",\"event_id\",\"image\"]}],\"grounded_values\":[{\"table\":\"sysmon_process_events\",\"column\":\"host\",\"value\":\"SCRANTON.dmevals.local\",\"tool_call_id\":\"value_search-3\"}]}",
+      "linker_tool_calls": 4,
+      "linker_turns": 5,
+      "malformed_agent_outputs": 0,
+      "model_calls": 5,
+      "output_tokens": 154,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00019480000000000002,
+          "input_tokens": 415,
+          "latency_ms": 828.214,
+          "output_tokens": 18,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003176,
+          "input_tokens": 714,
+          "latency_ms": 834.011,
+          "output_tokens": 20,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003556,
+          "input_tokens": 765,
+          "latency_ms": 698.04,
+          "output_tokens": 31,
+          "role": "linker",
+          "turn": 3
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00040960000000000004,
+          "input_tokens": 920,
+          "latency_ms": 690.093,
+          "output_tokens": 26,
+          "role": "linker",
+          "turn": 4
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00048,
+          "input_tokens": 964,
+          "latency_ms": 924.572,
+          "output_tokens": 59,
+          "role": "linker",
+          "turn": 5
+        }
+      ],
+      "question_sha256": "704e2b9d39da14f9c0bcff700d5b5f6dbfbb75b20de07b98f1f12ff0e04f65ff",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "otrf_apt29_day1"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [
+                      "NASHUA.dmevals.local",
+                      "NEWYORK.dmevals.local",
+                      "SCRANTON.dmevals.local",
+                      "UTICA.dmevals.local"
+                    ],
+                    "name": "host",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_id",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_pid",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "process_id",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "command_line",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "user_name",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "sysmon_process_events",
+                "row_count": 143884
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_Wuhcf9FWmZjusiMBDYkC22jA",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "query": "SCRANTON.dmevals.local"
+          },
+          "result": {
+            "error_type": "OUTPUT_LIMIT",
+            "message": "Tool result exceeds byte limit",
+            "ok": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_5h4z7AM4UImE1Dk1IJvaLe55",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "column": "host",
+            "query": "SCRANTON.dmevals.local",
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "host",
+                "table": "sysmon_process_events",
+                "value": "NASHUA.dmevals.local"
+              },
+              {
+                "column": "host",
+                "table": "sysmon_process_events",
+                "value": "NEWYORK.dmevals.local"
+              },
+              {
+                "column": "host",
+                "table": "sysmon_process_events",
+                "value": "SCRANTON.dmevals.local"
+              },
+              {
+                "column": "host",
+                "table": "sysmon_process_events",
+                "value": "UTICA.dmevals.local"
+              }
+            ],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_MKpsfa8QX7x1zUikUxyFa79j",
+          "turn": 3
+        },
+        {
+          "arguments": {
+            "column": "event_id",
+            "query": "1",
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "matches": [],
+            "ok": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_tgIZH7eiLkQtruLFTyw7ShyK",
+          "turn": 4
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_008",
+      "category": "endpoint",
+      "cost_usd": 0.00035720000000000006,
+      "difficulty": "advanced",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 417,
+      "latency_ms": 1476.016,
+      "linked_schema": null,
+      "linker_error": "TOOL_LIMIT_OR_UNAVAILABLE",
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 1,
+      "malformed_agent_outputs": 1,
+      "model_calls": 1,
+      "output_tokens": 119,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00035720000000000006,
+          "input_tokens": 417,
+          "latency_ms": 1476.016,
+          "output_tokens": 119,
+          "role": "linker",
+          "turn": 1
+        }
+      ],
+      "question_sha256": "513864536706cc07e60ae3d416532f000d68fbf451a96c1a334d73221473bb38",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": []
+    }
+  ],
+  "catalog_builder_version": "dualsql_lite_tools_v1",
+  "catalog_sha256": "35771c1c708ed724cbe98eb53db9c7795cf98137a9c89b92c0c797a90cbb78bd",
+  "correct_cases": 0,
+  "cost_per_case_usd": 0.0014391,
+  "database_tool_calls": 26,
+  "eligible": true,
+  "error_summary": {
+    "LINKER_FORMAT_OR_LIMIT_FAILURE": 8
+  },
+  "expected_case_ids": [
+    "public_sql_001",
+    "public_sql_002",
+    "public_sql_003",
+    "public_sql_004",
+    "public_sql_005",
+    "public_sql_006",
+    "public_sql_007",
+    "public_sql_008"
+  ],
+  "experiment_id": "E1",
+  "generator_prompt_sha256": "3782612c9572bdd251df9be295d2eab9ee6e9baec87f9be6c29763cb62edcfd2",
+  "generator_prompt_version": "dualsql_generator_v1",
+  "generator_recovery_events": 0,
+  "generator_tool_calls": 0,
+  "generator_turns": 0,
+  "identity": {
+    "benchmark_hash": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+    "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+    "git_commit": "b19b855c23d73f1c744b4ec4e38fb42d987c7321",
+    "scorer_file_hashes": {
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+      "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+      "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+      "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+      "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+      "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+      "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+      "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "scorer_hash": "7d22fbf45a625f501788902182d9b09e872ff0733cd9a9b4aa1d913f9e384b25",
+    "snapshot_binary_hash": "15edb2d159049cad17840d257cdf780d69f5c416796471e103dd45c4f0b2cdb6",
+    "snapshot_content_hash": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+    "source_hashes": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+      "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+    }
+  },
+  "input_tokens": 23614,
+  "known_spend_usd": 0.012875199999999998,
+  "latency_ms": 27553.908,
+  "linked_columns": 0,
+  "linked_tables": 0,
+  "linker_completion_rate": 0.0,
+  "linker_prompt_sha256": "9ff2a878d0b38b597f1950ae3cd627c696aea0e065c8fb11c0282429f9f5dda6",
+  "linker_prompt_version": "dualsql_linker_v2",
+  "linker_tool_calls": 26,
+  "linker_turns": 32,
+  "malformed_agent_outputs": 3,
+  "max_completion_tokens": 1000,
+  "max_retries": 0,
+  "metrics": {
+    "execution_accuracy": 0.0,
+    "execution_success_rate": 0.0,
+    "safety_rejection_rate": 0.0,
+    "syntax_validity_rate": 0.0
+  },
+  "model_calls": 32,
+  "official_eligible": false,
+  "output_tokens": 1292,
+  "preflight": {
+    "budget_usd": 2.0,
+    "max_turns_per_role": 5,
+    "method": "serialized request bytes plus framing and bounded prior turn context",
+    "series_ceiling_usd": 1.9936424,
+    "tool_result_byte_limit": 1800
+  },
+  "pricing": {
+    "checked_utc": "2026-09-25T09:50:44.608285+00:00",
+    "input_usd_per_million": 0.4,
+    "output_usd_per_million": 1.6,
+    "source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
+  },
+  "provider": "openai",
+  "requested_model": "gpt-4.1-mini-2025-04-14",
+  "run_id": "dualsql-lite-36120596491-1",
+  "run_status": "completed",
+  "series_version": "dualsql_lite_public_dev_v2",
+  "snapshot_binary_sha256": "15edb2d159049cad17840d257cdf780d69f5c416796471e103dd45c4f0b2cdb6",
+  "split": "public_dev",
+  "temperature": 0,
+  "tool_counts": {
+    "database_profiler": 6,
+    "sql_probe": 3,
+    "value_search": 17
+  },
+  "tool_implementation_sha256": "06764139535b9a8f6b9e29f465b63e986a15780fe28bfae3fc89a55b1dbec92c",
+  "tool_implementation_version": "dualsql_lite_tools_v1",
+  "tool_schema_sha256": "6071917ed33ee71aa8c52368368f97b46f6e7ea3d5e258c000f34715c50e6639",
+  "tool_usage_rate": {
+    "database_profiler": 0.75,
+    "sql_probe": 0.375,
+    "value_search": 0.75
+  },
+  "total_cost_usd": 0.0115128
+}
