@@ -19,8 +19,8 @@ from evaluation.dualsql_lite.tools import DatabaseTools, SnapshotOnlyDuckDBSnaps
 
 MAX_TURNS = 5
 MAX_TOOL_CALLS = 5
-LINKER_PROMPT_VERSION = "dualsql_linker_v3"
-GENERATOR_PROMPT_VERSION = "dualsql_generator_v1"
+LINKER_PROMPT_VERSION = "dualsql_linker_v4"
+GENERATOR_PROMPT_VERSION = "dualsql_generator_v4"
 LINKER_INSTRUCTIONS = (
     "You are the Schema Linker, not the SQL Generator. Link the question to the evaluation database. "
     "Use database_profiler and value_search to inspect uncertain schema or literals. "
@@ -31,12 +31,20 @@ LINKER_INSTRUCTIONS = (
     "database_profiler example or value_search match. The validator attaches provenance. "
     "Do not include a tool ID or values copied only from the question, a SQL probe, "
     "or an empty/failed tool response. If none are verified, use an empty list. "
+    "Map each concept to a column based on that column's meaning and examples; "
+    "a matching digit or word in another column does not establish a mapping. "
+    "Submit the schema as soon as the needed columns and values are known. "
     "Example shape: {\"tables\":[{\"table\":\"network_flows\",\"columns\":[\"label\"]}],"
     "\"grounded_values\":[]}. Do not return SQL, Markdown or reasoning."
 )
 GENERATOR_INSTRUCTIONS = (
     "Generate exactly one read-only DuckDB SELECT statement for the question. "
-    "Use database tools if enabled to check uncertain schema or values. "
+    "When database tools are enabled, use value_search to inspect actual stored text "
+    "before choosing an uncertain text equality or prefix predicate. "
+    "A column's name alone does not establish its value format. "
+    "If a probe unexpectedly returns zero rows, check the text values and column choice. "
+    "Keep dataset identifiers separate from event labels and other fields. "
+    "For a linked schema, use the verified values and columns rather than guessing. "
     "Return only the final SQL, no prose or reasoning."
 )
 
