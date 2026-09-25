@@ -131,13 +131,13 @@ These ablations justify testing retrieval, generation, selection, and repair as 
 
 ## What VinSOC Adopts
 
-The VinSOC design adopts the following ideas, not the full implementation:
+The VinSOC design adopts the following ideas, not the full implementation. In particular, E4 preserves a majority/self-consistency baseline while E5 tests pairwise selection on every non-unanimous executable candidate set:
 
 1. **Test-time compute instead of model training** for the first optimization phase.
 2. **Multiple reasoning paths** to create candidate diversity.
 3. **Value grounding** before generation.
 4. **Separate generation quality from selection quality.**
-5. **Pairwise selection** only when deterministic evidence cannot decide.
+5. **Pairwise selection** when executable result groups disagree; only unanimous agreement or a single executable group bypasses the LLM selector.
 6. **Execution Accuracy** remains the final headline metric.
 7. **Ablations** isolate which component actually contributes.
 
@@ -175,7 +175,7 @@ VinSOC defers repair to a later ablation and allows at most one repair attempt.
 | Online synthetic examples | Deferred |
 | Multiple samples per generator | One per generator initially |
 | Query fixer | Deferred to E6; one attempt |
-| Fine-tuned pairwise selector | Deterministic agreement + untuned pairwise tie-break |
+| Fine-tuned pairwise selector | E4 majority baseline; E5 unanimous early-exit + untuned pairwise selector on any executable disagreement |
 | BIRD execution accuracy | Existing VinSOC R2 execution evaluator |
 | Candidate upper bound | Candidate Oracle Accuracy / Pass@3 |
 
