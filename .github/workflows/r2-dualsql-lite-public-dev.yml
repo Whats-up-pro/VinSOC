@@ -1,0 +1,70 @@
+name: R2 DualSQL-Lite public dev E0-E3
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/r2-dualsql-lite-public-dev.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r2-dualsql-lite-public-dev
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      VINSOC_EVAL_MODEL: gpt-4.1-mini-2025-04-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Fetch manifest-pinned public sources
+        run: python -m scripts.fetch_r2_public_pilot_sources
+      - name: Rebuild snapshot twice and verify locked evidence
+        run: |
+          python -m scripts.build_r2_public_pilot --snapshot data/public_pilot/snapshot.duckdb --report "$RUNNER_TEMP/snapshot.json"
+          python -m scripts.build_r2_public_pilot --snapshot data/public_pilot/snapshot_verify.duckdb --report "$RUNNER_TEMP/snapshot_verify.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from evaluation.public_pilot import contract
+          root = Path(os.environ['RUNNER_TEMP'])
+          first = json.loads((root / 'snapshot.json').read_text())
+          second = json.loads((root / 'snapshot_verify.json').read_text())
+          assert first['content_sha256'] == second['content_sha256']
+          assert first['row_counts'] == second['row_counts']
+          contract.validate(Path('data/public_pilot/snapshot.duckdb'),
+                            lock_path=Path('evaluation/dualsql_lite/BASE.lock'))
+          PY
+      - name: Run newly generated E0-E3 with a series-wide 2 USD ceiling
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python -m evaluation.dualsql_lite.experiment \
+            --snapshot data/public_pilot/snapshot.duckdb \
+            --snapshot-report "$RUNNER_TEMP/snapshot.json" \
+            --output-dir "$RUNNER_TEMP/dualsql-lite-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --budget-usd 2
+          python -m evaluation.dualsql_lite.selection \
+            "$RUNNER_TEMP/dualsql-lite-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+      - name: Preserve completed or partial evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dualsql-lite-public-dev-evidence
+          path: |
+            ${{ runner.temp }}/snapshot.json
+            ${{ runner.temp }}/snapshot_verify.json
+            ${{ runner.temp }}/dualsql-lite-*/
+          if-no-files-found: warn
+          retention-days: 90
