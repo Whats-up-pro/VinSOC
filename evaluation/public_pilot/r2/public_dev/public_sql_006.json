@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_006",
+  "question": "For the Sysmon event with source_row_id apt29_evals_day1_manual_2020-05-01225525.json:line:828, return its host, image and parent_image.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT host, image, parent_image FROM sysmon_process_events WHERE source_dataset = 'otrf_apt29_day1' AND source_row_id = 'apt29_evals_day1_manual_2020-05-01225525.json:line:828'"
+  ],
+  "category": "endpoint",
+  "difficulty": "basic",
+  "result_comparator": "unordered_rows"
+}

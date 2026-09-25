@@ -1,0 +1,16 @@
+{
+  "case_id": "public_r1_019",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "List the two table names network_flows and sysmon_process_events supplied in this question; do not query the database.",
+  "reference_time": "2026-09-25T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "No investigation input or telemetry lookup is requested."
+}

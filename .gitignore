@@ -56,4 +56,5 @@ data/full.parquet
 data/cti_lookup.json
 data/threatfox_clean.csv
 data/snapshots/*.duckdb
+data/public_pilot/
 *.zip

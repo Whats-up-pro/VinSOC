@@ -1,0 +1,38 @@
+{
+  "schema_version": "1",
+  "sources": [
+    {
+      "archive_member": null,
+      "dataset_id": "ctu13_s5",
+      "file_sha256": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "format": "ctu13_binetflow",
+      "license_note": "MCFP allows use with attribution to Sebastian Garcia and the Malware Capture Facility Project; consult scenario 5 README.",
+      "path": "data/public_pilot/sources/capture20110815-2.binetflow",
+      "retrieved_at": "2026-09-25T04:14:58.039763+00:00",
+      "source_name": "CTU-13 scenario 5",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-46/detailed-bidirectional-flow-labels/capture20110815-2.binetflow"
+    },
+    {
+      "archive_member": null,
+      "dataset_id": "ctu13_s7",
+      "file_sha256": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+      "format": "ctu13_binetflow",
+      "license_note": "MCFP allows use with attribution to Sebastian Garcia and the Malware Capture Facility Project; consult scenario 7 README.",
+      "path": "data/public_pilot/sources/capture20110816-2.binetflow",
+      "retrieved_at": "2026-09-25T04:15:01.313666+00:00",
+      "source_name": "CTU-13 scenario 7",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-48/detailed-bidirectional-flow-labels/capture20110816-2.binetflow"
+    },
+    {
+      "archive_member": "apt29_evals_day1_manual_2020-05-01225525.json",
+      "dataset_id": "otrf_apt29_day1",
+      "file_sha256": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5",
+      "format": "sysmon_zip_jsonl",
+      "license_note": "OTRF README describes GPL-3.0, while repository LICENSE says MIT; retain source attribution and resolve the discrepancy before redistributing data.",
+      "path": "data/public_pilot/sources/apt29_evals_day1_manual.zip",
+      "retrieved_at": "2026-09-25T04:15:01.811782+00:00",
+      "source_name": "OTRF APT29 Day 1 Sysmon",
+      "source_url": "https://raw.githubusercontent.com/OTRF/Security-Datasets/master/datasets/compound/apt29/day1/apt29_evals_day1_manual.zip"
+    }
+  ]
+}

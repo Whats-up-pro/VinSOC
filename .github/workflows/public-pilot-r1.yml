@@ -1,0 +1,58 @@
+name: Public pilot R1 A1 (one-shot)
+
+on:
+  push:
+    branches: [codex/r2-public-eval]
+    paths: [evaluation/public_pilot/markers/r1.trigger]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-pilot-r1-one-shot
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Download exactly the manifest sources and verify bytes
+        run: python -m scripts.fetch_r2_public_pilot_sources
+      - name: Build twice, verify logical rows and frozen gold
+        run: |
+          python -m scripts.build_r2_public_pilot --snapshot data/public_pilot/snapshot.duckdb --report "$RUNNER_TEMP/snapshot.json"
+          python -m scripts.build_r2_public_pilot --snapshot data/public_pilot/snapshot_verify.duckdb --report "$RUNNER_TEMP/snapshot_verify.json"
+          python - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          first=json.loads((root/'snapshot.json').read_text())
+          second=json.loads((root/'snapshot_verify.json').read_text())
+          assert first['content_sha256']==second['content_sha256']
+          assert first['row_counts']==second['row_counts']
+          PY
+          python -m scripts.preflight_r2_public_pilot --snapshot data/public_pilot/snapshot.duckdb --report "$RUNNER_TEMP/preflight.json"
+      - name: Run R1 public_dev once with budget and partial report
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VINSOC_EVAL_MODEL: gpt-4.1-mini-2025-04-14
+        run: python -m evaluation.public_pilot.run_model --track r1 --snapshot-report "$RUNNER_TEMP/snapshot.json" --report "$RUNNER_TEMP/public-r1.json"
+      - name: Preserve full or partial diagnostic JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-pilot-r1-report
+          path: |
+            ${{ runner.temp }}/snapshot.json
+            ${{ runner.temp }}/snapshot_verify.json
+            ${{ runner.temp }}/preflight.json
+            ${{ runner.temp }}/public-r1.json
+          if-no-files-found: warn
+          retention-days: 30

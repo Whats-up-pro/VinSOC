@@ -1,0 +1,36 @@
+{
+  "case_id": "public_r1_012",
+  "category": "endpoint_only",
+  "difficulty": "advanced",
+  "request": "Investigate endpoint process telemetry on host NASHUA.dmevals.local during 2020-05-02 UTC. A recorded svchost.exe parent launched RuntimeBroker.exe. Check this parent-child event using endpoint logs only. Time range: 2020-05-02T00:00:00 through 2020-05-03T00:00:00, end exclusive.",
+  "reference_time": "2020-05-02T02:59:34.126000Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "NASHUA.dmevals.local",
+        "time_range": {
+          "start": "2020-05-02T00:00:00",
+          "end": "2020-05-03T00:00:00"
+        }
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Pilot single-turn tool decision; evidence comes from the verified source row, not an IOC reputation lookup.",
+  "evidence": {
+    "table": "sysmon_process_events",
+    "source_dataset": "otrf_apt29_day1",
+    "source_row_id": "apt29_evals_day1_manual_2020-05-01225525.json:line:16318",
+    "normalized_row_sha256": "de7e89465f226b8531bb7a9870a43a5750f2c97b3e51bf0d9ed86790825460be"
+  }
+}
