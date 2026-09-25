@@ -81,6 +81,34 @@ def test_snapshot_accepts_select_and_blocks_writes(snapshot_path):
         snapshot.query("SELECT * FROM network_flows; SELECT 1")
 
 
+def test_snapshot_executes_one_terminal_semicolon_before_bounded_wrapper(snapshot_path):
+    snapshot = DuckDBSnapshot(snapshot_path)
+    assert snapshot.query("  SELECT COUNT(*) AS total FROM network_flows;  ").rows == [{"total": 1}]
+    assert snapshot.query("WITH flows AS (SELECT 1 AS n) SELECT n FROM flows;").rows == [{"n": 1}]
+
+
+def test_semicolons_inside_literals_and_comments_are_not_statement_boundaries(snapshot_path):
+    snapshot = DuckDBSnapshot(snapshot_path)
+    assert snapshot.query("SELECT ';UPDATE network_flows' AS literal, 1 /* ; DROP */ AS n;").rows == [
+        {"literal": ";UPDATE network_flows", "n": 1}
+    ]
+    assert snapshot.query("SELECT 1 /* ; UPDATE */ AS n").rows == [{"n": 1}]
+
+
+@pytest.mark.parametrize("sql", [
+    "SELECT 1; SELECT 2",
+    "SELECT 1;;",
+    "SELECT 1; -- ;",
+    "SELECT 1; /* ; */;",
+    "DELETE FROM network_flows;",
+    "WITH x AS (DELETE FROM network_flows) SELECT 1;",
+    "SELECT 1 /* ; */; DROP TABLE network_flows",
+])
+def test_terminal_semicolon_never_allows_second_statement_or_write(snapshot_path, sql):
+    with pytest.raises(QuerySafetyError):
+        DuckDBSnapshot(snapshot_path).query(sql)
+
+
 def test_domain_skills_read_the_frozen_snapshot(snapshot_path):
     from vinsoc_data.network_source import DuckDBNetworkDataSource
     snapshot = DuckDBSnapshot(snapshot_path)

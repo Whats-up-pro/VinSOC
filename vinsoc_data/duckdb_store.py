@@ -99,8 +99,8 @@ def _sql_tokens(sql: str) -> list[str]:
     return re.findall(r"[a-z_][a-z0-9_]*|;", "".join(clean).lower())
 
 
-def validate_read_only_sql(sql: str) -> None:
-    """Apply VinSOC's conservative SQL execution policy.
+def _read_only_statement(sql: str) -> str:
+    """Validate one read-only statement and remove its optional final semicolon.
 
     Only a single ``SELECT`` statement or ``WITH ... SELECT`` statement is
     accepted.  The DuckDB connection is also read-only, which provides a
@@ -112,7 +112,12 @@ def validate_read_only_sql(sql: str) -> None:
     if not tokens:
         raise QuerySafetyError("SQL contains no executable statement")
     if ";" in tokens:
-        raise QuerySafetyError("Multi-statement SQL is not allowed")
+        candidate = sql.rstrip()
+        if (tokens.count(";") != 1 or not candidate.endswith(";")
+                or ";" in _sql_tokens(candidate[:-1])):
+            raise QuerySafetyError("Multi-statement SQL is not allowed")
+        sql = candidate[:-1].rstrip()
+        tokens = tokens[:-1]
     if tokens[0] not in {"select", "with"}:
         raise QuerySafetyError("Only SELECT or WITH ... SELECT statements are allowed")
     forbidden = sorted(set(tokens).intersection(_FORBIDDEN_SQL_KEYWORDS))
@@ -120,6 +125,12 @@ def validate_read_only_sql(sql: str) -> None:
         raise QuerySafetyError(f"Read-only policy blocked SQL keyword(s): {', '.join(forbidden)}")
     if "select" not in tokens:
         raise QuerySafetyError("A read-only query must contain SELECT")
+    return sql
+
+
+def validate_read_only_sql(sql: str) -> None:
+    """Apply VinSOC's conservative single-statement, read-only SQL policy."""
+    _read_only_statement(sql)
 
 
 class DuckDBSnapshot:
@@ -151,10 +162,10 @@ class DuckDBSnapshot:
 
     def query(self, sql: str, parameters: Sequence[Any] | None = None) -> QueryResult:
         """Execute a validated query and return at most ``row_limit`` rows."""
-        validate_read_only_sql(sql)
+        statement = _read_only_statement(sql)
         # A wrapper gives every model-generated query the same bounded result
         # contract without modifying the source snapshot.
-        bounded_sql = f"SELECT * FROM ({sql}) AS vinsoc_result LIMIT {self.row_limit + 1}"
+        bounded_sql = f"SELECT * FROM ({statement}) AS vinsoc_result LIMIT {self.row_limit + 1}"
         with self._connect() as connection:
             try:
                 cursor = connection.execute(bounded_sql, parameters or [])

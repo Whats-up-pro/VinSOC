@@ -176,6 +176,66 @@ def test_execution_accuracy_rejects_semantically_wrong_query_on_counterexample(t
     assert result.execution_accurate is False
 
 
+def test_public_003_missing_scenario_filter_is_exposed_by_cross_scenario_rows(tmp_path):
+    path = tmp_path / "cross_scenario.duckdb"
+    builder = SocSnapshotBuilder(path)
+    builder.create_empty_snapshot()
+    for dataset_id in ("ctu13_s5", "ctu13_s7"):
+        builder.register_provenance(
+            dataset_id=dataset_id, source_name=dataset_id,
+            source_url=f"https://example.invalid/{dataset_id}",
+            retrieved_at="2026-09-25T00:00:00", file_sha256="a" * 64,
+            license_note="Counterexample fixture only",
+        )
+        builder.insert_rows("network_flows", [{
+            "source_dataset": dataset_id, "source_row_id": "flow-1",
+            "event_time": "2011-08-15T16:52:55", "src_ip": "147.32.84.165",
+        }], source_dataset=dataset_id)
+    case = SQLBenchmarkCase(
+        "public_sql_003", "Count scenario 5 only", str(path),
+        ("SELECT count(*) FROM network_flows WHERE source_dataset = 'ctu13_s5' "
+         "AND src_ip = '147.32.84.165' "
+         "AND event_time >= TIMESTAMP '2011-08-15 16:52:50' "
+         "AND event_time < TIMESTAMP '2011-08-15 16:53:00'",),
+        "time_range", "intermediate", "scalar",
+    )
+    predicted = ("SELECT count(*) FROM network_flows WHERE src_ip = '147.32.84.165' "
+                 "AND event_time >= TIMESTAMP '2011-08-15 16:52:50' "
+                 "AND event_time < TIMESTAMP '2011-08-15 16:53:00';")
+    snapshot = DuckDBSnapshot(path)
+    assert snapshot.query(case.gold_sql[0]).rows[0] == {"count_star()": 1}
+    assert snapshot.query(predicted).rows[0] == {"count_star()": 2}
+    assert evaluate_sql_case(case, predicted, snapshot).execution_accurate is False
+
+
+def test_public_008_case_sensitive_like_exposed_by_mixed_case_process_images(tmp_path):
+    path = tmp_path / "mixed_case.duckdb"
+    builder = SocSnapshotBuilder(path)
+    builder.create_empty_snapshot()
+    builder.register_provenance(
+        dataset_id="otrf_apt29_day1", source_name="counterexample",
+        source_url="https://example.invalid/otrf", retrieved_at="2026-09-25T00:00:00",
+        file_sha256="b" * 64, license_note="Counterexample fixture only",
+    )
+    builder.insert_rows("sysmon_process_events", [{
+        "source_dataset": "otrf_apt29_day1", "source_row_id": "sysmon-1",
+        "host": "SCRANTON.dmevals.local", "event_id": 1,
+        "parent_image": r"C:\Windows\CMD.EXE", "image": r"C:\Windows\PowerShell.EXE",
+    }], source_dataset="otrf_apt29_day1")
+    gold = ("SELECT EXISTS(SELECT 1 FROM sysmon_process_events "
+            "WHERE host = 'SCRANTON.dmevals.local' AND event_id = 1 "
+            "AND parent_image ILIKE '%cmd.exe' AND image ILIKE '%powershell.exe') AS found")
+    predicted = gold.replace(" ILIKE ", " LIKE ") + ";"
+    case = SQLBenchmarkCase(
+        "public_sql_008", "Case insensitive process names", str(path),
+        (gold,), "endpoint", "advanced", "boolean",
+    )
+    snapshot = DuckDBSnapshot(path)
+    assert snapshot.query(gold).rows == [{"found": True}]
+    assert snapshot.query(predicted).rows == [{"found": False}]
+    assert evaluate_sql_case(case, predicted, snapshot).execution_accurate is False
+
+
 def test_unordered_rows_preserves_duplicate_multiplicity(tmp_path):
     snapshot = _snapshot(tmp_path)
     case = SQLBenchmarkCase(
