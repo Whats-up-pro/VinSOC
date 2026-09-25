@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_003",
+  "question": "Count scenario 5 network flows from 147.32.84.165 from 2011-08-15 16:52:50 inclusive until 16:53:00 exclusive, using the timestamps stored in event_time. Return flow_count.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s5' AND src_ip = '147.32.84.165' AND event_time >= TIMESTAMP '2011-08-15 16:52:50' AND event_time < TIMESTAMP '2011-08-15 16:53:00'"
+  ],
+  "category": "time_range",
+  "difficulty": "intermediate",
+  "result_comparator": "scalar"
+}

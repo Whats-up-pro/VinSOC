@@ -1,0 +1,31 @@
+{
+  "r1_case_count": 20,
+  "r1_split_sha256": "f488c33903fe311ea50ddeca16388c30d19a9a7e14ea8e9e5c41a08ea0597b29",
+  "r2_case_count": 8,
+  "r2_split_sha256": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+  "row_counts": {
+    "network_flows": 243906,
+    "sysmon_process_events": 143884
+  },
+  "scorer_file_sha256": {
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+    "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+    "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+    "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+    "vinsoc_data/duckdb_store.py": "31e6a3f03ed885ebbccd20260584ec1ba7d89e7b1ec2828d4b6e04afc4b7f86e"
+  },
+  "snapshot_content_sha256": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+  "source_file_sha256": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+    "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+  },
+  "version": "r1_r2_network_endpoint_public_dev_v1"
+}

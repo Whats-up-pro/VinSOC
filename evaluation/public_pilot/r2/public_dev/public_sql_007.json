@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_007",
+  "question": "List the five most frequent non-null Sysmon process images on SCRANTON.dmevals.local for event_id 1, returning image and event_count; break ties by image ascending.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT image, count(*) AS event_count FROM sysmon_process_events WHERE host = 'SCRANTON.dmevals.local' AND event_id = 1 AND image IS NOT NULL GROUP BY image ORDER BY event_count DESC, image ASC LIMIT 5"
+  ],
+  "category": "ordering_limit",
+  "difficulty": "advanced",
+  "result_comparator": "ordered_rows"
+}

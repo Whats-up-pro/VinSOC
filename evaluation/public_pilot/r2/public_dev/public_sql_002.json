@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_002",
+  "question": "List distinct destination IPv4 addresses contacted by From-Botnet flows in CTU-13 scenario 7, in ascending IP text order. Return one column dst_ip.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND label LIKE 'flow=From-Botnet%' ORDER BY dst_ip"
+  ],
+  "category": "distinct",
+  "difficulty": "intermediate",
+  "result_comparator": "ordered_rows"
+}
