@@ -177,7 +177,7 @@ VinSOC defers repair to a later ablation and allows at most one repair attempt.
 | Query fixer | Deferred to E6; one attempt |
 | Fine-tuned pairwise selector | E4 majority baseline; E5 unanimous early-exit + untuned pairwise selector on any executable disagreement |
 | BIRD execution accuracy | Existing VinSOC R2 execution evaluator |
-| Candidate upper bound | Candidate Oracle Accuracy / Pass@3 |
+| Candidate upper bound | Candidate Oracle Accuracy (Oracle@3) |
 
 ## VinSOC Experimental Interpretation
 
