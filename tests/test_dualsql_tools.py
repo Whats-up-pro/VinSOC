@@ -46,6 +46,13 @@ def test_profiler_and_value_catalog_are_deterministic_and_grounded(snapshot):
     }
     assert len(result["matches"]) <= 50
     assert len(json.dumps(result).encode()) <= 8192
+    broad = first.value_search({"query": "ctu"})
+    assert broad["ok"]
+    assert len(json.dumps(broad).encode()) <= 1800
+    labels = first.value_search({"query": "From-Botnet", "table": "network_flows",
+                                 "column": "label"})
+    assert labels["ok"] and labels["matches"]
+    assert all("from-botnet" in match["value"].casefold() for match in labels["matches"])
 
 
 @pytest.mark.parametrize("sql", [

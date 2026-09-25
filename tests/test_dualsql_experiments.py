@@ -110,7 +110,7 @@ def test_budget_reservations_follow_role_turns_when_linker_finishes_early(snapsh
                    "messages": [{"role": "system", "content": system},
                                 {"role": "user", "content": "Count flows"}] +
                                ([{"role": "assistant", "content": "x" * 6000},
-                                 {"role": "tool", "content": "x" * 1800}] * (turn - 1))}
+                                 {"role": "tool", "content": "x" * 1650}] * (turn - 1))}
         gate.before_call(request)
         gate.after_call(request, {"input_tokens": 100, "cost_usd": .0001})
     gate.finish_case()

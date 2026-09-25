@@ -12,7 +12,7 @@ from vinsoc_data.duckdb_store import DuckDBSnapshot, QuerySafetyError, _read_onl
 
 
 TOOL_VERSION = "dualsql_lite_tools_v1"
-MAX_RESPONSE_BYTES = 1800  # Stricter than the 8192-byte specification ceiling.
+MAX_RESPONSE_BYTES = 1650  # Stricter than the 8192-byte specification ceiling.
 MAX_PROBE_ROWS = 20
 MAX_VALUES_PER_COLUMN = 5
 MAX_VALUES_PER_CALL = 50
@@ -163,21 +163,29 @@ class DatabaseTools:
                 or (column is not None and not isinstance(column, str))):
             return {"ok": False, "error_type": "INVALID_ARGUMENTS"}
         terms = set(re.findall(r"[a-z]+|\d+", query.casefold()))
+        candidates = [item for item in self.catalog
+                      if (not table or item["table"] == table)
+                      and (not column or item["column"] == column)]
+        exact = [item for item in candidates if query.casefold() in item["value"].casefold()]
+        if exact:
+            candidates = exact
+        else:
+            candidates = [item for item in candidates if terms.intersection(
+                re.findall(r"[a-z]+|\d+", item["value"].casefold()))]
         hits = []
         per_column: dict[tuple[str, str], int] = {}
-        for item in self.catalog:
-            if (table and item["table"] != table) or (column and item["column"] != column):
-                continue
+        for item in candidates:
             key = (item["table"], item["column"])
-            if per_column.get(key, 0) >= MAX_VALUES_PER_COLUMN:
-                continue
-            tokens = set(re.findall(r"[a-z]+|\d+", item["value"].casefold()))
-            if query.casefold() in item["value"].casefold() or terms.intersection(tokens):
+            if per_column.get(key, 0) < MAX_VALUES_PER_COLUMN:
                 hits.append(item)
                 per_column[key] = per_column.get(key, 0) + 1
             if len(hits) == MAX_VALUES_PER_CALL:
                 break
-        return _bounded({"ok": True, "matches": hits})
+        result = {"ok": True, "matches": hits, "truncated": False}
+        while hits and len(json.dumps(result, ensure_ascii=True).encode()) > MAX_RESPONSE_BYTES:
+            hits.pop()
+            result["truncated"] = True
+        return _bounded(result)
 
     def sql_probe(self, args: dict[str, Any]) -> dict[str, Any]:
         sql = args.get("sql")
