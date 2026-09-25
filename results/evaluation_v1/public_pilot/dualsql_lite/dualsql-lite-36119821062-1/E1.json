@@ -1,0 +1,754 @@
+{
+  "average_turns": 2.125,
+  "breakdown": {
+    "category": {
+      "aggregation": {
+        "correct": 0,
+        "total": 1
+      },
+      "distinct": {
+        "correct": 0,
+        "total": 1
+      },
+      "endpoint": {
+        "correct": 0,
+        "total": 2
+      },
+      "network": {
+        "correct": 0,
+        "total": 2
+      },
+      "ordering_limit": {
+        "correct": 0,
+        "total": 1
+      },
+      "time_range": {
+        "correct": 0,
+        "total": 1
+      }
+    },
+    "difficulty": {
+      "advanced": {
+        "correct": 0,
+        "total": 3
+      },
+      "basic": {
+        "correct": 0,
+        "total": 2
+      },
+      "intermediate": {
+        "correct": 0,
+        "total": 3
+      }
+    }
+  },
+  "case_count": 8,
+  "case_results": [
+    {
+      "case_id": "public_sql_001",
+      "category": "network",
+      "cost_usd": 0.0005052,
+      "difficulty": "basic",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 715,
+      "latency_ms": 1991.909,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 137,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0001932,
+          "input_tokens": 319,
+          "latency_ms": 762.341,
+          "output_tokens": 41,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000312,
+          "input_tokens": 396,
+          "latency_ms": 1229.568,
+          "output_tokens": 96,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "23992610c4439491eeccf73c725525adf63bde52bb583dbe23fb9ccc12420efb",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT COUNT(*) AS flow_count FROM network_flows WHERE label = 'From-Botnet' AND source_dataset = 'scenario 5';"
+          },
+          "result": {
+            "columns": [
+              "flow_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "flow_count": 0
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_NI834UHwTP1zwqtuRmgvDqPr",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_002",
+      "category": "distinct",
+      "cost_usd": 0.0005660000000000001,
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "experiment": "E1",
+      "final_sql": "SELECT DISTINCT dst_ip\nFROM network_flows\nWHERE source_dataset = 'CTU-13' AND source_row_id = '7' AND label = 'From-Botnet'\nORDER BY dst_ip ASC;",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "input_tokens": 879,
+      "latency_ms": 2603.698,
+      "linked_schema": {
+        "grounded_values": [],
+        "tables": [
+          {
+            "columns": [
+              "source_dataset",
+              "source_row_id",
+              "label",
+              "dst_ip"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 3,
+      "output_tokens": 134,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0002208,
+          "input_tokens": 332,
+          "latency_ms": 1161.695,
+          "output_tokens": 55,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.000218,
+          "input_tokens": 417,
+          "latency_ms": 653.186,
+          "output_tokens": 32,
+          "role": "linker",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0001272,
+          "input_tokens": 130,
+          "latency_ms": 788.817,
+          "output_tokens": 47,
+          "role": "generator",
+          "turn": 1
+        }
+      ],
+      "question_sha256": "eedc30c6659bbc4e0f8ea38ea98add56cb90c0a1fdf0819b61e1ee198f605647",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset = 'CTU-13' AND label = 'From-Botnet' AND source_row_id LIKE '7-%' ORDER BY dst_ip ASC;"
+          },
+          "result": {
+            "columns": [
+              "dst_ip"
+            ],
+            "ok": true,
+            "rows": [],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_ugbgRoPJsNsWfwKo92GTpBmm",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_003",
+      "category": "time_range",
+      "cost_usd": 0.0006919999999999999,
+      "difficulty": "intermediate",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 814,
+      "latency_ms": 2700.523,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 229,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0002676,
+          "input_tokens": 349,
+          "latency_ms": 1306.821,
+          "output_tokens": 80,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00042439999999999996,
+          "input_tokens": 465,
+          "latency_ms": 1393.702,
+          "output_tokens": 149,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "f8fac2f5fedf73c3fc5bd4f2e6ba5ad5f25856959f942d12ca2eeaa8ac221638",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT COUNT(*) AS flow_count FROM network_flows WHERE src_ip = '147.32.84.165' AND event_time >= '2011-08-15 16:52:50' AND event_time < '2011-08-15 16:53:00' AND label = 'scenario 5'"
+          },
+          "result": {
+            "columns": [
+              "flow_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "flow_count": 0
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_qAhuLBHRNhOjnB1BlORTAm4K",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_004",
+      "category": "network",
+      "cost_usd": 0.000528,
+      "difficulty": "advanced",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 736,
+      "latency_ms": 1983.909,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 146,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00020720000000000002,
+          "input_tokens": 326,
+          "latency_ms": 727.272,
+          "output_tokens": 48,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003208,
+          "input_tokens": 410,
+          "latency_ms": 1256.637,
+          "output_tokens": 98,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "32674b9d5b95657dee4b505acfd4d5635b9015c680a52b473133f3944bc82505",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT COUNT(*) AS flow_count FROM network_flows WHERE label = 'scenario 7 From-Botnet' AND protocol = 'TCP' AND dst_port = 80;"
+          },
+          "result": {
+            "columns": [
+              "flow_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "flow_count": 0
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_FA0UQS7X7OoVD2CVquzeqfuq",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_005",
+      "category": "aggregation",
+      "cost_usd": 0.0007452000000000001,
+      "difficulty": "intermediate",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 811,
+      "latency_ms": 2948.3250000000003,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 263,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00020240000000000001,
+          "input_tokens": 330,
+          "latency_ms": 694.974,
+          "output_tokens": 44,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0005428000000000001,
+          "input_tokens": 481,
+          "latency_ms": 2253.351,
+          "output_tokens": 219,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "4ba2134e0b19597c915f9667fcddc9a9f3f80ea30f8199f229ea69268432cfdc",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT host, COUNT(*) AS event_count FROM sysmon_process_events WHERE event_id = 1 GROUP BY host ORDER BY event_count DESC, host ASC;"
+          },
+          "result": {
+            "columns": [
+              "host",
+              "event_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "event_count": 359,
+                "host": "SCRANTON.dmevals.local"
+              },
+              {
+                "event_count": 61,
+                "host": "NASHUA.dmevals.local"
+              },
+              {
+                "event_count": 18,
+                "host": "NEWYORK.dmevals.local"
+              },
+              {
+                "event_count": 9,
+                "host": "UTICA.dmevals.local"
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_bDcRohEWLat3YaBxkY7sA9Jv",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_006",
+      "category": "endpoint",
+      "cost_usd": 0.0007216000000000001,
+      "difficulty": "basic",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 816,
+      "latency_ms": 2681.503,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 247,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00022000000000000003,
+          "input_tokens": 338,
+          "latency_ms": 1003.881,
+          "output_tokens": 53,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0005016,
+          "input_tokens": 478,
+          "latency_ms": 1677.622,
+          "output_tokens": 194,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "7a2c1613c4a1332a6e9fbd0d93d8ac45bccfe7b22a44a1d689e63f6ae32e78ef",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT host, image, parent_image FROM sysmon_process_events WHERE source_row_id = 'apt29_evals_day1_manual_2020-05-01225525.json:line:828'"
+          },
+          "result": {
+            "columns": [
+              "host",
+              "image",
+              "parent_image"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "host": "SCRANTON.dmevals.local",
+                "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "parent_image": "C:\\Windows\\System32\\cmd.exe"
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_LXPJlSswGLJx8Gmi2JCePtLz",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_007",
+      "category": "ordering_limit",
+      "cost_usd": 0.000938,
+      "difficulty": "advanced",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 893,
+      "latency_ms": 4148.752,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 363,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00024440000000000003,
+          "input_tokens": 335,
+          "latency_ms": 888.915,
+          "output_tokens": 69,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0006936,
+          "input_tokens": 558,
+          "latency_ms": 3259.837,
+          "output_tokens": 294,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "704e2b9d39da14f9c0bcff700d5b5f6dbfbb75b20de07b98f1f12ff0e04f65ff",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT image, COUNT(*) AS event_count\nFROM sysmon_process_events\nWHERE host = 'SCRANTON.dmevals.local' AND event_id = 1 AND image IS NOT NULL\nGROUP BY image\nORDER BY event_count DESC, image ASC\nLIMIT 5;"
+          },
+          "result": {
+            "columns": [
+              "image",
+              "event_count"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "event_count": 94,
+                "image": "C:\\Windows\\System32\\svchost.exe"
+              },
+              {
+                "event_count": 52,
+                "image": "C:\\Windows\\System32\\conhost.exe"
+              },
+              {
+                "event_count": 11,
+                "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+              },
+              {
+                "event_count": 11,
+                "image": "C:\\Windows\\System32\\backgroundTaskHost.exe"
+              },
+              {
+                "event_count": 10,
+                "image": "C:\\Windows\\System32\\taskhostw.exe"
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_9aktweBosE3HFoffWH3suUpk",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_008",
+      "category": "endpoint",
+      "cost_usd": 0.000564,
+      "difficulty": "advanced",
+      "error_category": "LINKER_FORMAT_OR_LIMIT_FAILURE",
+      "execution_accurate": false,
+      "execution_success": false,
+      "experiment": "E1",
+      "final_sql": null,
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 0,
+      "input_tokens": 762,
+      "latency_ms": 2202.1229999999996,
+      "linked_schema": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 162,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00022280000000000002,
+          "input_tokens": 337,
+          "latency_ms": 1096.524,
+          "output_tokens": 55,
+          "role": "linker",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00034120000000000005,
+          "input_tokens": 425,
+          "latency_ms": 1105.599,
+          "output_tokens": 107,
+          "role": "linker",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "513864536706cc07e60ae3d416532f000d68fbf451a96c1a334d73221473bb38",
+      "safety_rejected": false,
+      "syntax_valid": false,
+      "trajectory": [
+        {
+          "arguments": {
+            "sql": "SELECT EXISTS (SELECT 1 FROM sysmon_process_events WHERE host = 'SCRANTON.dmevals.local' AND parent_image LIKE '%cmd.exe' AND image LIKE '%powershell.exe') AS found;"
+          },
+          "result": {
+            "columns": [
+              "found"
+            ],
+            "ok": true,
+            "rows": [
+              {
+                "found": true
+              }
+            ],
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "sql_probe",
+          "tool_call_id": "call_s4oSNoytlhsYXwkrB3ABOix0",
+          "turn": 1
+        }
+      ]
+    }
+  ],
+  "catalog_builder_version": "dualsql_lite_tools_v1",
+  "catalog_sha256": "35771c1c708ed724cbe98eb53db9c7795cf98137a9c89b92c0c797a90cbb78bd",
+  "correct_cases": 0,
+  "cost_per_case_usd": 0.0006575000000000001,
+  "database_tool_calls": 8,
+  "eligible": true,
+  "error_summary": {
+    "LINKER_FORMAT_OR_LIMIT_FAILURE": 7,
+    "RESULT_MISMATCH": 1
+  },
+  "expected_case_ids": [
+    "public_sql_001",
+    "public_sql_002",
+    "public_sql_003",
+    "public_sql_004",
+    "public_sql_005",
+    "public_sql_006",
+    "public_sql_007",
+    "public_sql_008"
+  ],
+  "experiment_id": "E1",
+  "generator_prompt_sha256": "3782612c9572bdd251df9be295d2eab9ee6e9baec87f9be6c29763cb62edcfd2",
+  "generator_prompt_version": "dualsql_generator_v1",
+  "generator_recovery_events": 0,
+  "generator_tool_calls": 0,
+  "generator_turns": 1,
+  "identity": {
+    "benchmark_hash": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+    "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+    "git_commit": "a384756aa66882e628321167561acfb58333dc72",
+    "scorer_file_hashes": {
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+      "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+      "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+      "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+      "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+      "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+      "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+      "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "scorer_hash": "7d22fbf45a625f501788902182d9b09e872ff0733cd9a9b4aa1d913f9e384b25",
+    "snapshot_binary_hash": "22bafa6cf3c63cc98ee261c2a51abdc4b77def4f635da6a90d2ff2905c056323",
+    "snapshot_content_hash": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+    "source_hashes": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+      "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+    }
+  },
+  "input_tokens": 6426,
+  "known_spend_usd": 0.0066368,
+  "latency_ms": 21260.742000000002,
+  "linked_columns": 4,
+  "linked_tables": 1,
+  "linker_completion_rate": 0.125,
+  "linker_prompt_sha256": "74c7dec494b0b21e74e19019627aa2db8eb13e70002eaf583be07857a2897295",
+  "linker_prompt_version": "dualsql_linker_v1",
+  "linker_tool_calls": 8,
+  "linker_turns": 16,
+  "malformed_agent_outputs": 0,
+  "max_completion_tokens": 1000,
+  "max_retries": 0,
+  "metrics": {
+    "execution_accuracy": 0.0,
+    "execution_success_rate": 0.125,
+    "safety_rejection_rate": 0.0,
+    "syntax_validity_rate": 0.125
+  },
+  "model_calls": 17,
+  "official_eligible": false,
+  "output_tokens": 1681,
+  "preflight": {
+    "budget_usd": 2.0,
+    "max_turns_per_role": 5,
+    "method": "serialized request bytes plus framing and bounded prior turn context",
+    "series_ceiling_usd": 1.9802343999999998,
+    "tool_result_byte_limit": 1800
+  },
+  "pricing": {
+    "checked_utc": "2026-09-25T09:43:12.303709+00:00",
+    "input_usd_per_million": 0.4,
+    "output_usd_per_million": 1.6,
+    "source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
+  },
+  "provider": "openai",
+  "requested_model": "gpt-4.1-mini-2025-04-14",
+  "run_id": "dualsql-lite-36119821062-1",
+  "run_status": "completed",
+  "series_version": "dualsql_lite_public_dev_v1",
+  "snapshot_binary_sha256": "22bafa6cf3c63cc98ee261c2a51abdc4b77def4f635da6a90d2ff2905c056323",
+  "split": "public_dev",
+  "temperature": 0,
+  "tool_counts": {
+    "sql_probe": 8
+  },
+  "tool_implementation_sha256": "06764139535b9a8f6b9e29f465b63e986a15780fe28bfae3fc89a55b1dbec92c",
+  "tool_implementation_version": "dualsql_lite_tools_v1",
+  "tool_schema_sha256": "6071917ed33ee71aa8c52368368f97b46f6e7ea3d5e258c000f34715c50e6639",
+  "tool_usage_rate": {
+    "database_profiler": 0.0,
+    "sql_probe": 1.0,
+    "value_search": 0.0
+  },
+  "total_cost_usd": 0.005260000000000001
+}

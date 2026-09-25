@@ -27,7 +27,7 @@ from evaluation.text_to_sql_snapshot import sha256_file
 
 
 CONDITIONS = ("E0", "E1", "E2", "E3")
-SERIES_VERSION = "dualsql_lite_public_dev_v1"
+SERIES_VERSION = "dualsql_lite_public_dev_v2"
 PRICING_SOURCE = "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
 
 
@@ -84,6 +84,8 @@ class BudgetGate:
                                "messages": [{"role": "system", "content": system},
                                             {"role": "user", "content": case.question}],
                                "tools": TOOL_SCHEMAS if tools_enabled else None}
+                    if role == "linker":
+                        initial["response_format"] = {"type": "json_object"}
                     size = len(json.dumps(initial, ensure_ascii=True).encode())
                     for turn in range(turns):
                         # Reserve prior assistant output, tool output and framing.

@@ -73,6 +73,7 @@ def test_e1_linker_grounding_then_static_generator(snapshot):
     assert result["linked_schema"] == linked
     assert result["linker_tool_calls"] == 1 and result["generator_tool_calls"] == 0
     assert client.requests[0]["tools"] and client.requests[1]["tools"]
+    assert client.requests[0]["response_format"] == {"type": "json_object"}
     assert client.requests[2]["tools"] is None
     assert all(r["model"] == "gpt-4.1-mini-2025-04-14" for r in client.requests)
     assert "GOLD_ONLY_SENTINEL" not in json.dumps(client.requests + result["trajectory"])
@@ -108,6 +109,8 @@ def test_invalid_link_is_model_failure_without_generator(snapshot, bad_link):
     client = FakeClient(response(json.dumps(bad_link)))
     result = DualSQLCaseRunner(snapshot, client).run_case(case(), "E1")
     assert result["error_category"] == "LINKER_FORMAT_OR_LIMIT_FAILURE"
+    assert result["linker_submission"] == json.dumps(bad_link)
+    assert result["linker_error"]
     assert result["final_sql"] is None and len(client.requests) == 1
 
 
