@@ -1,9 +1,6 @@
 name: Public pilot R2 Text-to-SQL (one-shot)
 
 on:
-  push:
-    branches: [codex/r2-public-eval]
-    paths: [evaluation/public_pilot/markers/r2.trigger]
   workflow_dispatch:
 
 permissions:
