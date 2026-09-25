@@ -27,7 +27,7 @@ from evaluation.text_to_sql_snapshot import sha256_file
 
 
 CONDITIONS = ("E0", "E1", "E2", "E3")
-SERIES_VERSION = "dualsql_lite_public_dev_v3"
+SERIES_VERSION = "dualsql_lite_public_dev_v4"
 PRICING_SOURCE = "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
 
 
@@ -75,7 +75,7 @@ class BudgetGate:
                                   MAX_TURNS, True))
                 else:
                     roles.append(("generator", GENERATOR_INSTRUCTIONS + "\nValidated linked schema:\n"
-                                  + "x" * 8000, 1 if experiment == "E1" else MAX_TURNS,
+                                  + "x" * 7000, 1 if experiment == "E1" else MAX_TURNS,
                                   experiment == "E3"))
                 bounds = []
                 for role, system, turns, tools_enabled in roles:

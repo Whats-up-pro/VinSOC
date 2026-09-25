@@ -1,5 +1,5 @@
 name: R2 DualSQL-Lite public dev E0-E3
-# Third, separately versioned public-dev series; prior artifacts stay immutable.
+# Fourth, separately versioned public-dev series; prior artifacts stay immutable.
 
 on:
   workflow_dispatch:
