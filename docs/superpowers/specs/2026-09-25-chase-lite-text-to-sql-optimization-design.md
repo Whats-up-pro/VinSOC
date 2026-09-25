@@ -37,8 +37,8 @@ Secondary questions:
   - Divide-and-Conquer CoT
 - Add deterministic, query-relevant value hints from the verified snapshot.
 - Validate and execute candidates in the existing read-only DuckDB environment.
-- Prefer deterministic selection when execution outputs agree.
-- Use an LLM pairwise tie-breaker only when deterministic selection cannot decide.
+- Prefer deterministic selection only when executable candidates are unanimous or only one executable candidate remains.
+- Use an LLM pairwise selector whenever two or more executable result groups disagree, including 2-vs-1 splits.
 - Add one optional repair attempt only in a later phase and only for syntax/execution failures.
 - Measure candidate quality, selector quality, diversity, cost, and latency separately.
 - Keep `public_dev`, official dev, and frozen holdout roles clearly separated.
@@ -126,9 +126,9 @@ Before final SQL selection:
 
 Gold data is visible only to the final evaluator.
 
-### 7.3 Deterministic-first selection
+### 7.3 Deterministic-first filtering, selector-aware disagreement
 
-Use database execution as evidence before spending another LLM call. This reduces cost and avoids relying entirely on an untuned selection model.
+Use database execution to eliminate invalid candidates and collapse execution-equivalent candidates before spending another LLM call. However, do not treat a 2-vs-1 result majority as correctness: CHASE-SQL shows majority/self-consistency can miss a correct minority candidate. E5 therefore invokes the LLM selector whenever two or more executable result groups disagree.
 
 ### 7.4 One variable at a time
 
@@ -164,7 +164,8 @@ Direct SQL        Query Plan CoT    Divide-and-Conquer CoT
                        v
            Execution-aware Selector
               |                 |
-        deterministic      LLM tie-breaker
+       unanimous/one       pairwise LLM
+        executable          on disagreement
               +--------+--------+
                        |
                        v
@@ -207,6 +208,7 @@ Requirements:
 - no full-table dumps;
 - no raw arbitrary telemetry rows;
 - no gold-derived values;
+- no benchmark-case-specific hand-written alias mappings;
 - same question + same snapshot => same hints;
 - hash the final context for provenance.
 
@@ -228,7 +230,7 @@ Produces a compact logical plan covering:
 4. ordering/limit;
 5. final SQL.
 
-Only the final SQL is passed downstream; reasoning text is retained only as optional debug metadata if provider policy permits.
+Only the final SQL is required downstream. If a provider returns a concise structured plan, it may be retained as ordinary debug output; hidden/internal reasoning is never required or depended on by the evaluator.
 
 #### Divide and Conquer
 
@@ -280,18 +282,19 @@ Selection order:
 1. Remove unsafe candidates.
 2. Remove candidates with syntax or execution failure if at least one executable candidate remains.
 3. Group executable candidates by result fingerprint.
-4. If all executable candidates agree, choose a stable representative.
-5. If one result group has a strict majority, choose a stable representative of that group.
-6. Otherwise invoke the LLM tie-breaker.
+4. If only one executable result group remains, choose a stable representative without another model call.
+5. If two or more executable result groups remain, mark the case as disagreement and hand one stable representative per result group to the next selection stage.
+
+For E4 only, use strict-majority result agreement as a self-consistency baseline; a 2-vs-1 split chooses the majority group. For E5, any disagreement proceeds to the LLM selector so that a correct minority candidate can still win.
 
 Stable representative order is fixed:
 `direct > query_plan > divide_and_conquer`.
 
 This ordering is a reproducibility rule, not a claim that Direct is more accurate.
 
-### 9.6 LLM Tie-Breaker
+### 9.6 LLM Pairwise Selector
 
-Invoked only when executable candidates disagree without a strict result majority.
+Invoked in E5 whenever two or more executable result groups disagree, including strict 2-vs-1 majorities.
 
 Input contains:
 
@@ -344,8 +347,8 @@ This prevents the fixer from using correctness feedback that would not exist in 
 | E1 | Yes | Direct | None | No |
 | E2 | Yes | Query Plan | None | No |
 | E3 | Yes | Divide & Conquer | None | No |
-| E4 | Yes | Direct + QP + DC | Deterministic only | No |
-| E5 | Yes | Direct + QP + DC | Deterministic + LLM tie-break | No |
+| E4 | Yes | Direct + QP + DC | Majority/self-consistency | No |
+| E5 | Yes | Direct + QP + DC | Unanimous early-exit + LLM pairwise selector on disagreement | No |
 | E6 | Yes | Best generator set | Best selector | One repair attempt |
 
 Rules:
@@ -368,7 +371,7 @@ number of final selected SQL queries whose accepted result matches gold
                               case count
 ```
 
-### 11.2 Candidate Oracle Accuracy / Pass@3
+### 11.2 Candidate Oracle Accuracy (Oracle@3)
 
 A case is an oracle success if at least one generated candidate is correct under the existing evaluator.
 
@@ -437,6 +440,7 @@ Optimization analysis uses:
 - `SAFETY_REJECTION`
 - `EXECUTION_ERROR`
 - `SELECTOR_ERROR`
+- `MAJORITY_WRONG_MINORITY_CORRECT`
 - `NO_CORRECT_CANDIDATE`
 
 The taxonomy is diagnostic. The scorer remains deterministic and does not depend on manually assigned taxonomy labels.
@@ -563,7 +567,7 @@ evaluation/
     context.py                         # schema + deterministic value hints
     generators.py                      # Direct / Query Plan / Divide & Conquer
     executor.py                        # validate, execute, result fingerprint
-    selector.py                        # deterministic selector + LLM tie-break
+    selector.py                        # grouping, E4 majority, E5 pairwise selector
     fixer.py                           # phase-2 one-shot repair
     metrics.py                         # oracle, selector, diversity, efficiency
     runner.py                          # experiment orchestration
@@ -664,7 +668,7 @@ Adopted:
 - Direct + Query Plan + Divide-and-Conquer candidate generation;
 - test-time multi-path generation;
 - execution-aware selection;
-- optional pairwise LLM tie-breaker;
+- pairwise LLM selection on executable disagreement;
 - later one-shot repair;
 - oracle/selector/diversity metrics.
 
