@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_008",
+  "question": "Did SCRANTON.dmevals.local have a Sysmon process creation event where the parent image ends with cmd.exe and the child image ends with powershell.exe? Return one Boolean named found.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT EXISTS(SELECT 1 FROM sysmon_process_events WHERE host = 'SCRANTON.dmevals.local' AND event_id = 1 AND parent_image ILIKE '%cmd.exe' AND image ILIKE '%powershell.exe') AS found"
+  ],
+  "category": "endpoint",
+  "difficulty": "advanced",
+  "result_comparator": "boolean"
+}

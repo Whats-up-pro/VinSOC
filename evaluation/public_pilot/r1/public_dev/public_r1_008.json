@@ -1,0 +1,36 @@
+{
+  "case_id": "public_r1_008",
+  "category": "network_only",
+  "difficulty": "intermediate",
+  "request": "Investigate recorded network flows for IPv4 address 61.135.188.212 during 2011-08-16 (dataset clock). The alert refers to a connection from 147.32.84.165 to this address on port 80. Use flow telemetry to check the connection; do not request CTI reputation. Time range: 2011-08-16T00:00:00 through 2011-08-17T00:00:00, end exclusive.",
+  "reference_time": "2011-08-16T13:56:28.639201Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "61.135.188.212",
+        "time_range": {
+          "start": "2011-08-16T00:00:00",
+          "end": "2011-08-17T00:00:00"
+        }
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "Pilot single-turn tool decision; evidence comes from the verified source row, not an IOC reputation lookup.",
+  "evidence": {
+    "table": "network_flows",
+    "source_dataset": "ctu13_s7",
+    "source_row_id": "line:31243",
+    "normalized_row_sha256": "c514ab17a1c8a43d8e006c4b8d607b6a64586eb8c930a6a2cf2fe8e7b948d2cd"
+  }
+}

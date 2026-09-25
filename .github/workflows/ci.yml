@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - codex/r2-public-eval
   workflow_dispatch:
 
 jobs:

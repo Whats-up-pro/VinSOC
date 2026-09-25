@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_005",
+  "question": "Count Sysmon process creation events (event_id=1) for each endpoint hostname; return host and event_count ordered by event_count descending, then host ascending.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT host, count(*) AS event_count FROM sysmon_process_events WHERE event_id = 1 GROUP BY host ORDER BY event_count DESC, host ASC"
+  ],
+  "category": "aggregation",
+  "difficulty": "intermediate",
+  "result_comparator": "ordered_rows"
+}

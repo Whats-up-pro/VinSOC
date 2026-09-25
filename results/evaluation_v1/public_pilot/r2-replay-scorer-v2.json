@@ -1,0 +1,242 @@
+{
+  "additional_cost_usd": 0.0,
+  "benchmark_split_sha256": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+  "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+  "case_count": 8,
+  "case_ids": [
+    "public_sql_001",
+    "public_sql_002",
+    "public_sql_003",
+    "public_sql_004",
+    "public_sql_005",
+    "public_sql_006",
+    "public_sql_007",
+    "public_sql_008"
+  ],
+  "case_results": [
+    {
+      "case_id": "public_sql_001",
+      "category": "network",
+      "difficulty": "basic",
+      "generated_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'scenario5'\n  AND label = 'From-Botnet'",
+      "v1": {
+        "error": null,
+        "error_category": "RESULT_MISMATCH",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "RESULT_MISMATCH",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_002",
+      "category": "distinct",
+      "difficulty": "intermediate",
+      "generated_sql": "SELECT DISTINCT dst_ip\nFROM network_flows\nWHERE source_dataset = 'CTU-13'\n  AND label = 'From-Botnet'\n  AND source_row_id LIKE '7%'\nORDER BY dst_ip ASC;",
+      "v1": {
+        "error": "Multi-statement SQL is not allowed",
+        "error_category": "SAFETY_REJECTION",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": true,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "RESULT_MISMATCH",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_003",
+      "category": "time_range",
+      "difficulty": "intermediate",
+      "generated_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE src_ip = '147.32.84.165'\n  AND event_time >= TIMESTAMP '2011-08-15 16:52:50'\n  AND event_time < TIMESTAMP '2011-08-15 16:53:00';",
+      "v1": {
+        "error": "Multi-statement SQL is not allowed",
+        "error_category": "SAFETY_REJECTION",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": true,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_004",
+      "category": "network",
+      "difficulty": "advanced",
+      "generated_sql": "WITH botnet_tcp_flows AS (\n    SELECT source_row_id\n    FROM network_flows\n    WHERE label = 'Scenario 7 From-Botnet'\n      AND protocol = 'TCP'\n      AND dst_port = 80\n)\nSELECT COUNT(DISTINCT source_row_id) AS flow_count\nFROM botnet_tcp_flows;",
+      "v1": {
+        "error": "Multi-statement SQL is not allowed",
+        "error_category": "SAFETY_REJECTION",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": true,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "RESULT_MISMATCH",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_005",
+      "category": "aggregation",
+      "difficulty": "intermediate",
+      "generated_sql": "SELECT\n    host,\n    COUNT(*) AS event_count\nFROM\n    sysmon_process_events\nWHERE\n    event_id = 1\nGROUP BY\n    host\nORDER BY\n    event_count DESC,\n    host ASC",
+      "v1": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_006",
+      "category": "endpoint",
+      "difficulty": "basic",
+      "generated_sql": "SELECT host, image, parent_image\nFROM sysmon_process_events\nWHERE source_row_id = 'apt29_evals_day1_manual_2020-05-01225525.json:line:828'",
+      "v1": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_007",
+      "category": "ordering_limit",
+      "difficulty": "advanced",
+      "generated_sql": "WITH filtered_events AS (\n    SELECT image\n    FROM sysmon_process_events\n    WHERE host = 'SCRANTON.dmevals.local'\n      AND event_id = 1\n      AND image IS NOT NULL\n)\nSELECT image, COUNT(*) AS event_count\nFROM filtered_events\nGROUP BY image\nORDER BY event_count DESC, image ASC\nLIMIT 5;",
+      "v1": {
+        "error": "Multi-statement SQL is not allowed",
+        "error_category": "SAFETY_REJECTION",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": true,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "public_sql_008",
+      "category": "endpoint",
+      "difficulty": "advanced",
+      "generated_sql": "WITH matched_events AS (\n    SELECT 1\n    FROM sysmon_process_events\n    WHERE host = 'SCRANTON.dmevals.local'\n      AND event_id = 1\n      AND parent_image LIKE '%cmd.exe'\n      AND image LIKE '%powershell.exe'\n    LIMIT 1\n)\nSELECT EXISTS (SELECT 1 FROM matched_events) AS found;",
+      "v1": {
+        "error": "Multi-statement SQL is not allowed",
+        "error_category": "SAFETY_REJECTION",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": true,
+        "syntax_valid": true
+      },
+      "v2": {
+        "error": null,
+        "error_category": "OK",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    }
+  ],
+  "interpretation": "Execution equality on this snapshot does not prove SQL semantic equivalence.",
+  "model_api_calls": 0,
+  "original_evaluator_commit_sha": "6c5a61391018df6254d93b07e0fe7caf610e20a4",
+  "original_metrics_v1": {
+    "execution_accuracy": 0.25,
+    "execution_success_rate": 0.375,
+    "safety_rejection_rate": 0.625,
+    "syntax_validity_rate": 1.0
+  },
+  "original_scorer_sha256": "e116736b2ccf86a5cf28724e7fad2eace604edbc654e33a3c2bd5818bcbf03ca",
+  "replay_metrics_v2": {
+    "execution_accuracy": 0.625,
+    "execution_success_rate": 1.0,
+    "safety_rejection_rate": 0.0,
+    "syntax_validity_rate": 1.0
+  },
+  "replay_mode": "offline_saved_predictions",
+  "scorer_file_sha256": {
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+    "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+    "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+    "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+    "scripts/replay_r2_public_pilot.py": "0ddf096ed2abff99da169c94af951102143fa505777e83d2147e1f3af063b79f",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+  },
+  "scorer_sha256": "c4430c5ec390b2909b6677b7872296569fd917ae1d230dc451300dd9e064605d",
+  "scorer_version": "r2_public_dev_replay_scorer_v2_terminal_semicolon",
+  "semantic_counterexamples": {
+    "public_sql_003": "Missing source_dataset filter: cross-scenario fixture changes result",
+    "public_sql_008": "LIKE versus ILIKE: mixed-case process-image fixture changes result"
+  },
+  "snapshot_binary_sha256": "09aefb438a61210058c3f9bf24e89d3cc2d95289247f688b042d82953ae826e4",
+  "snapshot_content_sha256": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+  "source_file_sha256": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+    "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+  },
+  "source_report_sha256": "0bac8abd8523eb5fe7faaa90e1708fee779ba217acead125b71fb90d4c72f636",
+  "split": "public_dev",
+  "track": "r2"
+}
