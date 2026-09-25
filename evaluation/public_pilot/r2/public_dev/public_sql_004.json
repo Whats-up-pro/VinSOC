@@ -1,0 +1,11 @@
+{
+  "case_id": "public_sql_004",
+  "question": "How many scenario 7 From-Botnet flows simultaneously use TCP and destination port 80? Both conditions must hold. Return flow_count.",
+  "database_snapshot": "data/public_pilot/snapshot.duckdb",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s7' AND label LIKE 'flow=From-Botnet%' AND protocol = 'TCP' AND dst_port = 80"
+  ],
+  "category": "network",
+  "difficulty": "advanced",
+  "result_comparator": "scalar"
+}

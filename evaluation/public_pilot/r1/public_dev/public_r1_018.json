@@ -1,0 +1,16 @@
+{
+  "case_id": "public_r1_018",
+  "category": "no_tool",
+  "difficulty": "intermediate",
+  "request": "Rewrite this note succinctly: “The analyst will review the evidence tomorrow.” No security investigation or lookup is requested.",
+  "reference_time": "2026-09-25T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "No investigation input or telemetry lookup is requested."
+}

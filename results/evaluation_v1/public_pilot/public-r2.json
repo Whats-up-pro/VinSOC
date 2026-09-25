@@ -1,0 +1,652 @@
+{
+  "benchmark_split_sha256": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+  "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+  "breakdown": {
+    "category": {
+      "aggregation": {
+        "case_ids": [
+          "public_sql_005"
+        ],
+        "metrics": {
+          "execution_accuracy": 1.0,
+          "execution_success_rate": 1.0,
+          "safety_rejection_rate": 0.0,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "distinct": {
+        "case_ids": [
+          "public_sql_002"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.0,
+          "execution_success_rate": 0.0,
+          "safety_rejection_rate": 1.0,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "endpoint": {
+        "case_ids": [
+          "public_sql_006",
+          "public_sql_008"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.5,
+          "execution_success_rate": 0.5,
+          "safety_rejection_rate": 0.5,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "network": {
+        "case_ids": [
+          "public_sql_001",
+          "public_sql_004"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.0,
+          "execution_success_rate": 0.5,
+          "safety_rejection_rate": 0.5,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "ordering_limit": {
+        "case_ids": [
+          "public_sql_007"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.0,
+          "execution_success_rate": 0.0,
+          "safety_rejection_rate": 1.0,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "time_range": {
+        "case_ids": [
+          "public_sql_003"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.0,
+          "execution_success_rate": 0.0,
+          "safety_rejection_rate": 1.0,
+          "syntax_validity_rate": 1.0
+        }
+      }
+    },
+    "difficulty": {
+      "advanced": {
+        "case_ids": [
+          "public_sql_004",
+          "public_sql_007",
+          "public_sql_008"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.0,
+          "execution_success_rate": 0.0,
+          "safety_rejection_rate": 1.0,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "basic": {
+        "case_ids": [
+          "public_sql_001",
+          "public_sql_006"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.5,
+          "execution_success_rate": 1.0,
+          "safety_rejection_rate": 0.0,
+          "syntax_validity_rate": 1.0
+        }
+      },
+      "intermediate": {
+        "case_ids": [
+          "public_sql_002",
+          "public_sql_003",
+          "public_sql_005"
+        ],
+        "metrics": {
+          "execution_accuracy": 0.3333333333333333,
+          "execution_success_rate": 0.3333333333333333,
+          "safety_rejection_rate": 0.6666666666666666,
+          "syntax_validity_rate": 1.0
+        }
+      }
+    }
+  },
+  "case_count": 8,
+  "case_ids": [
+    "public_sql_001",
+    "public_sql_002",
+    "public_sql_003",
+    "public_sql_004",
+    "public_sql_005",
+    "public_sql_006",
+    "public_sql_007",
+    "public_sql_008"
+  ],
+  "case_results": [
+    {
+      "case_id": "public_sql_001",
+      "category": "network",
+      "cost_usd": 0.00012560000000000002,
+      "difficulty": "basic",
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'scenario5'\n  AND label = 'From-Botnet'",
+      "input_tokens": 178,
+      "output_tokens": 34,
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_002",
+      "category": "distinct",
+      "cost_usd": 0.00015480000000000002,
+      "difficulty": "intermediate",
+      "error": "Multi-statement SQL is not allowed",
+      "error_category": "SAFETY_REJECTION",
+      "execution_accurate": false,
+      "execution_success": false,
+      "generated_sql": "SELECT DISTINCT dst_ip\nFROM network_flows\nWHERE source_dataset = 'CTU-13'\n  AND label = 'From-Botnet'\n  AND source_row_id LIKE '7%'\nORDER BY dst_ip ASC;",
+      "input_tokens": 191,
+      "output_tokens": 49,
+      "safety_rejected": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_003",
+      "category": "time_range",
+      "cost_usd": 0.0001904,
+      "difficulty": "intermediate",
+      "error": "Multi-statement SQL is not allowed",
+      "error_category": "SAFETY_REJECTION",
+      "execution_accurate": false,
+      "execution_success": false,
+      "generated_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE src_ip = '147.32.84.165'\n  AND event_time >= TIMESTAMP '2011-08-15 16:52:50'\n  AND event_time < TIMESTAMP '2011-08-15 16:53:00';",
+      "input_tokens": 208,
+      "output_tokens": 67,
+      "safety_rejected": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_004",
+      "category": "network",
+      "cost_usd": 0.0001844,
+      "difficulty": "advanced",
+      "error": "Multi-statement SQL is not allowed",
+      "error_category": "SAFETY_REJECTION",
+      "execution_accurate": false,
+      "execution_success": false,
+      "generated_sql": "WITH botnet_tcp_flows AS (\n    SELECT source_row_id\n    FROM network_flows\n    WHERE label = 'Scenario 7 From-Botnet'\n      AND protocol = 'TCP'\n      AND dst_port = 80\n)\nSELECT COUNT(DISTINCT source_row_id) AS flow_count\nFROM botnet_tcp_flows;",
+      "input_tokens": 185,
+      "output_tokens": 69,
+      "safety_rejected": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_005",
+      "category": "aggregation",
+      "cost_usd": 0.00015720000000000003,
+      "difficulty": "intermediate",
+      "error": null,
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "generated_sql": "SELECT\n    host,\n    COUNT(*) AS event_count\nFROM\n    sysmon_process_events\nWHERE\n    event_id = 1\nGROUP BY\n    host\nORDER BY\n    event_count DESC,\n    host ASC",
+      "input_tokens": 189,
+      "output_tokens": 51,
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_006",
+      "category": "endpoint",
+      "cost_usd": 0.00015240000000000005,
+      "difficulty": "basic",
+      "error": null,
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "generated_sql": "SELECT host, image, parent_image\nFROM sysmon_process_events\nWHERE source_row_id = 'apt29_evals_day1_manual_2020-05-01225525.json:line:828'",
+      "input_tokens": 197,
+      "output_tokens": 46,
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_007",
+      "category": "ordering_limit",
+      "cost_usd": 0.00019760000000000003,
+      "difficulty": "advanced",
+      "error": "Multi-statement SQL is not allowed",
+      "error_category": "SAFETY_REJECTION",
+      "execution_accurate": false,
+      "execution_success": false,
+      "generated_sql": "WITH filtered_events AS (\n    SELECT image\n    FROM sysmon_process_events\n    WHERE host = 'SCRANTON.dmevals.local'\n      AND event_id = 1\n      AND image IS NOT NULL\n)\nSELECT image, COUNT(*) AS event_count\nFROM filtered_events\nGROUP BY image\nORDER BY event_count DESC, image ASC\nLIMIT 5;",
+      "input_tokens": 194,
+      "output_tokens": 75,
+      "safety_rejected": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "public_sql_008",
+      "category": "endpoint",
+      "cost_usd": 0.0001984,
+      "difficulty": "advanced",
+      "error": "Multi-statement SQL is not allowed",
+      "error_category": "SAFETY_REJECTION",
+      "execution_accurate": false,
+      "execution_success": false,
+      "generated_sql": "WITH matched_events AS (\n    SELECT 1\n    FROM sysmon_process_events\n    WHERE host = 'SCRANTON.dmevals.local'\n      AND event_id = 1\n      AND parent_image LIKE '%cmd.exe'\n      AND image LIKE '%powershell.exe'\n    LIMIT 1\n)\nSELECT EXISTS (SELECT 1 FROM matched_events) AS found;",
+      "input_tokens": 196,
+      "output_tokens": 75,
+      "safety_rejected": true,
+      "syntax_valid": true
+    }
+  ],
+  "config": {
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "model": "gpt-4.1-mini-2025-04-14",
+    "provider": "openai",
+    "temperature": 0
+  },
+  "error_summary": {
+    "OK": 2,
+    "RESULT_MISMATCH": 1,
+    "SAFETY_REJECTION": 5
+  },
+  "evaluator_commit_sha": "6c5a61391018df6254d93b07e0fe7caf610e20a4",
+  "expected_case_ids": [
+    "public_sql_001",
+    "public_sql_002",
+    "public_sql_003",
+    "public_sql_004",
+    "public_sql_005",
+    "public_sql_006",
+    "public_sql_007",
+    "public_sql_008"
+  ],
+  "gold_validation": {
+    "public_sql_001": [
+      {
+        "result_sha256": "efb2df7901882d7bba9600b8e6eeb14f25637401ee3f981cb59753087afc00de",
+        "row_count": 1
+      }
+    ],
+    "public_sql_002": [
+      {
+        "result_sha256": "cbdd2b19aa44cec38ba50bdc36d06288abc4632ddc0cab87a7d7db826f29fb35",
+        "row_count": 17
+      }
+    ],
+    "public_sql_003": [
+      {
+        "result_sha256": "346df59631ff81ec8cd348c62edc2561b1e8bc72b8da30a36f94bff63cf443aa",
+        "row_count": 1
+      }
+    ],
+    "public_sql_004": [
+      {
+        "result_sha256": "fe19f170e3b5326ff3fb053403b5ccbddd0ecaeccaa12dac9fe739b3eec05934",
+        "row_count": 1
+      }
+    ],
+    "public_sql_005": [
+      {
+        "result_sha256": "33b0cd86e04ebd85ae9d5e321b32a01f7edf8f9dedd46fc6c6933a0289489f03",
+        "row_count": 4
+      }
+    ],
+    "public_sql_006": [
+      {
+        "result_sha256": "4b42fa19cab0103e24df380d84e60a8817c2c62c9fc5c9c4cea5b4b916466265",
+        "row_count": 1
+      }
+    ],
+    "public_sql_007": [
+      {
+        "result_sha256": "f0d8423f3ac7a2165808533394e9c3f5ce480abffaa9bdcbf2eb5bfffd58c81e",
+        "row_count": 5
+      }
+    ],
+    "public_sql_008": [
+      {
+        "result_sha256": "4189c28962fffec704e1a57b35b6870995b48a3cb13fb9ff9e5a8ceecff99313",
+        "row_count": 1
+      }
+    ]
+  },
+  "ineligible_reasons": [],
+  "metrics": {
+    "execution_accuracy": 0.25,
+    "execution_success_rate": 0.375,
+    "safety_rejection_rate": 0.625,
+    "syntax_validity_rate": 1.0
+  },
+  "official_eligible": false,
+  "official_ineligible_reasons": [
+    "public_dev_pilot_is_distinct_from_official_benchmarks"
+  ],
+  "pilot_eligible": true,
+  "preflight": {
+    "all_case_ids": [
+      "public_r1_001",
+      "public_r1_002",
+      "public_r1_003",
+      "public_r1_004",
+      "public_r1_005",
+      "public_r1_006",
+      "public_r1_007",
+      "public_r1_008",
+      "public_r1_009",
+      "public_r1_010",
+      "public_r1_011",
+      "public_r1_012",
+      "public_r1_013",
+      "public_r1_014",
+      "public_r1_015",
+      "public_r1_016",
+      "public_r1_017",
+      "public_r1_018",
+      "public_r1_019",
+      "public_r1_020",
+      "public_sql_001",
+      "public_sql_002",
+      "public_sql_003",
+      "public_sql_004",
+      "public_sql_005",
+      "public_sql_006",
+      "public_sql_007",
+      "public_sql_008"
+    ],
+    "bounds": [
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8552,
+        "max_cost_usd": 0.005020800000000001,
+        "request_utf8_bytes": 4456
+      },
+      {
+        "input_token_bound": 8552,
+        "max_cost_usd": 0.005020800000000001,
+        "request_utf8_bytes": 4456
+      },
+      {
+        "input_token_bound": 8551,
+        "max_cost_usd": 0.0050203999999999995,
+        "request_utf8_bytes": 4455
+      },
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8551,
+        "max_cost_usd": 0.0050203999999999995,
+        "request_utf8_bytes": 4455
+      },
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8553,
+        "max_cost_usd": 0.005021200000000001,
+        "request_utf8_bytes": 4457
+      },
+      {
+        "input_token_bound": 8496,
+        "max_cost_usd": 0.0049984,
+        "request_utf8_bytes": 4400
+      },
+      {
+        "input_token_bound": 8491,
+        "max_cost_usd": 0.0049964,
+        "request_utf8_bytes": 4395
+      },
+      {
+        "input_token_bound": 8506,
+        "max_cost_usd": 0.0050024,
+        "request_utf8_bytes": 4410
+      },
+      {
+        "input_token_bound": 8501,
+        "max_cost_usd": 0.0050003999999999995,
+        "request_utf8_bytes": 4405
+      },
+      {
+        "input_token_bound": 8497,
+        "max_cost_usd": 0.0049988,
+        "request_utf8_bytes": 4401
+      },
+      {
+        "input_token_bound": 8497,
+        "max_cost_usd": 0.0049988,
+        "request_utf8_bytes": 4401
+      },
+      {
+        "input_token_bound": 8495,
+        "max_cost_usd": 0.004998,
+        "request_utf8_bytes": 4399
+      },
+      {
+        "input_token_bound": 8494,
+        "max_cost_usd": 0.0049976000000000005,
+        "request_utf8_bytes": 4398
+      },
+      {
+        "input_token_bound": 8354,
+        "max_cost_usd": 0.0049416,
+        "request_utf8_bytes": 4258
+      },
+      {
+        "input_token_bound": 8359,
+        "max_cost_usd": 0.0049436,
+        "request_utf8_bytes": 4263
+      },
+      {
+        "input_token_bound": 8339,
+        "max_cost_usd": 0.0049356,
+        "request_utf8_bytes": 4243
+      },
+      {
+        "input_token_bound": 8338,
+        "max_cost_usd": 0.004935200000000001,
+        "request_utf8_bytes": 4242
+      },
+      {
+        "input_token_bound": 5049,
+        "max_cost_usd": 0.0036196,
+        "request_utf8_bytes": 953
+      },
+      {
+        "input_token_bound": 5106,
+        "max_cost_usd": 0.0036424,
+        "request_utf8_bytes": 1010
+      },
+      {
+        "input_token_bound": 5131,
+        "max_cost_usd": 0.0036524,
+        "request_utf8_bytes": 1035
+      },
+      {
+        "input_token_bound": 5090,
+        "max_cost_usd": 0.003636,
+        "request_utf8_bytes": 994
+      },
+      {
+        "input_token_bound": 5120,
+        "max_cost_usd": 0.003648,
+        "request_utf8_bytes": 1024
+      },
+      {
+        "input_token_bound": 5095,
+        "max_cost_usd": 0.003638,
+        "request_utf8_bytes": 999
+      },
+      {
+        "input_token_bound": 5123,
+        "max_cost_usd": 0.0036492000000000004,
+        "request_utf8_bytes": 1027
+      },
+      {
+        "input_token_bound": 5141,
+        "max_cost_usd": 0.0036564,
+        "request_utf8_bytes": 1045
+      }
+    ],
+    "budget_limit_usd": 1.0,
+    "cost_ceiling_usd": 0.12905600000000003,
+    "method": "serialized full request UTF-8 bytes + 4096 framing tokens; 1000 output tokens per call; zero retries"
+  },
+  "pricing": {
+    "calculated_cost_usd": 0.0013608000000000001,
+    "checked_utc": "2026-09-25T04:44:45.037310+00:00",
+    "input_usd_per_million": 0.4,
+    "known_cost_usd": 0.0013608000000000001,
+    "output_usd_per_million": 1.6,
+    "source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini",
+    "usage_complete": true
+  },
+  "prompt_sha256": "d2c28f4d4ae16155622eb0c16e321ac25dd01e9e74980e9ca465bb27e9123597",
+  "provider_metadata": {
+    "calls": [
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_001",
+        "category": "network",
+        "cost_usd": 0.00012560000000000002,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 178,
+        "output_tokens": 34,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_002",
+        "category": "distinct",
+        "cost_usd": 0.00015480000000000002,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 191,
+        "output_tokens": 49,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_003",
+        "category": "time_range",
+        "cost_usd": 0.0001904,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 208,
+        "output_tokens": 67,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_004",
+        "category": "network",
+        "cost_usd": 0.0001844,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 185,
+        "output_tokens": 69,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_005",
+        "category": "aggregation",
+        "cost_usd": 0.00015720000000000003,
+        "difficulty": "intermediate",
+        "fallback_triggered": false,
+        "input_tokens": 189,
+        "output_tokens": 51,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_006",
+        "category": "endpoint",
+        "cost_usd": 0.00015240000000000005,
+        "difficulty": "basic",
+        "fallback_triggered": false,
+        "input_tokens": 197,
+        "output_tokens": 46,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_007",
+        "category": "ordering_limit",
+        "cost_usd": 0.00019760000000000003,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 194,
+        "output_tokens": 75,
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-4.1-mini-2025-04-14",
+        "actual_provider": "openai",
+        "case_id": "public_sql_008",
+        "category": "endpoint",
+        "cost_usd": 0.0001984,
+        "difficulty": "advanced",
+        "fallback_triggered": false,
+        "input_tokens": 196,
+        "output_tokens": 75,
+        "status": "succeeded"
+      }
+    ],
+    "total_calls": 8
+  },
+  "row_counts": {
+    "network_flows": 243906,
+    "sysmon_process_events": 143884
+  },
+  "run_status": "completed",
+  "schema_sha256": "d9308abe17fa5a60fad5dd2901989acae8c9ecc2c4ab3dfa5d2d428b7623f553",
+  "scorer_file_sha256": {
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+    "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+    "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+    "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+    "vinsoc_data/duckdb_store.py": "31e6a3f03ed885ebbccd20260584ec1ba7d89e7b1ec2828d4b6e04afc4b7f86e"
+  },
+  "scorer_sha256": "e116736b2ccf86a5cf28724e7fad2eace604edbc654e33a3c2bd5818bcbf03ca",
+  "snapshot_content_sha256": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+  "snapshot_sha256": "880a0a11acf6e992882b829e17af8a641518e94737fb06cc00fcd394a066ef07",
+  "source_file_sha256": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+    "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+  },
+  "split": "public_dev",
+  "track": "r2"
+}
