@@ -121,6 +121,15 @@ jobs:
               json.dumps(actual, sort_keys=True, indent=2) + "\n", encoding="utf-8"
           )
           PY
+      - name: Classify retained ThreatFox last_seen_utc
+        run: |
+          unzip -p \
+            "$RUNNER_TEMP/run4-source/raw/threatfox_full.csv.zip" \
+            full.csv > "$RUNNER_TEMP/run4-full.csv"
+          python -m scripts.classify_threatfox_last_seen \
+            --input "$RUNNER_TEMP/run4-full.csv" \
+            --output "$RUNNER_TEMP/r2-run4-threatfox-last-seen-classification.json"
+          rm -f "$RUNNER_TEMP/run4-full.csv"
       - name: Encrypt the exact verified run-4 source bundle
         run: |
           tar -C "$RUNNER_TEMP/run4-source" \
@@ -245,10 +254,11 @@ jobs:
           path: |
             ${{ runner.temp }}/r2-run4-source-remediation.json
             ${{ runner.temp }}/run4-source-hashes.json
+            ${{ runner.temp }}/r2-run4-threatfox-last-seen-classification.json
           if-no-files-found: error
           retention-days: 90
       - name: Remove plaintext working copies
         if: always()
         run: |
           rm -rf "$RUNNER_TEMP/run4-source" "$RUNNER_TEMP/run4-roundtrip"
-          rm -f "$RUNNER_TEMP/original-artifact.zip"
+          rm -f "$RUNNER_TEMP/original-artifact.zip" "$RUNNER_TEMP/run4-full.csv"
