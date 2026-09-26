@@ -1,0 +1,40 @@
+name: R2 official source byte gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/r2-official-source-probe.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r2-official-source-byte-gate
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      THREATFOX_AUTH_KEY: ${{ secrets.THREATFOX_AUTH_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download and hash complete official source bytes
+        run: python -m scripts.probe_r2_official_sources --output "$RUNNER_TEMP/r2-official-source-probe"
+      - name: Preserve credential-free receipts on success or failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r2-official-source-receipts
+          path: |
+            ${{ runner.temp }}/r2-official-source-probe/probe.json
+            ${{ runner.temp }}/r2-official-source-probe/receipts/
+          if-no-files-found: error
+          retention-days: 30
