@@ -114,8 +114,35 @@ def _csv_rows(path: Path) -> Iterable[tuple[int, dict[str, str]]]:
         yield from enumerate(reader, start=2)
 
 
+def _threatfox_csv_rows(path: Path) -> Iterable[tuple[int, dict[str, str]]]:
+    """Read a ThreatFox export whose real header may itself be commented."""
+    with Path(path).open("r", encoding="utf-8-sig", newline="") as handle:
+        header: str | None = None
+        header_line = 0
+        data_lines: list[str] = []
+        for line_number, line in enumerate(handle, start=1):
+            if header is None:
+                candidate = line.lstrip()
+                if candidate.startswith("#"):
+                    candidate = candidate[1:].lstrip()
+                if "first_seen_utc" in candidate and "ioc_value" in candidate:
+                    header = candidate
+                    header_line = line_number
+                continue
+            if line.strip() and not line.lstrip().startswith("#"):
+                data_lines.append(line)
+    if header is None:
+        raise ValueError("ThreatFox CSV header not found")
+    reader = csv.DictReader([header, *data_lines])
+    required = {"ioc_id", "ioc_value", "ioc_type", "first_seen_utc"}
+    missing = sorted(required.difference(reader.fieldnames or ()))
+    if missing:
+        raise ValueError(f"ThreatFox CSV missing required column(s): {', '.join(missing)}")
+    yield from enumerate(reader, start=header_line + 1)
+
+
 def _iter_threatfox_csv(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]:
-    for line_number, row in _csv_rows(path):
+    for line_number, row in _threatfox_csv_rows(path):
         source_row_id = _text(row.get("ioc_id"))
         indicator = _text(row.get("ioc_value"))
         indicator_type = _text(row.get("ioc_type"))

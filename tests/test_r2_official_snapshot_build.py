@@ -24,7 +24,8 @@ def _write_csv(path: Path, fields: list[str], rows: list[dict[str, str]]) -> Non
 
 def _source_fixture(tmp_path: Path) -> tuple[Path, Path]:
     threatfox = tmp_path / "full.csv"
-    _write_csv(threatfox, ["ioc_id", "ioc_value", "ioc_type"], [{
+    _write_csv(threatfox, ["first_seen_utc", "ioc_id", "ioc_value", "ioc_type"], [{
+        "first_seen_utc": "2026-09-25 00:00:00",
         "ioc_id": "1", "ioc_value": "malware.example", "ioc_type": "domain"
     }])
     ctu = tmp_path / "capture20110812.binetflow"

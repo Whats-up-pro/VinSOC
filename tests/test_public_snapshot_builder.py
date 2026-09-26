@@ -96,6 +96,52 @@ def test_threatfox_adapter_maps_fields_and_skips_invalid_rows(tmp_path):
     ]
 
 
+def test_threatfox_adapter_discovers_commented_full_export_header(tmp_path):
+    source = tmp_path / "full.csv"
+    source.write_text(
+        "# ThreatFox full export generated at 2026-09-26 00:00:00 UTC\n"
+        "# Terms: https://threatfox.abuse.ch/\n"
+        "# first_seen_utc,ioc_id,ioc_value,ioc_type,threat_type,malware_printable,confidence_level,reference,last_seen_utc\n"
+        "2026-09-25 01:02:03,9876,evil.example,domain,botnet_cc,ExampleBot,95,https://threatfox.abuse.ch/ioc/9876/,2026-09-25 04:05:06\n",
+        encoding="utf-8",
+    )
+
+    rows = normalize_threatfox_csv(source, "threatfox_full")
+
+    assert rows == [{
+        "source_dataset": "threatfox_full",
+        "source_row_id": "9876",
+        "indicator": "evil.example",
+        "indicator_type": "domain",
+        "threat_type": "botnet_cc",
+        "malware_printable": "ExampleBot",
+        "confidence_level": 95,
+        "first_seen": "2026-09-25T01:02:03",
+        "last_seen": "2026-09-25T04:05:06",
+        "reference_url": "https://threatfox.abuse.ch/ioc/9876/",
+    }]
+
+
+def test_threatfox_adapter_fails_loudly_without_export_header(tmp_path):
+    source = tmp_path / "full.csv"
+    source.write_text("# metadata only\n42,evil.example,domain\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="ThreatFox CSV header not found"):
+        normalize_threatfox_csv(source, "threatfox_full")
+
+
+def test_threatfox_adapter_fails_loudly_when_required_columns_are_missing(tmp_path):
+    source = tmp_path / "full.csv"
+    source.write_text(
+        "# first_seen_utc,ioc_value,threat_type\n"
+        "2026-09-25 01:02:03,evil.example,botnet_cc\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match=r"missing required column\(s\): ioc_id, ioc_type"):
+        normalize_threatfox_csv(source, "threatfox_full")
+
+
 def test_ctu13_adapter_maps_flow_fields_and_skips_invalid_rows(tmp_path):
     source = tmp_path / "capture.binetflow"
     fields = [
