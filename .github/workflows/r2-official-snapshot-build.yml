@@ -34,6 +34,18 @@ jobs:
         run: |
           python -m scripts.build_r2_official_snapshot \
             --report "$RUNNER_TEMP/r2-official-snapshot-build.json"
+      - name: Preserve exact verified source bytes for reproducible rebuilds
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r2-official-frozen-source-bytes
+          path: |
+            ${{ runner.temp }}/r2-official-source-probe/probe.json
+            ${{ runner.temp }}/r2-official-source-probe/receipts/
+            ${{ runner.temp }}/r2-official-source-probe/raw/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
       - name: Preserve credential-free build metadata
         if: always()
         uses: actions/upload-artifact@v4
