@@ -558,6 +558,8 @@ def build_snapshot(
     dataset_manifest_path: Path,
     snapshot_path: Path,
     snapshot_manifest_path: Path,
+    *,
+    diagnostic_state: dict[str, Any] | None = None,
 ) -> dict[str, int]:
     """Build, validate, and atomically publish one verified snapshot."""
     dataset_manifest_path = Path(dataset_manifest_path)
@@ -567,6 +569,13 @@ def build_snapshot(
         raise ValueError(f"Refusing to overwrite existing snapshot: {snapshot_path}")
     if snapshot_manifest_path.exists():
         raise ValueError(f"Refusing to overwrite existing manifest: {snapshot_manifest_path}")
+    diagnostics = diagnostic_state if diagnostic_state is not None else {}
+    diagnostics["failure_stage"] = "source_validation"
+    diagnostics["table_row_counts"] = {
+        "cti_indicators": 0,
+        "network_flows": 0,
+        "sysmon_process_events": 0,
+    }
     sources = _load_dataset_manifest(dataset_manifest_path)
     _validate_sources(sources)
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
@@ -582,6 +591,7 @@ def build_snapshot(
         temporary_snapshot = Path(temp_dir) / snapshot_path.name
         builder = SocSnapshotBuilder(temporary_snapshot)
         builder.create_empty_snapshot()
+        diagnostics["failure_stage"] = "source_normalization"
         for source in sources:
             builder.register_provenance(
                 dataset_id=source["dataset_id"],
@@ -596,11 +606,25 @@ def build_snapshot(
                 rows = _iter_sysmon_zip_jsonl(
                     Path(source["path"]), source["dataset_id"], source["archive_member"]
                 )
+            elif source["format"] == "threatfox_csv":
+                table = "cti_indicators"
+                threatfox_diagnostics = _new_threatfox_diagnostics(source["dataset_id"])
+                diagnostics["threatfox"] = threatfox_diagnostics
+                rows = _iter_threatfox_csv(
+                    Path(source["path"]),
+                    source["dataset_id"],
+                    diagnostics=threatfox_diagnostics,
+                )
             else:
                 table, adapter = adapters[source["format"]]
                 rows = adapter(Path(source["path"]), source["dataset_id"])
-            _bulk_insert_rows(temporary_snapshot, table, rows, Path(temp_dir))
+            diagnostics["table_row_counts"][table] += _bulk_insert_rows(
+                temporary_snapshot, table, rows, Path(temp_dir)
+            )
+        diagnostics["failure_stage"] = "snapshot_validation"
         counts = _validate_built_snapshot(temporary_snapshot, len(sources))
+        diagnostics["table_row_counts"] = counts
+        diagnostics["failure_stage"] = "complete"
         os.replace(temporary_snapshot, snapshot_path)
 
     manifest_payload = {
