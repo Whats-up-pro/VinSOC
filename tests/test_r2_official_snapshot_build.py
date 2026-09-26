@@ -325,6 +325,20 @@ def test_run4_remediation_workflow_verifies_encrypts_and_round_trips():
     assert "name: r2-official-run4-remediation-evidence" in workflow
 
 
+def test_run4_remediation_classifies_only_after_source_hash_verification():
+    workflow = Path(".github/workflows/r2-run4-source-remediation.yml").read_text(
+        encoding="utf-8"
+    )
+
+    verify_index = workflow.index("- name: Verify all five retained source hashes")
+    classify_index = workflow.index("- name: Classify retained ThreatFox last_seen_utc")
+    assert verify_index < classify_index
+    assert "python -m scripts.classify_threatfox_last_seen" in workflow
+    assert "r2-run4-threatfox-last-seen-classification.json" in workflow
+    evidence_step = workflow.split("- name: Upload remediation evidence", 1)[1]
+    assert "r2-run4-threatfox-last-seen-classification.json" in evidence_step
+
+
 def test_staging_rejects_bytes_changed_after_same_run_receipt(tmp_path):
     from scripts.probe_r2_official_sources import probe
     from scripts.stage_r2_official_sources import stage_probe_output
