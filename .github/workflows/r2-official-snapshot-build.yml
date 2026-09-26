@@ -35,7 +35,7 @@ jobs:
           python -m scripts.build_r2_official_snapshot \
             --report "$RUNNER_TEMP/r2-official-snapshot-build.json"
       - name: Preserve exact verified source bytes for reproducible rebuilds
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: r2-official-frozen-source-bytes
