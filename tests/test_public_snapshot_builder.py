@@ -123,6 +123,37 @@ def test_threatfox_adapter_discovers_commented_full_export_header(tmp_path):
     }]
 
 
+def test_threatfox_adapter_honors_delimiter_space_before_quoted_fields(tmp_path):
+    source = tmp_path / "full.csv"
+    source.write_text(
+        "# first_seen_utc,ioc_id,ioc_value,ioc_type,threat_type,"
+        "malware_printable,confidence_level,reference,last_seen_utc\n"
+        '"2026-09-25 01:02:03", "9876", "evil.example", "domain", '
+        '"botnet_cc", "Example, Bot", "95", '
+        '"https://threatfox.abuse.ch/ioc/9876/", ""\n',
+        encoding="utf-8",
+    )
+
+    rows, diagnostics = normalize_threatfox_csv_with_diagnostics(source, "threatfox_full")
+
+    assert rows == [
+        {
+            "source_dataset": "threatfox_full",
+            "source_row_id": "9876",
+            "indicator": "evil.example",
+            "indicator_type": "domain",
+            "threat_type": "botnet_cc",
+            "malware_printable": "Example, Bot",
+            "confidence_level": 95,
+            "first_seen": "2026-09-25T01:02:03",
+            "last_seen": None,
+            "reference_url": "https://threatfox.abuse.ch/ioc/9876/",
+        }
+    ]
+    assert diagnostics["rows_accepted"] == 1
+    assert diagnostics["rows_rejected"] == 0
+
+
 def test_threatfox_adapter_fails_loudly_without_export_header(tmp_path):
     source = tmp_path / "full.csv"
     source.write_text("# metadata only\n42,evil.example,domain\n", encoding="utf-8")

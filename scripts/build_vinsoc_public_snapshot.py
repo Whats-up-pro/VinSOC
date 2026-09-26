@@ -133,7 +133,7 @@ def _threatfox_csv_rows(path: Path) -> Iterable[tuple[int, dict[str, str]]]:
                 data_lines.append(line)
     if header is None:
         raise ValueError("ThreatFox CSV header not found")
-    reader = csv.DictReader([header, *data_lines])
+    reader = csv.DictReader([header, *data_lines], skipinitialspace=True)
     required = {"ioc_id", "ioc_value", "ioc_type", "first_seen_utc"}
     missing = sorted(required.difference(reader.fieldnames or ()))
     if missing:
