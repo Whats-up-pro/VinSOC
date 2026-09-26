@@ -1,12 +1,7 @@
 name: R2 official three-source snapshot build
-# The push trigger is removed after the one-time provenance build succeeds.
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - .github/workflows/r2-official-snapshot-build.yml
 
 permissions:
   contents: read

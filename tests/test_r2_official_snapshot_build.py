@@ -6,6 +6,8 @@ import json
 import zipfile
 from pathlib import Path
 
+import pytest
+
 from evaluation.text_to_sql_snapshot import verify_official_snapshot_contract
 from scripts.build_r2_official_snapshot import build_official_snapshot_pair
 from scripts.build_vinsoc_public_snapshot import BUILDER_VERSION
@@ -127,3 +129,47 @@ def test_official_builder_rebuilds_same_logical_content_and_writes_lock(tmp_path
         official_lock_path=lock,
     )
     assert verified["snapshot_logical_sha256"] == result["first_build"]["snapshot_logical_sha256"]
+
+
+def test_official_snapshot_workflow_is_manual_only():
+    workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(
+        encoding="utf-8"
+    ).splitlines()
+    on_line = workflow.index("on:")
+    trigger_lines = []
+    for line in workflow[on_line + 1:]:
+        if line and not line.startswith(" "):
+            break
+        if line.startswith("  ") and not line.startswith("    ") and line.strip():
+            trigger_lines.append(line.strip())
+    assert trigger_lines == ["workflow_dispatch:"]
+
+
+def test_staging_rejects_bytes_changed_after_same_run_receipt(tmp_path):
+    from scripts.probe_r2_official_sources import probe
+    from scripts.stage_r2_official_sources import stage_probe_output
+    from tests.test_r2_official_source_probe import Response, zipped
+
+    threatfox = zipped("full.csv", b"first_seen_utc,ioc_id,ioc_value,ioc_type\n2026-09-25,1,a.test,domain\n")
+    ctu = b"StartTime,SrcAddr,DstAddr\n2011/08/12 00:00:00,1.1.1.1,2.2.2.2\n"
+    otrf = zipped("apt29_evals_day1_manual_2020-05-01225525.json", b'{"Hostname":"h","EventID":1}\n')
+
+    def opener(request, timeout):
+        if "threatfox-api" in request.full_url:
+            return Response(threatfox)
+        if request.full_url.endswith("capture20110812.binetflow"):
+            return Response(ctu)
+        return Response(otrf)
+
+    probe_dir = tmp_path / "probe"
+    probe(probe_dir, environ={"THREATFOX_AUTH_KEY": "secret"}, opener=opener,
+          retrieved_at="2026-09-26T00:00:00+00:00")
+    (probe_dir / "raw" / "capture20110812.binetflow").write_bytes(b"changed")
+
+    with pytest.raises(ValueError, match="ctu13_s3 transport byte count mismatch"):
+        stage_probe_output(
+            probe_dir=probe_dir,
+            source_root=tmp_path / "sources",
+            dataset_manifest_path=tmp_path / "dataset_manifest.json",
+            receipt_dir=tmp_path / "receipts",
+        )
