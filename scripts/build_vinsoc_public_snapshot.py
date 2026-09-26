@@ -15,7 +15,7 @@ import os
 import re
 import tempfile
 import zipfile
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Iterator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -23,6 +23,8 @@ from urllib.parse import urlparse
 
 from evaluation.text_to_sql_snapshot import sha256_file
 from vinsoc_data.duckdb_store import DuckDBSnapshot, SocSnapshotBuilder
+
+BUILDER_VERSION = "vinsoc_public_snapshot_v2_official"
 
 _SOURCE_FIELDS = {
     "dataset_id",
@@ -112,9 +114,7 @@ def _csv_rows(path: Path) -> Iterable[tuple[int, dict[str, str]]]:
         yield from enumerate(reader, start=2)
 
 
-def normalize_threatfox_csv(path: Path, dataset_id: str) -> list[dict[str, Any]]:
-    """Normalize the documented ThreatFox CSV export columns."""
-    normalized: list[dict[str, Any]] = []
+def _iter_threatfox_csv(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]:
     for line_number, row in _csv_rows(path):
         source_row_id = _text(row.get("ioc_id"))
         indicator = _text(row.get("ioc_value"))
@@ -130,26 +130,26 @@ def normalize_threatfox_csv(path: Path, dataset_id: str) -> list[dict[str, Any]]
         confidence = _integer(row.get("confidence_level"), minimum=0, maximum=100)
         if _text(row.get("confidence_level")) and confidence is None:
             continue
-        normalized.append(
-            {
-                "source_dataset": dataset_id,
-                "source_row_id": source_row_id or f"line:{line_number}",
-                "indicator": indicator,
-                "indicator_type": indicator_type,
-                "threat_type": _text(row.get("threat_type")),
-                "malware_printable": _text(row.get("malware_printable")),
-                "confidence_level": confidence,
-                "first_seen": first_seen,
-                "last_seen": last_seen,
-                "reference_url": _text(row.get("reference")),
-            }
-        )
-    return normalized
+        yield {
+            "source_dataset": dataset_id,
+            "source_row_id": source_row_id or f"line:{line_number}",
+            "indicator": indicator,
+            "indicator_type": indicator_type,
+            "threat_type": _text(row.get("threat_type")),
+            "malware_printable": _text(row.get("malware_printable")),
+            "confidence_level": confidence,
+            "first_seen": first_seen,
+            "last_seen": last_seen,
+            "reference_url": _text(row.get("reference")),
+        }
 
 
-def normalize_ctu13_binetflow(path: Path, dataset_id: str) -> list[dict[str, Any]]:
-    """Normalize CTU-13 detailed bidirectional ``.binetflow`` records."""
-    normalized: list[dict[str, Any]] = []
+def normalize_threatfox_csv(path: Path, dataset_id: str) -> list[dict[str, Any]]:
+    """Normalize the documented ThreatFox CSV export columns."""
+    return list(_iter_threatfox_csv(path, dataset_id))
+
+
+def _iter_ctu13_binetflow(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]:
     for line_number, row in _csv_rows(path):
         event_time = _timestamp(row.get("StartTime"))
         src_ip = _ip(row.get("SrcAddr"))
@@ -170,27 +170,29 @@ def normalize_ctu13_binetflow(path: Path, dataset_id: str) -> list[dict[str, Any
             continue
         if total_bytes is not None and source_bytes is not None and source_bytes > total_bytes:
             continue
-        normalized.append(
-            {
-                "source_dataset": dataset_id,
-                "source_row_id": f"line:{line_number}",
-                "event_time": event_time,
-                "src_ip": src_ip,
-                "src_port": src_port,
-                "dst_ip": dst_ip,
-                "dst_port": dst_port,
-                "protocol": (_text(row.get("Proto")) or "").upper() or None,
-                "action": _text(row.get("State")),
-                "bytes_out": source_bytes,
-                "bytes_in": (
-                    total_bytes - source_bytes
-                    if total_bytes is not None and source_bytes is not None
-                    else None
-                ),
-                "label": _text(row.get("Label")),
-            }
-        )
-    return normalized
+        yield {
+            "source_dataset": dataset_id,
+            "source_row_id": f"line:{line_number}",
+            "event_time": event_time,
+            "src_ip": src_ip,
+            "src_port": src_port,
+            "dst_ip": dst_ip,
+            "dst_port": dst_port,
+            "protocol": (_text(row.get("Proto")) or "").upper() or None,
+            "action": _text(row.get("State")),
+            "bytes_out": source_bytes,
+            "bytes_in": (
+                total_bytes - source_bytes
+                if total_bytes is not None and source_bytes is not None
+                else None
+            ),
+            "label": _text(row.get("Label")),
+        }
+
+
+def normalize_ctu13_binetflow(path: Path, dataset_id: str) -> list[dict[str, Any]]:
+    """Normalize CTU-13 detailed bidirectional ``.binetflow`` records."""
+    return list(_iter_ctu13_binetflow(path, dataset_id))
 
 
 def _nested(payload: dict[str, Any], *path: str) -> Any:
@@ -205,7 +207,12 @@ def _nested(payload: dict[str, Any], *path: str) -> Any:
 def _normalize_sysmon_lines(
     lines: Iterable[str], dataset_id: str, *, source_prefix: str | None = None
 ) -> list[dict[str, Any]]:
-    normalized: list[dict[str, Any]] = []
+    return list(_iter_sysmon_lines(lines, dataset_id, source_prefix=source_prefix))
+
+
+def _iter_sysmon_lines(
+    lines: Iterable[str], dataset_id: str, *, source_prefix: str | None = None
+) -> Iterator[dict[str, Any]]:
     for line_number, line in enumerate(lines, start=1):
         if not line.strip():
             continue
@@ -214,6 +221,9 @@ def _normalize_sysmon_lines(
         except json.JSONDecodeError:
             continue
         if not isinstance(payload, dict):
+            continue
+        channel = _text(payload.get("Channel"))
+        if channel is not None and channel != "Microsoft-Windows-Sysmon/Operational":
             continue
         winlog = payload.get("winlog") if isinstance(payload.get("winlog"), dict) else {}
         event_data = winlog.get("event_data")
@@ -225,6 +235,7 @@ def _normalize_sysmon_lines(
         host = _text(
             winlog.get("computer_name")
             or _nested(payload, "host", "name")
+            or payload.get("Hostname")
             or payload.get("Computer")
         )
         event_id = _integer(
@@ -236,41 +247,56 @@ def _normalize_sysmon_lines(
         row_id = f"line:{line_number}"
         if source_prefix:
             row_id = f"{source_prefix}:{row_id}"
-        normalized.append(
-            {
-                "source_dataset": dataset_id,
-                "source_row_id": row_id,
-                "event_time": event_time,
-                "host": host,
-                "event_id": event_id,
-                "parent_image": _text(
-                    event_data.get("ParentImage")
-                    or _nested(payload, "process", "parent", "executable")
-                ),
-                "parent_pid": _integer(
-                    event_data.get("ParentProcessId")
-                    or _nested(payload, "process", "parent", "pid"),
-                    minimum=0,
-                ),
-                "image": _text(
-                    event_data.get("Image") or _nested(payload, "process", "executable")
-                ),
-                "process_id": _integer(
-                    event_data.get("ProcessId") or _nested(payload, "process", "pid"), minimum=0
-                ),
-                "command_line": _text(
-                    event_data.get("CommandLine") or _nested(payload, "process", "command_line")
-                ),
-                "user_name": _text(event_data.get("User") or _nested(payload, "user", "name")),
-            }
-        )
-    return normalized
+        yield {
+            "source_dataset": dataset_id,
+            "source_row_id": row_id,
+            "event_time": event_time,
+            "host": host,
+            "event_id": event_id,
+            "parent_image": _text(
+                event_data.get("ParentImage")
+                or payload.get("ParentImage")
+                or _nested(payload, "process", "parent", "executable")
+            ),
+            "parent_pid": _integer(
+                event_data.get("ParentProcessId")
+                or payload.get("ParentProcessId")
+                or _nested(payload, "process", "parent", "pid"),
+                minimum=0,
+            ),
+            "image": _text(
+                event_data.get("Image")
+                or payload.get("Image")
+                or _nested(payload, "process", "executable")
+            ),
+            "process_id": _integer(
+                event_data.get("ProcessId")
+                or payload.get("ProcessId")
+                or _nested(payload, "process", "pid"), minimum=0
+            ),
+            "command_line": _text(
+                event_data.get("CommandLine")
+                or payload.get("CommandLine")
+                or _nested(payload, "process", "command_line")
+            ),
+            "user_name": _text(
+                event_data.get("User")
+                or payload.get("User")
+                or payload.get("SubjectUserName")
+                or _nested(payload, "user", "name")
+            ),
+        }
 
 
 def normalize_sysmon_jsonl(path: Path, dataset_id: str) -> list[dict[str, Any]]:
     """Normalize OTRF-style JSONL Windows/Sysmon event records."""
     with Path(path).open("r", encoding="utf-8-sig") as handle:
         return _normalize_sysmon_lines(handle, dataset_id)
+
+
+def _iter_sysmon_jsonl(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]:
+    with Path(path).open("r", encoding="utf-8-sig") as handle:
+        yield from _iter_sysmon_lines(handle, dataset_id)
 
 
 def normalize_sysmon_zip_jsonl(
@@ -287,6 +313,27 @@ def normalize_sysmon_zip_jsonl(
                 io.TextIOWrapper(raw_handle, encoding="utf-8-sig") as text_handle,
             ):
                 return _normalize_sysmon_lines(
+                    text_handle, dataset_id, source_prefix=archive_member
+                )
+    except KeyError as exc:
+        raise ValueError(f"Sysmon ZIP member does not exist: {archive_member}") from exc
+    except zipfile.BadZipFile as exc:
+        raise ValueError(f"Invalid Sysmon ZIP archive: {path}") from exc
+
+
+def _iter_sysmon_zip_jsonl(
+    path: Path, dataset_id: str, archive_member: str
+) -> Iterator[dict[str, Any]]:
+    try:
+        with zipfile.ZipFile(path) as archive:
+            info = archive.getinfo(archive_member)
+            if info.is_dir():
+                raise ValueError(f"Sysmon ZIP member is a directory: {archive_member}")
+            with (
+                archive.open(info, "r") as raw_handle,
+                io.TextIOWrapper(raw_handle, encoding="utf-8-sig") as text_handle,
+            ):
+                yield from _iter_sysmon_lines(
                     text_handle, dataset_id, source_prefix=archive_member
                 )
     except KeyError as exc:
@@ -384,6 +431,47 @@ def _validate_built_snapshot(path: Path, expected_sources: int) -> dict[str, int
     return counts
 
 
+def _bulk_insert_rows(
+    snapshot_path: Path,
+    table: str,
+    rows: Iterable[dict[str, Any]],
+    temporary_directory: Path,
+) -> int:
+    """Stream normalized rows through a temporary CSV into DuckDB."""
+    import duckdb
+
+    with tempfile.NamedTemporaryFile(
+        "w",
+        encoding="utf-8",
+        newline="",
+        suffix=f"-{table}.csv",
+        dir=temporary_directory,
+        delete=False,
+    ) as handle:
+        staged_path = Path(handle.name)
+        writer: csv.DictWriter | None = None
+        count = 0
+        for row in rows:
+            if writer is None:
+                writer = csv.DictWriter(handle, fieldnames=list(row), lineterminator="\n")
+                writer.writeheader()
+            elif set(row) != set(writer.fieldnames or ()):
+                raise ValueError(f"Normalized {table} rows have inconsistent columns")
+            writer.writerow(row)
+            count += 1
+    try:
+        if count:
+            escaped_path = str(staged_path).replace("'", "''")
+            with duckdb.connect(str(snapshot_path)) as connection:
+                connection.execute(
+                    f"COPY {table} FROM '{escaped_path}' "
+                    "(FORMAT CSV, HEADER TRUE, NULL '')"
+                )
+        return count
+    finally:
+        staged_path.unlink(missing_ok=True)
+
+
 def build_snapshot(
     dataset_manifest_path: Path,
     snapshot_path: Path,
@@ -401,10 +489,10 @@ def build_snapshot(
     _validate_sources(sources)
     snapshot_path.parent.mkdir(parents=True, exist_ok=True)
     snapshot_manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    adapters: dict[str, tuple[str, Callable[[Path, str], list[dict[str, Any]]]]] = {
-        "threatfox_csv": ("cti_indicators", normalize_threatfox_csv),
-        "ctu13_binetflow": ("network_flows", normalize_ctu13_binetflow),
-        "sysmon_jsonl": ("sysmon_process_events", normalize_sysmon_jsonl),
+    adapters: dict[str, tuple[str, Callable[[Path, str], Iterable[dict[str, Any]]]]] = {
+        "threatfox_csv": ("cti_indicators", _iter_threatfox_csv),
+        "ctu13_binetflow": ("network_flows", _iter_ctu13_binetflow),
+        "sysmon_jsonl": ("sysmon_process_events", _iter_sysmon_jsonl),
     }
     with tempfile.TemporaryDirectory(
         prefix="vinsoc-snapshot-", dir=snapshot_path.parent
@@ -423,13 +511,13 @@ def build_snapshot(
             )
             if source["format"] == "sysmon_zip_jsonl":
                 table = "sysmon_process_events"
-                rows = normalize_sysmon_zip_jsonl(
+                rows = _iter_sysmon_zip_jsonl(
                     Path(source["path"]), source["dataset_id"], source["archive_member"]
                 )
             else:
                 table, adapter = adapters[source["format"]]
                 rows = adapter(Path(source["path"]), source["dataset_id"])
-            builder.insert_rows(table, rows, source_dataset=source["dataset_id"])
+            _bulk_insert_rows(temporary_snapshot, table, rows, Path(temp_dir))
         counts = _validate_built_snapshot(temporary_snapshot, len(sources))
         os.replace(temporary_snapshot, snapshot_path)
 

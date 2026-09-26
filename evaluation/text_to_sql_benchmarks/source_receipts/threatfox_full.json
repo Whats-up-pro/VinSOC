@@ -1,0 +1,18 @@
+{
+  "canonical_source_url": "https://threatfox.abuse.ch/export/",
+  "dataset_id": "threatfox_full",
+  "format": "threatfox_csv_zip",
+  "ingest": {
+    "archive_member": "full.csv",
+    "bytes": 24073440,
+    "sha256": "cd366e759830c71d36a9f7a3c7c9f5f87549b8873bbc62607f55b8cd3dfb4d6f"
+  },
+  "license_note": "ThreatFox data export; retain abuse.ch attribution and comply with its terms.",
+  "retrieved_at": "2026-09-26T03:40:24.586959+00:00",
+  "source_name": "ThreatFox full CSV export",
+  "status": "verified_bytes",
+  "transport": {
+    "bytes": 3249305,
+    "sha256": "e81b8c80143a7d5202e8913e25de27e3b29b462b5444858e55e76b9af23108a2"
+  }
+}

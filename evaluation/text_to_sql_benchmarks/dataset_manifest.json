@@ -1,0 +1,38 @@
+{
+  "schema_version": "1",
+  "sources": [
+    {
+      "archive_member": null,
+      "dataset_id": "threatfox_full",
+      "file_sha256": "cd366e759830c71d36a9f7a3c7c9f5f87549b8873bbc62607f55b8cd3dfb4d6f",
+      "format": "threatfox_csv",
+      "license_note": "ThreatFox data export; retain abuse.ch attribution and comply with its terms.",
+      "path": "data/official_r2/sources/full.csv",
+      "retrieved_at": "2026-09-26T03:40:24.586959+00:00",
+      "source_name": "ThreatFox full CSV export",
+      "source_url": "https://threatfox.abuse.ch/export/"
+    },
+    {
+      "archive_member": null,
+      "dataset_id": "ctu13_s3",
+      "file_sha256": "0ebcd1df082bb5f85f8254c3857b02fdbb597c9b2ee7c50f908cc24ca92c0054",
+      "format": "ctu13_binetflow",
+      "license_note": "MCFP permits use with attribution to Sebastian Garcia and the Malware Capture Facility Project.",
+      "path": "data/official_r2/sources/capture20110812.binetflow",
+      "retrieved_at": "2026-09-26T03:40:24.586959+00:00",
+      "source_name": "CTU-13 Scenario 3",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-44/detailed-bidirectional-flow-labels/capture20110812.binetflow"
+    },
+    {
+      "archive_member": "apt29_evals_day1_manual_2020-05-01225525.json",
+      "dataset_id": "otrf_apt29_day1",
+      "file_sha256": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5",
+      "format": "sysmon_zip_jsonl",
+      "license_note": "Retain OTRF attribution; resolve the repository README/LICENSE discrepancy before redistributing source bytes.",
+      "path": "data/official_r2/sources/apt29_evals_day1_manual.zip",
+      "retrieved_at": "2026-09-26T03:40:24.586959+00:00",
+      "source_name": "OTRF APT29 Day 1 Sysmon",
+      "source_url": "https://raw.githubusercontent.com/OTRF/Security-Datasets/master/datasets/compound/apt29/day1/apt29_evals_day1_manual.zip"
+    }
+  ]
+}

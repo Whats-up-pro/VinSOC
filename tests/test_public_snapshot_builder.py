@@ -19,9 +19,10 @@ from scripts.build_vinsoc_public_snapshot import (
     build_snapshot,
     normalize_ctu13_binetflow,
     normalize_sysmon_jsonl,
+    normalize_sysmon_zip_jsonl,
     normalize_threatfox_csv,
 )
-from vinsoc_data.duckdb_store import DuckDBSnapshot
+from vinsoc_data.duckdb_store import DuckDBSnapshot, SocSnapshotBuilder
 
 
 def _sha256(path: Path) -> str:
@@ -217,7 +218,47 @@ def test_sysmon_adapter_maps_parent_child_host_and_skips_invalid_rows(tmp_path):
     ]
 
 
-def test_build_snapshot_verifies_sources_and_writes_exact_manifest(tmp_path):
+def test_official_otrf_top_level_layout_maps_sysmon_process_and_stable_member_row_id(tmp_path):
+    archive = tmp_path / "apt29.zip"
+    member = "apt29_evals_day1_manual_2020-05-01225525.json"
+    valid = {
+        "Channel": "Microsoft-Windows-Sysmon/Operational",
+        "Hostname": "ENDPOINT.example.test",
+        "EventID": 1,
+        "UtcTime": "2020-05-01 22:55:25.123",
+        "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+        "ProcessId": "0x1000",
+        "ParentProcessId": "2048",
+        "CommandLine": "powershell.exe -NoProfile",
+        "User": "EXAMPLE\\analyst",
+    }
+    unrelated = {**valid, "Channel": "Security", "Hostname": "WRONG.example.test"}
+    malformed = {"Channel": "Microsoft-Windows-Sysmon/Operational", "EventID": 1,
+                 "UtcTime": "2020-05-01 22:55:25.123"}
+    with zipfile.ZipFile(archive, "w") as handle:
+        handle.writestr(member, "\n".join(json.dumps(row) for row in (
+            valid, unrelated, malformed
+        )))
+
+    rows = normalize_sysmon_zip_jsonl(archive, "otrf_apt29_day1", member)
+
+    assert rows == [{
+        "source_dataset": "otrf_apt29_day1",
+        "source_row_id": f"{member}:line:1",
+        "event_time": "2020-05-01T22:55:25.123000",
+        "host": "ENDPOINT.example.test",
+        "event_id": 1,
+        "parent_image": "C:\\Windows\\System32\\cmd.exe",
+        "parent_pid": 2048,
+        "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "process_id": 4096,
+        "command_line": "powershell.exe -NoProfile",
+        "user_name": "EXAMPLE\\analyst",
+    }]
+
+
+def test_build_snapshot_verifies_sources_and_writes_exact_manifest(tmp_path, monkeypatch):
     threatfox = tmp_path / "threatfox.csv"
     _write_csv(
         threatfox,
@@ -319,6 +360,13 @@ def test_build_snapshot_verifies_sources_and_writes_exact_manifest(tmp_path):
     )
     snapshot_path = tmp_path / "vinsoc_public_v1.duckdb"
     snapshot_manifest = tmp_path / "snapshot_manifest.json"
+    monkeypatch.setattr(
+        SocSnapshotBuilder,
+        "insert_rows",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("official builder must stream rows instead of materializing them")
+        ),
+    )
 
     counts = build_snapshot(dataset_manifest, snapshot_path, snapshot_manifest)
 

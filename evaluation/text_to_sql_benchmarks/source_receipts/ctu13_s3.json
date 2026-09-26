@@ -1,0 +1,17 @@
+{
+  "canonical_source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-44/detailed-bidirectional-flow-labels/capture20110812.binetflow",
+  "dataset_id": "ctu13_s3",
+  "format": "ctu13_binetflow",
+  "ingest": {
+    "bytes": 639643247,
+    "sha256": "0ebcd1df082bb5f85f8254c3857b02fdbb597c9b2ee7c50f908cc24ca92c0054"
+  },
+  "license_note": "MCFP permits use with attribution to Sebastian Garcia and the Malware Capture Facility Project.",
+  "retrieved_at": "2026-09-26T03:40:24.586959+00:00",
+  "source_name": "CTU-13 Scenario 3",
+  "status": "verified_bytes",
+  "transport": {
+    "bytes": 639643247,
+    "sha256": "0ebcd1df082bb5f85f8254c3857b02fdbb597c9b2ee7c50f908cc24ca92c0054"
+  }
+}

@@ -1,0 +1,62 @@
+name: R2 official three-source snapshot build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/r2-official-snapshot-build.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r2-official-snapshot-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      THREATFOX_AUTH_KEY: ${{ secrets.THREATFOX_AUTH_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Retrieve and verify complete current source bytes
+        run: python -m scripts.probe_r2_official_sources --output "$RUNNER_TEMP/r2-official-source-probe"
+      - name: Stage exact verified builder inputs and provenance
+        run: |
+          python -m scripts.stage_r2_official_sources \
+            --probe-dir "$RUNNER_TEMP/r2-official-source-probe"
+      - name: Build twice and lock binary plus logical identity
+        run: |
+          python -m scripts.build_r2_official_snapshot \
+            --report "$RUNNER_TEMP/r2-official-snapshot-build.json"
+      - name: Preserve credential-free build metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r2-official-snapshot-build-metadata
+          path: |
+            ${{ runner.temp }}/r2-official-snapshot-build.json
+            evaluation/text_to_sql_benchmarks/dataset_manifest.json
+            evaluation/text_to_sql_benchmarks/source_receipts/
+            evaluation/text_to_sql_benchmarks/snapshot_manifest.json
+            evaluation/text_to_sql_benchmarks/official_snapshot.lock
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Preserve canonical verified snapshot
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r2-official-snapshot-duckdb
+          path: data/snapshots/vinsoc_public_v1.duckdb
+          if-no-files-found: error
+          compression-level: 6
+          retention-days: 30

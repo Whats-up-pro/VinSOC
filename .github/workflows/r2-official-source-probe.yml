@@ -2,10 +2,6 @@ name: R2 official source byte gate
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - .github/workflows/r2-official-source-probe.yml
 
 permissions:
   contents: read
