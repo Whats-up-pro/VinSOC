@@ -157,6 +157,18 @@ def test_official_snapshot_workflow_preserves_exact_same_run_source_bytes():
     assert "retention-days: 90" in workflow
 
 
+def test_official_snapshot_workflow_preserves_source_bytes_after_build_failure():
+    workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(
+        encoding="utf-8"
+    )
+    retention_step = workflow.split(
+        "- name: Preserve exact verified source bytes for reproducible rebuilds", 1
+    )[1].split("- name: Preserve credential-free build metadata", 1)[0]
+
+    assert "if: always()" in retention_step
+    assert "if: success()" not in retention_step
+
+
 def test_staging_rejects_bytes_changed_after_same_run_receipt(tmp_path):
     from scripts.probe_r2_official_sources import probe
     from scripts.stage_r2_official_sources import stage_probe_output
