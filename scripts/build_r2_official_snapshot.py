@@ -92,6 +92,7 @@ def _failure_report(
     diagnostics: dict[str, Any],
     exception: Exception,
 ) -> dict[str, Any]:
+    failure_stage = diagnostics.get("failure_stage", "official_snapshot_build")
     return {
         "schema_version": "r2_official_snapshot_diagnostic_v1",
         "status": "failed",
@@ -100,10 +101,10 @@ def _failure_report(
         "table_row_counts": diagnostics.get("table_row_counts", {}),
         "builder_version": builder_version,
         "git_sha": _git_sha(),
-        "failure_stage": diagnostics.get("failure_stage", "official_snapshot_build"),
+        "failure_stage": failure_stage,
         "failure": {
             "category": type(exception).__name__,
-            "message": str(exception),
+            "message": f"Official snapshot build failed during {failure_stage}",
         },
     }
 

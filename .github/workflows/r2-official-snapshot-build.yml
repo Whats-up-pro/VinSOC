@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 150
     env:
       THREATFOX_AUTH_KEY: ${{ secrets.THREATFOX_AUTH_KEY }}
+      SOURCE_RETENTION_PASSPHRASE: ${{ secrets.R2_SOURCE_RETENTION_PASSPHRASE }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,6 +25,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Require restricted source-retention secret
+        run: |
+          if [ -z "$SOURCE_RETENTION_PASSPHRASE" ]; then
+            echo "R2_SOURCE_RETENTION_PASSPHRASE is unavailable; refusing to download source bytes."
+            exit 1
+          fi
       - name: Retrieve and verify complete current source bytes
         run: python -m scripts.probe_r2_official_sources --output "$RUNNER_TEMP/r2-official-source-probe"
       - name: Stage exact verified builder inputs and provenance
@@ -34,6 +41,17 @@ jobs:
         run: |
           python -m scripts.build_r2_official_snapshot \
             --report "$RUNNER_TEMP/r2-official-snapshot-build.json"
+      - name: Encrypt exact verified source bytes for restricted retention
+        if: always()
+        run: |
+          tar -C "$RUNNER_TEMP/r2-official-source-probe" \
+            -cf - probe.json receipts raw \
+          | openssl enc -aes-256-cbc -salt -pbkdf2 -iter 600000 \
+              -pass env:SOURCE_RETENTION_PASSPHRASE \
+              -out "$RUNNER_TEMP/r2-official-frozen-source-bytes.tar.enc"
+          sha256sum "$RUNNER_TEMP/r2-official-frozen-source-bytes.tar.enc" \
+            > "$RUNNER_TEMP/r2-official-frozen-source-bytes.tar.enc.sha256"
+          rm -rf "$RUNNER_TEMP/r2-official-source-probe/raw"
       - name: Preserve exact verified source bytes for reproducible rebuilds
         if: always()
         id: source_retention
@@ -41,9 +59,8 @@ jobs:
         with:
           name: r2-official-frozen-source-bytes
           path: |
-            ${{ runner.temp }}/r2-official-source-probe/probe.json
-            ${{ runner.temp }}/r2-official-source-probe/receipts/
-            ${{ runner.temp }}/r2-official-source-probe/raw/
+            ${{ runner.temp }}/r2-official-frozen-source-bytes.tar.enc
+            ${{ runner.temp }}/r2-official-frozen-source-bytes.tar.enc.sha256
           if-no-files-found: error
           compression-level: 0
           retention-days: 90
@@ -78,6 +95,13 @@ jobs:
                   "artifact_id": os.environ.get("SOURCE_ARTIFACT_ID", ""),
                   "artifact_digest": os.environ.get("SOURCE_ARTIFACT_DIGEST", ""),
                   "artifact_url": os.environ.get("SOURCE_ARTIFACT_URL", ""),
+                  "encryption": "openssl_aes_256_cbc_pbkdf2_sha256",
+                  "ciphertext_sha256": (
+                      Path(os.environ["RUNNER_TEMP"])
+                      .joinpath("r2-official-frozen-source-bytes.tar.enc.sha256")
+                      .read_text(encoding="utf-8")
+                      .split()[0]
+                  ),
               },
               "source_hashes": source_hashes,
           }
