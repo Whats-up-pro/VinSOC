@@ -1,0 +1,254 @@
+name: R2 run-4 source retention remediation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: r2-run4-source-remediation
+  cancel-in-progress: false
+
+jobs:
+  remediate:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      ORIGINAL_RUN_ID: '36230976997'
+      ORIGINAL_ARTIFACT_ID: '10902596707'
+      ORIGINAL_ARTIFACT_NAME: r2-official-frozen-source-bytes
+      ORIGINAL_ARTIFACT_DIGEST: sha256:d59793d9c95c8effeeb2da9dff4642ecb00ba2114f99213f9eefb11c6af871f6
+      SOURCE_RETENTION_PASSPHRASE: ${{ secrets.R2_SOURCE_RETENTION_PASSPHRASE }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Require the source-retention secret
+        run: |
+          if [ -z "$SOURCE_RETENTION_PASSPHRASE" ]; then
+            echo "R2_SOURCE_RETENTION_PASSPHRASE is unavailable; refusing remediation."
+            exit 1
+          fi
+      - name: Verify and download the fixed run-4 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/run4-source"
+          gh api \
+            "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ORIGINAL_ARTIFACT_ID" \
+            > "$RUNNER_TEMP/original-artifact.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          record = json.loads(
+              Path(os.environ["RUNNER_TEMP"])
+              .joinpath("original-artifact.json")
+              .read_text(encoding="utf-8")
+          )
+          expected = {
+              "id": int(os.environ["ORIGINAL_ARTIFACT_ID"]),
+              "name": os.environ["ORIGINAL_ARTIFACT_NAME"],
+              "digest": os.environ["ORIGINAL_ARTIFACT_DIGEST"],
+          }
+          for key, value in expected.items():
+              if record.get(key) != value:
+                  raise SystemExit(f"Original artifact {key} mismatch")
+          workflow_run = record.get("workflow_run") or {}
+          if workflow_run.get("id") != int(os.environ["ORIGINAL_RUN_ID"]):
+              raise SystemExit("Original artifact run ID mismatch")
+          if record.get("expired") is not False:
+              raise SystemExit("Original artifact is expired")
+          PY
+          gh api \
+            "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ORIGINAL_ARTIFACT_ID/zip" \
+            > "$RUNNER_TEMP/original-artifact.zip"
+          unzip -q "$RUNNER_TEMP/original-artifact.zip" \
+            -d "$RUNNER_TEMP/run4-source"
+      - name: Verify all five retained source hashes
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import zipfile
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "run4-source"
+
+          def file_sha(path: Path) -> str:
+              digest = hashlib.sha256()
+              with path.open("rb") as handle:
+                  for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                      digest.update(chunk)
+              return digest.hexdigest()
+
+          def member_sha(path: Path, member: str) -> str:
+              digest = hashlib.sha256()
+              with zipfile.ZipFile(path) as archive, archive.open(member) as handle:
+                  for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                      digest.update(chunk)
+              return digest.hexdigest()
+
+          threatfox = root / "raw" / "threatfox_full.csv.zip"
+          ctu = root / "raw" / "capture20110812.binetflow"
+          otrf = root / "raw" / "apt29_evals_day1_manual.zip"
+          actual = {
+              "threatfox_zip_sha256": file_sha(threatfox),
+              "threatfox_full_csv_sha256": member_sha(threatfox, "full.csv"),
+              "ctu13_s3_sha256": file_sha(ctu),
+              "otrf_archive_sha256": file_sha(otrf),
+              "otrf_member_sha256": member_sha(
+                  otrf, "apt29_evals_day1_manual_2020-05-01225525.json"
+              ),
+          }
+          expected = {
+              "threatfox_zip_sha256": "28927b7eaf4b853b8c1dd57bd3a03bb80c2ac01c6f21d370481f0e07cc63d66b",
+              "threatfox_full_csv_sha256": "444e2caa3a3226e3778bd1e49732aac527c214f8c521b57707f4215de3a1691d",
+              "ctu13_s3_sha256": "0ebcd1df082bb5f85f8254c3857b02fdbb597c9b2ee7c50f908cc24ca92c0054",
+              "otrf_archive_sha256": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5",
+              "otrf_member_sha256": "dce651806007a20f6f4bac806dd6054e3361e0dd57a74ddd2f7cb5665d98c954",
+          }
+          if actual != expected:
+              raise SystemExit("Run-4 source hash mismatch")
+          output = Path(os.environ["RUNNER_TEMP"]) / "run4-source-hashes.json"
+          output.write_text(
+              json.dumps(actual, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+      - name: Encrypt the exact verified run-4 source bundle
+        run: |
+          tar -C "$RUNNER_TEMP/run4-source" \
+            -cf "$RUNNER_TEMP/r2-official-run4-source-bytes.tar" \
+            probe.json receipts raw
+          openssl enc -aes-256-cbc -salt -pbkdf2 -iter 600000 \
+            -pass env:SOURCE_RETENTION_PASSPHRASE \
+            -in "$RUNNER_TEMP/r2-official-run4-source-bytes.tar" \
+            -out "$RUNNER_TEMP/r2-official-run4-source-bytes.tar.enc"
+          sha256sum "$RUNNER_TEMP/r2-official-run4-source-bytes.tar.enc" \
+            > "$RUNNER_TEMP/r2-official-run4-source-bytes.tar.enc.sha256"
+          rm -f "$RUNNER_TEMP/r2-official-run4-source-bytes.tar"
+      - name: Decrypt and round-trip verify all five source hashes
+        run: |
+          mkdir -p "$RUNNER_TEMP/run4-roundtrip"
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 \
+            -pass env:SOURCE_RETENTION_PASSPHRASE \
+            -in "$RUNNER_TEMP/r2-official-run4-source-bytes.tar.enc" \
+          | tar -C "$RUNNER_TEMP/run4-roundtrip" -xf -
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import zipfile
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"]) / "run4-roundtrip"
+
+          def file_sha(path: Path) -> str:
+              digest = hashlib.sha256()
+              with path.open("rb") as handle:
+                  for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                      digest.update(chunk)
+              return digest.hexdigest()
+
+          def member_sha(path: Path, member: str) -> str:
+              digest = hashlib.sha256()
+              with zipfile.ZipFile(path) as archive, archive.open(member) as handle:
+                  for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                      digest.update(chunk)
+              return digest.hexdigest()
+
+          threatfox = root / "raw" / "threatfox_full.csv.zip"
+          ctu = root / "raw" / "capture20110812.binetflow"
+          otrf = root / "raw" / "apt29_evals_day1_manual.zip"
+          actual = {
+              "threatfox_zip_sha256": file_sha(threatfox),
+              "threatfox_full_csv_sha256": member_sha(threatfox, "full.csv"),
+              "ctu13_s3_sha256": file_sha(ctu),
+              "otrf_archive_sha256": file_sha(otrf),
+              "otrf_member_sha256": member_sha(
+                  otrf, "apt29_evals_day1_manual_2020-05-01225525.json"
+              ),
+          }
+          expected = json.loads(
+              Path(os.environ["RUNNER_TEMP"])
+              .joinpath("run4-source-hashes.json")
+              .read_text(encoding="utf-8")
+          )
+          if actual != expected:
+              raise SystemExit("Encrypted source round-trip hash mismatch")
+          Path(os.environ["RUNNER_TEMP"]).joinpath(
+              "round-trip-verified"
+          ).write_text("true\n", encoding="utf-8")
+          PY
+          rm -rf "$RUNNER_TEMP/run4-roundtrip"
+      - name: Upload encrypted replacement
+        id: encrypted_retention
+        uses: actions/upload-artifact@v4
+        with:
+          name: r2-official-run4-source-bytes-encrypted
+          path: |
+            ${{ runner.temp }}/r2-official-run4-source-bytes.tar.enc
+            ${{ runner.temp }}/r2-official-run4-source-bytes.tar.enc.sha256
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 90
+      - name: Write credential-free remediation metadata
+        env:
+          ENCRYPTED_ARTIFACT_ID: ${{ steps.encrypted_retention.outputs.artifact-id }}
+          ENCRYPTED_ARTIFACT_DIGEST: ${{ steps.encrypted_retention.outputs.artifact-digest }}
+          ENCRYPTED_ARTIFACT_URL: ${{ steps.encrypted_retention.outputs.artifact-url }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          if temp.joinpath("round-trip-verified").read_text(encoding="utf-8").strip() != "true":
+              raise SystemExit("Round-trip verification marker missing")
+          record = {
+              "schema_version": "r2_run4_source_remediation_v1",
+              "original": {
+                  "run_id": int(os.environ["ORIGINAL_RUN_ID"]),
+                  "artifact_id": int(os.environ["ORIGINAL_ARTIFACT_ID"]),
+                  "artifact_name": os.environ["ORIGINAL_ARTIFACT_NAME"],
+                  "artifact_digest": os.environ["ORIGINAL_ARTIFACT_DIGEST"],
+              },
+              "encrypted_replacement": {
+                  "artifact_id": os.environ["ENCRYPTED_ARTIFACT_ID"],
+                  "artifact_digest": os.environ["ENCRYPTED_ARTIFACT_DIGEST"],
+                  "artifact_url": os.environ["ENCRYPTED_ARTIFACT_URL"],
+                  "ciphertext_sha256": temp.joinpath(
+                      "r2-official-run4-source-bytes.tar.enc.sha256"
+                  ).read_text(encoding="utf-8").split()[0],
+                  "encryption": "openssl_aes_256_cbc_pbkdf2_sha256_iter_600000",
+                  "round_trip_verified": True,
+              },
+              "source_hashes": json.loads(
+                  temp.joinpath("run4-source-hashes.json").read_text(encoding="utf-8")
+              ),
+          }
+          temp.joinpath("r2-run4-source-remediation.json").write_text(
+              json.dumps(record, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+      - name: Upload remediation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: r2-official-run4-remediation-evidence
+          path: |
+            ${{ runner.temp }}/r2-run4-source-remediation.json
+            ${{ runner.temp }}/run4-source-hashes.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Remove plaintext working copies
+        if: always()
+        run: |
+          rm -rf "$RUNNER_TEMP/run4-source" "$RUNNER_TEMP/run4-roundtrip"
+          rm -f "$RUNNER_TEMP/original-artifact.zip"

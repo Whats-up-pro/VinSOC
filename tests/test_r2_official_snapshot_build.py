@@ -268,6 +268,63 @@ def test_official_snapshot_workflow_preserves_source_bytes_after_build_failure()
     assert "r2-official-source-probe/raw/" not in retention_step
 
 
+def test_run4_remediation_workflow_is_manual_only_with_least_permissions():
+    workflow = Path(".github/workflows/r2-run4-source-remediation.yml").read_text(
+        encoding="utf-8"
+    )
+    lines = workflow.splitlines()
+    on_line = lines.index("on:")
+    trigger_lines = []
+    for line in lines[on_line + 1:]:
+        if line and not line.startswith(" "):
+            break
+        if line.startswith("  ") and not line.startswith("    ") and line.strip():
+            trigger_lines.append(line.strip())
+
+    assert trigger_lines == ["workflow_dispatch:"]
+    assert "permissions:\n  contents: read\n  actions: read" in workflow
+    assert "SOURCE_RETENTION_PASSPHRASE: ${{ secrets.R2_SOURCE_RETENTION_PASSPHRASE }}" in workflow
+
+
+def test_run4_remediation_workflow_uses_only_the_fixed_retained_artifact():
+    workflow = Path(".github/workflows/r2-run4-source-remediation.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "ORIGINAL_RUN_ID: '36230976997'" in workflow
+    assert "ORIGINAL_ARTIFACT_ID: '10902596707'" in workflow
+    assert "ORIGINAL_ARTIFACT_NAME: r2-official-frozen-source-bytes" in workflow
+    assert "ORIGINAL_ARTIFACT_DIGEST: sha256:d59793d9c95c8effeeb2da9dff4642ecb00ba2114f99213f9eefb11c6af871f6" in workflow
+    assert "actions/artifacts/$ORIGINAL_ARTIFACT_ID/zip" in workflow
+    assert "probe_r2_official_sources" not in workflow
+    assert "threatfox-api.abuse.ch" not in workflow
+    assert "mcfp.felk.cvut.cz" not in workflow
+    assert "raw.githubusercontent.com/OTRF" not in workflow
+
+
+def test_run4_remediation_workflow_verifies_encrypts_and_round_trips():
+    workflow = Path(".github/workflows/r2-run4-source-remediation.yml").read_text(
+        encoding="utf-8"
+    )
+
+    for digest in (
+        "28927b7eaf4b853b8c1dd57bd3a03bb80c2ac01c6f21d370481f0e07cc63d66b",
+        "444e2caa3a3226e3778bd1e49732aac527c214f8c521b57707f4215de3a1691d",
+        "0ebcd1df082bb5f85f8254c3857b02fdbb597c9b2ee7c50f908cc24ca92c0054",
+        "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5",
+        "dce651806007a20f6f4bac806dd6054e3361e0dd57a74ddd2f7cb5665d98c954",
+    ):
+        assert digest in workflow
+    assert "openssl enc -aes-256-cbc -salt -pbkdf2 -iter 600000" in workflow
+    assert "openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000" in workflow
+    assert "round_trip_verified" in workflow
+    assert "name: r2-official-run4-source-bytes-encrypted" in workflow
+    assert "id: encrypted_retention" in workflow
+    assert "steps.encrypted_retention.outputs.artifact-id" in workflow
+    assert "steps.encrypted_retention.outputs.artifact-digest" in workflow
+    assert "name: r2-official-run4-remediation-evidence" in workflow
+
+
 def test_staging_rejects_bytes_changed_after_same_run_receipt(tmp_path):
     from scripts.probe_r2_official_sources import probe
     from scripts.stage_r2_official_sources import stage_probe_output
