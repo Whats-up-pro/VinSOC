@@ -1,0 +1,89 @@
+{
+  "artifact_sha256": {
+    "E0": "87fced7622727de26ffcc0b62ee66b1b0db0c7552d2a03afd5e9587b7e5542fd",
+    "E1": "512facb065f69e2d905f9e9efc10f8e10f9ccb57c794cc6e32a58cd03d237bfb",
+    "E2": "1cf48a4297a20cd7c3bcd4164db57fa2372a4d7da30d51a027e0813fa3475611",
+    "E3": "2fe12c040b28de9cf8de70189a7a4f5e1c4240b995b3d419c346154b3f34b317"
+  },
+  "configuration": {
+    "catalog_builder_version": "dualsql_lite_tools_v1",
+    "catalog_sha256": "35771c1c708ed724cbe98eb53db9c7795cf98137a9c89b92c0c797a90cbb78bd",
+    "generator_prompt_sha256": "a751a7dfa57ff67e0397873a97a8d24498fa4ec8b1337dd1c343ecf7d5b76f50",
+    "generator_prompt_version": "dualsql_generator_v4",
+    "linker_prompt_sha256": "c3923e81de2e6041d74d0d9bf2f29d1473a436d73bc96d25e56ff7cc2fe4af89",
+    "linker_prompt_version": "dualsql_linker_v4",
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "provider": "openai",
+    "requested_model": "gpt-4.1-mini-2025-04-14",
+    "snapshot_binary_sha256": "18a7bfbf21c74714b699c0bad130bf23b1d66f1e50f3fc4f446c8d5e58aef6d5",
+    "temperature": 0,
+    "tool_implementation_sha256": "71974191a43c2d214a967a27518ef4a375e1c357983ef1c87243045b97b24de6",
+    "tool_implementation_version": "dualsql_lite_tools_v1",
+    "tool_schema_sha256": "6071917ed33ee71aa8c52368368f97b46f6e7ea3d5e258c000f34715c50e6639"
+  },
+  "identity": {
+    "benchmark_hash": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+    "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+    "git_commit": "7fd111124777645a8490b4d90de6554f2f567f7d",
+    "scorer_file_hashes": {
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+      "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+      "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+      "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+      "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+      "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+      "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+      "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "scorer_hash": "7d22fbf45a625f501788902182d9b09e872ff0733cd9a9b4aa1d913f9e384b25",
+    "snapshot_binary_hash": "18a7bfbf21c74714b699c0bad130bf23b1d66f1e50f3fc4f446c8d5e58aef6d5",
+    "snapshot_content_hash": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+    "source_hashes": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+      "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+    }
+  },
+  "results": {
+    "E0": {
+      "correct": 5,
+      "cost_usd": 0.0013720000000000002,
+      "execution_accuracy": 0.625,
+      "latency_ms": 10452.685,
+      "model_calls": 8,
+      "total": 8
+    },
+    "E1": {
+      "correct": 1,
+      "cost_usd": 0.0097864,
+      "execution_accuracy": 0.125,
+      "latency_ms": 23314.400000000005,
+      "model_calls": 26,
+      "total": 8
+    },
+    "E2": {
+      "correct": 5,
+      "cost_usd": 0.0036044000000000002,
+      "execution_accuracy": 0.625,
+      "latency_ms": 12966.52,
+      "model_calls": 14,
+      "total": 8
+    },
+    "E3": {
+      "correct": 1,
+      "cost_usd": 0.0081408,
+      "execution_accuracy": 0.125,
+      "latency_ms": 20008.098,
+      "model_calls": 23,
+      "total": 8
+    }
+  },
+  "selected_experiment": "E0",
+  "selection_rule": "accuracy_desc,cost_asc,model_calls_asc,latency_asc,E0_E1_E2_E3",
+  "series_version": "dualsql_lite_public_dev_v4"
+}

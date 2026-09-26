@@ -3,10 +3,6 @@ name: R2 DualSQL-Lite public dev E0-E3
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - .github/workflows/r2-dualsql-lite-public-dev.yml
 
 permissions:
   contents: read
