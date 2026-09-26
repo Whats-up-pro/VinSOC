@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -20,6 +22,7 @@ from scripts.build_vinsoc_public_snapshot import BUILDER_VERSION, build_snapshot
 
 
 DEFAULT_BUILDER_PATH = Path("scripts/build_vinsoc_public_snapshot.py")
+_GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 
 
 def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
@@ -48,6 +51,63 @@ def _provenance_source_ids(snapshot_path: Path) -> list[str]:
         ]
 
 
+def _git_sha() -> str:
+    candidate = os.environ.get("GITHUB_SHA", "").strip().lower()
+    if not candidate:
+        candidate = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip().lower()
+    if not _GIT_SHA_PATTERN.fullmatch(candidate):
+        raise ValueError("Unable to identify the exact Git commit SHA")
+    return candidate
+
+
+def _source_hashes(dataset_manifest_path: Path, receipt_dir: Path) -> dict[str, Any]:
+    manifest = json.loads(Path(dataset_manifest_path).read_text(encoding="utf-8"))
+    result: dict[str, Any] = {}
+    for source in manifest["sources"]:
+        dataset_id = source["dataset_id"]
+        hashes: dict[str, Any] = {
+            "manifest_file_sha256": source["file_sha256"],
+        }
+        receipt_path = Path(receipt_dir) / f"{dataset_id}.json"
+        if receipt_path.is_file():
+            receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+            for receipt_section in ("transport", "ingest"):
+                section = receipt.get(receipt_section)
+                if isinstance(section, dict) and isinstance(section.get("sha256"), str):
+                    hashes[f"{receipt_section}_sha256"] = section["sha256"]
+        result[dataset_id] = hashes
+    return result
+
+
+def _failure_report(
+    *,
+    dataset_manifest_path: Path,
+    receipt_dir: Path,
+    builder_version: str,
+    diagnostics: dict[str, Any],
+    exception: Exception,
+) -> dict[str, Any]:
+    return {
+        "schema_version": "r2_official_snapshot_diagnostic_v1",
+        "status": "failed",
+        "source_hashes": _source_hashes(dataset_manifest_path, receipt_dir),
+        "threatfox": diagnostics.get("threatfox"),
+        "table_row_counts": diagnostics.get("table_row_counts", {}),
+        "builder_version": builder_version,
+        "git_sha": _git_sha(),
+        "failure_stage": diagnostics.get("failure_stage", "official_snapshot_build"),
+        "failure": {
+            "category": type(exception).__name__,
+            "message": str(exception),
+        },
+    }
+
+
 def build_official_snapshot_pair(
     *,
     dataset_manifest_path: Path,
@@ -70,9 +130,26 @@ def build_official_snapshot_pair(
         if output.exists():
             raise ValueError(f"Refusing to overwrite existing artifact: {output}")
 
-    first_counts = build_snapshot(
-        dataset_manifest_path, snapshot_path, snapshot_manifest_path
-    )
+    diagnostics: dict[str, Any] = {}
+    try:
+        first_counts = build_snapshot(
+            dataset_manifest_path,
+            snapshot_path,
+            snapshot_manifest_path,
+            diagnostic_state=diagnostics,
+        )
+    except Exception as exc:
+        _write_json_atomic(
+            report_path,
+            _failure_report(
+                dataset_manifest_path=dataset_manifest_path,
+                receipt_dir=receipt_dir,
+                builder_version=builder_version,
+                diagnostics=diagnostics,
+                exception=exc,
+            ),
+        )
+        raise
     first_logical_counts, first_logical_sha = logical_content_identity(snapshot_path)
     if first_counts != first_logical_counts:
         raise ValueError("First build row counts disagree with logical-content scan")
