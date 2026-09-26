@@ -116,3 +116,55 @@ def test_zip_with_unexpected_member_is_rejected(tmp_path):
         assert "member" in str(exc).lower()
     else:
         raise AssertionError("unexpected archive layout was accepted")
+
+
+def test_verified_probe_can_stage_exact_builder_inputs_and_manifest(tmp_path):
+    from scripts.probe_r2_official_sources import probe
+    from scripts.stage_r2_official_sources import stage_probe_output
+
+    threatfox_csv = b"ioc_id,ioc_value,ioc_type\n1,1.2.3.4,ip\n"
+    payloads = {
+        "threatfox": zipped("full.csv", threatfox_csv),
+        "ctu": b"StartTime,SrcAddr,DstAddr\n2011/08/12 00:00:00,1.1.1.1,2.2.2.2\n",
+        "otrf": zipped(
+            "apt29_evals_day1_manual_2020-05-01225525.json",
+            b'{"Hostname":"host","EventID":1}\n',
+        ),
+    }
+
+    def opener(request, timeout):
+        if "threatfox-api" in request.full_url:
+            return Response(payloads["threatfox"])
+        if request.full_url.endswith("capture20110812.binetflow"):
+            return Response(payloads["ctu"])
+        return Response(payloads["otrf"])
+
+    probe_dir = tmp_path / "probe"
+    probe(
+        probe_dir,
+        environ={"THREATFOX_AUTH_KEY": "test-secret"},
+        opener=opener,
+        retrieved_at="2026-09-26T01:02:03+00:00",
+    )
+    source_root = tmp_path / "official_sources"
+    manifest_path = tmp_path / "dataset_manifest.json"
+    receipt_dir = tmp_path / "committed_receipts"
+
+    manifest = stage_probe_output(
+        probe_dir=probe_dir,
+        source_root=source_root,
+        dataset_manifest_path=manifest_path,
+        receipt_dir=receipt_dir,
+    )
+
+    assert (source_root / "full.csv").read_bytes() == threatfox_csv
+    assert (source_root / "capture20110812.binetflow").read_bytes() == payloads["ctu"]
+    assert (source_root / "apt29_evals_day1_manual.zip").read_bytes() == payloads["otrf"]
+    assert [source["dataset_id"] for source in manifest["sources"]] == [
+        "threatfox_full", "ctu13_s3", "otrf_apt29_day1"
+    ]
+    assert manifest["sources"][0]["file_sha256"] == sha256(threatfox_csv).hexdigest()
+    assert json.loads(manifest_path.read_text(encoding="utf-8")) == manifest
+    assert sorted(path.name for path in receipt_dir.glob("*.json")) == [
+        "ctu13_s3.json", "otrf_apt29_day1.json", "threatfox_full.json"
+    ]
