@@ -56,7 +56,7 @@ def _last_seen_values(handle: TextIO) -> Iterator[str]:
         [header],
         (line for line in handle if line.strip() and not line.lstrip().startswith("#")),
     )
-    reader = csv.reader(lines)
+    reader = csv.reader(lines, skipinitialspace=True)
     fieldnames = next(reader)
     try:
         last_seen_index = fieldnames.index("last_seen_utc")

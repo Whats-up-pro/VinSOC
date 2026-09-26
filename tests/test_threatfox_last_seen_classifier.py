@@ -76,6 +76,24 @@ def test_classifier_emits_only_closed_category_counts(tmp_path):
     assert sum(result["representation_counts"].values()) == result["data_rows_seen"]
 
 
+def test_classifier_honors_threatfox_delimiter_space_before_quoted_empty(tmp_path):
+    source = tmp_path / "full.csv"
+    source.write_text(
+        "# first_seen_utc,ioc_id,ioc_value,ioc_type,threat_type,"
+        "malware_printable,confidence_level,reference,last_seen_utc\n"
+        '"2026-09-25 01:02:03", "9876", "evil.example", "domain", '
+        '"botnet_cc", "Example, Bot", "95", '
+        '"https://threatfox.abuse.ch/ioc/9876/", ""\n',
+        encoding="utf-8",
+    )
+
+    result = classify_last_seen(source)
+
+    assert result["data_rows_seen"] == 1
+    assert result["representation_counts"]["empty"] == 1
+    assert result["representation_counts"]["other_unrecognized"] == 0
+
+
 def test_classifier_report_never_serializes_unknown_or_ioc_values(tmp_path):
     source = tmp_path / "full.csv"
     _write_fixture(source, ["SENSITIVE_UNRECOGNIZED_TIMESTAMP"])
