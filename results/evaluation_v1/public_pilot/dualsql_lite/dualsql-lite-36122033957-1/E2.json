@@ -1,0 +1,858 @@
+{
+  "average_turns": 1.75,
+  "breakdown": {
+    "category": {
+      "aggregation": {
+        "correct": 1,
+        "total": 1
+      },
+      "distinct": {
+        "correct": 0,
+        "total": 1
+      },
+      "endpoint": {
+        "correct": 2,
+        "total": 2
+      },
+      "network": {
+        "correct": 1,
+        "total": 2
+      },
+      "ordering_limit": {
+        "correct": 1,
+        "total": 1
+      },
+      "time_range": {
+        "correct": 0,
+        "total": 1
+      }
+    },
+    "difficulty": {
+      "advanced": {
+        "correct": 3,
+        "total": 3
+      },
+      "basic": {
+        "correct": 1,
+        "total": 2
+      },
+      "intermediate": {
+        "correct": 1,
+        "total": 3
+      }
+    }
+  },
+  "case_count": 8,
+  "case_results": [
+    {
+      "case_id": "public_sql_001",
+      "category": "network",
+      "cost_usd": 0.00046880000000000007,
+      "difficulty": "basic",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'scenario 5'\n  AND label LIKE 'flow=From-Botnet%';",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 1,
+      "generator_turns": 2,
+      "input_tokens": 924,
+      "latency_ms": 1935.7330000000002,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 62,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00018160000000000002,
+          "input_tokens": 346,
+          "latency_ms": 1188.189,
+          "output_tokens": 27,
+          "role": "generator",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00028720000000000004,
+          "input_tokens": 578,
+          "latency_ms": 747.544,
+          "output_tokens": 35,
+          "role": "generator",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "23992610c4439491eeccf73c725525adf63bde52bb583dbe23fb9ccc12420efb",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "column": "label",
+            "query": "From-Botnet",
+            "table": "network_flows"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt-SPAM"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC5-Plain-HTTP-Encrypted-Data"
+              }
+            ],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "generator",
+          "tool": "value_search",
+          "tool_call_id": "call_H7f8Rm95ziXRXy1u5UO4b70T",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_002",
+      "category": "distinct",
+      "cost_usd": 0.0004904,
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT DISTINCT dst_ip\nFROM network_flows\nWHERE label LIKE 'flow=From-Botnet%'\n  AND source_dataset = 'CTU-13 scenario 7'\nORDER BY dst_ip ASC;",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 1,
+      "generator_turns": 2,
+      "input_tokens": 950,
+      "latency_ms": 1562.42,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 69,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00018680000000000001,
+          "input_tokens": 359,
+          "latency_ms": 706.368,
+          "output_tokens": 27,
+          "role": "generator",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0003036,
+          "input_tokens": 591,
+          "latency_ms": 856.052,
+          "output_tokens": 42,
+          "role": "generator",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "eedc30c6659bbc4e0f8ea38ea98add56cb90c0a1fdf0819b61e1ee198f605647",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "column": "label",
+            "query": "From-Botnet",
+            "table": "network_flows"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Attempt-SPAM"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC5-Plain-HTTP-Encrypted-Data"
+              }
+            ],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "generator",
+          "tool": "value_search",
+          "tool_call_id": "call_6ddNuQkze60x4qaULUhoJfVe",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_003",
+      "category": "time_range",
+      "cost_usd": 0.00026720000000000004,
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE src_ip = '147.32.84.165'\n  AND event_time >= '2011-08-15 16:52:50'\n  AND event_time < '2011-08-15 16:53:00'\n  AND label = 'scenario 5';",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "input_tokens": 376,
+      "latency_ms": 999.017,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 1,
+      "output_tokens": 73,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00026720000000000004,
+          "input_tokens": 376,
+          "latency_ms": 999.017,
+          "output_tokens": 73,
+          "role": "generator",
+          "turn": 1
+        }
+      ],
+      "question_sha256": "f8fac2f5fedf73c3fc5bd4f2e6ba5ad5f25856959f942d12ca2eeaa8ac221638",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": []
+    },
+    {
+      "case_id": "public_sql_004",
+      "category": "network",
+      "cost_usd": 0.0006264,
+      "difficulty": "advanced",
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s7'\n  AND label LIKE 'flow=From-Botnet%'\n  AND protocol = 'TCP'\n  AND dst_port = 80;",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 1,
+      "generator_turns": 2,
+      "input_tokens": 1298,
+      "latency_ms": 1528.01,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 67,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00016680000000000002,
+          "input_tokens": 353,
+          "latency_ms": 653.984,
+          "output_tokens": 16,
+          "role": "generator",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0004596,
+          "input_tokens": 945,
+          "latency_ms": 874.026,
+          "output_tokens": 51,
+          "role": "generator",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "32674b9d5b95657dee4b505acfd4d5635b9015c680a52b473133f3944bc82505",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "query": "scenario 7"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "source_dataset",
+                "table": "network_flows",
+                "value": "ctu13_s7"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "107.7.42.2"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "108.197.33.7"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "108.7.152.192"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "108.7.156.88"
+              },
+              {
+                "column": "src_ip",
+                "table": "network_flows",
+                "value": "108.7.183.92"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "1.174.7.203"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "108.6.32.7"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.106.5.7"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.111.7.194"
+              },
+              {
+                "column": "dst_ip",
+                "table": "network_flows",
+                "value": "109.196.179.7"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=Background-google-analytics7"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-CC7-Custom-Encryption"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Established-HTTP-To-Microsoft-7"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V46-TCP-Established-SSL-To-Microsoft-7"
+              },
+              {
+                "column": "label",
+                "table": "network_flows",
+                "value": "flow=From-Botnet-V48-TCP-HTTP-Google-Net-Established-7"
+              },
+              {
+                "column": "command_line",
+                "table": "sysmon_process_events",
+                "value": "\"C:\\Windows\\SystemApps\\Microsoft.Windows.Cortana_cw5n1h2txyewy\\SearchUI.exe\" -ServerName:CortanaUI.AppXa50dqqa5gqv4a428c9y1jjw7m3btvepj.mca"
+              }
+            ],
+            "ok": true,
+            "truncated": true
+          },
+          "role": "generator",
+          "tool": "value_search",
+          "tool_call_id": "call_zRwzoN2yIXcPxmsaGtv7tcGA",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_005",
+      "category": "aggregation",
+      "cost_usd": 0.0002004,
+      "difficulty": "intermediate",
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT host, COUNT(*) AS event_count\nFROM sysmon_process_events\nWHERE event_id = 1\nGROUP BY host\nORDER BY event_count DESC, host ASC;",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "input_tokens": 357,
+      "latency_ms": 830.013,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 1,
+      "output_tokens": 36,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0002004,
+          "input_tokens": 357,
+          "latency_ms": 830.013,
+          "output_tokens": 36,
+          "role": "generator",
+          "turn": 1
+        }
+      ],
+      "question_sha256": "4ba2134e0b19597c915f9667fcddc9a9f3f80ea30f8199f229ea69268432cfdc",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": []
+    },
+    {
+      "case_id": "public_sql_006",
+      "category": "endpoint",
+      "cost_usd": 0.00021480000000000002,
+      "difficulty": "basic",
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT host, image, parent_image\nFROM sysmon_process_events\nWHERE source_row_id = 'apt29_evals_day1_manual_2020-05-01225525.json:line:828';",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "input_tokens": 365,
+      "latency_ms": 801.649,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 1,
+      "output_tokens": 43,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00021480000000000002,
+          "input_tokens": 365,
+          "latency_ms": 801.649,
+          "output_tokens": 43,
+          "role": "generator",
+          "turn": 1
+        }
+      ],
+      "question_sha256": "7a2c1613c4a1332a6e9fbd0d93d8ac45bccfe7b22a44a1d689e63f6ae32e78ef",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": []
+    },
+    {
+      "case_id": "public_sql_007",
+      "category": "ordering_limit",
+      "cost_usd": 0.0005340000000000001,
+      "difficulty": "advanced",
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT image, COUNT(*) AS event_count\nFROM sysmon_process_events\nWHERE host = 'SCRANTON.dmevals.local'\n  AND event_id = 1\n  AND image IS NOT NULL\nGROUP BY image\nORDER BY event_count DESC, image ASC\nLIMIT 5;",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 1,
+      "generator_turns": 2,
+      "input_tokens": 1023,
+      "latency_ms": 2693.024,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 2,
+      "output_tokens": 78,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00017360000000000002,
+          "input_tokens": 362,
+          "latency_ms": 1629.425,
+          "output_tokens": 18,
+          "role": "generator",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00036040000000000003,
+          "input_tokens": 661,
+          "latency_ms": 1063.599,
+          "output_tokens": 60,
+          "role": "generator",
+          "turn": 2
+        }
+      ],
+      "question_sha256": "704e2b9d39da14f9c0bcff700d5b5f6dbfbb75b20de07b98f1f12ff0e04f65ff",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "examples": [
+                      "otrf_apt29_day1"
+                    ],
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "examples": [
+                      "NASHUA.dmevals.local",
+                      "NEWYORK.dmevals.local",
+                      "SCRANTON.dmevals.local",
+                      "UTICA.dmevals.local"
+                    ],
+                    "name": "host",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "event_id",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "parent_pid",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "image",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "process_id",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "examples": [],
+                    "name": "command_line",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "examples": [],
+                    "name": "user_name",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "sysmon_process_events",
+                "row_count": 143884
+              }
+            ]
+          },
+          "role": "generator",
+          "tool": "database_profiler",
+          "tool_call_id": "call_gxkok8ScAKBlCIaHm9lvuc45",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "public_sql_008",
+      "category": "endpoint",
+      "cost_usd": 0.0008024,
+      "difficulty": "advanced",
+      "error_category": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "experiment": "E2",
+      "final_sql": "SELECT \n    CASE \n        WHEN EXISTS (\n            SELECT 1\n            FROM sysmon_process_events\n            WHERE host = 'SCRANTON.dmevals.local'\n              AND parent_image LIKE '%cmd.exe'\n              AND image LIKE '%powershell.exe'\n        ) THEN TRUE\n        ELSE FALSE\n    END AS found;",
+      "generator_recovery_events": 0,
+      "generator_tool_calls": 2,
+      "generator_turns": 3,
+      "input_tokens": 1522,
+      "latency_ms": 2616.654,
+      "linked_schema": null,
+      "linker_error": null,
+      "linker_submission": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 0,
+      "malformed_agent_outputs": 0,
+      "model_calls": 3,
+      "output_tokens": 121,
+      "provider_calls": [
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0001888,
+          "input_tokens": 364,
+          "latency_ms": 806.001,
+          "output_tokens": 27,
+          "role": "generator",
+          "turn": 1
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.0002336,
+          "input_tokens": 476,
+          "latency_ms": 703.495,
+          "output_tokens": 27,
+          "role": "generator",
+          "turn": 2
+        },
+        {
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "cost_usd": 0.00038,
+          "input_tokens": 682,
+          "latency_ms": 1107.158,
+          "output_tokens": 67,
+          "role": "generator",
+          "turn": 3
+        }
+      ],
+      "question_sha256": "513864536706cc07e60ae3d416532f000d68fbf451a96c1a334d73221473bb38",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "column": "parent_image",
+            "query": "cmd.exe",
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "parent_image",
+                "table": "sysmon_process_events",
+                "value": "C:\\Windows\\System32\\cmd.exe"
+              },
+              {
+                "column": "parent_image",
+                "table": "sysmon_process_events",
+                "value": "C:\\Windows\\System32\\dsregcmd.exe"
+              }
+            ],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "generator",
+          "tool": "value_search",
+          "tool_call_id": "call_vJLRUzXF74jl5xonJWTdp0pW",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "column": "image",
+            "query": "powershell.exe",
+            "table": "sysmon_process_events"
+          },
+          "result": {
+            "matches": [
+              {
+                "column": "image",
+                "table": "sysmon_process_events",
+                "value": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+              },
+              {
+                "column": "image",
+                "table": "sysmon_process_events",
+                "value": "C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+              },
+              {
+                "column": "image",
+                "table": "sysmon_process_events",
+                "value": "C:\\windows\\system32\\WindowsPowerShell\\v1.0\\PowerShell.exe"
+              },
+              {
+                "column": "image",
+                "table": "sysmon_process_events",
+                "value": "C:\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe"
+              }
+            ],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "generator",
+          "tool": "value_search",
+          "tool_call_id": "call_fX9zpS4smigOJhO1eIXcfvWO",
+          "turn": 2
+        }
+      ]
+    }
+  ],
+  "catalog_builder_version": "dualsql_lite_tools_v1",
+  "catalog_sha256": "35771c1c708ed724cbe98eb53db9c7795cf98137a9c89b92c0c797a90cbb78bd",
+  "correct_cases": 5,
+  "cost_per_case_usd": 0.00045055000000000003,
+  "database_tool_calls": 6,
+  "eligible": true,
+  "error_summary": {
+    "OK": 5,
+    "RESULT_MISMATCH": 3
+  },
+  "expected_case_ids": [
+    "public_sql_001",
+    "public_sql_002",
+    "public_sql_003",
+    "public_sql_004",
+    "public_sql_005",
+    "public_sql_006",
+    "public_sql_007",
+    "public_sql_008"
+  ],
+  "experiment_id": "E2",
+  "generator_prompt_sha256": "a751a7dfa57ff67e0397873a97a8d24498fa4ec8b1337dd1c343ecf7d5b76f50",
+  "generator_prompt_version": "dualsql_generator_v4",
+  "generator_recovery_events": 0,
+  "generator_tool_calls": 6,
+  "generator_turns": 14,
+  "identity": {
+    "benchmark_hash": "fb09a35be56c20f01add8363d1c42a43a14c105483b89fbb48ae8b680d2afdbf",
+    "benchmark_version": "r1_r2_network_endpoint_public_dev_v1",
+    "git_commit": "7fd111124777645a8490b4d90de6554f2f567f7d",
+    "scorer_file_hashes": {
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "evaluation/public_pilot/contract.py": "b5111eeea1d6100b5bf8331385839d2b896f7e9b3dc84781bd62c2241b6889dc",
+      "evaluation/public_pilot/run_model.py": "535b7b36a94d49cc5cf5e5989e918195eac8e91d53b8bf7efd01f67c9fc79135",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+      "evaluation/tool_calling/decision_runner.py": "ea0eafcd28bf0168529947925d0e9d8133ca53ff7a8ec5615582a1c9cb2b49cb",
+      "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+      "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+      "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f",
+      "scripts/build_r2_public_pilot.py": "91a27671b6dd7a2f7389c6a4bb13e3944fb17bbef959794786e5d1e77580d9b7",
+      "scripts/fetch_r2_public_pilot_sources.py": "53d8956dff7644da019ddd27fe49f055e0f455d5632f9dd3d08b0e717fd6dd20",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "scorer_hash": "7d22fbf45a625f501788902182d9b09e872ff0733cd9a9b4aa1d913f9e384b25",
+    "snapshot_binary_hash": "18a7bfbf21c74714b699c0bad130bf23b1d66f1e50f3fc4f446c8d5e58aef6d5",
+    "snapshot_content_hash": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+    "source_hashes": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+      "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+    }
+  },
+  "input_tokens": 6815,
+  "known_spend_usd": 0.014762800000000001,
+  "latency_ms": 12966.52,
+  "linked_columns": 0,
+  "linked_tables": 0,
+  "linker_completion_rate": 0.0,
+  "linker_prompt_sha256": "c3923e81de2e6041d74d0d9bf2f29d1473a436d73bc96d25e56ff7cc2fe4af89",
+  "linker_prompt_version": "dualsql_linker_v4",
+  "linker_tool_calls": 0,
+  "linker_turns": 0,
+  "malformed_agent_outputs": 0,
+  "max_completion_tokens": 1000,
+  "max_retries": 0,
+  "metrics": {
+    "execution_accuracy": 0.625,
+    "execution_success_rate": 1.0,
+    "safety_rejection_rate": 0.0,
+    "syntax_validity_rate": 1.0
+  },
+  "model_calls": 14,
+  "official_eligible": false,
+  "output_tokens": 549,
+  "preflight": {
+    "budget_usd": 2.0,
+    "max_turns_per_role": 5,
+    "method": "serialized request bytes plus framing and bounded prior turn context",
+    "series_ceiling_usd": 1.9797192000000001,
+    "tool_result_byte_limit": 1650
+  },
+  "pricing": {
+    "checked_utc": "2026-09-25T10:07:05.622597+00:00",
+    "input_usd_per_million": 0.4,
+    "output_usd_per_million": 1.6,
+    "source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
+  },
+  "provider": "openai",
+  "requested_model": "gpt-4.1-mini-2025-04-14",
+  "run_id": "dualsql-lite-36122033957-1",
+  "run_status": "completed",
+  "series_version": "dualsql_lite_public_dev_v4",
+  "snapshot_binary_sha256": "18a7bfbf21c74714b699c0bad130bf23b1d66f1e50f3fc4f446c8d5e58aef6d5",
+  "split": "public_dev",
+  "temperature": 0,
+  "tool_counts": {
+    "database_profiler": 1,
+    "value_search": 5
+  },
+  "tool_implementation_sha256": "71974191a43c2d214a967a27518ef4a375e1c357983ef1c87243045b97b24de6",
+  "tool_implementation_version": "dualsql_lite_tools_v1",
+  "tool_schema_sha256": "6071917ed33ee71aa8c52368368f97b46f6e7ea3d5e258c000f34715c50e6639",
+  "tool_usage_rate": {
+    "database_profiler": 0.125,
+    "sql_probe": 0.0,
+    "value_search": 0.5
+  },
+  "total_cost_usd": 0.0036044000000000002
+}

@@ -1,0 +1,16 @@
+{
+  "content_sha256": "8dc07dd60d9222776ff3438bedd8488582e95f53d7b8052bbd510adad73cc42e",
+  "path": "data/public_pilot/snapshot_verify.duckdb",
+  "row_counts": {
+    "network_flows": 243906,
+    "sysmon_process_events": 143884
+  },
+  "schema_version": "1",
+  "sha256": "9807296d12d89f5c04c3aa31cb6e1a612b2a8635d225fa92b841a7f077f3960a",
+  "snapshot_id": "snapshot_verify",
+  "source_hashes": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+    "otrf_apt29_day1": "98a073140860560d70080ace9142961be4f64b4862bae892d62d0f254d0fdbe5"
+  }
+}
