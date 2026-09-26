@@ -46,6 +46,16 @@ _SOURCE_FORMATS = {
 _SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
+class SnapshotBulkLoadError(RuntimeError):
+    """A credential-safe description of a failed normalized-table load."""
+
+    category = "duckdb_copy_error"
+
+    def __init__(self, table: str) -> None:
+        self.table = table
+        super().__init__(f"DuckDB COPY failed for normalized table: {table}")
+
+
 def _text(value: Any) -> str | None:
     if value is None:
         return None
@@ -535,7 +545,15 @@ def _bulk_insert_rows(
         count = 0
         for row in rows:
             if writer is None:
-                writer = csv.DictWriter(handle, fieldnames=list(row), lineterminator="\n")
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=list(row),
+                    delimiter=",",
+                    quotechar='"',
+                    doublequote=True,
+                    quoting=csv.QUOTE_MINIMAL,
+                    lineterminator="\n",
+                )
                 writer.writeheader()
             elif set(row) != set(writer.fieldnames or ()):
                 raise ValueError(f"Normalized {table} rows have inconsistent columns")
@@ -544,11 +562,15 @@ def _bulk_insert_rows(
     try:
         if count:
             escaped_path = str(staged_path).replace("'", "''")
-            with duckdb.connect(str(snapshot_path)) as connection:
-                connection.execute(
-                    f"COPY {table} FROM '{escaped_path}' "
-                    "(FORMAT CSV, HEADER TRUE, NULL '')"
-                )
+            try:
+                with duckdb.connect(str(snapshot_path)) as connection:
+                    connection.execute(
+                        f"COPY {table} FROM '{escaped_path}' "
+                        "(FORMAT CSV, HEADER TRUE, AUTO_DETECT FALSE, "
+                        "DELIMITER ',', QUOTE '\"', ESCAPE '\"', NULL '')"
+                    )
+            except Exception:  # noqa: BLE001 - security boundary discards provider text
+                raise SnapshotBulkLoadError(table) from None
         return count
     finally:
         staged_path.unlink(missing_ok=True)

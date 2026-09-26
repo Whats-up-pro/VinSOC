@@ -9,8 +9,9 @@ from pathlib import Path
 import pytest
 
 from evaluation.text_to_sql_snapshot import verify_official_snapshot_contract
+from scripts import build_r2_official_snapshot
 from scripts.build_r2_official_snapshot import build_official_snapshot_pair
-from scripts.build_vinsoc_public_snapshot import BUILDER_VERSION
+from scripts.build_vinsoc_public_snapshot import BUILDER_VERSION, SnapshotBulkLoadError
 
 
 def _sha256(path: Path) -> str:
@@ -223,6 +224,39 @@ def test_official_failure_report_never_serializes_exception_row_values(tmp_path)
     assert "second.example" not in serialized
 
 
+def test_official_failure_report_exposes_only_safe_copy_failure_fields(
+    monkeypatch, tmp_path
+):
+    dataset_manifest, receipts = _source_fixture(tmp_path)
+    report = tmp_path / "official_snapshot_build.json"
+
+    def fail_copy(*_args, diagnostic_state, **_kwargs):
+        diagnostic_state["failure_stage"] = "source_normalization"
+        raise SnapshotBulkLoadError("cti_indicators")
+
+    monkeypatch.setattr(build_r2_official_snapshot, "build_snapshot", fail_copy)
+
+    with pytest.raises(SnapshotBulkLoadError):
+        build_official_snapshot_pair(
+            dataset_manifest_path=dataset_manifest,
+            receipt_dir=receipts,
+            snapshot_path=tmp_path / "vinsoc_public_v1.duckdb",
+            snapshot_manifest_path=tmp_path / "snapshot_manifest.json",
+            official_lock_path=tmp_path / "official_snapshot.lock",
+            report_path=report,
+        )
+
+    diagnostic = json.loads(report.read_text(encoding="utf-8"))
+    assert diagnostic["failure_stage"] == "source_normalization"
+    assert diagnostic["failure"] == {
+        "category": "duckdb_copy_error",
+        "table": "cti_indicators",
+    }
+    serialized = json.dumps(diagnostic, sort_keys=True)
+    assert "SENSITIVE_RAW_IOC_VALUE" not in serialized
+    assert "SENSITIVE_ORIGINAL_LINE" not in serialized
+
+
 def test_official_snapshot_workflow_is_manual_only():
     workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(
         encoding="utf-8"
@@ -266,6 +300,60 @@ def test_official_snapshot_workflow_preserves_source_bytes_after_build_failure()
     assert "openssl enc -aes-256-cbc -salt -pbkdf2" in workflow
     assert "r2-official-frozen-source-bytes.tar.enc" in retention_step
     assert "r2-official-source-probe/raw/" not in retention_step
+
+
+def test_run5_cti_validation_workflow_is_manual_only_and_least_privilege():
+    workflow = Path(".github/workflows/r2-run5-cti-load-validation.yml").read_text(
+        encoding="utf-8"
+    )
+    lines = workflow.splitlines()
+    on_line = lines.index("on:")
+    trigger_lines = []
+    for line in lines[on_line + 1:]:
+        if line and not line.startswith(" "):
+            break
+        if line.startswith("  ") and not line.startswith("    ") and line.strip():
+            trigger_lines.append(line.strip())
+
+    assert trigger_lines == ["workflow_dispatch:"]
+    assert "permissions:\n  contents: read\n  actions: read" in workflow
+    assert "R2_SOURCE_RETENTION_PASSPHRASE" in workflow
+    job_env = workflow.split("    env:\n", 1)[1].split("    steps:\n", 1)[0]
+    assert "R2_SOURCE_RETENTION_PASSPHRASE" not in job_env
+    require_secret_step = workflow.split(
+        "- name: Require the source-retention secret", 1
+    )[1].split("- name:", 1)[0]
+    decrypt_step = workflow.split(
+        "- name: Decrypt retained bytes in runner temp", 1
+    )[1].split("- name:", 1)[0]
+    assert "${{ secrets.R2_SOURCE_RETENTION_PASSPHRASE }}" in require_secret_step
+    assert "${{ secrets.R2_SOURCE_RETENTION_PASSPHRASE }}" in decrypt_step
+
+
+def test_run5_cti_validation_workflow_pins_retained_artifact_and_stays_offline():
+    workflow = Path(".github/workflows/r2-run5-cti-load-validation.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "36235433476" in workflow
+    assert "10904266318" in workflow
+    assert "sha256:a3858d1a92f15b70fc0d629a46f7c6eff6763caffde8b43077eabff74186d8f8" in workflow
+    assert "b39c70b47bdef1c9668d3dde250ad11880516744ebb7edd98748fc8eded61f65" in workflow
+    assert "0aa5b4371970bc4fd16c111cc65b2a7a54c744a810fa15054206640de36260ac" in workflow
+    assert "5df2498e5abc1d5f9c1564d16b6f00618611943cba7cc25dab12b2ed5c5ccd46" in workflow
+    assert "probe_r2_official_sources" not in workflow
+    assert "threatfox.abuse.ch" not in workflow
+    assert "stratosphereips.org" not in workflow
+    assert "github.com/OTRF" not in workflow
+    assert "curl " not in workflow
+    assert "wget " not in workflow
+    assert "if: always()" in workflow
+    assert "Write sanitized failure evidence when validation did not complete" in workflow
+    upload_step = workflow.split(
+        "- name: Upload credential-free aggregate evidence", 1
+    )[1].split("- name:", 1)[0]
+    assert "if-no-files-found: error" in upload_step
+    assert "if-no-files-found: warn" not in upload_step
 
 
 def test_run4_remediation_workflow_is_manual_only_with_least_permissions():
