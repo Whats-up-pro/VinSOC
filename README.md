@@ -22,18 +22,18 @@ Analyst Input
      ▼
 ┌─────────────┐
 │  LLM        │
-│  Orchestrator│
+│ Orchestrator│
 └──────┬──────┘
        │
        ▼
-┌──────────────┬──────────────┬──────────────┐
+┌─────────────┬──────────────┬──────────────┐
 │  CTI        │  Network     │  Endpoint    │
-│  Enrichment │  Investigation│ Investigation│
+│  Enrichment │ Investigation│ Investigation│
 └──────┬──────┴──────┬───────┴──────┬──────┘
-       │              │              │
-       ▼              ▼              ▼
+       │             │              │
+       ▼             ▼              ▼
 ┌─────────────────────────────────────────────┐
-│              Evidence Store                   │
+│              Evidence Store                 │
 │  OBSERVED · DERIVED · EXTERNAL_INTEL        │
 └──────────────────────┬──────────────────────┘
                        │
