@@ -9,13 +9,18 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import sys
 import zipfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from evaluation.text_to_sql_snapshot import load_snapshot_manifest, verify_snapshot
+from scripts import build_vinsoc_public_snapshot
 from scripts.build_vinsoc_public_snapshot import (
+    SnapshotBulkLoadError,
+    _bulk_insert_rows,
     build_snapshot,
     normalize_ctu13_binetflow,
     normalize_sysmon_jsonl,
@@ -35,6 +40,141 @@ def _write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, str]]) ->
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def test_bulk_insert_discards_sensitive_duckdb_copy_error(monkeypatch, tmp_path):
+    sensitive_ioc = "SENSITIVE_RAW_IOC_VALUE"
+    sensitive_line = "SENSITIVE_ORIGINAL_LINE"
+
+    class FailingConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def execute(self, _statement):
+            raise RuntimeError(f"{sensitive_ioc}: {sensitive_line}")
+
+    monkeypatch.setitem(
+        sys.modules,
+        "duckdb",
+        SimpleNamespace(connect=lambda _path: FailingConnection()),
+    )
+
+    with pytest.raises(SnapshotBulkLoadError) as raised:
+        _bulk_insert_rows(
+            tmp_path / "snapshot.duckdb",
+            "cti_indicators",
+            [{"source_row_id": "1"}],
+            tmp_path,
+        )
+
+    assert sensitive_ioc not in str(raised.value)
+    assert sensitive_line not in str(raised.value)
+    assert raised.value.category == "duckdb_copy_error"
+    assert raised.value.table == "cti_indicators"
+    assert raised.value.__cause__ is None
+    assert raised.value.__suppress_context__ is True
+
+
+def test_bulk_insert_preserves_embedded_comma_and_typed_columns(tmp_path):
+    snapshot_path = tmp_path / "snapshot.duckdb"
+    SocSnapshotBuilder(snapshot_path).create_empty_snapshot()
+    rows = [
+        {
+            "source_dataset": "threatfox_full",
+            "source_row_id": "000124",
+            "indicator": "second.invalid",
+            "indicator_type": "domain",
+            "threat_type": None,
+            "malware_printable": None,
+            "confidence_level": 80,
+            "first_seen": "2026-09-25T02:03:04",
+            "last_seen": "2026-09-25T03:04:05",
+            "reference_url": "https://example.invalid/124",
+        },
+        {
+            "source_dataset": "threatfox_full",
+            "source_row_id": "000123",
+            "indicator": "example.invalid",
+            "indicator_type": "domain",
+            "threat_type": "botnet_cc",
+            "malware_printable": "Example, Family",
+            "confidence_level": 95,
+            "first_seen": "2026-09-25T01:02:03",
+            "last_seen": None,
+            "reference_url": None,
+        },
+    ]
+
+    loaded = _bulk_insert_rows(
+        snapshot_path, "cti_indicators", rows, tmp_path
+    )
+
+    import duckdb
+
+    with duckdb.connect(str(snapshot_path), read_only=True) as connection:
+        actual = connection.execute(
+            "SELECT source_row_id, malware_printable, confidence_level "
+            "FROM cti_indicators ORDER BY source_row_id"
+        ).fetchall()
+    assert loaded == 2
+    assert actual == [
+        ("000123", "Example, Family", 95),
+        ("000124", None, 80),
+    ]
+
+
+def test_bulk_insert_pins_writer_and_duckdb_copy_contract(monkeypatch, tmp_path):
+    writer_kwargs = {}
+    statements = []
+    real_dict_writer = csv.DictWriter
+
+    def capture_writer(handle, *args, **kwargs):
+        writer_kwargs.update(kwargs)
+        return real_dict_writer(handle, *args, **kwargs)
+
+    class CapturingConnection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def execute(self, statement):
+            statements.append(statement)
+
+    monkeypatch.setattr(build_vinsoc_public_snapshot.csv, "DictWriter", capture_writer)
+    monkeypatch.setitem(
+        sys.modules,
+        "duckdb",
+        SimpleNamespace(connect=lambda _path: CapturingConnection()),
+    )
+
+    _bulk_insert_rows(
+        tmp_path / "snapshot.duckdb",
+        "cti_indicators",
+        [{"source_row_id": "000123", "indicator": "one,two"}],
+        tmp_path,
+    )
+
+    assert writer_kwargs == {
+        "fieldnames": ["source_row_id", "indicator"],
+        "delimiter": ",",
+        "quotechar": '"',
+        "doublequote": True,
+        "quoting": csv.QUOTE_MINIMAL,
+        "lineterminator": "\n",
+    }
+    statement = " ".join(statements[0].split())
+    assert "FORMAT CSV" in statement
+    assert "HEADER TRUE" in statement
+    assert "AUTO_DETECT FALSE" in statement
+    assert "DELIMITER ','" in statement
+    assert "QUOTE '\"'" in statement
+    assert "ESCAPE '\"'" in statement
+    assert "NULL ''" in statement
 
 
 def test_threatfox_adapter_maps_fields_and_skips_invalid_rows(tmp_path):

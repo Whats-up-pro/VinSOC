@@ -18,8 +18,11 @@ from evaluation.text_to_sql_snapshot import (
     sha256_file,
     verify_official_snapshot_contract,
 )
-from scripts.build_vinsoc_public_snapshot import BUILDER_VERSION, build_snapshot
-
+from scripts.build_vinsoc_public_snapshot import (
+    BUILDER_VERSION,
+    SnapshotBulkLoadError,
+    build_snapshot,
+)
 
 DEFAULT_BUILDER_PATH = Path("scripts/build_vinsoc_public_snapshot.py")
 _GIT_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
@@ -93,6 +96,16 @@ def _failure_report(
     exception: Exception,
 ) -> dict[str, Any]:
     failure_stage = diagnostics.get("failure_stage", "official_snapshot_build")
+    if isinstance(exception, SnapshotBulkLoadError):
+        failure = {
+            "category": exception.category,
+            "table": exception.table,
+        }
+    else:
+        failure = {
+            "category": type(exception).__name__,
+            "message": f"Official snapshot build failed during {failure_stage}",
+        }
     return {
         "schema_version": "r2_official_snapshot_diagnostic_v1",
         "status": "failed",
@@ -102,10 +115,7 @@ def _failure_report(
         "builder_version": builder_version,
         "git_sha": _git_sha(),
         "failure_stage": failure_stage,
-        "failure": {
-            "category": type(exception).__name__,
-            "message": f"Official snapshot build failed during {failure_stage}",
-        },
+        "failure": failure,
     }
 
 
