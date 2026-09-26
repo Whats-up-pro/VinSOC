@@ -145,6 +145,18 @@ def test_official_snapshot_workflow_is_manual_only():
     assert trigger_lines == ["workflow_dispatch:"]
 
 
+def test_official_snapshot_workflow_preserves_exact_same_run_source_bytes():
+    workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(
+        encoding="utf-8"
+    )
+
+    assert "name: r2-official-frozen-source-bytes" in workflow
+    assert "${{ runner.temp }}/r2-official-source-probe/raw/" in workflow
+    assert "${{ runner.temp }}/r2-official-source-probe/probe.json" in workflow
+    assert "${{ runner.temp }}/r2-official-source-probe/receipts/" in workflow
+    assert "retention-days: 90" in workflow
+
+
 def test_staging_rejects_bytes_changed_after_same_run_receipt(tmp_path):
     from scripts.probe_r2_official_sources import probe
     from scripts.stage_r2_official_sources import stage_probe_output
