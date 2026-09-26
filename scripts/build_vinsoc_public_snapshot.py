@@ -141,22 +141,68 @@ def _threatfox_csv_rows(path: Path) -> Iterable[tuple[int, dict[str, str]]]:
     yield from enumerate(reader, start=header_line + 1)
 
 
-def _iter_threatfox_csv(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]:
+def _new_threatfox_diagnostics(dataset_id: str) -> dict[str, Any]:
+    return {
+        "dataset_id": dataset_id,
+        "data_rows_seen": 0,
+        "rows_accepted": 0,
+        "rows_rejected": 0,
+        "primary_rejection_reasons": {
+            "missing_required_value": 0,
+            "invalid_first_seen_timestamp": 0,
+            "invalid_last_seen_timestamp": 0,
+            "invalid_confidence_level": 0,
+        },
+        "timestamp_shape_counts": {
+            "first_seen_ends_with_utc_literal": 0,
+            "last_seen_ends_with_utc_literal": 0,
+        },
+    }
+
+
+def _reject_threatfox_row(diagnostics: dict[str, Any], reason: str) -> None:
+    diagnostics["rows_rejected"] += 1
+    diagnostics["primary_rejection_reasons"][reason] += 1
+
+
+def _iter_threatfox_csv(
+    path: Path,
+    dataset_id: str,
+    *,
+    diagnostics: dict[str, Any] | None = None,
+) -> Iterator[dict[str, Any]]:
+    diagnostics = diagnostics if diagnostics is not None else _new_threatfox_diagnostics(dataset_id)
     for line_number, row in _threatfox_csv_rows(path):
+        diagnostics["data_rows_seen"] += 1
+        first_seen_text = _text(row.get("first_seen_utc"))
+        last_seen_text = _text(row.get("last_seen_utc"))
+        if first_seen_text and first_seen_text.endswith(" UTC"):
+            diagnostics["timestamp_shape_counts"][
+                "first_seen_ends_with_utc_literal"
+            ] += 1
+        if last_seen_text and last_seen_text.endswith(" UTC"):
+            diagnostics["timestamp_shape_counts"][
+                "last_seen_ends_with_utc_literal"
+            ] += 1
         source_row_id = _text(row.get("ioc_id"))
         indicator = _text(row.get("ioc_value"))
         indicator_type = _text(row.get("ioc_type"))
-        first_seen = _timestamp(row.get("first_seen_utc"))
-        last_seen = _timestamp(row.get("last_seen_utc"))
         if not source_row_id or not indicator or not indicator_type:
+            _reject_threatfox_row(diagnostics, "missing_required_value")
             continue
-        if _text(row.get("first_seen_utc")) and first_seen is None:
+        first_seen = _timestamp(first_seen_text)
+        if first_seen_text and first_seen is None:
+            _reject_threatfox_row(diagnostics, "invalid_first_seen_timestamp")
             continue
-        if _text(row.get("last_seen_utc")) and last_seen is None:
+        last_seen = _timestamp(last_seen_text)
+        if last_seen_text and last_seen is None:
+            _reject_threatfox_row(diagnostics, "invalid_last_seen_timestamp")
             continue
         confidence = _integer(row.get("confidence_level"), minimum=0, maximum=100)
         if _text(row.get("confidence_level")) and confidence is None:
+            _reject_threatfox_row(diagnostics, "invalid_confidence_level")
             continue
+        diagnostics["rows_accepted"] += 1
         yield {
             "source_dataset": dataset_id,
             "source_row_id": source_row_id or f"line:{line_number}",
@@ -174,6 +220,15 @@ def _iter_threatfox_csv(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]
 def normalize_threatfox_csv(path: Path, dataset_id: str) -> list[dict[str, Any]]:
     """Normalize the documented ThreatFox CSV export columns."""
     return list(_iter_threatfox_csv(path, dataset_id))
+
+
+def normalize_threatfox_csv_with_diagnostics(
+    path: Path, dataset_id: str
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Normalize ThreatFox rows and return privacy-preserving rejection counts."""
+    diagnostics = _new_threatfox_diagnostics(dataset_id)
+    rows = list(_iter_threatfox_csv(path, dataset_id, diagnostics=diagnostics))
+    return rows, diagnostics
 
 
 def _iter_ctu13_binetflow(path: Path, dataset_id: str) -> Iterator[dict[str, Any]]:

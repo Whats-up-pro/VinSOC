@@ -21,6 +21,7 @@ from scripts.build_vinsoc_public_snapshot import (
     normalize_sysmon_jsonl,
     normalize_sysmon_zip_jsonl,
     normalize_threatfox_csv,
+    normalize_threatfox_csv_with_diagnostics,
 )
 from vinsoc_data.duckdb_store import DuckDBSnapshot, SocSnapshotBuilder
 
@@ -140,6 +141,49 @@ def test_threatfox_adapter_fails_loudly_when_required_columns_are_missing(tmp_pa
 
     with pytest.raises(ValueError, match=r"missing required column\(s\): ioc_id, ioc_type"):
         normalize_threatfox_csv(source, "threatfox_full")
+
+
+def test_threatfox_diagnostics_count_first_failure_without_values(tmp_path):
+    source = tmp_path / "full.csv"
+    source.write_text(
+        "# first_seen_utc,ioc_id,ioc_value,ioc_type,confidence_level,last_seen_utc\n"
+        "2026-09-25 01:02:03,1,accepted.example,domain,95,2026-09-25 04:05:06\n"
+        "2026-09-25 01:02:03 UTC,2,utc.example,domain,95,\n"
+        "not-a-time,3,bad-first.example,domain,95,\n"
+        "2026-09-25 01:02:03,4,bad-last.example,domain,95,2026-09-25 04:05:06 UTC\n"
+        "2026-09-25 01:02:03,5,bad-confidence.example,domain,unknown,\n"
+        "2026-09-25 01:02:03,6,,domain,95,\n",
+        encoding="utf-8",
+    )
+
+    rows, diagnostics = normalize_threatfox_csv_with_diagnostics(
+        source, "threatfox_full"
+    )
+
+    assert len(rows) == 1
+    assert diagnostics == {
+        "dataset_id": "threatfox_full",
+        "data_rows_seen": 6,
+        "rows_accepted": 1,
+        "rows_rejected": 5,
+        "primary_rejection_reasons": {
+            "missing_required_value": 1,
+            "invalid_first_seen_timestamp": 2,
+            "invalid_last_seen_timestamp": 1,
+            "invalid_confidence_level": 1,
+        },
+        "timestamp_shape_counts": {
+            "first_seen_ends_with_utc_literal": 1,
+            "last_seen_ends_with_utc_literal": 1,
+        },
+    }
+    assert diagnostics["rows_accepted"] + diagnostics["rows_rejected"] == diagnostics[
+        "data_rows_seen"
+    ]
+    serialized = json.dumps(diagnostics, sort_keys=True)
+    assert "accepted.example" not in serialized
+    assert "not-a-time" not in serialized
+    assert "unknown" not in serialized
 
 
 def test_ctu13_adapter_maps_flow_fields_and_skips_invalid_rows(tmp_path):
