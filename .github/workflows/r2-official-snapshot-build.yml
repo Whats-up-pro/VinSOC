@@ -46,6 +46,57 @@ jobs:
         run: |
           python -m scripts.build_r2_official_snapshot \
             --report "$RUNNER_TEMP/r2-official-snapshot-build.json"
+      - name: Encrypt canonical verified snapshot before upload
+        if: success()
+        run: |
+          SNAPSHOT_PLAINTEXT="data/snapshots/vinsoc_public_v1.duckdb"
+          SNAPSHOT_CIPHERTEXT="$RUNNER_TEMP/r2-official-snapshot.duckdb.enc"
+          SNAPSHOT_ROUNDTRIP="$RUNNER_TEMP/r2-official-snapshot-roundtrip.duckdb"
+          sha256sum "$SNAPSHOT_PLAINTEXT" \
+            > "$RUNNER_TEMP/r2-official-snapshot.plaintext.sha256"
+          openssl enc -aes-256-cbc -salt -pbkdf2 -iter 600000 \
+            -pass env:SOURCE_RETENTION_PASSPHRASE \
+            -in "$SNAPSHOT_PLAINTEXT" \
+            -out "$SNAPSHOT_CIPHERTEXT"
+          sha256sum "$SNAPSHOT_CIPHERTEXT" \
+            > "$RUNNER_TEMP/r2-official-snapshot.ciphertext.sha256"
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 \
+            -pass env:SOURCE_RETENTION_PASSPHRASE \
+            -in "$SNAPSHOT_CIPHERTEXT" \
+            -out "$SNAPSHOT_ROUNDTRIP"
+          test "$(sha256sum "$SNAPSHOT_ROUNDTRIP" | cut -d' ' -f1)" = \
+            "$(cut -d' ' -f1 "$RUNNER_TEMP/r2-official-snapshot.plaintext.sha256")"
+          rm -f "$SNAPSHOT_ROUNDTRIP"
+      - name: Record credential-free encrypted snapshot metadata
+        if: success()
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          record = {
+              "schema_version": "r2_official_snapshot_artifact_v1",
+              "artifact": {
+                  "name": "r2-official-snapshot-duckdb-encrypted",
+                  "ciphertext_filename": "r2-official-snapshot.duckdb.enc",
+              },
+              "encryption": {
+                  "format": "openssl_enc_aes_256_cbc_pbkdf2_sha256_iter_600000",
+              },
+              "plaintext_sha256": temp.joinpath(
+                  "r2-official-snapshot.plaintext.sha256"
+              ).read_text(encoding="utf-8").split()[0],
+              "ciphertext_sha256": temp.joinpath(
+                  "r2-official-snapshot.ciphertext.sha256"
+              ).read_text(encoding="utf-8").split()[0],
+              "round_trip_verified": True,
+          }
+          temp.joinpath("r2-official-snapshot-artifact-metadata.json").write_text(
+              json.dumps(record, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
       - name: Encrypt exact verified source bytes for restricted retention
         if: always()
         run: |
@@ -121,18 +172,21 @@ jobs:
           path: |
             ${{ runner.temp }}/r2-official-snapshot-build.json
             ${{ runner.temp }}/r2-official-source-retention.json
+            ${{ runner.temp }}/r2-official-snapshot-artifact-metadata.json
             evaluation/text_to_sql_benchmarks/dataset_manifest.json
             evaluation/text_to_sql_benchmarks/source_receipts/
             evaluation/text_to_sql_benchmarks/snapshot_manifest.json
             evaluation/text_to_sql_benchmarks/official_snapshot.lock
           if-no-files-found: warn
           retention-days: 90
-      - name: Preserve canonical verified snapshot
+      - name: Preserve encrypted canonical verified snapshot
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: r2-official-snapshot-duckdb
-          path: data/snapshots/vinsoc_public_v1.duckdb
+          name: r2-official-snapshot-duckdb-encrypted
+          path: |
+            ${{ runner.temp }}/r2-official-snapshot.duckdb.enc
+            ${{ runner.temp }}/r2-official-snapshot-artifact-metadata.json
           if-no-files-found: error
-          compression-level: 6
+          compression-level: 0
           retention-days: 30

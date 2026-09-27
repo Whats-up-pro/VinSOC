@@ -3,6 +3,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
+import shutil
+import subprocess
 import zipfile
 from pathlib import Path
 
@@ -269,6 +272,96 @@ def test_official_snapshot_workflow_is_manual_only():
         if line.startswith("  ") and not line.startswith("    ") and line.strip():
             trigger_lines.append(line.strip())
     assert trigger_lines == ["workflow_dispatch:"]
+
+
+def test_official_snapshot_workflow_uploads_only_encrypted_snapshot_with_safe_metadata_and_roundtrip(
+    tmp_path,
+):
+    """A harmless local fixture proves the encryption format round-trips by SHA-256."""
+    workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(
+        encoding="utf-8"
+    )
+    encryption_step = workflow.split(
+        "- name: Encrypt canonical verified snapshot before upload", 1
+    )[1].split("- name:", 1)[0]
+    metadata_step = workflow.split(
+        "- name: Record credential-free encrypted snapshot metadata", 1
+    )[1].split("- name:", 1)[0]
+    upload_step = workflow.split(
+        "- name: Preserve encrypted canonical verified snapshot", 1
+    )[1].split("- name:", 1)[0]
+
+    assert "openssl enc -aes-256-cbc -salt -pbkdf2 -iter 600000" in encryption_step
+    assert "-pass env:SOURCE_RETENTION_PASSPHRASE" in encryption_step
+    assert "SOURCE_RETENTION_PASSPHRASE" not in metadata_step
+    assert "THREATFOX_AUTH_KEY" not in metadata_step
+    assert "data/snapshots/" not in metadata_step
+    assert "raw/" not in metadata_step
+    assert "source_receipts" not in metadata_step
+    assert "plaintext_sha256" in metadata_step
+    assert "ciphertext_sha256" in metadata_step
+    assert "r2-official-snapshot-duckdb-encrypted" in metadata_step
+    assert "openssl_enc_aes_256_cbc_pbkdf2_sha256_iter_600000" in metadata_step
+    assert "r2-official-snapshot.duckdb.enc" in upload_step
+    assert "data/snapshots/vinsoc_public_v1.duckdb" not in upload_step
+    assert "r2-official-snapshot-artifact-metadata.json" in upload_step
+
+    openssl = shutil.which("openssl")
+    if openssl is None:
+        git_openssl = Path(r"C:\Program Files\Git\usr\bin\openssl.exe")
+        if git_openssl.is_file():
+            openssl = str(git_openssl)
+    assert openssl is not None, "openssl is required for the encryption round-trip test"
+    plaintext = tmp_path / "fixture.duckdb"
+    ciphertext = tmp_path / "fixture.duckdb.enc"
+    recovered = tmp_path / "fixture.roundtrip.duckdb"
+    plaintext.write_bytes(b"small harmless snapshot encryption fixture\n")
+    environment = os.environ | {"SOURCE_RETENTION_PASSPHRASE": "test-only-passphrase"}
+    encrypt = subprocess.run(
+        [
+            openssl,
+            "enc",
+            "-aes-256-cbc",
+            "-salt",
+            "-pbkdf2",
+            "-iter",
+            "600000",
+            "-pass",
+            "env:SOURCE_RETENTION_PASSPHRASE",
+            "-in",
+            str(plaintext),
+            "-out",
+            str(ciphertext),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=environment,
+    )
+    assert encrypt.returncode == 0, encrypt.stderr
+    decrypt = subprocess.run(
+        [
+            openssl,
+            "enc",
+            "-d",
+            "-aes-256-cbc",
+            "-pbkdf2",
+            "-iter",
+            "600000",
+            "-pass",
+            "env:SOURCE_RETENTION_PASSPHRASE",
+            "-in",
+            str(ciphertext),
+            "-out",
+            str(recovered),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=environment,
+    )
+    assert decrypt.returncode == 0, decrypt.stderr
+    assert _sha256(recovered) == _sha256(plaintext)
 
 
 def test_official_snapshot_workflow_checks_both_secrets_before_download():

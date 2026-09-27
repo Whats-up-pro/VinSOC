@@ -21,16 +21,17 @@ This audit examines whether the proposed R2 official workflow can legally and et
 
 ## 1. Workflow Architecture (for reference)
 
-The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
+The proposed hardened `r2-official-snapshot-build.yml` workflow:
 
 1. Downloads all sources in a single probe step within the same run
 2. Stages manifest/receipts from the same probe output
 3. Builds snapshot from the same staged sources
 4. Encrypts exact source bytes (AES-256-CBC) with passphrase
-5. Uploads three artifacts:
+5. Encrypts the DuckDB snapshot before artifact upload and verifies a local decrypt round-trip by SHA-256
+6. Uploads three artifacts:
    - `r2-official-frozen-source-bytes` (encrypted tar, 90-day retention)
-   - `r2-official-snapshot-build-metadata` (hashes/receipts/lock, 90-day retention)
-   - `r2-official-snapshot-duckdb` (unencrypted, 30-day retention)
+   - `r2-official-snapshot-build-metadata` (credential-free hashes/receipts/lock, 90-day retention)
+   - `r2-official-snapshot-duckdb-encrypted` (ciphertext plus credential-free verification metadata, 30-day retention)
 
 **Note:** This is a **one-shot manual workflow** (`workflow_dispatch` only). Probe and build are in the same run, ensuring source bytes are frozen from the exact download that created the snapshot.
 
@@ -55,7 +56,8 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 | Use Case | Status | Evidence |
 |----------|--------|----------|
-| Download and retain exact bytes | `CONFIRMED` | Free API access with authentication (commercial subscription may be required) |
+| Authenticated download access | `CONDITIONAL` | API access uses authentication; Terms indicate a commercial subscription may be required for some users |
+| Retain exact ThreatFox bytes, including long-term retention | `UNCONFIRMED` | No evidence in this audit grants a durable-retention right; technical access and encrypted storage do not establish that right |
 | Transform to DuckDB table | `RESTRICTED` | Section 6.6 prohibits validation use; transformation may constitute use |
 | Distribute via GitHub Actions artifact | `RESTRICTED` | Derivative work and validation restrictions may apply |
 | Use for AI model evaluation | `RESTRICTED` | **Section 6.6 explicitly prohibits "validating" AI systems** |
@@ -156,7 +158,7 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 ## 3. Artifact Analysis
 
-**Note:** Existing artifacts below are from **failed** builds (run `36216646548` failed at CTI ingestion). They demonstrate the workflow structure but do not represent a successful official snapshot. No official snapshot with verified row counts exists yet.
+**Note:** The existing encrypted source artifact below is artifact `10904266318` from failed run #5 `36235433476`. The offline CTI validation run `36261977204` is tied to that failed-run artifact. Neither is the source identity of a successful official build. They demonstrate workflow evidence only; no official snapshot with verified row counts exists yet.
 
 ### 3.1 Encrypted Source Bytes Artifact (from failed run)
 
@@ -168,7 +170,8 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 | **Passphrase** | Stored in `R2_SOURCE_RETENTION_PASSPHRASE` secret (not in artifact) |
 | **Retention** | 90 days |
 | **Access** | Requires repo read access + artifact ID |
-| **Run ID** | From failed run `36216646548` (run with ID unknown from gh api) |
+| **Artifact ID** | `10904266318` |
+| **Run ID** | Failed run #5 `36235433476` |
 
 **Existing artifact example (from gh api query):**
 ```json
@@ -191,14 +194,17 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 | Property | Value |
 |----------|-------|
-| **Name** | `r2-official-snapshot-duckdb` |
+| **Name** | `r2-official-snapshot-duckdb-encrypted` |
 | **Content** | Three tables: `cti_indicators`, `network_flows`, `sysmon_process_events` |
-| **Encryption** | None (uploaded plaintext) |
+| **Encryption** | OpenSSL AES-256-CBC with PBKDF2/SHA-256, 600,000 iterations |
 | **Retention** | 30 days |
-| **Access** | Anyone with repo read access + artifact ID |
+| **Access** | Repo readers can retrieve ciphertext; decryption requires the restricted `R2_SOURCE_RETENTION_PASSPHRASE` secret |
 
 **Analysis:**
-- Contains **transformed data**, not raw source bytes
+- This artifact is only planned for a future successful build; no such ciphertext artifact currently exists
+- Upload contains ciphertext and credential-free metadata only; no plaintext `.duckdb` is uploaded
+- Metadata records the artifact name, format version, plaintext SHA-256, ciphertext SHA-256, and round-trip result
+- Contains **transformed data** once decrypted, not raw source bytes
 - `cti_indicators` table contains IOC data derived from ThreatFox
 - `network_flows` contains netflow data derived from CTU-13
 - `sysmon_process_events` contains process events derived from OTRF
@@ -210,7 +216,7 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 | Property | Value |
 |----------|-------|
 | **Name** | `r2-official-snapshot-build-metadata` |
-| **Content** | `snapshot_manifest.json`, `official_snapshot.lock`, `source_receipts/`, `r2-official-source-retention.json` |
+| **Content** | `snapshot_manifest.json`, `official_snapshot.lock`, `source_receipts/`, `r2-official-source-retention.json`, and planned encrypted-snapshot verification metadata |
 | **Encryption** | None (credential-free) |
 | **Retention** | 90 days |
 
@@ -254,16 +260,18 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 ### 4.2 DuckDB Snapshot
 
-**Current state:** GitHub Actions artifact, 30-day retention, unencrypted.
+**Current state:** No successful official snapshot artifact exists. The hardened workflow would create ciphertext only after a successful official build, with 30-day artifact retention.
 
 **Proposed solution:** Option A (preferred) or Option B.
 
 | Option | Description | Risk |
 |--------|-------------|------|
-| **A: Encrypted upload** | Encrypt snapshot before upload, keep decryption key restricted | Lower distribution risk |
-| **B: Private artifact only** | Don't upload to public repo; use authenticated download for evaluation only | Limits reproducibility |
+| **A: Encrypted upload** | Implemented in the proposed workflow; encrypt snapshot before upload and keep decryption key restricted | Lower distribution risk; does not establish source-data rights |
+| **B: Private artifact only** | Policy alternative requiring human approval | Limits reproducibility |
 
 **Note:** The 30-day window is for CI artifact; actual evaluation can occur within that window.
+
+**Gate:** **BLOCKED**. Encryption hardening does not decide whether the artifact may be distributed or who may decrypt it.
 
 **Status: BLOCKED** — No decision made on snapshot distribution policy.
 
@@ -340,6 +348,13 @@ If ThreatFox rights cannot be obtained:
 2. [ ] OTRF APT29 dataset license conflict is resolved
 3. [ ] Durable encrypted source storage is identified and configured
 4. [ ] DuckDB artifact distribution policy is decided
+
+## 10. Human Decisions Still Required
+
+1. [ ] Whether ThreatFox permits VinSOC to use its data for AI evaluation despite Section 6.6.
+2. [ ] Which license applies specifically to the OTRF APT29 dataset and whether it permits this use and artifact distribution.
+3. [ ] The accountable owner and restricted storage location for retaining exact source bytes long enough for reproducible rebuilds.
+4. [ ] The group authorized to decrypt the planned snapshot ciphertext and how membership is reviewed.
 
 **This audit should be reviewed by:**
 - Repository owner (legal authority)
