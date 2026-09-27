@@ -3,7 +3,7 @@
 **Date:** 2026-09-27
 **Audit Scope:** Three-source R2 Text-to-SQL evaluation using ThreatFox, CTU-13 Scenario 3, and OTRF APT29 Day 1
 **Repository:** Whats-up-pro/VinSOC
-**Commit:** f2f38f454a83ecd185dc381d150d092235843f26
+**Commit:** c23b1c1e310bde28f03198367939af2a54db7853
 
 ---
 
@@ -11,7 +11,11 @@
 
 This audit examines whether the proposed R2 official workflow can legally and ethically use three third-party datasets to build a DuckDB snapshot for Text-to-SQL model evaluation. The evaluation intent is to score 8 `official_dev` SQL cases against the snapshot, including the `cti_indicators` table containing ThreatFox IOC data. **Raw IOCs are not included in prompts** — only schema context is exposed to the model.
 
-**Key Finding:** Usage rights for all three sources are **UNRESOLVED**. No source has confirmed rights for AI model evaluation use. Durable encrypted source retention is **UNIDENTIFIED**.
+**Key Findings:**
+- **ThreatFox:** RESTRICTED — Section 6.6 of Terms & Conditions explicitly prohibits using data for developing, training, fine-tuning, or **validating** any AI system or model. This directly impacts R2 evaluation use.
+- **CTU-13:** CONFIRMED — Creative Commons CC-BY explicitly permits redistribution with attribution.
+- **OTRF APT29:** CONFLICTING — MIT/GPL-3.0 license discrepancy; dataset-specific license unverified.
+- **Durable source retention:** UNIDENTIFIED — No durable storage solution identified beyond 90-day GitHub Actions artifact.
 
 ---
 
@@ -43,31 +47,35 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 | **Auth Required** | Yes (THREATFOX_AUTH_KEY) |
 | **Manifest SHA** | `cd366e759830c71d36a9f7a3c7c9f5f8...` (CSV hash) |
 
-#### Terms of Use Analysis
+#### Terms & Conditions Analysis
 
-**Source:** https://abuse.ch/terms-of-use/ (verified 2026-09-27)
+**Sources:**
+- https://abuse.ch/terms-of-use/ (verified 2026-09-27)
+- https://abuse.ch/terms-and-conditions/ (verified 2026-09-27)
 
 | Use Case | Status | Evidence |
 |----------|--------|----------|
-| Download and retain exact bytes | `CONFIRMED` | Free API access with authentication |
-| Transform to DuckDB table | `UNCONFIRMED` | Terms don't explicitly address data transformation |
-| Distribute via GitHub Actions artifact | `UNCONFIRMED` | Terms mention "intellectual property" restrictions |
-| Use for AI model evaluation | `UNCONFIRMED` | **No AI/ML provisions found in ToS** |
+| Download and retain exact bytes | `CONFIRMED` | Free API access with authentication (commercial subscription may be required) |
+| Transform to DuckDB table | `RESTRICTED` | Section 6.6 prohibits validation use; transformation may constitute use |
+| Distribute via GitHub Actions artifact | `RESTRICTED` | Derivative work and validation restrictions may apply |
+| Use for AI model evaluation | `RESTRICTED` | **Section 6.6 explicitly prohibits "validating" AI systems** |
 | Cite when publishing results | `CONFIRMED` | Attribution to abuse.ch required |
 
-**Key Terms (verbatim):**
+**Key Terms — Terms of Use (verbatim):**
 > "Use of the Platforms by companies, networks, or individuals with commercial or for-profit needs may require a paid subscription"
->
-> "copy, adapt, alter, translate, modify or make derivative works based on the Platforms and/or any other of our or Spamhaus' intellectual property, without the express consent of abuse.ch"
+
+**Key Terms — Terms & Conditions Section 6.6 (verbatim):**
+> "You shall not use, and we do not consent to the use of, our site, or any data published by, or contained in, or accessible via, our site or any services provided via, or in relation to, our site for the purposes of developing, training, fine-tuning or validating any artificial intelligence system or model."
 
 **Analysis:**
-- Free access exists under "fair use principles" for non-commercial API use
-- The ToS does NOT explicitly address AI/ML model training or evaluation
-- Converting to a database table may constitute "derivative work"
-- Distributing via public artifact may breach redistribution terms
-- VinSOC's use is **evaluation, not training**, but this distinction is not in the ToS
+- Section 6.6 directly addresses AI validation — VinSOC's R2 evaluation involves **validating** Text-to-SQL model accuracy against ThreatFox-backed database
+- The restriction applies to "data" accessible via the service, not just the service itself
+- Storing IOCs in DuckDB and using them to score model outputs may constitute "using data for validating"
+- Section 6.2 also restricts automated analytical techniques to "generate information" (patterns, trends)
+- **Excluding IOCs from prompts does not resolve the validation concern** — the evaluation still uses ThreatFox data to judge model correctness
+- The question is whether *evaluating model output against IOCs* is "validating" under Section 6.6
 
-**Status: UNRESOLVED** — Requires clarification from abuse.ch or qualified legal review.
+**Status: RESTRICTED** — Direct restriction found in Section 6.6. Applicability to VinSOC's evaluation method requires rights-holder clarification or qualified legal review. Excluding IOCs from prompts does not remove the validation concern.
 
 ---
 
@@ -148,18 +156,21 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 ## 3. Artifact Analysis
 
-### 3.1 Encrypted Source Bytes Artifact
+**Note:** Existing artifacts below are from **failed** builds (run `36216646548` failed at CTI ingestion). They demonstrate the workflow structure but do not represent a successful official snapshot. No official snapshot with verified row counts exists yet.
+
+### 3.1 Encrypted Source Bytes Artifact (from failed run)
 
 | Property | Value |
 |----------|-------|
 | **Name** | `r2-official-frozen-source-bytes` |
 | **Content** | `probe.json`, `receipts/`, `raw/` (tar archive) |
 | **Encryption** | AES-256-CBC, PBKDF2 (600k iterations) |
-| **Passphrase** | Stored in `R2_SOURCE_RETENTION_PASSPHRASE` secret |
+| **Passphrase** | Stored in `R2_SOURCE_RETENTION_PASSPHRASE` secret (not in artifact) |
 | **Retention** | 90 days |
-| **Access** | Anyone with repo read access + artifact ID |
+| **Access** | Requires repo read access + artifact ID |
+| **Run ID** | From failed run `36216646548` (run with ID unknown from gh api) |
 
-**Current artifact status (from gh api):**
+**Existing artifact example (from gh api query):**
 ```json
 {
   "name": "r2-official-frozen-source-bytes",
@@ -170,11 +181,13 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 **Analysis:**
 - 90 days is **NOT durable** — artifact expires and exact bytes cannot be recovered
-- Encrypted tar contains all three sources in plaintext
-- Passphrase holder has complete access to source bytes
-- After 90 days, only SHA-256 hashes remain (not recoverable for exact rebuild)
+- Encrypted tar contains all three sources in plaintext (once decrypted)
+- Passphrase holder (owner of `R2_SOURCE_RETENTION_PASSPHRASE` secret) has complete access
+- After 90 days, only SHA-256 hashes remain in receipts — exact bytes are unrecoverable
+- Access requires GitHub authentication with repo read permission and artifact ID
+- **This is separate from "download rights" under source terms** — artifact access ≠ source data rights
 
-### 3.2 DuckDB Snapshot Artifact
+### 3.2 DuckDB Snapshot Artifact (planned — not yet created)
 
 | Property | Value |
 |----------|-------|
@@ -260,12 +273,12 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 
 | Decision | Status | Evidence/Notes |
 |----------|--------|----------------|
-| **ThreatFox AI evaluation right** | `UNRESOLVED` | ToS has no AI provisions; derivative work concern |
-| **CTU-13 retention and redistribution** | `CONFIRMED` | CC-BY explicitly permits |
+| **ThreatFox AI evaluation right** | `RESTRICTED` | Section 6.6 prohibits validating AI; applicability needs clarification |
+| **CTU-13 retention and redistribution** | `CONFIRMED` | CC-BY explicitly permits redistribution with attribution |
 | **OTRF APT29 dataset terms** | `CONFLICTING` | MIT/GPL-3.0 discrepancy; dataset license unverified |
 | **Durable restricted source storage** | `UNDECIDED` | No storage destination or owner identified |
 | **DuckDB artifact access** | `UNRESOLVED` | License compliance for transformed data unclear |
-| **Official build dispatch** | **BLOCKED** | ThreatFox and OTRF rights unresolved |
+| **Official build dispatch** | **BLOCKED** | ThreatFox Section 6.6 restricts validation use |
 | **Official E0 model run** | **BLOCKED** | Depends on ThreatFox-backed snapshot rights |
 
 ---
@@ -273,7 +286,11 @@ The `r2-official-snapshot-build.yml` workflow (read-only, not modified):
 ## 6. Recommended Questions for Rights Holders
 
 ### ThreatFox / abuse.ch
-> "VinSOC intends to use ThreatFox IOC data to populate a reference database for evaluating Text-to-SQL model accuracy. The IOCs will be normalized into a database schema; raw IOCs are not exposed in model prompts. Evaluation results (SQL accuracy scores) may be published with attribution. Does this use case comply with abuse.ch's Terms of Use? Are there any restrictions on using ThreatFox data for AI/ML model evaluation?"
+> "VinSOC intends to use ThreatFox IOC data to populate a reference database for evaluating Text-to-SQL model accuracy. The IOCs will be normalized into a database schema; raw IOCs are not exposed in model prompts. Evaluation results (SQL accuracy scores) may be published with attribution.
+>
+> We note Section 6.6 of your Terms & Conditions states: 'You shall not use...any data...for the purposes of developing, training, fine-tuning or validating any artificial intelligence system or model.'
+>
+> Does VinSOC's use of ThreatFox IOCs to score model SQL output constitute 'validating' under Section 6.6? If so, is there an exception or alternative arrangement for non-commercial academic evaluation?"
 
 ### OTRF / Security-Datasets
 > "The Security-Datasets repository has conflicting license claims (MIT in LICENSE file, GPL-3.0 in README). Specifically for the APT29 Evals dataset: (1) Which license applies to this dataset? (2) Does converting to a database table and using for AI model evaluation comply with the license? (3) Can derived artifacts (DuckDB files) be distributed?"
@@ -307,6 +324,7 @@ If ThreatFox rights cannot be obtained:
 | ThreatFox FAQ | https://threatfox.abuse.ch/faq/ | 2026-09-27 |
 | ThreatFox Terms | https://abuse.ch/terms-of-use/ | 2026-09-27 |
 | CTU-13 Dataset | https://www.stratosphereips.org/datasets-overview/ | 2026-09-27 |
+| ThreatFox Terms & Conditions | https://abuse.ch/terms-and-conditions/ | 2026-09-27 |
 | OTRF Security-Datasets | https://github.com/OTRF/Security-Datasets | 2026-09-27 |
 | OTRF LICENSE | https://github.com/OTRF/Security-Datasets/blob/master/LICENSE | 2026-09-27 |
 | Dataset Manifest | `evaluation/text_to_sql_benchmarks/dataset_manifest.json` | f2f38f4 |
