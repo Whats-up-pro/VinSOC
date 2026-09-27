@@ -1,0 +1,89 @@
+name: CTU-only R2 public_dev paid pilot
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ctu-network-public-r2-paid
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Download and verify the two pinned CTU sources
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          manifest = json.loads(Path("evaluation/ctu_network_public/dataset_manifest.json").read_text(encoding="utf-8"))
+          if [source["dataset_id"] for source in manifest["sources"]] != ["ctu13_s5", "ctu13_s7"]:
+              raise SystemExit("CTU-only source IDs mismatch")
+          for source in manifest["sources"]:
+              destination = Path(source["path"])
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              digest = hashlib.sha256()
+              with urllib.request.urlopen(source["source_url"], timeout=120) as response, destination.open("wb") as output:
+                  while chunk := response.read(1024 * 1024):
+                      digest.update(chunk)
+                      output.write(chunk)
+              if digest.hexdigest() != source["file_sha256"]:
+                  raise SystemExit(f"Pinned checksum mismatch for {source['dataset_id']}")
+          print("Both pinned CTU source checksums verified.")
+          PY
+      - name: Build twice and validate the locked contract
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot "$RUNNER_TEMP/ctu-first.duckdb" \
+            --report "$RUNNER_TEMP/ctu-first-build.json"
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot "$RUNNER_TEMP/ctu-second.duckdb" \
+            --report "$RUNNER_TEMP/ctu-second-build.json"
+          python -m evaluation.ctu_network_public.contract --snapshot "$RUNNER_TEMP/ctu-first.duckdb"
+          python -m evaluation.ctu_network_public.contract --snapshot "$RUNNER_TEMP/ctu-second.duckdb"
+      - name: Serialize all eight requests and prove the combined budget ceiling
+        run: |
+          python -m evaluation.ctu_network_public.run_model \
+            --snapshot "$RUNNER_TEMP/ctu-first.duckdb" \
+            --output "$RUNNER_TEMP/ctu-r2-preflight.json" \
+            --preflight-only
+      - name: Run exactly one paid eight-case R2 pass
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY is missing; no paid request was sent."
+            exit 1
+          fi
+          echo "OPENAI_API_KEY is present; starting the one-shot paid pass."
+          python -m evaluation.ctu_network_public.run_model \
+            --snapshot "$RUNNER_TEMP/ctu-first.duckdb" \
+            --output "$RUNNER_TEMP/ctu-r2-result.json"
+      - name: Upload full or partial credential-free JSON evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctu-network-public-r2-evidence
+          path: |
+            ${{ runner.temp }}/ctu-first-build.json
+            ${{ runner.temp }}/ctu-second-build.json
+            ${{ runner.temp }}/ctu-r2-preflight.json
+            ${{ runner.temp }}/ctu-r2-result.json
+          if-no-files-found: warn
+          retention-days: 90
