@@ -11,16 +11,16 @@ This skill is read-only. It queries CTI sources but does not modify anything.
 Data Sources (in priority order):
 1. mock_data: Explicit mock/test data
 2. threatfox_path/threatfox_data: Local ThreatFox data
-3. providers: Runtime CTI providers (ThreatFox, MalwareBazaar, etc.)
-4. No source: FAIL
+3. duckdb_snapshot: DuckDB snapshot cti_indicators table (fallback)
+4. providers: Runtime CTI providers (ThreatFox, MalwareBazaar, etc.)
+5. No source: FAIL
 """
 import json
 import logging
 import re
 import uuid
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from skills.base import BaseSkill, SkillContract, SkillResult
 
@@ -35,13 +35,14 @@ class CTISkill(BaseSkill):
     """
 
     skill_name = "cti_enrichment"
-    skill_version = "1.2.0"  # Updated to 1.2.0 for provider runtime support
+    skill_version = "1.3.0"  # Updated to 1.3.0 for DuckDB snapshot integration
 
     def __init__(
         self,
         mock_data: Optional[Dict[str, Any]] = None,
         threatfox_path: Optional[str] = None,
         threatfox_data: Optional[Dict[str, Any]] = None,
+        duckdb_snapshot: Optional[str] = None,
         providers: Optional[List[Any]] = None,
         auto_load_threatfox: bool = True,
     ):
@@ -55,6 +56,9 @@ class CTISkill(BaseSkill):
                            defaults to data/cti_lookup.json if it exists.
             threatfox_data: Optional pre-loaded ThreatFox data dict.
                            Takes precedence over threatfox_path if both provided.
+            duckdb_snapshot: Optional path to DuckDB snapshot file. If provided,
+                             CTI data will be read from the snapshot's cti_indicators table
+                             as a fallback when other sources are not configured.
             providers: Optional list of CTIProvider instances for runtime lookup.
             auto_load_threatfox: If True, auto-load from default path if no source
                                 is explicitly configured. Set to False for testing.
@@ -89,6 +93,13 @@ class CTISkill(BaseSkill):
             default_path = Path("data/cti_lookup.json")
             if default_path.exists():
                 self._load_threatfox(str(default_path))
+
+        # DuckDB snapshot for CTI lookup (priority: after mock + threatfox, before providers)
+        self._duckdb_snapshot_path: Optional[str] = None
+        self._snapshot_data: Optional[Dict[str, Any]] = None
+        self._snapshot_source_configured = False
+        if duckdb_snapshot is not None:
+            self._load_from_snapshot(duckdb_snapshot)
 
         # Runtime providers
         self.providers = providers or []
@@ -126,6 +137,108 @@ class CTISkill(BaseSkill):
             logger.error(f"Failed to read ThreatFox JSON: {e}")
             self.threatfox_data = {}
             self._threatfox_source_configured = False
+
+    def _load_from_snapshot(self, snapshot_path: str) -> None:
+        """Load CTI data from DuckDB snapshot's cti_indicators table."""
+        logger.info(f"Loading CTI data from snapshot: {snapshot_path}")
+        try:
+            import duckdb
+        except ImportError as exc:
+            logger.error(f"DuckDB not available: {exc}")
+            self._snapshot_data = {}
+            self._snapshot_source_configured = False
+            return
+
+        snapshot_file = Path(snapshot_path)
+        if not snapshot_file.is_file():
+            logger.warning(f"Snapshot file not found: {snapshot_path}")
+            self._snapshot_data = {}
+            self._snapshot_source_configured = False
+            return
+
+        try:
+            conn = duckdb.connect(str(snapshot_file), read_only=True)
+
+            # Check if cti_indicators table exists
+            tables = conn.execute("SHOW TABLES").fetchall()
+            table_names = [t[0] for t in tables]
+
+            if "cti_indicators" not in table_names:
+                logger.warning(f"Snapshot does not contain cti_indicators table")
+                self._snapshot_data = {}
+                self._snapshot_source_configured = False
+                conn.close()
+                return
+
+            # Load all CTI indicators into memory as a lookup dict
+            # The indicator column is indexed for lookup
+            cursor = conn.execute("""
+                SELECT indicator, indicator_type, threat_type, malware_printable,
+                       confidence_level, reference_url, source_dataset
+                FROM cti_indicators
+            """)
+
+            data: Dict[str, Any] = {}
+            count = 0
+            for row in cursor.fetchall():
+                (indicator, indicator_type, threat_type, malware_printable,
+                 confidence_level, reference_url, source_dataset) = row
+
+                # Normalize indicator for lookup
+                lookup_key = indicator.lower().strip()
+
+                # Determine reputation from threat_type
+                reputation = "unknown"
+                if threat_type:
+                    threat_lower = threat_type.lower()
+                    if any(x in threat_lower for x in ["malware", "botnet", "ransomware", "trojan", "backdoor", "stealer"]):
+                        reputation = "malicious"
+                    elif any(x in threat_lower for x in ["suspicious", "potentially", "unwanted"]):
+                        reputation = "suspicious"
+
+                # Map confidence_level (integer) to string
+                confidence = "low"
+                if confidence_level:
+                    if confidence_level >= 80:
+                        confidence = "high"
+                    elif confidence_level >= 50:
+                        confidence = "medium"
+
+                # Build observed_evidence
+                observed_evidence = [
+                    {"type": "threat_type", "value": threat_type or "unknown"}
+                ]
+                if reference_url:
+                    observed_evidence.append({"type": "reference_url", "value": reference_url})
+
+                # Build sources entry - reference_url may be None
+                source_entry: Dict[str, Any] = {"name": f"cti_indicators:{source_dataset}"}
+                if reference_url:
+                    source_entry["reference"] = reference_url
+                # else: don't include reference field if None
+
+                data[lookup_key] = {
+                    "reputation": reputation,
+                    "confidence": confidence,
+                    "related_actors": [],
+                    "related_malware": [malware_printable] if malware_printable else [],
+                    "mitre_techniques": [],
+                    "sources": [source_entry],
+                    "observed_evidence": observed_evidence,
+                }
+                count += 1
+
+            conn.close()
+
+            self._snapshot_data = data
+            self._snapshot_source_configured = True
+            self._duckdb_snapshot_path = snapshot_path
+            logger.info(f"Loaded {count:,} IOCs from snapshot")
+
+        except Exception as exc:
+            logger.error(f"Failed to load snapshot: {exc}")
+            self._snapshot_data = {}
+            self._snapshot_source_configured = False
 
     def _lookup_threatfox(self, indicator: str) -> Optional[Dict[str, Any]]:
         """
@@ -233,8 +346,9 @@ class CTISkill(BaseSkill):
         Priority:
         1. mock_data (if configured)
         2. threatfox_data (if configured)
-        3. providers (if configured)
-        4. FAIL (no source)
+        3. duckdb_snapshot (if configured)
+        4. providers (if configured)
+        5. FAIL (no source)
 
         Args:
             indicator: The IOC to enrich
@@ -256,14 +370,18 @@ class CTISkill(BaseSkill):
         if self._threatfox_source_configured:
             return self._build_result_from_threatfox(indicator, indicator_type)
 
-        # Priority 3: providers
+        # Priority 3: duckdb_snapshot
+        if self._snapshot_source_configured:
+            return self._build_result_from_snapshot(indicator, indicator_type)
+
+        # Priority 4: providers
         if self._providers_configured:
             return self._execute_with_providers(indicator, indicator_type)
 
         # No data source configured
         return SkillResult(
             success=False,
-            error="No CTI data source configured. Use mock_data, threatfox_path, or providers parameter."
+            error="No CTI data source configured. Use mock_data, threatfox_path, duckdb_snapshot, or providers parameter."
         )
 
     def _execute_with_providers(self, indicator: str, indicator_type: str) -> SkillResult:
@@ -461,6 +579,101 @@ class CTISkill(BaseSkill):
             evidence_ids=[evidence_id],
         )
 
+    def _lookup_snapshot(self, indicator: str) -> Optional[Dict[str, Any]]:
+        """
+        Look up IOC in snapshot data.
+
+        Args:
+            indicator: The IOC to look up
+
+        Returns:
+            Snapshot entry if found, None otherwise
+        """
+        if not self._snapshot_data:
+            return None
+
+        # Normalize for lookup
+        lookup_key = indicator.lower().strip()
+
+        # Direct match
+        if lookup_key in self._snapshot_data:
+            return self._snapshot_data[lookup_key]
+
+        # For URLs, also try without protocol
+        if indicator.startswith(("http://", "https://")):
+            stripped = indicator.split("://", 1)[1]
+            if stripped.lower() in self._snapshot_data:
+                return self._snapshot_data[stripped.lower()]
+
+        # For ip:port format, also try just the IP
+        if ":ip:port" in indicator or "." in indicator:
+            parts = indicator.replace("ip:port://", "").rsplit(":", 1)
+            if len(parts) == 2 and parts[1].isdigit():
+                ip_part = parts[0].lower()
+                if ip_part in self._snapshot_data:
+                    return self._snapshot_data[ip_part]
+
+        return None
+
+    def _build_result_from_snapshot(
+        self, indicator: str, indicator_type: str
+    ) -> SkillResult:
+        """
+        Build CTI result from snapshot data.
+
+        Args:
+            indicator: The IOC value
+            indicator_type: The IOC type
+
+        Returns:
+            SkillResult with CTI data from snapshot
+        """
+        evidence_id = f"cti_{uuid.uuid4().hex[:8]}"
+
+        # Look up in snapshot
+        snapshot_entry = self._lookup_snapshot(indicator)
+
+        if not snapshot_entry:
+            # Not found in snapshot - return unknown
+            return SkillResult(
+                success=True,
+                data={
+                    "indicator": indicator,
+                    "indicator_type": indicator_type,
+                    "reputation": "unknown",
+                    "confidence": "low",
+                    "related_actors": [],
+                    "related_malware": [],
+                    "mitre_techniques": [],
+                    "sources": [{"name": "cti_indicators:snapshot"}],
+                    "observed_evidence": [
+                        {
+                            "type": "lookup_status",
+                            "value": "not_found",
+                            "context": f"IOC not found in snapshot: {self._duckdb_snapshot_path}",
+                        }
+                    ],
+                },
+                evidence_ids=[evidence_id],
+            )
+
+        # Return data from snapshot
+        return SkillResult(
+            success=True,
+            data={
+                "indicator": indicator,
+                "indicator_type": indicator_type,
+                "reputation": snapshot_entry.get("reputation", "unknown"),
+                "confidence": snapshot_entry.get("confidence", "low"),
+                "related_actors": snapshot_entry.get("related_actors", []),
+                "related_malware": snapshot_entry.get("related_malware", []),
+                "mitre_techniques": snapshot_entry.get("mitre_techniques", []),
+                "sources": snapshot_entry.get("sources", []),
+                "observed_evidence": snapshot_entry.get("observed_evidence", []),
+            },
+            evidence_ids=[evidence_id],
+        )
+
     def _build_result_from_mock(self, indicator: str, indicator_type: str) -> SkillResult:
         """Build result from mock data."""
         evidence_id = f"cti_{uuid.uuid4().hex[:8]}"
@@ -528,6 +741,7 @@ def check_ip_reputation(
     indicator_type: Optional[str] = None,
     mock_data: Optional[Dict[str, Any]] = None,
     threatfox_path: Optional[str] = None,
+    duckdb_snapshot: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Check reputation of an indicator.
@@ -537,11 +751,16 @@ def check_ip_reputation(
         indicator_type: Optional type (auto-detected if not provided)
         mock_data: Optional mock data for testing
         threatfox_path: Optional path to ThreatFox JSON file
+        duckdb_snapshot: Optional path to DuckDB snapshot for CTI lookup
 
     Returns:
         Dict with CTI result
     """
-    skill = CTISkill(mock_data=mock_data, threatfox_path=threatfox_path)
+    skill = CTISkill(
+        mock_data=mock_data,
+        threatfox_path=threatfox_path,
+        duckdb_snapshot=duckdb_snapshot
+    )
     result = skill.execute(indicator=indicator, indicator_type=indicator_type)
 
     if not result.success:
@@ -554,6 +773,7 @@ def check_domain_reputation(
     domain: str,
     mock_data: Optional[Dict[str, Any]] = None,
     threatfox_path: Optional[str] = None,
+    duckdb_snapshot: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Check reputation of a domain."""
     return check_ip_reputation(
@@ -561,6 +781,7 @@ def check_domain_reputation(
         indicator_type="domain",
         mock_data=mock_data,
         threatfox_path=threatfox_path,
+        duckdb_snapshot=duckdb_snapshot,
     )
 
 
@@ -568,6 +789,7 @@ def check_hash_reputation(
     hash_val: str,
     mock_data: Optional[Dict[str, Any]] = None,
     threatfox_path: Optional[str] = None,
+    duckdb_snapshot: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Check reputation of a file hash."""
     return check_ip_reputation(
@@ -575,4 +797,5 @@ def check_hash_reputation(
         indicator_type="hash",
         mock_data=mock_data,
         threatfox_path=threatfox_path,
+        duckdb_snapshot=duckdb_snapshot,
     )

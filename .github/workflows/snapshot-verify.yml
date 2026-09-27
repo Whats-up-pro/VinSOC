@@ -1,0 +1,160 @@
+name: Snapshot Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      snapshot_path:
+        description: "Path to DuckDB snapshot file"
+        required: false
+        default: "data/snapshots/vinsoc_public_v1.duckdb"
+
+jobs:
+  verify-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute snapshot SHA-256
+        id: sha256
+        run: |
+          SNAPSHOT_PATH="${{ inputs.snapshot_path }}"
+          echo "path=$SNAPSHOT_PATH" >> $GITHUB_OUTPUT
+          if [ -f "$SNAPSHOT_PATH" ]; then
+            SHA256=$(sha256sum "$SNAPSHOT_PATH" | cut -d' ' -f1)
+            echo "sha256=$SHA256" >> $GITHUB_OUTPUT
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "sha256=" >> $GITHUB_OUTPUT
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Python
+        if: steps.sha256.outputs.exists == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install DuckDB
+        if: steps.sha256.outputs.exists == 'true'
+        run: pip install duckdb
+
+      - name: Verify snapshot schema and row counts
+        if: steps.sha256.outputs.exists == 'true'
+        id: verify
+        run: |
+          python3 << 'EOF'
+          import json
+          import sys
+          import duckdb
+
+          snapshot_path = "${{ inputs.snapshot_path }}"
+          expected_sha256 = "aea4434983226507564e63cec32aaa274ecc84e14eeeab8292c79dcc50a2bd4d"
+
+          try:
+              conn = duckdb.connect(snapshot_path, read_only=True)
+
+              # Verify schema
+              tables = conn.execute("SHOW TABLES").fetchall()
+              table_names = [t[0] for t in tables]
+              required_tables = ["dataset_provenance", "cti_indicators", "network_flows", "sysmon_process_events"]
+
+              missing_tables = set(required_tables) - set(table_names)
+              if missing_tables:
+                  print(f"ERROR: Missing tables: {missing_tables}")
+                  sys.exit(1)
+
+              print(f"Tables found: {table_names}")
+
+              # Count rows in each table
+              row_counts = {}
+              for table in table_names:
+                  count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+                  row_counts[table] = count
+                  print(f"  {table}: {count:,} rows")
+
+              # Check dataset_provenance has expected entries
+              provenance = conn.execute("SELECT dataset_id, source_name, file_sha256 FROM dataset_provenance").fetchall()
+              print(f"\nDataset Provenance ({len(provenance)} sources):")
+              for ds_id, name, sha in provenance:
+                  print(f"  {ds_id}: {name}")
+                  print(f"    SHA-256: {sha}")
+
+              # Verify cti_indicators has proper structure
+              sample_cti = conn.execute("SELECT * FROM cti_indicators LIMIT 3").fetchall()
+              columns = [desc[0] for desc in conn.execute("SELECT * FROM cti_indicators LIMIT 0").description]
+              print(f"\ncti_indicators columns: {columns}")
+
+              # Verify network_flows has proper structure
+              columns = [desc[0] for desc in conn.execute("SELECT * FROM network_flows LIMIT 0").description]
+              print(f"network_flows columns: {columns}")
+
+              # Verify sysmon_process_events has proper structure
+              columns = [desc[0] for desc in conn.execute("SELECT * FROM sysmon_process_events LIMIT 0").description]
+              print(f"sysmon_process_events columns: {columns}")
+
+              conn.close()
+
+              # Output results
+              with open("verification_results.json", "w") as f:
+                  json.dump({
+                      "snapshot_path": snapshot_path,
+                      "sha256_computed": "${{ steps.sha256.outputs.sha256 }}",
+                      "sha256_expected": expected_sha256,
+                      "sha256_match": "${{ steps.sha256.outputs.sha256 }}" == expected_sha256,
+                      "tables": table_names,
+                      "row_counts": row_counts,
+                      "sources": [{"dataset_id": ds[0], "name": ds[1], "sha256": ds[2]} for ds in provenance],
+                      "status": "PASS" if "${{ steps.sha256.outputs.sha256 }}" == expected_sha256 else "SHA_MISMATCH"
+                  }, f, indent=2)
+
+              print(f"\nVerification complete. SHA-256 match: {'${{ steps.sha256.outputs.sha256 }}' == expected_sha256}")
+
+          except Exception as e:
+              print(f"ERROR: {e}")
+              with open("verification_results.json", "w") as f:
+                  json.dump({
+                      "status": "ERROR",
+                      "error": str(e),
+                      "snapshot_path": snapshot_path
+                  }, f)
+              sys.exit(1)
+          EOF
+
+      - name: Upload verification results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-verification-results
+          path: verification_results.json
+          retention-days: 30
+
+      - name: Display verification summary
+        if: steps.sha256.outputs.exists == 'true'
+        run: |
+          echo "## Snapshot Verification Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Path | \`${{ inputs.snapshot_path }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| File Exists | \`${{ steps.sha256.outputs.exists }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Computed SHA-256 | \`${{ steps.sha256.outputs.sha256 }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Expected SHA-256 | \`aea4434983226507564e63cec32aaa274ecc84e14eeeab8292c79dcc50a2bd4d\` |" >> $GITHUB_STEP_SUMMARY
+          if [ -f verification_results.json ]; then
+            ROW_COUNTS=$(cat verification_results.json | python3 -c "import json,sys; d=json.load(sys.stdin); print('\\n'.join(f'|   - {k} | {v:,} rows |' for k,v in d.get('row_counts',{}).items()))")
+            echo "$ROW_COUNTS" >> $GITHUB_STEP_SUMMARY
+            STATUS=$(cat verification_results.json | python3 -c "import json,sys; print(json.load(sys.stdin).get('status','UNKNOWN'))")
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Status: $STATUS**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Fail if snapshot verification fails
+        if: steps.sha256.outputs.exists == 'true'
+        run: |
+          if [ -f verification_results.json ]; then
+            STATUS=$(cat verification_results.json | python3 -c "import json,sys; print(json.load(sys.stdin).get('status','UNKNOWN'))")
+            if [ "$STATUS" != "PASS" ]; then
+              echo "Snapshot verification failed with status: $STATUS"
+              cat verification_results.json
+              exit 1
+            fi
+          fi
