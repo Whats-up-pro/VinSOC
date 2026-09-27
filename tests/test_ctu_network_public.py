@@ -12,7 +12,7 @@ from scripts.build_ctu_network_public_snapshot import (
     build_ctu_network_snapshot,
     logical_content_hash,
 )
-from evaluation.ctu_network_public.contract import validate_contract_payload
+from evaluation.ctu_network_public.contract import portable_text_sha256, validate_contract_payload
 
 
 def _sha(path: Path) -> str:
@@ -97,3 +97,12 @@ def test_contract_rejects_source_case_scorer_or_logical_row_mutation(field):
     actual[field] = "changed"
     with pytest.raises(ValueError, match="changed"):
         validate_contract_payload(actual, expected)
+
+
+def test_locked_python_hash_is_independent_of_checkout_line_endings(tmp_path):
+    lf = tmp_path / "lf.py"
+    crlf = tmp_path / "crlf.py"
+    lf.write_bytes(b"first = 1\nsecond = 2\n")
+    crlf.write_bytes(b"first = 1\r\nsecond = 2\r\n")
+
+    assert portable_text_sha256(lf) == portable_text_sha256(crlf)

@@ -32,6 +32,12 @@ def canonical_sha256(value: Any) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def portable_text_sha256(path: Path) -> str:
+    """Hash tracked source text without checkout-specific line endings."""
+    content = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
 def split_data(directory: Path = CASES) -> dict[str, Any]:
     return {path.name: json.loads(path.read_text(encoding="utf-8")) for path in sorted(directory.glob("*.json"))}
 
@@ -105,7 +111,7 @@ def build_lock(snapshot: Path, manifest_path: Path = MANIFEST, cases_dir: Path =
         "version": VERSION,
         "source_file_sha256": {source["dataset_id"]: source["file_sha256"] for source in sources},
         "manifest_sha256": sha256_file(manifest_path),
-        "builder_scorer_sha256": {path: sha256_file(Path(path)) for path in SCORER_FILES},
+        "builder_scorer_sha256": {path: portable_text_sha256(Path(path)) for path in SCORER_FILES},
         "case_ids": sorted(case.case_id for case in cases),
         "split_sha256": canonical_sha256(raw),
         **facts,

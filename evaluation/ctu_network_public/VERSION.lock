@@ -1,9 +1,9 @@
 {
   "builder_scorer_sha256": {
-    "evaluation/ctu_network_public/contract.py": "b62f6c0466ccc8119dbe091257017ee786c721951b0acd9465358b234d7312c9",
-    "evaluation/text_to_sql.py": "3bf2ac4c7f5289b3131f580b8613e7ff215e883e5c58973365322ce6d7a1e89c",
+    "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
     "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
-    "vinsoc_data/duckdb_store.py": "8d5d9c5c040dfdff98dbfc783c73b24e029dcc7d5a2390308ba913f57afda66e"
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
   },
   "case_ids": [
     "ctu_sql_001",
