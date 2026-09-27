@@ -25,14 +25,19 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
-      - name: Require restricted source-retention secret
+      - name: Require all secrets before any source download
         run: |
+          if [ -z "$THREATFOX_AUTH_KEY" ]; then
+            echo "THREATFOX_AUTH_KEY is unavailable; refusing to download source bytes."
+            exit 1
+          fi
           if [ -z "$SOURCE_RETENTION_PASSPHRASE" ]; then
             echo "R2_SOURCE_RETENTION_PASSPHRASE is unavailable; refusing to download source bytes."
             exit 1
           fi
       - name: Retrieve and verify complete current source bytes
         run: python -m scripts.probe_r2_official_sources --output "$RUNNER_TEMP/r2-official-source-probe"
+        # Note: Both secrets verified above; probe will fail if any source is unavailable
       - name: Stage exact verified builder inputs and provenance
         run: |
           python -m scripts.stage_r2_official_sources \

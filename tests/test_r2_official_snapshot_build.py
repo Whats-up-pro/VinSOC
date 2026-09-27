@@ -271,6 +271,34 @@ def test_official_snapshot_workflow_is_manual_only():
     assert trigger_lines == ["workflow_dispatch:"]
 
 
+def test_official_snapshot_workflow_checks_both_secrets_before_download():
+    """Verify workflow fails fast if either THREATFOX_AUTH_KEY or SOURCE_RETENTION_PASSPHRASE is missing."""
+    workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(encoding="utf-8")
+
+    # Find the secret check step
+    secret_check_step = workflow.split("- name: Require all secrets before any source download", 1)[
+        1
+    ].split("- name:", 1)[0]
+
+    # Must check both secrets
+    assert "THREATFOX_AUTH_KEY" in secret_check_step
+    assert "SOURCE_RETENTION_PASSPHRASE" in secret_check_step
+
+    # Both checks must exit before download
+    assert "exit 1" in secret_check_step
+
+    # Checks must be before probe step
+    probe_step_index = workflow.index(
+        "- name: Retrieve and verify complete current source bytes"
+    )
+    secret_check_index = workflow.index("- name: Require all secrets before any source download")
+    assert secret_check_index < probe_step_index
+
+    # Secrets not printed to logs
+    assert 'echo "$THREATFOX_AUTH_KEY"' not in secret_check_step
+    assert 'echo "$SOURCE_RETENTION_PASSPHRASE"' not in secret_check_step
+
+
 def test_official_snapshot_workflow_preserves_exact_same_run_source_bytes():
     workflow = Path(".github/workflows/r2-official-snapshot-build.yml").read_text(
         encoding="utf-8"
