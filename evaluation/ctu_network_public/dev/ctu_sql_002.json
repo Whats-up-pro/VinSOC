@@ -1,0 +1,1 @@
+{"case_id":"ctu_sql_002","question":"Count scenario 7 flows labeled Normal as flow_count.","database_snapshot":"data/ctu_network_public/snapshot.duckdb","gold_sql":["SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s7' AND label LIKE '%Normal%'"],"category":"network","difficulty":"basic","result_comparator":"scalar"}

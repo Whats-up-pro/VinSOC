@@ -1,0 +1,1 @@
+{"case_id":"ctu_sql_008","question":"Return scenario flow totals ordered by source dataset.","database_snapshot":"data/ctu_network_public/snapshot.duckdb","gold_sql":["SELECT source_dataset, count(*) AS flow_count FROM network_flows GROUP BY source_dataset ORDER BY source_dataset ASC"],"category":"aggregation","difficulty":"basic","result_comparator":"ordered_rows"}

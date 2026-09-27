@@ -23,12 +23,19 @@ def logical_content_hash(snapshot: Path) -> tuple[dict[str, int], str]:
     import duckdb
 
     digest = hashlib.sha256()
+    counts: dict[str, int] = {}
     with duckdb.connect(str(snapshot), read_only=True) as conn:
-        cursor = conn.execute("SELECT * FROM network_flows ORDER BY source_dataset, source_row_id")
-        rows = cursor.fetchall()
-    for row in rows:
-        digest.update((json.dumps(row, default=str, separators=(",", ":")) + "\n").encode())
-    return {"network_flows": len(rows)}, digest.hexdigest()
+        for table, ordering in (("dataset_provenance", "dataset_id"), ("network_flows", "source_dataset, source_row_id")):
+            cursor = conn.execute(f"SELECT * FROM {table} ORDER BY {ordering}")
+            columns = [(item[0], str(item[1])) for item in cursor.description]
+            digest.update((table + "\n" + json.dumps(columns, separators=(",", ":")) + "\n").encode())
+            count = 0
+            while batch := cursor.fetchmany(4096):
+                for row in batch:
+                    digest.update((json.dumps(row, default=str, separators=(",", ":")) + "\n").encode())
+                    count += 1
+            counts[table] = count
+    return {"network_flows": counts["network_flows"]}, digest.hexdigest()
 
 
 def _copy_rows(snapshot: Path, rows: list[dict], temporary: Path) -> None:
@@ -41,8 +48,11 @@ def _copy_rows(snapshot: Path, rows: list[dict], temporary: Path) -> None:
         writer.writerows(rows)
     import duckdb
     escaped = str(csv_path).replace("'", "''")
-    with duckdb.connect(str(snapshot)) as conn:
-        conn.execute(f"COPY network_flows FROM '{escaped}' (FORMAT CSV, HEADER TRUE, DELIMITER ',', QUOTE '\"', ESCAPE '\"', NULL '')")
+    try:
+        with duckdb.connect(str(snapshot)) as conn:
+            conn.execute(f"COPY network_flows FROM '{escaped}' (FORMAT CSV, HEADER TRUE, DELIMITER ',', QUOTE '\"', ESCAPE '\"', NULL '')")
+    except duckdb.Error:
+        raise RuntimeError("DuckDB COPY failed for network_flows") from None
 
 
 def build_ctu_network_snapshot(manifest_path: Path, snapshot_path: Path) -> dict:

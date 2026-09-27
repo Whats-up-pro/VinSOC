@@ -1,0 +1,1 @@
+{"case_id":"ctu_sql_003","question":"How many distinct destination IPs occur in scenario 5?","database_snapshot":"data/ctu_network_public/snapshot.duckdb","gold_sql":["SELECT count(DISTINCT dst_ip) AS destination_count FROM network_flows WHERE source_dataset = 'ctu13_s5'"],"category":"network","difficulty":"intermediate","result_comparator":"scalar"}

@@ -8,9 +8,11 @@ from pathlib import Path
 import pytest
 
 from scripts.build_ctu_network_public_snapshot import (
+    _copy_rows,
     build_ctu_network_snapshot,
     logical_content_hash,
 )
+from evaluation.ctu_network_public.contract import validate_contract_payload
 
 
 def _sha(path: Path) -> str:
@@ -51,3 +53,47 @@ def test_ctu_only_snapshot_has_only_network_and_rebuilds_logically(tmp_path):
 def test_ctu_only_builder_rejects_bad_source_checksum_before_load(tmp_path):
     with pytest.raises(ValueError, match="checksum"):
         build_ctu_network_snapshot(_manifest(tmp_path, bad_hash=True), tmp_path / "snapshot.duckdb")
+
+
+def test_ctu_copy_preserves_empty_comma_and_quote_without_leaking_row_on_failure(tmp_path):
+    manifest = _manifest(tmp_path)
+    source = tmp_path / "ctu13_s5.binetflow"
+    with source.open("a", encoding="utf-8", newline="") as handle:
+        handle.write('2011/08/15 16:43:21.000001,tcp,192.0.2.3,,198.51.100.4,80,CON,10,0,"flow=Normal, quoted ""value"""\n')
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["sources"][0]["file_sha256"] = _sha(source)
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+    report = build_ctu_network_snapshot(manifest, tmp_path / "quoted.duckdb")
+    assert report["row_counts"]["network_flows"] == 3
+
+
+def test_copy_failure_does_not_expose_raw_row(monkeypatch, tmp_path):
+    import duckdb
+
+    sensitive = "SENSITIVE_RAW_ROW_VALUE"
+    monkeypatch.setattr(
+        duckdb,
+        "connect",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(duckdb.InvalidInputException(sensitive)),
+    )
+    with pytest.raises(RuntimeError, match="DuckDB COPY failed for network_flows") as caught:
+        _copy_rows(tmp_path / "snapshot.duckdb", [{"label": sensitive}], tmp_path)
+    assert sensitive not in str(caught.value)
+    assert caught.value.__cause__ is None
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["source_file_sha256", "split_sha256", "builder_scorer_sha256", "logical_snapshot_sha256"],
+)
+def test_contract_rejects_source_case_scorer_or_logical_row_mutation(field):
+    expected = {
+        "source_file_sha256": {"ctu13_s5": "a"},
+        "split_sha256": "b",
+        "builder_scorer_sha256": {"scorer.py": "c"},
+        "logical_snapshot_sha256": "d",
+    }
+    actual = json.loads(json.dumps(expected))
+    actual[field] = "changed"
+    with pytest.raises(ValueError, match="changed"):
+        validate_contract_payload(actual, expected)

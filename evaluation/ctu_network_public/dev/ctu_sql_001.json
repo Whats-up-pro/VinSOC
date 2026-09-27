@@ -1,0 +1,1 @@
+{"case_id":"ctu_sql_001","question":"Count scenario 5 flows labeled From-Botnet as flow_count.","database_snapshot":"data/ctu_network_public/snapshot.duckdb","gold_sql":["SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s5' AND label LIKE 'flow=From-Botnet%'"],"category":"network","difficulty":"basic","result_comparator":"scalar"}
