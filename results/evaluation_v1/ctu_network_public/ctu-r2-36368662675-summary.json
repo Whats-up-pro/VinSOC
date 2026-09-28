@@ -1,0 +1,21 @@
+{
+  "artifact_id": 10948681694,
+  "artifact_name": "ctu-network-public-r2-evidence",
+  "case_results": [
+    {"case_id": "ctu_sql_001", "cost_usd": 0.000096, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 104, "output_tokens": 34, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_002", "cost_usd": 0.00009, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 101, "output_tokens": 31, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_003", "cost_usd": 0.0000952, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 102, "output_tokens": 34, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_004", "cost_usd": 0.000156, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 130, "output_tokens": 65, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_005", "cost_usd": 0.0001156, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 101, "output_tokens": 47, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_006", "cost_usd": 0.000108, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 102, "output_tokens": 42, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_007", "cost_usd": 0.000092, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 114, "output_tokens": 29, "safety_rejected": false, "syntax_valid": true},
+    {"case_id": "ctu_sql_008", "cost_usd": 0.000126, "error_category": "RESULT_MISMATCH", "execution_accurate": false, "execution_success": true, "input_tokens": 99, "output_tokens": 54, "safety_rejected": false, "syntax_valid": true}
+  ],
+  "config": {"max_completion_tokens": 1000, "max_retries": 0, "model": "gpt-4.1-mini-2025-04-14", "provider": "openai", "temperature": 0},
+  "metrics": {"execution_accuracy": 0.0, "execution_success_rate": 1.0, "safety_rejection_rate": 0.0, "syntax_validity_rate": 1.0},
+  "pilot_eligible": true,
+  "pricing": {"cost_unknown": false, "known_cost_usd": 0.0008788, "pricing_source": "https://developers.openai.com/api/docs/models/gpt-4.1-mini", "total_input_tokens": 853, "total_output_tokens": 336},
+  "provenance": {"logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c", "prompt_identity_sha256": "6d0e57a41a6b7d5171822be0a1be9b5e3a47eeba16e88d399f408abaf59738a9", "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb"},
+  "run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36368662675",
+  "workflow_run_id": 36368662675
+}
