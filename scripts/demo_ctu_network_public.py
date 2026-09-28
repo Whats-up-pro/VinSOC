@@ -26,7 +26,7 @@ def select_scenario(snapshot_path: Path, name: str) -> dict[str, Any]:
             "label": None,
             "time_range": {"start": "2011-08-15T00:00:00", "end": "2011-08-16T00:00:00"},
         }
-    label_filter = "%botnet%" if name == "botnet" else "normal"
+    label_filter = "%botnet%" if name == "botnet" else "%normal%"
     result = snapshot.query(
         "SELECT source_dataset, source_row_id, event_time, src_ip, label FROM network_flows "
         "WHERE lower(label) LIKE ? AND src_ip IS NOT NULL "

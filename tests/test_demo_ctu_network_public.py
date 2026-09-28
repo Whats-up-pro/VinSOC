@@ -56,3 +56,17 @@ def test_offline_demo_reports_evidence_gap_without_a_benign_or_malicious_claim(m
     assert "No matching network telemetry" in result["limitations"]
     assert "benign" not in result["assessment"].lower()
     assert "malicious" not in result["assessment"].lower()
+
+
+def test_normal_scenario_selects_a_ctu_normal_label_with_its_full_label_prefix(tmp_path):
+    from scripts import demo_ctu_network_public as demo
+
+    path = _snapshot(tmp_path / "ctu.duckdb")
+    with duckdb.connect(str(path)) as conn:
+        conn.execute(
+            "INSERT INTO network_flows VALUES ('ctu13_s5', '43', TIMESTAMP '2011-08-15 10:00:00', "
+            "'192.0.2.11', 4445, '198.51.100.11', 443, 'TCP', 'CON', 12, 6, 'flow=From-Normal-V46-Grill')"
+        )
+    scenario = demo.select_scenario(path, "normal")
+    assert scenario["indicator"] == "192.0.2.11"
+    assert scenario["label"] == "Normal"
