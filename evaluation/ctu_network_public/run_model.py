@@ -119,7 +119,8 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
         "provenance": {"logical_snapshot_sha256": lock["logical_snapshot_sha256"],
                        "split_sha256": lock["split_sha256"], "source_file_sha256": lock["source_file_sha256"],
                        "builder_scorer_sha256": lock["builder_scorer_sha256"]},
-        "preflight": preflight, "serialized_requests": requests, "case_results": [], "provider_calls": 0,
+        "preflight": preflight, "serialized_requests": requests, "case_results": [],
+        "attempted_calls": 0, "responses_received": 0, "calls_with_valid_usage": 0,
     }
     _save(output, report)
     if preflight_only:
@@ -135,35 +136,62 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
             report["run_status"] = "budget_stopped"
             _save(output, report)
             raise ValueError("Remaining conservative budget is insufficient")
+        attempt = {"case_id": case.case_id, "request_index": index + 1, "outcome": "attempted"}
+        report["case_results"].append(attempt)
+        report["attempted_calls"] += 1
+        report["run_status"] = "in_progress"
+        _save(output, report)
         try:
             response = client.chat.completions.create(**request)
-            report["provider_calls"] += 1
+            report["responses_received"] += 1
             input_tokens, output_tokens = checked_usage(response)
-            if input_tokens > bound["input_token_bound"]:
-                raise ValueError("Actual input usage exceeded preflight bound")
             charged = cost_usd(input_tokens, output_tokens)
             known += charged
-            generated = _extract_sql(response.choices[0].message.content or "")
-            evaluation = evaluate_sql_case(case, generated, snapshot)
-            evaluations.append(evaluation)
-            report["case_results"].append({"case_id": case.case_id, "generated_sql": generated,
-                "syntax_valid": evaluation.syntax_valid, "execution_success": evaluation.execution_success,
-                "execution_accurate": evaluation.execution_accurate, "safety_rejected": evaluation.safety_rejected,
-                "error": evaluation.error, "error_category": _sql_error_category(evaluation),
-                "actual_model": response.model, "input_tokens": input_tokens, "output_tokens": output_tokens,
-                "cost_usd": charged})
+            report["calls_with_valid_usage"] += 1
             report["pricing"]["known_cost_usd"] = known
-            report["run_status"] = "in_progress"
+            attempt.update({"actual_model": response.model, "input_tokens": input_tokens,
+                            "output_tokens": output_tokens, "cost_usd": charged,
+                            "outcome": "usage_recorded"})
+            _save(output, report)
+            if input_tokens > bound["input_token_bound"]:
+                raise ValueError("Actual input usage exceeded preflight bound")
+            generated = _extract_sql(response.choices[0].message.content or "")
+            attempt["generated_sql"] = generated
+            try:
+                evaluation = evaluate_sql_case(case, generated, snapshot)
+            except Exception as exc:
+                attempt.update({"outcome": "scoring_error", "scoring_error": type(exc).__name__,
+                                "syntax_valid": False, "execution_success": False,
+                                "execution_accurate": False, "safety_rejected": False,
+                                "error": "Scoring failed after a charged response.",
+                                "error_category": "scoring_error"})
+                _save(output, report)
+                continue
+            evaluations.append(evaluation)
+            attempt.update({"outcome": "scored", "syntax_valid": evaluation.syntax_valid,
+                            "execution_success": evaluation.execution_success,
+                            "execution_accurate": evaluation.execution_accurate,
+                            "safety_rejected": evaluation.safety_rejected, "error": evaluation.error,
+                            "error_category": _sql_error_category(evaluation)})
             _save(output, report)
         except Exception as exc:
+            if report["responses_received"] < report["attempted_calls"] or not attempt.get("cost_usd"):
+                report["pricing"]["cost_unknown"] = True
+            attempt.update({"outcome": "provider_or_validation_error", "failure_category": type(exc).__name__})
             report["run_status"] = "provider_or_validation_error"
-            report["pricing"]["cost_unknown"] = True
             report["failure"] = {"category": type(exc).__name__, "message": "Paid call or response validation failed"}
             _save(output, report)
             raise
     report["metrics"] = aggregate_sql_metrics(evaluations)
     report["run_status"] = "complete"
-    report["pilot_eligible"] = len(evaluations) == 8 and report["provider_calls"] == 8 and not report["pricing"]["cost_unknown"]
+    report["pilot_eligible"] = (
+        len(report["case_results"]) == 8
+        and report["attempted_calls"] == 8
+        and report["responses_received"] == 8
+        and report["calls_with_valid_usage"] == 8
+        and len(evaluations) == 8
+        and not report["pricing"]["cost_unknown"]
+    )
     _save(output, report)
     return report
 
@@ -176,7 +204,7 @@ def main() -> int:
     parser.add_argument("--preflight-only", action="store_true")
     args = parser.parse_args()
     result = run(args.snapshot, args.output, preflight_only=args.preflight_only)
-    print(json.dumps({"run_status": result["run_status"], "provider_calls": result["provider_calls"], "known_cost_usd": result["pricing"]["known_cost_usd"], "combined_ceiling_usd": result["preflight"]["combined_ceiling_usd"]}, sort_keys=True))
+    print(json.dumps({"run_status": result["run_status"], "attempted_calls": result["attempted_calls"], "responses_received": result["responses_received"], "calls_with_valid_usage": result["calls_with_valid_usage"], "known_cost_usd": result["pricing"]["known_cost_usd"], "combined_ceiling_usd": result["preflight"]["combined_ceiling_usd"]}, sort_keys=True))
     return 0
 
 

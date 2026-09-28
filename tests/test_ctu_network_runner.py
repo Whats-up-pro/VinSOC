@@ -26,22 +26,23 @@ class Snapshot:
 
 
 class FakeCompletions:
-    def __init__(self, mode="ok"):
+    def __init__(self, mode="ok", *, prompt_tokens=100):
         self.mode = mode
+        self.prompt_tokens = prompt_tokens
         self.requests = []
 
     def create(self, **request):
         self.requests.append(request)
         if self.mode == "provider_error":
             raise RuntimeError("provider unavailable")
-        usage = None if self.mode == "missing_usage" else SimpleNamespace(prompt_tokens=100, completion_tokens=10)
+        usage = None if self.mode == "missing_usage" else SimpleNamespace(prompt_tokens=self.prompt_tokens, completion_tokens=10)
         model = "wrong-model" if self.mode == "wrong_model" else runner.MODEL
         return SimpleNamespace(model=model, usage=usage, choices=[SimpleNamespace(message=SimpleNamespace(content="SELECT 1"))])
 
 
 class FakeClient:
-    def __init__(self, mode="ok"):
-        self.completions = FakeCompletions(mode)
+    def __init__(self, mode="ok", *, prompt_tokens=100):
+        self.completions = FakeCompletions(mode, prompt_tokens=prompt_tokens)
         self.chat = SimpleNamespace(completions=self.completions)
 
 
@@ -69,7 +70,9 @@ def test_runner_sends_eight_pinned_requests_and_records_usage(monkeypatch, tmp_p
     client = FakeClient()
     report = runner.run(tmp_path / "snapshot.duckdb", tmp_path / "report.json", client=client)
     assert report["case_ids"] == [f"ctu_sql_{index:03d}" for index in range(1, 9)]
-    assert report["provider_calls"] == 8
+    assert report["attempted_calls"] == 8
+    assert report["responses_received"] == 8
+    assert report["calls_with_valid_usage"] == 8
     assert report["run_status"] == "complete"
     assert all(request["model"] == runner.MODEL and request["temperature"] == 0 and request["max_completion_tokens"] == 1000 for request in client.completions.requests)
     assert report["pricing"]["known_cost_usd"] > 0
@@ -84,7 +87,32 @@ def test_runner_stops_and_preserves_partial_report(monkeypatch, tmp_path, mode):
     partial = json.loads(output.read_text(encoding="utf-8"))
     assert partial["run_status"] == "provider_or_validation_error"
     assert partial["pricing"]["cost_unknown"] is True
-    assert partial["provider_calls"] <= 1
+    assert partial["attempted_calls"] == 1
+    assert partial["responses_received"] <= 1
+
+
+def test_runner_records_known_charge_before_scoring_failure(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    output = tmp_path / "partial.json"
+    monkeypatch.setattr(runner, "evaluate_sql_case", lambda *_args, **_kwargs: (_ for _ in ()).throw(RuntimeError("scoring failed")))
+    report = runner.run(tmp_path / "snapshot.duckdb", output, client=FakeClient())
+    persisted = json.loads(output.read_text(encoding="utf-8"))
+    assert report["attempted_calls"] == 8
+    assert persisted["pricing"]["known_cost_usd"] > 0
+    assert persisted["case_results"][0]["scoring_error"] == "RuntimeError"
+    assert persisted["case_results"][0]["cost_usd"] > 0
+
+
+def test_runner_stops_before_scoring_when_actual_input_exceeds_bound(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    output = tmp_path / "partial.json"
+    with pytest.raises(ValueError, match="preflight bound"):
+        runner.run(tmp_path / "snapshot.duckdb", output, client=FakeClient(prompt_tokens=999999))
+    persisted = json.loads(output.read_text(encoding="utf-8"))
+    assert persisted["attempted_calls"] == 1
+    assert persisted["responses_received"] == 1
+    assert persisted["calls_with_valid_usage"] == 1
+    assert persisted["pricing"]["known_cost_usd"] > 0
 
 
 def test_preflight_blocks_combined_budget_before_calls(monkeypatch):
@@ -94,6 +122,23 @@ def test_preflight_blocks_combined_budget_before_calls(monkeypatch):
     monkeypatch.setattr(runner, "BUDGET_USD", 0.000001)
     with pytest.raises(ValueError, match="exceeds"):
         runner.preflight_bounds([request] * 8)
+
+
+def test_runner_budget_stop_happens_before_any_api_attempt(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    monkeypatch.setattr(runner, "preflight_bounds", lambda _requests: {
+        "r2_bounds": [{"input_token_bound": 1, "max_cost_usd": 0.001}] * 8,
+        "reserved_demo_ceiling_usd": 0.001,
+        "combined_ceiling_usd": 0.009,
+    })
+    monkeypatch.setattr(runner, "BUDGET_USD", 0.009)
+    client = FakeClient()
+    with pytest.raises(ValueError, match="budget"):
+        runner.run(tmp_path / "snapshot.duckdb", tmp_path / "budget.json", client=client)
+    persisted = json.loads((tmp_path / "budget.json").read_text(encoding="utf-8"))
+    assert persisted["run_status"] == "budget_stopped"
+    assert persisted["attempted_calls"] == 0
+    assert client.completions.requests == []
 
 
 def test_paid_workflow_is_manual_only_and_scopes_secret_to_paid_step():
