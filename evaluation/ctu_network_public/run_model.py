@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -13,16 +14,44 @@ from evaluation.ctu_network_public.contract import CASES, LOCK, validate
 from evaluation.text_to_sql import SQLBenchmarkCase, _extract_sql, _sql_error_category, aggregate_sql_metrics, evaluate_sql_case
 from vinsoc_data.duckdb_store import DuckDBSnapshot
 
-# gpt-5-mini-2025-08-07 — active future migration target
+# ---------------------------------------------------------------------------
+# Load authoritative lock; compute SHA-256 of the lock file at runtime.
+# ---------------------------------------------------------------------------
+_LOCK_PATH = Path(__file__).parent / "MODEL_CONFIG_GPT5MINI.lock"
+
+with _LOCK_PATH.open(encoding="utf-8") as _fh:
+    _LOCK_RAW = _fh.read()
+
+_MODEL_CONFIG_SHA256 = hashlib.sha256(_LOCK_RAW.encode("utf-8")).hexdigest()
+_MODEL_CONFIG = json.loads(_LOCK_RAW)
+
+# Runtime constants — must match lock values.
 MODEL = "gpt-5-mini-2025-08-07"
 REASONING_EFFORT = "low"
 CAP = 1000
+MAX_RETRIES = 0
 INPUT_USD_M = 0.25
 OUTPUT_USD_M = 2.00
-BUDGET_USD = 1.00
-DEMO_RESERVED_CALLS = 2
+# Conservative ceiling of actual 8 serialized requests must be < $0.10 before any call.
+E0_SUITE_BUDGET_USD = 0.10
 FRAMING_TOKENS = 4096
 PRICING_SOURCE = "https://developers.openai.com/api/docs/models/gpt-5-mini"
+
+# Verify lock fields match runtime constants (fail fast at import time).
+if _MODEL_CONFIG.get("model") != MODEL:
+    raise ValueError(f"lock model={_MODEL_CONFIG['model']} != runtime MODEL={MODEL}")
+if _MODEL_CONFIG.get("reasoning_effort") != REASONING_EFFORT:
+    raise ValueError(f"lock reasoning_effort={_MODEL_CONFIG['reasoning_effort']} != runtime REASONING_EFFORT={REASONING_EFFORT}")
+if _MODEL_CONFIG.get("max_completion_tokens") != CAP:
+    raise ValueError(f"lock max_completion_tokens={_MODEL_CONFIG['max_completion_tokens']} != runtime CAP={CAP}")
+if _MODEL_CONFIG.get("max_retries") != MAX_RETRIES:
+    raise ValueError(f"lock max_retries={_MODEL_CONFIG['max_retries']} != runtime MAX_RETRIES={MAX_RETRIES}")
+if _MODEL_CONFIG.get("input_price_usd_per_million") != INPUT_USD_M:
+    raise ValueError(f"lock input_price={_MODEL_CONFIG['input_price_usd_per_million']} != runtime INPUT_USD_M={INPUT_USD_M}")
+if _MODEL_CONFIG.get("output_price_usd_per_million") != OUTPUT_USD_M:
+    raise ValueError(f"lock output_price={_MODEL_CONFIG['output_price_usd_per_million']} != runtime OUTPUT_USD_M={OUTPUT_USD_M}")
+if _MODEL_CONFIG.get("ceiling_8_cases_usd") != E0_SUITE_BUDGET_USD:
+    raise ValueError(f"lock ceiling_8_cases_usd={_MODEL_CONFIG['ceiling_8_cases_usd']} != runtime E0_SUITE_BUDGET_USD={E0_SUITE_BUDGET_USD}")
 
 
 def cost_usd(input_tokens: int, output_tokens: int) -> float:
@@ -68,14 +97,17 @@ def preflight_bounds(requests: list[dict[str, Any]]) -> dict[str, Any]:
     if len(requests) != 8:
         raise ValueError("Exactly eight R2 requests are required")
     bounds = [request_bound(request) for request in requests]
-    demo_bound = max(item["max_cost_usd"] for item in bounds) * DEMO_RESERVED_CALLS
-    ceiling = sum(item["max_cost_usd"] for item in bounds) + demo_bound
-    if ceiling >= BUDGET_USD:
-        raise ValueError("Combined R2 plus reserved live-demo ceiling exceeds $1.00")
-    return {"method": "serialized request UTF-8 bytes + 4096 framing tokens; 1000 output tokens; reasoning_effort=low; temperature absent; zero retries",
-            "r2_bounds": bounds, "reserved_demo_calls": DEMO_RESERVED_CALLS,
-            "reserved_demo_ceiling_usd": demo_bound, "combined_ceiling_usd": ceiling,
-            "budget_limit_usd": BUDGET_USD}
+    # Conservative ceiling = sum of all 8 actual request costs.
+    # Live demo is independent GPT-4.1-mini workflow — NOT mixed into GPT-5 Mini E0 budget.
+    ceiling = sum(item["max_cost_usd"] for item in bounds)
+    if ceiling >= E0_SUITE_BUDGET_USD:
+        raise ValueError(
+            f"Combined 8-case suite ceiling {ceiling:.6f} >= E0 budget ${E0_SUITE_BUDGET_USD:.2f}"
+        )
+    return {"method": "serialized request UTF-8 bytes + 4096 framing tokens; reasoning_effort=low; temperature absent; zero retries",
+            "r2_bounds": bounds,
+            "suite_ceiling_usd": ceiling,
+            "e0_budget_limit_usd": E0_SUITE_BUDGET_USD}
 
 
 def _save(path: Path, payload: dict[str, Any]) -> None:
@@ -113,23 +145,45 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
     snapshot = DuckDBSnapshot(snapshot_path)
     schema = schema_context(snapshot)
     requests = [build_request(case, schema) for case in cases]
-    preflight = preflight_bounds(requests)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
-    report: dict[str, Any] = {
-        "version": lock["version"], "run_status": "preflight_complete", "pilot_eligible": False,
-        "evaluator_commit_sha": sha, "case_ids": [case.case_id for case in cases],
-        "config": {"provider": "openai", "model": MODEL, "reasoning_effort": REASONING_EFFORT,
-                   "temperature": None, "max_completion_tokens": CAP, "max_retries": 0},
-        "pricing": {"input_usd_per_million": INPUT_USD_M, "output_usd_per_million": OUTPUT_USD_M,
-                    "source": PRICING_SOURCE, "checked_utc": datetime.now(timezone.utc).isoformat(),
-                    "known_cost_usd": 0.0, "cost_unknown": False},
-        "provenance": {"logical_snapshot_sha256": lock["logical_snapshot_sha256"],
-                       "split_sha256": lock["split_sha256"], "source_file_sha256": lock["source_file_sha256"],
-                       "builder_scorer_sha256": lock["builder_scorer_sha256"]},
-        "preflight": preflight, "serialized_requests": requests, "case_results": [],
-        "attempted_calls": 0, "responses_received": 0, "calls_with_valid_usage": 0,
-    }
+
+    def _make_report(preflight: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "version": lock["version"], "run_status": "preflight_complete", "pilot_eligible": False,
+            "evaluator_commit_sha": sha, "case_ids": [case.case_id for case in cases],
+            "model_config_sha256": _MODEL_CONFIG_SHA256,
+            "config": {"provider": "openai", "model": MODEL, "reasoning_effort": REASONING_EFFORT,
+                       "temperature": None, "max_completion_tokens": CAP, "max_retries": MAX_RETRIES},
+            "pricing": {"input_usd_per_million": INPUT_USD_M, "output_usd_per_million": OUTPUT_USD_M,
+                        "source": PRICING_SOURCE, "checked_utc": datetime.now(timezone.utc).isoformat(),
+                        "known_cost_usd": 0.0, "cost_unknown": False},
+            "provenance": {"logical_snapshot_sha256": lock["logical_snapshot_sha256"],
+                           "split_sha256": lock["split_sha256"], "source_file_sha256": lock["source_file_sha256"],
+                           "builder_scorer_sha256": lock["builder_scorer_sha256"],
+                           "model_config_sha256": _MODEL_CONFIG_SHA256},
+            "preflight": preflight, "serialized_requests": requests, "case_results": [],
+            "attempted_calls": 0, "responses_received": 0, "calls_with_valid_usage": 0,
+        }
+
+    # Build skeleton report; will be replaced once preflight passes.
+    report: dict[str, Any] = {"case_ids": [case.case_id for case in cases]}
     _save(output, report)
+
+    try:
+        preflight = preflight_bounds(requests)
+    except ValueError as exc:
+        report = _make_report({"preflight_error": str(exc)})
+        report["run_status"] = "preflight_failed"
+        _save(output, report)
+        raise
+
+    report = _make_report(preflight)
+    _save(output, report)
+    if preflight_only:
+        return report
+    if os.environ.get("GITHUB_REF") != "refs/heads/master" or os.environ.get("GITHUB_SHA") != sha:
+        raise ValueError("Paid runner requires exact master Actions checkout")
+    client = client or make_client()
     if preflight_only:
         return report
     if os.environ.get("GITHUB_REF") != "refs/heads/master" or os.environ.get("GITHUB_SHA") != sha:
@@ -138,8 +192,9 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
     known = 0.0
     evaluations = []
     for index, (case, request, bound) in enumerate(zip(cases, requests, preflight["r2_bounds"])):
-        remaining = sum(item["max_cost_usd"] for item in preflight["r2_bounds"][index:]) + preflight["reserved_demo_ceiling_usd"]
-        if known + remaining >= BUDGET_USD:
+        # Per-case budget gate: stop if remaining cases would exceed suite budget.
+        remaining = sum(item["max_cost_usd"] for item in preflight["r2_bounds"][index:])
+        if known + remaining >= E0_SUITE_BUDGET_USD:
             report["run_status"] = "budget_stopped"
             _save(output, report)
             raise ValueError("Remaining conservative budget is insufficient")
@@ -211,7 +266,11 @@ def main() -> int:
     parser.add_argument("--preflight-only", action="store_true")
     args = parser.parse_args()
     result = run(args.snapshot, args.output, preflight_only=args.preflight_only)
-    print(json.dumps({"run_status": result["run_status"], "attempted_calls": result["attempted_calls"], "responses_received": result["responses_received"], "calls_with_valid_usage": result["calls_with_valid_usage"], "known_cost_usd": result["pricing"]["known_cost_usd"], "combined_ceiling_usd": result["preflight"]["combined_ceiling_usd"]}, sort_keys=True))
+    print(json.dumps({"run_status": result["run_status"], "attempted_calls": result["attempted_calls"],
+                      "responses_received": result["responses_received"],
+                      "calls_with_valid_usage": result["calls_with_valid_usage"],
+                      "known_cost_usd": result["pricing"]["known_cost_usd"],
+                      "suite_ceiling_usd": result["preflight"]["suite_ceiling_usd"]}, sort_keys=True))
     return 0
 
 
