@@ -156,6 +156,14 @@ def _assessment_evidence(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]
     ]
 
 
+def _safe_finish_reason(value: Any) -> str | None:
+    """Return an allowlisted finish_reason or safe fallback. Never returns raw input."""
+    if not isinstance(value, str):
+        return None
+    valid = {"stop", "length", "content_filter", "tool_calls", "function_call"}
+    return value if value in valid else "other"
+
+
 def _assessment_failure_reason(raw: str, evidence_ids: list[str]) -> str:
     """Return the specific reason why assessment validation failed."""
     # 1. JSON parsing
@@ -164,49 +172,49 @@ def _assessment_failure_reason(raw: str, evidence_ids: list[str]) -> str:
     except (TypeError, json.JSONDecodeError):
         return "assessment_json_invalid"
 
-    # 2. Required fields missing
+    # 2. JSON parsed but not a dict object (null, number, bool, list, string)
+    if not isinstance(data, dict):
+        return "assessment_json_not_object"
+
+    # 3. Required fields present
     for field in ("assessment", "evidence_ids", "limitations"):
         if field not in data:
             return f"assessment_field_missing:{field}"
 
     assessment, cited, limitations = data["assessment"], data["evidence_ids"], data["limitations"]
 
-    # 3. assessment type/size
+    # 4. Field types FIRST (before content checks)
     if not isinstance(assessment, str):
         return "assessment_field_type_invalid:assessment"
-    if not assessment.strip():
-        return "assessment_field_type_invalid:assessment_empty"
-    if len(assessment) > 2000:
-        return "assessment_field_type_invalid:assessment_too_long"
-
-    # 4. evidence_ids type
     if not isinstance(cited, list):
         return "assessment_field_type_invalid:evidence_ids"
-    if any(not isinstance(item, str) for item in cited):
-        return "assessment_field_type_invalid:evidence_ids_item"
-
-    # 5. evidence_ids duplicates
-    if len(cited) != len(set(cited)):
-        return "assessment_evidence_ids_duplicate"
-
-    # 6. evidence_ids not subset of actual
-    if cited and not set(cited) <= set(evidence_ids):
-        return "assessment_evidence_ids_not_subset"
-
-    # 7. evidence_ids not cited in assessment text
-    if evidence_ids and not cited:
-        return "assessment_evidence_ids_missing"
-    if cited and any(item not in assessment for item in cited):
-        return "assessment_evidence_ids_not_in_text"
-
-    # 8. limitations type
     if not isinstance(limitations, list):
         return "assessment_field_type_invalid:limitations"
+
+    # 5. Limitations items (before evidence_ids content checks)
     for i, item in enumerate(limitations):
         if not isinstance(item, str):
             return f"assessment_field_type_invalid:limitations_item_{i}"
         if len(item) > 500:
             return f"assessment_field_type_invalid:limitations_item_{i}_too_long"
+
+    # 6. Assessment content (after types verified)
+    if not assessment.strip():
+        return "assessment_field_type_invalid:assessment_empty"
+    if len(assessment) > 2000:
+        return "assessment_field_type_invalid:assessment_too_long"
+
+    # 7. evidence_ids content (after types verified)
+    if any(not isinstance(item, str) for item in cited):
+        return "assessment_field_type_invalid:evidence_ids_item"
+    if len(cited) != len(set(cited)):
+        return "assessment_evidence_ids_duplicate"
+    if cited and not set(cited) <= set(evidence_ids):
+        return "assessment_evidence_ids_not_subset"
+    if evidence_ids and not cited:
+        return "assessment_evidence_ids_missing"
+    if cited and any(item not in assessment for item in cited):
+        return "assessment_evidence_ids_not_in_text"
 
     return "assessment_validation_passed"
 
@@ -399,7 +407,7 @@ def run_model_driven_demo(
             "model_generated_arguments_executed": False,
             "model_generated_assessment": False,
             "tool_arguments_scope": "selected IPv4 and bounded 2011 interval",
-            "assessment_evidence_ids_validated": True,
+            "assessment_evidence_ids_validated": False,
         },
     }
     _write_report(output, report)
@@ -534,7 +542,9 @@ def run_model_driven_demo(
         except ValueError:
             raw_content = getattr(response.choices[0].message, "content", None) or ""
             item["assessment_failure_reason"] = _assessment_failure_reason(raw_content, result["evidence_ids"])
-            item["assessment_finish_reason"] = getattr(response.choices[0], "finish_reason", None)
+            item["assessment_finish_reason"] = _safe_finish_reason(
+                getattr(response.choices[0], "finish_reason", None)
+            )
             report["status"] = "assessment_invalid"
             _write_report(output, report)
             raise
