@@ -13,14 +13,16 @@ from evaluation.ctu_network_public.contract import CASES, LOCK, validate
 from evaluation.text_to_sql import SQLBenchmarkCase, _extract_sql, _sql_error_category, aggregate_sql_metrics, evaluate_sql_case
 from vinsoc_data.duckdb_store import DuckDBSnapshot
 
-MODEL = "gpt-4.1-mini-2025-04-14"
+# gpt-5-mini-2025-08-07 — active future migration target
+MODEL = "gpt-5-mini-2025-08-07"
+REASONING_EFFORT = "low"
 CAP = 1000
-INPUT_USD_M = 0.40
-OUTPUT_USD_M = 1.60
+INPUT_USD_M = 0.25
+OUTPUT_USD_M = 2.00
 BUDGET_USD = 1.00
 DEMO_RESERVED_CALLS = 2
 FRAMING_TOKENS = 4096
-PRICING_SOURCE = "https://developers.openai.com/api/docs/models/gpt-4.1-mini"
+PRICING_SOURCE = "https://developers.openai.com/api/docs/models/gpt-5-mini"
 
 
 def cost_usd(input_tokens: int, output_tokens: int) -> float:
@@ -38,20 +40,24 @@ def schema_context(snapshot: DuckDBSnapshot) -> str:
 
 
 def build_request(case: SQLBenchmarkCase, schema: str) -> dict[str, Any]:
-    return {
+    request: dict[str, Any] = {
         "model": MODEL,
         "messages": [
             {"role": "system", "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\n" + schema},
             {"role": "user", "content": case.question},
         ],
-        "temperature": 0,
+        "reasoning_effort": REASONING_EFFORT,
         "max_completion_tokens": CAP,
     }
+    # temperature is ABSENT for gpt-5-mini
+    return request
 
 
 def request_bound(request: dict[str, Any]) -> dict[str, Any]:
-    if request.get("model") != MODEL or request.get("temperature") != 0 or request.get("max_completion_tokens") != CAP:
+    if request.get("model") != MODEL or request.get("reasoning_effort") != REASONING_EFFORT or request.get("max_completion_tokens") != CAP:
         raise ValueError("Unpinned request blocked")
+    if "temperature" in request:
+        raise ValueError("temperature must be absent for gpt-5-mini")
     size = len(json.dumps(request, ensure_ascii=True, separators=(",", ":")).encode())
     input_bound = size + FRAMING_TOKENS
     return {"request_utf8_bytes": size, "input_token_bound": input_bound,
@@ -66,7 +72,7 @@ def preflight_bounds(requests: list[dict[str, Any]]) -> dict[str, Any]:
     ceiling = sum(item["max_cost_usd"] for item in bounds) + demo_bound
     if ceiling >= BUDGET_USD:
         raise ValueError("Combined R2 plus reserved live-demo ceiling exceeds $1.00")
-    return {"method": "serialized request UTF-8 bytes + 4096 framing tokens; 1000 output tokens; zero retries",
+    return {"method": "serialized request UTF-8 bytes + 4096 framing tokens; 1000 output tokens; reasoning_effort=low; temperature absent; zero retries",
             "r2_bounds": bounds, "reserved_demo_calls": DEMO_RESERVED_CALLS,
             "reserved_demo_ceiling_usd": demo_bound, "combined_ceiling_usd": ceiling,
             "budget_limit_usd": BUDGET_USD}
@@ -112,7 +118,8 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
     report: dict[str, Any] = {
         "version": lock["version"], "run_status": "preflight_complete", "pilot_eligible": False,
         "evaluator_commit_sha": sha, "case_ids": [case.case_id for case in cases],
-        "config": {"provider": "openai", "model": MODEL, "temperature": 0, "max_completion_tokens": CAP, "max_retries": 0},
+        "config": {"provider": "openai", "model": MODEL, "reasoning_effort": REASONING_EFFORT,
+                   "temperature": None, "max_completion_tokens": CAP, "max_retries": 0},
         "pricing": {"input_usd_per_million": INPUT_USD_M, "output_usd_per_million": OUTPUT_USD_M,
                     "source": PRICING_SOURCE, "checked_utc": datetime.now(timezone.utc).isoformat(),
                     "known_cost_usd": 0.0, "cost_unknown": False},

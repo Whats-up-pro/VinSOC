@@ -16,10 +16,18 @@ from typing import Any
 from agent.orchestrator import InvestigationOrchestrator
 from agent.tools import get_tool_schemas
 from evaluation.ctu_network_public.contract import LOCK, validate
-from evaluation.ctu_network_public.run_model import CAP, MODEL, cost_usd
 from scripts.check_env import load_env, resolve_openai_key
 from scripts.demo_ctu_network_public import _verify_evidence_pairs, _write_report, select_scenario
 from vinsoc_data.duckdb_store import DuckDBSnapshot
+
+# gpt-4.1-mini-2025-04-14 — demo model (independent from R2 gpt-5-mini migration)
+DEMO_MODEL = "gpt-4.1-mini-2025-04-14"
+DEMO_CAP = 1000
+DEMO_INPUT_USD_M = 0.40
+DEMO_OUTPUT_USD_M = 1.60
+
+def _demo_cost_usd(input_tokens: int, output_tokens: int) -> float:
+    return (input_tokens * DEMO_INPUT_USD_M + output_tokens * DEMO_OUTPUT_USD_M) / 1_000_000
 
 PRIOR_TASK_COST_USD = 0.0013708  # Original R2 and tool-selection demo usage.
 INPUT_TOKEN_RESERVE = 50_000
@@ -249,9 +257,9 @@ def _network_tool_request(scenario: dict[str, Any], tools: list[dict[str, Any]])
         "task": "Call network_investigation for this IPv4 and bounded historical interval.",
     }
     return {
-        "model": MODEL,
+        "model": DEMO_MODEL,
         "temperature": 0,
-        "max_completion_tokens": CAP,
+        "max_completion_tokens": DEMO_CAP,
         "tools": tools,
         "tool_choice": {
             "type": "function",
@@ -279,18 +287,18 @@ def run_first_request_diagnostic(
     lock = validate(snapshot_path, LOCK)
     scenario = select_scenario(snapshot_path, "botnet")
     request = _network_tool_request(scenario, _network_tools())
-    reserve = cost_usd(INPUT_TOKEN_RESERVE, CAP)
+    reserve = _demo_cost_usd(INPUT_TOKEN_RESERVE, DEMO_CAP)
     report: dict[str, Any] = {
         "demo_mode": "first_request_diagnostic_v1",
         "status": "preflight",
-        "model": MODEL,
+        "model": DEMO_MODEL,
         "snapshot_logical_sha256": lock["logical_snapshot_sha256"],
         "version": lock["version"],
         "temperature": 0,
-        "max_completion_tokens": CAP,
+        "max_completion_tokens": DEMO_CAP,
         "max_retries": 0,
         "tool_allowlist": ["network_investigation"],
-        "prior_task_cost_usd": PRIOR_TASK_COST_USD,
+        "prior_task__demo_cost_usd": PRIOR_TASK_COST_USD,
         "budget_usd": budget_usd,
         "preflight_ceiling_usd": PRIOR_TASK_COST_USD + reserve,
         "attempted_calls": 0,
@@ -338,7 +346,7 @@ def run_first_request_diagnostic(
     input_tokens = getattr(usage, "prompt_tokens", None)
     output_tokens = getattr(usage, "completion_tokens", None)
     if (
-        actual_model != MODEL
+        actual_model != DEMO_MODEL
         or type(input_tokens) is not int
         or type(output_tokens) is not int
         or input_tokens < 0
@@ -353,7 +361,7 @@ def run_first_request_diagnostic(
         )
         _write_report(output, report)
         raise ValueError("OpenAI actual model or usage invalid")
-    charged = cost_usd(input_tokens, output_tokens)
+    charged = _demo_cost_usd(input_tokens, output_tokens)
     report.update(
         {
             "status": "diagnostic_response_received",
@@ -367,7 +375,7 @@ def run_first_request_diagnostic(
         }
     )
     _write_report(output, report)
-    if input_tokens > INPUT_TOKEN_RESERVE or output_tokens > CAP:
+    if input_tokens > INPUT_TOKEN_RESERVE or output_tokens > DEMO_CAP:
         report["status"] = "usage_exceeded_bound"
         _write_report(output, report)
         raise ValueError("OpenAI usage exceeded preflight bound")
@@ -383,18 +391,18 @@ def run_model_driven_demo(
     scenarios = [select_scenario(snapshot_path, name) for name in SCENARIO_NAMES]
     tools = _network_tools()
     total_calls = len(scenarios) * CALLS_PER_SCENARIO
-    reserve_per_call = cost_usd(INPUT_TOKEN_RESERVE, CAP)
+    reserve_per_call = _demo_cost_usd(INPUT_TOKEN_RESERVE, DEMO_CAP)
     report: dict[str, Any] = {
         "demo_mode": "local_model_driven_network_v1",
         "status": "preflight",
-        "model": MODEL,
+        "model": DEMO_MODEL,
         "snapshot_logical_sha256": lock["logical_snapshot_sha256"],
         "version": lock["version"],
         "temperature": 0,
-        "max_completion_tokens": CAP,
+        "max_completion_tokens": DEMO_CAP,
         "max_retries": 0,
         "tool_allowlist": ["network_investigation"],
-        "prior_task_cost_usd": PRIOR_TASK_COST_USD,
+        "prior_task__demo_cost_usd": PRIOR_TASK_COST_USD,
         "budget_usd": budget_usd,
         "preflight_ceiling_usd": PRIOR_TASK_COST_USD + total_calls * reserve_per_call,
         "attempted_calls": 0,
@@ -447,7 +455,7 @@ def run_model_driven_demo(
         report["responses_received"] += 1
         usage = getattr(response, "usage", None)
         if (
-            response.model != MODEL
+            response.model != DEMO_MODEL
             or usage is None
             or type(getattr(usage, "prompt_tokens", None)) is not int
             or type(getattr(usage, "completion_tokens", None)) is not int
@@ -465,7 +473,7 @@ def run_model_driven_demo(
             report.update({"status": "usage_invalid", "cost_unknown": True})
             _write_report(output, report)
             raise ValueError("OpenAI usage invalid")
-        charged = cost_usd(usage.prompt_tokens, usage.completion_tokens)
+        charged = _demo_cost_usd(usage.prompt_tokens, usage.completion_tokens)
         report["known_cost_usd"] += charged
         report["calls"].append(
             {
@@ -474,13 +482,13 @@ def run_model_driven_demo(
                 "actual_model": response.model,
                 "input_tokens": usage.prompt_tokens,
                 "output_tokens": usage.completion_tokens,
-                "cost_usd": charged,
+                "_demo_cost_usd": charged,
                 "latency_ms": round((perf_counter() - started) * 1000, 3),
             }
         )
         report["status"] = stage + "_response_received"
         _write_report(output, report)
-        if usage.prompt_tokens > INPUT_TOKEN_RESERVE or usage.completion_tokens > CAP:
+        if usage.prompt_tokens > INPUT_TOKEN_RESERVE or usage.completion_tokens > DEMO_CAP:
             report["status"] = "usage_exceeded_bound"
             _write_report(output, report)
             raise ValueError("OpenAI usage exceeded preflight bound")
@@ -518,9 +526,9 @@ def run_model_driven_demo(
             "evidence": _assessment_evidence(result["evidence"]),
         }
         request = {
-            "model": MODEL,
+            "model": DEMO_MODEL,
             "temperature": 0,
-            "max_completion_tokens": CAP,
+            "max_completion_tokens": DEMO_CAP,
             "response_format": {"type": "json_object"},
             "messages": [
                 {

@@ -74,8 +74,17 @@ def test_runner_sends_eight_pinned_requests_and_records_usage(monkeypatch, tmp_p
     assert report["responses_received"] == 8
     assert report["calls_with_valid_usage"] == 8
     assert report["run_status"] == "complete"
-    assert all(request["model"] == runner.MODEL and request["temperature"] == 0 and request["max_completion_tokens"] == 1000 for request in client.completions.requests)
+    # Check gpt-5-mini specific fields: model, reasoning_effort, no temperature
+    for request in client.completions.requests:
+        assert request["model"] == runner.MODEL
+        assert request["reasoning_effort"] == "low"
+        assert "temperature" not in request
+        assert request["max_completion_tokens"] == 1000
     assert report["pricing"]["known_cost_usd"] > 0
+    # Config reflects gpt-5-mini migration
+    assert report["config"]["model"] == "gpt-5-mini-2025-08-07"
+    assert report["config"]["reasoning_effort"] == "low"
+    assert report["config"]["temperature"] is None
 
 
 @pytest.mark.parametrize("mode", ["wrong_model", "missing_usage", "provider_error"])
@@ -157,3 +166,66 @@ def test_paid_workflow_is_manual_only_and_scopes_secret_to_paid_step():
     assert "OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}" in paid
     assert "--preflight-only" in workflow
     assert "if: always()" in workflow
+
+
+def test_gpt5mini_model_config_lock_exists():
+    """MODEL_CONFIG_GPT5MINI.lock must exist and have required fields."""
+    config = json.loads(Path("evaluation/ctu_network_public/MODEL_CONFIG_GPT5MINI.lock").read_text(encoding="utf-8"))
+    assert config["model"] == "gpt-5-mini-2025-08-07"
+    assert config["temperature"] is None
+    assert config["reasoning_effort"] == "low"
+    assert config["max_completion_tokens"] == 1000
+    assert config["max_retries"] == 0
+    assert config["input_price_usd_per_million"] == 0.25
+    assert config["output_price_usd_per_million"] == 2.00
+    assert config["ceiling_8_cases_usd"] == 0.10
+
+
+def test_request_bound_rejects_temperature_for_gpt5mini(monkeypatch):
+    """gpt-5-mini requires temperature to be absent, not just zero."""
+    request = runner.build_request(
+        SimpleNamespace(question="q"), "network_flows(source_dataset VARCHAR)"
+    )
+    # Request should not have temperature
+    assert "temperature" not in request
+    # Adding temperature should fail request_bound
+    request["temperature"] = 0
+    with pytest.raises(ValueError, match="temperature must be absent"):
+        runner.request_bound(request)
+
+
+def test_request_bound_checks_reasoning_effort():
+    """request_bound validates reasoning_effort is present and correct."""
+    request = runner.build_request(
+        SimpleNamespace(question="q"), "network_flows(source_dataset VARCHAR)"
+    )
+    # Valid request
+    bound = runner.request_bound(request)
+    assert bound["max_output_tokens"] == 1000
+    assert bound["max_cost_usd"] > 0
+
+    # Wrong reasoning_effort
+    bad = dict(request, reasoning_effort="high")
+    with pytest.raises(ValueError, match="Unpinned"):
+        runner.request_bound(bad)
+
+    # Missing reasoning_effort
+    bad = dict(request)
+    del bad["reasoning_effort"]
+    with pytest.raises(ValueError, match="Unpinned"):
+        runner.request_bound(bad)
+
+
+def test_ceiling_8_cases_under_10_cents():
+    """8-case suite ceiling must be <= $0.10 per MODEL_CONFIG_GPT5MINI.lock."""
+    request = runner.build_request(
+        SimpleNamespace(question="How many rows are in the network_flows table?"),
+        "network_flows(source_dataset VARCHAR, event_time TIMESTAMP, src_ip VARCHAR)"
+    )
+    # Approximate worst case: 500 prompt tokens + 1000 output tokens
+    # Cost = (500 * 0.25 + 1000 * 2.00) / 1M = 0.000125 + 0.002 = 0.002125 per call
+    # 8 cases + 2 demo reserved calls * max = 8 * 0.002125 + 2 * 0.002125 = 0.02125
+    bound = runner.request_bound(request)
+    # Conservative ceiling for 8 cases + 2 demo calls
+    ceiling = 8 * bound["max_cost_usd"] + 2 * bound["max_cost_usd"]
+    assert ceiling <= 0.10, f"Ceiling {ceiling} exceeds $0.10"
