@@ -551,6 +551,7 @@ def run_model_driven_demo(
         report["status"] = scenario["name"] + "_complete"
         _write_report(output, report)
     report["status"] = "complete"
+    report["execution_semantics"]["assessment_evidence_ids_validated"] = True
     report["combined_known_cost_usd"] = PRIOR_TASK_COST_USD + report["known_cost_usd"]
     _write_report(output, report)
     return report

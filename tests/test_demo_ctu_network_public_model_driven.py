@@ -473,50 +473,6 @@ def test_first_request_diagnostic_preserves_safe_partial_report_on_429(monkeypat
     assert "SECRET_VALUE" not in serialized
 
 
-class FakeAssessmentClient:
-    """Client that returns assessment with controlled content."""
-
-    def __init__(self, assessment_content: str, finish_reason: str = "stop"):
-        self.requests = []
-        self.assessment_content = assessment_content
-        self.finish_reason = finish_reason
-        self.chat = SimpleNamespace(completions=self)
-
-    def create(self, **request):
-        self.requests.append(request)
-        if request.get("tools"):
-            text = request["messages"][-1]["content"]
-            indicator = "192.0.2.10" if "192.0.2.10" in text else "192.0.2.11"
-            scenario = json.loads(text)
-            args = {
-                "indicator": indicator,
-                "indicator_type": "ipv4",
-                "time_range": scenario["time_range"],
-            }
-            message = SimpleNamespace(
-                tool_calls=[
-                    SimpleNamespace(
-                        id="fake_tool_call",
-                        function=SimpleNamespace(
-                            name="network_investigation", arguments=json.dumps(args)
-                        ),
-                    )
-                ],
-                content=None,
-            )
-        else:
-            message = SimpleNamespace(
-                tool_calls=None,
-                content=self.assessment_content,
-            )
-        return SimpleNamespace(
-            id=f"fake_response_{len(self.requests)}",
-            model="gpt-4.1-mini-2025-04-14",
-            usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
-            choices=[SimpleNamespace(message=message, finish_reason=self.finish_reason)],
-        )
-
-
 @pytest.mark.parametrize(
     ("assessment_content", "expected_reason"),
     [
@@ -621,7 +577,9 @@ def test_assessment_evidence_ids_validated_only_after_validator_passes(monkeypat
         demo.run_model_driven_demo(_snapshot(tmp_path / "ctu_invalid.duckdb"), output_invalid, client=client_invalid)
     report_invalid = json.loads(output_invalid.read_text(encoding="utf-8"))
     assert report_invalid["execution_semantics"]["model_generated_assessment"] is False
-    # Valid assessment IS tested by test_model_arguments_reach_network_tool_and_model_assesses_evidence
+
+
+def test_partial_scenario_data_preserved_on_failure(monkeypatch, tmp_path):
     """Partial scenario data should be preserved even when assessment fails."""
     from scripts import demo_ctu_network_public_model_driven as demo
 
@@ -676,94 +634,6 @@ def test_assessment_failure_reason_allowslist_recorded(monkeypatch, tmp_path):
 # =============================================================================
 # Regression tests for assessment failure handling
 # =============================================================================
-
-
-class AssessmentClientForValidator:
-    """Client that returns assessment content for testing validator directly."""
-
-    def __init__(self, assessment_content: str, finish_reason: str = "stop"):
-        self.requests = []
-        self.assessment_content = assessment_content
-        self.finish_reason = finish_reason
-        self.chat = SimpleNamespace(completions=self)
-
-    def create(self, **request):
-        self.requests.append(request)
-        if request.get("tools"):
-            text = request["messages"][-1]["content"]
-            indicator = "192.0.2.10" if "192.0.2.10" in text else "192.0.2.11"
-            scenario = json.loads(text)
-            args = {
-                "indicator": indicator,
-                "indicator_type": "ipv4",
-                "time_range": scenario["time_range"],
-            }
-            message = SimpleNamespace(
-                tool_calls=[
-                    SimpleNamespace(
-                        id="fake_tool_call",
-                        function=SimpleNamespace(
-                            name="network_investigation", arguments=json.dumps(args)
-                        ),
-                    )
-                ],
-                content=None,
-            )
-        else:
-            message = SimpleNamespace(
-                tool_calls=None,
-                content=self.assessment_content,
-            )
-        return SimpleNamespace(
-            id=f"fake_response_{len(self.requests)}",
-            model="gpt-4.1-mini-2025-04-14",
-            usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
-            choices=[SimpleNamespace(message=message, finish_reason=self.finish_reason)],
-        )
-
-
-class FakeAssessmentClient:
-    """Client that returns assessment with controlled content for failure testing."""
-
-    def __init__(self, assessment_content: str, finish_reason: str = "stop"):
-        self.requests = []
-        self.assessment_content = assessment_content
-        self.finish_reason = finish_reason
-        self.chat = SimpleNamespace(completions=self)
-
-    def create(self, **request):
-        self.requests.append(request)
-        if request.get("tools"):
-            text = request["messages"][-1]["content"]
-            indicator = "192.0.2.10" if "192.0.2.10" in text else "192.0.2.11"
-            scenario = json.loads(text)
-            args = {
-                "indicator": indicator,
-                "indicator_type": "ipv4",
-                "time_range": scenario["time_range"],
-            }
-            message = SimpleNamespace(
-                tool_calls=[
-                    SimpleNamespace(
-                        id="fake_tool_call",
-                        function=SimpleNamespace(
-                            name="network_investigation", arguments=json.dumps(args)
-                        ),
-                    )
-                ],
-                content=None,
-            )
-        else:
-            message = SimpleNamespace(
-                tool_calls=None,
-                content=self.assessment_content,
-            )
-        return SimpleNamespace(
-            id=f"fake_response_{len(self.requests)}",
-            model="gpt-4.1-mini-2025-04-14",
-            usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
-            choices=[SimpleNamespace(message=message, finish_reason=self.finish_reason)],
-        )
 
 
 # --- Test _assessment_failure_reason directly ---
@@ -918,7 +788,7 @@ def test_partial_report_has_no_raw_response_on_json_not_object(monkeypatch, tmp_
         },
     )
     output = tmp_path / "partial_not_object.json"
-    client = AssessmentClientForValidator(assessment_content="null", finish_reason="stop")
+    client = FakeAssessmentClient(assessment_content="null", finish_reason="stop")
     with pytest.raises(ValueError):
         demo.run_model_driven_demo(_snapshot(tmp_path / "ctu.duckdb"), output, client=client)
 
@@ -947,7 +817,7 @@ def test_partial_report_has_no_raw_response_on_finish_reason_invalid(monkeypatch
     )
     output = tmp_path / "partial_finish.json"
     # Invalid finish_reason
-    client = AssessmentClientForValidator(
+    client = FakeAssessmentClient(
         assessment_content='{"assessment": "partial',
         finish_reason="sk-secret-key-value",
     )
@@ -974,7 +844,7 @@ def test_assessment_flag_false_on_first_scenario_failure(monkeypatch, tmp_path):
         },
     )
     output = tmp_path / "first_fail.json"
-    client = AssessmentClientForValidator(assessment_content="not valid json", finish_reason="stop")
+    client = FakeAssessmentClient(assessment_content="not valid json", finish_reason="stop")
     with pytest.raises(ValueError):
         demo.run_model_driven_demo(_snapshot(tmp_path / "ctu.duckdb"), output, client=client)
 
