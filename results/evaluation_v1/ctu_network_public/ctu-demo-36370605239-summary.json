@@ -1,0 +1,43 @@
+{
+  "artifact_id": 10948812931,
+  "artifact_name": "ctu-network-public-live-demo",
+  "artifact_scope": "model tool selection followed by fixed network lookup",
+  "attempted_calls": 2,
+  "cost_usd": 0.000492,
+  "cost_unknown": false,
+  "execution_semantics": {
+    "assessment_source": "deterministic_template",
+    "end_to_end_model_driven_investigation_demonstrated": false,
+    "model_generated_arguments_executed": false,
+    "model_generated_assessment": false,
+    "model_role": "network_tool_selection_only",
+    "tool_arguments_source": "preselected_scenario"
+  },
+  "model": "gpt-4.1-mini-2025-04-14",
+  "provider_request_ids_recorded": false,
+  "responses_received": 2,
+  "run_sha": "ac604ab5ada1e6b8238b60a763624ff8e7d2fd57",
+  "run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36370605239",
+  "scenarios": [
+    {
+      "ground_truth_label": "Botnet",
+      "name": "botnet",
+      "network_tool_requested": true,
+      "observed_evidence_items": 4,
+      "source_row_references": 7,
+      "usage": {"input_tokens": 347, "output_tokens": 67, "cost_usd": 0.000246}
+    },
+    {
+      "ground_truth_label": "Normal",
+      "name": "normal",
+      "network_tool_requested": true,
+      "observed_evidence_items": 1,
+      "source_row_references": 1,
+      "usage": {"input_tokens": 347, "output_tokens": 67, "cost_usd": 0.000246}
+    }
+  ],
+  "snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "total_input_tokens": 694,
+  "total_output_tokens": 134,
+  "workflow_run_id": 36370605239
+}

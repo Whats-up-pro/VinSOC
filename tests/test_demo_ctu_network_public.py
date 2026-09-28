@@ -83,11 +83,22 @@ def test_live_demo_sends_only_network_tool_and_persists_sanitized_usage(monkeypa
         def __init__(self): self.requests = []; self.chat = SimpleNamespace(completions=self)
         def create(self, **request):
             self.requests.append(request)
-            call = SimpleNamespace(function=SimpleNamespace(name="network_investigation"))
+            call = SimpleNamespace(function=SimpleNamespace(
+                name="network_investigation",
+                arguments='{"indicator":"203.0.113.77","time_range":{"start":"2026-01-01","end":"2026-01-02"}}',
+            ))
             return SimpleNamespace(model=demo.MODEL, usage=SimpleNamespace(prompt_tokens=10, completion_tokens=5), choices=[SimpleNamespace(message=SimpleNamespace(tool_calls=[call]))])
     monkeypatch.setattr(demo, "validate", lambda *_args, **_kwargs: {"version": "v", "logical_snapshot_sha256": "a" * 64})
     client = Client()
     result = demo.run_live_demo(path, tmp_path / "live.json", client=client)
     assert result["attempted_calls"] == result["responses_received"] == 2
     assert all([tool["function"]["name"] for tool in request["tools"]] == ["network_investigation"] for request in client.requests)
+    assert result["execution_semantics"] == {
+        "model_role": "network_tool_selection_only",
+        "tool_arguments_source": "preselected_scenario",
+        "model_generated_arguments_executed": False,
+        "assessment_source": "deterministic_template",
+        "model_generated_assessment": False,
+    }
+    assert result["scenarios"][0]["tool_trace"][0]["arguments"]["indicator"] == "192.0.2.10"
     assert "content" not in (tmp_path / "live.json").read_text(encoding="utf-8")

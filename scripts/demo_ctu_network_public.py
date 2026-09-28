@@ -123,7 +123,7 @@ def _write_report(path: Path, report: dict[str, Any]) -> None:
 
 
 def run_live_demo(snapshot_path: Path, output: Path, *, client: Any) -> dict[str, Any]:
-    """Run exactly two capped requests; model text and raw responses are not persisted."""
+    """Measure model tool selection, then run a fixed network lookup for each scenario."""
     scenarios = [select_scenario(snapshot_path, name) for name in ("botnet", "normal")]
     tools = [item for item in get_tool_schemas() if item["function"]["name"] == "network_investigation"]
     requests = [{"model": MODEL, "temperature": 0, "max_completion_tokens": CAP, "tools": tools,
@@ -133,7 +133,14 @@ def run_live_demo(snapshot_path: Path, output: Path, *, client: Any) -> dict[str
     report: dict[str, Any] = {"demo_mode": "live", "model": MODEL, "temperature": 0, "max_completion_tokens": CAP,
         "max_retries": 0, "tool_allowlist": ["network_investigation"], "r2_known_cost_usd": 0.0008788,
         "combined_ceiling_usd": 0.0008788 + sum(bounds), "attempted_calls": 0, "responses_received": 0,
-        "known_cost_usd": 0.0, "cost_unknown": False, "scenarios": []}
+        "known_cost_usd": 0.0, "cost_unknown": False, "scenarios": [],
+        "execution_semantics": {
+            "model_role": "network_tool_selection_only",
+            "tool_arguments_source": "preselected_scenario",
+            "model_generated_arguments_executed": False,
+            "assessment_source": "deterministic_template",
+            "model_generated_assessment": False,
+        }}
     if report["combined_ceiling_usd"] >= 1.0:
         raise ValueError("Combined R2 and live-demo budget ceiling exceeds $1.00")
     _write_report(output, report)
