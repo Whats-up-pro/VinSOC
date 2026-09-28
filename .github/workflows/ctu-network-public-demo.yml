@@ -1,0 +1,49 @@
+name: CTU-only network live demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  demo:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - name: Download pinned CTU sources and verify checksums
+        run: |
+          python - <<'PY'
+          import hashlib, json, urllib.request
+          from pathlib import Path
+          manifest=json.loads(Path('evaluation/ctu_network_public/dataset_manifest.json').read_text())
+          for source in manifest['sources']:
+              path=Path(source['path']); path.parent.mkdir(parents=True, exist_ok=True)
+              with urllib.request.urlopen(source['source_url'], timeout=120) as response:
+                  data=response.read()
+              if hashlib.sha256(data).hexdigest()!=source['file_sha256']: raise SystemExit('Pinned checksum mismatch')
+              path.write_bytes(data)
+          PY
+      - name: Build and validate locked snapshot
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot --manifest evaluation/ctu_network_public/dataset_manifest.json --snapshot "$RUNNER_TEMP/ctu-demo.duckdb" --report "$RUNNER_TEMP/ctu-demo-build.json"
+          python -m evaluation.ctu_network_public.contract --snapshot "$RUNNER_TEMP/ctu-demo.duckdb"
+      - name: Run capped network-only live demo
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then echo "OPENAI_API_KEY is missing"; exit 1; fi
+          python -m scripts.demo_ctu_network_public --snapshot "$RUNNER_TEMP/ctu-demo.duckdb" --scenario botnet --live --output "$RUNNER_TEMP/ctu-live-demo.json"
+      - name: Upload demo evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctu-network-public-live-demo
+          path: ${{ runner.temp }}/ctu-live-demo.json
+          if-no-files-found: warn
+          retention-days: 90

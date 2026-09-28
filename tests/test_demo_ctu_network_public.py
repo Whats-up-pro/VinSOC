@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import duckdb
 
@@ -70,3 +71,23 @@ def test_normal_scenario_selects_a_ctu_normal_label_with_its_full_label_prefix(t
     scenario = demo.select_scenario(path, "normal")
     assert scenario["indicator"] == "192.0.2.11"
     assert scenario["label"] == "Normal"
+
+
+def test_live_demo_sends_only_network_tool_and_persists_sanitized_usage(monkeypatch, tmp_path):
+    from scripts import demo_ctu_network_public as demo
+
+    path = _snapshot(tmp_path / "ctu.duckdb")
+    with duckdb.connect(str(path)) as conn:
+        conn.execute("INSERT INTO network_flows VALUES ('ctu13_s5', '43', TIMESTAMP '2011-08-15 10:00:00', '192.0.2.11', 1, '198.51.100.11', 443, 'TCP', 'CON', 1, 1, 'flow=From-Normal-V46-Grill')")
+    class Client:
+        def __init__(self): self.requests = []; self.chat = SimpleNamespace(completions=self)
+        def create(self, **request):
+            self.requests.append(request)
+            call = SimpleNamespace(function=SimpleNamespace(name="network_investigation"))
+            return SimpleNamespace(model=demo.MODEL, usage=SimpleNamespace(prompt_tokens=10, completion_tokens=5), choices=[SimpleNamespace(message=SimpleNamespace(tool_calls=[call]))])
+    monkeypatch.setattr(demo, "validate", lambda *_args, **_kwargs: {"version": "v", "logical_snapshot_sha256": "a" * 64})
+    client = Client()
+    result = demo.run_live_demo(path, tmp_path / "live.json", client=client)
+    assert result["attempted_calls"] == result["responses_received"] == 2
+    assert all([tool["function"]["name"] for tool in request["tools"]] == ["network_investigation"] for request in client.requests)
+    assert "content" not in (tmp_path / "live.json").read_text(encoding="utf-8")
