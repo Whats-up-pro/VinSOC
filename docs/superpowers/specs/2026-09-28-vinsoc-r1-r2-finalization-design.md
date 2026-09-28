@@ -1,7 +1,7 @@
 # VinSOC R1/R2 Project Finalization Design
 
 **Date:** 2026-09-28  
-**Status:** Approved design for final implementation planning  
+**Status:** Pending written-spec review before implementation planning  
 **Base commit:** `e73770529be94beded00689470a7597fd810011e`
 
 ## 1. Purpose
@@ -326,7 +326,7 @@ Conditions:
 
 All conditions use the same GPT-5 Mini backbone and the same benchmark/scorer/snapshot contract.
 
-If the paid GPT-5 E0 artifact is byte-for-byte/configuration-equivalent to the E0 condition in the final series, reuse that artifact instead of paying for a duplicate E0 run.
+If the paid GPT-5 E0 run has the same model/request contract, system prompt, schema context, benchmark split, snapshot identity, and scorer identity required by the final E0 condition, reuse that run instead of paying for a duplicate E0 call series. Report-file byte identity is not required.
 
 ### 6.6 DualSQL framework stabilization
 
