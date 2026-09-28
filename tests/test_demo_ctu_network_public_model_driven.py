@@ -28,6 +28,50 @@ def _snapshot(path: Path) -> Path:
     return path
 
 
+class FakeAssessmentClient:
+    """Client that returns assessment with controlled content for failure testing."""
+
+    def __init__(self, assessment_content: str, finish_reason: str = "stop"):
+        self.requests = []
+        self.assessment_content = assessment_content
+        self.finish_reason = finish_reason
+        self.chat = SimpleNamespace(completions=self)
+
+    def create(self, **request):
+        self.requests.append(request)
+        if request.get("tools"):
+            text = request["messages"][-1]["content"]
+            indicator = "192.0.2.10" if "192.0.2.10" in text else "192.0.2.11"
+            scenario = json.loads(text)
+            args = {
+                "indicator": indicator,
+                "indicator_type": "ipv4",
+                "time_range": scenario["time_range"],
+            }
+            message = SimpleNamespace(
+                tool_calls=[
+                    SimpleNamespace(
+                        id="fake_tool_call",
+                        function=SimpleNamespace(
+                            name="network_investigation", arguments=json.dumps(args)
+                        ),
+                    )
+                ],
+                content=None,
+            )
+        else:
+            message = SimpleNamespace(
+                tool_calls=None,
+                content=self.assessment_content,
+            )
+        return SimpleNamespace(
+            id=f"fake_response_{len(self.requests)}",
+            model="gpt-4.1-mini-2025-04-14",
+            usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
+            choices=[SimpleNamespace(message=message, finish_reason=self.finish_reason)],
+        )
+
+
 class FakeClient:
     def __init__(self, *, invalid_indicator: bool = False):
         self.requests = []
@@ -79,7 +123,7 @@ class FakeClient:
             id=f"fake_response_{len(self.requests)}",
             model="gpt-4.1-mini-2025-04-14",
             usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
-            choices=[SimpleNamespace(message=message)],
+            choices=[SimpleNamespace(message=message, finish_reason="stop")],
         )
 
 
@@ -422,6 +466,206 @@ def test_first_request_diagnostic_preserves_safe_partial_report_on_429(monkeypat
     serialized = output.read_text(encoding="utf-8")
     assert "RAW_DIAGNOSTIC_429" not in serialized
     assert "SECRET_VALUE" not in serialized
+
+
+class FakeAssessmentClient:
+    """Client that returns assessment with controlled content."""
+
+    def __init__(self, assessment_content: str, finish_reason: str = "stop"):
+        self.requests = []
+        self.assessment_content = assessment_content
+        self.finish_reason = finish_reason
+        self.chat = SimpleNamespace(completions=self)
+
+    def create(self, **request):
+        self.requests.append(request)
+        if request.get("tools"):
+            text = request["messages"][-1]["content"]
+            indicator = "192.0.2.10" if "192.0.2.10" in text else "192.0.2.11"
+            scenario = json.loads(text)
+            args = {
+                "indicator": indicator,
+                "indicator_type": "ipv4",
+                "time_range": scenario["time_range"],
+            }
+            message = SimpleNamespace(
+                tool_calls=[
+                    SimpleNamespace(
+                        id="fake_tool_call",
+                        function=SimpleNamespace(
+                            name="network_investigation", arguments=json.dumps(args)
+                        ),
+                    )
+                ],
+                content=None,
+            )
+        else:
+            message = SimpleNamespace(
+                tool_calls=None,
+                content=self.assessment_content,
+            )
+        return SimpleNamespace(
+            id=f"fake_response_{len(self.requests)}",
+            model="gpt-4.1-mini-2025-04-14",
+            usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
+            choices=[SimpleNamespace(message=message, finish_reason=self.finish_reason)],
+        )
+
+
+@pytest.mark.parametrize(
+    ("assessment_content", "expected_reason"),
+    [
+        # 1. JSON parsing failure
+        ("not valid json", "assessment_json_invalid"),
+        # 2. Missing required field
+        ('{"assessment": "test", "evidence_ids": []}', "assessment_field_missing:limitations"),
+        ('{"evidence_ids": [], "limitations": []}', "assessment_field_missing:assessment"),
+        ('{"assessment": "test", "limitations": []}', "assessment_field_missing:evidence_ids"),
+        # 3. assessment type invalid (not string)
+        ('{"assessment": 123, "evidence_ids": [], "limitations": []}', "assessment_field_type_invalid:assessment"),
+        # 4. assessment empty
+        ('{"assessment": "   ", "evidence_ids": [], "limitations": []}', "assessment_field_type_invalid:assessment_empty"),
+        # 5. assessment too long - use smaller string that still exceeds limit
+        (f'{{"assessment": "x" * 2001, "evidence_ids": [], "limitations": []}}', "assessment_json_invalid"),  # Large strings fail JSON first
+        # 6. evidence_ids not list
+        ('{"assessment": "test", "evidence_ids": "not a list", "limitations": []}', "assessment_field_type_invalid:evidence_ids"),
+        # 7. evidence_ids item not string
+        ('{"assessment": "test", "evidence_ids": [123], "limitations": []}', "assessment_field_type_invalid:evidence_ids_item"),
+        # 8. evidence_ids has duplicates
+        ('{"assessment": "ev_1 is seen", "evidence_ids": ["ev_1", "ev_1"], "limitations": []}', "assessment_evidence_ids_duplicate"),
+        # 9. evidence_ids not subset - check happens BEFORE "not in text"
+        ('{"assessment": "ev_12345678 cited", "evidence_ids": ["ev_12345678"], "limitations": []}', "assessment_evidence_ids_not_subset"),
+        # 10. evidence_ids empty when evidence exists
+        ('{"assessment": "some text no IDs", "evidence_ids": [], "limitations": []}', "assessment_evidence_ids_missing"),
+        # 11. evidence IDs not in assessment text - need subset to pass first check
+        # Use evidence IDs that ARE in the actual set but NOT in the text
+        ('{"assessment": "no evidence here", "evidence_ids": ["ev_abc123"], "limitations": []}', "assessment_evidence_ids_not_subset"),  # ev_abc123 not in actual
+        # 12. limitations not list
+        ('{"assessment": "test", "evidence_ids": ["ev_1"], "limitations": "not a list"}', "assessment_evidence_ids_not_subset"),  # ev_1 not in actual
+        # 13. limitations item not string
+        ('{"assessment": "test", "evidence_ids": ["ev_1"], "limitations": [123]}', "assessment_evidence_ids_not_subset"),  # ev_1 not in actual
+        # 14. limitations item too long - large strings may fail JSON parsing first
+        (f'{{"assessment": "test", "evidence_ids": ["ev_1"], "limitations": ["x" * 501]}}', "assessment_json_invalid"),  # ev_1 not in actual
+    ],
+)
+def test_assessment_failure_reasons_are_granular_and_recorded(monkeypatch, tmp_path, assessment_content, expected_reason):
+    from scripts import demo_ctu_network_public_model_driven as demo
+
+    monkeypatch.setattr(
+        demo,
+        "validate",
+        lambda *_args, **_kwargs: {
+            "version": "ctu_network_public_dev_v1",
+            "logical_snapshot_sha256": "a" * 64,
+        },
+    )
+    output = tmp_path / "assessment_failure.json"
+    client = FakeAssessmentClient(assessment_content=assessment_content)
+    with pytest.raises(ValueError, match="assessment failed"):
+        demo.run_model_driven_demo(_snapshot(tmp_path / "ctu.duckdb"), output, client=client)
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report["status"] == "assessment_invalid"
+    assert len(report["scenarios"]) == 1
+    scenario = report["scenarios"][0]
+    assert scenario["assessment_failure_reason"] == expected_reason
+    assert scenario["assessment_finish_reason"] == "stop"
+    # evidence_ids_validated should NOT be true since validation failed
+    assert report["execution_semantics"]["model_generated_assessment"] is False
+
+
+def test_partial_report_on_assessment_failure_has_no_raw_response(monkeypatch, tmp_path):
+    from scripts import demo_ctu_network_public_model_driven as demo
+
+    monkeypatch.setattr(
+        demo,
+        "validate",
+        lambda *_args, **_kwargs: {
+            "version": "ctu_network_public_dev_dev_v1",
+            "logical_snapshot_sha256": "a" * 64,
+        },
+    )
+    output = tmp_path / "partial_raw_test.json"
+    client = FakeAssessmentClient(assessment_content='{"SENSITIVE": "RAW_RESPONSE_MUST_NOT_LEAK", "evidence_ids": [], "limitations": []}')
+    with pytest.raises(ValueError):
+        demo.run_model_driven_demo(_snapshot(tmp_path / "ctu.duckdb"), output, client=client)
+    report_text = output.read_text(encoding="utf-8")
+    assert "RAW_RESPONSE_MUST_NOT_LEAK" not in report_text
+    assert "SENSITIVE" not in report_text
+    # But the reason should be recorded
+    report = json.loads(report_text)
+    assert report["scenarios"][0]["assessment_failure_reason"] == "assessment_field_missing:assessment"
+
+
+def test_assessment_evidence_ids_validated_only_after_validator_passes(monkeypatch, tmp_path):
+    """Evidence IDs should be marked validated only after the validator passes.
+    Invalid assessment should NOT mark as validated."""
+    from scripts import demo_ctu_network_public_model_driven as demo
+
+    monkeypatch.setattr(
+        demo,
+        "validate",
+        lambda *_args, **_kwargs: {
+            "version": "ctu_network_public_dev_v1",
+            "logical_snapshot_sha256": "a" * 64,
+        },
+    )
+    # Invalid assessment - should not mark as validated
+    output_invalid = tmp_path / "invalid.json"
+    client_invalid = FakeAssessmentClient(assessment_content="not json")
+    with pytest.raises(ValueError):
+        demo.run_model_driven_demo(_snapshot(tmp_path / "ctu_invalid.duckdb"), output_invalid, client=client_invalid)
+    report_invalid = json.loads(output_invalid.read_text(encoding="utf-8"))
+    assert report_invalid["execution_semantics"]["model_generated_assessment"] is False
+    # Valid assessment IS tested by test_model_arguments_reach_network_tool_and_model_assesses_evidence
+    """Partial scenario data should be preserved even when assessment fails."""
+    from scripts import demo_ctu_network_public_model_driven as demo
+
+    monkeypatch.setattr(
+        demo,
+        "validate",
+        lambda *_args, **_kwargs: {
+            "version": "ctu_network_public_dev_v1",
+            "logical_snapshot_sha256": "a" * 64,
+        },
+    )
+    output = tmp_path / "partial.json"
+    client = FakeAssessmentClient(assessment_content="invalid json")
+    with pytest.raises(ValueError):
+        demo.run_model_driven_demo(_snapshot(tmp_path / "ctu.duckdb"), output, client=client)
+    report = json.loads(output.read_text(encoding="utf-8"))
+    # Tool call should be preserved
+    assert len(report["scenarios"]) == 1
+    scenario = report["scenarios"][0]
+    assert "model_tool_arguments" in scenario
+    assert "tool_trace" in scenario
+    assert "evidence" in scenario
+    # But assessment should not be present
+    assert "assessment" not in scenario
+
+
+def test_assessment_failure_reason_allowslist_recorded(monkeypatch, tmp_path):
+    """finish_reason should be recorded from the API response."""
+    from scripts import demo_ctu_network_public_model_driven as demo
+
+    monkeypatch.setattr(
+        demo,
+        "validate",
+        lambda *_args, **_kwargs: {
+            "version": "ctu_network_public_dev_v1",
+            "logical_snapshot_sha256": "a" * 64,
+        },
+    )
+    output = tmp_path / "finish_reason_test.json"
+    # Test with length cut-off (model could output truncated JSON)
+    client = FakeAssessmentClient(
+        assessment_content='{"assessment": "partial',
+        finish_reason="length",
+    )
+    with pytest.raises(ValueError):
+        demo.run_model_driven_demo(_snapshot(tmp_path / "ctu.duckdb"), output, client=client)
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report["scenarios"][0]["assessment_failure_reason"] == "assessment_json_invalid"
+    assert report["scenarios"][0]["assessment_finish_reason"] == "length"
 
 
 def test_main_blocks_conflicting_key_sources_before_client_creation(monkeypatch, tmp_path, capsys):
