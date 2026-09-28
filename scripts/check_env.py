@@ -12,41 +12,78 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
+from collections.abc import Mapping
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
+
+from dotenv import dotenv_values
+
+KeySource = Literal[
+    "dotenv",
+    "process_environment",
+    "both_same",
+    "conflicting_key_sources",
+    "missing",
+]
+
+
+@dataclass(frozen=True)
+class OpenAIKeyResolution:
+    """Resolved key plus a non-sensitive description of its source."""
+
+    key: str | None
+    source: KeySource
+
+
+def resolve_openai_key(
+    process_env: Mapping[str, str], dotenv_env: Mapping[str, str]
+) -> OpenAIKeyResolution:
+    """Resolve OPENAI_API_KEY without exposing any property of its value."""
+    process_value = process_env.get("OPENAI_API_KEY") or None
+    dotenv_value = dotenv_env.get("OPENAI_API_KEY") or None
+    if process_value and dotenv_value:
+        if process_value == dotenv_value:
+            return OpenAIKeyResolution(process_value, "both_same")
+        return OpenAIKeyResolution(None, "conflicting_key_sources")
+    if process_value:
+        return OpenAIKeyResolution(process_value, "process_environment")
+    if dotenv_value:
+        return OpenAIKeyResolution(dotenv_value, "dotenv")
+    return OpenAIKeyResolution(None, "missing")
 
 
 def load_env(path: Path) -> dict[str, str]:
     """Load environment variables from .env file without modifying the file."""
-    env_vars = {}
-    if path.exists():
-        with open(path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#"):
-                    if "=" in line:
-                        key, _, value = line.partition("=")
-                        env_vars[key.strip()] = value.strip()
-    return env_vars
+    if not path.exists():
+        return {}
+    return {
+        key: value
+        for key, value in dotenv_values(path, interpolate=False).items()
+        if isinstance(value, str)
+    }
 
 
-def check_env() -> int:
+def check_env(
+    *,
+    process_env: Mapping[str, str] | None = None,
+    dotenv_env: Mapping[str, str] | None = None,
+) -> int:
     """Check .env configuration and report status."""
-    env_path = Path(".env")
-    env_vars = load_env(env_path)
+    process_values = os.environ if process_env is None else process_env
+    dotenv_values_map = load_env(Path(".env")) if dotenv_env is None else dotenv_env
+    resolution = resolve_openai_key(process_values, dotenv_values_map)
+    print(f"OPENAI_API_KEY source: {resolution.source}")
+    if resolution.source == "conflicting_key_sources":
+        return 1
 
-    api_key = env_vars.get("OPENAI_API_KEY", "")
-    base_url = env_vars.get("OPENAI_BASE_URL", "")
-
-    # Check OPENAI_API_KEY
-    if api_key:
+    if resolution.key:
         print("OPENAI_API_KEY: present")
     else:
         print("OPENAI_API_KEY: missing")
         print("  -> Set OPENAI_API_KEY in .env to use local evaluation")
 
-    # Block OPENAI_BASE_URL
-    if base_url:
+    if process_values.get("OPENAI_BASE_URL") or dotenv_values_map.get("OPENAI_BASE_URL"):
         print("OPENAI_BASE_URL: configured")
         print("  -> BLOCKED: R2 pilot requires standard OpenAI endpoint")
         print("  -> Remove OPENAI_BASE_URL from .env")
