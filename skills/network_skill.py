@@ -323,6 +323,14 @@ class NetworkSkill(BaseSkill):
                     "source_record_ids": [
                         event.source_record_id for event in group[:100] if event.source_record_id
                     ],
+                    "source_records": [
+                        {
+                            "source_dataset": event.provenance.get("dataset"),
+                            "source_row_id": event.source_record_id,
+                        }
+                        for event in group[:100]
+                        if event.provenance.get("dataset") and event.source_record_id
+                    ],
                     "source_event_count": len(group),
                     "record_ids_truncated": len(group) > 100,
                 },
