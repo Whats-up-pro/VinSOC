@@ -1,0 +1,33 @@
+{
+  "version": "dualsql_lite_ctu_gpt5_v1",
+  "e0_report_sha256": "33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15",
+  "e0_run_id": "36520685612",
+  "dev_version": "ctu_network_public_dev_v1",
+  "case_ids": ["ctu_sql_001", "ctu_sql_002", "ctu_sql_003", "ctu_sql_004", "ctu_sql_005", "ctu_sql_006", "ctu_sql_007", "ctu_sql_008"],
+  "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+  "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "source_file_sha256": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+  },
+  "builder_scorer_sha256": {
+    "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+    "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+  },
+  "system_prompt_sha256": "ceefaab0bb4cbf69d4cb4cd3fad91297f7f5b823f13d2f22d11c976a5bb50115",
+  "schema_context_sha256": "3dfc6d713fcedff0523f1bfd6707a5a6332260380057433f8916387f1687dc71",
+  "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+  "model": "gpt-5-mini-2025-08-07",
+  "reasoning_effort": "low",
+  "max_completion_tokens": 1000,
+  "max_retries": 0,
+  "pricing": {
+    "input_usd_per_million": 0.25,
+    "output_usd_per_million": 2.0,
+    "source": "https://developers.openai.com/api/docs/models/gpt-5-mini",
+    "verified_utc": "2026-09-29T10:33:37Z",
+    "stop_if_current_official_price_differs": true
+  }
+}
