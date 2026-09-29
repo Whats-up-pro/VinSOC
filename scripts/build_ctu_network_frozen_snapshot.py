@@ -56,7 +56,15 @@ def _write_normalized_csv(source: dict[str, Any], path: Path) -> int:
         writer = None
         for row in iter_ctu_rows(Path(source["path"]), source["dataset_id"]):
             if writer is None:
-                writer = csv.DictWriter(handle, fieldnames=list(row), lineterminator="\n")
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=list(row),
+                    delimiter=",",
+                    quotechar='"',
+                    doublequote=True,
+                    quoting=csv.QUOTE_MINIMAL,
+                    lineterminator="\n",
+                )
                 writer.writeheader()
             writer.writerow(row)
             count += 1
@@ -119,14 +127,23 @@ def build_ctu_network_frozen_snapshot(
         with duckdb.connect(str(built)) as conn:
             conn.execute("SET memory_limit='512MB'")
             conn.execute(f"SET temp_directory='{_quoted_path(temp_dir)}'")
-            conn.execute(f"COPY network_flows FROM '{_quoted_path(csv_path)}' (FORMAT CSV, HEADER TRUE, NULL '')")
+            conn.execute(
+                f"COPY network_flows FROM '{_quoted_path(csv_path)}' "
+                "(FORMAT CSV, HEADER TRUE, AUTO_DETECT FALSE, "
+                "DELIMITER ',', QUOTE '\"', ESCAPE '\"', NULL '')"
+            )
     with duckdb.connect(str(built), read_only=True) as conn:
         names = {row[0] for row in conn.execute("SHOW TABLES").fetchall()}
         actual_counts = dict(conn.execute(
             "SELECT source_dataset, count(*) FROM network_flows GROUP BY source_dataset"
         ).fetchall())
+        distinct_source_row_id = conn.execute(
+            "SELECT count(DISTINCT source_dataset || ':' || source_row_id) "
+            "FROM network_flows"
+        ).fetchone()[0]
         provenance = conn.execute("SELECT count(*) FROM dataset_provenance").fetchone()[0]
-    if names != TABLES or actual_counts != counts or provenance != 2:
+    if (names != TABLES or actual_counts != counts or provenance != 2
+            or distinct_source_row_id != sum(counts.values())):
         raise ValueError("Frozen snapshot table, source count, or provenance mismatch")
     schema, content_hash = _logical_content_hash(built, temp_dir)
     os.replace(built, snapshot_path)
@@ -138,7 +155,7 @@ def build_ctu_network_frozen_snapshot(
         "source_urls": {s["dataset_id"]: s["source_url"] for s in sources},
         "source_row_counts": counts,
         "row_counts": {"network_flows": sum(counts.values())},
-        "distinct_source_row_id": sum(counts.values()),
+        "distinct_source_row_id": distinct_source_row_id,
         "row_identity_proof": "PRIMARY KEY(source_dataset, source_row_id) enforced on COPY",
         "tables": sorted(names),
         "schema": schema,
