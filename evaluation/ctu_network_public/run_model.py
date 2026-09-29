@@ -8,6 +8,7 @@ import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
+from time import perf_counter
 from typing import Any
 
 from evaluation.ctu_network_public.contract import CASES, LOCK, validate
@@ -140,16 +141,19 @@ def checked_usage(response: Any) -> tuple[int, int]:
 
 def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflight_only: bool = False) -> dict[str, Any]:
     snapshot_path, output = Path(snapshot_path), Path(output)
+    if output.exists():
+        raise FileExistsError(f"Evidence output already exists: {output}")
     lock = validate(snapshot_path, LOCK)
     cases = [SQLBenchmarkCase.from_dict(json.loads(path.read_text(encoding="utf-8"))) for path in sorted(CASES.glob("*.json"))]
     snapshot = DuckDBSnapshot(snapshot_path)
     schema = schema_context(snapshot)
     requests = [build_request(case, schema) for case in cases]
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    run_id = os.environ.get("GITHUB_RUN_ID") or output.parent.name
 
     def _make_report(preflight: dict[str, Any]) -> dict[str, Any]:
         return {
-            "version": lock["version"], "run_status": "preflight_complete", "pilot_eligible": False,
+            "run_id": run_id, "version": lock["version"], "run_status": "preflight_complete", "pilot_eligible": False,
             "evaluator_commit_sha": sha, "case_ids": [case.case_id for case in cases],
             "model_config_sha256": _MODEL_CONFIG_SHA256,
             "config": {"provider": "openai", "model": MODEL, "reasoning_effort": REASONING_EFFORT,
@@ -160,7 +164,9 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
             "provenance": {"logical_snapshot_sha256": lock["logical_snapshot_sha256"],
                            "split_sha256": lock["split_sha256"], "source_file_sha256": lock["source_file_sha256"],
                            "builder_scorer_sha256": lock["builder_scorer_sha256"],
-                           "model_config_sha256": _MODEL_CONFIG_SHA256},
+                           "model_config_sha256": _MODEL_CONFIG_SHA256,
+                           "system_prompt_sha256": hashlib.sha256(requests[0]["messages"][0]["content"].encode("utf-8")).hexdigest(),
+                           "schema_context_sha256": hashlib.sha256(schema.encode("utf-8")).hexdigest()},
             "preflight": preflight, "serialized_requests": requests, "case_results": [],
             "attempted_calls": 0, "responses_received": 0, "calls_with_valid_usage": 0,
         }
@@ -181,12 +187,13 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
     _save(output, report)
     if preflight_only:
         return report
+    if os.environ.get("GITHUB_RUN_ATTEMPT", "1") != "1":
+        report["run_status"] = "identity_blocked"
+        _save(output, report)
+        raise ValueError("Actions rerun is blocked; use a new workflow dispatch for a diagnosed new attempt")
     if os.environ.get("GITHUB_REF") != "refs/heads/master" or os.environ.get("GITHUB_SHA") != sha:
-        raise ValueError("Paid runner requires exact master Actions checkout")
-    client = client or make_client()
-    if preflight_only:
-        return report
-    if os.environ.get("GITHUB_REF") != "refs/heads/master" or os.environ.get("GITHUB_SHA") != sha:
+        report["run_status"] = "identity_blocked"
+        _save(output, report)
         raise ValueError("Paid runner requires exact master Actions checkout")
     client = client or make_client()
     known = 0.0
@@ -203,9 +210,14 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
         report["attempted_calls"] += 1
         report["run_status"] = "in_progress"
         _save(output, report)
+        started = perf_counter()
         try:
             response = client.chat.completions.create(**request)
             report["responses_received"] += 1
+            attempt["latency_ms"] = (perf_counter() - started) * 1000
+            attempt["response_id"] = getattr(response, "id", None)
+            attempt["actual_model"] = getattr(response, "model", None)
+            _save(output, report)
             input_tokens, output_tokens = checked_usage(response)
             charged = cost_usd(input_tokens, output_tokens)
             known += charged
@@ -237,6 +249,7 @@ def run(snapshot_path: Path, output: Path, *, client: Any | None = None, preflig
                             "error_category": _sql_error_category(evaluation)})
             _save(output, report)
         except Exception as exc:
+            attempt.setdefault("latency_ms", (perf_counter() - started) * 1000)
             if report["responses_received"] < report["attempted_calls"] or not attempt.get("cost_usd"):
                 report["pricing"]["cost_unknown"] = True
             attempt.update({"outcome": "provider_or_validation_error", "failure_category": type(exc).__name__})

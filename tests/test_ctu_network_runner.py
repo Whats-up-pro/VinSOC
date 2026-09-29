@@ -88,6 +88,60 @@ def test_runner_sends_eight_pinned_requests_and_records_usage(monkeypatch, tmp_p
     assert report["config"]["temperature"] is None
 
 
+def test_runner_preserves_run_identity_prompt_and_case_latency(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    monkeypatch.setenv("GITHUB_RUN_ID", "123456")
+    output = tmp_path / "report.json"
+    report = runner.run(tmp_path / "snapshot.duckdb", output, client=FakeClient())
+    assert report["run_id"] == "123456"
+    assert report["provenance"]["system_prompt_sha256"] == hashlib.sha256(
+        report["serialized_requests"][0]["messages"][0]["content"].encode("utf-8")
+    ).hexdigest()
+    assert all(type(item["latency_ms"]) is float and item["latency_ms"] >= 0
+               for item in report["case_results"])
+    assert json.loads(output.read_text(encoding="utf-8"))["run_id"] == "123456"
+
+
+def test_runner_never_overwrites_an_existing_report(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    output = tmp_path / "report.json"
+    output.write_text('{"historical":true}\n', encoding="utf-8")
+    client = FakeClient()
+    with pytest.raises(FileExistsError):
+        runner.run(tmp_path / "snapshot.duckdb", output, client=client)
+    assert output.read_text(encoding="utf-8") == '{"historical":true}\n'
+    assert client.completions.requests == []
+
+
+def test_wrong_actions_sha_blocks_before_provider_call(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    monkeypatch.setenv("GITHUB_SHA", "e" * 40)
+    output = tmp_path / "report.json"
+    client = FakeClient()
+    with pytest.raises(ValueError, match="exact master Actions checkout"):
+        runner.run(tmp_path / "snapshot.duckdb", output, client=client)
+    assert json.loads(output.read_text(encoding="utf-8"))["run_status"] == "identity_blocked"
+    assert client.completions.requests == []
+
+
+def test_actions_rerun_is_blocked_before_provider_call(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    monkeypatch.setenv("GITHUB_RUN_ATTEMPT", "2")
+    client = FakeClient()
+    with pytest.raises(ValueError, match="new workflow dispatch"):
+        runner.run(tmp_path / "snapshot.duckdb", tmp_path / "report.json", client=client)
+    assert client.completions.requests == []
+
+
+def test_wrong_model_response_records_actual_identity(monkeypatch, tmp_path):
+    setup_run(monkeypatch, tmp_path)
+    output = tmp_path / "report.json"
+    with pytest.raises(ValueError, match="Actual model"):
+        runner.run(tmp_path / "snapshot.duckdb", output, client=FakeClient("wrong_model"))
+    attempt = json.loads(output.read_text(encoding="utf-8"))["case_results"][0]
+    assert attempt["actual_model"] == "wrong-model"
+
+
 @pytest.mark.parametrize("mode", ["wrong_model", "missing_usage", "provider_error"])
 def test_runner_stops_and_preserves_partial_report(monkeypatch, tmp_path, mode):
     setup_run(monkeypatch, tmp_path)
