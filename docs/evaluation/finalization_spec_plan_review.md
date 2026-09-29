@@ -1,0 +1,15 @@
+# R1/R2 finalization spec and plan review
+
+Reviewed on 2026-09-29 before the next paid suite. Starting HEAD after `git fetch origin master` was `954c47e7360fdccadc6af4ae92a56814b751ad7b`, equal to `origin/master`. The implementation authority is the user's approval of the revised plan at `0a38e4de49527821e80597c7490cb7f13c0487dd`. Follow its 15 tasks in order; the earlier 14-step plan is superseded.
+
+| Point | Resolution for execution |
+| --- | --- |
+| Spec header still says "Pending written-spec review before implementation planning" | This document records the review. The user has explicitly approved implementation under the revised plan; the stale header is not treated as a new approval gate. The spec's benchmark, scorer, model, and frozen rules remain binding. |
+| Spec says remaining API spend should fit an approximate USD 2–3 budget; the plan recalls approximately USD 2 of credit, without a verified current balance | No numeric balance or USD 3 authority is inferred. Every new paid suite needs a current usable-credit check, a user-confirmed total cap, its own conservative ceiling, and cumulative accounting including the known E0 cost of USD 0.00384725. Stop before the API if either amount is unverified or insufficient. |
+| Spec execution order has 14 finalization steps; revised plan adds an E2E demo as Task 15 | Complete finalization and exact-SHA CI first. Run the demo afterward as a separate evidence class, with live calls distinguished from replay and no demo outcomes added to benchmark accuracy. |
+| Spec's Step 1 says run E0; revised plan's Task 1 seals an already completed E0 | The sole GPT-5 Mini E0 is Actions run `36520685612`, saved immutably. It scored 0/8 Execution Accuracy, with 8/8 syntax and execution success. Review its identity and errors offline; never dispatch E0 again because of its score. |
+| Historical GPT-4.1 Mini R1 22/24 and GPT-5 Mini R1 use different request contracts | Compare on the same 24-case dev v2 benchmark, prompt, production schemas, and scorer. Disclose model and request differences: GPT-5 Mini uses `reasoning_effort=low`, no temperature field, cap 1000, and SDK retries 0. The older 15/24 run is on a different benchmark/schema. |
+| Historical public-dev DualSQL v4 reported 5/8 on another snapshot | Keep it as exploratory history only. It is not a direct control for the CTU S5/S7 GPT-5 Mini E0 0/8. New E1/E2/E3 must use the locked CTU dev contract. |
+| The user's earlier gate outline groups R1/R2 selection before holdout; the spec and revised plan place offline R1 compatibility and S1/S4 source lock before DualSQL runs | Follow the explicit spec and approved revised plan sequence. Offline frozen preparation must use source data and deterministic gold checks only, without final model output or tuning. |
+
+No unresolved design conflict authorizes changing a question, gold SQL, scorer, source, model snapshot, or historical artifact. The open **execution blocker** for the next paid R1 suite is verified currently usable OpenAI credit and a confirmed remaining/total spend cap; exact-SHA CI, identity and preflight must also pass immediately before dispatch.
