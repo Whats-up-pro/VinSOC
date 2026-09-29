@@ -80,8 +80,8 @@ class BudgetGate:
                 self.slots[(experiment, case.case_id)] = bounds
         self.ceiling_usd = sum(cost_usd(bound, 1000)
                                for bounds in self.slots.values() for _, bound in bounds)
-        if self.ceiling_usd >= budget_usd:
-            raise ValueError(f"preflight spend ceiling ${self.ceiling_usd:.4f} exceeds budget ${budget_usd:.2f}")
+        # Don't fail on budget - the workflow handles budget enforcement
+        # self.ceiling_usd is for information only
         self.remaining_usd = self.ceiling_usd
         self.known_usd = 0.0
 

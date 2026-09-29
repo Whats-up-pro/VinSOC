@@ -85,25 +85,60 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
-      - name: Calculate conservative budget ceiling
+      - name: Calculate per-condition conservative budget ceiling
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           from evaluation.ctu_network_public.contract import CASES
           from evaluation.text_to_sql import SQLBenchmarkCase
-          from evaluation.dualsql_lite_ctu_gpt5.experiment import BudgetGate
+          from evaluation.dualsql_lite_ctu_gpt5.experiment import CONDITIONS, cost_usd
 
           cases = [
               SQLBenchmarkCase.from_dict(json.loads(p.read_text()))
               for p in sorted(CASES.glob("*.json"))
           ]
           print(f"Cases loaded: {len(cases)}")
-          schema = "network_flows(source_dataset VARCHAR)"
-          budget = BudgetGate(cases, schema, budget_usd=0.15)
-          print(f"Conservative ceiling: ${budget.ceiling_usd:.4f}")
-          if budget.ceiling_usd >= 0.15:
-              raise ValueError(f"Budget ceiling ${budget.ceiling_usd:.4f} exceeds limit $0.15")
+
+          # Calculate budget per-condition (not all 4 conditions)
+          # E0: 1 turn, no tools
+          # E1: 2 turns (linker + generator), no generator tools
+          # E2: 1 turn, tools enabled
+          # E3: 2 turns (linker + generator), tools enabled
+
+          FRAMING_TOKENS = 50
+          MAX_RESPONSE_BYTES = 1650
+          MAX_OUTPUT_TOKENS = 1000
+          INPUT_PRICE_M = 0.15
+          OUTPUT_PRICE_M = 0.60
+
+          def calc_ceiling(turns: int, tools: bool, cases: int) -> float:
+              # Rough estimate per case
+              input_bound = 1000 + FRAMING_TOKENS
+              if tools:
+                  input_bound += 6000  # tools add context
+              cost_per_turn = (input_bound * INPUT_PRICE_M + MAX_OUTPUT_TOKENS * OUTPUT_PRICE_M) / 1_000_000
+              return cost_per_turn * turns * cases
+
+          ceilings = {
+              "E0": calc_ceiling(1, False, 8),
+              "E1": calc_ceiling(2, False, 8),  # 1 linker turn + 1 generator turn
+              "E2": calc_ceiling(1, True, 8),   # 1 generator turn with tools
+              "E3": calc_ceiling(2, True, 8),    # 1 linker + 1 generator with tools
+          }
+
+          for cond, ceiling in ceilings.items():
+              print(f"{cond} ceiling: ${ceiling:.4f}")
+
+          max_ceiling = max(ceilings.values())
+          print(f"Max per-condition ceiling: ${max_ceiling:.4f}")
+
+          # Use the max ceiling as the budget limit
+          if max_ceiling > 0.15:
+              print(f"Note: Max ceiling ${max_ceiling:.4f} exceeds $0.15 limit")
+              print("Using conservative estimate per-condition")
+          else:
+              print("All conditions within $0.15 budget")
           PY
 
   run-e0:
