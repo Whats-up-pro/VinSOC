@@ -230,7 +230,8 @@ def run(output: Path, *, client: Any | None = None, preflight_only: bool = False
             _save(output, report)
             raise
         report["preflight"]["funding_gate"] = {
-            "source": "user-confirmed available credit and total limit",
+            "source": "user-attested usable-credit lower bound and confirmed total limit",
+            "credit_value_semantics": "minimum usable credit attested for this suite; not exact account balance",
             "confirmed_total_budget_usd": confirmed_total,
             "verified_credit_usd": verified_credit,
             "checked_utc": datetime.now(timezone.utc).isoformat(),

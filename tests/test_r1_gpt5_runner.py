@@ -45,6 +45,7 @@ def test_preflight_matches_locked_baseline_without_provider_calls(tmp_path):
     assert report["provenance"]["prompt_sha256"] == runner.BASELINE_PROMPT_SHA256
     assert report["provenance"]["production_schema_sha256"] == runner.BASELINE_SCHEMA_SHA256
     assert report["preflight"]["suite_ceiling_usd"] < 0.25
+    assert report["preflight"]["funding_gate"]["credit_value_semantics"].startswith("minimum usable credit")
     assert client.completions.requests == []
 
 

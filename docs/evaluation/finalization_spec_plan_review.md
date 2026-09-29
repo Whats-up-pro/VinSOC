@@ -14,4 +14,6 @@ Reviewed on 2026-09-29 before the next paid suite. Starting HEAD after `git fetc
 
 On 2026-09-29, the user clarified that **USD 2.00 is the total API spending cap**, not a verified available-credit balance. Known E0 spend is USD 0.00384725. The next R1 suite's offline conservative ceiling is USD 0.098658, so known spend plus that ceiling is USD 0.10250525, below the confirmed cap. The user explicitly has not verified current usable API credit. No API request is authorized by this arithmetic alone.
 
+The user subsequently attested that usable credit is comfortably sufficient for the stated R1 suite ceiling and explicitly authorized that suite. The dispatch will use USD 0.098659 as a conservative **attested lower bound**, not as a claim about the exact account balance. The funding record labels this distinction. This authorization applies to the one R1 24-case dev suite only; later paid suites need fresh per-suite gates within the USD 2.00 total cap.
+
 No unresolved design conflict authorizes changing a question, gold SQL, scorer, source, model snapshot, or historical artifact. The open **execution blocker** for the next paid R1 suite is verified currently usable OpenAI credit. Exact-SHA CI, identity, cumulative budget and suite preflight must also pass immediately before dispatch.

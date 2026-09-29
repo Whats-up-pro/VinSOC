@@ -8,7 +8,7 @@ on:
         required: true
         type: number
       verified_credit_usd:
-        description: Verified currently usable OpenAI credit in USD
+        description: User-attested minimum usable OpenAI API credit in USD, not exact balance
         required: true
         type: number
 
