@@ -100,7 +100,7 @@
 - Consumes: pinned S1/S4 manifest and source receipt.
 - Produces: `build_ctu_network_frozen_snapshot(...) -> dict[str, Any]` with measured counts and a deterministic logical hash.
 
-- [ ] **Step 1: Add failing staging/load regression tests**
+- [x] **Step 1: Add failing staging/load regression tests**
 
 Add tests named:
 
@@ -112,7 +112,7 @@ def test_distinct_source_row_id_is_measured_from_database(tmp_path): ...
 
 The fixture must include a VARCHAR containing a comma, a nullable port/value, a numeric-looking `source_row_id` retained as text, valid integer fields, and nullable/valid timestamps. Query DuckDB after loading and assert exact values and types.
 
-- [ ] **Step 2: Run the focused tests and confirm failure**
+- [x] **Step 2: Run the focused tests and confirm failure**
 
 Run:
 
@@ -122,7 +122,7 @@ python -m pytest tests/test_ctu_network_frozen_builder.py -q
 
 Expected: the new tests fail because the CSV dialect, COPY contract, or measured distinct count is absent.
 
-- [ ] **Step 3: Make the staging dialect explicit**
+- [x] **Step 3: Make the staging dialect explicit**
 
 In `_write_normalized_csv()` configure `csv.DictWriter` with:
 
@@ -134,7 +134,7 @@ quoting=csv.QUOTE_MINIMAL
 lineterminator="\n"
 ```
 
-- [ ] **Step 4: Make DuckDB COPY explicit**
+- [x] **Step 4: Make DuckDB COPY explicit**
 
 Use typed table schema and all of:
 
@@ -150,7 +150,7 @@ NULL ''
 
 Do not add a second parser or change `iter_ctu_rows()`.
 
-- [ ] **Step 5: Measure row identity from DuckDB**
+- [x] **Step 5: Measure row identity from DuckDB**
 
 Query:
 
@@ -161,7 +161,7 @@ FROM network_flows
 
 Compare the result with total rows and fail on mismatch. Store the measured result in `distinct_source_row_id`.
 
-- [ ] **Step 6: Run focused verification**
+- [x] **Step 6: Run focused verification**
 
 Run:
 
@@ -173,7 +173,7 @@ git diff --check
 
 Expected: PASS with no provider/model call.
 
-- [ ] **Step 7: Commit only the builder change**
+- [x] **Step 7: Commit only the builder change**
 
 ```bash
 git add scripts/build_ctu_network_frozen_snapshot.py tests/test_ctu_network_frozen_builder.py
@@ -194,7 +194,7 @@ git push origin master
 - Produces: `validate_frozen_contract(snapshot: Path, lock_path: Path, cases_dir: Path) -> dict[str, Any]`.
 - Consumes later: Task 10 frozen gate only. DualSQL dev prompts and tools must never consume these files.
 
-- [ ] **Step 1: Write failing contract tests**
+- [x] **Step 1: Write failing contract tests**
 
 Cover:
 
@@ -208,13 +208,13 @@ Cover:
 - semantic counterexample that differs from gold;
 - provider creation forbidden during all offline validation.
 
-- [ ] **Step 2: Build the full snapshot twice from the same pinned bytes**
+- [x] **Step 2: Build the full snapshot twice from the same pinned bytes**
 
 Use separate output/work directories. Record real S1/S4 normalized counts, schema, source hashes, logical hashes, and measured distinct identity. Require both logical hashes to match.
 
 If either pinned source file is unavailable or either full build fails, STOP. Do not download replacement bytes or silently rebuild from another source.
 
-- [ ] **Step 3: Author eight source-separated frozen cases offline**
+- [x] **Step 3: Author eight source-separated frozen cases offline**
 
 Use S1/S4 only. Collectively cover:
 
@@ -229,11 +229,11 @@ Use S1/S4 only. Collectively cover:
 
 Use no model output. If eight cases cannot satisfy coverage, stop for human review before writing a smaller lock.
 
-- [ ] **Step 4: Implement and write the frozen lock**
+- [x] **Step 4: Implement and write the frozen lock**
 
 The lock must include source URLs/hashes, normalized source counts, schema, logical hash, measured distinct row identity, case IDs/file hashes/directory hash, gold-result hashes, comparator contract, semantic counterexamples, and builder/scorer hashes.
 
-- [ ] **Step 5: Run offline verification**
+- [x] **Step 5: Run offline verification**
 
 ```bash
 python -m pytest tests/test_ctu_network_frozen_builder.py tests/test_ctu_network_frozen.py -q
@@ -245,7 +245,7 @@ git diff --check
 
 Expected: two matching logical hashes, no model calls, no paid cost.
 
-- [ ] **Step 6: Commit the complete Task 5 lock**
+- [x] **Step 6: Commit the complete Task 5 lock**
 
 Stage only the named frozen files and tests. Commit and push. Do not create a frozen model workflow.
 
@@ -266,11 +266,11 @@ def verify_e0_baseline(
 ) -> BaselineEvidence: ...
 ```
 
-- [ ] **Step 1: Write parameterized failing tests for every identity field**
+- [x] **Step 1: Write parameterized failing tests for every identity field**
 
 Require exactly eight distinct `ctu_sql_001` through `ctu_sql_008` cases, complete run status, eight valid usage records, requested/actual model, reasoning effort, cap, retries, split hash, logical snapshot hash, source hashes, scorer/builder hashes, system prompt hash, schema hash, and fixed report SHA.
 
-- [ ] **Step 2: Pin the API request semantics correctly**
+- [x] **Step 2: Pin the API request semantics correctly**
 
 For every item in `serialized_requests` assert:
 
@@ -281,15 +281,15 @@ For every item in `serialized_requests` assert:
 
 Accept `report["config"]["temperature"] is None` as descriptive metadata.
 
-- [ ] **Step 3: Pin pricing provenance**
+- [x] **Step 3: Pin pricing provenance**
 
 `SERIES.lock` must record the rates used by the E0 report, official pricing URL, verification timestamp, and a rule that paid execution stops if current official pricing differs before E1.
 
-- [ ] **Step 4: Implement the compatibility gate and run it offline**
+- [x] **Step 4: Implement the compatibility gate and run it offline**
 
 The gate reads the immutable E0 report and `evaluation/ctu_network_public/VERSION.lock`. It never creates a provider.
 
-- [ ] **Step 5: Run focused tests and commit**
+- [x] **Step 5: Run focused tests and commit**
 
 ```bash
 python -m pytest tests/test_dualsql_ctu_gpt5.py -q
