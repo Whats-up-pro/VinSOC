@@ -1,0 +1,71 @@
+name: R1 GPT-5 Mini dev v2 one pass
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: r1-gpt5-dev-once
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Require successful CI on this exact commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          sha = os.environ['GITHUB_SHA']
+          url = f'https://api.github.com/repos/{repo}/actions/workflows/ci.yml/runs?head_sha={sha}&status=completed'
+          request = urllib.request.Request(url, headers={
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+          })
+          with urllib.request.urlopen(request, timeout=30) as response:
+              runs = json.load(response)['workflow_runs']
+          if not any(run['head_sha'] == sha and run['conclusion'] == 'success' for run in runs):
+              raise SystemExit('Successful CI on exact checkout SHA is required before paid evaluation')
+          print(f'CI success verified for {sha}')
+          PY
+      - name: Install evaluation dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Verify locked split and 24-request cost preflight
+        run: |
+          python -m evaluation.tool_calling.gpt5_dev_runner \
+            --output "$RUNNER_TEMP/r1-gpt5-preflight.json" --preflight-only
+      - name: Run one paid 24-case R1 model-only pass
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo 'OPENAI_API_KEY unavailable; no paid request sent'
+            exit 1
+          fi
+          python -m evaluation.tool_calling.gpt5_dev_runner \
+            --output "$RUNNER_TEMP/r1-gpt5-result.json"
+      - name: Preserve full or partial credential-free evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r1-gpt5-dev-v2-evidence
+          path: |
+            ${{ runner.temp }}/r1-gpt5-preflight.json
+            ${{ runner.temp }}/r1-gpt5-result.json
+          if-no-files-found: warn
+          retention-days: 90
