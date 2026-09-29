@@ -1,0 +1,383 @@
+{
+  "attempted_calls": 8,
+  "calls_with_valid_usage": 8,
+  "case_ids": [
+    "ctu_sql_001",
+    "ctu_sql_002",
+    "ctu_sql_003",
+    "ctu_sql_004",
+    "ctu_sql_005",
+    "ctu_sql_006",
+    "ctu_sql_007",
+    "ctu_sql_008"
+  ],
+  "case_results": [
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_001",
+      "cost_usd": 0.00036175,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'scenario 5'\n  AND label = 'From-Botnet';",
+      "input_tokens": 103,
+      "latency_ms": 3378.981694999993,
+      "outcome": "scored",
+      "output_tokens": 168,
+      "request_index": 1,
+      "response_id": "chatcmpl-ETJWiA1k3PU88IFCuqwn7TMm807Ag",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_002",
+      "cost_usd": 0.000355,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'scenario 7'\n  AND label = 'Normal';",
+      "input_tokens": 100,
+      "latency_ms": 2606.328286000007,
+      "outcome": "scored",
+      "output_tokens": 165,
+      "request_index": 2,
+      "response_id": "chatcmpl-ETJWkRdlmqJa6Plt8643rhlnfYzPn",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_003",
+      "cost_usd": 0.00055325,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips\nFROM network_flows\nWHERE label = 'scenario 5'\n   OR label = 'scenario_5'\n   OR label = '5'\n   OR label ILIKE '%scenario 5%'\n   OR label ILIKE '%scenario_5%';",
+      "input_tokens": 101,
+      "latency_ms": 3542.213643000025,
+      "outcome": "scored",
+      "output_tokens": 264,
+      "request_index": 3,
+      "response_id": "chatcmpl-ETJWnbVDBRxRK9e6VbkaTAQ7WIaUg",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_004",
+      "cost_usd": 0.00056825,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT COUNT(*) AS cnt\nFROM network_flows\nWHERE label = 'scenario 5'\n  AND event_time >= TIMESTAMP '2011-08-15 16:43:20.931208'\n  AND event_time < TIMESTAMP '2011-08-15 16:43:20.931209';",
+      "input_tokens": 129,
+      "latency_ms": 2963.3017329999802,
+      "outcome": "scored",
+      "output_tokens": 268,
+      "request_index": 4,
+      "response_id": "chatcmpl-ETJWqaB6lmOnkoo1ybbLDi1Xn1hdI",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_005",
+      "cost_usd": 0.000631,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT COUNT(*) AS count_flows\nFROM network_flows\nWHERE lower(label) LIKE '%7%'\n  AND upper(protocol) = 'UDP'\n  AND bytes_out > 0;",
+      "input_tokens": 100,
+      "latency_ms": 3142.1303079999916,
+      "outcome": "scored",
+      "output_tokens": 303,
+      "request_index": 5,
+      "response_id": "chatcmpl-ETJWtVnPOUjAVcXAfqWQFkxczO5JX",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_006",
+      "cost_usd": 0.00038925,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT dst_port, COUNT(*) AS flow_count\nFROM network_flows\nWHERE label = 'scenario 5' AND dst_port IS NOT NULL\nGROUP BY dst_port\nORDER BY flow_count DESC\nLIMIT 5;",
+      "input_tokens": 101,
+      "latency_ms": 2204.2113240000276,
+      "outcome": "scored",
+      "output_tokens": 182,
+      "request_index": 6,
+      "response_id": "chatcmpl-ETJWwLKNIeeN0iT4LFcOKcKJt4W26",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_007",
+      "cost_usd": 0.00035225,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE label = 'Botnet'\nGROUP BY protocol;",
+      "input_tokens": 113,
+      "latency_ms": 2677.998027000001,
+      "outcome": "scored",
+      "output_tokens": 162,
+      "request_index": 7,
+      "response_id": "chatcmpl-ETJWzZbAd0xL6xHm9fMjuBiTyAZQU",
+      "safety_rejected": false,
+      "syntax_valid": true
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "ctu_sql_008",
+      "cost_usd": 0.0006365,
+      "error": null,
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "generated_sql": "SELECT\n  source_dataset,\n  COALESCE(label, '(null)') AS label,\n  COUNT(*) AS flow_count,\n  SUM(COALESCE(bytes_out, 0) + COALESCE(bytes_in, 0)) AS total_bytes,\n  SUM(COALESCE(bytes_out, 0)) AS total_bytes_out,\n  SUM(COALESCE(bytes_in, 0)) AS total_bytes_in\nFROM network_flows\nGROUP BY source_dataset, label\nORDER BY source_dataset, label;",
+      "input_tokens": 98,
+      "latency_ms": 4513.693099000022,
+      "outcome": "scored",
+      "output_tokens": 306,
+      "request_index": 8,
+      "response_id": "chatcmpl-ETJX27mvQiEu76n0AeBk41644xNEh",
+      "safety_rejected": false,
+      "syntax_valid": true
+    }
+  ],
+  "config": {
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "model": "gpt-5-mini-2025-08-07",
+    "provider": "openai",
+    "reasoning_effort": "low",
+    "temperature": null
+  },
+  "evaluator_commit_sha": "4fa777ed8a3fd450cef871d427df16270c8fa606",
+  "metrics": {
+    "execution_accuracy": 0.0,
+    "execution_success_rate": 1.0,
+    "safety_rejection_rate": 0.0,
+    "syntax_validity_rate": 1.0
+  },
+  "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+  "pilot_eligible": true,
+  "preflight": {
+    "e0_budget_limit_usd": 0.1,
+    "method": "serialized request UTF-8 bytes + 4096 framing tokens; reasoning_effort=low; temperature absent; zero retries",
+    "r2_bounds": [
+      {
+        "input_token_bound": 4689,
+        "max_cost_usd": 0.00317225,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 593
+      },
+      {
+        "input_token_bound": 4684,
+        "max_cost_usd": 0.003171,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 588
+      },
+      {
+        "input_token_bound": 4686,
+        "max_cost_usd": 0.0031715,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 590
+      },
+      {
+        "input_token_bound": 4751,
+        "max_cost_usd": 0.00318775,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 655
+      },
+      {
+        "input_token_bound": 4688,
+        "max_cost_usd": 0.003172,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 592
+      },
+      {
+        "input_token_bound": 4693,
+        "max_cost_usd": 0.00317325,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 597
+      },
+      {
+        "input_token_bound": 4736,
+        "max_cost_usd": 0.003184,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 640
+      },
+      {
+        "input_token_bound": 4686,
+        "max_cost_usd": 0.0031715,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 590
+      }
+    ],
+    "suite_ceiling_usd": 0.02540325
+  },
+  "pricing": {
+    "checked_utc": "2026-09-29T04:14:38.329787+00:00",
+    "cost_unknown": false,
+    "input_usd_per_million": 0.25,
+    "known_cost_usd": 0.00384725,
+    "output_usd_per_million": 2.0,
+    "source": "https://developers.openai.com/api/docs/models/gpt-5-mini"
+  },
+  "provenance": {
+    "builder_scorer_sha256": {
+      "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+    "schema_context_sha256": "3dfc6d713fcedff0523f1bfd6707a5a6332260380057433f8916387f1687dc71",
+    "source_file_sha256": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+    },
+    "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+    "system_prompt_sha256": "ceefaab0bb4cbf69d4cb4cd3fad91297f7f5b823f13d2f22d11c976a5bb50115"
+  },
+  "responses_received": 8,
+  "run_id": "36520685612",
+  "run_status": "complete",
+  "serialized_requests": [
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows labeled From-Botnet as flow_count.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 flows labeled Normal as flow_count.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "How many distinct destination IPs occur in scenario 5?",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows at the exact microsecond from 2011-08-15 16:43:20.931208 inclusive to 16:43:20.931209 exclusive.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 UDP flows with positive outbound bytes.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return the five scenario 5 destination ports with most flows.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "For scenario 7 Botnet-labeled flows, return each protocol and its flow count; row order does not matter.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Generate exactly one read-only DuckDB SELECT statement and no prose. Do not attach databases, install extensions, or modify data.\n\nSchema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return scenario flow totals ordered by source dataset.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    }
+  ],
+  "version": "ctu_network_public_dev_v1"
+}

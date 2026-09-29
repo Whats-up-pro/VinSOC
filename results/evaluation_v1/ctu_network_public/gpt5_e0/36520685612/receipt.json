@@ -1,0 +1,21 @@
+{
+  "run_id": "36520685612",
+  "run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36520685612",
+  "workflow_artifact_id": 11013215781,
+  "workflow_artifact_name": "ctu-network-public-r2-evidence",
+  "workflow_artifact_digest": "sha256:4222b2d94d0df030842f1191bb4743c0f3497300c83d0467827b55e62cc0b0cd",
+  "evaluator_commit_sha": "4fa777ed8a3fd450cef871d427df16270c8fa606",
+  "ci_run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36520615263",
+  "source_files_sha256": {
+    "ctu-first-build.json": "03d88812f8953e111ffa3900788448be47732c6f4bab48294e201c69442cda68",
+    "ctu-r2-preflight.json": "16571d6570b588aa284c5ed0f297a593e2637add23911b8ffbd64b7477139a47",
+    "ctu-r2-result.json": "33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15",
+    "ctu-second-build.json": "868eac6d71190dae68cb2f0a57e0a456b9d40c5a606216554434c458d3dde554"
+  },
+  "run_status": "complete",
+  "pilot_eligible": true,
+  "execution_accuracy": "0/8",
+  "preflight_ceiling_usd": 0.02540325,
+  "usage_derived_cost_usd": 0.00384725,
+  "note": "One GPT-5 Mini E0 development suite. Incorrect SQL is preserved as scored evidence; no case was retried."
+}

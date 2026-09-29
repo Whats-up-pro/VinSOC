@@ -1,0 +1,13 @@
+{
+  "content_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "distinct_source_row_id": 243906,
+  "row_counts": {
+    "network_flows": 243906
+  },
+  "sha256": "4e6a8b15c0ad63fa7c565de728d23af552529650f40247151dcc0d5bc2b6d5aa",
+  "source_hashes": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+  },
+  "version": "ctu_network_public_dev_v1"
+}
