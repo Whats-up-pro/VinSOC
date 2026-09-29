@@ -366,27 +366,27 @@ def run_role(
 ) -> RoleResult: ...
 ```
 
-- [ ] **Step 1: Write failing controller tests**
+- [x] **Step 1: Write failing controller tests**
 
 Cover two valid native tool calls in one turn, sixth tool call blocked, sixth model turn blocked, question literal accepted without DB provenance, DB-derived value carrying `evidence_id`, invented DB value rejected, usage saved before malformed arguments, and no gold sentinel in any inference input.
 
-- [ ] **Step 2: Implement request construction**
+- [x] **Step 2: Implement request construction**
 
 Every call uses the fixed GPT-5 contract. Do not include a `temperature` key. Omit `tools` entirely for a no-tool role rather than sending `null`.
 
-- [ ] **Step 3: Implement role limits**
+- [x] **Step 3: Implement role limits**
 
 Each role allows at most five model turns, five total DB tool calls, and one final submission. Multiple tool calls in one turn are valid while the total remains within five.
 
-- [ ] **Step 4: Make grounding controller-owned**
+- [x] **Step 4: Make grounding controller-owned**
 
 The linker final answer contains only selected table and column names. The controller attaches bounded values returned by tools together with their `evidence_id`. Question literals remain a separate evidence class and need no database trace.
 
-- [ ] **Step 5: Save charged telemetry before parsing**
+- [x] **Step 5: Save charged telemetry before parsing**
 
 Immediately after a response, validate and persist response ID, actual model, usage, cost, and latency. Only then parse tool arguments or final content.
 
-- [ ] **Step 6: Run tests and commit**
+- [x] **Step 6: Run tests and commit**
 
 ```bash
 python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_agents.py -q
