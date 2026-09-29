@@ -9,6 +9,12 @@ import pytest
 from evaluation.tool_calling import gpt5_dev_runner as runner
 
 
+@pytest.fixture(autouse=True)
+def confirmed_paid_budget(monkeypatch):
+    monkeypatch.setenv("VINSOC_CONFIRMED_TOTAL_BUDGET_USD", "2.00")
+    monkeypatch.setenv("VINSOC_VERIFIED_CREDIT_USD", "2.00")
+
+
 class FakeCompletions:
     def __init__(self, model=runner.MODEL):
         self.model = model
@@ -181,3 +187,17 @@ def test_existing_result_is_append_only(tmp_path):
     with pytest.raises(FileExistsError):
         runner.run(output, client=FakeClient(), preflight_only=True)
     assert output.read_text(encoding="utf-8") == '{"historical":true}\n'
+
+
+def test_paid_runner_blocks_missing_verified_credit_before_call(monkeypatch, tmp_path):
+    monkeypatch.setattr(runner, "git_head", lambda: "a" * 40)
+    monkeypatch.setattr(runner, "git_clean", lambda: True)
+    monkeypatch.setenv("GITHUB_REF", "refs/heads/master")
+    monkeypatch.setenv("GITHUB_SHA", "a" * 40)
+    monkeypatch.delenv("VINSOC_VERIFIED_CREDIT_USD")
+    client = FakeClient()
+    output = tmp_path / "partial.json"
+    with pytest.raises(ValueError, match="verified credit"):
+        runner.run(output, client=client)
+    assert client.completions.requests == []
+    assert json.loads(output.read_text(encoding="utf-8"))["run_status"] == "funding_blocked"

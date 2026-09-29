@@ -2,6 +2,15 @@ name: R1 GPT-5 Mini dev v2 one pass
 
 on:
   workflow_dispatch:
+    inputs:
+      confirmed_total_budget_usd:
+        description: User-confirmed total finalization spend limit in USD
+        required: true
+        type: number
+      verified_credit_usd:
+        description: Verified currently usable OpenAI credit in USD
+        required: true
+        type: number
 
 permissions:
   contents: read
@@ -46,12 +55,17 @@ jobs:
       - name: Install evaluation dependencies
         run: python -m pip install -r requirements.txt
       - name: Verify locked split and 24-request cost preflight
+        env:
+          VINSOC_CONFIRMED_TOTAL_BUDGET_USD: ${{ inputs.confirmed_total_budget_usd }}
+          VINSOC_VERIFIED_CREDIT_USD: ${{ inputs.verified_credit_usd }}
         run: |
           python -m evaluation.tool_calling.gpt5_dev_runner \
             --output "$RUNNER_TEMP/r1-gpt5-preflight.json" --preflight-only
       - name: Run one paid 24-case R1 model-only pass
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VINSOC_CONFIRMED_TOTAL_BUDGET_USD: ${{ inputs.confirmed_total_budget_usd }}
+          VINSOC_VERIFIED_CREDIT_USD: ${{ inputs.verified_credit_usd }}
         run: |
           if [ -z "$OPENAI_API_KEY" ]; then
             echo 'OPENAI_API_KEY unavailable; no paid request sent'

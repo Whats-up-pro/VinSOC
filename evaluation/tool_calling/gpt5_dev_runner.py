@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import subprocess
 from datetime import datetime, timezone
@@ -23,7 +24,6 @@ CAP = 1000
 INPUT_USD_M = 0.25
 OUTPUT_USD_M = 2.00
 SUITE_BUDGET_USD = 0.25
-TOTAL_FINALIZATION_BUDGET_USD = 3.00
 FRAMING_TOKENS = 4096
 BASELINE_PROMPT_SHA256 = "21f87b197c1bf1206d4a36e111853bddf6ea623bab58a5da311ccbcb61d7780b"
 BASELINE_SCHEMA_SHA256 = "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0"
@@ -93,7 +93,7 @@ def _prepare() -> tuple[list[ToolCallCase], list[dict[str, Any]], dict[str, Any]
                        "max_cost_usd": cost_usd(input_bound, CAP)})
     ceiling = sum(item["max_cost_usd"] for item in bounds)
     prior = json.loads(E0_RECEIPT.read_text(encoding="utf-8"))["usage_derived_cost_usd"]
-    if ceiling >= SUITE_BUDGET_USD or prior + ceiling >= TOTAL_FINALIZATION_BUDGET_USD:
+    if ceiling >= SUITE_BUDGET_USD:
         raise ValueError("R1 model-only suite cost preflight failed")
     info = {"lock": lock, "scorer_hashes": scorer_hashes, "bounds": bounds,
             "suite_ceiling_usd": ceiling, "prior_spend_usd": prior,
@@ -205,14 +205,37 @@ def run(output: Path, *, client: Any | None = None, preflight_only: bool = False
                        "production_schema_sha256": info["production_schema_sha256"]},
         "preflight": {"method": "serialized UTF-8 request bytes + 4096 framing tokens; full output cap; zero retries",
                       "bounds": info["bounds"], "suite_ceiling_usd": info["suite_ceiling_usd"],
-                      "suite_budget_usd": SUITE_BUDGET_USD, "prior_spend_usd": info["prior_spend_usd"],
-                      "finalization_budget_usd": TOTAL_FINALIZATION_BUDGET_USD},
+                      "suite_budget_usd": SUITE_BUDGET_USD, "prior_spend_usd": info["prior_spend_usd"]},
         "pricing": {"input_usd_per_million": INPUT_USD_M, "output_usd_per_million": OUTPUT_USD_M,
                     "source": "https://developers.openai.com/api/docs/models/gpt-5-mini",
                     "checked_utc": datetime.now(timezone.utc).isoformat(),
                     "known_cost_usd": 0.0, "cost_unknown": False},
     }
     _save(output, report)
+    confirmed_raw = os.environ.get("VINSOC_CONFIRMED_TOTAL_BUDGET_USD")
+    credit_raw = os.environ.get("VINSOC_VERIFIED_CREDIT_USD")
+    if not preflight_only or confirmed_raw is not None or credit_raw is not None:
+        try:
+            if confirmed_raw is None or credit_raw is None:
+                raise ValueError("verified credit and confirmed total budget are required")
+            confirmed_total = float(confirmed_raw)
+            verified_credit = float(credit_raw)
+            if (not math.isfinite(confirmed_total) or not math.isfinite(verified_credit)
+                    or confirmed_total <= 0 or verified_credit <= 0
+                    or info["prior_spend_usd"] + info["suite_ceiling_usd"] >= confirmed_total
+                    or info["suite_ceiling_usd"] >= verified_credit):
+                raise ValueError("verified credit or confirmed total budget is insufficient")
+        except ValueError:
+            report["run_status"] = "funding_blocked"
+            _save(output, report)
+            raise
+        report["preflight"]["funding_gate"] = {
+            "source": "user-confirmed available credit and total limit",
+            "confirmed_total_budget_usd": confirmed_total,
+            "verified_credit_usd": verified_credit,
+            "checked_utc": datetime.now(timezone.utc).isoformat(),
+        }
+        _save(output, report)
     if preflight_only:
         return report
     if (os.environ.get("GITHUB_REF") != "refs/heads/master" or os.environ.get("GITHUB_SHA") != sha
@@ -238,7 +261,8 @@ def run(output: Path, *, client: Any | None = None, preflight_only: bool = False
         remaining = sum(bound["max_cost_usd"] for bound in info["bounds"][index:])
         if (provider.get_run_metadata()["known_cost_usd"] + remaining >= SUITE_BUDGET_USD
                 or info["prior_spend_usd"] + provider.get_run_metadata()["known_cost_usd"] + remaining
-                >= TOTAL_FINALIZATION_BUDGET_USD):
+                >= confirmed_total
+                or provider.get_run_metadata()["known_cost_usd"] + remaining >= verified_credit):
             report["run_status"] = "budget_stopped"
             _save(output, report)
             raise ValueError("R1 remaining conservative cost bound exceeds budget")
