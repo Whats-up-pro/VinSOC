@@ -2,37 +2,37 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. Work directly on `master`; this plan does not authorize parallel agents or branches.
 
-**Goal:** Close the fixed R1 and CTU-only R2 evaluations with one controlled GPT-5 Mini development series per condition, one frozen run per track, an evidence-backed E2E trace, and a final mentor-facing report.
+**Goal:** Close the fixed R1 and CTU-only R2 evaluations with one controlled GPT-5 Mini development series per condition, one frozen run per track, and a final mentor-facing report. A separate E2E demonstration follows project finalization.
 
 **Architecture:** Keep benchmark, scorer, snapshot, and historical artifacts immutable. Add versioned GPT-5 Mini runners and append-only evidence/lock artifacts around the existing decision scorer and SQL scorer. Separate offline contract checks, paid inference, deterministic scoring, and post-run analysis; every paid suite has a same-SHA CI gate and a conservative cost gate before client creation.
 
 **Tech Stack:** Python 3.11, OpenAI Chat Completions SDK, DuckDB, pytest, GitHub Actions, JSON locks and reports.
 
-**Spec:** `docs/superpowers/specs/2026-09-28-vinsoc-r1-r2-finalization-design.md` (sections 3–14). Gate 4's E2E demonstration is an additional user requirement and belongs after both frozen metrics exist.
+**Spec:** `docs/superpowers/specs/2026-09-28-vinsoc-r1-r2-finalization-design.md` (sections 3–14). The user also requests an E2E demonstration. It is a separate post-finalization phase after the spec's fourteen ordered tasks, final documentation, and final CI.
 
 ## Global Constraints
 
-- Starting `master` and `origin/master` SHA: `38f3c444abf25caad8266804dee6c84fc2be4eba`; CI run `36515239701` passed on that SHA. Record the SHA again before every paid suite; require CI success for that exact SHA.
+- Audited `master` SHA: `bba1cfe6597519a7b5ebb5d0a6da8e44c6af00e2`; CI run `36520923206` passed on that SHA. The paid E0 ran on `4fa777ed8a3fd450cef871d427df16270c8fa606` after CI `36520615263`; record the SHA again before every future paid suite and require CI success for that exact SHA.
 - Preserve all pre-existing untracked files, `.env`, and historical artifacts. Never use `git clean`, broad `git add .`, or overwrite an evidence path. Stage named files only.
 - R1 dev: exactly 24 `r1_a1_dev_v2` cases; split SHA-256 `d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259`; scorer SHA-256 `271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149`; historical GPT-4.1 Mini baseline 22/24.
 - R2 dev: exactly 8 `ctu_network_public_dev_v1` cases from S5/S7; logical snapshot SHA-256 `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`; split and builder/scorer hashes must equal `evaluation/ctu_network_public/VERSION.lock`.
 - GPT-5 Mini contract: OpenAI standard endpoint, `gpt-5-mini-2025-08-07`, reasoning effort `low`, absent `temperature`, max completion tokens `1000`, SDK retries `0`, no fallback or automatic case retry. Stop on actual-model mismatch.
-- R2 E0 eight-case preflight ceiling must be less than USD 0.10. Every other suite needs an explicit conservative ceiling before any API call. Keep a cumulative ledger and stop before exceeding USD 3.00 of remaining finalization API spend, including demo calls.
+- R2 E0 eight-case preflight ceiling must be less than USD 0.10. Every other suite needs an explicit conservative ceiling before any API call. Keep a cumulative ledger across finalization and the later demo. The user's last stated available credit was about USD 2.00; do not treat USD 3.00 as funded or approved. Each future paid suite requires a verified usable balance covering its conservative ceiling and must stay within the user's confirmed spending limit. Do not purchase credit or raise limits.
 - Paid evidence runs are manual-only on a clean Actions checkout of `master`; source/split/scorer/config/CI hashes and actual usage, cost, latency, generated SQL or native tool calls, case scores, and failures must be captured even for a partial paid attempt.
 - Do not edit benchmark questions, gold, result comparators, scorer semantics, or tool gold to improve a score. Frozen outputs never inform prompt, tool, or architecture changes. R2's final claim is CTU-only network Text-to-SQL.
 
 ## Review Decisions Before Execution
 
-1. **Spec review status:** the spec says “Pending written-spec review before implementation planning.” Review this plan together with the spec and record acceptance/corrections before code or paid runs. The user's request authorizes drafting the plan now.
-2. **Budget interpretation:** use USD 3.00 as a hard ceiling for API spend from this finalization, including the E2E live demo; historical spend is reported separately. Each suite also has a lower local ceiling derived from its serialized worst-case requests. If that ceiling does not fit the remaining ledger, stop and request a budget decision, with no quiet cap/model change.
-3. **E0 reuse:** reuse only a GPT-5 Mini E0 artifact whose request payload, prompt, schema context, split, snapshot, scorer, model identity, and cap hashes exactly match the final E0 condition. The existing GPT-4.1 Mini CTU run and public-pilot DualSQL v4 runs cannot qualify.
+1. **Spec review status:** the spec still says "Pending written-spec review before implementation planning." Record this discrepancy and obtain review of the written spec and this revised plan before the next new paid suite. The GPT-5 E0 run has already occurred; its immutable result is evaluated as evidence, not retroactively called an approved final series.
+2. **Budget interpretation:** the plan's earlier USD 3.00 proposal was not a balance check. Use a per-suite conservative ceiling plus a cumulative ledger beginning with the observed GPT-5 E0 cost of USD 0.00384725. Verify available credit and the user's actual cap before the next paid call; if unknown or insufficient, stop without changing model, cap, or retry policy.
+3. **E0 reuse:** the completed GPT-5 Mini run `36520685612` is the candidate E0. Reuse its original JSON only if all eight request payloads, system prompt, schema context, model/request contract, split, snapshot, scorer, and actual model match the final E0 condition. A byte-identical report file is unnecessary. The GPT-4.1 Mini CTU 0/8 and DualSQL public-dev v4 5/8 are different evidence classes.
 4. **R1 improvement trigger:** allow one generic change only when the GPT-5 Mini failures demonstrate a recurring class across cases. Otherwise mark the controlled-improvement column `N/A` and lock the stronger of the two dev configurations by the spec's tie-break order.
 5. **Frozen size and source:** author eight R2 frozen cases if verified S1/S4 data supports the full semantic matrix; six or seven is valid only when the matrix remains covered and the reason is recorded before lock. A failed S1/S4 checksum or provenance check is a blocker, never a reason to substitute another source.
-6. **Demo evidence class:** the R1 demo must let the model choose among only production tools backed by the verified snapshot and use its validated arguments in the production skill; it must cite rechecked evidence IDs in its own assessment. A separate R2 question must show model SQL, validator verdict, DuckDB rows, and source provenance. Label any older replay as replay; neither demo score enters benchmark accuracy.
+6. **Demo evidence class:** schedule the new demo after Tasks 1-14 and final CI. R1 must let the model choose among only production tools backed by the verified snapshot, execute validated arguments, and cite rechecked evidence IDs. The separate R2 question records SQL, validator verdict, DuckDB rows, and provenance. Label live calls and replay; neither enters benchmark accuracy.
 
 ## Review Focus
 
-- Charged response followed by malformed native tool arguments: persist response identity, usage, raw safe call payload, and parse failure before stopping or scoring the case.
+- Charged response followed by malformed native tool arguments: persist validated response identity and usage before parsing; retain a bounded, sanitized call representation and parse-failure category, without raw provider exception, key, or secret.
 - A runner called outside Actions or on a different SHA: fail before provider creation and retain a credential-free preflight artifact.
 - A model emits multiple valid DB calls in one turn: execute each within the total call bound and preserve ordered controller-owned provenance.
 - A question literal absent from DB-tool outputs: allow it as question evidence while rejecting a claimed DB-grounded value without matching controller trace.
@@ -40,17 +40,18 @@
 
 ---
 
-### Task 1: Run the single R2 GPT-5 Mini E0 dev suite
+### Task 1: Seal and analyze the completed R2 GPT-5 Mini E0 dev suite
 
-**Files:** modify `evaluation/ctu_network_public/run_model.py` and `.github/workflows/ctu-network-public-r2.yml` only for missing evidence/gate behavior; verify `evaluation/ctu_network_public/{contract.py,VERSION.lock,MODEL_CONFIG_GPT5MINI.lock}`; create an immutable run directory under `results/evaluation_v1/ctu_network_public/gpt5_e0/<run-id>/` and a credential-free full/partial report. Test: `tests/test_ctu_network_runner.py`.
+**Files:** the original Actions JSON and receipt are already committed under `results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/`. Create `docs/evaluation/r2_gpt5_e0_run_review.md` for per-case diagnosis only; do not alter the eight cases, prompt, snapshot, scorer, or saved report.
 
-**Interfaces:** `contract.validate(snapshot, LOCK)` verifies the existing split/snapshot; `run_model.run(snapshot_path, output, preflight_only=...)` produces one E0 report with exact request payloads and per-case SQL/score/usage. Later tasks consume its report SHA-256.
+**Interfaces:** `ctu-r2-result.json` from artifact `11013215781` is the candidate E0 input for Tasks 3, 6, and 8. The artifact ZIP digest is `sha256:4222b2d94d0df030842f1191bb4743c0f3497300c83d0467827b55e62cc0b0cd`; the original report SHA-256 is `33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15`.
 
-- [ ] Verify current `master` SHA, clean tracked checkout, dev lock hashes, official S5/S7 source SHA-256, and snapshot logical hash; inspect prior run registry so a valid GPT-5 Mini E0 is never duplicated.
-- [ ] Write failing focused tests for append-only output, run ID, prompt/config hashes, SQL and latency per response, charged partial response, exact Actions SHA, and preflight rejection before client creation; make the minimum runner/workflow changes without altering its prompt, schema context, scorer, or eight cases.
-- [ ] Commit the named hardening files on `master`, obtain CI success on that exact SHA, then run offline preflight; confirm eight serialized requests, the exact model contract, no `temperature`, zero retries, and ceiling `< $0.10`.
-- [ ] Dispatch exactly one manual Actions E0 suite on the proven SHA; inspect run log/artifact for actual model on each response, eight distinct case IDs, all SQL, syntax/execution/accuracy, usage/cost/latency, and any partial failure. Never retry a wrong case.
-- [ ] Import the original Actions JSON and its SHA-256 under a new append-only path; record run URL and exact Git SHA. Do not replace the historical GPT-4.1 Mini artifact.
+- [x] CI `36520615263` passed on exact run SHA `4fa777ed8a3fd450cef871d427df16270c8fa606`; manual Actions run `36520685612` completed with eight attempted calls, eight responses, and eight valid usage records. The artifact was downloaded and its ZIP/report digests verified.
+- [x] Original report has `run_status=complete`, `pilot_eligible=true`, Execution Accuracy `0/8`, Syntax Validity `8/8`, Execution Success `8/8`, Safety Rejection `0/8`; preflight ceiling `$0.02540325`, usage-derived cost `$0.00384725`, total usage `845` input and `1818` output tokens. All eight actual models match `gpt-5-mini-2025-08-07`; requests use `reasoning_effort=low`, omit `temperature`, cap at `1000`, and use zero SDK retries.
+- [x] Commit `bba1cfe6597519a7b5ebb5d0a6da8e44c6af00e2` preserved the four original JSON files byte-for-byte with `receipt.json`; its CI `36520923206` passed. Both builds report 243906 rows and identical logical SHA `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`. This is CTU `public_dev` evidence; `pilot_eligible` does not by itself mean final/holdout eligibility.
+- [ ] Independently reconcile the committed receipt, report, run URL, lock hashes, and any final E0 condition before reuse. If an identity differs, label this run diagnostic and stop before E1-E3; never rerun E0 because of the 0/8 score.
+- [ ] Diagnose the eight stored SQL queries offline against questions, gold, and snapshot. Cases 001-007 show wrong scenario/source or label grounding; 008 adds grouping/columns beyond the question. Assign one primary cause each in Task 3, without editing gold or scorer.
+
 
 ### Task 2: Add and run the single R1 GPT-5 Mini model-only dev suite
 
@@ -58,9 +59,9 @@
 
 **Interfaces:** retain `DecisionRunner` and production `get_tool_schemas()` semantics; new runner returns the existing R1 scorer's per-case result plus native predicted calls and provider metadata.
 
-- [ ] Write failing tests for absent temperature, exact 24-case locked split/scorer, same prompt/tool schema hash as the baseline, response/model/usage validation, append-only output, and a charged malformed-call response.
-- [ ] Implement only the GPT-5 request/telemetry adapter and bounded suite wrapper; keep the scorer, matcher, gold, and one-decision-turn policy unchanged. Run focused tests and the full CI command.
-- [ ] Commit named code/workflow files on `master`; wait for CI success on the new exact SHA. Run a 24-request cost preflight with an explicit suite ceiling and cumulative USD 3.00 ledger check before constructing the client.
+- [ ] Write failing tests for absent temperature and `reasoning_effort=low`, exact 24-case locked split/scorer, baseline prompt hash `21f87b197c1bf1206d4a36e111853bddf6ea623bab58a5da311ccbcb61d7780b` and production schema hash `aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0`, response/model/usage validation, append-only output, and a charged malformed-call response. The current `OpenAIProvider.generate()` adds `temperature` and parses tool JSON before recording usage; the GPT-5 adapter must fix both for this suite.
+- [ ] Implement only the GPT-5 request/telemetry adapter and bounded suite wrapper; set SDK `max_retries=0` explicitly, validate actual model and usage before parsing tool arguments, record charged-response telemetry even when parsing fails, and use the pinned pricing snapshot. Keep the scorer, matcher, gold, and one-decision-turn policy unchanged. Run focused tests and the full CI command.
+- [ ] Commit named code/workflow files on `master`; wait for CI success on the new exact SHA. Run a 24-request cost preflight with an explicit suite ceiling and verified available-credit/cumulative-ledger check before constructing the client.
 - [ ] Dispatch one manual Actions suite; preserve full/partial immutable JSON with predicted native tool calls, matches, error flags, usage, cost, latency, prompt/schema/config hashes, and Actions URL. No case retry for an incorrect decision.
 
 ### Task 3: Analyze R1 and R2 development errors
@@ -70,7 +71,7 @@
 **Interfaces:** one primary R1 cause from section 5.4 of the spec per failed case; one primary R2 semantic cause from section 6.4 per incorrect case. Preserve deterministic scorer labels separately.
 
 - [ ] Build a per-case matrix with prediction/SQL, gold comparison, category, error cause, model/provider errors, calls, usage, cost, and latency; explicitly revisit R1 `case_002` and `case_015`.
-- [ ] Independently check cause assignments against stored calls/SQL/results and cite artifact paths plus hashes; record whether a recurring R1 cause supports one generic improvement.
+- [ ] Independently check cause assignments against stored calls/SQL/results and cite artifact paths plus hashes. For R2, show the actual wrong `source_dataset`/`label` values in cases 001-007 and the overbroad projection/grouping in 008, then assign one primary semantic cause per case without editing gold. Record whether a recurring R1 cause supports one generic improvement.
 - [ ] Verify totals reconcile to the scorer outputs and commit analysis only after the evidence has been checked.
 
 ### Task 4: Lock R1 frozen compatibility offline
@@ -109,7 +110,7 @@
 
 **Interfaces:** each condition uses the Task 1 E0 backbone and Task 6 fixed framework; common benchmark/snapshot/scorer/model hashes make all four conditions comparable.
 
-- [ ] Write/run offline tests for per-suite conservative turn/tool-context cost bounds, cumulative USD 3.00 gate, exact Actions SHA/CI/model identity, zero retry, and append-only partial evidence.
+- [ ] Write/run offline tests for per-suite conservative turn/tool-context cost bounds, verified credit and cumulative ledger gate, exact Actions SHA/CI/model identity, zero retry, and append-only partial evidence.
 - [ ] Commit workflow and versioned runner; obtain same-SHA CI success; preflight E1, then dispatch exactly one E1 suite and save its full/partial artifact.
 - [ ] Repeat the same gate for E2 and E3 separately, once each, without changing framework/prompt/tool contracts between conditions. Stop on identity/cost/source failure; keep wrong SQL as scored evidence.
 - [ ] Reconcile per-case SQL, tool trajectory, syntax/execution/accuracy, semantic errors, model/DB call counts, usage, cost, and latency against provider metadata.
@@ -160,26 +161,35 @@
 - [ ] Offline verify official source bytes and all lock hashes, no prior frozen run for this version, 6–8 cases, same-SHA CI, actual model, preflight cost, zero retries, and cumulative budget.
 - [ ] Dispatch once; preserve SQL, validator verdict, DuckDB result score, trajectory, provenance, per-case usage/cost/latency, and run URL. Make no changes based on frozen outcomes.
 
-### Task 13: Freeze evidence, demonstrate E2E, and write the final evaluation report
+### Task 13: Freeze evidence and write the final evaluation report
 
-**Files:** create `docs/evaluation/vinsoc_r1_r2_final_2026-09-29.md`, `docs/evaluation/e2e_ctu_trace.md`, and append-only demo JSON under `results/evaluation_v1/ctu_network_public/demo/<run-id>/`; adapt `scripts/demo_ctu_network_public_model_driven.py` and add a versioned R2 SQL trace runner only after both frozen metrics exist. Tests: focused demo tests.
+**Files:** create `docs/evaluation/vinsoc_r1_r2_final.md` and an append-only evidence index. Do not add demo code or new paid demo calls in this task.
 
-**Interfaces:** verified CTU snapshot supplies one Botnet and one Normal scenario for R1; the model chooses allowed data-backed production tool calls, production skill returns evidence IDs/source-row pairs, and a separate R2 request passes model → SQL validator → DuckDB → result/provenance.
+**Interfaces:** reports for historical baseline, model-only dev, controlled improvement, and frozen are reconciled by artifact hashes. The result table is the input for Task 14 documentation.
 
-- [ ] Test tool allowance, absence of forced tool choice, model-chosen argument execution, evidence-ID/source-row verification, cited assessment claims, and explicit live/replay labels. Run cost/model/CI preflight before any new live demo call.
-- [ ] Execute exactly the two R1 situations and one R2 question; preserve full/partial trace with source hashes, live-call usage/cost, SQL and validator output. Mark any reused historical trace as replay artifact, and never count three demo examples as benchmark accuracy.
-- [ ] Verify all historical, model-only, controlled-improvement, and frozen counts from immutable source JSON; write the required R1/R2 four-column table, per-case errors, category breakdown, cost/token/call/latency, snapshot and artifact hashes, limitations, and exact links.
-- [ ] Reconcile every report claim to an artifact/hash and freeze the final evidence index; run full CI on the final evidence/report commit.
+- [ ] Recalculate every raw numerator/denominator, category, error class, token, cost, call, and latency claim from immutable source JSON; distinguish R1 22/24 on dev v2, historical CTU GPT-4.1 Mini 0/8, GPT-5 E0 0/8 on the same CTU split, and DualSQL public-dev v4 5/8 on a different split/snapshot.
+- [ ] Write the four-column R1/R2 historical/model-only/controlled/frozen table, source-session and snapshot limitations, selected configuration, per-case errors, and exact artifact/run/hash references. Do not infer significance from eight cases or call a scorer replay a model gain.
+- [ ] Freeze a machine-readable evidence index, check every link/hash, and commit the report with full CI on its exact SHA.
 
 ### Task 14: Reconcile README and evaluation documentation
 
-**Files:** update `README.md`, `evaluation/tool_calling/README.md`, `evaluation/text_to_sql_benchmarks/README.md`, and any existing evaluation summary that would contradict the frozen evidence.
+**Files:** update `README.md`, `evaluation/tool_calling/README.md`, `evaluation/text_to_sql_benchmarks/README.md`, and any evaluation summary contradicting the final artifacts.
 
 **Interfaces:** documentation links to the Task 13 evidence index; no metric is recomputed from prose.
 
-- [ ] Update only claims that the final artifact table proves: CTU-only R2 scope, fixed-benchmark R1 baseline distinction, dev/frozen separation, and live/replay demo labels.
-- [ ] Run documentation link/hash checks, focused tests, and full CI on the final named-file commit. Confirm `git status` contains only the original untouched untracked files and no tracked diff.
+- [ ] Update only claims proved by final artifacts: CTU-only R2 scope, fixed-benchmark R1 baseline distinction, dev/frozen separation, and exact source-session limitations.
+- [ ] Run documentation link/hash checks, focused tests, and full CI on the final named-file commit. Confirm the only remaining untracked files are the original untouched files and there is no tracked diff.
+
+### Task 15: Demonstrate product E2E after finalization
+
+**Files:** only after Task 14 and its CI, create a versioned demo trace under `results/evaluation_v1/ctu_network_public/demo/<run-id>/` and `docs/evaluation/e2e_ctu_trace.md`; adapt `scripts/demo_ctu_network_public_model_driven.py` and add a narrow R2 question-to-SQL trace only where necessary. Keep the benchmark and its frozen locks untouched.
+
+**Interfaces:** the verified CTU snapshot supplies one Botnet and one Normal R1 situation; a separate R2 question flows through model SQL, the existing SQL safety validator, read-only DuckDB, and provenance. The forced-tool historical demo is replay evidence only.
+
+- [ ] First implement offline tests for allowed tools, model-chosen arguments, bounded source-backed tool execution, evidence-ID/source-row validation, cited assessment, SQL safety, and truthful live/replay flags. A forced `tool_choice` cannot prove dynamic selection.
+- [ ] After focused/full CI and a fresh cost/credit gate, perform only the minimal declared live calls. Preserve full/partial JSON with run SHA, source hashes, actual model, usage, cost, trace, and failure categories.
+- [ ] Present the two R1 situations and one R2 question as product traces. Keep demo outcomes out of R1/R2 benchmark numerators and explicitly state CTU-only coverage.
 
 ## Stop and Evidence Rules
 
-At every task boundary, stop and report the exact blocker if model snapshot/actual identity, preflight or cumulative budget, same-SHA CI, frozen S1/S4 provenance, immutable artifact path, or frozen lock validation fails. Provider/infrastructure failure may permit a new immutable attempt only after diagnosis; it never permits rerunning an incorrect answer. Do not silently substitute another source, model, endpoint, or scorer.
+At every task boundary, stop and report the exact blocker if model snapshot/actual identity, preflight or verified credit/cumulative budget, same-SHA CI, frozen S1/S4 provenance, immutable artifact path, or frozen lock validation fails. The completed E0 score of 0/8 is evaluation evidence and never authorizes another E0 run. Provider/infrastructure failure may permit a new immutable attempt only after diagnosis; it never permits rerunning an incorrect answer. Do not silently substitute another source, model, endpoint, or scorer.
