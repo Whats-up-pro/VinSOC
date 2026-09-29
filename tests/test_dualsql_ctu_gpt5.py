@@ -255,3 +255,119 @@ def test_ctu_tool_rejects_unknown_arguments_and_tables():
     assert tools.database_profiler({"table": "dataset_provenance"}) == {
         "ok": False, "error_type": "INVALID_ARGUMENTS"
     }
+
+
+class _RoleClient:
+    def __init__(self, *messages):
+        from types import SimpleNamespace
+
+        self.messages = iter(messages)
+        self.requests = []
+        self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
+
+    def create(self, **request):
+        from types import SimpleNamespace
+
+        self.requests.append(request)
+        message = next(self.messages)
+        return SimpleNamespace(id=f"chatcmpl-{len(self.requests)}", model="gpt-5-mini-2025-08-07",
+                               usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
+                               choices=[SimpleNamespace(message=message)])
+
+
+def _role_message(content=None, calls=()):
+    from types import SimpleNamespace
+
+    tool_calls = [SimpleNamespace(id=f"tool-{index}", type="function",
+                                  function=SimpleNamespace(name=name, arguments=arguments))
+                  for index, (name, arguments) in enumerate(calls, 1)]
+    return SimpleNamespace(content=content, tool_calls=tool_calls)
+
+
+def _run_test_role(client, *, role="generator", tools=None, question="Count TCP flows", max_turns=5):
+    from evaluation.dualsql_lite_ctu_gpt5.agents import run_role
+
+    charged = []
+    result = run_role(role=role, question=question, system_prompt="Use network_flows.",
+                      tools=tools, client=client, telemetry_sink=charged.append,
+                      max_turns=max_turns)
+    return result, charged
+
+
+def test_ctu_role_two_native_tool_calls_in_one_turn_and_fixed_request():
+    client = _RoleClient(
+        _role_message(calls=[("database_profiler", "{}"),
+                             ("value_search", '{"query":"TCP","column":"protocol"}')]),
+        _role_message(content="SELECT count(*) FROM network_flows"),
+    )
+    result, charged = _run_test_role(client, tools=_tools())
+    assert result.content == "SELECT count(*) FROM network_flows"
+    assert result.model_turns == 2 and result.db_tool_calls == 2
+    assert len(result.trajectory) == 2 and len(charged) == 2
+    assert all(call.response_id and call.cost_usd > 0 for call in charged)
+    assert all(request["model"] == "gpt-5-mini-2025-08-07" and
+               request["reasoning_effort"] == "low" and
+               request["max_completion_tokens"] == 1000 and
+               "temperature" not in request for request in client.requests)
+
+
+def test_ctu_role_sixth_tool_call_is_blocked_after_charged_response():
+    five = [("sql_probe", '{"sql":"SELECT 1"}')] * 5
+    client = _RoleClient(_role_message(calls=five),
+                         _role_message(calls=[("database_profiler", "{}")]))
+    result, charged = _run_test_role(client, tools=_tools())
+    assert result.error == "TOOL_LIMIT" and result.db_tool_calls == 5
+    assert len(charged) == 2
+
+
+def test_ctu_role_sixth_model_turn_is_blocked():
+    client = _RoleClient(*[_role_message(calls=[("database_profiler", "{}")]) for _ in range(5)])
+    result, charged = _run_test_role(client, tools=_tools())
+    assert result.error == "TURN_LIMIT"
+    assert result.model_turns == 5 and len(charged) == 5 and len(client.requests) == 5
+
+
+def test_ctu_linker_grounding_is_controller_owned_and_question_literals_are_separate():
+    tools = _tools()
+    link = '{"tables":[{"table":"network_flows","columns":["source_dataset","protocol"]}]}'
+    client = _RoleClient(
+        _role_message(calls=[("value_search", '{"query":"ctu13_s5","column":"source_dataset"}')]),
+        _role_message(content=link),
+    )
+    result, _ = _run_test_role(client, role="linker", tools=tools,
+                               question="Count flows where protocol is 'TCP'")
+    assert result.error is None and result.selected_schema == [
+        {"table": "network_flows", "columns": ["source_dataset", "protocol"]}
+    ]
+    assert result.question_literals == [{"value": "TCP", "evidence_class": "question"}]
+    assert any(value["value"] == "ctu13_s5" and value["evidence_id"].startswith("ev-")
+               for value in result.grounded_values)
+    assert "GOLD_ONLY_SENTINEL" not in json.dumps(client.requests)
+    assert all("grounded_values" not in request["messages"][-1].get("content", "")
+               for request in client.requests[:1])
+
+
+def test_ctu_linker_rejects_invented_value_in_final_submission():
+    client = _RoleClient(_role_message(content=json.dumps({
+        "tables": [{"table": "network_flows", "columns": ["label"]}],
+        "grounded_values": [{"table": "network_flows", "column": "label", "value": "invented"}],
+    })))
+    result, charged = _run_test_role(client, role="linker", tools=_tools())
+    assert result.error == "INVALID_LINKED_SCHEMA" and len(charged) == 1
+
+
+def test_ctu_role_persists_usage_before_malformed_tool_arguments():
+    client = _RoleClient(_role_message(calls=[("value_search", "{bad json")]),
+                         _role_message(content="SELECT 1"))
+    result, charged = _run_test_role(client, tools=_tools())
+    assert len(charged) == 2 and charged[0].response_id == "chatcmpl-1"
+    assert charged[0].input_tokens == 100 and charged[0].output_tokens == 50
+    assert result.error is None and result.malformed == 1
+    assert result.trajectory[0]["result"]["error_type"] == "INVALID_ARGUMENTS"
+
+
+def test_ctu_role_omits_tools_for_no_tool_generator():
+    client = _RoleClient(_role_message(content="SELECT 1"))
+    result, _ = _run_test_role(client, tools=None, max_turns=1)
+    assert result.content == "SELECT 1"
+    assert "tools" not in client.requests[0]

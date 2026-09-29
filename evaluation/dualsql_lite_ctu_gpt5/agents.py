@@ -14,6 +14,10 @@ from evaluation.text_to_sql import (
     evaluate_sql_case,
 )
 from evaluation.dualsql_lite_ctu_gpt5.tools import DatabaseTools, SnapshotOnlyDuckDBSnapshot, TOOL_SCHEMAS
+from evaluation.dualsql_lite_ctu_gpt5.prompts import (
+    LINKER_INSTRUCTIONS, GENERATOR_INSTRUCTIONS,
+    LINKER_PROMPT_VERSION, GENERATOR_PROMPT_VERSION,
+)
 
 
 MODEL = "gpt-5-mini-2025-08-07"
@@ -22,43 +26,7 @@ REASONING_EFFORT = "low"
 MAX_TURNS = 5
 MAX_TOOL_CALLS = 5
 
-LINKER_PROMPT_VERSION = "dualsql_lite_ctu_gpt5_linker_v1"
-GENERATOR_PROMPT_VERSION = "dualsql_lite_ctu_gpt5_generator_v1"
-
-LINKER_INSTRUCTIONS = (
-    "You are the Schema Linker for CTU-13 network telemetry. "
-    "Link the question to the database schema. "
-    "Use database_profiler and value_search to inspect uncertain schema or literals. "
-    "CRITICAL: Stored source_dataset values are 'ctu13_s1', 'ctu13_s4' (not 'Scenario 1'). "
-    "CRITICAL: Stored labels contain 'flow=' prefix like 'flow=From-Botnet-V42-UDP-DNS'. "
-    "SQL probe is available only for inspecting data; never return SQL in your final answer. "
-    "Your final answer MUST be one JSON object with exactly tables and grounded_values. "
-    "tables is a list of {table, columns} with real table/column names. "
-    "grounded_values is a list of {table, column, value} from database_profiler or value_search. "
-    "IMPORTANT: Values explicitly stated in the question (like 'Scenario 1' or 'botnet') "
-    "do NOT need to be verified through DB tools - they are question context. "
-    "However, stored database values (like 'ctu13_s1' or 'flow=From-Botnet-...') MUST be verified. "
-    "Map each database column to question concepts based on column meaning and examples. "
-    "Submit the schema as soon as the needed columns and values are known. "
-    'Example: {"tables":[{"table":"network_flows","columns":["source_dataset","label"]}],'
-    '"grounded_values":[{"table":"network_flows","column":"source_dataset","value":"ctu13_s1"}]}. '
-    "Do not return SQL, Markdown or reasoning."
-)
-
-GENERATOR_INSTRUCTIONS = (
-    "Generate exactly one read-only DuckDB SELECT statement for the question. "
-    "CRITICAL CTU VALUE FORMAT: "
-    "- source_dataset values: 'ctu13_s1', 'ctu13_s4' (not 'Scenario 1' or 'Scenario 4') "
-    "- label values: contain 'flow=' prefix like 'flow=From-Botnet-V42-UDP-DNS', 'flow=Background' "
-    "- Use value_search to verify exact stored values before using text predicates "
-    "A column's name alone does not establish its value format. "
-    "Keep dataset identifiers (source_dataset) separate from event labels. "
-    "For a linked schema, use the verified values and columns rather than guessing. "
-    "Return only the final SQL, no prose or reasoning."
-)
-
-
-class InvalidEvidenceRun(RuntimeError):
+class InvalidEvidenceRun(ValueError):
     """Provider or experiment identity cannot support an evidence claim."""
 
 
@@ -78,8 +46,8 @@ def _hash(text: str) -> str:
 
 
 def cost_usd(input_tokens: int, output_tokens: int) -> float:
-    """Calculate GPT-5 Mini cost (USD 0.15/1M input, USD 0.60/1M output)."""
-    return (input_tokens * 0.15 + output_tokens * 0.60) / 1_000_000
+    """Calculate GPT-5 Mini cost using the pinned 0.25/2.00 USD rates."""
+    return (input_tokens * 0.25 + output_tokens * 2.00) / 1_000_000
 
 
 def validate_linked_schema(raw: str, tools: DatabaseTools,
@@ -312,3 +280,212 @@ class DualSQLCaseRunner:
             "latency_ms": sum(x["latency_ms"] for x in telemetry),
             "provider_calls": telemetry
         }
+
+
+@dataclass(frozen=True)
+class ProviderCall:
+    """The charged response identity persisted before any content parsing."""
+
+    response_id: str
+    actual_model: str
+    input_tokens: int
+    output_tokens: int
+    cost_usd: float
+    latency_ms: float
+    role: str
+    turn: int
+
+
+@dataclass
+class RoleResult:
+    content: str | None
+    model_turns: int
+    db_tool_calls: int
+    trajectory: list[dict[str, Any]]
+    provider_calls: list[ProviderCall]
+    selected_schema: list[dict[str, Any]] | None = None
+    grounded_values: list[dict[str, Any]] | None = None
+    question_literals: list[dict[str, str]] | None = None
+    error: str | None = None
+    malformed: int = 0
+
+    @property
+    def turns(self) -> int:
+        return self.model_turns
+
+    @property
+    def tool_count(self) -> int:
+        return self.db_tool_calls
+
+    @property
+    def linked_schema(self) -> dict[str, Any] | None:
+        if self.selected_schema is None:
+            return None
+        return {"tables": self.selected_schema,
+                "grounded_values": self.grounded_values or [],
+                "question_literals": self.question_literals or []}
+
+
+def _selected_schema(content: str, tools: DatabaseTools) -> list[dict[str, Any]]:
+    """Accept schema names only; tool values are attached by this controller."""
+    try:
+        payload = json.loads(content)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Invalid linked schema JSON") from exc
+    if not isinstance(payload, dict) or set(payload) != {"tables"}:
+        raise ValueError("Linked schema must contain only tables")
+    tables = payload["tables"]
+    if not isinstance(tables, list) or not 1 <= len(tables) <= len(tools.schema):
+        raise ValueError("Invalid linked table count")
+    selected = []
+    seen = set()
+    for item in tables:
+        if not isinstance(item, dict) or set(item) != {"table", "columns"}:
+            raise ValueError("Invalid linked table")
+        table, columns = item["table"], item["columns"]
+        if (not isinstance(table, str) or table not in tools.schema or table in seen
+                or not isinstance(columns, list) or not columns
+                or any(not isinstance(column, str) for column in columns)
+                or len(columns) != len(set(columns))
+                or any(column not in {c["name"] for c in tools.schema[table]}
+                       for column in columns)):
+            raise ValueError("Invented linked table or column")
+        selected.append({"table": table, "columns": columns})
+        seen.add(table)
+    return selected
+
+
+def _question_literals(question: str) -> list[dict[str, str]]:
+    """Keep explicitly quoted question values separate from database evidence."""
+    values = dict.fromkeys(match.group(2) for match in
+                           __import__("re").finditer(r"(['\"])(.*?)\1", question)
+                           if match.group(2))
+    return [{"value": value, "evidence_class": "question"}
+            for value in list(values)[:20]]
+
+
+def run_role(
+    *,
+    role: str,
+    question: str,
+    system_prompt: str,
+    tools: DatabaseTools | None,
+    client: Any,
+    telemetry_sink: Callable[[ProviderCall], None],
+    max_turns: int = MAX_TURNS,
+) -> RoleResult:
+    """Run one bounded role with native tool calls and charged telemetry first."""
+    if role not in {"linker", "generator"} or not 1 <= max_turns <= MAX_TURNS:
+        raise ValueError("Invalid role or turn limit")
+    messages: list[dict[str, Any]] = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": question},
+    ]
+    trajectory: list[dict[str, Any]] = []
+    charged: list[ProviderCall] = []
+    tool_count = 0
+    malformed = 0
+
+    def finish(turn: int, *, content: str | None = None,
+               error: str | None = None) -> RoleResult:
+        result = RoleResult(content, turn, tool_count, trajectory, charged,
+                            question_literals=_question_literals(question), error=error,
+                            malformed=malformed)
+        if error is None and role == "linker":
+            if tools is None:
+                result.error = "INVALID_LINKED_SCHEMA"
+                return result
+            try:
+                result.selected_schema = _selected_schema(content or "", tools)
+            except ValueError:
+                result.error = "INVALID_LINKED_SCHEMA"
+                return result
+            allowed = {(item["table"], column) for item in result.selected_schema
+                       for column in item["columns"]}
+            values: list[dict[str, Any]] = []
+            for event in trajectory:
+                for match in event["result"].get("matches", []):
+                    if (match["table"], match["column"]) in allowed:
+                        values.append({"table": match["table"], "column": match["column"],
+                                       "value": match["value"],
+                                       "evidence_id": match["evidence_id"]})
+            result.grounded_values = values[:20]
+        return result
+
+    for turn in range(1, max_turns + 1):
+        request: dict[str, Any] = {
+            "model": MODEL,
+            "reasoning_effort": REASONING_EFFORT,
+            "max_completion_tokens": CAP,
+            "messages": messages,
+        }
+        if tools is not None:
+            request["tools"] = TOOL_SCHEMAS
+        if role == "linker":
+            request["response_format"] = {"type": "json_object"}
+        started = time.monotonic()
+        response = client.chat.completions.create(**request)
+        latency_ms = round((time.monotonic() - started) * 1000, 3)
+        response_id = getattr(response, "id", None)
+        actual_model = getattr(response, "model", None)
+        usage = getattr(response, "usage", None)
+        input_tokens = getattr(usage, "prompt_tokens", None)
+        output_tokens = getattr(usage, "completion_tokens", None)
+        if not isinstance(response_id, str) or not response_id:
+            raise InvalidEvidenceRun("Provider response ID is missing")
+        if (type(input_tokens) is not int or input_tokens <= 0
+                or type(output_tokens) is not int or not 0 <= output_tokens <= CAP):
+            raise InvalidEvidenceRun("Provider charged usage is missing")
+        call = ProviderCall(response_id, str(actual_model), input_tokens,
+                            output_tokens, cost_usd(input_tokens, output_tokens),
+                            latency_ms, role, turn)
+        telemetry_sink(call)
+        charged.append(call)
+        if actual_model != MODEL:
+            raise InvalidEvidenceRun("Wrong actual model in provider response")
+
+        try:
+            message = response.choices[0].message
+            tool_calls = getattr(message, "tool_calls", None) or []
+        except (AttributeError, IndexError, TypeError):
+            return finish(turn, error="MALFORMED_RESPONSE")
+        if tool_calls:
+            if tools is None:
+                return finish(turn, error="TOOL_UNAVAILABLE")
+            if tool_count + len(tool_calls) > MAX_TOOL_CALLS:
+                return finish(turn, error="TOOL_LIMIT")
+            assistant_calls = []
+            for native in tool_calls:
+                try:
+                    tool_id = native.id
+                    tool_name = native.function.name
+                    arguments = json.loads(native.function.arguments)
+                except (AttributeError, TypeError, ValueError):
+                    tool_id = getattr(native, "id", "malformed-tool")
+                    tool_name = getattr(getattr(native, "function", None), "name", "")
+                    arguments = None
+                if not isinstance(arguments, dict):
+                    malformed += 1
+                    result = {"ok": False, "error_type": "INVALID_ARGUMENTS"}
+                else:
+                    result = tools.invoke(tool_name, arguments)
+                tool_count += 1
+                trajectory.append({"role": role, "turn": turn, "tool_call_id": tool_id,
+                                   "tool": tool_name, "arguments": arguments,
+                                   "result": result})
+                assistant_calls.append({"id": tool_id, "type": "function",
+                                        "function": {"name": tool_name,
+                                                     "arguments": getattr(
+                                                         getattr(native, "function", None),
+                                                         "arguments", "")}})
+            messages.append({"role": "assistant", "content": getattr(message, "content", None),
+                             "tool_calls": assistant_calls})
+            for event in trajectory[-len(tool_calls):]:
+                messages.append({"role": "tool", "tool_call_id": event["tool_call_id"],
+                                 "content": json.dumps(event["result"], default=str)})
+            continue
+        content = getattr(message, "content", None)
+        if not isinstance(content, str) or not content.strip():
+            return finish(turn, error="EMPTY_FINAL_SUBMISSION")
+        return finish(turn, content=content.strip())
+    return finish(max_turns, error="TURN_LIMIT")
