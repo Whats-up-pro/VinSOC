@@ -315,11 +315,11 @@ class CTUDatabaseTools:
     def invoke(self, name: str, arguments: Any) -> dict[str, Any]: ...
 ```
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Test real S5/S7 snapshot values for `source_dataset`, `label`, and `protocol`; deterministic catalog hash; unique controller-owned `evidence_id`; 20-row probe cap; response byte cap; read-only SQL; external access rejection; internal/provenance table rejection; and raw DuckDB exception suppression.
 
-- [ ] **Step 2: Implement only three tools**
+- [x] **Step 2: Implement only three tools**
 
 Expose exactly:
 
@@ -329,11 +329,11 @@ Expose exactly:
 
 Only `network_flows` is visible. Build the value catalog directly from the verified snapshot. Do not create case-ID rules, `scenario 5 -> ctu13_s5` aliases, benchmark literal maps, or hand-written answer hints.
 
-- [ ] **Step 3: Enforce safe errors**
+- [x] **Step 3: Enforce safe errors**
 
 Tool failure output contains a safe category such as `INVALID_ARGUMENTS`, `SAFETY_REJECTION`, `OUTPUT_LIMIT`, or `EXECUTION_ERROR`. Never serialize `str(original_exception)`.
 
-- [ ] **Step 4: Run focused and historical safety tests**
+- [x] **Step 4: Run focused and historical safety tests**
 
 ```bash
 python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_tools.py -q
@@ -341,7 +341,7 @@ python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_tools.py -q
 
 Expected: new tests pass and historical DualSQL safety behavior remains intact.
 
-- [ ] **Step 5: Commit the tool boundary**
+- [x] **Step 5: Commit the tool boundary**
 
 Stage only `tools.py` and the named tests.
 
