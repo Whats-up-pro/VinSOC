@@ -51,6 +51,10 @@ def test_preflight_matches_locked_baseline_without_provider_calls(tmp_path):
 def test_one_decision_per_case_uses_pinned_gpt5_request_and_saves_usage(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "git_head", lambda: "a" * 40)
     monkeypatch.setattr(runner, "git_clean", lambda: True)
+    monkeypatch.setattr(
+        "evaluation.tool_calling.provenance._git_identity",
+        lambda: {"commit_sha": "a" * 40, "branch": "master", "working_tree_clean": True},
+    )
     monkeypatch.setenv("GITHUB_REF", "refs/heads/master")
     monkeypatch.setenv("GITHUB_SHA", "a" * 40)
     monkeypatch.setenv("GITHUB_RUN_ID", "7654321")
@@ -61,6 +65,8 @@ def test_one_decision_per_case_uses_pinned_gpt5_request_and_saves_usage(monkeypa
     assert report["run_id"] == "7654321"
     assert len(report["case_results"]) == len(client.completions.requests) == 24
     assert report["provider_metadata"]["total_calls"] == 24
+    assert report["official_eligible"] is True
+    assert report["provenance"]["ineligible_reasons"] == []
     assert report["pricing"]["known_cost_usd"] > 0
     assert all(c["actual_model"] == runner.MODEL for c in report["provider_metadata"]["calls"])
     assert all(x["model"] == runner.MODEL and x["reasoning_effort"] == "low"
