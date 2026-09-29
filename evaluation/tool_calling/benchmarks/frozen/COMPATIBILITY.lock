@@ -1,0 +1,42 @@
+{
+  "case_count": 8,
+  "case_directory_sha256": "50e52b226f886fd04e6c856614d2df7ef9c2ce27e1cea5a78fecfafc072accf7",
+  "case_files_sha256": {
+    "frozen_001.json": "49d90a20c7b65613c2bff0227f8f5191fa9c3c77b6d812d6a18e828e79778d66",
+    "frozen_002.json": "566109416adb26ce86d0321d93e2c99fcdeb44156c311d82b94ad08588e9f832",
+    "frozen_003.json": "7ec23e79b8d73b34753240122a489b978f9a9ac05352187a9ab20aa86f006f24",
+    "frozen_004.json": "669b8177ea473dec149c95a850ebb1f619392c5f1e5efad7496ee21ebbd7a386",
+    "frozen_005.json": "25e46cd30b8b7eba11198e449f87c9aa11fbf15dc0597320adbd66aab40c9792",
+    "frozen_006.json": "d5417fe84d16a97367696327e96748b6e8babcd768fa4162118bba732cbb6039",
+    "frozen_007.json": "5f8a8e500428a4c34dc3141bbad79c3c98886a1e2081264bbf6fabbd1377c066",
+    "frozen_008.json": "1da2605e2dc02e1dae8c5b01a6c50af0320d0606007cdc369564dd4917907600"
+  },
+  "case_ids": [
+    "frozen_001",
+    "frozen_002",
+    "frozen_003",
+    "frozen_004",
+    "frozen_005",
+    "frozen_006",
+    "frozen_007",
+    "frozen_008"
+  ],
+  "hash_canonicalization": "UTF-8 JSON with sorted object keys and compact separators; scorer source line endings normalized to LF",
+  "model_calls": 0,
+  "production_schema_sha256": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+  "production_tool_names": [
+    "cti_enrichment",
+    "endpoint_investigation",
+    "network_investigation"
+  ],
+  "scorer_file_sha256": {
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f"
+  },
+  "scorer_sha256": "271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149",
+  "split_sha256": "eb46a6d42aeced2f6f676fb5a04a670a49351d4516c5582cb61dcb39e2b61ae4",
+  "validation": "case structure, production tool/argument names, dev separation, and offline scorer load",
+  "version": "r1_a1_frozen_compatibility_v1"
+}
