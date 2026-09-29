@@ -1,0 +1,11 @@
+{
+  "case_id": "frozen_sql_003",
+  "question": "Count Scenario 1 UDP flows with positive outbound bytes whose label begins with either flow=From-Botnet or flow=From-Normal.",
+  "database_snapshot": "data/ctu_network_frozen/snapshot.duckdb",
+  "gold_sql": ["SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND protocol = 'UDP' AND bytes_out > 0 AND (label LIKE 'flow=From-Botnet%' OR label LIKE 'flow=From-Normal%')"],
+  "category": "filter",
+  "difficulty": "advanced",
+  "result_comparator": "scalar",
+  "semantic_tags": ["boolean_precedence"],
+  "counterexample_sql": "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND protocol = 'UDP' AND bytes_out > 0 AND label LIKE 'flow=From-Botnet%' OR label LIKE 'flow=From-Normal%'"
+}

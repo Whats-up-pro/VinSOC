@@ -1,0 +1,11 @@
+{
+  "case_id": "frozen_sql_001",
+  "question": "How many Scenario 1 flows have a label beginning with flow=From-Botnet?",
+  "database_snapshot": "data/ctu_network_frozen/snapshot.duckdb",
+  "gold_sql": ["SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND label LIKE 'flow=From-Botnet%'"],
+  "category": "network",
+  "difficulty": "basic",
+  "result_comparator": "scalar",
+  "semantic_tags": ["scalar_filter", "stored_value_grounding"],
+  "counterexample_sql": "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND label = 'From-Botnet'"
+}

@@ -1,0 +1,11 @@
+{
+  "case_id": "frozen_sql_002",
+  "question": "How many distinct destination IP addresses appear in Scenario 4 TCP flows?",
+  "database_snapshot": "data/ctu_network_frozen/snapshot.duckdb",
+  "gold_sql": ["SELECT count(DISTINCT dst_ip) AS destination_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND protocol = 'TCP'"],
+  "category": "distinct",
+  "difficulty": "intermediate",
+  "result_comparator": "scalar",
+  "semantic_tags": ["distinct"],
+  "counterexample_sql": "SELECT count(dst_ip) AS destination_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND protocol = 'TCP'"
+}

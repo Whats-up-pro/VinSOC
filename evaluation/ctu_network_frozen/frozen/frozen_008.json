@@ -1,0 +1,11 @@
+{
+  "case_id": "frozen_sql_008",
+  "question": "How many Scenario 4 flows have the exact stored label flow=From-Normal-V45-Stribrek?",
+  "database_snapshot": "data/ctu_network_frozen/snapshot.duckdb",
+  "gold_sql": ["SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND label = 'flow=From-Normal-V45-Stribrek'"],
+  "category": "filter",
+  "difficulty": "basic",
+  "result_comparator": "scalar",
+  "semantic_tags": ["scalar_filter", "stored_value_grounding"],
+  "counterexample_sql": "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND label LIKE 'flow=From-Normal%'"
+}

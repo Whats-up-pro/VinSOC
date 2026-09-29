@@ -1,0 +1,11 @@
+{
+  "case_id": "frozen_sql_005",
+  "question": "For Scenario 4 flows whose label begins with flow=From-Botnet, return the flow count for each protocol.",
+  "database_snapshot": "data/ctu_network_frozen/snapshot.duckdb",
+  "gold_sql": ["SELECT protocol, count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND label LIKE 'flow=From-Botnet%' GROUP BY protocol"],
+  "category": "aggregation",
+  "difficulty": "intermediate",
+  "result_comparator": "unordered_rows",
+  "semantic_tags": ["aggregation_group_by", "multi_row_comparison"],
+  "counterexample_sql": "SELECT protocol, count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' GROUP BY protocol"
+}

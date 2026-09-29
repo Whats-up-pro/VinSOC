@@ -1,0 +1,236 @@
+{
+  "builder_scorer_sha256": {
+    "evaluation/ctu_network_frozen/contract.py": "b6b132d10f4991dc4dd8b004c5440c1ca28d98348952ed3a45ae42f2c734c14e",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+    "scripts/build_ctu_network_frozen_snapshot.py": "cca4654b2d6c7565b8f0c161ebfb1013349f30221751011939fbe75926fa2573",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+  },
+  "case_directory_sha256": "cd922b4c0a883ea12c919851c6b929d677de987ae97c03e1eb783b34df30cf94",
+  "case_file_sha256": {
+    "frozen_001.json": "91ddd92292d521a2dcec232c727d3eeeecafd5ebb7ea8643733c551a6d864e73",
+    "frozen_002.json": "58f44347f708868ef16791b737e237b1a7175164261f37d7b4a4b3a12411d2a0",
+    "frozen_003.json": "8916fc7fbd1a4b5e83a6bb6ac1257c8661bae5f12ba5871ae6e7f66a241d261f",
+    "frozen_004.json": "5874de9488b8f135c13a766089068fed07e21ae1a39c44a37629138d92bb0052",
+    "frozen_005.json": "922a7164ccbe0f8257eaee3988dfb645d4f5151031c8b371680f3e465fcca8ba",
+    "frozen_006.json": "5054593dd9b9f13157eab854e2aed2ee72f387c54449c68845cd4c95cc4931ac",
+    "frozen_007.json": "f7480a6c8a7be45970d88a2a4f496b48e3a9b89f842b13fb8203967180b76ec1",
+    "frozen_008.json": "37ea365f7192e9403b4a960c5c7870f609bd528a94cec993b9e1048c015bb40a"
+  },
+  "case_ids": [
+    "frozen_sql_001",
+    "frozen_sql_002",
+    "frozen_sql_003",
+    "frozen_sql_004",
+    "frozen_sql_005",
+    "frozen_sql_006",
+    "frozen_sql_007",
+    "frozen_sql_008"
+  ],
+  "comparator_contract": {
+    "cases": {
+      "frozen_sql_001": "scalar",
+      "frozen_sql_002": "scalar",
+      "frozen_sql_003": "scalar",
+      "frozen_sql_004": "scalar",
+      "frozen_sql_005": "unordered_rows",
+      "frozen_sql_006": "ordered_rows",
+      "frozen_sql_007": "ordered_rows",
+      "frozen_sql_008": "scalar"
+    },
+    "scorer_sha256": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf"
+  },
+  "distinct_source_row_id": 3945672,
+  "gold_results": {
+    "frozen_sql_001": {
+      "gold_sql_sha256": "d4a40d08479d8ace41510daea1a55790bd1dcf296dcad1ed3af733417e8fcc6b",
+      "result_sha256": "12a320e0550f5889666d35fb70aebe73b40478ab20ba5925ed25a1951b23d13f",
+      "row_count": 1
+    },
+    "frozen_sql_002": {
+      "gold_sql_sha256": "bb1979b85f44cc00b1ec79f4f5f8a35b260c6968f9facd7128fef13e70fc4aa8",
+      "result_sha256": "ce8ad876851751b7bfc236641d22908959d3856b9416204755236981713f2703",
+      "row_count": 1
+    },
+    "frozen_sql_003": {
+      "gold_sql_sha256": "52a5b6da734daf62c6a4ba13761afc1547ac858571633d4c0608b6505235337d",
+      "result_sha256": "03e8092524c3156cb37a6dbe76ead9d0e45f03917232f9a0ebeadb6da5a4ad7c",
+      "row_count": 1
+    },
+    "frozen_sql_004": {
+      "gold_sql_sha256": "879a5bf911cbd768bd25a389ee7d46eae85d9a7f5403e4ef827bf67e78e0278c",
+      "result_sha256": "e78b6b2ef0c79a52a59ac18225babf1fdc8ccac1258146aff6d5fd1f0be1254a",
+      "row_count": 1
+    },
+    "frozen_sql_005": {
+      "gold_sql_sha256": "7a9181533ccd1b0d9bc2ae5812034c50a5d5958afceddf1f5c678899983d3a69",
+      "result_sha256": "49a4ffbb16e4404f1b51372d0f2b9defa195f53fb9adfcf81490472b8d7ec042",
+      "row_count": 3
+    },
+    "frozen_sql_006": {
+      "gold_sql_sha256": "faf411c959d9e3b9f03286a5e06df4987e50195392bafd41a4ffe7472906a88d",
+      "result_sha256": "424eb5a49e1a2d21285e6abd69b52e8f4b45957c098f071ae485a571158fce21",
+      "row_count": 5
+    },
+    "frozen_sql_007": {
+      "gold_sql_sha256": "d384e0b67aa32488583e3eb8286af57b9855f4594b424a2379c69dd7e52d5102",
+      "result_sha256": "3e6bd10ada8cab91b7c9aef2a8fdf670bf0cac8533f1fa2d4affd0150312e387",
+      "row_count": 2
+    },
+    "frozen_sql_008": {
+      "gold_sql_sha256": "75c70c4ea112e80055e003b43532a84653415815587882029b8752f9d9a2fb33",
+      "result_sha256": "6a04c03b34aaee2ab56d80fd3417e769a2b3ade0699ad8d3794adc77e6a72248",
+      "row_count": 1
+    }
+  },
+  "logical_snapshot_sha256": "0251bbe1a2bdca6acc4f181cf7342ec03b2e04048ab747c8625dbfc0b5d03ea4",
+  "manifest_sha256": "e65a80483ba822ab8e7dd701489bbb7d4cf547c607d225cfbe57f4ffefb37f9d",
+  "model_calls": 0,
+  "row_counts": {
+    "network_flows": 3945672
+  },
+  "schema": {
+    "dataset_provenance": [
+      [
+        "dataset_id",
+        "VARCHAR"
+      ],
+      [
+        "source_name",
+        "VARCHAR"
+      ],
+      [
+        "source_url",
+        "VARCHAR"
+      ],
+      [
+        "retrieved_at",
+        "TIMESTAMP"
+      ],
+      [
+        "file_sha256",
+        "VARCHAR"
+      ],
+      [
+        "license_note",
+        "VARCHAR"
+      ],
+      [
+        "schema_version",
+        "VARCHAR"
+      ]
+    ],
+    "network_flows": [
+      [
+        "source_dataset",
+        "VARCHAR"
+      ],
+      [
+        "source_row_id",
+        "VARCHAR"
+      ],
+      [
+        "event_time",
+        "TIMESTAMP"
+      ],
+      [
+        "src_ip",
+        "VARCHAR"
+      ],
+      [
+        "src_port",
+        "INTEGER"
+      ],
+      [
+        "dst_ip",
+        "VARCHAR"
+      ],
+      [
+        "dst_port",
+        "INTEGER"
+      ],
+      [
+        "protocol",
+        "VARCHAR"
+      ],
+      [
+        "action",
+        "VARCHAR"
+      ],
+      [
+        "bytes_out",
+        "BIGINT"
+      ],
+      [
+        "bytes_in",
+        "BIGINT"
+      ],
+      [
+        "label",
+        "VARCHAR"
+      ]
+    ]
+  },
+  "semantic_counterexamples": {
+    "frozen_sql_001": {
+      "different_from_gold": true,
+      "sql_sha256": "2e94919406360a7fa410e5bf6e50523ddcdfd4a9294fff9d5e6c9b6e06dea219"
+    },
+    "frozen_sql_002": {
+      "different_from_gold": true,
+      "sql_sha256": "875aff2df6350171658270d6b9c0b3d976498f0ad9c55c653aacf5abec29c41b"
+    },
+    "frozen_sql_003": {
+      "different_from_gold": true,
+      "sql_sha256": "aa9d275b5f49771c99db932c2fc96da94cad6fb230accb5402e0df7753c34cb5"
+    },
+    "frozen_sql_004": {
+      "different_from_gold": true,
+      "sql_sha256": "63beac0b4a4a84876cc405bf843f4fad5f16812bf3e9cdf409a18e1e1efce755"
+    },
+    "frozen_sql_005": {
+      "different_from_gold": true,
+      "sql_sha256": "52ef4c543ac01ce925cbd46aeba6c2bfced56db9f728539bd738be8d5378fcc6"
+    },
+    "frozen_sql_006": {
+      "different_from_gold": true,
+      "sql_sha256": "a6c88c4e3523024bb965bb80d99dab85172fd74bb52203cca1d5fac7cdcf0a4e"
+    },
+    "frozen_sql_007": {
+      "different_from_gold": true,
+      "sql_sha256": "c1749e2ed2fd8e52df44a1bd20861e53dba183512a3b14da41156965b3a53008"
+    },
+    "frozen_sql_008": {
+      "different_from_gold": true,
+      "sql_sha256": "1630bba8ef284e55ff111a36ecf117d624dcc533c25fa397f2916797bd1b5d57"
+    }
+  },
+  "semantic_coverage": [
+    "aggregation_group_by",
+    "boolean_precedence",
+    "bounded_time_interval",
+    "distinct",
+    "multi_row_comparison",
+    "order_by_limit",
+    "scalar_filter",
+    "stored_value_grounding"
+  ],
+  "source_file_sha256": {
+    "ctu13_s1": "be09f7f6a06beef0134152dc88bff85f0027db4affe07b3fbe956bbb49be5430",
+    "ctu13_s4": "30353fcffe971e97839ccffaa1675535490420f1ba1f65e5c90f6a815a8ab2c0"
+  },
+  "source_receipt_sha256": "e20b1359ccec19eb52fd462e748305dc744cb178eaca9121b69cd3b356ac0c3e",
+  "source_row_counts": {
+    "ctu13_s1": 2824609,
+    "ctu13_s4": 1121063
+  },
+  "source_urls": {
+    "ctu13_s1": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/detailed-bidirectional-flow-labels/capture20110810.binetflow",
+    "ctu13_s4": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-45/detailed-bidirectional-flow-labels/capture20110815.binetflow"
+  },
+  "split_sha256": "0d01dd48d188ae88f44ac58a784e87c726eaa2ab1bff809a7a6badda041bef89",
+  "tables": [
+    "dataset_provenance",
+    "network_flows"
+  ],
+  "version": "ctu_network_frozen_s1_s4_v1"
+}
