@@ -1,0 +1,31 @@
+{
+  "status": "source_bytes_verified; snapshot_and_frozen_cases_not_yet_locked",
+  "official_catalog_url": "https://www.stratosphereips.org/datasets-ctu13",
+  "checked_utc": "2026-09-29T06:51:42Z",
+  "source_checks": {
+    "ctu13_s1": {
+      "official_capture_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/detailed-bidirectional-flow-labels/capture20110810.binetflow",
+      "http_status": 200,
+      "content_length_bytes": 386629271,
+      "etag": "\"170b7e97-50de0fa50fbc0\"",
+      "last_modified": "Fri, 30 Jan 2015 16:20:07 GMT",
+      "line_count_including_header": 2824637,
+      "sha256_stream_and_disk": "be09f7f6a06beef0134152dc88bff85f0027db4affe07b3fbe956bbb49be5430"
+    },
+    "ctu13_s4": {
+      "official_capture_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-45/",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-45/detailed-bidirectional-flow-labels/capture20110815.binetflow",
+      "http_status": 200,
+      "content_length_bytes": 153789874,
+      "etag": "\"92aa5b2-50de0fec96480\"",
+      "last_modified": "Fri, 30 Jan 2015 16:21:22 GMT",
+      "line_count_including_header": 1121077,
+      "sha256_stream_and_disk": "30353fcffe971e97839ccffaa1675535490420f1ba1f65e5c90f6a815a8ab2c0"
+    }
+  },
+  "checksum_note": "The official directory did not publish a SHA-256 sidecar. These SHA-256 values were computed from the direct official response stream, then independently recomputed from local bytes; content length and ETag were recorded from the authoritative endpoint. All future builds must match these pinned bytes.",
+  "source_separation": "S1/S4 only; dev snapshot sources S5/S7 are excluded.",
+  "model_calls": 0,
+  "api_cost_usd": 0
+}

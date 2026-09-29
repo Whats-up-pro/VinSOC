@@ -1,0 +1,27 @@
+{
+  "schema_version": "1",
+  "sources": [
+    {
+      "archive_member": null,
+      "dataset_id": "ctu13_s1",
+      "file_sha256": "be09f7f6a06beef0134152dc88bff85f0027db4affe07b3fbe956bbb49be5430",
+      "format": "ctu13_binetflow",
+      "license_note": "CTU-13 Scenario 1; CC-BY; attribute Sebastian Garcia and the Malware Capture Facility Project.",
+      "path": "data/ctu_network_frozen/sources/capture20110810.binetflow",
+      "retrieved_at": "2026-09-29T06:51:42Z",
+      "source_name": "CTU-13 Scenario 1",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/detailed-bidirectional-flow-labels/capture20110810.binetflow"
+    },
+    {
+      "archive_member": null,
+      "dataset_id": "ctu13_s4",
+      "file_sha256": "30353fcffe971e97839ccffaa1675535490420f1ba1f65e5c90f6a815a8ab2c0",
+      "format": "ctu13_binetflow",
+      "license_note": "CTU-13 Scenario 4; CC-BY; attribute Sebastian Garcia and the Malware Capture Facility Project.",
+      "path": "data/ctu_network_frozen/sources/capture20110815.binetflow",
+      "retrieved_at": "2026-09-29T06:51:42Z",
+      "source_name": "CTU-13 Scenario 4",
+      "source_url": "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-45/detailed-bidirectional-flow-labels/capture20110815.binetflow"
+    }
+  ]
+}
