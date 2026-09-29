@@ -71,7 +71,9 @@ def _logical_content_hash(snapshot: Path, temp_directory: Path) -> tuple[dict[st
     digest = hashlib.sha256()
     schema: dict[str, list[list[str]]] = {}
     with duckdb.connect(str(snapshot), read_only=True) as conn:
-        conn.execute("SET memory_limit='512MB'")
+        conn.execute("SET memory_limit='1GB'")
+        conn.execute("SET threads=1")
+        conn.execute("SET preserve_insertion_order=false")
         conn.execute(f"SET temp_directory='{_quoted_path(temp_directory)}'")
         for table, ordering in (("dataset_provenance", "dataset_id"),
                                 ("network_flows", "source_dataset, source_row_id")):
