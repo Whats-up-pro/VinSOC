@@ -1,0 +1,249 @@
+{
+  "attempted_calls": 0,
+  "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+  "benchmark_version": "r1_a1_dev_v2",
+  "case_results": [],
+  "config": {
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "model": "gpt-5-mini-2025-08-07",
+    "provider": "openai",
+    "reasoning_effort": "low",
+    "temperature": null
+  },
+  "evaluator_commit_sha": "eec657fe29e8c06844f72952eb0cb14f519a7530",
+  "expected_case_ids": [
+    "case_001",
+    "case_002",
+    "case_003",
+    "case_004",
+    "case_005",
+    "case_006",
+    "case_007",
+    "case_008",
+    "case_009",
+    "case_010",
+    "case_011",
+    "case_012",
+    "case_013",
+    "case_014",
+    "case_015",
+    "case_016",
+    "case_017",
+    "case_018",
+    "case_019",
+    "case_020",
+    "case_021",
+    "case_022",
+    "case_023",
+    "case_024"
+  ],
+  "mode": "decision",
+  "model_config_sha256": "5688ad2d339c97f2161bab65016962c0a2c64ee77b07071c573bf06779114941",
+  "official_eligible": false,
+  "preflight": {
+    "bounds": [
+      {
+        "case_id": "case_001",
+        "input_token_bound": 8492,
+        "max_cost_usd": 0.004123,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4396
+      },
+      {
+        "case_id": "case_002",
+        "input_token_bound": 8427,
+        "max_cost_usd": 0.00410675,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4331
+      },
+      {
+        "case_id": "case_003",
+        "input_token_bound": 8465,
+        "max_cost_usd": 0.00411625,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4369
+      },
+      {
+        "case_id": "case_004",
+        "input_token_bound": 8489,
+        "max_cost_usd": 0.00412225,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4393
+      },
+      {
+        "case_id": "case_005",
+        "input_token_bound": 8453,
+        "max_cost_usd": 0.00411325,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4357
+      },
+      {
+        "case_id": "case_006",
+        "input_token_bound": 8475,
+        "max_cost_usd": 0.00411875,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4379
+      },
+      {
+        "case_id": "case_007",
+        "input_token_bound": 8470,
+        "max_cost_usd": 0.0041175,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4374
+      },
+      {
+        "case_id": "case_008",
+        "input_token_bound": 8462,
+        "max_cost_usd": 0.0041155,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4366
+      },
+      {
+        "case_id": "case_009",
+        "input_token_bound": 8427,
+        "max_cost_usd": 0.00410675,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4331
+      },
+      {
+        "case_id": "case_010",
+        "input_token_bound": 8447,
+        "max_cost_usd": 0.00411175,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4351
+      },
+      {
+        "case_id": "case_011",
+        "input_token_bound": 8424,
+        "max_cost_usd": 0.004106,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4328
+      },
+      {
+        "case_id": "case_012",
+        "input_token_bound": 8435,
+        "max_cost_usd": 0.00410875,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4339
+      },
+      {
+        "case_id": "case_013",
+        "input_token_bound": 8436,
+        "max_cost_usd": 0.004109,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4340
+      },
+      {
+        "case_id": "case_014",
+        "input_token_bound": 8456,
+        "max_cost_usd": 0.004114,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4360
+      },
+      {
+        "case_id": "case_015",
+        "input_token_bound": 8455,
+        "max_cost_usd": 0.00411375,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4359
+      },
+      {
+        "case_id": "case_016",
+        "input_token_bound": 8479,
+        "max_cost_usd": 0.00411975,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4383
+      },
+      {
+        "case_id": "case_017",
+        "input_token_bound": 8501,
+        "max_cost_usd": 0.00412525,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4405
+      },
+      {
+        "case_id": "case_018",
+        "input_token_bound": 8457,
+        "max_cost_usd": 0.00411425,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4361
+      },
+      {
+        "case_id": "case_019",
+        "input_token_bound": 8608,
+        "max_cost_usd": 0.004152,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4512
+      },
+      {
+        "case_id": "case_020",
+        "input_token_bound": 8403,
+        "max_cost_usd": 0.00410075,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4307
+      },
+      {
+        "case_id": "case_021",
+        "input_token_bound": 8362,
+        "max_cost_usd": 0.0040905,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4266
+      },
+      {
+        "case_id": "case_022",
+        "input_token_bound": 8382,
+        "max_cost_usd": 0.0040955,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4286
+      },
+      {
+        "case_id": "case_023",
+        "input_token_bound": 8363,
+        "max_cost_usd": 0.00409075,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4267
+      },
+      {
+        "case_id": "case_024",
+        "input_token_bound": 8264,
+        "max_cost_usd": 0.004066,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4168
+      }
+    ],
+    "funding_gate": {
+      "checked_utc": "2026-09-29T06:33:45.666259+00:00",
+      "confirmed_total_budget_usd": 2.0,
+      "credit_value_semantics": "minimum usable credit attested for this suite; not exact account balance",
+      "source": "user-attested usable-credit lower bound and confirmed total limit",
+      "verified_credit_usd": 0.098659
+    },
+    "method": "serialized UTF-8 request bytes + 4096 framing tokens; full output cap; zero retries",
+    "prior_spend_usd": 0.00384725,
+    "suite_budget_usd": 0.25,
+    "suite_ceiling_usd": 0.098658
+  },
+  "pricing": {
+    "checked_utc": "2026-09-29T06:33:45.665867+00:00",
+    "cost_unknown": false,
+    "input_usd_per_million": 0.25,
+    "known_cost_usd": 0.0,
+    "output_usd_per_million": 2.0,
+    "source": "https://developers.openai.com/api/docs/models/gpt-5-mini"
+  },
+  "provenance": {
+    "production_schema_sha256": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+    "prompt_sha256": "21f87b197c1bf1206d4a36e111853bddf6ea623bab58a5da311ccbcb61d7780b"
+  },
+  "run_id": "36531679435",
+  "run_status": "preflight_complete",
+  "scorer_file_sha256": {
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f"
+  },
+  "scorer_sha256": "271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149",
+  "split": "dev"
+}

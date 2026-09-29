@@ -1,0 +1,2600 @@
+{
+  "aggregate": {
+    "argument_field_accuracy": 1.0,
+    "case_count": 24,
+    "critical_argument_accuracy": 1.0,
+    "exact_call_f1": 0.9355,
+    "exact_call_precision": 0.9355,
+    "exact_call_recall": 0.9355,
+    "execution_error_rate": 0.0,
+    "forbidden_tool_rate": 0.0,
+    "mean_latency_ms": 2693.66,
+    "no_tool_accuracy": 0.8,
+    "ordering_accuracy": null,
+    "p95_latency_ms": 6933.33,
+    "provider_error_rate": 0.0,
+    "run_id": "36531679435",
+    "tool_f1": 0.9355,
+    "tool_precision": 0.9355,
+    "tool_recall": 0.9355,
+    "tool_set_exact_match_rate": 0.7917,
+    "trajectory_success_rate": 0.7917
+  },
+  "attempted_calls": 24,
+  "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+  "benchmark_version": "r1_a1_dev_v2",
+  "case_results": [
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_001",
+      "cost_usd": 0.0002965,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 850,
+      "latency_ms": 2678.273445000002,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 42,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "10.0.0.53",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\":\"10.0.0.53\",\"indicator_type\":\"ipv4\",\"time_range\":null}",
+          "id": "call_COXWNSalZZYs12xyNvVRyE7J",
+          "name": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_002",
+      "cost_usd": 0.0005085,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": false,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 1,
+      "forbidden_tool_violations": [],
+      "input_tokens": 834,
+      "latency_ms": 2506.142749999995,
+      "matches": [
+        {
+          "critical_arg_match": false,
+          "expected_call_id": null,
+          "expected_tool": null,
+          "match_type": "no_match",
+          "matched_critical_args": [],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": false
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 150,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "203.0.113.50",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "indicator": "203.0.113.50",
+            "indicator_type": "ipv4"
+          },
+          "tool": "cti_enrichment"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"203.0.113.50\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+          "id": "call_DSfvaZdv1J2RjQh4dj47pCYR",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"indicator\": \"203.0.113.50\", \"indicator_type\": \"ipv4\"}",
+          "id": "call_NBnFxrs9r7m1OZXhw0aLg7YC",
+          "name": "cti_enrichment"
+        }
+      ],
+      "trajectory_success": false,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_003",
+      "cost_usd": 0.0004015,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 846,
+      "latency_ms": 2750.7095709999944,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 95,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "ws100"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"host\":\"WS100\",\"time_range\":null}",
+          "id": "call_myml5BRcf31hRapLuO6GXf66",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_004",
+      "cost_usd": 0.00027375,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 839,
+      "latency_ms": 1955.3107789999942,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 32,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "partner.example.com",
+            "indicator_type": "domain"
+          },
+          "tool": "cti_enrichment"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\":\"partner.example.com\",\"indicator_type\":\"domain\"}",
+          "id": "call_2uGDmw5gyRk0t5pdAUIiacyv",
+          "name": "cti_enrichment"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_005",
+      "cost_usd": 0.000621,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": false,
+      "expected_call_count": 3,
+      "false_negatives": 1,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 844,
+      "latency_ms": 2645.4084370000005,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_3",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 205,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "185.220.101.45",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2026-09-29T00:00:00Z",
+              "start": "2026-09-22T00:00:00Z"
+            }
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "host": "ws023",
+            "time_range": {
+              "end": "2026-09-29T00:00:00Z",
+              "start": "2026-09-22T00:00:00Z"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"185.220.101.45\", \"indicator_type\": \"ipv4\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T00:00:00Z\"}}",
+          "id": "call_sALKzc014edaRmsCdWjmgfqK",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"host\": \"WS023\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T00:00:00Z\"}}",
+          "id": "call_gBZsqq3e6GFWp2rvP3EyGWDa",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": false,
+      "true_positives": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_006",
+      "cost_usd": 0.00028175,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 839,
+      "latency_ms": 1349.2259200000021,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 36,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "secure-login-bankind1882.xyz",
+            "indicator_type": "domain"
+          },
+          "tool": "cti_enrichment"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\":\"secure-login-bankind1882.xyz\",\"indicator_type\":\"domain\"}",
+          "id": "call_ya79IoOv3Od9S7vbYIHF8Jk1",
+          "name": "cti_enrichment"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_007",
+      "cost_usd": 0.00049275,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 2,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 843,
+      "latency_ms": 2223.3856840000003,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 141,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "lockbit1234abcd.onion",
+            "indicator_type": "domain"
+          },
+          "tool": "cti_enrichment"
+        },
+        {
+          "arguments": {
+            "host": "file-server-01"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"lockbit1234abcd.onion\", \"indicator_type\": \"domain\"}",
+          "id": "call_aOHwdb0qEAMLWHUCRIEPo2QC",
+          "name": "cti_enrichment"
+        },
+        {
+          "arguments": "{\"host\": \"FILE-SERVER-01\", \"time_range\": null}",
+          "id": "call_wDgOFvP1Qpav0jKMvSg20vjG",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_008",
+      "cost_usd": 0.00093775,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 3,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 847,
+      "latency_ms": 4253.293267000004,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_3",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 363,
+      "predicted_call_count": 3,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2026-09-29T23:59:59Z",
+              "start": "2026-09-22T00:00:00Z"
+            }
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "host": "workstation-042",
+            "time_range": {
+              "end": "2026-09-29T23:59:59Z",
+              "start": "2026-09-22T00:00:00Z"
+            }
+          },
+          "tool": "endpoint_investigation"
+        },
+        {
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4"
+          },
+          "tool": "cti_enrichment"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+          "id": "call_VNY4q9gBRD4AIsguI20JefVV",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"host\": \"WORKSTATION-042\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+          "id": "call_rOgX1JIZHd3NUZUOqHj6GWEV",
+          "name": "endpoint_investigation"
+        },
+        {
+          "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\"}",
+          "id": "call_75zbSbNM1e3aan2OUqlioav2",
+          "name": "cti_enrichment"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 3
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_009",
+      "cost_usd": 0.00063425,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": false,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 1,
+      "forbidden_tool_violations": [],
+      "input_tokens": 833,
+      "latency_ms": 1997.198877999992,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": false,
+          "expected_call_id": null,
+          "expected_tool": null,
+          "match_type": "no_match",
+          "matched_critical_args": [],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": false
+        }
+      ],
+      "output_tokens": 213,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "10.0.0.25",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "host": "10.0.0.25"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"10.0.0.25\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+          "id": "call_QKb7bvOVuTPEgw2saCzAxY9e",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"host\": \"10.0.0.25\", \"time_range\": null}",
+          "id": "call_rGtjNtLwT1QX2eL1aBuKWIm2",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": false,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_010",
+      "cost_usd": 0.0004975,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 2,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 838,
+      "latency_ms": 1752.0041429999935,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 144,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "192.168.1.50",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "host": "ws050"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"192.168.1.50\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+          "id": "call_5OuEn9hbO0dAJbBLpOQ6Ti63",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"host\": \"WS050\", \"time_range\": null}",
+          "id": "call_TfOculXky3jNSIyrCVwqVkm7",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_011",
+      "cost_usd": 0.00042025,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 833,
+      "latency_ms": 1488.9288310000097,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 106,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "10.0.0.100",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\":\"10.0.0.100\",\"indicator_type\":\"ipv4\",\"time_range\":null}",
+          "id": "call_jGiU0H0QsOQzICesRaZ1juMA",
+          "name": "network_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_012",
+      "cost_usd": 0.00027025,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 833,
+      "latency_ms": 840.9577380000002,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 31,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "ws001"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"host\":\"WS001\",\"time_range\":null}",
+          "id": "call_YLsRl0NTF3uqRjLIfdVGF0s0",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_013",
+      "cost_usd": 0.00027,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 832,
+      "latency_ms": 1160.5969220000106,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 31,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "ws023"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"host\":\"WS023\",\"time_range\":null}",
+          "id": "call_ESS0doPVehjzeczjiPQAnV3t",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_014",
+      "cost_usd": 0.00027125,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 1,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 837,
+      "latency_ms": 1098.141744000003,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 31,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "host": "ws045"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"host\":\"WS045\",\"time_range\":null}",
+          "id": "call_0kDrV2rXDrIA1LwDn3RFKMVv",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_015",
+      "cost_usd": 0.00068975,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 3,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 847,
+      "latency_ms": 2142.192284999993,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_3",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 239,
+      "predicted_call_count": 3,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4"
+          },
+          "tool": "cti_enrichment"
+        },
+        {
+          "arguments": {
+            "indicator": "91.220.131.77",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "host": "workstation-042"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\"}",
+          "id": "call_2k3XOL6IGIJN8BEgAT1JdoEi",
+          "name": "cti_enrichment"
+        },
+        {
+          "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+          "id": "call_bcfiyZKBBKRhkTtw1ksjraQw",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"host\": \"WORKSTATION-042\", \"time_range\": null}",
+          "id": "call_3BKt6m9s4kl7qIRJRVi6aO9b",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 3
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_016",
+      "cost_usd": 0.00056625,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 2,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 873,
+      "latency_ms": 2118.010920999993,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 174,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+            "indicator_type": "hash"
+          },
+          "tool": "cti_enrichment"
+        },
+        {
+          "arguments": {
+            "host": "workstation-015"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\", \"indicator_type\": \"hash\"}",
+          "id": "call_jDhsrrKLIadhkuGtBKNh6dso",
+          "name": "cti_enrichment"
+        },
+        {
+          "arguments": "{\"host\": \"WORKSTATION-015\", \"time_range\": null}",
+          "id": "call_OoKK0EyVRjxpPK7y250Zq9yQ",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_017",
+      "cost_usd": 0.00049725,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 2,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 845,
+      "latency_ms": 1621.2015210000031,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "cti_enrichment",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 143,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "libcdn.legitframework.io",
+            "indicator_type": "domain"
+          },
+          "tool": "cti_enrichment"
+        },
+        {
+          "arguments": {
+            "host": "dev-workstation-08"
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"libcdn.legitframework.io\", \"indicator_type\": \"domain\"}",
+          "id": "call_7zqV1xfC4cpwHSfgA8KCjCol",
+          "name": "cti_enrichment"
+        },
+        {
+          "arguments": "{\"host\": \"DEV-WORKSTATION-08\", \"time_range\": null}",
+          "id": "call_Lj2n0IPibL5jAuXCRiql85SM",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_018",
+      "cost_usd": 0.000876,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 2,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 840,
+      "latency_ms": 2682.0284020000004,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 333,
+      "predicted_call_count": 2,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "10.0.0.200",
+            "indicator_type": "ipv4",
+            "time_range": {
+              "end": "2026-09-29T23:59:59Z",
+              "start": "2026-09-22T00:00:00Z"
+            }
+          },
+          "tool": "network_investigation"
+        },
+        {
+          "arguments": {
+            "host": "ws200",
+            "time_range": {
+              "end": "2026-09-29T23:59:59Z",
+              "start": "2026-09-22T00:00:00Z"
+            }
+          },
+          "tool": "endpoint_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\": \"10.0.0.200\", \"indicator_type\": \"ipv4\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+          "id": "call_UTIIx9dDCtbukhUhYN029qcD",
+          "name": "network_investigation"
+        },
+        {
+          "arguments": "{\"host\": \"WS200\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+          "id": "call_fw3sFhkmQQSBFxn8CxydDSqM",
+          "name": "endpoint_investigation"
+        }
+      ],
+      "trajectory_success": true,
+      "true_positives": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_019",
+      "cost_usd": 0.00221775,
+      "critical_arg_errors": 0,
+      "errors": [
+        "INVALID_TOOL_CALL"
+      ],
+      "exact_call_match": false,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 871,
+      "latency_ms": 9322.444479000013,
+      "matches": [],
+      "output_tokens": 1000,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "raw_tool_calls": [],
+      "trajectory_success": false,
+      "true_positives": 0
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_020",
+      "cost_usd": 0.00029225,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": false,
+      "expected_call_count": 2,
+      "false_negatives": 1,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 833,
+      "latency_ms": 1224.434140999989,
+      "matches": [
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_2",
+          "expected_tool": "network_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "indicator"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "network_investigation",
+          "required_arg_match": true
+        }
+      ],
+      "output_tokens": 42,
+      "predicted_call_count": 1,
+      "predicted_calls": [
+        {
+          "arguments": {
+            "indicator": "203.0.113.25",
+            "indicator_type": "ipv4"
+          },
+          "tool": "network_investigation"
+        }
+      ],
+      "raw_tool_calls": [
+        {
+          "arguments": "{\"indicator\":\"203.0.113.25\",\"indicator_type\":\"ipv4\",\"time_range\":null}",
+          "id": "call_5pMXFkYlkogXLFC1Kr0UGokF",
+          "name": "network_investigation"
+        }
+      ],
+      "trajectory_success": false,
+      "true_positives": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_021",
+      "cost_usd": 0.00192875,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 811,
+      "latency_ms": 6933.334402999989,
+      "matches": [],
+      "output_tokens": 863,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "raw_tool_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_022",
+      "cost_usd": 0.0011435,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 822,
+      "latency_ms": 4521.640473999994,
+      "matches": [],
+      "output_tokens": 469,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "raw_tool_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_023",
+      "cost_usd": 0.00129775,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 815,
+      "latency_ms": 4507.865754000008,
+      "matches": [],
+      "output_tokens": 547,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "raw_tool_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "case_id": "case_024",
+      "cost_usd": 0.00026375,
+      "critical_arg_errors": 0,
+      "errors": [],
+      "exact_call_match": true,
+      "expected_call_count": 0,
+      "false_negatives": 0,
+      "false_positives": 0,
+      "forbidden_tool_violations": [],
+      "input_tokens": 799,
+      "latency_ms": 874.9986880000051,
+      "matches": [],
+      "output_tokens": 32,
+      "predicted_call_count": 0,
+      "predicted_calls": [],
+      "raw_tool_calls": [],
+      "trajectory_success": true,
+      "true_positives": 0
+    }
+  ],
+  "config": {
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "model": "gpt-5-mini-2025-08-07",
+    "provider": "openai",
+    "reasoning_effort": "low",
+    "temperature": null
+  },
+  "error_summary": {
+    "INVALID_TOOL_CALL": 1
+  },
+  "evaluator_commit_sha": "eec657fe29e8c06844f72952eb0cb14f519a7530",
+  "expected_case_ids": [
+    "case_001",
+    "case_002",
+    "case_003",
+    "case_004",
+    "case_005",
+    "case_006",
+    "case_007",
+    "case_008",
+    "case_009",
+    "case_010",
+    "case_011",
+    "case_012",
+    "case_013",
+    "case_014",
+    "case_015",
+    "case_016",
+    "case_017",
+    "case_018",
+    "case_019",
+    "case_020",
+    "case_021",
+    "case_022",
+    "case_023",
+    "case_024"
+  ],
+  "mode": "decision",
+  "model_config_sha256": "5688ad2d339c97f2161bab65016962c0a2c64ee77b07071c573bf06779114941",
+  "official_eligible": true,
+  "preflight": {
+    "bounds": [
+      {
+        "case_id": "case_001",
+        "input_token_bound": 8492,
+        "max_cost_usd": 0.004123,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4396
+      },
+      {
+        "case_id": "case_002",
+        "input_token_bound": 8427,
+        "max_cost_usd": 0.00410675,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4331
+      },
+      {
+        "case_id": "case_003",
+        "input_token_bound": 8465,
+        "max_cost_usd": 0.00411625,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4369
+      },
+      {
+        "case_id": "case_004",
+        "input_token_bound": 8489,
+        "max_cost_usd": 0.00412225,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4393
+      },
+      {
+        "case_id": "case_005",
+        "input_token_bound": 8453,
+        "max_cost_usd": 0.00411325,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4357
+      },
+      {
+        "case_id": "case_006",
+        "input_token_bound": 8475,
+        "max_cost_usd": 0.00411875,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4379
+      },
+      {
+        "case_id": "case_007",
+        "input_token_bound": 8470,
+        "max_cost_usd": 0.0041175,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4374
+      },
+      {
+        "case_id": "case_008",
+        "input_token_bound": 8462,
+        "max_cost_usd": 0.0041155,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4366
+      },
+      {
+        "case_id": "case_009",
+        "input_token_bound": 8427,
+        "max_cost_usd": 0.00410675,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4331
+      },
+      {
+        "case_id": "case_010",
+        "input_token_bound": 8447,
+        "max_cost_usd": 0.00411175,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4351
+      },
+      {
+        "case_id": "case_011",
+        "input_token_bound": 8424,
+        "max_cost_usd": 0.004106,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4328
+      },
+      {
+        "case_id": "case_012",
+        "input_token_bound": 8435,
+        "max_cost_usd": 0.00410875,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4339
+      },
+      {
+        "case_id": "case_013",
+        "input_token_bound": 8436,
+        "max_cost_usd": 0.004109,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4340
+      },
+      {
+        "case_id": "case_014",
+        "input_token_bound": 8456,
+        "max_cost_usd": 0.004114,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4360
+      },
+      {
+        "case_id": "case_015",
+        "input_token_bound": 8455,
+        "max_cost_usd": 0.00411375,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4359
+      },
+      {
+        "case_id": "case_016",
+        "input_token_bound": 8479,
+        "max_cost_usd": 0.00411975,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4383
+      },
+      {
+        "case_id": "case_017",
+        "input_token_bound": 8501,
+        "max_cost_usd": 0.00412525,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4405
+      },
+      {
+        "case_id": "case_018",
+        "input_token_bound": 8457,
+        "max_cost_usd": 0.00411425,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4361
+      },
+      {
+        "case_id": "case_019",
+        "input_token_bound": 8608,
+        "max_cost_usd": 0.004152,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4512
+      },
+      {
+        "case_id": "case_020",
+        "input_token_bound": 8403,
+        "max_cost_usd": 0.00410075,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4307
+      },
+      {
+        "case_id": "case_021",
+        "input_token_bound": 8362,
+        "max_cost_usd": 0.0040905,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4266
+      },
+      {
+        "case_id": "case_022",
+        "input_token_bound": 8382,
+        "max_cost_usd": 0.0040955,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4286
+      },
+      {
+        "case_id": "case_023",
+        "input_token_bound": 8363,
+        "max_cost_usd": 0.00409075,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4267
+      },
+      {
+        "case_id": "case_024",
+        "input_token_bound": 8264,
+        "max_cost_usd": 0.004066,
+        "max_output_tokens": 1000,
+        "request_utf8_bytes": 4168
+      }
+    ],
+    "funding_gate": {
+      "checked_utc": "2026-09-29T06:33:45.817246+00:00",
+      "confirmed_total_budget_usd": 2.0,
+      "credit_value_semantics": "minimum usable credit attested for this suite; not exact account balance",
+      "source": "user-attested usable-credit lower bound and confirmed total limit",
+      "verified_credit_usd": 0.098659
+    },
+    "method": "serialized UTF-8 request bytes + 4096 framing tokens; full output cap; zero retries",
+    "prior_spend_usd": 0.00384725,
+    "suite_budget_usd": 0.25,
+    "suite_ceiling_usd": 0.098658
+  },
+  "pricing": {
+    "checked_utc": "2026-09-29T06:33:45.816826+00:00",
+    "cost_unknown": false,
+    "input_usd_per_million": 0.25,
+    "known_cost_usd": 0.01595,
+    "output_usd_per_million": 2.0,
+    "source": "https://developers.openai.com/api/docs/models/gpt-5-mini"
+  },
+  "provenance": {
+    "benchmark_files_sha256": {
+      "case_001.json": "15458444433285f21ebfe41d62faa333a3a2b0cced6fee8b57e9ec97c9847435",
+      "case_002.json": "5b7c8f39bbc8b6d1e8641cdf0e2dccc42cc8a6dc84e6df41c756f0cdcd2788a8",
+      "case_003.json": "9990ecd6a1fbe0cca685e6b4ee7e89de13504221945fe56febde54ee81c0bdaf",
+      "case_004.json": "6e52b6fb0dd80b1b3a5d8cebaaecd986f66b59fd51277041c59ec4575b66c3f0",
+      "case_005.json": "044b4a459e005793594c9cb3554690d87da92f544c22f7669af6d6435d217aa6",
+      "case_006.json": "76e5510b20479a4f72ece0183eb060e7bd6835153770e3161d833940c24503b6",
+      "case_007.json": "ac14231427c9e2d868563bdaf6f807ecb99f0ab2bd2e41d0dc4571f657f78125",
+      "case_008.json": "000f3518367db9b84ccc49070d9d648630e120c8529bdcfeaec708d04c7e9373",
+      "case_009.json": "5fc0f0d0e082803740ce054a31ff9d0bdaa811f88a821151c1e8a012acfc9836",
+      "case_010.json": "5ae2917795e4712e0ff4eb4b326a7f802865e7e070f3b2af86b202f5f17537eb",
+      "case_011.json": "daad241d7c2aa7cacc6a8e38046eca6e5362eee928a0220d1e3b76793f61c3df",
+      "case_012.json": "06ab4d327c0e2bfec36a97a327d01b7f94070a6e5a9536b0b828b0f3566d3f9b",
+      "case_013.json": "211cea942b118029f01eb2669d6c529d58fea6b1406e8f97d6d7c75fac5cce56",
+      "case_014.json": "0dc513cf3f5ab741800a8acd04492c8c8806bbb77d283056c8c6acc56562aad1",
+      "case_015.json": "1b60ddd1b467b6a8d1bc51bd1caf4c99b623035d760cf35abbb25ce6e7b56f29",
+      "case_016.json": "5446cc2a24a012b20b774d9bb804e1767c20fd2c963b31fde7e41e03a5ab0f21",
+      "case_017.json": "a56861f39d438a58c9ff3cf50f9c3ee61d7436e238952990ece2552bce1f487c",
+      "case_018.json": "f3f0d4b04ee0031fb29197a14682243834c4837ce9727fd68f581e7afe48554e",
+      "case_019.json": "dba8afd2e3d48ea06324dda9af9512d87654070378923d9b70545835e9704480",
+      "case_020.json": "505c0eb29558dbcf057ad85bba788b7f3ecc01c431a8bd57239ddfc83d70aa32",
+      "case_021.json": "90d5a02868e7004e8aa6cca7bdeaa3672ece0321e55c2f9869d03fc0304d785d",
+      "case_022.json": "c42e52067dd001bd18316e966ef7b270e39da4b0920c0bf5e34d665e44c4e33c",
+      "case_023.json": "ab852f4805394879cf1d682c694a46c48e88186de6587e2f0940dae5d04c508d",
+      "case_024.json": "be2109c0b424ce034ae8ac13683d5a03791ba32c72baf41f1d3575595cac2843"
+    },
+    "benchmark_split": "dev",
+    "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+    "canonicalization": "UTF-8 JSON, sorted object keys, compact separators; split files sorted by filename; prompts sorted by case_id",
+    "case_schema_sha256": {
+      "case_001": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_002": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_003": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_004": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_005": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_006": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_007": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_008": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_009": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_010": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_011": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_012": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_013": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_014": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_015": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_016": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_017": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_018": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_019": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_020": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_021": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_022": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_023": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+      "case_024": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0"
+    },
+    "evaluated_cases_sha256": "98cef62a9e74bae86b3abd0b6c3239483f1704e8f295fc610e4f0156f0fb5808",
+    "format": "r1_a1_provenance_v1",
+    "git": {
+      "branch": "master",
+      "commit_sha": "eec657fe29e8c06844f72952eb0cb14f519a7530",
+      "working_tree_clean": true
+    },
+    "ineligible_reasons": [],
+    "official_eligible": true,
+    "production_schema_sha256": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+    "production_schemas_by_sha256": {
+      "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0": [
+        {
+          "function": {
+            "description": "Enrich an Indicator of Compromise (IOC) with Cyber Threat Intelligence.\n\nUse this tool to get threat intelligence about:\n- IPv4 addresses\n- Domain names\n- File hashes (MD5, SHA1, SHA256)\n\nThe tool returns:\n- Reputation (benign/suspicious/malicious/unknown)\n- Related threat actors (if known)\n- Related malware families (if known)\n- MITRE ATT&CK techniques\n- Source attribution\n\nNote: Do not call this tool for endpoint hostname or process context.",
+            "name": "cti_enrichment",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "indicator": {
+                  "description": "The IOC value to investigate (IP, domain, or hash)",
+                  "type": "string"
+                },
+                "indicator_type": {
+                  "description": "The type of IOC. Auto-detected if not provided.",
+                  "enum": [
+                    "ipv4",
+                    "domain",
+                    "hash",
+                    "url",
+                    null
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "indicator",
+                "indicator_type"
+              ],
+              "type": "object"
+            },
+            "strict": true
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Investigate flow telemetry for an IPv4 address.\n\nUse this tool to analyze:\n- Connection frequency and patterns\n- Unique destinations and ports contacted\n- Failed vs successful connection ratios\n- Periodicity candidates (beaconing patterns)\n- Scan candidates (port scanning patterns)\n- Transfer metrics (large data transfers)\n- Service fanout (admin service reachability)\n\nThis tool analyzes IP-based network logs and IDS/firewall telemetry.\nDomain-only lookup is unavailable with current flow telemetry; obtain a\nconcrete IPv4 address before calling this tool.\nWhen a frozen DuckDB snapshot is configured, the tool uses its internal,\nread-only domain query layer. Do not send SQL in this tool call.",
+            "name": "network_investigation",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "indicator": {
+                  "description": "IPv4 address to investigate; domain-only lookup is unavailable",
+                  "pattern": "^[0-9]{1,3}(\\.[0-9]{1,3}){3}$",
+                  "type": "string"
+                },
+                "indicator_type": {
+                  "description": "IPv4 or null for automatic IPv4 validation; domains are unsupported.",
+                  "enum": [
+                    "ipv4",
+                    null
+                  ],
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "time_range": {
+                  "additionalProperties": false,
+                  "description": "Optional time range for the investigation. Defaults to last 24 hours.",
+                  "properties": {
+                    "end": {
+                      "description": "End time in ISO8601 format",
+                      "type": "string"
+                    },
+                    "start": {
+                      "description": "Start time in ISO8601 format",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "indicator",
+                "indicator_type",
+                "time_range"
+              ],
+              "type": "object"
+            },
+            "strict": true
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Investigate endpoint telemetry for suspicious process relationships.\n\nUse this tool to analyze:\n- Parent-child process chains\n- Suspicious application spawning (e.g., Word spawning PowerShell)\n- LOLBin usage patterns\n- MITRE ATT&CK technique indicators\n\nThis tool analyzes endpoint detection and response (EDR) data.\nWhen a frozen DuckDB snapshot is configured, the tool uses its internal,\nread-only domain query layer. Do not send SQL in this tool call.\nCall this when process relationships are relevant to the investigation.",
+            "name": "endpoint_investigation",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "host": {
+                  "description": "The hostname or identifier of the endpoint to investigate",
+                  "type": "string"
+                },
+                "time_range": {
+                  "additionalProperties": false,
+                  "description": "Optional time range for the investigation. Defaults to last 24 hours.",
+                  "properties": {
+                    "end": {
+                      "description": "End time in ISO8601 format",
+                      "type": "string"
+                    },
+                    "start": {
+                      "description": "Start time in ISO8601 format",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end"
+                  ],
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "host",
+                "time_range"
+              ],
+              "type": "object"
+            },
+            "strict": true
+          },
+          "type": "function"
+        }
+      ]
+    },
+    "prompt_sha256": "21f87b197c1bf1206d4a36e111853bddf6ea623bab58a5da311ccbcb61d7780b",
+    "prompts": [
+      {
+        "case_id": "case_001",
+        "messages": [
+          {
+            "content": "Investigate connection and flow volume for internal DNS server 10.0.0.53.\nIndicator: 10.0.0.53\nIndicator type: ipv4\nContext: Flow alert shows unusually frequent connections from this server. Analyze connection frequency and destination IPs using flow telemetry.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_002",
+        "messages": [
+          {
+            "content": "Investigation of an IP address identified as belonging to a trusted software vendor\nIndicator: 203.0.113.50\nIndicator type: ipv4\nContext: Alert: Connection to external IP from internal workstation",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_003",
+        "messages": [
+          {
+            "content": "Investigate local file access on internal workstation WS100 after a DLP alert.\nIndicator: 192.168.1.100\nIndicator type: ipv4\nContext: DLP flagged access to a sensitive document; no network activity is indicated.\nEndpoint pivot: WS100",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_004",
+        "messages": [
+          {
+            "content": "Check threat intelligence reputation for partner.example.com, a domain reported in a partner-communication alert.\nIndicator: partner.example.com\nIndicator type: domain\nContext: Only the domain is supplied; flow telemetry does not resolve domain-only lookups.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_005",
+        "messages": [
+          {
+            "content": "Investigation of an IP confirmed as command-and-control for known malware family\nIndicator: 185.220.101.45\nIndicator type: ipv4\nContext: Alert: Connection to known Tor exit node used by Cobalt Strike\nEndpoint pivot: WS023",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_006",
+        "messages": [
+          {
+            "content": "Check threat intelligence for phishing domain secure-login-bankind1882.xyz.\nIndicator: secure-login-bankind1882.xyz\nIndicator type: domain\nContext: Email security gateway flagged the domain; no connection or resolved IPv4 telemetry is supplied.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_007",
+        "messages": [
+          {
+            "content": "Investigate reported ransomware C2 domain and endpoint process activity.\nIndicator: lockbit1234abcd.onion\nIndicator type: domain\nContext: DNS alert on the domain; no resolved IPv4 flow indicator is provided.\nEndpoint pivot: FILE-SERVER-01",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_008",
+        "messages": [
+          {
+            "content": "Investigation of IP associated with APT29/Cozy Bear infrastructure\nIndicator: 91.220.131.77\nIndicator type: ipv4\nContext: Alert: Connection to IP flagged by threat intelligence as APT infrastructure\nEndpoint pivot: WORKSTATION-042",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_009",
+        "messages": [
+          {
+            "content": "Investigation of an internal host performing port scan behavior\nIndicator: 10.0.0.25\nIndicator type: ipv4\nContext: Alert: Internal host detected performing port scan against other internal servers",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_010",
+        "messages": [
+          {
+            "content": "Investigation of lateral movement pattern from compromised host\nIndicator: 192.168.1.50\nIndicator type: ipv4\nContext: Alert: Suspicious lateral movement detected from workstation to file server\nEndpoint pivot: WS050",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_011",
+        "messages": [
+          {
+            "content": "Investigation of suspicious outbound traffic pattern suggesting data exfiltration\nIndicator: 10.0.0.100\nIndicator type: ipv4\nContext: Alert: Unusual outbound traffic volume from database server",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_012",
+        "messages": [
+          {
+            "content": "Investigation of suspicious process relationship: Microsoft Word spawning PowerShell\nIndicator: WS001\nIndicator type: hostname\nContext: EDR Alert: winword.exe spawned powershell.exe\nEndpoint pivot: WS001",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_013",
+        "messages": [
+          {
+            "content": "Investigation of suspicious process relationship: Excel spawning CMD\nIndicator: WS023\nIndicator type: hostname\nContext: EDR Alert: excel.exe spawned cmd.exe with suspicious arguments\nEndpoint pivot: WS023",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_014",
+        "messages": [
+          {
+            "content": "Investigation of suspicious process: Browser spawning certutil for file download\nIndicator: WS045\nIndicator type: hostname\nContext: EDR Alert: chrome.exe spawned certutil.exe - possible malware download\nEndpoint pivot: WS045",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_015",
+        "messages": [
+          {
+            "content": "Complete APT intrusion with multiple stages: initial access, execution, persistence, C2\nIndicator: 91.220.131.77\nIndicator type: ipv4\nContext: Alert: Connection to known APT C2 infrastructure\nEndpoint pivot: WORKSTATION-042",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_016",
+        "messages": [
+          {
+            "content": "Ransomware infection chain: malicious document delivers payload, ransomware executes\nIndicator: a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\nIndicator type: hash\nContext: Alert: Suspicious file hash detected on endpoint\nEndpoint pivot: WORKSTATION-015",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_017",
+        "messages": [
+          {
+            "content": "Investigate suspicious library domain and the developer workstation.\nIndicator: libcdn.legitframework.io\nIndicator type: domain\nContext: Application traffic analysis flagged the domain, but no resolved IPv4 flow indicator is supplied.\nEndpoint pivot: DEV-WORKSTATION-08",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_018",
+        "messages": [
+          {
+            "content": "Internal actor exfiltrating data and communicating with external infrastructure\nIndicator: 10.0.0.200\nIndicator type: ipv4\nContext: Alert: HR flagged employee under investigation for potential data theft\nEndpoint pivot: WS200",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_019",
+        "messages": [
+          {
+            "content": "Explain the evidence gap for an unverified internal IP without running an investigation.\nIndicator: 10.0.0.99\nIndicator type: ipv4\nContext: Asset is absent from CMDB, and no endpoint or network telemetry is available. This internal address cannot identify a public CTI source.\nDo not call any tool; state what evidence is missing and what would be needed before investigation.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_020",
+        "messages": [
+          {
+            "content": "CTI shows clean reputation but network shows anomalous traffic pattern\nIndicator: 203.0.113.25\nIndicator type: ipv4\nContext: Alert: Anomalous traffic pattern to external IP",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_021",
+        "messages": [
+          {
+            "content": "Explain why evidence provenance matters in a SOC investigation report. Answer conceptually without inspecting indicators or telemetry.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_022",
+        "messages": [
+          {
+            "content": "Describe which input types the VinSOC CTI, network, and endpoint investigation tools support. This is a capability question only; do not perform a lookup.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_023",
+        "messages": [
+          {
+            "content": "Do not call any tool or query investigation data. Draft a short checklist an analyst can use before starting an incident investigation.",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      },
+      {
+        "case_id": "case_024",
+        "messages": [
+          {
+            "content": "What does the acronym CPU stand for?",
+            "role": "user"
+          }
+        ],
+        "system_prompt": "You are a SOC analyst assistant.\n\nSelect only the investigation tools needed to satisfy the user's request.\nUse the provided tool schemas as the source of truth for tool names and arguments.\nDo not invent tools, arguments, indicators, hosts, or evidence.\nIf no tool is needed, do not call one."
+      }
+    ]
+  },
+  "provider_metadata": {
+    "calls": [
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.0002965,
+        "finish_reason": "tool_calls",
+        "input_tokens": 850,
+        "latency_ms": 2678.273445000002,
+        "malformed_native_calls": 0,
+        "output_tokens": 42,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\":\"10.0.0.53\",\"indicator_type\":\"ipv4\",\"time_range\":null}",
+            "id": "call_COXWNSalZZYs12xyNvVRyE7J",
+            "name": "network_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhMPHrZ5pys4TfOBokcxLvrOc1c",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.0005085,
+        "finish_reason": "tool_calls",
+        "input_tokens": 834,
+        "latency_ms": 2506.142749999995,
+        "malformed_native_calls": 0,
+        "output_tokens": 150,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"203.0.113.50\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+            "id": "call_DSfvaZdv1J2RjQh4dj47pCYR",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"indicator\": \"203.0.113.50\", \"indicator_type\": \"ipv4\"}",
+            "id": "call_NBnFxrs9r7m1OZXhw0aLg7YC",
+            "name": "cti_enrichment"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhNSbPF4Cl2YMZVnVxp8uciGffD",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.0004015,
+        "finish_reason": "tool_calls",
+        "input_tokens": 846,
+        "latency_ms": 2750.7095709999944,
+        "malformed_native_calls": 0,
+        "output_tokens": 95,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"host\":\"WS100\",\"time_range\":null}",
+            "id": "call_myml5BRcf31hRapLuO6GXf66",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhREkk6Ansu4uqAYi4liXTWDaaO",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00027375,
+        "finish_reason": "tool_calls",
+        "input_tokens": 839,
+        "latency_ms": 1955.3107789999942,
+        "malformed_native_calls": 0,
+        "output_tokens": 32,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\":\"partner.example.com\",\"indicator_type\":\"domain\"}",
+            "id": "call_2uGDmw5gyRk0t5pdAUIiacyv",
+            "name": "cti_enrichment"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhTbOli5b3BcszrFp9REgxZJBhE",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.000621,
+        "finish_reason": "tool_calls",
+        "input_tokens": 844,
+        "latency_ms": 2645.4084370000005,
+        "malformed_native_calls": 0,
+        "output_tokens": 205,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"185.220.101.45\", \"indicator_type\": \"ipv4\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T00:00:00Z\"}}",
+            "id": "call_sALKzc014edaRmsCdWjmgfqK",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"host\": \"WS023\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T00:00:00Z\"}}",
+            "id": "call_gBZsqq3e6GFWp2rvP3EyGWDa",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhUVt7daiNts5VNbHOtXlPTgVo1",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00028175,
+        "finish_reason": "tool_calls",
+        "input_tokens": 839,
+        "latency_ms": 1349.2259200000021,
+        "malformed_native_calls": 0,
+        "output_tokens": 36,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\":\"secure-login-bankind1882.xyz\",\"indicator_type\":\"domain\"}",
+            "id": "call_ya79IoOv3Od9S7vbYIHF8Jk1",
+            "name": "cti_enrichment"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhXlsKR5AGHyRrSMBzqAGAGhqAJ",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00049275,
+        "finish_reason": "tool_calls",
+        "input_tokens": 843,
+        "latency_ms": 2223.3856840000003,
+        "malformed_native_calls": 0,
+        "output_tokens": 141,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"lockbit1234abcd.onion\", \"indicator_type\": \"domain\"}",
+            "id": "call_aOHwdb0qEAMLWHUCRIEPo2QC",
+            "name": "cti_enrichment"
+          },
+          {
+            "arguments": "{\"host\": \"FILE-SERVER-01\", \"time_range\": null}",
+            "id": "call_wDgOFvP1Qpav0jKMvSg20vjG",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhZBDJ5PZ7NKZ5iMNi1Nbdv70mz",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00093775,
+        "finish_reason": "tool_calls",
+        "input_tokens": 847,
+        "latency_ms": 4253.293267000004,
+        "malformed_native_calls": 0,
+        "output_tokens": 363,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+            "id": "call_VNY4q9gBRD4AIsguI20JefVV",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"host\": \"WORKSTATION-042\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+            "id": "call_rOgX1JIZHd3NUZUOqHj6GWEV",
+            "name": "endpoint_investigation"
+          },
+          {
+            "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\"}",
+            "id": "call_75zbSbNM1e3aan2OUqlioav2",
+            "name": "cti_enrichment"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhbqBBdSV3Z9HG3mF2QIej753wg",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00063425,
+        "finish_reason": "tool_calls",
+        "input_tokens": 833,
+        "latency_ms": 1997.198877999992,
+        "malformed_native_calls": 0,
+        "output_tokens": 213,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"10.0.0.25\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+            "id": "call_QKb7bvOVuTPEgw2saCzAxY9e",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"host\": \"10.0.0.25\", \"time_range\": null}",
+            "id": "call_rGtjNtLwT1QX2eL1aBuKWIm2",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhfTVCn2CYGEWgGfOOAnAuUTQrH",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.0004975,
+        "finish_reason": "tool_calls",
+        "input_tokens": 838,
+        "latency_ms": 1752.0041429999935,
+        "malformed_native_calls": 0,
+        "output_tokens": 144,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"192.168.1.50\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+            "id": "call_5OuEn9hbO0dAJbBLpOQ6Ti63",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"host\": \"WS050\", \"time_range\": null}",
+            "id": "call_TfOculXky3jNSIyrCVwqVkm7",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhhdKyHQ2EH87F0g0Ii35X3NLBt",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00042025,
+        "finish_reason": "tool_calls",
+        "input_tokens": 833,
+        "latency_ms": 1488.9288310000097,
+        "malformed_native_calls": 0,
+        "output_tokens": 106,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\":\"10.0.0.100\",\"indicator_type\":\"ipv4\",\"time_range\":null}",
+            "id": "call_jGiU0H0QsOQzICesRaZ1juMA",
+            "name": "network_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhiKEKtCfHfcaIC8kxj80epENNM",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00027025,
+        "finish_reason": "tool_calls",
+        "input_tokens": 833,
+        "latency_ms": 840.9577380000002,
+        "malformed_native_calls": 0,
+        "output_tokens": 31,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"host\":\"WS001\",\"time_range\":null}",
+            "id": "call_YLsRl0NTF3uqRjLIfdVGF0s0",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhkldi3wQExrPLrOlrDtzo1DsZY",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00027,
+        "finish_reason": "tool_calls",
+        "input_tokens": 832,
+        "latency_ms": 1160.5969220000106,
+        "malformed_native_calls": 0,
+        "output_tokens": 31,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"host\":\"WS023\",\"time_range\":null}",
+            "id": "call_ESS0doPVehjzeczjiPQAnV3t",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhlOl3OVHHndiScegk32bv6OrQf",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00027125,
+        "finish_reason": "tool_calls",
+        "input_tokens": 837,
+        "latency_ms": 1098.141744000003,
+        "malformed_native_calls": 0,
+        "output_tokens": 31,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"host\":\"WS045\",\"time_range\":null}",
+            "id": "call_0kDrV2rXDrIA1LwDn3RFKMVv",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhmZTgw5hyKvoyC9Pn0WCSRUBD5",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00068975,
+        "finish_reason": "tool_calls",
+        "input_tokens": 847,
+        "latency_ms": 2142.192284999993,
+        "malformed_native_calls": 0,
+        "output_tokens": 239,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\"}",
+            "id": "call_2k3XOL6IGIJN8BEgAT1JdoEi",
+            "name": "cti_enrichment"
+          },
+          {
+            "arguments": "{\"indicator\": \"91.220.131.77\", \"indicator_type\": \"ipv4\", \"time_range\": null}",
+            "id": "call_bcfiyZKBBKRhkTtw1ksjraQw",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"host\": \"WORKSTATION-042\", \"time_range\": null}",
+            "id": "call_3BKt6m9s4kl7qIRJRVi6aO9b",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhnDb7Te5hoByILANA1ujOM7TWF",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00056625,
+        "finish_reason": "tool_calls",
+        "input_tokens": 873,
+        "latency_ms": 2118.010920999993,
+        "malformed_native_calls": 0,
+        "output_tokens": 174,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\", \"indicator_type\": \"hash\"}",
+            "id": "call_jDhsrrKLIadhkuGtBKNh6dso",
+            "name": "cti_enrichment"
+          },
+          {
+            "arguments": "{\"host\": \"WORKSTATION-015\", \"time_range\": null}",
+            "id": "call_OoKK0EyVRjxpPK7y250Zq9yQ",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhpyLHUDV32W6gTnElwQN9T4pmN",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00049725,
+        "finish_reason": "tool_calls",
+        "input_tokens": 845,
+        "latency_ms": 1621.2015210000031,
+        "malformed_native_calls": 0,
+        "output_tokens": 143,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"libcdn.legitframework.io\", \"indicator_type\": \"domain\"}",
+            "id": "call_7zqV1xfC4cpwHSfgA8KCjCol",
+            "name": "cti_enrichment"
+          },
+          {
+            "arguments": "{\"host\": \"DEV-WORKSTATION-08\", \"time_range\": null}",
+            "id": "call_Lj2n0IPibL5jAuXCRiql85SM",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhr6zAYjyWB9nnIrK0kFuKatd3u",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.000876,
+        "finish_reason": "tool_calls",
+        "input_tokens": 840,
+        "latency_ms": 2682.0284020000004,
+        "malformed_native_calls": 0,
+        "output_tokens": 333,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\": \"10.0.0.200\", \"indicator_type\": \"ipv4\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+            "id": "call_UTIIx9dDCtbukhUhYN029qcD",
+            "name": "network_investigation"
+          },
+          {
+            "arguments": "{\"host\": \"WS200\", \"time_range\": {\"start\": \"2026-09-22T00:00:00Z\", \"end\": \"2026-09-29T23:59:59Z\"}}",
+            "id": "call_fw3sFhkmQQSBFxn8CxydDSqM",
+            "name": "endpoint_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhtGQGLsBQvCxVynB6zplDImFms",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00221775,
+        "finish_reason": "length",
+        "input_tokens": 871,
+        "latency_ms": 9322.444479000013,
+        "malformed_native_calls": 1,
+        "output_tokens": 1000,
+        "raw_tool_calls": [],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLhwIb4SUnhNnic0BgRhJBHk08BR",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00029225,
+        "finish_reason": "tool_calls",
+        "input_tokens": 833,
+        "latency_ms": 1224.434140999989,
+        "malformed_native_calls": 0,
+        "output_tokens": 42,
+        "raw_tool_calls": [
+          {
+            "arguments": "{\"indicator\":\"203.0.113.25\",\"indicator_type\":\"ipv4\",\"time_range\":null}",
+            "id": "call_5pMXFkYlkogXLFC1Kr0UGokF",
+            "name": "network_investigation"
+          }
+        ],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLi541JIyvNkKrJZeYc6Xy4GJUtU",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00192875,
+        "finish_reason": "stop",
+        "input_tokens": 811,
+        "latency_ms": 6933.334402999989,
+        "malformed_native_calls": 0,
+        "output_tokens": 863,
+        "raw_tool_calls": [],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLi6ZwmquNa4nmroa3az277iBqCb",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.0011435,
+        "finish_reason": "stop",
+        "input_tokens": 822,
+        "latency_ms": 4521.640473999994,
+        "malformed_native_calls": 0,
+        "output_tokens": 469,
+        "raw_tool_calls": [],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLiD43Zuawk8UPT7ERwkE6O2ziRh",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00129775,
+        "finish_reason": "stop",
+        "input_tokens": 815,
+        "latency_ms": 4507.865754000008,
+        "malformed_native_calls": 0,
+        "output_tokens": 547,
+        "raw_tool_calls": [],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLiI89scD5Ebec7HTkGs1XcjCDY5",
+        "status": "succeeded"
+      },
+      {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "actual_provider": "openai",
+        "cost_unknown": false,
+        "cost_usd": 0.00026375,
+        "finish_reason": "stop",
+        "input_tokens": 799,
+        "latency_ms": 874.9986880000051,
+        "malformed_native_calls": 0,
+        "output_tokens": 32,
+        "raw_tool_calls": [],
+        "requested_model": "gpt-5-mini-2025-08-07",
+        "requested_provider": "openai",
+        "response_id": "chatcmpl-ETLiMXUqdQB4INJFidYhG43gZ0hAj",
+        "status": "succeeded"
+      }
+    ],
+    "cost_complete": true,
+    "known_cost_usd": 0.01595,
+    "total_calls": 24
+  },
+  "run_id": "36531679435",
+  "run_status": "complete",
+  "scorer_file_sha256": {
+    "evaluation/tool_calling/arguments.py": "bb8a0c22d9c4b2a419447aa4cdabd180a122e48abb720d7f1983c98574fa8f1f",
+    "evaluation/tool_calling/matching.py": "2db0d3344ed7141ad00be39fad394a196acc161fe4d80def8535853e19525c8c",
+    "evaluation/tool_calling/metrics.py": "d060de28e858b52ebaa99e4db6c751bddf373b769beaa8dd36bcaf933f89b10a",
+    "evaluation/tool_calling/models.py": "93a3a0db8ed57a50cf2628c2904a6803b8c45cff57287a6f043ea58cd1f7ec7f"
+  },
+  "scorer_sha256": "271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149",
+  "split": "dev"
+}

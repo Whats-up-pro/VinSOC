@@ -1,0 +1,27 @@
+{
+  "artifact_id": 11016344827,
+  "artifact_name": "r1-gpt5-dev-v2-evidence",
+  "artifact_zip_sha256": "897bbb1bfdd5e1e5e344c52790cdcc53f5218fcd5af674b0fc5ff44ae2891541",
+  "run_id": "36531679435",
+  "run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36531679435",
+  "ci_run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36531561628",
+  "evaluator_commit_sha": "eec657fe29e8c06844f72952eb0cb14f519a7530",
+  "source_files_sha256": {
+    "r1-gpt5-preflight.json": "20e4d5ba3edd92422f07225680b2f528181b45e4f937a48f4d17351bf66bb095",
+    "r1-gpt5-result.json": "aa653f3950a0c886faa5b4945c048fe8aad45fb96a90879b9584f9ef4e7f6178"
+  },
+  "run_status": "complete",
+  "official_eligible": true,
+  "attempted_calls": 24,
+  "responses_with_usage": 24,
+  "actual_model": "gpt-5-mini-2025-08-07",
+  "case_success": "19/24",
+  "exact_call_f1": 0.9355,
+  "no_tool_accuracy": 0.8,
+  "input_tokens": 20104,
+  "output_tokens": 5462,
+  "usage_derived_cost_usd": 0.01595,
+  "preflight_ceiling_usd": 0.098658,
+  "known_cumulative_e0_r1_cost_usd": 0.01979725,
+  "note": "The two original Actions JSON files are preserved byte-for-byte. The funding input of USD 0.098659 was a user-attested usable-credit lower bound for this suite, not an exact account balance. The user-confirmed total API cap is USD 2.00. Historical GPT-4.1 Mini 22/24 uses a different model/request contract."
+}
