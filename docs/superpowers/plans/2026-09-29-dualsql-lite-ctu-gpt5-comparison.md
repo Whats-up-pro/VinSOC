@@ -1,361 +1,627 @@
-# NEXT TASK FOR AGENT A - TRIỂN KHAI DUALSQL-LITE NHƯ PHƯƠNG ÁN SO SÁNH VỚI E0
+# DualSQL-Lite CTU GPT-5 Comparison Implementation Plan
 
-Làm trực tiếp trên `master` của repo `Whats-up-pro/VinSOC`. Trước khi sửa:
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Mark each checkbox only after its verification command has actually passed.
 
-1. Chạy `git fetch origin` và đồng bộ với `origin/master`.
-2. Ghi initial SHA và `git status --short`.
-3. HEAD được audit gần nhất là `2715c9537da7da38a527582e16f918503365751c`; nếu origin đã mới hơn thì dùng HEAD mới.
-4. Giữ nguyên `.env`, file untracked và artifact lịch sử.
-5. Không dùng `git clean`, `git reset --hard`, `git add .`, branch hoặc PR.
-6. Chỉ stage các file thuộc task.
-7. Đọc:
-   - `docs/superpowers/specs/2026-09-28-vinsoc-r1-r2-finalization-design.md`
-   - `docs/superpowers/plans/2026-09-29-vinsoc-r1-r2-finalization.md`
+**Goal:** Keep the locked GPT-5 Mini E0 one-shot run as the R2 baseline, implement DualSQL-Lite as an additional E1/E2/E3 comparison on the same CTU S5/S7 development contract, select the winner by Execution Accuracy, and stop before any frozen model call.
 
-Chỉ thị này làm rõ và thay thế nội dung triển khai ở Task 6-8 và Task 12 của plan hiện tại khi có điểm khác nhau.
+**Architecture:** First close the unfinished offline CTU S1/S4 frozen preparation required by Task 5. Then create a new versioned `dualsql_lite_ctu_gpt5_v1` package that reuses the locked CTU S5/S7 benchmark and scorer, adds three bounded database tools, and runs E1/E2/E3 without modifying historical DualSQL evidence. E0 is reused only after strict report and request compatibility checks.
 
-## Mục tiêu
+**Tech Stack:** Python 3.11/3.12, DuckDB, OpenAI Python SDK, pytest, GitHub Actions.
 
-Giữ E0 one-shot Text-to-SQL làm baseline. DualSQL-Lite là kiến trúc bổ sung để so sánh, chưa thay thế E0.
+**Spec:** `docs/superpowers/specs/2026-09-28-vinsoc-r1-r2-finalization-design.md`
 
-Tạo series mới:
+**Supersedes:** This plan replaces the unfinished implementation details of Tasks 5-8 and clarifies the Task 12 gate in `docs/superpowers/plans/2026-09-29-vinsoc-r1-r2-finalization.md`. Other tasks in that plan remain binding.
 
-`dualsql_lite_ctu_gpt5_v1`
+## Global Constraints
 
-Series phải đo bốn điều kiện:
+- Work directly on `master`. Do not create a branch or pull request.
+- Before editing, run `git fetch origin`, fast-forward to `origin/master`, record the full initial SHA, and run `git status --short`.
+- Preserve `.env`, all pre-existing untracked files, historical result JSON, and historical locks.
+- Never use `git clean`, `git reset --hard`, broad `git add .`, or overwrite an evidence path.
+- Stage only named task files.
+- Historical `evaluation/dualsql_lite/`, its `SELECTED_CONFIG.lock`, and `results/evaluation_v1/public_pilot/dualsql_lite/` are immutable.
+- E0 run `36520685612` is immutable and must not be rerun.
+- Do not change benchmark questions, gold SQL, comparator semantics, scorer code, source bytes, or the locked S5/S7 snapshot contract.
+- Do not inspect S1/S4 frozen model outputs because none should exist. Offline source, schema, gold SQL, and deterministic result validation are allowed.
+- Do not use frozen data, values, questions, or gold to tune E1/E2/E3 prompts or tools.
+- Provider is OpenAI. Model is `gpt-5-mini-2025-08-07`. `reasoning_effort=low`, `max_completion_tokens=1000`, SDK retries `0`, and the API request must omit `temperature`.
+- Do not use `OPENAI_BASE_URL`, fallback providers, routers, model aliases, or silent substitutions.
+- All paid workflows are manual-only and reject GitHub Actions reruns.
+- No paid call occurs before offline tests, full CI on the exact implementation SHA, snapshot verification, account/credit check, and conservative budget preflight.
+- The conservative E1+E2+E3 ceiling must be below USD 0.75. Do not buy credit or change account limits.
+- One incorrect SQL is scored evidence. Do not retry it.
+- Any identity, provider, model, source, CI, or budget failure stops the task. Preserve safe partial evidence and do not dispatch again.
+- Do not run R1, a demo, ThreatFox, OTRF, or any model/snapshot outside this task.
 
-- E0: one-shot generator, không linker, không DB tool.
-- E1: Schema Linker có DB tools, sau đó generator one-shot không có DB tools.
-- E2: không linker, generator có DB tools.
-- E3: Schema Linker có DB tools và generator cũng có DB tools.
+## Fixed Evidence
 
-Execution Accuracy là metric chính. Không mặc định E3 là winner.
+- E0 Actions run: `36520685612`
+- E0 report: `results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json`
+- E0 report SHA-256: `33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15`
+- E0 result: Execution Accuracy `0/8`, Syntax Validity `8/8`, Execution Success `8/8`
+- Dev version: `ctu_network_public_dev_v1`
+- Dev logical snapshot SHA-256: `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`
+- Dev split SHA-256: `96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb`
+- Dev sources: `ctu13_s5` and `ctu13_s7`, exactly 243,906 normalized flows
+- Frozen sources: `ctu13_s1` and `ctu13_s4`, with hashes already pinned in `evaluation/ctu_network_frozen/dataset_manifest.json`
 
-## Evidence hiện có
+## Review Focus
 
-R2 GPT-5 Mini E0 đã chạy:
+1. The S1/S4 builder must prove the database's real distinct row identity count; it cannot copy the expected total into the report.
+2. Every E1/E2/E3 Actions run must reconstruct and validate the exact S5/S7 dev snapshot before any client is created.
+3. E0 compatibility checks serialized request objects for an absent `temperature` key; `config.temperature=null` is valid report metadata and is not an API parameter.
+4. E1, E2, and E3 must run on one identical implementation SHA. No evidence commit may occur between the three paid runs.
+5. Charged usage, response ID, actual model, and latency must be saved before tool-argument or final-output parsing can fail.
 
-- Actions run: `36520685612`
-- Model: `gpt-5-mini-2025-08-07`
-- Kết quả: EX 0/8
-- Syntax Validity: 8/8
-- Execution Success: 8/8
-- Report:
-  `results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json`
-- Report SHA-256:
-  `33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15`
+## File Map
 
-Lỗi E0 chủ yếu là sai stored representation của `source_dataset`, `label`; case 008 chọn projection/grouping rộng hơn yêu cầu.
+### Modify
 
-DualSQL GPT-4.1 Mini lịch sử có E0/E2 5/8 và E1/E3 1/8, nhưng dùng snapshot, model và request contract khác. Giữ nguyên toàn bộ:
+- `scripts/build_ctu_network_frozen_snapshot.py`: explicit staging CSV/COPY contract and measured row-identity evidence.
+- `tests/test_ctu_network_frozen_builder.py`: builder regressions for commas, NULLs, COPY options, and distinct identity.
 
-- `evaluation/dualsql_lite/`
-- `evaluation/dualsql_lite/SELECTED_CONFIG.lock`
-- `results/evaluation_v1/public_pilot/dualsql_lite/`
+### Create for offline frozen completion
 
-Không sửa hoặc dùng các điểm cũ làm baseline trực tiếp cho series mới.
+- `evaluation/ctu_network_frozen/contract.py`: build and validate the S1/S4 frozen contract.
+- `evaluation/ctu_network_frozen/VERSION.lock`: immutable source, snapshot, case, gold, and scorer identity.
+- `evaluation/ctu_network_frozen/frozen/frozen_001.json` through `frozen_008.json`: offline-authored holdout cases.
+- `tests/test_ctu_network_frozen.py`: frozen contract and gold-isolation tests.
 
-## Phase 0 - Khép snapshot builder đang làm dở
+### Create for the new comparison series
 
-Rà:
+- `evaluation/dualsql_lite_ctu_gpt5/__init__.py`: package identity.
+- `evaluation/dualsql_lite_ctu_gpt5/contract.py`: E0 compatibility and series identity.
+- `evaluation/dualsql_lite_ctu_gpt5/SERIES.lock`: E0/dev/model/pricing contract.
+- `evaluation/dualsql_lite_ctu_gpt5/tools.py`: CTU-only database tools and catalog.
+- `evaluation/dualsql_lite_ctu_gpt5/prompts.py`: versioned linker and generator prompts.
+- `evaluation/dualsql_lite_ctu_gpt5/agents.py`: bounded GPT-5 controller.
+- `evaluation/dualsql_lite_ctu_gpt5/runner.py`: one-condition runner, budget gate, and partial evidence.
+- `evaluation/dualsql_lite_ctu_gpt5/selection.py`: identity validation and deterministic winner selection.
+- `evaluation/dualsql_lite_ctu_gpt5/SELECTED_CONFIG.lock`: created only after all three dev runs complete.
+- `tests/test_dualsql_ctu_gpt5.py`: core contract, tools, agents, runner, and selection tests.
+- `tests/test_dualsql_ctu_gpt5_workflow.py`: workflow shape and snapshot-provisioning tests.
+- `.github/workflows/r2-dualsql-ctu-gpt5.yml`: manual E1/E2/E3 workflow.
+- `docs/evaluation/r2_dualsql_ctu_gpt5_dev.md`: final dev comparison and error analysis.
 
-- `scripts/build_ctu_network_frozen_snapshot.py`
-- `tests/test_ctu_network_frozen_builder.py`
+### Append after all paid runs, never between them
 
-CSV staging và DuckDB COPY phải có contract tường minh:
+- `results/evaluation_v1/ctu_network_public/dualsql_lite_ctu_gpt5_v1/<run-id>/<condition>.json`
+- `results/evaluation_v1/ctu_network_public/dualsql_lite_ctu_gpt5_v1/<run-id>/receipt.json`
 
-- delimiter `,`
-- quotechar `"`
-- doublequote `True`
-- quoting `csv.QUOTE_MINIMAL`
-- lineterminator `\n`
-- `AUTO_DETECT FALSE`
-- `DELIMITER ','`
-- `QUOTE '"'`
-- `ESCAPE '"'`
-- `NULL ''`
+---
 
-Viết regression test cho VARCHAR chứa dấu phẩy và nullable values. Build S1/S4 hai lần offline, xác nhận logical hash giống nhau, row counts đúng và không có model call.
+### Task 1: Harden and prove the S1/S4 snapshot builder
 
-Chưa chạy frozen model ở phase này.
+**Files:**
+- Modify: `scripts/build_ctu_network_frozen_snapshot.py`
+- Modify: `tests/test_ctu_network_frozen_builder.py`
 
-## Phase 1 - Khóa E0 compatibility
+**Interfaces:**
+- Consumes: pinned S1/S4 manifest and source receipt.
+- Produces: `build_ctu_network_frozen_snapshot(...) -> dict[str, Any]` with measured counts and a deterministic logical hash.
 
-Tạo:
+- [ ] **Step 1: Add failing staging/load regression tests**
 
-- `evaluation/dualsql_lite_ctu_gpt5/__init__.py`
-- `evaluation/dualsql_lite_ctu_gpt5/contract.py`
-- `evaluation/dualsql_lite_ctu_gpt5/SERIES.lock`
-- `tests/test_dualsql_ctu_gpt5.py`
-
-Implement:
+Add tests named:
 
 ```python
-verify_e0_baseline(
-    report_path: Path,
-    series_lock_path: Path,
-) -> BaselineEvidence
+def test_internal_csv_copy_preserves_comma_null_and_types(tmp_path): ...
+def test_copy_contract_disables_auto_detect(tmp_path, monkeypatch): ...
+def test_distinct_source_row_id_is_measured_from_database(tmp_path): ...
 ```
 
-Kiểm tra đồng thời:
+The fixture must include a VARCHAR containing a comma, a nullable port/value, a numeric-looking `source_row_id` retained as text, valid integer fields, and nullable/valid timestamps. Query DuckDB after loading and assert exact values and types.
 
-- đúng 8 case và đủ case ID;
-- run complete và usage hợp lệ;
-- requested/actual model đúng;
-- `reasoning_effort=low`;
-- không có `temperature`;
-- cap 1000;
-- retries 0;
-- split hash;
-- logical snapshot hash;
-- source hashes;
-- scorer/builder hashes;
-- system prompt hash;
-- schema context hash;
-- report SHA cố định.
+- [ ] **Step 2: Run the focused tests and confirm failure**
 
-Chỉ tái sử dụng E0 nếu toàn bộ identity phù hợp với E0 condition của series mới. Nếu có mismatch, STOP và báo cụ thể. Không tự rerun E0.
+Run:
 
-## Phase 2 - CTU-only database tools
+```bash
+python -m pytest tests/test_ctu_network_frozen_builder.py -q
+```
 
-Tạo:
+Expected: the new tests fail because the CSV dialect, COPY contract, or measured distinct count is absent.
 
-`evaluation/dualsql_lite_ctu_gpt5/tools.py`
+- [ ] **Step 3: Make the staging dialect explicit**
 
-Cung cấp đúng ba tools:
-
-1. `database_profiler`
-2. `value_search`
-3. `sql_probe`
-
-Phạm vi chỉ gồm `network_flows`.
-
-`value_search` phải tìm được stored values thật của:
-
-- `source_dataset`
-- `label`
-- `protocol`
-
-Không tạo alias theo case ID hoặc literal benchmark. Catalog phải dựng trực tiếp từ verified CTU snapshot và có deterministic SHA-256.
-
-Tool output phải có controller-owned `evidence_id`. Mỗi output bị giới hạn byte; SQL Probe tối đa 20 rows. Chặn write SQL, multi-statement, external files, URLs, extension loading, provenance/internal tables và remote scans.
-
-Không serialize raw DuckDB exception. Chỉ trả safe error category.
-
-## Phase 3 - GPT-5 agent controller
-
-Tạo:
-
-- `evaluation/dualsql_lite_ctu_gpt5/prompts.py`
-- `evaluation/dualsql_lite_ctu_gpt5/agents.py`
-
-Cả hai role dùng:
+In `_write_normalized_csv()` configure `csv.DictWriter` with:
 
 ```text
-model = gpt-5-mini-2025-08-07
-reasoning_effort = low
-temperature = absent
-max_completion_tokens = 1000
-SDK retries = 0
+delimiter=","
+quotechar='"'
+doublequote=True
+quoting=csv.QUOTE_MINIMAL
+lineterminator="\n"
 ```
 
-Schema Linker chỉ trả bảng và cột. Controller tự gắn grounded values cùng evidence ID từ tool trajectory. Không bắt model tự chứng nhận provenance.
+- [ ] **Step 4: Make DuckDB COPY explicit**
 
-Cho phép nhiều native tool calls trong một turn nếu tổng call chưa vượt giới hạn.
+Use typed table schema and all of:
 
-Giới hạn cho mỗi role:
+```text
+FORMAT CSV
+HEADER TRUE
+AUTO_DETECT FALSE
+DELIMITER ','
+QUOTE '"'
+ESCAPE '"'
+NULL ''
+```
 
-- tối đa 5 model turns;
-- tối đa 5 DB tool calls;
-- một final submission.
+Do not add a second parser or change `iter_ctu_rows()`.
 
-E1 generator chạy one-shot, không tools. E2 generator có tools. E3 linker và generator đều có tools.
+- [ ] **Step 5: Measure row identity from DuckDB**
 
-Usage, response ID và actual model phải được ghi trước khi parse tool arguments. Malformed arguments là model-level failure và vẫn giữ charged usage.
+Query:
 
-Gold SQL, gold result, scorer verdict và benchmark annotations không được xuất hiện trong model messages, tool arguments, tool results hoặc linked schema.
+```sql
+SELECT count(DISTINCT source_dataset || ':' || source_row_id)
+FROM network_flows
+```
 
-## Phase 4 - Một runner cho một condition
+Compare the result with total rows and fail on mismatch. Store the measured result in `distinct_source_row_id`.
 
-Tạo:
+- [ ] **Step 6: Run focused verification**
 
-- `evaluation/dualsql_lite_ctu_gpt5/runner.py`
-- `.github/workflows/r2-dualsql-ctu-gpt5.yml`
+Run:
 
-Interface:
+```bash
+python -m pytest tests/test_ctu_network_frozen_builder.py -q
+python -m py_compile scripts/build_ctu_network_frozen_snapshot.py
+git diff --check
+```
+
+Expected: PASS with no provider/model call.
+
+- [ ] **Step 7: Commit only the builder change**
+
+```bash
+git add scripts/build_ctu_network_frozen_snapshot.py tests/test_ctu_network_frozen_builder.py
+git commit -m "fix(eval): lock CTU frozen staging contract"
+git push origin master
+```
+
+### Task 2: Complete Task 5 and seal the offline S1/S4 frozen contract
+
+**Files:**
+- Create: `evaluation/ctu_network_frozen/contract.py`
+- Create: `evaluation/ctu_network_frozen/VERSION.lock`
+- Create: `evaluation/ctu_network_frozen/frozen/frozen_001.json` through `frozen_008.json`
+- Create: `tests/test_ctu_network_frozen.py`
+
+**Interfaces:**
+- Produces: `build_frozen_lock(snapshot: Path, cases_dir: Path) -> dict[str, Any]`.
+- Produces: `validate_frozen_contract(snapshot: Path, lock_path: Path, cases_dir: Path) -> dict[str, Any]`.
+- Consumes later: Task 10 frozen gate only. DualSQL dev prompts and tools must never consume these files.
+
+- [ ] **Step 1: Write failing contract tests**
+
+Cover:
+
+- source URL/hash mismatch;
+- logical snapshot mismatch;
+- measured distinct row mismatch;
+- changed case file;
+- duplicate/missing case ID;
+- gold result mismatch;
+- comparator mismatch;
+- semantic counterexample that differs from gold;
+- provider creation forbidden during all offline validation.
+
+- [ ] **Step 2: Build the full snapshot twice from the same pinned bytes**
+
+Use separate output/work directories. Record real S1/S4 normalized counts, schema, source hashes, logical hashes, and measured distinct identity. Require both logical hashes to match.
+
+If either pinned source file is unavailable or either full build fails, STOP. Do not download replacement bytes or silently rebuild from another source.
+
+- [ ] **Step 3: Author eight source-separated frozen cases offline**
+
+Use S1/S4 only. Collectively cover:
+
+- scalar count/filter;
+- DISTINCT;
+- Boolean precedence;
+- bounded time interval;
+- aggregation/GROUP BY;
+- ORDER BY/LIMIT;
+- stored-value grounding;
+- multi-row comparison.
+
+Use no model output. If eight cases cannot satisfy coverage, stop for human review before writing a smaller lock.
+
+- [ ] **Step 4: Implement and write the frozen lock**
+
+The lock must include source URLs/hashes, normalized source counts, schema, logical hash, measured distinct row identity, case IDs/file hashes/directory hash, gold-result hashes, comparator contract, semantic counterexamples, and builder/scorer hashes.
+
+- [ ] **Step 5: Run offline verification**
+
+```bash
+python -m pytest tests/test_ctu_network_frozen_builder.py tests/test_ctu_network_frozen.py -q
+python -m evaluation.ctu_network_frozen.contract --snapshot <first-full-snapshot>
+python -m evaluation.ctu_network_frozen.contract --snapshot <second-full-snapshot>
+python -m py_compile evaluation/ctu_network_frozen/contract.py
+git diff --check
+```
+
+Expected: two matching logical hashes, no model calls, no paid cost.
+
+- [ ] **Step 6: Commit the complete Task 5 lock**
+
+Stage only the named frozen files and tests. Commit and push. Do not create a frozen model workflow.
+
+### Task 3: Lock E0 compatibility for the new dev series
+
+**Files:**
+- Create: `evaluation/dualsql_lite_ctu_gpt5/__init__.py`
+- Create: `evaluation/dualsql_lite_ctu_gpt5/contract.py`
+- Create: `evaluation/dualsql_lite_ctu_gpt5/SERIES.lock`
+- Create: `tests/test_dualsql_ctu_gpt5.py`
+
+**Interfaces:**
 
 ```python
-run_condition(
+def verify_e0_baseline(
+    report_path: Path,
+    series_lock_path: Path,
+) -> BaselineEvidence: ...
+```
+
+- [ ] **Step 1: Write parameterized failing tests for every identity field**
+
+Require exactly eight distinct `ctu_sql_001` through `ctu_sql_008` cases, complete run status, eight valid usage records, requested/actual model, reasoning effort, cap, retries, split hash, logical snapshot hash, source hashes, scorer/builder hashes, system prompt hash, schema hash, and fixed report SHA.
+
+- [ ] **Step 2: Pin the API request semantics correctly**
+
+For every item in `serialized_requests` assert:
+
+- `model == "gpt-5-mini-2025-08-07"`;
+- `reasoning_effort == "low"`;
+- `max_completion_tokens == 1000`;
+- the `temperature` key is absent.
+
+Accept `report["config"]["temperature"] is None` as descriptive metadata.
+
+- [ ] **Step 3: Pin pricing provenance**
+
+`SERIES.lock` must record the rates used by the E0 report, official pricing URL, verification timestamp, and a rule that paid execution stops if current official pricing differs before E1.
+
+- [ ] **Step 4: Implement the compatibility gate and run it offline**
+
+The gate reads the immutable E0 report and `evaluation/ctu_network_public/VERSION.lock`. It never creates a provider.
+
+- [ ] **Step 5: Run focused tests and commit**
+
+```bash
+python -m pytest tests/test_dualsql_ctu_gpt5.py -q
+python -m py_compile evaluation/dualsql_lite_ctu_gpt5/__init__.py evaluation/dualsql_lite_ctu_gpt5/contract.py
+git diff --check
+```
+
+Commit only after the exact E0 report passes.
+
+### Task 4: Implement CTU-only database tools
+
+**Files:**
+- Create: `evaluation/dualsql_lite_ctu_gpt5/tools.py`
+- Modify: `tests/test_dualsql_ctu_gpt5.py`
+
+**Interfaces:**
+
+```python
+class CTUDatabaseTools:
+    def database_profiler(self, arguments: dict[str, Any]) -> dict[str, Any]: ...
+    def value_search(self, arguments: dict[str, Any]) -> dict[str, Any]: ...
+    def sql_probe(self, arguments: dict[str, Any]) -> dict[str, Any]: ...
+    def invoke(self, name: str, arguments: Any) -> dict[str, Any]: ...
+```
+
+- [ ] **Step 1: Write failing tests**
+
+Test real S5/S7 snapshot values for `source_dataset`, `label`, and `protocol`; deterministic catalog hash; unique controller-owned `evidence_id`; 20-row probe cap; response byte cap; read-only SQL; external access rejection; internal/provenance table rejection; and raw DuckDB exception suppression.
+
+- [ ] **Step 2: Implement only three tools**
+
+Expose exactly:
+
+- `database_profiler`;
+- `value_search`;
+- `sql_probe`.
+
+Only `network_flows` is visible. Build the value catalog directly from the verified snapshot. Do not create case-ID rules, `scenario 5 -> ctu13_s5` aliases, benchmark literal maps, or hand-written answer hints.
+
+- [ ] **Step 3: Enforce safe errors**
+
+Tool failure output contains a safe category such as `INVALID_ARGUMENTS`, `SAFETY_REJECTION`, `OUTPUT_LIMIT`, or `EXECUTION_ERROR`. Never serialize `str(original_exception)`.
+
+- [ ] **Step 4: Run focused and historical safety tests**
+
+```bash
+python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_tools.py -q
+```
+
+Expected: new tests pass and historical DualSQL safety behavior remains intact.
+
+- [ ] **Step 5: Commit the tool boundary**
+
+Stage only `tools.py` and the named tests.
+
+### Task 5: Implement the GPT-5 linker and generator controller
+
+**Files:**
+- Create: `evaluation/dualsql_lite_ctu_gpt5/prompts.py`
+- Create: `evaluation/dualsql_lite_ctu_gpt5/agents.py`
+- Modify: `tests/test_dualsql_ctu_gpt5.py`
+
+**Interfaces:**
+
+```python
+def run_role(
+    *,
+    role: Literal["linker", "generator"],
+    question: str,
+    system_prompt: str,
+    tools: CTUDatabaseTools | None,
+    client: Any,
+    telemetry_sink: Callable[[ProviderCall], None],
+) -> RoleResult: ...
+```
+
+- [ ] **Step 1: Write failing controller tests**
+
+Cover two valid native tool calls in one turn, sixth tool call blocked, sixth model turn blocked, question literal accepted without DB provenance, DB-derived value carrying `evidence_id`, invented DB value rejected, usage saved before malformed arguments, and no gold sentinel in any inference input.
+
+- [ ] **Step 2: Implement request construction**
+
+Every call uses the fixed GPT-5 contract. Do not include a `temperature` key. Omit `tools` entirely for a no-tool role rather than sending `null`.
+
+- [ ] **Step 3: Implement role limits**
+
+Each role allows at most five model turns, five total DB tool calls, and one final submission. Multiple tool calls in one turn are valid while the total remains within five.
+
+- [ ] **Step 4: Make grounding controller-owned**
+
+The linker final answer contains only selected table and column names. The controller attaches bounded values returned by tools together with their `evidence_id`. Question literals remain a separate evidence class and need no database trace.
+
+- [ ] **Step 5: Save charged telemetry before parsing**
+
+Immediately after a response, validate and persist response ID, actual model, usage, cost, and latency. Only then parse tool arguments or final content.
+
+- [ ] **Step 6: Run tests and commit**
+
+```bash
+python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_agents.py -q
+python -m py_compile evaluation/dualsql_lite_ctu_gpt5/prompts.py evaluation/dualsql_lite_ctu_gpt5/agents.py
+```
+
+### Task 6: Implement one-condition runner and bounded evidence
+
+**Files:**
+- Create: `evaluation/dualsql_lite_ctu_gpt5/runner.py`
+- Modify: `tests/test_dualsql_ctu_gpt5.py`
+
+**Interfaces:**
+
+```python
+def run_condition(
     condition: Literal["E1", "E2", "E3"],
     snapshot_path: Path,
     output_path: Path,
     client: Any,
     series_lock: SeriesLock,
-) -> ConditionReport
+) -> ConditionReport: ...
 ```
 
-Workflow chỉ có `workflow_dispatch`, không có `push`.
+- [ ] **Step 1: Write failing runner tests**
 
-Workflow chỉ chấp nhận `E1`, `E2`, `E3`. E0 được lấy từ artifact đã khóa sau khi compatibility gate đạt.
+Test invalid condition rejection, E1/E2/E3 call limits, provider creation after preflight only, partial evidence after a charged parse failure, actual-model mismatch, usage mismatch, output-path immutability, and report identity completeness.
 
-Mỗi condition tạo artifact riêng dưới:
+- [ ] **Step 2: Implement condition semantics**
 
-`results/evaluation_v1/ctu_network_public/dualsql_lite_ctu_gpt5_v1/<run-id>/`
+- E1: linker has DB tools; generator is one-shot and has no DB tools.
+- E2: no linker; generator has DB tools.
+- E3: linker and generator both have DB tools.
 
-Report phải append-only và có partial evidence sau mỗi charged response.
+- [ ] **Step 3: Implement conservative preflight**
 
-## Phase 5 - Budget và provenance
+Reserve at most:
 
-Preflight tính từ serialized request thật và bounded tool context.
+- E1: 48 model calls across eight cases;
+- E2: 40 model calls;
+- E3: 80 model calls.
 
-Cận call tối đa:
+Bounds use serialized initial requests plus the maximum bounded tool/assistant context for later turns. Compute all three condition ceilings before provider creation and require their sum to be below USD 0.75.
 
-- E1: 48 model calls cho 8 case.
-- E2: 40 model calls cho 8 case.
-- E3: 80 model calls cho 8 case.
+- [ ] **Step 4: Enforce per-call budget**
 
-Trước từng call:
+Before each call require:
 
 ```text
-known_spend + conservative_remaining_bound < suite_budget
+known_spend + conservative_remaining_bound < condition_budget
 ```
 
-Tổng conservative ceiling đề xuất cho E1-E3 không vượt `$0.75`. Nếu cận tính thật vượt mức này, STOP trước khi tạo client và báo breakdown.
+Save a credential-free partial JSON before and after every charged response. A final path must never overwrite an existing file.
 
-Không tự mua credit, tăng limit hoặc đổi model.
+- [ ] **Step 5: Record complete provenance**
 
-Report phải ghi:
+Include git SHA, condition, case IDs, split hash, logical snapshot hash, source hashes, scorer hashes, model config hash, prompt hashes, tool schema/implementation hashes, catalog hash, pricing rates/source/check time, requested/actual model, response IDs, calls, tokens, cost, latency, SQL, trajectory, and score.
 
-- git SHA;
-- condition;
-- benchmark/split hash;
-- snapshot logical hash;
-- scorer hash;
-- model config hash;
-- prompt hashes;
-- tool schema và implementation hashes;
-- catalog hash;
-- requested/actual model;
-- calls, tokens, calculated cost và latency;
-- per-case SQL, trajectory và score;
-- partial state khi dừng.
-
-## Phase 6 - Tests và CI
-
-Test tối thiểu:
-
-- E0 identity mismatch bị chặn offline.
-- GPT-5 request không chứa `temperature`.
-- Hai valid tool calls trong một turn đều được xử lý.
-- Tool call thứ sáu bị chặn.
-- Turn thứ sáu bị chặn.
-- Question literal được dùng mà không cần DB provenance.
-- Giá trị nhận từ DB phải có controller provenance.
-- Invented grounded value bị từ chối.
-- Gold sentinel không xuất hiện trong inference inputs.
-- `source_dataset`, `label`, `protocol` tìm được từ snapshot thật.
-- Read-only safety và external access gate.
-- Raw database exception không leak.
-- Usage được lưu trước parse failure.
-- Budget bị chặn trước provider creation.
-- Partial report được giữ sau charged failure.
-- Selection từ chối report khác identity.
-
-Chạy:
+- [ ] **Step 6: Run tests and commit**
 
 ```bash
-python -m pytest tests/test_dualsql_ctu_gpt5.py -q
-python -m pytest tests/test_dualsql_tools.py tests/test_dualsql_experiments.py -q
+python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_experiments.py -q
+python -m py_compile evaluation/dualsql_lite_ctu_gpt5/runner.py
+```
+
+### Task 7: Implement selection and the manual workflow
+
+**Files:**
+- Create: `evaluation/dualsql_lite_ctu_gpt5/selection.py`
+- Create: `.github/workflows/r2-dualsql-ctu-gpt5.yml`
+- Create: `tests/test_dualsql_ctu_gpt5_workflow.py`
+- Modify: `tests/test_dualsql_ctu_gpt5.py`
+
+**Interfaces:**
+
+```python
+def build_selection(
+    e0: BaselineEvidence,
+    e1: ConditionReport,
+    e2: ConditionReport,
+    e3: ConditionReport,
+) -> SelectionResult: ...
+```
+
+- [ ] **Step 1: Test every selection tie-break and identity mismatch**
+
+Order:
+
+1. higher Execution Accuracy;
+2. lower cost;
+3. fewer model calls;
+4. lower latency;
+5. simpler E0, E1, E2, E3.
+
+Reject partial reports, different splits, logical snapshots, sources, scorer identities, model contracts, implementation SHAs among E1-E3, or prompt/tool/catalog drift.
+
+- [ ] **Step 2: Test workflow shape**
+
+Require:
+
+- only `workflow_dispatch`;
+- one choice input limited to E1/E2/E3;
+- `contents: read` permission;
+- `GITHUB_RUN_ATTEMPT == 1` before paid work;
+- no `push` trigger;
+- no E0 dispatch;
+- no artifact upload containing source bytes or DuckDB files.
+
+- [ ] **Step 3: Reconstruct the exact dev snapshot in every run**
+
+The workflow must:
+
+1. read `evaluation/ctu_network_public/dataset_manifest.json`;
+2. download only S5/S7 official URLs;
+3. verify both pinned source SHA-256 values;
+4. build two separate snapshots with `scripts.build_ctu_network_public_snapshot`;
+5. validate both using `evaluation.ctu_network_public.contract` and `VERSION.lock`;
+6. require equal logical hashes and the fixed 243,906 count;
+7. use the first validated snapshot for inference;
+8. clean source bytes and DuckDB files in an `if: always()` step;
+9. upload only credential-free JSON evidence.
+
+- [ ] **Step 4: Enforce checkout and paid gates**
+
+The workflow runs only on `refs/heads/master`, validates `GITHUB_SHA` against local HEAD, requires the pinned model secret/value, and creates the OpenAI client only after snapshot, E0, price, budget, and account gates pass.
+
+- [ ] **Step 5: Run all offline verification**
+
+```bash
+python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_ctu_gpt5_workflow.py tests/test_dualsql_tools.py tests/test_dualsql_agents.py tests/test_dualsql_experiments.py -q
 python -m pytest -q
 python -m py_compile evaluation/dualsql_lite_ctu_gpt5/*.py
 git diff --check
 ```
 
-Nếu local thiếu dependency, báo đúng command và lỗi. Không gọi test chưa chạy là pass.
+If a dependency is missing, report the exact command and error. Do not call an unrun test passed.
 
-Commit/push code, test và workflow lên `master`. Chờ CI Python 3.11/3.12 xanh trên đúng final implementation SHA.
+- [ ] **Step 6: Commit the final implementation SHA**
 
-## Phase 7 - Paid development series
+Stage named code, tests, lock, and workflow only. Push `master`. Record this full SHA as `IMPLEMENTATION_SHA`.
 
-E1, E2 và E3 phải chạy từ cùng một git SHA, prompt version, tool implementation và catalog identity.
+- [ ] **Step 7: Wait for exact-SHA CI**
 
-Thứ tự:
+Both Python 3.11 and 3.12 must pass on `IMPLEMENTATION_SHA`. Do not use CI from an earlier or later SHA.
 
-1. Preflight E1, chạy E1 đúng một lần.
-2. Preflight E2, chạy E2 đúng một lần.
-3. Preflight E3, chạy E3 đúng một lần.
+### Task 8: Run E1, E2, and E3 once on the same SHA
 
-Không sửa code, prompt hoặc tools giữa ba condition.
+**Files:** No tracked file changes until all three runs finish.
 
-Không retry case vì SQL sai. Provider/model/snapshot identity failure làm run invalid và phải STOP. Không tự dispatch lần thứ hai.
+- [ ] **Step 1: Confirm account and cumulative budget**
 
-## Phase 8 - Selection và báo cáo
+Verify usable OpenAI project/organization, credit or billing state, spend limits, and model rate limits. Do not infer available balance from a previous successful call.
 
-Tạo:
+- [ ] **Step 2: Freeze the implementation checkout**
 
-- `evaluation/dualsql_lite_ctu_gpt5/selection.py`
-- `evaluation/dualsql_lite_ctu_gpt5/SELECTED_CONFIG.lock`
-- `docs/evaluation/r2_dualsql_ctu_gpt5_dev.md`
+Before every dispatch confirm `origin/master == IMPLEMENTATION_SHA`. Do not commit documentation, receipts, result JSON, or any other file between E1, E2, and E3.
 
-Headline metric:
+- [ ] **Step 3: Dispatch E1 once**
+
+Run preflight, then one manual E1 suite. On any failure, preserve the partial artifact and STOP. Do not rerun.
+
+- [ ] **Step 4: Dispatch E2 once**
+
+Only after E1 completes validly, with the same `IMPLEMENTATION_SHA` and no repository commit. On failure, STOP.
+
+- [ ] **Step 5: Dispatch E3 once**
+
+Only after E2 completes validly, with the same `IMPLEMENTATION_SHA` and no repository commit. On failure, STOP.
+
+- [ ] **Step 6: Verify all three artifacts before committing anything**
+
+For each run verify artifact ID/digest, condition, eight unique cases, run complete, actual model, valid usage, snapshot/split/source/scorer identity, prompt/tool/catalog hashes, and evaluator SHA. Require all E1-E3 evaluator SHAs to equal `IMPLEMENTATION_SHA`.
+
+### Task 9: Preserve results, select the winner, and stop
+
+**Files:**
+- Append: three immutable result directories and receipts.
+- Create: `evaluation/dualsql_lite_ctu_gpt5/SELECTED_CONFIG.lock`
+- Create: `docs/evaluation/r2_dualsql_ctu_gpt5_dev.md`
+
+- [ ] **Step 1: Copy verified artifacts into new immutable paths**
+
+Never overwrite. Record original Actions URLs, artifact IDs/digests, and report SHA-256 values in receipts.
+
+- [ ] **Step 2: Run deterministic selection**
+
+Compare E0/E1/E2/E3 with `build_selection()`. Headline metric:
 
 ```text
 Execution Accuracy = correct execution results / 8
 ```
 
-Báo thêm:
+Also report raw correct count, Syntax Validity, Execution Success, Safety Rejection, linker completion, model calls, DB calls, tokens, cost, latency, and per-case error class.
 
-- raw correct count;
-- Syntax Validity;
-- Execution Success;
-- Safety Rejection;
-- linker completion;
-- model calls;
-- DB tool calls;
-- input/output tokens;
-- cost;
-- latency;
-- per-case error class.
+- [ ] **Step 3: Apply claim discipline**
 
-Selection order:
+Each case equals 12.5 percentage points. Claim a `strong pilot signal` only if the winner exceeds E0 by at least 2/8. Do not claim statistical significance.
 
-1. Execution Accuracy cao hơn.
-2. Cost thấp hơn.
-3. Model calls ít hơn.
-4. Latency thấp hơn.
-5. Kiến trúc đơn giản hơn theo E0, E1, E2, E3.
+- [ ] **Step 4: Write and verify the selection lock**
 
-Với 8 case, mỗi case tương đương 12.5 điểm phần trăm. Chỉ claim "strong pilot signal" nếu hơn E0 ít nhất 2/8 case. Không claim statistical significance.
+The lock contains all four report hashes, winner, exact deployable config, prompt/tool/catalog hashes, pricing identity, selection inputs, and tie-break trace.
 
-Nếu E0 thắng, giữ E0 làm final configuration và ghi DualSQL không chứng minh được cải thiện. Nếu E1/E2/E3 thắng, đó là candidate cho frozen; E0 vẫn được giữ làm baseline trong báo cáo.
+- [ ] **Step 5: Commit evidence only after selection passes**
 
-## Phase 9 - Frozen comparison gate
+Commit the three result directories, receipts, selection lock, and dev report. Run full CI on this evidence commit.
 
-Chưa chạy frozen trước khi `SELECTED_CONFIG.lock` được commit và CI xanh.
+- [ ] **Step 6: STOP FOR HUMAN REVIEW**
 
-Nếu E0 thắng dev, chạy E0 frozen đúng một lần.
+Do not run frozen.
 
-Nếu E1/E2/E3 thắng dev, trước frozen phải cập nhật spec/plan để khóa một trong hai protocol:
+If E0 wins, the later frozen task may run E0 once after its lock and exact-SHA CI.
 
-1. Selected-only frozen: chạy winner một lần, comparison với E0 chỉ được claim trên dev.
-2. Paired frozen: một workflow nguyên khối chạy E0 và winner, mỗi condition đúng một lần, không hiển thị kết quả trung gian và không tuning sau đó.
+If E1, E2, or E3 wins, first update the spec and plan to choose one protocol:
 
-Mục tiêu hiện tại là so sánh DualSQL với baseline nên ưu tiên paired frozen, nhưng không tự chạy cho đến khi protocol được ghi vào spec và lock.
+1. selected-only frozen; or
+2. paired E0/winner frozen in one atomic workflow with no intermediate result exposure.
 
-## Báo cáo sau mỗi checkpoint
+No frozen workflow may be dispatched until that protocol is written, reviewed, and locked.
 
-Báo:
+## Required Final Report to the Reviewer
 
-- initial/final SHA;
-- files changed;
-- tests thật đã chạy;
-- CI URL;
-- Actions run URL nếu có;
-- artifact ID/digest;
-- condition và count;
-- EX, syntax, execution success, safety;
-- calls, usage, cost và latency;
-- blocker hoặc deviation.
+Report:
 
-Không chạy demo, R1 paid suite, ThreatFox, OTRF hoặc bất kỳ model/snapshot nào ngoài phạm vi task này.
-
+- initial SHA;
+- `IMPLEMENTATION_SHA`;
+- final evidence SHA;
+- exact files changed;
+- local commands actually run;
+- CI URLs for implementation and evidence SHAs;
+- E1/E2/E3 Actions URLs;
+- artifact IDs/digests and report hashes;
+- E0/E1/E2/E3 EX, syntax, execution success, and safety;
+- per-condition model/DB calls, tokens, cost, and latency;
+- total known task cost and `cost_unknown` state;
+- selected configuration and full tie-break trace;
+- any blocker or deviation;
+- explicit confirmation that no result commit occurred between E1/E2/E3;
+- explicit confirmation that no frozen model call occurred.
