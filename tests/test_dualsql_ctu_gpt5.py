@@ -174,3 +174,84 @@ def test_e0_descriptive_null_temperature_is_allowed(tmp_path):
     lock_path = tmp_path / "SERIES.lock"
     lock_path.write_text(json.dumps(_lock_payload()), encoding="utf-8")
     assert contract.verify_e0_baseline(REPORT, lock_path).report_sha256 == REPORT_SHA256
+
+
+DEV_SNAPSHOT = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
+
+
+def _tools():
+    module = importlib.import_module("evaluation.dualsql_lite_ctu_gpt5.tools")
+    try:
+        return module.CTUDatabaseTools(DEV_SNAPSHOT)
+    except AttributeError:
+        pytest.fail("CTUDatabaseTools boundary is missing")
+
+
+def test_ctu_tools_expose_only_network_flows_and_real_dev_values():
+    tools = _tools()
+    profile = tools.database_profiler({})
+    assert profile["ok"] is True
+    assert [table["name"] for table in profile["tables"]] == ["network_flows"]
+    assert all("type" in column for column in profile["tables"][0]["columns"])
+    sources = tools.value_search({"query": "ctu13_s5", "column": "source_dataset"})
+    labels = tools.value_search({"query": "From-Botnet", "column": "label"})
+    protocols = tools.value_search({"query": "TCP", "column": "protocol"})
+    assert any(item["value"] == "ctu13_s5" for item in sources["matches"])
+    assert any("flow=From-Botnet" in item["value"] for item in labels["matches"])
+    assert any(item["value"] == "TCP" for item in protocols["matches"])
+    assert all(item["table"] == "network_flows" for result in
+               (sources, labels, protocols) for item in result["matches"])
+    assert len({profile["evidence_id"], sources["evidence_id"],
+                labels["evidence_id"], protocols["evidence_id"]}) == 4
+    assert all(item["evidence_id"] == result["evidence_id"] for result in
+               (sources, labels, protocols) for item in result["matches"])
+
+
+def test_ctu_catalog_hash_is_deterministic_and_schema_has_no_frozen_hints():
+    first, second = _tools(), _tools()
+    assert first.catalog_sha256 == second.catalog_sha256
+    assert len(first.catalog_sha256) == 64
+    module = importlib.import_module("evaluation.dualsql_lite_ctu_gpt5.tools")
+    schema_text = json.dumps(module.TOOL_SCHEMAS)
+    assert "ctu13_s1" not in schema_text and "ctu13_s4" not in schema_text
+    assert {item["function"]["name"] for item in module.TOOL_SCHEMAS} == {
+        "database_profiler", "value_search", "sql_probe"
+    }
+
+
+def test_ctu_sql_probe_limits_rows_and_response_bytes():
+    tools = _tools()
+    result = tools.sql_probe({"sql": "SELECT source_row_id FROM network_flows ORDER BY source_row_id"})
+    assert result["ok"] is True
+    assert len(result["rows"]) == 20
+    assert result["truncated"] is True
+    assert len(json.dumps(result, default=str).encode("utf-8")) <= 1650
+    oversized = tools.sql_probe({"sql": "SELECT repeat('x', 3000) AS payload FROM network_flows LIMIT 1"})
+    assert oversized == {"ok": False, "error_type": "OUTPUT_LIMIT"}
+
+
+@pytest.mark.parametrize("sql", [
+    "DELETE FROM network_flows",
+    "SELECT * FROM dataset_provenance",
+    "SELECT * FROM information_schema.tables",
+    "SELECT * FROM read_csv('https://example.com/data.csv')",
+    "SELECT * FROM cti_indicators",
+])
+def test_ctu_sql_probe_rejects_non_snapshot_or_mutating_sql(sql):
+    result = _tools().sql_probe({"sql": sql})
+    assert result == {"ok": False, "error_type": "SAFETY_REJECTION"}
+
+
+def test_ctu_tool_execution_error_suppresses_duckdb_details():
+    result = _tools().sql_probe({"sql": "SELECT nonexistent_column FROM network_flows"})
+    assert result == {"ok": False, "error_type": "EXECUTION_ERROR"}
+
+
+def test_ctu_tool_rejects_unknown_arguments_and_tables():
+    tools = _tools()
+    assert tools.invoke("value_search", {"query": "TCP", "extra": True}) == {
+        "ok": False, "error_type": "INVALID_ARGUMENTS"
+    }
+    assert tools.database_profiler({"table": "dataset_provenance"}) == {
+        "ok": False, "error_type": "INVALID_ARGUMENTS"
+    }
