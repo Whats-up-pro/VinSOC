@@ -59,6 +59,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Build CTU dev snapshot
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb \
+            --report $RUNNER_TEMP/ctu-dev-build.json
       - name: Verify DualSQL framework
         run: |
           python - <<'PY'
@@ -155,6 +161,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Build CTU dev snapshot
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb \
+            --report $RUNNER_TEMP/ctu-dev-build.json
       - name: Run E0 condition
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -212,6 +224,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Build CTU dev snapshot
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb \
+            --report $RUNNER_TEMP/ctu-dev-build.json
       - name: Run E1 condition
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -269,6 +287,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Build CTU dev snapshot
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb \
+            --report $RUNNER_TEMP/ctu-dev-build.json
       - name: Run E2 condition
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -326,6 +350,12 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+      - name: Build CTU dev snapshot
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb \
+            --report $RUNNER_TEMP/ctu-dev-build.json
       - name: Run E3 condition
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
