@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Phạm vi phiên remediation hiện tại:** Chỉ thị trực tiếp của người dùng yêu cầu hoàn tất Tasks 1-7 offline, zero API/model dispatch và STOP FOR HUMAN REVIEW. Các bổ sung Tasks 8-10 từ remote `4886b57` được giữ nguyên để review; không được thực thi trong phiên này. CLI live vẫn closed.
+**Phạm vi phiên hiện tại:** Người dùng đã mở Tasks 8-10 sau remediation và exact-SHA CI: đúng một smoke E3, smoke qua gate thì chạy ngay một suite 8 dev cases trên cùng implementation SHA; không commit giữa hai lượt, không retry hoặc prompt rescue. Trần live mới $0.75 trong ngân sách còn lại; account owner đã xác nhận credit/hard limit đủ cho đúng project. Commit evidence khi live kết thúc rồi STOP FOR HUMAN REVIEW. Frozen S1/S4 vẫn closed. CLI offline cũ giữ disabled; chỉ entrypoint live mới có gates được phép tạo client.
 
 **Status:** AUTHORIZED FOR REMEDIATION + LIVE R2 DEV VALIDATION. Người dùng đã duyệt ngày 2026-09-30: hoàn tất offline/CI rồi chạy một smoke E3 và, nếu smoke qua gate, một suite E3 dev. Tasks 8-10 thay thế điểm dừng offline trước đây. Không mở frozen.
 
@@ -153,7 +153,7 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 - [x] Chờ CI Python 3.11 và 3.12 trên đúng final SHA xanh. Nếu fail thì sửa regression và đổi final SHA; không workflow model dispatch.
 - [x] Hoàn thành báo cáo offline theo phạm vi chỉ thị trực tiếp: Tasks 1-7 đã có verification, implementation CI xanh; commit hồ sơ cuối và kiểm CI của chính SHA đó trước STOP FOR HUMAN REVIEW.
 
-> Nội dung continuation từ remote được giữ cho task riêng: sau báo cáo offline, tiếp tục Task 8 theo phê duyệt live mới; không xin lại quyền trong phạm vi đã duyệt, giữ evidence/báo blocker khi gate fail. **Phiên hiện tại không thực thi continuation này** theo chỉ thị zero API và STOP của người dùng.
+> Checkpoint Tasks 1-7 đã hoàn thành với zero API calls tại `0973d5a6`. Chỉ thị live mới của người dùng mở Tasks 8-10 trong phiên tiếp tục này: không xin lại quyền đã duyệt, vẫn dừng khi gate fail và giữ frozen closed.
 
 ## Acceptance Criteria
 
@@ -176,12 +176,12 @@ Ghi initial SHA, LIVE_IMPLEMENTATION_SHA và final evidence SHA; files changed; 
 
 **Interfaces:** `run_live_dev(mode: Literal["smoke", "suite"], snapshot_path: Path, output_path: Path, client_factory: Callable, smoke_report_path: Path | None = None) -> dict[str, Any]`. CLI chỉ hỗ trợ condition E3, split dev S5/S7; smoke chỉ case `ctu_sql_001`, suite đúng 8 ID đã khóa. Entry point dùng actual controller, native DB tools và evaluator; không FakeProvider/fallback trong live mode.
 
-- [ ] Viết offline tests cho fixed condition/split, real-provider identity, retries 0, model/cap/reasoning/no-temperature contract; gold sentinel không có trong request.
-- [ ] Test mọi preflight failure chặn trước `client_factory()`: snapshot/source/split/hash mismatch, key-source conflict, pricing/budget không xác minh được, output tồn tại. Không log key, raw exception hoặc credential.
-- [ ] Budget mới: tổng trần bảo thủ của smoke + suite không quá USD 0.75, trong phần còn lại của ngân sách USD 2 đã duyệt. Smoke reserve tối đa USD 0.10. Chi phí lịch sử incomplete không được coi là 0; dùng thông tin tài khoản/ngân sách mới có thể xác minh để xác nhận khả năng chi trả. Không tự mua credit hay tăng spend limit.
+- [x] Viết offline tests cho fixed condition/split, real-provider identity, retries 0, model/cap/reasoning/no-temperature contract; gold sentinel không có trong request.
+- [x] Test mọi preflight failure chặn trước `client_factory()`: snapshot/source/split/hash mismatch, key-source conflict, pricing/budget không xác minh được, output tồn tại. Không log key, raw exception hoặc credential.
+- [x] Budget mới: tổng trần bảo thủ của smoke + suite không quá USD 0.75, trong phần còn lại của ngân sách USD 2 đã duyệt. Smoke reserve tối đa USD 0.10. Chi phí lịch sử incomplete không được coi là 0; dùng thông tin tài khoản/ngân sách mới có thể xác minh để xác nhận khả năng chi trả. Không tự mua credit hay tăng spend limit.
 - [ ] Pin giá theo nguồn OpenAI chính thức và verification time ngay trước lượt live. Tính bound từ request/context đã serialize, cap 1000, tối đa 5 turns và 5 DB calls mỗi role. Trước từng API call reserve cả remaining bound; không dựa vào giá trị `estimated_cost_usd=0` để mở gate.
-- [ ] Test partial evidence được lưu trước/sau response, kể cả lỗi parsing/tool/provider. API 429/model unavailable/parameter mismatch thì dừng, lưu safe category và cost-unknown state. Không SDK retry, không đổi model/prompt rồi gọi lại.
-- [ ] Suite gate đọc immutable smoke report, yêu cầu cùng implementation SHA, snapshot/split/scorer/prompt/tool/schema/catalog/request identity. Smoke subset luôn `official_eligible=false`; report suite phải kiểm chứng eligibility theo dev protocol, không tự gán true.
+- [x] Test partial evidence được lưu trước/sau response, kể cả lỗi parsing/tool/provider. API 429/model unavailable/parameter mismatch thì dừng, lưu safe category và cost-unknown state. Không SDK retry, không đổi model/prompt rồi gọi lại.
+- [x] Suite gate đọc immutable smoke report, yêu cầu cùng implementation SHA, snapshot/split/scorer/prompt/tool/schema/catalog/request identity. Smoke subset luôn `official_eligible=false`; report suite phải kiểm chứng eligibility theo dev protocol, không tự gán true.
 - [ ] Chạy targeted tests, full pytest, compile checks và `git diff --check`. Commit/push code/tests; ghi `LIVE_IMPLEMENTATION_SHA` và chờ CI Python 3.11/3.12 xanh trên đúng SHA đó.
 
 ### Task 9: Một smoke E2E thật, rồi một suite E3 dev
