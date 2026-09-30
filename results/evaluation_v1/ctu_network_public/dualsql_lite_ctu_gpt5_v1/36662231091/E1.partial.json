@@ -1,0 +1,3215 @@
+{
+  "account_gate": {
+    "credit_checked_utc": "2026-09-30T02:55:59Z",
+    "cumulative_known_usd": 0.01979725,
+    "organization_project_verified": true,
+    "pricing_checked_utc": "2026-09-30T02:51:53Z",
+    "spend_limit_remaining_usd": 0.71,
+    "total_authorized_usd": 2.0,
+    "usable_credit_usd": 3.0
+  },
+  "attempted_calls": 26,
+  "case_ids": [
+    "ctu_sql_001",
+    "ctu_sql_002",
+    "ctu_sql_003",
+    "ctu_sql_004",
+    "ctu_sql_005",
+    "ctu_sql_006",
+    "ctu_sql_007",
+    "ctu_sql_008"
+  ],
+  "case_results": [
+    {
+      "case_id": "ctu_sql_001",
+      "category": "network",
+      "difficulty": "basic",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'scenario-5'\n  AND label = 'From-Botnet';",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "source_dataset",
+              "source_row_id",
+              "event_time",
+              "src_ip",
+              "src_port",
+              "dst_ip",
+              "dst_port",
+              "protocol",
+              "action",
+              "bytes_out",
+              "bytes_in",
+              "label"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 2,
+      "linker_turns": 3,
+      "question_sha256": "957fdad3b75ee2289725f15b26dcafaeb48e2d24694a4eadb6a3adcc83bc3a67",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "query": "scenario 5",
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000001",
+            "matches": [],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_BZt1P9yuDiIqGLKccQZtv4wy",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000002",
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows"
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_47mNTHpfcLYD06Cp528WXiuW",
+          "turn": 2
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_002",
+      "category": "network",
+      "difficulty": "basic",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_row_id = 'line:10007'\n  AND label = 'Normal';",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100007"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100017"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100027"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100037"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100047"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100057"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100067"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:10007"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100070"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100071"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100072"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100073"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100074"
+          },
+          {
+            "column": "source_row_id",
+            "evidence_id": "ev-000005",
+            "table": "network_flows",
+            "value": "line:100075"
+          }
+        ],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "source_row_id",
+              "label"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 3,
+      "linker_turns": 4,
+      "question_sha256": "00d03fa63e073a8335fd473716b14fb11dc824b6568c8f9341d65cbc5cd4164e",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000003",
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows"
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_MtLF7460yBMx09bVy6SqNVqD",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "column": "source_dataset",
+            "query": "scenario",
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000004",
+            "matches": [],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_f8J6V5hDYgoBYfDExUvCx8ak",
+          "turn": 2
+        },
+        {
+          "arguments": {
+            "column": "source_row_id",
+            "query": "7",
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000005",
+            "matches": [
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100007"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100017"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100027"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100037"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100047"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100057"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100067"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:10007"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100070"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100071"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100072"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100073"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100074"
+              },
+              {
+                "column": "source_row_id",
+                "evidence_id": "ev-000005",
+                "table": "network_flows",
+                "value": "line:100075"
+              }
+            ],
+            "ok": true,
+            "truncated": true
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_0zut1gKbXsa3FYm5HsdaK286",
+          "turn": 3
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_003",
+      "category": "network",
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips\nFROM network_flows\nWHERE label = 'scenario 5';",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "source_dataset",
+              "source_row_id",
+              "event_time",
+              "src_ip",
+              "src_port",
+              "dst_ip",
+              "dst_port",
+              "protocol",
+              "action",
+              "bytes_out",
+              "bytes_in",
+              "label"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 2,
+      "linker_turns": 2,
+      "question_sha256": "6469410b00b5580f52b78407f5d1c9a89b50e0d2f6b349e4fada59d8fb9bf69f",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000006",
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows"
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_eWpRwcRbj8Cgcs4xhY4y0Qds",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "query": "scenario 5",
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000007",
+            "matches": [],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_7NoBvYNpfgpDiK34yNkIAwmI",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_004",
+      "category": "time_range",
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT COUNT(*) AS count\nFROM network_flows\nWHERE label = 'scenario 5'\n  AND event_time >= TIMESTAMP '2011-08-15 16:43:20.931208'\n  AND event_time <  TIMESTAMP '2011-08-15 16:43:20.931209';",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "source_dataset",
+              "source_row_id",
+              "event_time",
+              "src_ip",
+              "src_port",
+              "dst_ip",
+              "dst_port",
+              "protocol",
+              "action",
+              "bytes_out",
+              "bytes_in",
+              "label"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 2,
+      "linker_turns": 2,
+      "question_sha256": "3363bc31520c2aa082bc519a988603b3c4948c9789df1fd126be20549f34fdd9",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000008",
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows"
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_tsrgeyqEv1nbtiPP4qiTS8RS",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "column": "label",
+            "query": "scenario",
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000009",
+            "matches": [],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_ZYtg7PqWmCg2QWz24m16S9id",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_005",
+      "category": "network",
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT COUNT(*) AS count\nFROM network_flows\nWHERE label = 'scenario 7'\n  AND protocol = 'UDP'\n  AND bytes_out > 0;",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "label",
+              "protocol",
+              "bytes_out"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 1,
+      "question_sha256": "cf400fcaae05220384884b385a56e49ad775aa946ad00dde6c1a00744bba41b9",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": []
+    },
+    {
+      "case_id": "ctu_sql_006",
+      "category": "ordering_limit",
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT dst_port, COUNT(*) AS flow_count\nFROM network_flows\nWHERE label = 'scenario 5'\nGROUP BY dst_port\nORDER BY flow_count DESC\nLIMIT 5;",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "label",
+              "dst_port"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 2,
+      "linker_turns": 3,
+      "question_sha256": "dbcc554db8b436258e761356d877d5b308ac824082d1c21c121204f2a89fdbcc",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "column": "label",
+            "query": "scenario 5",
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000010",
+            "matches": [],
+            "ok": true,
+            "truncated": false
+          },
+          "role": "linker",
+          "tool": "value_search",
+          "tool_call_id": "call_LsNwTHZkSvfuzJlQDcDXQWtL",
+          "turn": 1
+        },
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000011",
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows"
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_D9Tn9bT4z5zdOR4aQn3b4UCZ",
+          "turn": 2
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_007",
+      "category": "aggregation",
+      "difficulty": "intermediate",
+      "error_category": "RESULT_MISMATCH",
+      "execution_accurate": false,
+      "execution_success": true,
+      "final_sql": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE label = 'Botnet'\nGROUP BY protocol;",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "protocol",
+              "label"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 0,
+      "linker_turns": 1,
+      "question_sha256": "ec17947d20ec3c83cf3f597de1c8db7de5ddd46ce71f4d20c287cf54a56929af",
+      "safety_rejected": false,
+      "syntax_valid": true,
+      "trajectory": []
+    },
+    {
+      "case_id": "ctu_sql_008",
+      "category": "aggregation",
+      "difficulty": "basic",
+      "error_category": "SAFETY_REJECTION",
+      "execution_accurate": false,
+      "execution_success": false,
+      "final_sql": "SELECT\n  source_dataset,\n  COUNT(*) AS total_flows,\n  SUM(COALESCE(bytes_out,0) + COALESCE(bytes_in,0)) AS total_bytes\nFROM network_flows\nGROUP BY source_dataset\nORDER BY source_dataset;",
+      "generator_error": null,
+      "generator_tool_calls": 0,
+      "generator_turns": 1,
+      "linked_schema": {
+        "grounded_values": [],
+        "question_literals": [],
+        "tables": [
+          {
+            "columns": [
+              "source_dataset",
+              "source_row_id",
+              "event_time",
+              "src_ip",
+              "src_port",
+              "dst_ip",
+              "dst_port",
+              "protocol",
+              "action",
+              "bytes_out",
+              "bytes_in",
+              "label"
+            ],
+            "table": "network_flows"
+          }
+        ]
+      },
+      "linker_error": null,
+      "linker_tool_calls": 1,
+      "linker_turns": 2,
+      "question_sha256": "5b79943716113431fbebb06a20299f4e54e4f4005a2ea505b9bf77b2ebe37b6f",
+      "safety_rejected": true,
+      "syntax_valid": true,
+      "trajectory": [
+        {
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "evidence_id": "ev-000012",
+            "ok": true,
+            "tables": [
+              {
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ],
+                "name": "network_flows"
+              }
+            ]
+          },
+          "role": "linker",
+          "tool": "database_profiler",
+          "tool_call_id": "call_WOjvzoYFreOgbpS7bydQlpy4",
+          "turn": 1
+        }
+      ]
+    }
+  ],
+  "condition": "E1",
+  "cost_unknown": false,
+  "implementation_sha": "ff12a3e32781b452ae266251b7997cc28b76c80f",
+  "known_cost_usd": 0.011448750000000004,
+  "metrics": {
+    "execution_accurate": 0,
+    "execution_success": 7,
+    "safety_rejected": 1,
+    "syntax_valid": 8
+  },
+  "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+  "model_contract": {
+    "max_completion_tokens": 1000,
+    "max_retries": 0,
+    "model": "gpt-5-mini-2025-08-07",
+    "reasoning_effort": "low"
+  },
+  "preflight": {
+    "condition_ceiling_usd": 0.19111949999999997,
+    "max_condition_calls": 48,
+    "series_ceiling_usd": 0.70808825
+  },
+  "pricing": {
+    "current_check_utc": "2026-09-30T02:51:53Z",
+    "input_usd_per_million": 0.25,
+    "output_usd_per_million": 2.0,
+    "source": "https://developers.openai.com/api/docs/models/gpt-5-mini",
+    "stop_if_current_official_price_differs": true,
+    "verified_utc": "2026-09-29T10:33:37Z"
+  },
+  "provenance": {
+    "builder_scorer_sha256": {
+      "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "catalog_sha256": "70fa10a7cdda9a17aa6de4733a8bb0638351b8ba7865bb94aae9f9d9cf736bea",
+    "e0_report_sha256": "33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15",
+    "generator_prompt_sha256": "5bc3e9157dd3ab06d4d2ede8487239d2df17aa8baec298d49e5a8719b1eaed9a",
+    "generator_prompt_version": "dualsql_lite_ctu_gpt5_generator_v2",
+    "linker_prompt_sha256": "46b0bdd52e520c1770ad88c35e9369d3e99fa454eb314592bbd7e7918218b1ae",
+    "linker_prompt_version": "dualsql_lite_ctu_gpt5_linker_v2",
+    "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+    "schema_context_sha256": "3dfc6d713fcedff0523f1bfd6707a5a6332260380057433f8916387f1687dc71",
+    "serialized_requests_sha256": "90f6ff8e7c5a21b9268bbb97ed147f8460eb46b551256bb1bfef67014c43ab9b",
+    "source_file_sha256": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+    },
+    "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+    "tool_implementation_sha256": "f38722ecf2bda9dc7e0986cd7607d5ec7ee9353457c471e9a8d67b1c6400f576",
+    "tool_schema_sha256": "6329d7db6e15f847a9f32bb319ae36b048c34636e7a178d1f5a03a40b6a76aa2",
+    "tool_version": "dualsql_lite_ctu_gpt5_tools_v2"
+  },
+  "provider_calls": [
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00066525,
+      "input_tokens": 365,
+      "latency_ms": 4530.915,
+      "output_tokens": 287,
+      "response_id": "chatcmpl-ETeodBx5xx9H2R9oSvV1a9C9wzCQD",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00015875,
+      "input_tokens": 427,
+      "latency_ms": 1355.126,
+      "output_tokens": 26,
+      "response_id": "chatcmpl-ETeohvgROfdsHYhv2enOX3mhhxWoX",
+      "role": "linker",
+      "turn": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.000482,
+      "input_tokens": 648,
+      "latency_ms": 2376.186,
+      "output_tokens": 160,
+      "response_id": "chatcmpl-ETeoifqx5j2A8NyGzoMmC3AYmi1Rg",
+      "role": "linker",
+      "turn": 3
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.0005055,
+      "input_tokens": 166,
+      "latency_ms": 2963.793,
+      "output_tokens": 232,
+      "response_id": "chatcmpl-ETeolvPIQwduDGSeiWpsK11qRQOff",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.0001425,
+      "input_tokens": 362,
+      "latency_ms": 930.473,
+      "output_tokens": 26,
+      "response_id": "chatcmpl-ETeoneq5r8IgGY6p4loUfVWOaVM1u",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00046975,
+      "input_tokens": 583,
+      "latency_ms": 2133.158,
+      "output_tokens": 162,
+      "response_id": "chatcmpl-ETeoooXIhTJx7jL5nlV8DwdtRvRUd",
+      "role": "linker",
+      "turn": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00036,
+      "input_tokens": 648,
+      "latency_ms": 1517.825,
+      "output_tokens": 99,
+      "response_id": "chatcmpl-ETeorhZW9Ex0JUmKYsZRFBQA98MlE",
+      "role": "linker",
+      "turn": 3
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.0007845,
+      "input_tokens": 1218,
+      "latency_ms": 2533.548,
+      "output_tokens": 240,
+      "response_id": "chatcmpl-ETeosDKV6mT5hjpTQVqyFGOUIrwre",
+      "role": "linker",
+      "turn": 4
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00049125,
+      "input_tokens": 629,
+      "latency_ms": 2000.003,
+      "output_tokens": 167,
+      "response_id": "chatcmpl-ETeov2SZKYmJTDO0Z9e1zORSqHBol",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00060275,
+      "input_tokens": 363,
+      "latency_ms": 2657.375,
+      "output_tokens": 256,
+      "response_id": "chatcmpl-ETeowKB0FFaIsPQZTrESO0BHElZDB",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.0004825,
+      "input_tokens": 650,
+      "latency_ms": 2015.68,
+      "output_tokens": 160,
+      "response_id": "chatcmpl-ETeozxQ3pQH9hNLwdLCK3RpHZgvmY",
+      "role": "linker",
+      "turn": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.000367,
+      "input_tokens": 164,
+      "latency_ms": 1852.815,
+      "output_tokens": 163,
+      "response_id": "chatcmpl-ETep1b1gvKZTb6WTKSJuHP8pfhrAV",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00035775,
+      "input_tokens": 391,
+      "latency_ms": 2207.367,
+      "output_tokens": 130,
+      "response_id": "chatcmpl-ETep3xJTmQlxPcpLCvPuyoVaVVimS",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00049,
+      "input_tokens": 680,
+      "latency_ms": 2744.348,
+      "output_tokens": 160,
+      "response_id": "chatcmpl-ETep6MHZb84mNlvpMdk16VTxuQ1Bv",
+      "role": "linker",
+      "turn": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.000842,
+      "input_tokens": 192,
+      "latency_ms": 3571.873,
+      "output_tokens": 397,
+      "response_id": "chatcmpl-ETep8L0zMY4TjHoDrRaYnCGlWiM6M",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.0004485,
+      "input_tokens": 362,
+      "latency_ms": 3039.22,
+      "output_tokens": 179,
+      "response_id": "chatcmpl-ETepCduxX7JrrN0Rpm0XAkcZHOuC0",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00024575,
+      "input_tokens": 127,
+      "latency_ms": 1803.78,
+      "output_tokens": 107,
+      "response_id": "chatcmpl-ETepElTt5SZKujip5PYRN69xMLvgM",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00028875,
+      "input_tokens": 363,
+      "latency_ms": 1355.91,
+      "output_tokens": 99,
+      "response_id": "chatcmpl-ETepG1mTMhZYKwB7IPEKbwotomJoM",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00028725,
+      "input_tokens": 429,
+      "latency_ms": 1244.002,
+      "output_tokens": 90,
+      "response_id": "chatcmpl-ETepIeQM3U3z7Xuy00Oj4qLnkaEra",
+      "role": "linker",
+      "turn": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.0005125,
+      "input_tokens": 650,
+      "latency_ms": 2213.953,
+      "output_tokens": 175,
+      "response_id": "chatcmpl-ETepJbXgND02xstSa2D87g3FLN8uo",
+      "role": "linker",
+      "turn": 3
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00038125,
+      "input_tokens": 125,
+      "latency_ms": 2052.339,
+      "output_tokens": 175,
+      "response_id": "chatcmpl-ETepL5cixFkOcxkDpX5PAmhro2fx6",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00056975,
+      "input_tokens": 375,
+      "latency_ms": 2272.762,
+      "output_tokens": 238,
+      "response_id": "chatcmpl-ETepNpilD5iYUn5FqPuBdX98oMTOY",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.000486,
+      "input_tokens": 136,
+      "latency_ms": 2576.597,
+      "output_tokens": 226,
+      "response_id": "chatcmpl-ETepQ28fRheWbjHb6BKJSZd9AxNr3",
+      "role": "generator",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00027,
+      "input_tokens": 360,
+      "latency_ms": 1551.66,
+      "output_tokens": 90,
+      "response_id": "chatcmpl-ETepShfP6sIusMTb3svHEtLmNgTkD",
+      "role": "linker",
+      "turn": 1
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00046525,
+      "input_tokens": 581,
+      "latency_ms": 1861.38,
+      "output_tokens": 160,
+      "response_id": "chatcmpl-ETepUYVPgLz7z9ipzrSneokb1VT06",
+      "role": "linker",
+      "turn": 2
+    },
+    {
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "cost_usd": 0.00029225,
+      "input_tokens": 161,
+      "latency_ms": 1892.949,
+      "output_tokens": 126,
+      "response_id": "chatcmpl-ETepVF7OQf6B7OTZI4SH7Lf35FAui",
+      "role": "generator",
+      "turn": 1
+    }
+  ],
+  "run_status": "complete",
+  "serialized_requests": [
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows labeled From-Botnet as flow_count.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows labeled From-Botnet as flow_count.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"scenario 5\",\"table\":\"network_flows\"}",
+                "name": "value_search"
+              },
+              "id": "call_BZt1P9yuDiIqGLKccQZtv4wy",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000001\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_BZt1P9yuDiIqGLKccQZtv4wy"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows labeled From-Botnet as flow_count.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"scenario 5\",\"table\":\"network_flows\"}",
+                "name": "value_search"
+              },
+              "id": "call_BZt1P9yuDiIqGLKccQZtv4wy",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000001\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_BZt1P9yuDiIqGLKccQZtv4wy"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\":\"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_47mNTHpfcLYD06Cp528WXiuW",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000002\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_47mNTHpfcLYD06Cp528WXiuW"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"source_dataset\", \"source_row_id\", \"event_time\", \"src_ip\", \"src_port\", \"dst_ip\", \"dst_port\", \"protocol\", \"action\", \"bytes_out\", \"bytes_in\", \"label\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows labeled From-Botnet as flow_count.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 flows labeled Normal as flow_count.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 flows labeled Normal as flow_count.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\":\"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_MtLF7460yBMx09bVy6SqNVqD",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000003\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_MtLF7460yBMx09bVy6SqNVqD"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 flows labeled Normal as flow_count.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\":\"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_MtLF7460yBMx09bVy6SqNVqD",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000003\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_MtLF7460yBMx09bVy6SqNVqD"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"scenario\",\"table\":\"network_flows\",\"column\":\"source_dataset\"}",
+                "name": "value_search"
+              },
+              "id": "call_f8J6V5hDYgoBYfDExUvCx8ak",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000004\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_f8J6V5hDYgoBYfDExUvCx8ak"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 flows labeled Normal as flow_count.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\":\"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_MtLF7460yBMx09bVy6SqNVqD",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000003\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_MtLF7460yBMx09bVy6SqNVqD"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"scenario\",\"table\":\"network_flows\",\"column\":\"source_dataset\"}",
+                "name": "value_search"
+              },
+              "id": "call_f8J6V5hDYgoBYfDExUvCx8ak",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000004\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_f8J6V5hDYgoBYfDExUvCx8ak"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"7\",\"table\":\"network_flows\",\"column\":\"source_row_id\"}",
+                "name": "value_search"
+              },
+              "id": "call_0zut1gKbXsa3FYm5HsdaK286",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000005\", \"matches\": [{\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100007\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100017\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100027\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100037\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100047\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100057\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100067\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:10007\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100070\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100071\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100072\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100073\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100074\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100075\", \"evidence_id\": \"ev-000005\"}], \"truncated\": true}",
+          "role": "tool",
+          "tool_call_id": "call_0zut1gKbXsa3FYm5HsdaK286"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"source_row_id\", \"label\"]}], \"grounded_values\": [{\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100007\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100017\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100027\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100037\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100047\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100057\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100067\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:10007\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100070\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100071\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100072\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100073\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100074\", \"evidence_id\": \"ev-000005\"}, {\"table\": \"network_flows\", \"column\": \"source_row_id\", \"value\": \"line:100075\", \"evidence_id\": \"ev-000005\"}], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 flows labeled Normal as flow_count.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "How many distinct destination IPs occur in scenario 5?",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "How many distinct destination IPs occur in scenario 5?",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\": \"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_eWpRwcRbj8Cgcs4xhY4y0Qds",
+              "type": "function"
+            },
+            {
+              "function": {
+                "arguments": "{\"query\": \"scenario 5\", \"table\": \"network_flows\"}",
+                "name": "value_search"
+              },
+              "id": "call_7NoBvYNpfgpDiK34yNkIAwmI",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000006\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_eWpRwcRbj8Cgcs4xhY4y0Qds"
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000007\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_7NoBvYNpfgpDiK34yNkIAwmI"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"source_dataset\", \"source_row_id\", \"event_time\", \"src_ip\", \"src_port\", \"dst_ip\", \"dst_port\", \"protocol\", \"action\", \"bytes_out\", \"bytes_in\", \"label\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "How many distinct destination IPs occur in scenario 5?",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows at the exact microsecond from 2011-08-15 16:43:20.931208 inclusive to 16:43:20.931209 exclusive.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows at the exact microsecond from 2011-08-15 16:43:20.931208 inclusive to 16:43:20.931209 exclusive.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\": \"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_tsrgeyqEv1nbtiPP4qiTS8RS",
+              "type": "function"
+            },
+            {
+              "function": {
+                "arguments": "{\"table\": \"network_flows\", \"column\": \"label\", \"query\": \"scenario\"}",
+                "name": "value_search"
+              },
+              "id": "call_ZYtg7PqWmCg2QWz24m16S9id",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000008\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_tsrgeyqEv1nbtiPP4qiTS8RS"
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000009\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_ZYtg7PqWmCg2QWz24m16S9id"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"source_dataset\", \"source_row_id\", \"event_time\", \"src_ip\", \"src_port\", \"dst_ip\", \"dst_port\", \"protocol\", \"action\", \"bytes_out\", \"bytes_in\", \"label\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 5 flows at the exact microsecond from 2011-08-15 16:43:20.931208 inclusive to 16:43:20.931209 exclusive.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 UDP flows with positive outbound bytes.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"label\", \"protocol\", \"bytes_out\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "Count scenario 7 UDP flows with positive outbound bytes.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return the five scenario 5 destination ports with most flows.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return the five scenario 5 destination ports with most flows.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"scenario 5\",\"table\":\"network_flows\",\"column\":\"label\"}",
+                "name": "value_search"
+              },
+              "id": "call_LsNwTHZkSvfuzJlQDcDXQWtL",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000010\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_LsNwTHZkSvfuzJlQDcDXQWtL"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return the five scenario 5 destination ports with most flows.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"query\":\"scenario 5\",\"table\":\"network_flows\",\"column\":\"label\"}",
+                "name": "value_search"
+              },
+              "id": "call_LsNwTHZkSvfuzJlQDcDXQWtL",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000010\", \"matches\": [], \"truncated\": false}",
+          "role": "tool",
+          "tool_call_id": "call_LsNwTHZkSvfuzJlQDcDXQWtL"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\":\"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_D9Tn9bT4z5zdOR4aQn3b4UCZ",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000011\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_D9Tn9bT4z5zdOR4aQn3b4UCZ"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"label\", \"dst_port\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "Return the five scenario 5 destination ports with most flows.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "For scenario 7 Botnet-labeled flows, return each protocol and its flow count; row order does not matter.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"protocol\", \"label\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "For scenario 7 Botnet-labeled flows, return each protocol and its flow count; row order does not matter.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return scenario flow totals ordered by source dataset.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "You link a network-flow question to the verified database schema. Use database_profiler and value_search when column meaning or stored values are uncertain. Return one JSON object with exactly a tables array. Each table entry has only table and columns; use real names observed in the supplied schema. Do not include values in the final JSON: the controller attaches verified database values and their evidence IDs. A literal explicitly quoted in the question is question evidence and needs no database lookup. Return no SQL or prose.\nDatabase schema:\nnetwork_flows(source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, src_ip VARCHAR, src_port INTEGER, dst_ip VARCHAR, dst_port INTEGER, protocol VARCHAR, action VARCHAR, bytes_out BIGINT, bytes_in BIGINT, label VARCHAR)",
+          "role": "system"
+        },
+        {
+          "content": "Return scenario flow totals ordered by source dataset.",
+          "role": "user"
+        },
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"table\":\"network_flows\"}",
+                "name": "database_profiler"
+              },
+              "id": "call_WOjvzoYFreOgbpS7bydQlpy4",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "{\"ok\": true, \"evidence_id\": \"ev-000012\", \"tables\": [{\"name\": \"network_flows\", \"columns\": [{\"name\": \"source_dataset\", \"type\": \"VARCHAR\"}, {\"name\": \"source_row_id\", \"type\": \"VARCHAR\"}, {\"name\": \"event_time\", \"type\": \"TIMESTAMP\"}, {\"name\": \"src_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"src_port\", \"type\": \"INTEGER\"}, {\"name\": \"dst_ip\", \"type\": \"VARCHAR\"}, {\"name\": \"dst_port\", \"type\": \"INTEGER\"}, {\"name\": \"protocol\", \"type\": \"VARCHAR\"}, {\"name\": \"action\", \"type\": \"VARCHAR\"}, {\"name\": \"bytes_out\", \"type\": \"BIGINT\"}, {\"name\": \"bytes_in\", \"type\": \"BIGINT\"}, {\"name\": \"label\", \"type\": \"VARCHAR\"}]}]}",
+          "role": "tool",
+          "tool_call_id": "call_WOjvzoYFreOgbpS7bydQlpy4"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      },
+      "tools": [
+        {
+          "function": {
+            "description": "Inspect typed columns in the verified network_flows table.",
+            "name": "database_profiler",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "table": {
+                  "description": "Optional exact table name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Find stored text values in the verified network_flows snapshot.",
+            "name": "value_search",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "column": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        },
+        {
+          "function": {
+            "description": "Run one bounded read-only SELECT over network_flows.",
+            "name": "sql_probe",
+            "parameters": {
+              "additionalProperties": false,
+              "properties": {
+                "sql": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "sql"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "max_completion_tokens": 1000,
+      "messages": [
+        {
+          "content": "Write one read-only DuckDB SELECT over the supplied network_flows schema. Use tools to inspect uncertain stored values when tools are available. Respect exact filters, Boolean grouping, time boundaries, aggregation, ordering, and limits. Use only verified database values or literals explicitly supplied in the question. Return only SQL, without Markdown or commentary.\nLinked schema:\n{\"tables\": [{\"table\": \"network_flows\", \"columns\": [\"source_dataset\", \"source_row_id\", \"event_time\", \"src_ip\", \"src_port\", \"dst_ip\", \"dst_port\", \"protocol\", \"action\", \"bytes_out\", \"bytes_in\", \"label\"]}], \"grounded_values\": [], \"question_literals\": []}",
+          "role": "system"
+        },
+        {
+          "content": "Return scenario flow totals ordered by source dataset.",
+          "role": "user"
+        }
+      ],
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low"
+    }
+  ]
+}

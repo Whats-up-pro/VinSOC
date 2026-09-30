@@ -1,0 +1,19 @@
+{
+  "actions_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36662683274",
+  "artifact_digest": "sha256:b687f31a454d72723eb5349324fd8e5587e700b7b03e63ce9a146e67c4a54bc3",
+  "artifact_id": 11075027530,
+  "artifact_name": "r2-dualsql-ctu-gpt5-E2-36662683274",
+  "condition": "E2",
+  "execution_accurate": 0,
+  "implementation_sha": "ff12a3e32781b452ae266251b7997cc28b76c80f",
+  "input_tokens": 8542,
+  "known_cost_usd": 0.006217499999999999,
+  "model": "gpt-5-mini-2025-08-07",
+  "model_calls": 19,
+  "output_tokens": 2041,
+  "partial_report_path": "E2.partial.json",
+  "partial_report_sha256": "6bdd3bb513877b2c9d8035e7c74f7ad4826b2cfd9ce631a3e23ced3e85cd57af",
+  "report_path": "E2.json",
+  "report_sha256": "6bdd3bb513877b2c9d8035e7c74f7ad4826b2cfd9ce631a3e23ced3e85cd57af",
+  "run_id": "36662683274"
+}

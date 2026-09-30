@@ -536,27 +536,27 @@ Both Python 3.11 and 3.12 must pass on `IMPLEMENTATION_SHA`. Do not use CI from 
 
 **Files:** No tracked file changes until all three runs finish.
 
-- [ ] **Step 1: Confirm account and cumulative budget**
+- [x] **Step 1: Confirm account and cumulative budget**
 
 Verify usable OpenAI project/organization, credit or billing state, spend limits, and model rate limits. Do not infer available balance from a previous successful call.
 
-- [ ] **Step 2: Freeze the implementation checkout**
+- [x] **Step 2: Freeze the implementation checkout**
 
 Before every dispatch confirm `origin/master == IMPLEMENTATION_SHA`. Do not commit documentation, receipts, result JSON, or any other file between E1, E2, and E3.
 
-- [ ] **Step 3: Dispatch E1 once**
+- [x] **Step 3: Dispatch E1 once**
 
 Run preflight, then one manual E1 suite. On any failure, preserve the partial artifact and STOP. Do not rerun.
 
-- [ ] **Step 4: Dispatch E2 once**
+- [x] **Step 4: Dispatch E2 once**
 
 Only after E1 completes validly, with the same `IMPLEMENTATION_SHA` and no repository commit. On failure, STOP.
 
-- [ ] **Step 5: Dispatch E3 once**
+- [x] **Step 5: Dispatch E3 once**
 
 Only after E2 completes validly, with the same `IMPLEMENTATION_SHA` and no repository commit. On failure, STOP.
 
-- [ ] **Step 6: Verify all three artifacts before committing anything**
+- [x] **Step 6: Verify all three artifacts before committing anything**
 
 For each run verify artifact ID/digest, condition, eight unique cases, run complete, actual model, valid usage, snapshot/split/source/scorer identity, prompt/tool/catalog hashes, and evaluator SHA. Require all E1-E3 evaluator SHAs to equal `IMPLEMENTATION_SHA`.
 
@@ -567,11 +567,11 @@ For each run verify artifact ID/digest, condition, eight unique cases, run compl
 - Create: `evaluation/dualsql_lite_ctu_gpt5/SELECTED_CONFIG.lock`
 - Create: `docs/evaluation/r2_dualsql_ctu_gpt5_dev.md`
 
-- [ ] **Step 1: Copy verified artifacts into new immutable paths**
+- [x] **Step 1: Copy verified artifacts into new immutable paths**
 
 Never overwrite. Record original Actions URLs, artifact IDs/digests, and report SHA-256 values in receipts.
 
-- [ ] **Step 2: Run deterministic selection**
+- [x] **Step 2: Run deterministic selection**
 
 Compare E0/E1/E2/E3 with `build_selection()`. Headline metric:
 
@@ -581,11 +581,11 @@ Execution Accuracy = correct execution results / 8
 
 Also report raw correct count, Syntax Validity, Execution Success, Safety Rejection, linker completion, model calls, DB calls, tokens, cost, latency, and per-case error class.
 
-- [ ] **Step 3: Apply claim discipline**
+- [x] **Step 3: Apply claim discipline**
 
 Each case equals 12.5 percentage points. Claim a `strong pilot signal` only if the winner exceeds E0 by at least 2/8. Do not claim statistical significance.
 
-- [ ] **Step 4: Write and verify the selection lock**
+- [x] **Step 4: Write and verify the selection lock**
 
 The lock contains all four report hashes, winner, exact deployable config, prompt/tool/catalog hashes, pricing identity, selection inputs, and tie-break trace.
 
