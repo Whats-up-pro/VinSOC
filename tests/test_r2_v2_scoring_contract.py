@@ -55,7 +55,7 @@ def test_order_duplicate_and_column_semantics_unchanged(tmp_path):
 def test_run_condition_scores_final_without_gold_in_request(tmp_path, monkeypatch):
     tools, manifest = make_tools(tmp_path)
     client = FakeClient([response("SELECT 9")])
-    monkeypatch.setattr(experiment, "verify_dev_inputs", lambda *a: {})
+    monkeypatch.setattr(experiment, "verify_dev_inputs", lambda *a: {"logical_snapshot_sha256": "fixture", "source_file_sha256": {"alpha": "fixture"}})
     report = experiment.run_condition("E0", [case(gold="SELECT 3 AS GOLD_SENTINEL")], tools.snapshot_path, client, tmp_path / "output", manifest)
     assert report["counts"]["execution_accurate"] == 0
     assert report["counts"]["execution_success"] == 1

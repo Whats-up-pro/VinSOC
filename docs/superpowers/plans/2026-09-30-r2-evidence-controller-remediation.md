@@ -130,12 +130,12 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 
 **Interfaces:** `build_report_identity(snapshot_path: Path, manifest_path: Path, cases_dir: Path) -> dict[str, Any]` ghi git SHA, dirty-state, file/content hashes và model request contract. Schema report mới dùng raw counts/rates, explicit complete/partial status và eligibility reasons. Chỉ tạo report bằng fake client trong task này.
 
-- [ ] Test report fake-client có git SHA, exact condition, case IDs/hash, snapshot logical hash, sources, scorer/builder hash, prompt/tool/schema/catalog hash, serialized request contract, response IDs/model/usage, per-case score và cost completeness.
-- [ ] Test output final/partial tồn tại thì reject, duplicate/missing case IDs reject, actual model/usage mismatch ghi safe failure và giữ partial evidence. Generic `--cases-dir` ngoài verified S5/S7 dev phải fail trước provider.
-- [ ] Tính complete cost chỉ khi usage của tất cả attempted calls được xác nhận đầy đủ. Dirty implementation và incomplete evidence không được official eligibility. Fake-client report luôn có `official_eligible=false` với reason `synthetic_provider`; không tạo headline accuracy cho model thật từ fixture.
-- [ ] CLI v2 tạo OpenAI client phải luôn fail-fast trước client creation cho đến khi task paid riêng được duyệt và triển khai đầy đủ gates. Fake-client entrypoint vẫn kiểm thử được. Budget/pricing/account gate và workflow paid mới thuộc task sau.
-- [ ] History receipt liệt kê missing run-time provenance; backfill chỉ những field có bằng chứng trực tiếp (original log, response ID, exact request bytes). Ghi inferred/reconstructed riêng. Không dùng filesystem mtime làm run timestamp proof, không đặt `provenance_complete=true` từ các hash mới.
-- [ ] Chạy report-contract tests; so sánh inventory artifact/E0/v1 selection ban đầu. Commit verification contract và receipt bổ sung ở path mới.
+- [x] Test report fake-client có git SHA, exact condition, case IDs/hash, snapshot logical hash, sources, scorer/builder hash, prompt/tool/schema/catalog hash, serialized request contract, response IDs/model/usage, per-case score và cost completeness.
+- [x] Test output final/partial tồn tại thì reject, duplicate/missing case IDs reject, actual model/usage mismatch ghi safe failure và giữ partial evidence. Generic `--cases-dir` ngoài verified S5/S7 dev phải fail trước provider.
+- [x] Tính complete cost chỉ khi usage của tất cả attempted calls được xác nhận đầy đủ. Dirty implementation và incomplete evidence không được official eligibility. Fake-client report luôn có `official_eligible=false` với reason `synthetic_provider`; không tạo headline accuracy cho model thật từ fixture.
+- [x] CLI v2 tạo OpenAI client phải luôn fail-fast trước client creation cho đến khi task paid riêng được duyệt và triển khai đầy đủ gates. Fake-client entrypoint vẫn kiểm thử được. Budget/pricing/account gate và workflow paid mới thuộc task sau.
+- [x] History receipt liệt kê missing run-time provenance; backfill chỉ những field có bằng chứng trực tiếp (original log, response ID, exact request bytes). Ghi inferred/reconstructed riêng. Không dùng filesystem mtime làm run timestamp proof, không đặt `provenance_complete=true` từ các hash mới.
+- [x] Chạy report-contract tests; so sánh inventory artifact/E0/v1 selection ban đầu. Commit verification contract và receipt bổ sung ở path mới.
 
 ### Task 7: Đồng bộ tài liệu và nghiệm thu exact-SHA CI
 

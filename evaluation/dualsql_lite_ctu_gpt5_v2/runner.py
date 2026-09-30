@@ -172,13 +172,14 @@ def run_role(role: str, question: str, system_prompt: str, tools: V2DatabaseTool
     return done("TURN_LIMIT")
 
 
-def run_case(case, condition: str, tools: V2DatabaseTools, client: Any, schema_context: str) -> dict:
+def run_case(case, condition: str, tools: V2DatabaseTools, client: Any, schema_context: str,
+             telemetry_sink: Callable | None = None) -> dict:
     linker = generator = linked = None
     if condition not in {"E0", "E1", "E2", "E3"}:
         raise ValueError("INVALID_CONDITION")
     if condition in {"E1", "E3"}:
         linker = run_role("linker", case.question, LINKER_INSTRUCTIONS + "\nDatabase schema:\n" + schema_context,
-                          tools, client, MAX_TURNS)
+                          tools, client, MAX_TURNS, telemetry_sink)
         linked = linker.linked_schema
         if linker.error:
             return _result(case, condition, linker, None, linked, None, linker.error)
@@ -186,7 +187,7 @@ def run_case(case, condition: str, tools: V2DatabaseTools, client: Any, schema_c
                                        else "\nDatabase schema:\n" + schema_context)
     enabled = condition in {"E2", "E3"}
     generator = run_role("generator", case.question, system, tools if enabled else None,
-                         client, MAX_TURNS if enabled else 1)
+                         client, MAX_TURNS if enabled else 1, telemetry_sink)
     return _result(case, condition, linker, generator, linked,
                    generator.content if not generator.error else None, generator.error or "OK")
 
