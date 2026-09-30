@@ -1,29 +1,29 @@
-# CTU frozen: evidence l?ch s?, kh?ng ?? ?i?u ki?n protocol
+# CTU frozen: evidence lịch sử, không đủ điều kiện protocol
 
-Hai l??t S1/S4 ?? ti?u th? holdout. Kh?ng rerun ho?c d?ng k?t qu? n?y ?? ch?nh h? th?ng. Xem [protocol audit](ctu_frozen_protocol_audit_2026-09-30.md) v? [receipt offline](../../results/evaluation_v1/ctu_network_frozen/remediation_audit_v1/receipt.json).
+Hai lượt S1/S4 đã tiêu thụ holdout. Không rerun hoặc dùng kết quả này để chỉnh hệ thống. Xem [protocol audit](ctu_frozen_protocol_audit_2026-09-30.md) và [receipt offline](../../results/evaluation_v1/ctu_network_frozen/remediation_audit_v1/receipt.json).
 
-| ?i?u ki?n l?ch s? | Execution Accuracy theo script c? | Execution success theo flags c? | Syntax validity | Chi ph? ???c b?o c?o |
+| Điều kiện lịch sử | Execution Accuracy theo script cũ | Execution success theo flags cũ | Syntax validity | Chi phí được báo cáo |
 |---|---|---|---|---|
-| Baseline E0 | 0/8 | 8/8 | Ch?a x?c minh ??ng ngh?a | $0.00438375 |
-| v2 E3 | 2/8 | 3/8 | Ch?a x?c minh ??ng ngh?a | $0.01022375 |
+| Baseline E0 | 0/8 | 8/8 | Chưa xác minh đúng nghĩa | $0.00438375 |
+| v2 E3 | 2/8 | 3/8 | Chưa xác minh đúng nghĩa | $0.01022375 |
 
-`syntax_valid` trong script c? th?c ch?t ghi query th?c thi ???c; kh?ng ???c di?n gi?i l? ki?m tra c? ph?p ??c l?p. Auditor ch? ??c JSON, kh?ng replay scorer hay ch?y SQL.
+`syntax_valid` trong script cũ thực chất ghi query thực thi được; không phải kiểm tra cú pháp độc lập. Auditor chỉ đọc JSON, không replay scorer hoặc chạy SQL.
 
-## ??nh ch?nh t?ng case E3
+## Đính chính từng case E3
 
-| Case | Flags l?ch s? | Di?n gi?i gi?i h?n |
+| Case | Flags lịch sử | Diễn giải giới hạn |
 |---|---|---|
-| 001, 002 | Kh?p k?t qu? | C? stored-value grounding; ch?a t?ch confound ?? ph?c t?p |
-| 003, 008 | EXEC_ERROR | L?i schema; kh?ng ??i th?nh SYNTAX_ERROR |
-| 004, 006, 007 | EMPTY_SQL | Kh?ng c? SQL final |
-| 005 | RESULT_MISMATCH | SQL th?c thi ???c nh?ng k?t qu? kh?c gold |
+| 001, 002 | Khớp kết quả | Có stored-value grounding; chưa tách confound độ phức tạp |
+| 003, 008 | EXEC_ERROR | Lỗi schema; không đổi thành SYNTAX_ERROR |
+| 004, 006, 007 | EMPTY_SQL | Không có SQL final |
+| 005 | RESULT_MISMATCH | SQL thực thi được nhưng kết quả khác gold |
 
-Ch?nh l?ch 2 case kh?ng ch?ng minh remediation hay linker c?i thi?n accuracy. Claim causal/validated v? ?? ngh? tuning t? holdout ?? r?t l?i. Snapshot/case l?ch s? gi? nguy?n; kh?ng s?a artifact.
+Chênh lệch 2 case không chứng minh remediation hoặc linker cải thiện accuracy. Claim causal/validated và đề nghị tuning từ holdout đã rút lại. Snapshot/case lịch sử giữ nguyên; không sửa artifact.
 
-## Cost v? provenance
+## Cost và provenance
 
-T?ng hai report l? $0.01460750; c?ng spend ?? ghi nh?n tr??c ?? $0.05047400 th?nh **lower bound $0.06508150**, kh?ng ph?i chi ph? th?c ??y ??. `cost_complete=false`, `cost_unknown=true`: thi?u usage trung gian v? retry policy. Kh?ng suy cost t? s? turn ho?c g?i Billing ?? b? evidence.
+Tổng hai report là $0.01460750; cộng spend đã ghi nhận trước đó $0.05047400 thành **lower bound $0.06508150**, không phải chi phí thực đầy đủ. `cost_complete=false`, `cost_unknown=true`: thiếu usage trung gian và retry policy. Không suy cost từ số turn hoặc gọi Billing để bù evidence.
 
-Thi?u implementation SHA, exact request bytes, response IDs, pre-run CI/cost lock v? winner lock. Hash receipt l? hash bytes t?i th?i ?i?m audit; kh?ng ch?ng minh provenance g?c. C?c con s? n?y ch? l? historical/exploratory findings, kh?ng ph?i frozen accuracy ???c nghi?m thu.
+Thiếu implementation SHA, exact request bytes, response IDs, pre-run CI/cost lock và winner lock. Hash receipt là hash bytes tại thời điểm audit; không chứng minh provenance gốc. Các con số này chỉ là historical/exploratory findings, không phải frozen accuracy được nghiệm thu.
 
-Artifact g?c: [baseline](../../results/evaluation_v1/ctu_network_frozen/baseline_e0/report.json), [E3](../../results/evaluation_v1/ctu_network_frozen/v2_e3/report.json). B?n b?o c?o tr??c remediation c? th? truy t?i commit `cf46fb4`. S1/S4 v?n closed.
+Artifact gốc: [baseline](../../results/evaluation_v1/ctu_network_frozen/baseline_e0/report.json), [E3](../../results/evaluation_v1/ctu_network_frozen/v2_e3/report.json). Bản trước remediation truy tại commit `cf46fb4`. S1/S4 vẫn closed.

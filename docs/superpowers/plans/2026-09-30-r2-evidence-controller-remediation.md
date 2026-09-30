@@ -86,7 +86,7 @@ Chỉ scan hai thư mục `baseline_e0/` và `v2_e3/` đã pin trong inventory. 
 
 **Interfaces:** `V2DatabaseTools(snapshot_path: Path, manifest_path: Path)` exposes `schema`, `catalog`, `catalog_sha256`, `source_references(question: str)`, `schema_context()`, `database_profiler(dict)`, `value_search(dict)`, `sql_probe(dict)`, `invoke(name: str, arguments: Any)`. Cả 3 tools dùng bounds và safe error categories từ boundary v1 hiện có.
 
-- [x] ??i chi?u collection recovery: l?i c? kh?ng c?n t?i hi?n; 639 tests collect/pass. Đọc cả hai test files và caller; giữ semantic assertions, chỉ cập nhật interface theo design đã duyệt.
+- [x] Đối chiếu collection recovery: lỗi cũ không còn tái hiện; 639 tests collect/pass. Đọc cả hai test files và caller; giữ semantic assertions, chỉ cập nhật interface theo design đã duyệt.
 - [x] Thêm tests cho manifest/snapshot source mismatch, source reference unknown/ambiguous, high-cardinality row-ID lookup và low-cardinality domain listing. Mapping phải đến từ source metadata đã verify; không benchmark lookup table.
 - [x] Implement interface thống nhất; controller-owned `evidence_id` có thể truy về actual tool result. Test evidence ID giả/mismatch không được chấp nhận.
 - [x] Xóa raw DuckDB error serialization trong v2 tools. Test error chứa sensitive sentinel không xuất hiện trong tool result/report.
@@ -145,11 +145,11 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 
 **Interfaces:** README là giới thiệu, track status, kết quả có link artifact, setup/tái lập và link report chi tiết. Remediation status ghi initial/final SHA, actual checks và deviations.
 
-- [ ] Viết tài liệu giải thích tiếng Việt, giữ code/identifier tiếng Anh. R1 24 dev, 5 no-tool; CTU dev S5/S7 8 cases và S1/S4 historical 8 cases được tách khỏi legacy three-source R2 8+6. Không biến CTU snapshot thành bằng chứng three-source đã hoàn tất.
-- [ ] Lấy mọi con số từ artifact/current command. Ghi test count gắn exact CI SHA/time hoặc bỏ fixed count để tránh drift. Phân biệt dev accuracy, holdout eligibility và historical exploratory findings.
-- [ ] Giữa README và docs cùng ghi frozen E3 2/8 theo historical script, execution success 3/8 theo flags cũ, syntax validity chưa được xác minh đúng nghĩa; incomplete cost/provenance. Không tạo kết quả mới từ replay scorer ngầm.
-- [ ] Chạy `python -m pytest -q`, targeted tests Tasks 1-6, `python -m compileall -q evaluation/dualsql_lite_ctu_gpt5_v2 scripts/audit_r2_historical_reports.py`, `python -m py_compile scripts/run_frozen_v2_e3.py scripts/run_frozen_baseline_e0.py`, `git diff --check`. Ghi command/output thực tế; thiếu dependency thì báo lỗi, không claim pass.
-- [ ] Kiểm staged diff chỉ có allowed code/tests/docs/new receipt; artifact cũ, `.env`, user edits không đổi. Commit/push trên master; ghi final SHA và CI URL.
+- [x] Viết tài liệu giải thích tiếng Việt, giữ code/identifier tiếng Anh. R1 24 dev, 5 no-tool; CTU dev S5/S7 8 cases và S1/S4 historical 8 cases được tách khỏi legacy three-source R2 8+6. Không biến CTU snapshot thành bằng chứng three-source đã hoàn tất.
+- [x] Lấy mọi con số từ artifact/current command. Ghi test count gắn exact CI SHA/time hoặc bỏ fixed count để tránh drift. Phân biệt dev accuracy, holdout eligibility và historical exploratory findings.
+- [x] Giữa README và docs cùng ghi frozen E3 2/8 theo historical script, execution success 3/8 theo flags cũ, syntax validity chưa được xác minh đúng nghĩa; incomplete cost/provenance. Không tạo kết quả mới từ replay scorer ngầm.
+- [x] Chạy `python -m pytest -q`, targeted tests Tasks 1-6, `python -m compileall -q evaluation/dualsql_lite_ctu_gpt5_v2 scripts/audit_r2_historical_reports.py`, `python -m py_compile scripts/run_frozen_v2_e3.py scripts/run_frozen_baseline_e0.py`, `git diff --check`. Ghi command/output thực tế; thiếu dependency thì báo lỗi, không claim pass.
+- [x] Kiểm staged diff chỉ có allowed code/tests/docs/new receipt; artifact cũ, `.env`, user edits không đổi. Commit/push trên master; ghi final SHA và CI URL.
 - [ ] Chờ CI Python 3.11 và 3.12 trên đúng final SHA xanh. Nếu fail thì sửa regression và đổi final SHA; không workflow model dispatch.
 - [ ] Hoàn thành báo cáo offline, rồi tiếp tục Task 8 theo phê duyệt live mới. Không dừng xin lại quyền gọi API trong phạm vi đã duyệt; nếu một gate kỹ thuật/chi phí thất bại thì giữ evidence và báo blocker.
 

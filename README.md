@@ -1,237 +1,49 @@
 # VinSOC
 
-**AI-Powered SOC Investigation System** · Read-only · Evidence-grounded
+Hệ thống hỗ trợ điều tra SOC: model chọn công cụ, skill trả evidence và báo cáo dẫn chứng để analyst review. Data access chỉ đọc; quyết định xử lý thuộc người dùng.
 
-VinSOC uses an LLM to select investigation tools and return structured evidence for human analyst review. It does **not** block traffic, modify systems, or make autonomous decisions.
+Python 3.11/3.12 · DuckDB · Research
 
-| | |
-|---|---|
-| **Python** | 3.11+ |
-| **Tests** | 214 passed (Python 3.11 / 3.12 CI) |
-| **License** | Research |
+## Kiến trúc
 
----
+`Analyst → LLM orchestrator → CTI / Network / Endpoint skills → Evidence Store → Human review`
 
-## Overview
+Evidence gồm `OBSERVED`, `DERIVED`, `EXTERNAL_INTEL`; nhận định phải truy được evidence ID. Tool selection, SQL execution và demo tích hợp được đánh giá riêng.
 
-VinSOC transforms raw SOC telemetry into structured, traceable evidence for human analyst review.
+## Trạng thái đánh giá
 
-```
-Analyst Input
-     │
-     ▼
-┌─────────────┐
-│  LLM        │
-│ Orchestrator│
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┬──────────────┬──────────────┐
-│  CTI        │  Network     │  Endpoint    │
-│  Enrichment │ Investigation│ Investigation│
-└──────┬──────┴──────┬───────┴──────┬──────┘
-       │             │              │
-       ▼             ▼              ▼
-┌─────────────────────────────────────────────┐
-│              Evidence Store                 │
-│  OBSERVED · DERIVED · EXTERNAL_INTEL        │
-└──────────────────────┬──────────────────────┘
-                       │
-                       ▼
-               Assessment Report
-                       │
-                       ▼
-              Human Analyst Review
-```
+| Track | Bộ dữ liệu / metric | Evidence và giới hạn |
+|---|---|---|
+| R1 tool calling | 24 dev, trong đó 5 no-tool; 8 frozen | Decision-only đo production tool/arguments, không thực thi tool. A2/MockProvider là regression, không phải model accuracy. |
+| R2 CTU dev S5/S7 | 8 case; Execution Accuracy | [E0 GPT-5 Mini](results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json) là immutable evidence 0/8. [v1 report](docs/evaluation/r2_dualsql_ctu_gpt5_dev.md) tách khỏi remediation. |
+| R2 CTU S1/S4 lịch sử | 8 case, holdout đã consumed | Script cũ báo E0 EX 0/8, E3 EX 2/8; E3 execution success 3/8 theo flags cũ. Syntax validity đúng nghĩa chưa xác minh; cost/provenance incomplete. Không đủ frozen eligibility. |
+| R2 legacy three-source | 8 dev + 6 frozen | ThreatFox/CTU/OTRF contract riêng; snapshot CTU không chứng minh bộ three-source đã hoàn tất. |
 
----
+Các kết quả dev không chứng minh generalization trên holdout. Xem [đính chính frozen](docs/evaluation/frozen_comparison_results.md), [protocol audit](docs/evaluation/ctu_frozen_protocol_audit_2026-09-30.md) và [remediation status](docs/evaluation/r2_remediation_status.md).
 
-## Quick Start
+Remediation hiện tại chỉ offline: adapter source metadata được giữ, một controller fail-closed, telemetry trước parse, locked scorer và output append-only. CLI trả phí và frozen entrypoints vẫn closed. Các Tasks 8-10 thêm trên remote dành cho review tiếp theo, ngoài phạm vi chỉ thị offline hiện tại.
 
-```bash
-# Install dependencies
+## Setup và verification offline
+
+```powershell
 pip install -r requirements.txt
-
-# Run all tests
 python -m pytest -q
-
-# List available scenarios
-python -m cli.main list
-
-# Run investigation
-python -m cli.main investigate 185.220.101.45 --type ipv4
+python -m compileall -q evaluation/dualsql_lite_ctu_gpt5_v2 scripts/audit_r2_historical_reports.py
 ```
 
----
+Tests dùng synthetic fixtures; không cần API key hoặc snapshot local để chạy unit tests. Gate full S5/S7 yêu cầu snapshot và source bytes hiện có đã verify; xem command và artifact trong remediation status.
 
-## Evaluation
+CI kiểm Python 3.11/3.12 tại [GitHub Actions](https://github.com/Whats-up-pro/VinSOC/actions). Test count gắn với SHA và command trong status, không dùng con số cố định trên README.
 
-### Tool Calling (R1) 🔄
+## Mã nguồn và tài liệu
 
-Measure whether a pinned LLM selects the correct production tool schemas and argument values.
+| Path | Nội dung |
+|---|---|
+| `agent/`, `skills/` | Orchestrator, CTI/network/endpoint investigation |
+| `evaluation/tool_calling/` | [R1 contract](evaluation/tool_calling/README.md) |
+| `evaluation/dualsql_lite_ctu_gpt5_v2/` | Offline R2 remediation controller/tools/report |
+| `evaluation/text_to_sql.py` | Scorer được khóa, comparator execution |
+| `evaluation/text_to_sql_benchmarks/` | [Legacy R2 contract](evaluation/text_to_sql_benchmarks/README.md) |
+| `tests/` | Unit/integration regression |
 
-```bash
-# A1: real-model decision benchmark
-python -m evaluation.tool_calling benchmarks dev --mode decision \
-  --provider openai --model <PINNED_MODEL> --temperature 0
-
-# A2: integration/regression benchmark through the production orchestrator
-python -m evaluation.tool_calling benchmarks dev --mode integration
-```
-
-R1 now has 20 visible development cases and 8 separate frozen holdout cases. The evaluator reports tool-level P/R/F1, exact-call P/R/F1, required/critical argument accuracy, tool-set exact match, no-tool accuracy, forbidden-tool rate, trajectory success, latency and provider metadata. The previous MockProvider/A2 numbers are historical regression results and are **not** an official real-model accuracy baseline after the evaluator hardening.
-
-### Text-to-SQL (R2) 🔄
-
-Measure generated SQL with execution-based accuracy on the same frozen, read-only DuckDB snapshot used by gold SQL.
-
-```bash
-python -m evaluation.text_to_sql evaluate \
-  --snapshot data/snapshots/vinsoc_public_v1.duckdb \
-  --split dev \
-  --provider openai --model <PINNED_MODEL> --temperature 0
-```
-
-R2 has 8 development cases and 6 frozen holdout cases. Execution Accuracy is the headline correctness metric; syntax validity, execution success, safety rejection and deterministic error categories are diagnostics. An official score requires a provenance-recorded public-data snapshot built according to `docs/duckdb_data_layer.md`; the repository intentionally does not fabricate that snapshot.
-
----
-
-## Architecture
-
-### Investigation Skills
-
-| Skill | Description | Data Source |
-|-------|-------------|-------------|
-| `cti_enrichment` | Threat intelligence lookup | ThreatFox |
-| `network_investigation` | Network telemetry analysis | CTU-13, CICIDS2017 |
-| `endpoint_investigation` | Process relationship analysis | Sysmon |
-
-### Evidence Model (V2)
-
-| Class | Description |
-|-------|-------------|
-| `OBSERVED` | Raw telemetry from data sources |
-| `DERIVED` | Analytics output (beaconing candidates, etc.) |
-| `EXTERNAL_INTEL` | CTI enrichment results |
-
-### Data Layer
-
-- **DuckDB** frozen snapshots for network/endpoint data
-- Read-only access, no writes permitted
-- LLM never sees raw database
-
----
-
-## Project Structure
-
-```
-VinSOC/
-├── agent/              # LLM orchestration
-│   ├── orchestrator.py
-│   ├── evidence.py
-│   ├── tools.py
-│   └── provider.py
-│
-├── skills/             # Investigation skills
-│   ├── cti_skill.py
-│   ├── network_skill.py
-│   └── endpoint_skill.py
-│
-├── evaluation/         # Evaluation framework
-│   ├── tool_calling/          # R1 benchmark + dev/frozen cases
-│   ├── text_to_sql.py         # R2 runner/evaluator/CLI
-│   └── text_to_sql_benchmarks/ # R2 dev/frozen cases
-│
-├── schemas/          # JSON schemas
-├── scenarios/        # Test scenarios
-├── tests/            # Unit & integration tests
-└── docs/            # Architecture docs
-```
-
----
-
-## Design Principles
-
-| Principle | Description |
-|-----------|-------------|
-| **Read-only** | No traffic blocking, system modification, or automated response |
-| **Evidence-grounded** | Every claim linked to evidence IDs |
-| **Fail-closed** | CTI errors fail the investigation |
-| **Human review** | Analyst approves/rejects/escalates final assessment |
-| **Reproducible** | Pinned models, timestamps, benchmark hashes |
-
----
-
-## Setup
-
-### Requirements
-
-- Python 3.11+
-- DuckDB
-- OpenAI API key (optional, for production)
-
-### Installation
-
-```bash
-git clone https://github.com/Whats-up-pro/VinSOC.git
-cd VinSOC
-pip install -r requirements.txt
-```
-
-### Environment
-
-```bash
-export OPENAI_API_KEY=sk-...
-```
-
----
-
-## Benchmark Cases
-
-**R1:** 20 development + 8 frozen holdout cases in `evaluation/tool_calling/benchmarks/`
-
-**R2:** 8 development + 6 frozen holdout cases in `evaluation/text_to_sql_benchmarks/`
-
-| Category | Description |
-|----------|-------------|
-| `cti_only` | Single CTI lookup |
-| `network_only` | Network analysis only |
-| `endpoint_only` | Endpoint investigation only |
-| `cti_network` | CTI + Network |
-| `cti_network_endpoint` | Full investigation |
-| `hostname_led` | Hostname start (no CTI until pivot) |
-
----
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [Architecture](docs/architecture.md) | Full system design |
-| [Evaluation](docs/evaluation.md) | Evaluation methodology |
-| [Evidence V2](docs/evidence_v2_cti.md) | Evidence model |
-| [Network V2](docs/network_telemetry_v2.md) | Network analytics |
-| [DuckDB](docs/duckdb_data_layer.md) | Data layer setup |
-
----
-
-## Roadmap
-
-| Stage | Focus | Status |
-|-------|-------|--------|
-| R0 | Runtime & semantic integrity | ✅ |
-| R1 | Tool Calling Evaluation | 🔄 |
-| R2 | Text-to-SQL Benchmark | 🔄 evaluator/cases ready; official snapshot baseline pending |
-| R3 | End-to-End Investigation | ⏳ |
-
----
-
-## Contributing
-
-Contributions welcome. Please follow existing code patterns and add tests.
-
----
-
-## License
-
-Research project for SOC investigation evaluation.
+Thiết kế: [architecture](docs/architecture.md), [evaluation protocol](docs/evaluation_protocol_v1.md), [DuckDB layer](docs/duckdb_data_layer.md), [remediation plan](docs/superpowers/plans/2026-09-30-r2-evidence-controller-remediation.md).

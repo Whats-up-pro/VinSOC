@@ -1,73 +1,15 @@
 # R1 Tool Calling Benchmarks
 
-## Structure
+`dev/` hiện có **24 case, 5 case không yêu cầu tool**. `frozen/` có 8 holdout riêng; case và gold không được thay trong remediation R2.
 
-```
-benchmarks/
-├── dev/           # Development cases (20 converted + 4 no-tool relevance cases)
-├── frozen/        # Frozen holdout cases (for official evaluation)
-└── README.md
-```
+Mỗi JSON khai báo `case_id`, `request`, `reference_time`, `expected_calls`, `forbidden_tools`, `ordering_constraints`. Expected call gồm `tool`, `required_arguments`, `critical_arguments`, `optional`. Production schemas là nguồn xác định tool thật.
 
-## Case Format
+Category gồm CTI/network/endpoint đơn lẻ hoặc phối hợp, hostname/hash/URL và `no_tool`; difficulty là `basic`, `intermediate`, `advanced`.
 
-Each case is a JSON file with:
+Decision-only A1 không thực thi tool; MockProvider/A2 chỉ kiểm integration. Case success, exact-call F1 và no-tool accuracy là metric riêng. Frozen chỉ mở theo protocol đã khóa, không dùng để chỉnh dev.
 
-```json
-{
-  "case_id": "case_001",
-  "category": "cti_only",
-  "difficulty": "basic",
-  "request": "...",
-  "reference_time": "2026-09-22T00:00:00Z",
-  "expected_calls": [
-    {
-      "call_id": "cti_1",
-      "tool": "cti_enrichment",
-      "required_arguments": {"indicator": "1.2.3.4"},
-      "critical_arguments": ["indicator"],
-      "optional": false
-    }
-  ],
-  "forbidden_tools": [],
-  "ordering_constraints": [],
-  "notes": "..."
-}
+```powershell
+python -m evaluation.tool_calling list dev
 ```
 
-## Categories
-
-| Category | Description |
-|----------|-------------|
-| `cti_only` | CTI enrichment only |
-| `network_only` | Network investigation only |
-| `endpoint_only` | Endpoint investigation only |
-| `cti_network` | CTI + Network |
-| `cti_endpoint` | CTI + Endpoint |
-| `network_endpoint` | Network + Endpoint |
-| `cti_network_endpoint` | All three tools |
-| `hostname_led` | Starts with hostname (no CTI until IOC pivot) |
-| `hash_led` | Starts with file hash |
-| `url_led` | Starts with URL |
-| `no_tool` | The correct decision is to abstain from all investigation tools |
-
-## Difficulty
-
-| Level | Description |
-|-------|-------------|
-| `basic` | Single tool, obvious choice |
-| `intermediate` | Two tools, some context needed |
-| `advanced` | Three tools or pivot dependency |
-
-## Usage
-
-```bash
-# Run A2 integration benchmark
-python -m evaluation.tool_calling benchmarks dev
-
-# Run with specific cases
-python -m evaluation.tool_calling benchmarks dev --cases case_001 case_002
-
-# Run frozen (official)
-python -m evaluation.tool_calling benchmarks frozen
-```
+[R1 contract](../README.md) · [Evaluation protocol](../../../docs/evaluation_protocol_v1.md)

@@ -1,134 +1,29 @@
-# Tool Calling Evaluation (R1)
+# R1 Tool Calling
 
-Formal evaluation framework for measuring LLM tool selection accuracy in SOC investigations.
+R1 A1 đo native `tool_calls` trên production schemas: tên tool và argument cần thiết. Suite dev v2 có **24 case, 5 no-tool**; frozen có 8 case riêng. A1 không thực thi tool. A2 chạy orchestrator/skill bằng fixture là integration regression, không phải accuracy của model thật.
 
-## Quick Start
+## Metric
 
-```bash
-# List available cases
+| Metric | Field |
+|---|---|
+| Tool multiset exact match | `tool_set_exact_match_rate` |
+| Exact call precision / recall / F1 | `exact_call_precision`, `exact_call_recall`, `exact_call_f1` |
+| Required argument accuracy | `argument_field_accuracy` |
+| Critical argument accuracy | `critical_argument_accuracy` |
+| No-tool accuracy | `no_tool_accuracy` |
+| Single-turn case success | `trajectory_success_rate` |
+
+Field legacy `trajectory_success_rate` không phải BFCL multi-turn trajectory. Provider/parse failure không nhận no-tool success. Token/cost/latency, forbidden-tool và errors phải báo cùng metric.
+
+## Contract và sử dụng
+
+```powershell
 python -m evaluation.tool_calling list dev
-
-# Run real-model decision benchmark (A1)
-python -m evaluation.tool_calling benchmarks dev --mode decision \
-  --provider openai --model <PINNED_MODEL> --temperature 0
-
-# Run integration/regression benchmark (A2)
-python -m evaluation.tool_calling benchmarks dev --mode integration
+python -m pytest -q
 ```
 
-## What is Evaluated?
+Model evidence cần model/request, prompt/schema, benchmark/scorer identity và cost/CI gates. [Baseline lịch sử 22/24](../../results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json) dùng model/contract khác; [phân tích GPT-5](../../docs/evaluation/r1_gpt5_dev_error_analysis.md) ghi khác biệt. Gold adjudicate sau khi quan sát model phải công bố giới hạn; không đổi gold để nâng điểm.
 
-| Component | Evaluated |
-|-----------|-----------|
-| Tool selection | ✅ |
-| Tool arguments | ✅ |
-| Critical arguments | ✅ |
-| Ordering constraints | ✅ |
-| Forbidden tools | ✅ |
-| CTI/Network/Endpoint quality | ❌ |
+[Benchmarks](benchmarks/README.md) · [Protocol](../../docs/evaluation_protocol_v1.md) · [R2 remediation](../../docs/evaluation/r2_remediation_status.md)
 
-## Architecture
-
-```
-┌──────────────────────────────────────────────┐
-│              Evaluation Modes                  │
-├────────────────────┬─────────────────────────┤
-│  A1: Decision-Only │  A2: Integration       │
-│  (LLM only)        │  (Mock + Orchestrator) │
-├────────────────────┼─────────────────────────┤
-│  Input → LLM → Call │ Input → Skills → Metrics│
-└────────────────────┴─────────────────────────┘
-```
-
-## Metrics
-
-### Headline metrics
-
-| Question | Metric field | Meaning |
-|----------|--------------|---------|
-| Tool Selection Accuracy | `tool_set_exact_match_rate` | Predicted tool multiset exactly matches the allowed required/optional set |
-| Exact Call Correctness | `exact_call_precision`, `exact_call_recall`, `exact_call_f1` | Tool name and required argument values are correct |
-| Required Argument Accuracy | `argument_field_accuracy` | Required argument values are correct |
-| Critical Argument Accuracy | `critical_argument_accuracy` | Critical argument values are correct |
-| No-Tool Accuracy | `no_tool_accuracy` | Model correctly abstains on requests that need no investigation tool |
-| Case Success | `trajectory_success_rate` | Single-turn case success: all required calls are exact, with no non-exact prediction, forbidden tool, or ordering violation |
-
-`trajectory_success_rate` is retained for backward compatibility. In R1 A1 it means
-single-turn case success; it is **not** BFCL V4 multi-turn trajectory evaluation.
-Tool Precision, Tool Recall, and Tool F1 remain diagnostic tool-name metrics and
-must not be reported as overall system accuracy.
-
-## Baseline Status
-
-The historical A2/MockProvider regression results are not treated as the official LLM accuracy baseline after metric hardening. Run A1 with a pinned provider/model/config on `dev`, perform controlled improvements, then run the frozen split once for the final holdout result.
-
-## Directory Structure
-
-```
-evaluation/tool_calling/
-├── models.py           # Data models
-├── arguments.py       # Argument normalization
-├── matching.py        # One-to-one call matching
-├── metrics.py         # Metrics aggregation
-├── decision_runner.py  # A1: LLM decision
-├── integration_runner.py # A2: Mock integration
-├── __main__.py       # CLI
-├── benchmarks/
-│   ├── dev/         # 24 development cases, including four no-tool cases
-│   └── frozen/      # Holdout cases
-└── results/         # Benchmark outputs
-```
-
-## Case Format
-
-```json
-{
-  "case_id": "case_001",
-  "category": "cti_only",
-  "difficulty": "basic",
-  "request": "Investigate IP 1.2.3.4",
-  "expected_calls": [
-    {
-      "call_id": "cti_1",
-      "tool": "cti_enrichment",
-      "required_arguments": {"indicator": "1.2.3.4"},
-      "critical_arguments": ["indicator"]
-    }
-  ],
-  "forbidden_tools": []
-}
-```
-
-## Categories
-
-| Category | Description |
-|----------|-------------|
-| `cti_only` | CTI enrichment only |
-| `network_only` | Network investigation only |
-| `endpoint_only` | Endpoint investigation only |
-| `cti_network` | CTI + Network |
-| `cti_network_endpoint` | All three tools |
-| `hostname_led` | No CTI until IOC pivot |
-
-## Difficulty Levels
-
-| Level | Description |
-|-------|-------------|
-| `basic` | Single tool, obvious |
-| `intermediate` | Two tools |
-| `advanced` | Three tools or pivot |
-
-## CLI Reference
-
-```bash
-python -m evaluation.tool_calling list dev
-python -m evaluation.tool_calling benchmarks dev --mode integration
-python -m evaluation.tool_calling benchmarks dev --mode decision --provider openai --model <PINNED_MODEL> --temperature 0
-python -m evaluation.tool_calling benchmarks frozen --mode decision --provider openai --model <PINNED_MODEL> --temperature 0
-python -m evaluation.tool_calling benchmarks dev --cases case_001
-```
-
-## Reference
-
-- [BFCL](https://gorilla.cs.berkeley.edu/blogs/15_bfcl_v4_web_search.html) - Berkeley Function Calling Leaderboard
-- [Spider2](https://github.com/xlang-ai/Spider2) - Text-to-SQL benchmark
+Phiên R2 remediation này không gọi R1, không mở frozen và không chạy demo.

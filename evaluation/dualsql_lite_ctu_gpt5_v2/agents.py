@@ -18,7 +18,8 @@ def validate_link(question: str, selected: list[dict[str, Any]],
     schema = tools.schema["network_flows"]
     allowed = {item["name"] for item in schema}
     if (not isinstance(selected, list) or len(selected) != 1
-            or not isinstance(selected[0], dict) or selected[0].get("table") != "network_flows"):
+            or not isinstance(selected[0], dict) or set(selected[0]) != {"table", "columns"}
+            or selected[0].get("table") != "network_flows"):
         return {"error": "INVALID_LINKED_SCHEMA", "grounded_values": [],
                 "unresolved_literals": []}
     columns = selected[0].get("columns")

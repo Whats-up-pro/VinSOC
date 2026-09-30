@@ -87,3 +87,15 @@ def test_live_client_boundary_closed_before_constructor(monkeypatch):
     monkeypatch.setattr("openai.OpenAI", forbidden)
     with pytest.raises(RuntimeError, match="PAID_EXECUTION_DISABLED"):
         create_client()
+
+
+def test_linker_extra_fields_cannot_cross_validated_handoff(tmp_path):
+    tools, _ = make_tools(tmp_path)
+    payload = {"tables": [{"table": "network_flows", "columns": ["label"],
+                           "final_sql": "SELECT 999", "unverified_value": "invented"}],
+               "grounded_values": []}
+    client = FakeClient([response(json.dumps(payload)), response("SELECT 1")])
+    result = run_case(case(), "E1", tools, client, tools.schema_context())
+    assert result["error_category"] == "INVALID_LINKED_SCHEMA"
+    assert len(client.requests) == 1
+    assert result["roles"]["generator"] is None

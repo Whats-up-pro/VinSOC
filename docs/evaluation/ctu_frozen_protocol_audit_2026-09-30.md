@@ -72,3 +72,9 @@ the artifacts nor existing VERSION.lock, benchmark, gold or scorer were edited.
 Paid continuation is blocked by the consumed holdout and missing pre-run
 identity/CI/cost evidence. Do not create retrospective locks to imply those
 gates passed, dispatch a replacement frozen run, or silently change its source.
+
+## Đính chính offline sau recovery
+
+[Auditor receipt](../../results/evaluation_v1/ctu_network_frozen/remediation_audit_v1/receipt.json) xác nhận E0 EX 0/8 và E3 EX 2/8; E3 có 3 execution success theo flags cũ, 2 `EXEC_ERROR`, 3 `EMPTY_SQL`. Field `syntax_valid` cũ có semantics thực thi, không chứng minh syntax validity độc lập. Không replay SQL/scorer trong audit.
+
+[Remediation status](r2_remediation_status.md) ghi các checks hiện tại. Hash mới xác nhận bytes hiện tại, không bù pre-run provenance. Cost lịch sử vẫn incomplete; S1/S4 consumed/closed. Phạm vi phiên Tasks 1-7 vẫn zero API calls dù remote thêm plan live tương lai.
