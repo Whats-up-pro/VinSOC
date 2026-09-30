@@ -1,0 +1,17 @@
+{
+  "case_id": "frozen_sql_006",
+  "question": "Return the five Scenario 1 TCP destination ports with the most flows, with each flow count; order by count descending and port ascending to break ties.",
+  "generated_sql": "SELECT dst_port AS port, COUNT(*) AS flow_count\nFROM network_flows\nWHERE label = 'Scenario 1' AND LOWER(protocol) = 'tcp'\nGROUP BY dst_port\nORDER BY flow_count DESC, dst_port ASC\nLIMIT 5;",
+  "gold_sql": [
+    "SELECT dst_port, count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND protocol = 'TCP' GROUP BY dst_port ORDER BY flow_count DESC, dst_port ASC LIMIT 5"
+  ],
+  "content": "SELECT dst_port AS port, COUNT(*) AS flow_count\nFROM network_flows\nWHERE label = 'Scenario 1' AND LOWER(protocol) = 'tcp'\nGROUP BY dst_port\nORDER BY flow_count DESC, dst_port ASC\nLIMIT 5;",
+  "input_tokens": 110,
+  "output_tokens": 189,
+  "cost_usd": 0.0004055,
+  "latency_ms": 1958.4878999739885,
+  "model": "gpt-5-mini-2025-08-07",
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH"
+}

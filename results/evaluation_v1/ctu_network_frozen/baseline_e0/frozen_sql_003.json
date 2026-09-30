@@ -1,0 +1,17 @@
+{
+  "case_id": "frozen_sql_003",
+  "question": "Count Scenario 1 UDP flows with positive outbound bytes whose label begins with either flow=From-Botnet or flow=From-Normal.",
+  "generated_sql": "SELECT COUNT(*) AS count\nFROM network_flows\nWHERE source_dataset = 'Scenario 1'\n  AND protocol = 'UDP'\n  AND bytes_out > 0\n  AND (label LIKE 'flow=From-Botnet%' OR label LIKE 'flow=From-Normal%');",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND protocol = 'UDP' AND bytes_out > 0 AND (label LIKE 'flow=From-Botnet%' OR label LIKE 'flow=From-Normal%')"
+  ],
+  "content": "SELECT COUNT(*) AS count\nFROM network_flows\nWHERE source_dataset = 'Scenario 1'\n  AND protocol = 'UDP'\n  AND bytes_out > 0\n  AND (label LIKE 'flow=From-Botnet%' OR label LIKE 'flow=From-Normal%');",
+  "input_tokens": 108,
+  "output_tokens": 260,
+  "cost_usd": 0.000547,
+  "latency_ms": 2701.9759999820963,
+  "model": "gpt-5-mini-2025-08-07",
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH"
+}

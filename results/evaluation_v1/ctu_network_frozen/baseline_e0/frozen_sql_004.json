@@ -1,0 +1,17 @@
+{
+  "case_id": "frozen_sql_004",
+  "question": "How many Scenario 4 flows occurred from 2011-08-15 10:42:52.613616 inclusive until 2011-08-15 10:42:52.613617 exclusive?",
+  "generated_sql": "SELECT COUNT(*) AS scenario4_count\nFROM network_flows\nWHERE label = 'Scenario 4'\n  AND event_time >= TIMESTAMP '2011-08-15 10:42:52.613616'\n  AND event_time < TIMESTAMP '2011-08-15 10:42:52.613617';",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND event_time >= TIMESTAMP '2011-08-15 10:42:52.613616' AND event_time < TIMESTAMP '2011-08-15 10:42:52.613617'"
+  ],
+  "content": "SELECT COUNT(*) AS scenario4_count\nFROM network_flows\nWHERE label = 'Scenario 4'\n  AND event_time >= TIMESTAMP '2011-08-15 10:42:52.613616'\n  AND event_time < TIMESTAMP '2011-08-15 10:42:52.613617';",
+  "input_tokens": 124,
+  "output_tokens": 206,
+  "cost_usd": 0.000443,
+  "latency_ms": 2510.0971000501886,
+  "model": "gpt-5-mini-2025-08-07",
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH"
+}

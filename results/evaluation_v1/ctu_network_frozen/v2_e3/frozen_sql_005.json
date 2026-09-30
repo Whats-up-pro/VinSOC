@@ -1,0 +1,49 @@
+{
+  "case_id": "frozen_sql_005",
+  "question": "For Scenario 4 flows whose label begins with flow=From-Botnet, return the flow count for each protocol.",
+  "generated_sql": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s4'\n  AND label LIKE 'flow=From-Botnet%'\nGROUP BY protocol\nORDER BY flow_count DESC;",
+  "gold_sql": [
+    "SELECT protocol, count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND label LIKE 'flow=From-Botnet%' GROUP BY protocol"
+  ],
+  "linker_turns": 2,
+  "linker_tool_calls": 2,
+  "generator_turns": 3,
+  "generator_tool_calls": 2,
+  "linked_schema": {
+    "tables": [
+      {
+        "table": "network_flows",
+        "columns": [
+          "source_dataset",
+          "label",
+          "protocol"
+        ]
+      }
+    ],
+    "grounded_values": [
+      {
+        "table": "network_flows",
+        "column": "source_dataset",
+        "value": "ctu13_s4"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-Attempt"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-ICMP"
+      }
+    ]
+  },
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH",
+  "usage": {
+    "input_tokens": 2016,
+    "output_tokens": 992,
+    "cost_usd": 0.0024879999999999998
+  }
+}

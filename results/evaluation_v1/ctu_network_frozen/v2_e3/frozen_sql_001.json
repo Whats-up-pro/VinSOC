@@ -1,0 +1,72 @@
+{
+  "case_id": "frozen_sql_001",
+  "question": "How many Scenario 1 flows have a label beginning with flow=From-Botnet?",
+  "generated_sql": "SELECT COUNT(*) AS botnet_flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s1'\n  AND label LIKE 'flow=From-Botnet%';",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND label LIKE 'flow=From-Botnet%'"
+  ],
+  "linker_turns": 4,
+  "linker_tool_calls": 3,
+  "generator_turns": 3,
+  "generator_tool_calls": 2,
+  "linked_schema": {
+    "tables": [
+      {
+        "table": "network_flows",
+        "columns": [
+          "source_dataset",
+          "source_row_id",
+          "event_time",
+          "src_ip",
+          "src_port",
+          "dst_ip",
+          "dst_port",
+          "protocol",
+          "action",
+          "bytes_out",
+          "bytes_in",
+          "label"
+        ]
+      }
+    ],
+    "grounded_values": [
+      {
+        "table": "network_flows",
+        "column": "source_dataset",
+        "value": "ctu13_s1"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-ICMP"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-Attempt"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted"
+      }
+    ]
+  },
+  "execution_accurate": true,
+  "syntax_valid": true,
+  "usage": {
+    "input_tokens": 2051,
+    "output_tokens": 711,
+    "cost_usd": 0.0019347499999999998
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "case_id": "frozen_sql_001",
+  "question": "How many Scenario 1 flows have a label beginning with flow=From-Botnet?",
+  "generated_sql": "SELECT COUNT(*) AS cnt\nFROM network_flows\nWHERE source_dataset = 'scenario-1'\n  AND label LIKE 'flow=From-Botnet%';",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s1' AND label LIKE 'flow=From-Botnet%'"
+  ],
+  "content": "SELECT COUNT(*) AS cnt\nFROM network_flows\nWHERE source_dataset = 'scenario-1'\n  AND label LIKE 'flow=From-Botnet%';",
+  "input_tokens": 98,
+  "output_tokens": 234,
+  "cost_usd": 0.0004925,
+  "latency_ms": 5069.260900025256,
+  "model": "gpt-5-mini-2025-08-07",
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH"
+}

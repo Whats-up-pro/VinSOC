@@ -1,0 +1,17 @@
+{
+  "case_id": "frozen_sql_005",
+  "question": "For Scenario 4 flows whose label begins with flow=From-Botnet, return the flow count for each protocol.",
+  "generated_sql": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset ILIKE '%scenario-4%' AND label LIKE 'flow=From-Botnet%'\nGROUP BY protocol;",
+  "gold_sql": [
+    "SELECT protocol, count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND label LIKE 'flow=From-Botnet%' GROUP BY protocol"
+  ],
+  "content": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset ILIKE '%scenario-4%' AND label LIKE 'flow=From-Botnet%'\nGROUP BY protocol;",
+  "input_tokens": 104,
+  "output_tokens": 432,
+  "cost_usd": 0.00089,
+  "latency_ms": 3401.8967000301927,
+  "model": "gpt-5-mini-2025-08-07",
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH"
+}

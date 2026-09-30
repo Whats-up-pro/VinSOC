@@ -1,0 +1,20 @@
+{
+  "case_id": "frozen_sql_007",
+  "question": "For each of Scenarios 1 and 4, return the scenario identifier and the number of flows whose label begins with flow=From-Normal, ordered by scenario identifier.",
+  "generated_sql": "",
+  "gold_sql": [
+    "SELECT source_dataset, count(*) AS flow_count FROM network_flows WHERE source_dataset IN ('ctu13_s1', 'ctu13_s4') AND label LIKE 'flow=From-Normal%' GROUP BY source_dataset ORDER BY source_dataset"
+  ],
+  "linker_turns": 5,
+  "linker_tool_calls": 6,
+  "generator_turns": 5,
+  "generator_tool_calls": 5,
+  "linked_schema": null,
+  "execution_accurate": false,
+  "error_category": "EMPTY_SQL",
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0
+  }
+}

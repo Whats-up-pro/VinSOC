@@ -1,0 +1,20 @@
+{
+  "case_id": "frozen_sql_004",
+  "question": "How many Scenario 4 flows occurred from 2011-08-15 10:42:52.613616 inclusive until 2011-08-15 10:42:52.613617 exclusive?",
+  "generated_sql": "",
+  "gold_sql": [
+    "SELECT count(*) AS flow_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND event_time >= TIMESTAMP '2011-08-15 10:42:52.613616' AND event_time < TIMESTAMP '2011-08-15 10:42:52.613617'"
+  ],
+  "linker_turns": 5,
+  "linker_tool_calls": 5,
+  "generator_turns": 5,
+  "generator_tool_calls": 5,
+  "linked_schema": null,
+  "execution_accurate": false,
+  "error_category": "EMPTY_SQL",
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "case_id": "frozen_sql_002",
+  "question": "How many distinct destination IP addresses appear in Scenario 4 TCP flows?",
+  "generated_sql": "SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips\nFROM network_flows\nWHERE label = 'Scenario 4'\n  AND LOWER(protocol) = 'tcp';",
+  "gold_sql": [
+    "SELECT count(DISTINCT dst_ip) AS destination_count FROM network_flows WHERE source_dataset = 'ctu13_s4' AND protocol = 'TCP'"
+  ],
+  "content": "SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips\nFROM network_flows\nWHERE label = 'Scenario 4'\n  AND LOWER(protocol) = 'tcp';",
+  "input_tokens": 94,
+  "output_tokens": 108,
+  "cost_usd": 0.0002395,
+  "latency_ms": 2107.1985999587923,
+  "model": "gpt-5-mini-2025-08-07",
+  "execution_accurate": false,
+  "syntax_valid": true,
+  "error_category": "RESULT_MISMATCH"
+}

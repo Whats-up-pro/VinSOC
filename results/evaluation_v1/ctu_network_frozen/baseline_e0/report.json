@@ -1,0 +1,21 @@
+{
+  "condition": "Baseline E0",
+  "snapshot": "data\\ctu_network_frozen\\snapshots\\frozen_v1.duckdb",
+  "case_count": 8,
+  "metrics": {
+    "execution_accuracy": "0/8",
+    "syntax_valid": "8/8"
+  },
+  "total_cost_usd": 0.00438375,
+  "case_ids": [
+    "frozen_sql_001",
+    "frozen_sql_002",
+    "frozen_sql_003",
+    "frozen_sql_004",
+    "frozen_sql_005",
+    "frozen_sql_006",
+    "frozen_sql_007",
+    "frozen_sql_008"
+  ],
+  "run_timestamp": "2026-09-30T06:29:56.523751+00:00"
+}
