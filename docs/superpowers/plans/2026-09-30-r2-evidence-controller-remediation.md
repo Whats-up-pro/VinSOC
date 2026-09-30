@@ -116,13 +116,13 @@ Giữ interface `run_role(role: str, question: str, system_prompt: str, tools: V
 
 Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBenchmarkCase], snapshot_path: Path, client: Any, output_dir: Path, manifest_path: Path) -> dict[str, Any]`. Caller truyền manifest đã verify; case IDs/file hashes phải khớp locked dev contract trước inference.
 
-- [ ] Thêm tests synthetic: invalid syntax; syntactically valid SQL với unknown table/column; empty SQL; executable result mismatch; exact match; unsafe SQL. Assert syntax, execution success, safety rejection và EX độc lập.
-- [ ] Thêm ordered-row và duplicate-row fixtures theo existing comparator. Test không tự sort ordered rows, không bỏ duplicate, không đổi column semantics/tolerance ngoài locked contract.
-- [ ] Bỏ `syntax_valid = sql is not None`; `run_case()` chỉ tạo inference record. `experiment.run_condition()` phải gọi scorer, thay cho aggregate `execution_accurate` chưa được tính.
-- [ ] Tool probes và final SQL đều đi qua existing read-only safety boundary; test multi-statement, write, external file/function và provenance/internal table access bị chặn trước DB execution.
-- [ ] Giữa inference và scoring có gold-isolation gate; diagnostic linker/literal metrics không thay đổi EX. Không sửa core scorer trong task này. Nếu scorer core không đáp ứng test thì STOP và báo blocker để review contract mới.
-- [ ] `METRICS.md` đồng bộ với actual locked comparator; bỏ placeholder SHA. Mô tả version/implementation hash do verifier ghi, không tự gán SHA chưa tồn tại.
-- [ ] Chạy `python -m pytest tests/test_r2_v2_scoring_contract.py tests/test_text_to_sql_runner.py tests/test_dualsql_lite_ctu_gpt5_v2.py -q`; commit scoring integration sau PASS.
+- [x] Thêm tests synthetic: invalid syntax; syntactically valid SQL với unknown table/column; empty SQL; executable result mismatch; exact match; unsafe SQL. Assert syntax, execution success, safety rejection và EX độc lập.
+- [x] Thêm ordered-row và duplicate-row fixtures theo existing comparator. Test không tự sort ordered rows, không bỏ duplicate, không đổi column semantics/tolerance ngoài locked contract.
+- [x] Bỏ `syntax_valid = sql is not None`; `run_case()` chỉ tạo inference record. `experiment.run_condition()` phải gọi scorer, thay cho aggregate `execution_accurate` chưa được tính.
+- [x] Tool probes và final SQL đều đi qua existing read-only safety boundary; test multi-statement, write, external file/function và provenance/internal table access bị chặn trước DB execution.
+- [x] Giữa inference và scoring có gold-isolation gate; diagnostic linker/literal metrics không thay đổi EX. Không sửa core scorer trong task này. Nếu scorer core không đáp ứng test thì STOP và báo blocker để review contract mới.
+- [x] `METRICS.md` đồng bộ với actual locked comparator; bỏ placeholder SHA. Mô tả version/implementation hash do verifier ghi, không tự gán SHA chưa tồn tại.
+- [x] Chạy `python -m pytest tests/test_r2_v2_scoring_contract.py tests/test_text_to_sql_runner.py tests/test_dualsql_lite_ctu_gpt5_v2.py -q`; commit scoring integration sau PASS.
 
 ### Task 6: Offline report contract và evidence immutability
 

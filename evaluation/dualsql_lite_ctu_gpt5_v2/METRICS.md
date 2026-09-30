@@ -1,72 +1,13 @@
-# v2 Metrics Definition (Locked BEFORE Paid Run)
+# R2 remediation metric contract
 
-## Execution Accuracy
+Identity m?i: `dualsql_lite_ctu_gpt5_v2_remediation_v1`; kh?ng ph?i lock c?a m?t paid run. Scorer duy nh?t: `evaluation.text_to_sql.evaluate_sql_case`, portable SHA-256 ?? kh?a trong `evaluation/ctu_network_public/VERSION.lock` l? `bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf`. Verifier ghi implementation SHA th?c t?; kh?ng g?n SHA t??ng lai.
 
-A generated SQL is marked "accurate" if it produces the same result as the gold SQL.
+Execution Accuracy = s? final SQL kh?p gold / to?n b? case kh?a, k? c? failure. Syntax Validity d?ng DuckDB parser v? y?u c?u ??ng m?t statement; unknown column c? th? syntax valid nh?ng execution fail. Multi-statement ???c parser gate lo?i tr??c execution. Safety, execution success, EX l? c?c flags ri?ng t? evaluator.
 
-### Exact Match Rules
+Comparator hi?n t?i gi? th? t? select-list values, b? kh?c bi?t alias. `ordered_rows`, `scalar`, `boolean` gi? row order; `unordered_rows` v? `multiset_rows` b? order nh?ng gi? duplicate multiplicity. Float canonicalization l?m tr?n 9 ch? s?; kh?ng th?m tolerance hay t? sort ordered rows.
 
-1. **Scalar results**: Single row with single value. Match if value equals gold value ± tolerance for FLOAT/DOUBLE.
+Final SQL v? probe d?ng c?ng snapshot-only read-only boundary, c?m writes, external readers v? internal/provenance tables. Gold ch? d?ng sau inference, kh?ng truy?n sang linker/generator.
 
-2. **Unordered rows**: Multiple rows, order doesn't matter. Match if:
-   - Same row count
-   - Each row's values match (column order doesn't matter)
+Diagnostic literal grounding v? column precision kh?ng thay EX, kh?ng v?o selection lock hay input inference. Catalog c? cap; kh?ng t?m th?y trong catalog ch?a ?? ch?ng minh kh?ng t?n t?i trong snapshot. Kh?ng d?ng metric n?y ?? tuning t? frozen.
 
-3. **Ordered rows**: Multiple rows with specific ordering. Match if:
-   - Same row count
-   - Same row order
-   - Same values per row
-
-### LIKE Pattern Handling
-
-**IMPORTANT**: `LIKE` patterns in gold SQL have semantic meaning:
-
-| Gold Pattern | Semantic Intent | Match |
-|-------------|----------------|-------|
-| `'flow=From-Botnet%'` | Label starts with "flow=From-Botnet" | Labels matching prefix |
-| `'%Normal%'` | Label contains "Normal" | Labels with substring "Normal" |
-| `'%Botnet%'` | Label contains "Botnet" | Labels with substring "Botnet" |
-
-Catalog lookup is NOT authoritative for LIKE patterns.
-- "Not in catalog" ≠ "Not in snapshot"
-- Catalog is limited to 5000 distinct values per column
-- Gold SQL LIKE patterns are evaluated against full snapshot
-
-### SQL Comparison
-
-1. Parse both SQLs
-2. Execute both against snapshot
-3. Compare results using rules above
-
-## Semantic Tags (Diagnostic Only)
-
-These tags describe query characteristics. They do NOT affect accuracy scoring.
-
-| Tag | Description |
-|-----|-------------|
-| `scalar_filter` | WHERE clause filters rows |
-| `stored_value_grounding` | WHERE uses exact stored values |
-| `like_prefix` | LIKE used with % suffix |
-| `boolean_precedence` | AND/OR grouping matters |
-| `bounded_time_interval` | Time range filter |
-| `distinct` | COUNT(DISTINCT ...) used |
-| `aggregation_group_by` | GROUP BY clause |
-| `order_by_limit` | ORDER BY + LIMIT |
-
-## Prohibited Patterns
-
-These patterns, if detected in gold SQL, indicate a malformed case:
-
-1. `INSERT`, `UPDATE`, `DELETE` (non-read-only)
-2. `DROP`, `CREATE`, `ALTER` (DDL)
-3. References to `information_schema`, `pg_catalog`, system tables
-4. External file access (`read_csv`, `parquet_scan`, etc.)
-
-## Metric Lock
-
-This document is locked at commit:
-```
-<v2_suite_commit_sha>
-```
-
-Any changes to metric definitions require a new suite version.
+Report fixture c? raw counts/rates v? lu?n `official_eligible=false`; kh?ng bi?n fixture th?nh accuracy c?a model th?t. Frozen l?ch s? E3 EX2/8, execution3/8 theo flags c?; syntax validity ??ng ngh?a ch?a x?c minh. Cost/provenance l?ch s? incomplete.
