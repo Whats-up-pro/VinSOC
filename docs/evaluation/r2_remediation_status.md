@@ -1,5 +1,7 @@
 # R2 remediation offline — 2026-09-30
 
+> Phần dưới ghi checkpoint offline Tasks 1-7 tại `0973d5a6`, không phải trạng thái live mới. Theo chỉ thị trực tiếp tiếp theo, Tasks 8-10 đã chạy đúng một smoke + một suite E3 dev trên `90acf451` và CI xanh. [Báo cáo live](r2_remediation_live_results.md): EX 1/8, syntax 4/8, execution 3/8; cost mới $0.02185315, usage đầy đủ. Frozen vẫn closed, STOP FOR HUMAN REVIEW.
+
 ## Phạm vi và checkout
 
 Initial SHA: `abfac96967dabc9452b5422f7d86e7d0a579d126`, bằng `origin/master` sau fetch/fast-forward; tracked working tree sạch. Danh sách untracked ban đầu được giữ nguyên, `.env` không được mở hoặc stage. Làm trực tiếp master, không reset/clean/branch/PR.
@@ -96,3 +98,9 @@ Historical E0 EX 0/8, E3 EX 2/8; E3 execution success 3/8 theo flags cũ, 2 `EXE
 Deferred minors: không có. Blocker đối với nghiệm thu offline: không còn sau implementation CI; final evidence-commit CI được kiểm trước final response. Live/frozen continuation vẫn closed, không được diễn giải là hoàn tất các metric mới.
 
 Frozen S1/S4 vẫn consumed/closed. Không thay nguồn/model, không chọn winner từ frozen. **STOP FOR HUMAN REVIEW** sau exact-SHA CI.
+
+## Continuation Tasks 8-10 được duyệt riêng
+
+Initial SHA phiên live `0973d5a6e3a02af40a8a7e31b1bf5f39d487fffe`. Thêm entrypoint `scripts/run_r2_v2_dev_live.py` và transport/gate tests; giữ toàn bộ recovery/controller/tools/scorer/prompts. SDK/transport được pin sau CI collection failure tại `4a84aa6`; implementation `90acf451c264d98c3cc35662670b3b772366136a`, [CI 36700628921](https://github.com/Whats-up-pro/VinSOC/actions/runs/36700628921) Python 3.11/3.12 xanh, 704 tests/job. Local full 704 passed/1612 warnings, focused 23 và targeted 49; compile/diff pass.
+
+Smoke PASS pipeline (5 calls, $0.003007), suite complete 8/8 (36 calls, EX 1/8, $0.01884615). Tổng 41 actual responses, cost $0.02185315; 45 historical digests và snapshot binary/logical SHA trước/sau giữ nguyên. Không commit giữa smoke/suite, không retry/prompt rescue, không R1/frozen/demo/model workflow dispatch. Account gate là owner confirmation đủ $0.75 đúng project, không independent Billing query. Historical cost vẫn incomplete. [Acceptance receipt](../../results/evaluation_v1/ctu_network_public/dualsql_v2_remediation_live/20260930_90acf451/acceptance_receipt.json) có identity/usage/cost và [report](r2_remediation_live_results.md) có mọi case error, storage hashes và các ruling. Evidence-commit CI được xác nhận ở checkpoint sau push.

@@ -1,0 +1,22 @@
+{
+  "causal_improvement_claim": false,
+  "checks": {
+    "cases": true,
+    "logical_snapshot": true,
+    "model_cap_reasoning_retry": true,
+    "scorer_builder": true,
+    "sources": true,
+    "split": true,
+    "temperature_absent": true
+  },
+  "descriptive_dev_comparison_only": true,
+  "differences": [
+    "E0 one-shot versus repaired E3 linker plus agentic generator",
+    "Different prompt/schema and tool context, call budget, explicit standard service tier and context bound",
+    "SDK/runtime versions not attested for historical E0; no retrospective backfill"
+  ],
+  "e0_path": "results\\evaluation_v1\\ctu_network_public\\gpt5_e0\\36520685612\\ctu-r2-result.json",
+  "e0_rerun": false,
+  "e0_sha256": "33b35678171309c1a8958c1d9818499915986942e6936a03428df8fa0544bc15",
+  "holdout_generalization_claim": false
+}

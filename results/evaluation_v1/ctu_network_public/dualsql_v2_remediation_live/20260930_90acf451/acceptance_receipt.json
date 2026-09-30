@@ -1,0 +1,279 @@
+{
+  "all_response_costs_reconciled": true,
+  "audit_database_queries": 0,
+  "audit_model_calls": 0,
+  "combined_recorded_lower_bound_usd": 0.08693465,
+  "db_calls_definition": "Controller database-tool invocations, not every DuckDB statement; metadata/preflight work excluded",
+  "frozen_closed": true,
+  "gates": {
+    "account": {
+      "billing_independently_queried": false,
+      "confirmation_text": "Confirmed enough for the correct project",
+      "confirmed_utc": "2026-09-30T09:52:11+00:00",
+      "credit_at_least_usd": 0.75,
+      "hard_limit_at_least_usd": 0.75,
+      "project_verified": true,
+      "source": "owner_confirmation"
+    },
+    "ci": {
+      "conclusion": "success",
+      "databaseId": 36700628921,
+      "event": "push",
+      "headSha": "90acf451c264d98c3cc35662670b3b772366136a",
+      "jobs": [
+        {
+          "completedAt": "2026-09-30T10:10:49Z",
+          "conclusion": "success",
+          "databaseId": 109838965700,
+          "name": "test (3.12)",
+          "startedAt": "2026-09-30T10:09:42Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-09-30T10:09:43Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-09-30T10:09:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:45Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-09-30T10:09:43Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:45Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-python@v5",
+              "number": 3,
+              "startedAt": "2026-09-30T10:09:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:10:00Z",
+              "conclusion": "success",
+              "name": "Install dependencies",
+              "number": 4,
+              "startedAt": "2026-09-30T10:09:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:10:47Z",
+              "conclusion": "success",
+              "name": "Run full repository test suite",
+              "number": 5,
+              "startedAt": "2026-09-30T10:10:00Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:10:47Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@v5",
+              "number": 9,
+              "startedAt": "2026-09-30T10:10:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:10:47Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 10,
+              "startedAt": "2026-09-30T10:10:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:10:47Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 11,
+              "startedAt": "2026-09-30T10:10:47Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36700628921/job/109838965700"
+        },
+        {
+          "completedAt": "2026-09-30T10:09:59Z",
+          "conclusion": "success",
+          "databaseId": 109838965740,
+          "name": "test (3.11)",
+          "startedAt": "2026-09-30T10:09:06Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-09-30T10:09:08Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-09-30T10:09:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:10Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@v4",
+              "number": 2,
+              "startedAt": "2026-09-30T10:09:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:10Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-python@v5",
+              "number": 3,
+              "startedAt": "2026-09-30T10:09:10Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:18Z",
+              "conclusion": "success",
+              "name": "Install dependencies",
+              "number": 4,
+              "startedAt": "2026-09-30T10:09:10Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:57Z",
+              "conclusion": "success",
+              "name": "Run full repository test suite",
+              "number": 5,
+              "startedAt": "2026-09-30T10:09:18Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:57Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@v5",
+              "number": 9,
+              "startedAt": "2026-09-30T10:09:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:57Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@v4",
+              "number": 10,
+              "startedAt": "2026-09-30T10:09:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-09-30T10:09:57Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 11,
+              "startedAt": "2026-09-30T10:09:57Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36700628921/job/109838965740"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36700628921"
+    },
+    "historical_cost_complete": false,
+    "historical_recorded_lower_bound_usd": 0.0650815,
+    "implementation_sha": "90acf451c264d98c3cc35662670b3b772366136a",
+    "new_live_budget_usd": 0.75,
+    "pricing": {
+      "cached_input": 0.025,
+      "checked_utc": "2026-09-30T10:12:42.675299+00:00",
+      "input": 0.25,
+      "output": 2.0,
+      "source_sha256": "3f3228b22ff8f4d6235158bb70ce1206a521724beb2b0dd814f0f38d0d897800",
+      "url": "https://developers.openai.com/api/docs/models/gpt-5-mini.md"
+    },
+    "remaining_allocation_source": "user authorization of new .75 allocation within remaining approved budget",
+    "total_authorized_usd": 2.0
+  },
+  "historical_cost_complete": false,
+  "historical_recorded_lower_bound_usd": 0.0650815,
+  "historical_unchanged": true,
+  "implementation_ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/36700628921",
+  "implementation_sha": "90acf451c264d98c3cc35662670b3b772366136a",
+  "initial_sha": "0973d5a6e3a02af40a8a7e31b1bf5f39d487fffe",
+  "model_api_calls": 41,
+  "model_dispatch_count": 0,
+  "model_response_calls": 41,
+  "new_live_budget_usd": 0.75,
+  "new_live_total_cost_usd": 0.021853150000000002,
+  "no_commit_between_smoke_and_suite": true,
+  "rerun_count": 0,
+  "runtime_successful_select_queries_derived": {
+    "method": "Successful sql_probe statements plus successful predicted and gold queries in locked evaluator; excludes metadata/preflight",
+    "smoke": 2,
+    "suite": 8
+  },
+  "sdk_retries": 0,
+  "smoke_attempt_count": 1,
+  "suite_attempt_count": 1,
+  "summary": {
+    "smoke": {
+      "attempted_calls": 5,
+      "cached_input_tokens": 0,
+      "cost_complete": true,
+      "counts": {
+        "execution_accurate": 0,
+        "execution_success": 1,
+        "safety_rejected": 0,
+        "syntax_valid": 1
+      },
+      "db_calls": 3,
+      "input_tokens": 4908,
+      "latency_ms": 14913.20219996851,
+      "observed_cost_usd": 0.003007,
+      "output_tokens": 890,
+      "response_count": 5,
+      "status": "complete",
+      "successful_sql_probes": 0,
+      "tool_breakdown": {
+        "database_profiler": 1,
+        "value_search": 2
+      }
+    },
+    "suite": {
+      "attempted_calls": 36,
+      "cached_input_tokens": 4736,
+      "cost_complete": true,
+      "counts": {
+        "execution_accurate": 1,
+        "execution_success": 3,
+        "safety_rejected": 1,
+        "syntax_valid": 4
+      },
+      "db_calls": 27,
+      "input_tokens": 30751,
+      "latency_ms": 77932.99379991367,
+      "observed_cost_usd": 0.018846150000000002,
+      "output_tokens": 6112,
+      "response_count": 36,
+      "status": "complete",
+      "successful_sql_probes": 2,
+      "tool_breakdown": {
+        "database_profiler": 8,
+        "sql_probe": 2,
+        "value_search": 17
+      }
+    }
+  },
+  "tests": {
+    "ci_py311": "704 passed in 37.90s",
+    "ci_py312": "704 passed, 1609 warnings in 45.63s",
+    "focused_23": {
+      "log_sha256": "3fc1371e4715bc0dd7ef4a0653115420f76ef8d217d685b328b47094405bb15a",
+      "result": "23 passed in 7.18s"
+    },
+    "full": {
+      "log_sha256": "b313d8be181cb6592f378ac8017a3f27e4a92b8120969a6d17b8a6f314f9560d",
+      "result": "704 passed, 1612 warnings in 194.48s"
+    },
+    "targeted_49": {
+      "log_sha256": "4d39e2f708ec7eb180b2acda45aebc52da00e9c1612ccc72d50aac59632c065b",
+      "result": "49 passed in 12.13s"
+    }
+  }
+}

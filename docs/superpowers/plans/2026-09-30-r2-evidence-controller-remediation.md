@@ -179,29 +179,29 @@ Ghi initial SHA, LIVE_IMPLEMENTATION_SHA và final evidence SHA; files changed; 
 - [x] Viết offline tests cho fixed condition/split, real-provider identity, retries 0, model/cap/reasoning/no-temperature contract; gold sentinel không có trong request.
 - [x] Test mọi preflight failure chặn trước `client_factory()`: snapshot/source/split/hash mismatch, key-source conflict, pricing/budget không xác minh được, output tồn tại. Không log key, raw exception hoặc credential.
 - [x] Budget mới: tổng trần bảo thủ của smoke + suite không quá USD 0.75, trong phần còn lại của ngân sách USD 2 đã duyệt. Smoke reserve tối đa USD 0.10. Chi phí lịch sử incomplete không được coi là 0; dùng thông tin tài khoản/ngân sách mới có thể xác minh để xác nhận khả năng chi trả. Không tự mua credit hay tăng spend limit.
-- [ ] Pin giá theo nguồn OpenAI chính thức và verification time ngay trước lượt live. Tính bound từ request/context đã serialize, cap 1000, tối đa 5 turns và 5 DB calls mỗi role. Trước từng API call reserve cả remaining bound; không dựa vào giá trị `estimated_cost_usd=0` để mở gate.
+- [x] Pin giá theo nguồn OpenAI chính thức và verification time ngay trước lượt live. Tính bound từ request/context đã serialize, cap 1000, tối đa 5 turns và 5 DB calls mỗi role. Trước từng API call reserve cả remaining bound; không dựa vào giá trị `estimated_cost_usd=0` để mở gate.
 - [x] Test partial evidence được lưu trước/sau response, kể cả lỗi parsing/tool/provider. API 429/model unavailable/parameter mismatch thì dừng, lưu safe category và cost-unknown state. Không SDK retry, không đổi model/prompt rồi gọi lại.
 - [x] Suite gate đọc immutable smoke report, yêu cầu cùng implementation SHA, snapshot/split/scorer/prompt/tool/schema/catalog/request identity. Smoke subset luôn `official_eligible=false`; report suite phải kiểm chứng eligibility theo dev protocol, không tự gán true.
-- [ ] Chạy targeted tests, full pytest, compile checks và `git diff --check`. Commit/push code/tests; ghi `LIVE_IMPLEMENTATION_SHA` và chờ CI Python 3.11/3.12 xanh trên đúng SHA đó.
+- [x] Chạy targeted tests, full pytest, compile checks và `git diff --check`. Commit/push code/tests; ghi `LIVE_IMPLEMENTATION_SHA` và chờ CI Python 3.11/3.12 xanh trên đúng SHA đó.
 
 ### Task 9: Một smoke E2E thật, rồi một suite E3 dev
 
 **Files:** Không commit bất kỳ tracked file nào giữa smoke và suite. Tạo evidence ở đường dẫn mới; commit sau khi phần live kết thúc.
 
-- [ ] Xác nhận checkout sạch đối với code thực thi, `origin/master == LIVE_IMPLEMENTATION_SHA`, CI đúng SHA xanh và verified dev snapshot đang có sẵn. Chạy preflight budget/account/key-source; không tự tải nguồn mới.
-- [ ] Chạy smoke E3 `ctu_sql_001` đúng một lần. SDK có thể có nhiều API turns trong role theo contract; đây là một smoke scenario, không phải một API request. Ghi toàn bộ attempted/response/tool calls và usage.
-- [ ] Smoke PASS khi actual provider/model đúng, usage hợp lệ, linker/tools/generator đã thực sự chạy, final SQL không rỗng và đi qua safety/DB execution, scorer/report hoàn tất, cost trong bound. EX không bắt buộc true: kết quả SQL sai gold vẫn là một quan sát hợp lệ. Nếu pipeline dừng vì lỗi linker/API/empty SQL/safety/execution thì smoke FAIL, không suite, không retry.
-- [ ] Nếu smoke PASS, chạy ngay một suite E3 trên đúng 8 dev cases và cùng SHA. Smoke case xuất hiện lại trong suite là lượt đo đã khai báo trước; không lựa chọn rerun riêng case sai.
-- [ ] Lỗi model từng case được ghi đúng và tính trong mẫu số 8. Khi runtime guard cho phép, tiếp tục các case còn lại; lỗi hạ tầng/provider hoặc vượt budget kết thúc partial run. Không loại bỏ case thất bại để tăng điểm.
-- [ ] Dùng inventory riêng để xác nhận artifact E0/E1-E3/v1/frozen lịch sử không đổi. Không đưa smoke vào numerator/denominator của suite accuracy.
+- [x] Xác nhận checkout sạch đối với code thực thi, `origin/master == LIVE_IMPLEMENTATION_SHA`, CI đúng SHA xanh và verified dev snapshot đang có sẵn. Chạy preflight budget/account/key-source; không tự tải nguồn mới.
+- [x] Chạy smoke E3 `ctu_sql_001` đúng một lần. SDK có thể có nhiều API turns trong role theo contract; đây là một smoke scenario, không phải một API request. Ghi toàn bộ attempted/response/tool calls và usage.
+- [x] Smoke PASS khi actual provider/model đúng, usage hợp lệ, linker/tools/generator đã thực sự chạy, final SQL không rỗng và đi qua safety/DB execution, scorer/report hoàn tất, cost trong bound. EX không bắt buộc true: kết quả SQL sai gold vẫn là một quan sát hợp lệ. Nếu pipeline dừng vì lỗi linker/API/empty SQL/safety/execution thì smoke FAIL, không suite, không retry.
+- [x] Nếu smoke PASS, chạy ngay một suite E3 trên đúng 8 dev cases và cùng SHA. Smoke case xuất hiện lại trong suite là lượt đo đã khai báo trước; không lựa chọn rerun riêng case sai.
+- [x] Lỗi model từng case được ghi đúng và tính trong mẫu số 8. Khi runtime guard cho phép, tiếp tục các case còn lại; lỗi hạ tầng/provider hoặc vượt budget kết thúc partial run. Không loại bỏ case thất bại để tăng điểm.
+- [x] Dùng inventory riêng để xác nhận artifact E0/E1-E3/v1/frozen lịch sử không đổi. Không đưa smoke vào numerator/denominator của suite accuracy.
 
 ### Task 10: Commit live evidence và báo cáo, rồi human review
 
 **Files:** Append immutable evidence tại `results/evaluation_v1/ctu_network_public/dualsql_v2_remediation_live/<run-id>/`; Create `docs/evaluation/r2_remediation_live_results.md`; cập nhật remediation status/README chỉ từ evidence đã kiểm chứng.
 
-- [ ] Verify final/partial report identity, SQL/scoring trace, calls/tokens và sum cost của mọi observed response. Response thiếu usage phải giữ cost incomplete; không diễn giải thành cost 0.
-- [ ] Báo smoke riêng; suite có EX trên 8, syntax validity, execution success, safety rejection, model/DB calls, token usage, cost, latency và per-case error class. Nếu suite partial, ghi partial và số case thực sự hoàn tất, không công bố như suite complete.
-- [ ] Chỉ đối chiếu immutable E0 run `36520685612` nếu snapshot/split/scorer/model/request contracts tương thích và được verify. Không rerun E0. Ghi rõ E3/controller đã sửa; kết quả dev không chứng minh độ tổng quát trên holdout.
+- [x] Verify final/partial report identity, SQL/scoring trace, calls/tokens và sum cost của mọi observed response. Response thiếu usage phải giữ cost incomplete; không diễn giải thành cost 0.
+- [x] Báo smoke riêng; suite có EX trên 8, syntax validity, execution success, safety rejection, model/DB calls, token usage, cost, latency và per-case error class. Nếu suite partial, ghi partial và số case thực sự hoàn tất, không công bố như suite complete.
+- [x] Chỉ đối chiếu immutable E0 run `36520685612` nếu snapshot/split/scorer/model/request contracts tương thích và được verify. Không rerun E0. Ghi rõ E3/controller đã sửa; kết quả dev không chứng minh độ tổng quát trên holdout.
 - [ ] Commit evidence sau khi smoke/suite kết thúc hoặc dừng vì lỗi; push master, đọc evidence-commit CI. Không sửa code để làm đẹp kết quả live trong task này.
 - [ ] STOP FOR HUMAN REVIEW với bằng chứng live R2 E2E. Không claim demo SOC toàn hệ thống hoàn tất; không mở frozen S1/S4 đã consumed.
 

@@ -1,0 +1,26 @@
+{
+  "manifest_self_excluded": true,
+  "run_id": "20260930_90acf451",
+  "sha256": {
+    "20260930_90acf451/acceptance_receipt.json": "697168f1e2e78413b4ae6d3dfb690c8d1c9138f83638a5325e229df7b88567ba",
+    "20260930_90acf451/e0_compatibility_receipt.json": "5a4e9100bdbcd50d319d23737ee32e78fab227caa444b2c898bcf355e1ca65cf",
+    "20260930_90acf451/historical_inventory_receipt.json": "c8765f6e2a16f3ac6a477a6f395bbdc8ac09a254de769bcab219e8b0296d9169",
+    "20260930_90acf451/smoke/ctu_sql_001.json": "5f86c25013ed08ed6b7b5f0c97e75d2bb4839abad1ffe74ab7099609df30b921",
+    "20260930_90acf451/smoke/partial.jsonl": "bf7e529b7570bda17d121a4ded05a9688aae6fc176bcfef899345616d9aad5e9",
+    "20260930_90acf451/smoke/report.json": "8c3c6c87f62631b9beff870a2dc6579434fcf45c9ef921d50633e946c893c6e1",
+    "20260930_90acf451/suite/ctu_sql_001.json": "15bef6aaf0e037961d55a1671532137549f9d5a926ad4d552c60b9b38b3de50b",
+    "20260930_90acf451/suite/ctu_sql_002.json": "c7947f114c2e58d946443e960ac480f8e1a7b912841aff2acb6c58479df2d987",
+    "20260930_90acf451/suite/ctu_sql_003.json": "b6d85c5fc5e444ebdf538a0f4098af216bcde60941bc913b6135c502b61fca8b",
+    "20260930_90acf451/suite/ctu_sql_004.json": "f77115a8b15fe62531be685082a5743f765f584d706abfd186b9e8baea8242d5",
+    "20260930_90acf451/suite/ctu_sql_005.json": "b41f9ab7e986cc1866c5fc4c6ac9000d8d30721436b162bb07eaf9fae7993ff4",
+    "20260930_90acf451/suite/ctu_sql_006.json": "1aa6459d4ec82a7c680dc8bc3fbc06f7785d2a537bda401ca5db56d57b25d85a",
+    "20260930_90acf451/suite/ctu_sql_007.json": "034f502255289e317b79baa6476015b84f138f5d8245202f9da3e84628bf21bf",
+    "20260930_90acf451/suite/ctu_sql_008.json": "b6d6164128efcfcf4249f5383320302bc36c3515a5d7d51bd8a068129530c64a",
+    "20260930_90acf451/suite/partial.jsonl": "f5b2b48ece785cf330e5e60724571db04af2fdb916136303c09a019c4c5d47e5",
+    "20260930_90acf451/suite/report.json": "1bdc6a20c4c402445719642c17d3d9f8cd3bc85e4d6fa40b5ba32c67f5023c25",
+    "r2_remediation_live_e3_v1/smoke.claim.json": "91f4781a96c930a8464639f256344a957792fc08fcd67631ceb04f9e4dcad5ae",
+    "r2_remediation_live_e3_v1/smoke.receipt.json": "5c1aa6ca2eab1849ce9505e72333019ddf4db6a09f762b12dc5f409eea8fba85",
+    "r2_remediation_live_e3_v1/suite.claim.json": "255e27113f4aee2c4edfdcc867eb1668081b19e80a87c27d3545dd589d126a43"
+  },
+  "storage": "Exact bytes retained by scoped .gitattributes -text; same Git blob and checkout SHA256"
+}

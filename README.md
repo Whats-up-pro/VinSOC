@@ -15,13 +15,13 @@ Evidence gồm `OBSERVED`, `DERIVED`, `EXTERNAL_INTEL`; nhận định phải tr
 | Track | Bộ dữ liệu / metric | Evidence và giới hạn |
 |---|---|---|
 | R1 tool calling | 24 dev, trong đó 5 no-tool; 8 frozen | Decision-only đo production tool/arguments, không thực thi tool. A2/MockProvider là regression, không phải model accuracy. |
-| R2 CTU dev S5/S7 | 8 case; Execution Accuracy | [E0 GPT-5 Mini](results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json) là immutable evidence 0/8. [v1 report](docs/evaluation/r2_dualsql_ctu_gpt5_dev.md) tách khỏi remediation. |
+| R2 CTU dev S5/S7 | 8 case; Execution Accuracy | [E0 GPT-5 Mini](results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json) immutable 0/8. [E3 remediation live](docs/evaluation/r2_remediation_live_results.md): EX 1/8, syntax 4/8, execution 3/8; một lượt dev, không holdout. [v1 report](docs/evaluation/r2_dualsql_ctu_gpt5_dev.md) giữ riêng. |
 | R2 CTU S1/S4 lịch sử | 8 case, holdout đã consumed | Script cũ báo E0 EX 0/8, E3 EX 2/8; E3 execution success 3/8 theo flags cũ. Syntax validity đúng nghĩa chưa xác minh; cost/provenance incomplete. Không đủ frozen eligibility. |
 | R2 legacy three-source | 8 dev + 6 frozen | ThreatFox/CTU/OTRF contract riêng; snapshot CTU không chứng minh bộ three-source đã hoàn tất. |
 
 Các kết quả dev không chứng minh generalization trên holdout. Xem [đính chính frozen](docs/evaluation/frozen_comparison_results.md), [protocol audit](docs/evaluation/ctu_frozen_protocol_audit_2026-09-30.md) và [remediation status](docs/evaluation/r2_remediation_status.md).
 
-Remediation hiện tại chỉ offline: adapter source metadata được giữ, một controller fail-closed, telemetry trước parse, locked scorer và output append-only. CLI trả phí và frozen entrypoints vẫn closed. Các Tasks 8-10 thêm trên remote dành cho review tiếp theo, ngoài phạm vi chỉ thị offline hiện tại.
+Remediation giữ adapter source metadata, một controller fail-closed, telemetry trước parse, locked scorer và output append-only. Tasks 1-7 đã nghiệm thu offline; Tasks 8-10 được duyệt riêng và đã chạy một smoke + một suite E3 trên exact-SHA CI xanh. Tổng live cost từ usage $0.02185315; [trace, lỗi từng case và hashes](docs/evaluation/r2_remediation_live_results.md). Series live đã consumed; CLI offline cũ và frozen entrypoints vẫn closed. **STOP FOR HUMAN REVIEW**, không tự chạy tiếp thí nghiệm hoặc demo.
 
 ## Setup và verification offline
 
@@ -41,7 +41,7 @@ CI kiểm Python 3.11/3.12 tại [GitHub Actions](https://github.com/Whats-up-pr
 |---|---|
 | `agent/`, `skills/` | Orchestrator, CTI/network/endpoint investigation |
 | `evaluation/tool_calling/` | [R1 contract](evaluation/tool_calling/README.md) |
-| `evaluation/dualsql_lite_ctu_gpt5_v2/` | Offline R2 remediation controller/tools/report |
+| `evaluation/dualsql_lite_ctu_gpt5_v2/` | R2 remediation controller/tools/report; gated live entrypoint trong `scripts/` |
 | `evaluation/text_to_sql.py` | Scorer được khóa, comparator execution |
 | `evaluation/text_to_sql_benchmarks/` | [Legacy R2 contract](evaluation/text_to_sql_benchmarks/README.md) |
 | `tests/` | Unit/integration regression |

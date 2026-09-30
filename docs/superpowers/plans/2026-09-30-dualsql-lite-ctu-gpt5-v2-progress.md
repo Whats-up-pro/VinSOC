@@ -70,4 +70,15 @@ Initial SHA `abfac96967dabc9452b5422f7d86e7d0a579d126`, master = origin sau fetc
 
 Ruling: remote `4886b57` thêm live Tasks 8-10 trong khi thực hiện, được giữ qua merge `ca9d78d`. Chỉ thị trực tiếp hiện tại yêu cầu zero API, không dispatch và STOP FOR HUMAN REVIEW, nên chưa thực thi continuation mới. Chi phí remediation $0; frozen vẫn consumed/closed. Không tạo provenance hồi tố, không gọi R1 hoặc E2E.
 
+## Continuation live Tasks 8-10 — phê duyệt trực tiếp tiếp theo
+
+Chỉ thị live mới thay điểm dừng offline ở checkpoint trên, không mở frozen. Initial `0973d5a6`, implementation `90acf451c264d98c3cc35662670b3b772366136a`; [exact-SHA CI](https://github.com/Whats-up-pro/VinSOC/actions/runs/36700628921) cả Python 3.11/3.12 success, 704 tests/job. Adapter/controller/scorer/prompts/gold/snapshot giữ nguyên; thêm gated live boundary và pin SDK/transport đã test.
+
+- [x] Task 8 focused tests, full 704 passed, compile/diff pass và exact-SHA CI xanh; preflight source/identity/account/pricing/budget PASS.
+- [x] Task 9 đúng một smoke E3 PASS pipeline rồi một suite E3 đủ 8 cases cùng SHA, không commit/retry/prompt change giữa hai lượt.
+- [x] Audit current evidence: EX 1/8, syntax 4/8, execution success 3/8, safety 1/8; 41 attempted/41 responses, cost $0.02185315 complete; 45 historical hashes không đổi.
+- [ ] Task 10 evidence commit/push và CI của evidence SHA (checkpoint ghi sau verification).
+
+[Live report và artifact links](../../evaluation/r2_remediation_live_results.md). Frozen S1/S4 vẫn consumed/closed; không R1/new experiments/SOC demo. STOP FOR HUMAN REVIEW sau nghiệm thu evidence CI.
+
 Fresh reviewer phát hiện field thừa trong table handoff có thể lọt sang generator; regression RED 1 failed, đã reject keys ngoài table/columns và GREEN/full pass. Không có deferred minor. Final SHA và exact evidence-commit CI được báo ở thông báo nghiệm thu.
