@@ -100,13 +100,13 @@ Chỉ scan hai thư mục `baseline_e0/` và `v2_e3/` đã pin trong inventory. 
 
 Giữ interface `run_role(role: str, question: str, system_prompt: str, tools: V2DatabaseTools | None, client: Any, max_turns: int = 1, telemetry_sink: Callable | None = None) -> RoleResult` và `run_case(case: SQLBenchmarkCase, condition: str, tools: V2DatabaseTools, client: Any, schema_context: str) -> dict[str, Any]`. `telemetry_sink(request, telemetry)` lưu record trước parsing; không log credential hoặc raw provider error.
 
-- [ ] Thêm offline fake-client tests: malformed JSON, empty tables/columns, unknown table/column, unresolved source, invented evidence, provider error, cap exhaustion, empty response. Assert generator `create()` count 0 sau linker failure và failure category rõ ràng.
-- [ ] Test linker success có usage nhưng generator fail; malformed arguments sau response; role hết 5 turns; nhiều tool calls trong một turn. Assert telemetry được giữ, call 6/tool 6 bị chặn, no-tool request không có key `tools`.
-- [ ] Gọi gate trước generator. Phân biệt no-reference grounding: grouping question không cần value vẫn có thể hợp lệ; schema rỗng không hợp lệ. Question literal giữ nguyên mà không giả mạo DB provenance. Không thêm heuristic số cột hoặc gold-column lookup để quyết định schema hợp lệ; mọi giới hạn mới phải có contract được review.
-- [ ] Lưu response ID, actual model, input/output tokens, latency và usage trước parsing. Mọi return path phải giữ usage/trajectory; sum report bằng sum tất cả observed responses. Request không có response/usage phải để `cost_unknown=true`, không giả zero complete cost.
-- [ ] Giữa các role chỉ truyền question, schema/evidence đã validate. Test gold sentinel vắng mặt trong inference requests. Failure kết thúc case; không fallback E0, không increase cap/turns, không thay prompt.
-- [ ] Tạo client chỉ trên một boundary có retries 0; regression tests chặn secret trong serialized public errors. Giữ legacy entrypoints disabled.
-- [ ] Chạy targeted controller tests và historical `tests/test_dualsql_agents.py`; commit controller fix khi pass.
+- [x] Thêm offline fake-client tests: malformed JSON, empty tables/columns, unknown table/column, unresolved source, invented evidence, provider error, cap exhaustion, empty response. Assert generator `create()` count 0 sau linker failure và failure category rõ ràng.
+- [x] Test linker success có usage nhưng generator fail; malformed arguments sau response; role hết 5 turns; nhiều tool calls trong một turn. Assert telemetry được giữ, call 6/tool 6 bị chặn, no-tool request không có key `tools`.
+- [x] Gọi gate trước generator. Phân biệt no-reference grounding: grouping question không cần value vẫn có thể hợp lệ; schema rỗng không hợp lệ. Question literal giữ nguyên mà không giả mạo DB provenance. Không thêm heuristic số cột hoặc gold-column lookup để quyết định schema hợp lệ; mọi giới hạn mới phải có contract được review.
+- [x] Lưu response ID, actual model, input/output tokens, latency và usage trước parsing. Mọi return path phải giữ usage/trajectory; sum report bằng sum tất cả observed responses. Request không có response/usage phải để `cost_unknown=true`, không giả zero complete cost.
+- [x] Giữa các role chỉ truyền question, schema/evidence đã validate. Test gold sentinel vắng mặt trong inference requests. Failure kết thúc case; không fallback E0, không increase cap/turns, không thay prompt.
+- [x] Tạo client chỉ trên một boundary có retries 0; regression tests chặn secret trong serialized public errors. Giữ legacy entrypoints disabled.
+- [x] Chạy targeted controller tests và historical `tests/test_dualsql_agents.py`; commit controller fix khi pass.
 
 ### Task 5: Nối actual evaluator và safety boundary vào v2
 

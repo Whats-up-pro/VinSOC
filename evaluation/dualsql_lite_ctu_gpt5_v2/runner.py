@@ -1,24 +1,21 @@
-"""v2 runner - controller validates grounded values on run_role path."""
-
+"""Offline remediation controller: one fail-closed gate, complete response telemetry."""
 from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from dataclasses import asdict, dataclass, field
+from typing import Any, Callable
 
-from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import (
-    GENERATOR_INSTRUCTIONS, GENERATOR_PROMPT_VERSION,
-    LINKER_INSTRUCTIONS, LINKER_PROMPT_VERSION,
-)
+from evaluation.dualsql_lite_ctu_gpt5_v2.agents import validate_link
+from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import GENERATOR_INSTRUCTIONS, LINKER_INSTRUCTIONS
 from evaluation.dualsql_lite_ctu_gpt5_v2.tools import V2DatabaseTools, TOOL_SCHEMAS
-
 
 MODEL = "gpt-5-mini-2025-08-07"
 CAP = 1000
 REASONING_EFFORT = "low"
 MAX_TURNS = 5
+MAX_DB_CALLS = 5
+CONTROLLER_VERSION = "r2_remediation_controller_v1"
 
 
 @dataclass
@@ -29,270 +26,178 @@ class RoleResult:
     error: str | None = None
     linked_schema: dict | None = None
     usage: list[dict] = field(default_factory=list)
+    trajectory: list[dict] = field(default_factory=list)
+    attempted_calls: int = 0
+    response_count: int = 0
+    cost_unknown: bool = False
 
 
 def cost_usd(input_tokens: int, output_tokens: int) -> float:
-    """GPT-5 Mini: $0.25/1M input, $2.00/1M output."""
-    return (input_tokens * 0.25 + output_tokens * 2.00) / 1_000_000
+    return (input_tokens * .25 + output_tokens * 2) / 1_000_000
 
 
-def validate_linked_schema(raw: str, tools: V2DatabaseTools,
-                           trajectory: list[dict]) -> tuple[dict, list[str]]:
-    """
-    Validate linked schema on v2 path.
-    Returns (validated_schema, errors).
-    Errors include provenance failures.
-    """
-    errors = []
+def validate_linked_schema(raw: str, tools: V2DatabaseTools, trajectory: list[dict],
+                           question: str = "") -> tuple[dict, list[str]]:
+    """Compatibility wrapper; validate_link is the only semantic/provenance gate."""
     try:
         value = json.loads(raw)
-    except json.JSONDecodeError as e:
-        return {}, [f"Invalid JSON: {e}"]
-
-    if not isinstance(value, dict):
-        return {}, ["Schema must be JSON object"]
-    if "tables" not in value:
-        errors.append("Missing 'tables' field")
-    if "grounded_values" not in value:
-        errors.append("Missing 'grounded_values' field")
-    if errors:
-        return {}, errors
-
-    tables = value.get("tables", [])
-    grounded = value.get("grounded_values", [])
-
-    if not isinstance(tables, list):
-        return {}, ["'tables' must be list"]
-    if not isinstance(grounded, list):
-        return {}, ["'grounded_values' must be list"]
-
-    # Track observed values from tool output
-    observed: dict[tuple[str, str, str], str] = {}
-    for call in trajectory:
-        result = call.get("result", {})
-        if not result.get("ok"):
-            continue
-        # From value_search matches
-        for match in result.get("matches", []):
-            key = (match.get("table", ""), match.get("column", ""), str(match.get("value", "")))
-            observed[key] = call.get("tool_call_id", "")
-        # From profiler column examples
-        for table in result.get("tables", []):
-            for col in table.get("columns", []):
-                for example in col.get("examples", []):
-                    key = (table.get("name", ""), col.get("name", ""), str(example))
-                    observed[key] = call.get("tool_call_id", "")
-
-    # Validate table names
-    selected_tables = {}
-    for entry in tables:
-        if not isinstance(entry, dict):
-            errors.append(f"Invalid table entry: {entry}")
-            continue
-        table = entry.get("table")
-        columns = entry.get("columns", [])
-        if not isinstance(table, str) or table not in tools.schema:
-            errors.append(f"Unknown table: {table}")
-            continue
-        if not isinstance(columns, list):
-            errors.append(f"Columns must be list for {table}")
-            continue
-        selected_tables[table] = set(columns)
-
-    # Validate grounded values - MUST have tool provenance
-    validated_values = []
-    for gv in grounded:
-        if not isinstance(gv, dict):
-            errors.append(f"Invalid grounded_value: {gv}")
-            continue
-        table = gv.get("table")
-        column = gv.get("column")
-        gv_value = str(gv.get("value", ""))
-        if not all([table, column, gv_value]):
-            errors.append(f"Incomplete grounded_value: {gv}")
-            continue
-        # Check provenance
-        key = (table, column, gv_value)
-        if key not in observed:
-            errors.append(f"Value '{gv_value}' in {table}.{column} has no tool provenance")
-            continue
-        validated_values.append({**gv, "provenance_call_id": observed[key]})
-
-    if errors:
-        return {}, errors
-
-    return {"tables": tables, "grounded_values": validated_values}, []
+    except (ValueError, TypeError):
+        return {}, ["LINKER_FORMAT_ERROR"]
+    if (not isinstance(value, dict) or set(value) != {"tables", "grounded_values"}
+            or not isinstance(value["grounded_values"], list)):
+        return {}, ["LINKER_FORMAT_ERROR"]
+    linked = validate_link(question, value["tables"], trajectory, tools,
+                           submitted_values=value["grounded_values"])
+    return ({}, [linked["error"]]) if linked["error"] else (linked, [])
 
 
-def run_role(
-    role: str,
-    question: str,
-    system_prompt: str,
-    tools: V2DatabaseTools | None,
-    client,
-    max_turns: int = 1,
-    telemetry_sink: Any = None,
-) -> RoleResult:
-    """
-    Run one role (linker or generator) with tools.
-    Controller validates linked_schema provenance.
-    """
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": question},
-    ]
+def run_role(role: str, question: str, system_prompt: str, tools: V2DatabaseTools | None,
+             client: Any, max_turns: int = 1,
+             telemetry_sink: Callable | None = None) -> RoleResult:
+    messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": question}]
+    usage, trajectory = [], []
+    attempted = responses = tool_count = turn = 0
+    unknown = False
 
-    trajectory = []
-    tool_count = 0
-    usage = []
+    def done(error=None, content=None, linked=None):
+        return RoleResult(content, turn, tool_count, error, linked, usage, trajectory,
+                          attempted, responses, unknown)
 
-    for turn in range(1, max_turns + 1):
-        request = {
-            "model": MODEL,
-            "reasoning_effort": REASONING_EFFORT,
-            "max_completion_tokens": CAP,
-            "messages": messages,
-            "tools": TOOL_SCHEMAS if tools else None,
-        }
+    if role not in {"linker", "generator"} or max_turns < 1:
+        return done("INVALID_ROLE_CONTRACT")
+    for turn in range(1, min(max_turns, MAX_TURNS) + 1):
+        request = {"model": MODEL, "reasoning_effort": REASONING_EFFORT,
+                   "max_completion_tokens": CAP, "messages": list(messages)}
+        if tools is not None:
+            request["tools"] = TOOL_SCHEMAS
         if role == "linker":
             request["response_format"] = {"type": "json_object"}
-
+        attempted += 1
         start = time.monotonic()
-        response = client.chat.completions.create(**request)
-        latency_ms = (time.monotonic() - start) * 1000
-
-        # Extract usage
-        tel = {
-            "role": role,
-            "turn": turn,
-            "model": response.model,
-            "input_tokens": response.usage.prompt_tokens,
-            "output_tokens": response.usage.completion_tokens,
-            "cost_usd": cost_usd(response.usage.prompt_tokens, response.usage.completion_tokens),
-            "latency_ms": latency_ms,
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception:
+            unknown = True
+            return done("PROVIDER_ERROR")
+        responses += 1
+        raw_usage = getattr(response, "usage", None)
+        input_tokens = getattr(raw_usage, "prompt_tokens", None)
+        output_tokens = getattr(raw_usage, "completion_tokens", None)
+        total_tokens = getattr(raw_usage, "total_tokens", None)
+        complete = (type(input_tokens) is int and input_tokens >= 0
+                    and type(output_tokens) is int and output_tokens >= 0
+                    and type(total_tokens) is int and total_tokens == input_tokens + output_tokens)
+        actual_model = getattr(response, "model", None)
+        response_id = getattr(response, "id", None)
+        choices = getattr(response, "choices", None)
+        choice = choices[0] if choices else None
+        message = getattr(choice, "message", None)
+        observed_response = {
+            "content": getattr(message, "content", None),
+            "finish_reason": getattr(choice, "finish_reason", None),
+            "tool_calls": [{"id": getattr(call, "id", None), "function": {
+                "name": getattr(getattr(call, "function", None), "name", None),
+                "arguments": getattr(getattr(call, "function", None), "arguments", None)}}
+                for call in (getattr(message, "tool_calls", None) or [])],
         }
+        tel = {"role": role, "turn": turn, "response_id": response_id,
+               "model": actual_model, "input_tokens": input_tokens, "output_tokens": output_tokens,
+               "total_tokens": total_tokens, "usage_complete": complete,
+               "cost_usd": cost_usd(input_tokens, output_tokens) if complete and actual_model == MODEL else None,
+               "latency_ms": (time.monotonic() - start) * 1000, "response": observed_response}
         usage.append(tel)
+        unknown |= not complete or actual_model != MODEL
+        # The sink receives the observed response before any choices/tool parsing.
         if telemetry_sink:
-            telemetry_sink(request, tel)
-
-        message = response.choices[0].message
+            try:
+                telemetry_sink(request, tel)
+            except Exception:
+                return done("TELEMETRY_WRITE_ERROR")
+        if actual_model != MODEL:
+            return done("MODEL_IDENTITY_MISMATCH")
+        if not complete:
+            return done("USAGE_INCOMPLETE")
+        if not isinstance(response_id, str) or not response_id:
+            return done("RESPONSE_ID_MISSING")
+        choices = getattr(response, "choices", None)
+        if not choices:
+            return done("EMPTY_RESPONSE")
+        choice = choices[0]
+        message = getattr(choice, "message", None)
+        content = getattr(message, "content", None)
+        if getattr(choice, "finish_reason", None) == "length":
+            return done("COMPLETION_LIMIT", content)
         calls = getattr(message, "tool_calls", None) or []
-
         if calls:
-            if not tools:
-                return RoleResult(None, turn, tool_count, "TOOLS_DISABLED")
-
-            messages.append({
-                "role": "assistant",
-                "content": getattr(message, "content", None),
-                "tool_calls": [{
-                    "id": c.id,
-                    "type": "function",
-                    "function": {"name": c.function.name, "arguments": c.function.arguments}
-                } for c in calls]
-            })
-
+            if tools is None:
+                return done("TOOLS_DISABLED")
+            serialized_calls = []
             for call in calls:
+                function = getattr(call, "function", None)
+                arguments = getattr(function, "arguments", None)
+                name = getattr(function, "name", None)
+                call_id = getattr(call, "id", None)
+                serialized_calls.append({"id": call_id, "type": "function",
+                                         "function": {"name": name, "arguments": arguments}})
+            messages.append({"role": "assistant", "content": content, "tool_calls": serialized_calls})
+            for call in serialized_calls:
+                if tool_count >= MAX_DB_CALLS:
+                    return done("TOOL_LIMIT")
+                try:
+                    args = json.loads(call["function"]["arguments"])
+                except (ValueError, TypeError):
+                    return done("MALFORMED_TOOL_ARGUMENTS")
+                if not isinstance(args, dict):
+                    return done("MALFORMED_TOOL_ARGUMENTS")
                 tool_count += 1
                 try:
-                    args = json.loads(call.function.arguments)
-                except:
-                    args = {}
-                result = tools.invoke(call.function.name, args)
-                trajectory.append({
-                    "role": role,
-                    "turn": turn,
-                    "tool_call_id": call.id,
-                    "tool": call.function.name,
-                    "arguments": args,
-                    "result": result,
-                })
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": call.id,
-                    "content": json.dumps(result, default=str),
-                })
+                    result = tools.invoke(call["function"]["name"], args)
+                except Exception:
+                    result = {"ok": False, "error_type": "TOOL_EXECUTION_ERROR"}
+                trajectory.append({"role": role, "turn": turn, "tool_call_id": call["id"],
+                                   "tool": call["function"]["name"], "arguments": args, "result": result})
+                messages.append({"role": "tool", "tool_call_id": call["id"],
+                                 "content": json.dumps(result, default=str)})
             continue
-
-        content = getattr(message, "content", None)
-        if not content:
-            return RoleResult(None, turn, tool_count, "EMPTY_RESPONSE")
-
-        # Final submission
-        linked_schema = None
-        if role == "linker" and tools:
-            validated, errors = validate_linked_schema(content, tools, trajectory)
+        if not isinstance(content, str) or not content.strip():
+            return done("EMPTY_RESPONSE")
+        if role == "linker":
+            if tools is None:
+                return done("TOOLS_DISABLED", content)
+            linked, errors = validate_linked_schema(content, tools, trajectory, question)
             if errors:
-                return RoleResult(content, turn, tool_count, f"LINKER_VALIDATION: {errors[0]}")
-            linked_schema = validated
-
-        return RoleResult(content.strip(), turn, tool_count, None, linked_schema, usage)
-
-    return RoleResult(None, max_turns, tool_count, "TURN_LIMIT")
+                return done(errors[0], content)
+            return done(content=content.strip(), linked=linked)
+        return done(content=content.strip())
+    return done("TURN_LIMIT")
 
 
-def run_case(
-    case,
-    condition: str,
-    tools: V2DatabaseTools,
-    client,
-    schema_context: str,
-) -> dict:
-    """Run one case for v2 evaluation."""
-    linked = None
-
-    # Linker path (E1, E3)
+def run_case(case, condition: str, tools: V2DatabaseTools, client: Any, schema_context: str) -> dict:
+    linker = generator = linked = None
+    if condition not in {"E0", "E1", "E2", "E3"}:
+        raise ValueError("INVALID_CONDITION")
     if condition in {"E1", "E3"}:
-        linker = run_role(
-            "linker", case.question,
-            LINKER_INSTRUCTIONS + "\nDatabase schema:\n" + schema_context,
-            tools, client, max_turns=5
-        )
+        linker = run_role("linker", case.question, LINKER_INSTRUCTIONS + "\nDatabase schema:\n" + schema_context,
+                          tools, client, MAX_TURNS)
+        linked = linker.linked_schema
         if linker.error:
             return _result(case, condition, linker, None, linked, None, linker.error)
-        linked = linker.linked_schema
-
-    # Generator path
-    if condition == "E0":
-        system = GENERATOR_INSTRUCTIONS + "\nDatabase schema:\n" + schema_context
-        tools_enabled = None
-        max_turns = 1
-    elif condition == "E1":
-        system = GENERATOR_INSTRUCTIONS + "\nLinked schema:\n" + json.dumps(linked or {})
-        tools_enabled = None
-        max_turns = 1
-    elif condition == "E2":
-        system = GENERATOR_INSTRUCTIONS + "\nDatabase schema:\n" + schema_context
-        tools_enabled = tools
-        max_turns = 5
-    else:  # E3
-        system = GENERATOR_INSTRUCTIONS + "\nLinked schema:\n" + json.dumps(linked or {})
-        tools_enabled = tools
-        max_turns = 5
-
-    generator = run_role("generator", case.question, system, tools_enabled, client, max_turns)
-
-    if generator.error:
-        return _result(case, condition, None, generator, linked, None, generator.error)
-
-    sql = generator.content
-    return _result(case, condition, None, generator, linked, sql, "OK")
+    system = GENERATOR_INSTRUCTIONS + ("\nLinked schema:\n" + json.dumps(linked) if linked is not None
+                                       else "\nDatabase schema:\n" + schema_context)
+    enabled = condition in {"E2", "E3"}
+    generator = run_role("generator", case.question, system, tools if enabled else None,
+                         client, MAX_TURNS if enabled else 1)
+    return _result(case, condition, linker, generator, linked,
+                   generator.content if not generator.error else None, generator.error or "OK")
 
 
 def _result(case, condition, linker, generator, linked, sql, error) -> dict:
-    usage = []
-    if linker:
-        usage.extend(linker.usage)
-    if generator:
-        usage.extend(generator.usage)
-
-    return {
-        "case_id": case.case_id,
-        "condition": condition,
-        "linked_schema": linked,
-        "error_category": error,
-        "final_sql": sql,
-        "syntax_valid": sql is not None,
-        "usage": usage,
-        "total_cost_usd": sum(u["cost_usd"] for u in usage),
-    }
+    roles = {"linker": asdict(linker) if linker else None,
+             "generator": asdict(generator) if generator else None}
+    usage = [u for role in (linker, generator) if role for u in role.usage]
+    return {"case_id": case.case_id, "condition": condition, "roles": roles,
+            "linked_schema": linked, "error_category": error, "final_sql": sql, "usage": usage,
+            "trajectory": [t for role in (linker, generator) if role for t in role.trajectory],
+            "attempted_calls": sum(role.attempted_calls for role in (linker, generator) if role),
+            "response_count": len(usage), "cost_unknown": any(role.cost_unknown for role in (linker, generator) if role),
+            "observed_cost_usd": sum(u["cost_usd"] for u in usage if u["cost_usd"] is not None)}

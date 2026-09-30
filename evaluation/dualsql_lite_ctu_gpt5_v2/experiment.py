@@ -17,6 +17,11 @@ CONDITIONS = ["E0", "E1", "E2", "E3"]
 SERIES_VERSION = "dualsql_lite_ctu_gpt5_v2"
 
 
+def create_client():
+    """No live client until a separate paid plan implements every pre-run gate."""
+    raise RuntimeError("PAID_EXECUTION_DISABLED")
+
+
 def load_cases(cases_dir: Path) -> list[SQLBenchmarkCase]:
     """Load cases from directory."""
     cases = []
@@ -83,8 +88,7 @@ def main():
     parser.add_argument("--api-key", default=None)
     args = parser.parse_args()
 
-    from openai import OpenAI
-    client = OpenAI(api_key=args.api_key)
+    client = create_client()
 
     cases = load_cases(args.cases_dir)
     print(f"Loaded {len(cases)} cases from {args.cases_dir}")

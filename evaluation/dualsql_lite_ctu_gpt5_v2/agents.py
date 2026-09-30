@@ -12,16 +12,18 @@ def extract_question_references(question: str, tools: V2DatabaseTools) -> list[d
 
 
 def validate_link(question: str, selected: list[dict[str, Any]],
-                  trajectory: list[dict[str, Any]], tools: V2DatabaseTools) -> dict[str, Any]:
+                  trajectory: list[dict[str, Any]], tools: V2DatabaseTools,
+                  submitted_values: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     """Reject missing or mismatched source references before a generator call."""
     schema = tools.schema["network_flows"]
     allowed = {item["name"] for item in schema}
     if (not isinstance(selected, list) or len(selected) != 1
-            or selected[0].get("table") != "network_flows"):
+            or not isinstance(selected[0], dict) or selected[0].get("table") != "network_flows"):
         return {"error": "INVALID_LINKED_SCHEMA", "grounded_values": [],
                 "unresolved_literals": []}
     columns = selected[0].get("columns")
     if (not isinstance(columns, list) or not columns
+            or any(not isinstance(column, str) for column in columns)
             or len(columns) != len(set(columns)) or any(column not in allowed for column in columns)):
         return {"error": "INVALID_LINKED_SCHEMA", "grounded_values": [],
                 "unresolved_literals": []}
@@ -31,9 +33,6 @@ def validate_link(question: str, selected: list[dict[str, Any]],
         return {"error": reference_error, "grounded_values": [], "unresolved_literals": []}
     if any(reference["column"] not in columns for reference in references):
         return {"error": "WRONG_COLUMN_FOR_INTENT", "grounded_values": [],
-                "unresolved_literals": [reference["surface"] for reference in references]}
-    if len(columns) > max(2, len(schema) // 2):
-        return {"error": "OVERBROAD_LINKED_SCHEMA", "grounded_values": [],
                 "unresolved_literals": [reference["surface"] for reference in references]}
     values: list[dict[str, str]] = []
     for event in trajectory:
@@ -52,15 +51,23 @@ def validate_link(question: str, selected: list[dict[str, Any]],
             value = item.get("value")
             if column not in columns or not isinstance(value, str):
                 continue
-            if column == "source_dataset" and not any(
+            if column == "source_dataset" and references and not any(
                     reference["value"] == value for reference in references):
                 continue
-            if column != "source_dataset" and value.casefold() not in question.casefold():
+            query = event.get("arguments", {}).get("query", "")
+            if (question and column != "source_dataset" and value.casefold() not in question.casefold()
+                    and not (query and query.casefold() in question.casefold())):
                 continue
             entry = {"table": "network_flows", "column": column,
                      "value": value, "evidence_id": item["evidence_id"]}
             if entry not in values:
                 values.append(entry)
+    for item in submitted_values or []:
+        if not isinstance(item, dict) or not any(
+                all(item.get(key) == observed[key] for key in ("table", "column", "value"))
+                and ("evidence_id" not in item or item["evidence_id"] == observed["evidence_id"])
+                for observed in values):
+            return {"error": "INVALID_TOOL_PROVENANCE", "grounded_values": [], "unresolved_literals": []}
     unresolved = [reference["surface"] for reference in references
                   if not any(item["column"] == reference["column"] and
                              item["value"] == reference["value"] for item in values)]

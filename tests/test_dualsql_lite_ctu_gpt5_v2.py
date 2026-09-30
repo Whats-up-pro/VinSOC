@@ -1,5 +1,6 @@
 """Tests for v2 package - validate grounding without question literal hints."""
 
+import json
 import pytest
 import duckdb
 
@@ -9,7 +10,7 @@ from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import (
     LINKER_PROMPT_VERSION,
     GENERATOR_PROMPT_VERSION,
 )
-from evaluation.dualsql_lite_ctu_gpt5_v2.tools import CTUDatabaseTools
+from evaluation.dualsql_lite_ctu_gpt5_v2.tools import V2DatabaseTools
 from evaluation.dualsql_lite_ctu_gpt5_v2.runner import validate_linked_schema
 
 
@@ -25,7 +26,9 @@ def tools(tmp_path):
             ("ctu13_s5", "flow=From-Botnet-TCP", "TCP"),
             ("ctu13_s7", "flow=From-Normal-UDP", "UDP"),
         ])
-    return CTUDatabaseTools(snapshot)
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"sources": [{"dataset_id": "ctu13_s5", "source_name": "CTU-13 Scenario 5"}, {"dataset_id": "ctu13_s7", "source_name": "CTU-13 Scenario 7"}]}))
+    return V2DatabaseTools(snapshot, manifest)
 
 
 class TestPrompts:
@@ -94,13 +97,9 @@ class TestValidation:
 
     def test_valid_value_with_provenance(self, tools):
         """Value found by tool should pass validation."""
-        trajectory = [{
-            "tool_call_id": "call_1",
-            "result": {
-                "ok": True,
-                "matches": [{"table": "network_flows", "column": "source_dataset", "value": "ctu13_s5"}]
-            }
-        }]
+        trajectory = [{"tool_call_id": "call_1", "tool": "value_search",
+                       "arguments": {"query": "ctu13_s5"},
+                       "result": tools.value_search({"query": "ctu13_s5"})}]
         schema = '{"tables":[{"table":"network_flows","columns":["source_dataset"]}],"grounded_values":[{"table":"network_flows","column":"source_dataset","value":"ctu13_s5"}]}'
         validated, errors = validate_linked_schema(schema, tools, trajectory)
         assert not errors, f"Unexpected errors: {errors}"
