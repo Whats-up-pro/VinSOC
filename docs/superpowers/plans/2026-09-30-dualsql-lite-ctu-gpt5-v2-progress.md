@@ -36,7 +36,9 @@ after the newer implementation and frozen attempts were discovered.
 - [x] Fresh reviewer checked import compatibility and pre-client guards. Its
   important documentation finding was fixed by withdrawing improvement and
   future-tuning claims from the exploratory frozen summary.
-- [ ] Recovery CI Python 3.11/3.12 on the pushed recovery SHA.
+- [x] Recovery CI Python 3.11/3.12 passed on implementation SHA
+  `c7f6d5bef63aeb8931c7b86472c9dd72939100f9` in
+  [run 36683245016](https://github.com/Whats-up-pro/VinSOC/actions/runs/36683245016).
 - [ ] E0′ development run, representative v2 development run and winner lock.
   **Blocked:** v2 was changed and frozen consumed before this sequence.
 - [ ] Protocol-eligible frozen result and subsequent E2E demonstration.
