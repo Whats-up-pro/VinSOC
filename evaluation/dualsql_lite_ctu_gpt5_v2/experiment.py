@@ -10,7 +10,7 @@ from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import (
     GENERATOR_PROMPT_VERSION, LINKER_PROMPT_VERSION,
 )
 from evaluation.dualsql_lite_ctu_gpt5_v2.runner import run_case, run_role
-from evaluation.dualsql_lite_ctu_gpt5_v2.tools import CTUDatabaseTools, TOOL_VERSION
+from evaluation.dualsql_lite_ctu_gpt5_v2.tools import V2DatabaseTools, TOOL_VERSION
 from evaluation.text_to_sql import SQLBenchmarkCase
 
 CONDITIONS = ["E0", "E1", "E2", "E3"]
@@ -33,10 +33,11 @@ def run_condition(
     snapshot_path: Path,
     client,
     output_dir: Path,
+    manifest_path: Path,
 ) -> dict[str, Any]:
     """Run one condition (E0-E3) for v2."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    tools = CTUDatabaseTools(snapshot_path)
+    tools = V2DatabaseTools(snapshot_path, manifest_path)
     schema = tools.schema_context()
 
     results = []

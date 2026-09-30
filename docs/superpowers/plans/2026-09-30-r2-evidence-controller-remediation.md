@@ -84,13 +84,13 @@ Chỉ scan hai thư mục `baseline_e0/` và `v2_e3/` đã pin trong inventory. 
 
 **Interfaces:** `V2DatabaseTools(snapshot_path: Path, manifest_path: Path)` exposes `schema`, `catalog`, `catalog_sha256`, `source_references(question: str)`, `schema_context()`, `database_profiler(dict)`, `value_search(dict)`, `sql_probe(dict)`, `invoke(name: str, arguments: Any)`. Cả 3 tools dùng bounds và safe error categories từ boundary v1 hiện có.
 
-- [ ] Reproduce collection error. Đọc cả hai test files và caller; giữ semantic assertions, chỉ cập nhật interface theo design đã duyệt.
-- [ ] Thêm tests cho manifest/snapshot source mismatch, source reference unknown/ambiguous, high-cardinality row-ID lookup và low-cardinality domain listing. Mapping phải đến từ source metadata đã verify; không benchmark lookup table.
-- [ ] Implement interface thống nhất; controller-owned `evidence_id` có thể truy về actual tool result. Test evidence ID giả/mismatch không được chấp nhận.
-- [ ] Xóa raw DuckDB error serialization trong v2 tools. Test error chứa sensitive sentinel không xuất hiện trong tool result/report.
-- [ ] Chạy `python -m pytest tests/test_dualsql_ctu_gpt5_v2.py tests/test_dualsql_lite_ctu_gpt5_v2.py tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_tools.py -q`.
-- [ ] Nếu có verified S5/S7 snapshot, chạy `python -m evaluation.dualsql_lite_ctu_gpt5_v2.offline_gate --snapshot <verified-dev-snapshot> --manifest evaluation/ctu_network_public/dataset_manifest.json --output <new-output-path>`. Assert 7 referenced cases resolved, no-reference case 008, 2 negative controls, 27 v1 calls replayed. Synthetic gate không thay thế gate full snapshot; nếu thiếu snapshot thì ghi blocker, không download/rebuild trong task này.
-- [ ] Full pytest phải hết collection error; ghi kết quả thực tế. Commit tools/interface fix sau focused verification.
+- [x] ??i chi?u collection recovery: l?i c? kh?ng c?n t?i hi?n; 639 tests collect/pass. Đọc cả hai test files và caller; giữ semantic assertions, chỉ cập nhật interface theo design đã duyệt.
+- [x] Thêm tests cho manifest/snapshot source mismatch, source reference unknown/ambiguous, high-cardinality row-ID lookup và low-cardinality domain listing. Mapping phải đến từ source metadata đã verify; không benchmark lookup table.
+- [x] Implement interface thống nhất; controller-owned `evidence_id` có thể truy về actual tool result. Test evidence ID giả/mismatch không được chấp nhận.
+- [x] Xóa raw DuckDB error serialization trong v2 tools. Test error chứa sensitive sentinel không xuất hiện trong tool result/report.
+- [x] Chạy `python -m pytest tests/test_dualsql_ctu_gpt5_v2.py tests/test_dualsql_lite_ctu_gpt5_v2.py tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_tools.py -q`.
+- [x] Nếu có verified S5/S7 snapshot, chạy `python -m evaluation.dualsql_lite_ctu_gpt5_v2.offline_gate --snapshot <verified-dev-snapshot> --manifest evaluation/ctu_network_public/dataset_manifest.json --output <new-output-path>`. Assert 7 referenced cases resolved, no-reference case 008, 2 negative controls, 27 v1 calls replayed. Synthetic gate không thay thế gate full snapshot; nếu thiếu snapshot thì ghi blocker, không download/rebuild trong task này.
+- [x] Full pytest phải hết collection error; ghi kết quả thực tế. Commit tools/interface fix sau focused verification.
 
 ### Task 4: Một controller, fail-closed và telemetry đầy đủ
 

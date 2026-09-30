@@ -26,6 +26,9 @@ def validate_link(question: str, selected: list[dict[str, Any]],
         return {"error": "INVALID_LINKED_SCHEMA", "grounded_values": [],
                 "unresolved_literals": []}
     references = extract_question_references(question, tools)
+    reference_error = tools.source_reference_error(question)
+    if reference_error:
+        return {"error": reference_error, "grounded_values": [], "unresolved_literals": []}
     if any(reference["column"] not in columns for reference in references):
         return {"error": "WRONG_COLUMN_FOR_INTENT", "grounded_values": [],
                 "unresolved_literals": [reference["surface"] for reference in references]}
@@ -37,6 +40,8 @@ def validate_link(question: str, selected: list[dict[str, Any]],
         result = event.get("result", {})
         if not result.get("ok"):
             continue
+        if tools.observed_evidence.get(result.get("evidence_id")) != result:
+            return {"error": "INVALID_TOOL_PROVENANCE", "grounded_values": [], "unresolved_literals": []}
         observed = list(result.get("matches", []))
         for column, domain in result.get("domains", {}).items():
             observed.extend({"table": "network_flows", "column": column,

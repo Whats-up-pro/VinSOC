@@ -12,7 +12,7 @@ from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import (
     GENERATOR_INSTRUCTIONS, GENERATOR_PROMPT_VERSION,
     LINKER_INSTRUCTIONS, LINKER_PROMPT_VERSION,
 )
-from evaluation.dualsql_lite_ctu_gpt5_v2.tools import CTUDatabaseTools, TOOL_SCHEMAS
+from evaluation.dualsql_lite_ctu_gpt5_v2.tools import V2DatabaseTools, TOOL_SCHEMAS
 
 
 MODEL = "gpt-5-mini-2025-08-07"
@@ -36,7 +36,7 @@ def cost_usd(input_tokens: int, output_tokens: int) -> float:
     return (input_tokens * 0.25 + output_tokens * 2.00) / 1_000_000
 
 
-def validate_linked_schema(raw: str, tools: CTUDatabaseTools,
+def validate_linked_schema(raw: str, tools: V2DatabaseTools,
                            trajectory: list[dict]) -> tuple[dict, list[str]]:
     """
     Validate linked schema on v2 path.
@@ -128,7 +128,7 @@ def run_role(
     role: str,
     question: str,
     system_prompt: str,
-    tools: CTUDatabaseTools | None,
+    tools: V2DatabaseTools | None,
     client,
     max_turns: int = 1,
     telemetry_sink: Any = None,
@@ -234,7 +234,7 @@ def run_role(
 def run_case(
     case,
     condition: str,
-    tools: CTUDatabaseTools,
+    tools: V2DatabaseTools,
     client,
     schema_context: str,
 ) -> dict:

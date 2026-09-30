@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-TOOL_VERSION = "dualsql_lite_ctu_gpt5_v2_tools_v1"
+TOOL_VERSION = "dualsql_lite_ctu_gpt5_v2_remediation_tools_v1"
 
 # Preserve the source-metadata API introduced at 92e20d5. The CTUDatabaseTools
 # implementation used by the recorded frozen attempts remains separate below.
@@ -188,8 +188,8 @@ class CTUDatabaseTools:
                 "rows": rows[:20],
                 "truncated": len(rows) > 20,
             }
-        except Exception as e:
-            return {"ok": False, "error_type": "EXECUTION_ERROR", "message": str(e)[:200]}
+        except Exception:
+            return {"ok": False, "error_type": "EXECUTION_ERROR"}
 
     def invoke(self, name: str, args: dict) -> dict:
         handlers = {

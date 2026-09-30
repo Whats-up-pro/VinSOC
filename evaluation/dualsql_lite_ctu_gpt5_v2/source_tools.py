@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -57,6 +58,31 @@ class V2DatabaseTools(CTUDatabaseTools):
         encoded = json.dumps({"catalog": self.catalog, "source_aliases": self.source_aliases},
                              sort_keys=True, ensure_ascii=False).encode("utf-8")
         self.catalog_sha256 = hashlib.sha256(encoded).hexdigest()
+        self.observed_evidence: dict[str, dict[str, Any]] = {}
+
+    def _remember(self, result: dict[str, Any]) -> dict[str, Any]:
+        if result.get("ok") and result.get("evidence_id"):
+            self.observed_evidence[result["evidence_id"]] = deepcopy(result)
+        return result
+
+    def source_reference_error(self, question: str) -> str | None:
+        normalized = f" {_normal(question)} "
+        aliases: dict[str, set[str]] = {}
+        for value, names in self.source_aliases.items():
+            for alias in names:
+                aliases.setdefault(alias, set()).add(value)
+        for alias, values in aliases.items():
+            if len(alias.split()) >= 2 and f" {alias} " in normalized and len(values) > 1:
+                return "AMBIGUOUS_SOURCE_REFERENCE"
+        # Derive numbered source-name patterns from metadata, never benchmark IDs.
+        for alias in aliases:
+            words = alias.split()
+            if len(words) >= 2 and words[-1].isdigit():
+                prefix = " ".join(words[:-1])
+                for mention in re.findall(r"(?<!\w)" + re.escape(prefix) + r"\s+\d+(?!\w)", normalized):
+                    if mention not in aliases:
+                        return "UNKNOWN_SOURCE_REFERENCE"
+        return None
 
     def source_references(self, question: str) -> list[dict[str, str]]:
         normalized = f" {_normal(question)} "
@@ -85,7 +111,7 @@ class V2DatabaseTools(CTUDatabaseTools):
             if _size(base) > MAX_RESPONSE_BYTES:
                 del base["domains"][column]
                 base["truncated_domains"].append(column)
-        return base
+        return self._remember(base)
 
     def value_search(self, arguments: dict[str, Any]) -> dict[str, Any]:
         base = super().value_search(arguments)
@@ -124,4 +150,7 @@ class V2DatabaseTools(CTUDatabaseTools):
         if _size(result) > MAX_RESPONSE_BYTES:
             result["domain"] = []
             result["truncated"] = True
-        return result
+        return self._remember(result)
+
+    def sql_probe(self, arguments: dict[str, Any]) -> dict[str, Any]:
+        return self._remember(super().sql_probe(arguments))

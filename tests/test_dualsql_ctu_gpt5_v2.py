@@ -139,3 +139,35 @@ def test_offline_gate_resolves_references_and_keeps_wrong_lookup_unresolved(tool
     assert report["no_reference_cases"] == ["three"]
     assert report["negative_controls_passed"] == 2
     assert report["replay"][1]["resolution"] == "unresolved"
+
+
+def test_unknown_source_reference_fails_closed(tools):
+    result = validate_link("Count scenario 999 flows", [{"table": "network_flows", "columns": ["source_dataset"]}], [], tools)
+    assert result["error"] == "UNKNOWN_SOURCE_REFERENCE"
+
+
+def test_forged_or_mismatched_evidence_rejected(tools):
+    result = tools.value_search({"query": "scenario 5"})
+    result["matches"][0]["evidence_id"] = "forged"
+    linked = validate_link("Count scenario 5 flows", [{"table": "network_flows", "columns": ["source_dataset"]}], [{"result": result}], tools)
+    assert linked["error"] == "INVALID_TOOL_PROVENANCE"
+
+
+def test_manifest_mismatch_and_ambiguous_alias_fail_closed(tools, tmp_path):
+    manifest = tmp_path / "bad.json"
+    manifest.write_text(json.dumps({"sources": [{"dataset_id": "missing", "source_name": "Scenario 5"}]}))
+    with pytest.raises(ValueError, match="metadata"):
+        V2DatabaseTools(tools.snapshot_path, manifest)
+    manifest.write_text(json.dumps({"sources": [{"dataset_id": s, "source_name": "Dataset Group 5"} for s in ("ctu13_s5", "ctu13_s7")]}))
+    ambiguous = V2DatabaseTools(tools.snapshot_path, manifest)
+    linked = validate_link("Count Group 5 flows", [{"table": "network_flows", "columns": ["source_dataset"]}], [], ambiguous)
+    assert linked["error"] == "AMBIGUOUS_SOURCE_REFERENCE"
+
+
+def test_probe_error_does_not_serialize_exception(tools, monkeypatch):
+    def broken():
+        raise RuntimeError("sensitive-secret-sentinel")
+    monkeypatch.setattr(tools, "_connect", broken)
+    result = tools.sql_probe({"sql": "SELECT * FROM network_flows"})
+    assert result["error_type"] == "EXECUTION_ERROR"
+    assert "sensitive-secret-sentinel" not in json.dumps(result)
