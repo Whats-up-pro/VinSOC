@@ -137,4 +137,10 @@ Artifact ID trong repository: **`20260930_90acf451`**; đây là local live run,
 
 Giữ toàn bộ recovery/source adapter, frozen pre-client guards, consumed lock, prompts, benchmarks/gold, comparator/core scorer, snapshot và historical artifacts. Sửa thêm live entrypoint/tests, dependency pins; cập nhật plan/status/README từ evidence; thêm scoped `.gitattributes` và namespace artifacts/receipts mới. Không stage `.env`, credential, raw dataset hay untracked user files. Verification ledger/logs local được giữ, không stage, theo yêu cầu không xóa untracked.
 
-Không còn blocker đối với việc ghi nhận lượt live đã hoàn tất. Kết quả 1/8 là kết quả âm về chất lượng dev, không mở frozen hoặc cho phép tuning/rerun trong task này. Nghiệm thu evidence-commit CI và human review là phần còn lại của checkpoint tài liệu.
+Không còn blocker đối với việc ghi nhận lượt live đã hoàn tất. Kết quả 1/8 là kết quả âm về chất lượng dev, không mở frozen hoặc cho phép tuning/rerun trong task này.
+
+## Evidence checkpoint đã xác minh
+
+Evidence commit **`82598875d2b415508a69fa86e8290a5656702444`** đã push master. [CI evidence 36703577420](https://github.com/Whats-up-pro/VinSOC/actions/runs/36703577420) success trên đúng SHA, Python 3.11 `704 passed in 40.10s`, Python 3.12 `704 passed, 1609 warnings in 38.92s`. Trước commit: staged 26 allowed paths; 20 artifact hashes bằng cả checkout và Git blob; credential scan, compile và staged diff check pass; 45 historical hashes không đổi.
+
+Checkbox Task 10 được chốt sau khi đọc kết quả CI này. Commit tài liệu closure kế tiếp chỉ ghi verification đã xảy ra; SHA và CI của chính closure commit được xác nhận trong thông báo cuối. Không sửa execution code hoặc artifact sau live. **STOP FOR HUMAN REVIEW**, không thí nghiệm/E2E mới.

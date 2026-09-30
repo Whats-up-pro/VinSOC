@@ -202,8 +202,10 @@ Ghi initial SHA, LIVE_IMPLEMENTATION_SHA và final evidence SHA; files changed; 
 - [x] Verify final/partial report identity, SQL/scoring trace, calls/tokens và sum cost của mọi observed response. Response thiếu usage phải giữ cost incomplete; không diễn giải thành cost 0.
 - [x] Báo smoke riêng; suite có EX trên 8, syntax validity, execution success, safety rejection, model/DB calls, token usage, cost, latency và per-case error class. Nếu suite partial, ghi partial và số case thực sự hoàn tất, không công bố như suite complete.
 - [x] Chỉ đối chiếu immutable E0 run `36520685612` nếu snapshot/split/scorer/model/request contracts tương thích và được verify. Không rerun E0. Ghi rõ E3/controller đã sửa; kết quả dev không chứng minh độ tổng quát trên holdout.
-- [ ] Commit evidence sau khi smoke/suite kết thúc hoặc dừng vì lỗi; push master, đọc evidence-commit CI. Không sửa code để làm đẹp kết quả live trong task này.
-- [ ] STOP FOR HUMAN REVIEW với bằng chứng live R2 E2E. Không claim demo SOC toàn hệ thống hoàn tất; không mở frozen S1/S4 đã consumed.
+- [x] Commit evidence sau khi smoke/suite kết thúc hoặc dừng vì lỗi; push master, đọc evidence-commit CI. Không sửa code để làm đẹp kết quả live trong task này.
+- [x] STOP FOR HUMAN REVIEW với bằng chứng live R2 E2E. Không claim demo SOC toàn hệ thống hoàn tất; không mở frozen S1/S4 đã consumed.
+
+**Verified checkpoint Tasks 8-10:** initial `0973d5a6`, implementation `90acf451c264d98c3cc35662670b3b772366136a`, CI `36700628921` Python 3.11/3.12 success. Một smoke PASS, một suite 8/8 complete: EX 1/8, syntax 4/8, execution 3/8, safety 1/8; 41 attempted/response calls, $0.02185315 cost complete. Evidence commit `82598875d2b415508a69fa86e8290a5656702444`, CI `36703577420` đúng SHA xanh cả hai jobs, 704 tests/job. [Report/commands/artifact hashes](../../evaluation/r2_remediation_live_results.md). 45 historical digests giữ nguyên, frozen closed. Closure docs chỉ ghi kết quả đã pass; final SHA/CI được xác nhận sau push trước STOP.
 
 ## Phần Chờ Review Riêng
 
