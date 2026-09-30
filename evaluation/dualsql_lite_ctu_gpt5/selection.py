@@ -89,7 +89,8 @@ def _verified_row(expected_condition: str, report: ConditionReport,
                 or call["latency_ms"] < 0):
             _fail(f"{expected_condition} provider identity or usage")
     cost = sum(float(call["cost_usd"]) for call in calls)
-    if abs(cost - float(payload.get("known_cost_usd", -1))) > 1e-9:
+    reported_cost = float(payload.get("known_cost_usd", -1))
+    if abs(cost - reported_cost) > 1e-9:
         _fail(f"{expected_condition} provider cost total")
 
     derived = {
@@ -110,7 +111,7 @@ def _verified_row(expected_condition: str, report: ConditionReport,
     return {
         "condition": expected_condition,
         **derived,
-        "cost_usd": cost,
+        "cost_usd": reported_cost,
         "model_calls": len(calls),
         "latency_ms": sum(float(call["latency_ms"]) for call in calls),
         "implementation_sha": implementation_sha,
