@@ -411,17 +411,17 @@ def run_condition(
 ) -> ConditionReport: ...
 ```
 
-- [ ] **Step 1: Write failing runner tests**
+- [x] **Step 1: Write failing runner tests**
 
 Test invalid condition rejection, E1/E2/E3 call limits, provider creation after preflight only, partial evidence after a charged parse failure, actual-model mismatch, usage mismatch, output-path immutability, and report identity completeness.
 
-- [ ] **Step 2: Implement condition semantics**
+- [x] **Step 2: Implement condition semantics**
 
 - E1: linker has DB tools; generator is one-shot and has no DB tools.
 - E2: no linker; generator has DB tools.
 - E3: linker and generator both have DB tools.
 
-- [ ] **Step 3: Implement conservative preflight**
+- [x] **Step 3: Implement conservative preflight**
 
 Reserve at most:
 
@@ -431,7 +431,7 @@ Reserve at most:
 
 Bounds use serialized initial requests plus the maximum bounded tool/assistant context for later turns. Compute all three condition ceilings before provider creation and require their sum to be below USD 0.75.
 
-- [ ] **Step 4: Enforce per-call budget**
+- [x] **Step 4: Enforce per-call budget**
 
 Before each call require:
 
@@ -441,11 +441,11 @@ known_spend + conservative_remaining_bound < condition_budget
 
 Save a credential-free partial JSON before and after every charged response. A final path must never overwrite an existing file.
 
-- [ ] **Step 5: Record complete provenance**
+- [x] **Step 5: Record complete provenance**
 
 Include git SHA, condition, case IDs, split hash, logical snapshot hash, source hashes, scorer hashes, model config hash, prompt hashes, tool schema/implementation hashes, catalog hash, pricing rates/source/check time, requested/actual model, response IDs, calls, tokens, cost, latency, SQL, trajectory, and score.
 
-- [ ] **Step 6: Run tests and commit**
+- [x] **Step 6: Run tests and commit**
 
 ```bash
 python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_experiments.py -q
