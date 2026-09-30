@@ -4,8 +4,9 @@ jsonschema>=4.0.0
 rich>=13.0.0
 
 # Optional: LLM Providers
-# OpenAI SDK
-openai>=1.0.0
+# Live R2 SDK/transport contract verified together; avoid a major SDK migration.
+openai==2.8.1
+httpx==0.28.1
 
 # Optional: Testing
 pytest>=7.0.0

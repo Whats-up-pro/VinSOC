@@ -115,7 +115,7 @@ def verified_environment(snapshot_path):
                                          framing_tokens_reserve=FRAMING_TOKENS)
     identity["pricing_usd_per_million"] = PRICES
     import importlib.metadata
-    identity["runtime_versions"] = {name: importlib.metadata.version(name) for name in ("openai", "duckdb")}
+    identity["runtime_versions"] = {name: importlib.metadata.version(name) for name in ("openai", "httpx", "duckdb")}
     identity["provenance_scope"] = "current live dev execution; not historical provenance backfill"
     return cases, tools, identity
 
