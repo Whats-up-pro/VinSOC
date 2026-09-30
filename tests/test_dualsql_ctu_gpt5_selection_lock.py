@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from pathlib import Path
 
 from evaluation.ctu_network_public.contract import portable_text_sha256
@@ -42,7 +43,14 @@ def test_selected_config_lock_is_derived_from_immutable_evidence():
     assert selected["report_sha256"] == expected_hashes
     assert selected["winner"] == comparison.winner == "E0"
     assert selected["implementation_sha"] == comparison.implementation_sha
-    assert selected["selection_inputs"] == list(comparison.rows)
+    assert len(selected["selection_inputs"]) == len(comparison.rows)
+    for locked_row, recomputed_row in zip(selected["selection_inputs"], comparison.rows):
+        assert {key: value for key, value in locked_row.items() if key != "latency_ms"} == {
+            key: value for key, value in recomputed_row.items() if key != "latency_ms"
+        }
+        # Python 3.11 and 3.12 differ by a few 1e-12 ms units when summing E0 floats.
+        assert math.isclose(locked_row["latency_ms"], recomputed_row["latency_ms"],
+                            rel_tol=0, abs_tol=1e-8)
     assert selected["tie_break_trace"] == list(comparison.tiebreak_trace)
     assert selected["selection_order"] == comparison.payload["selection_order"]
     assert selected["comparison_identity"] == comparison.payload["identity"]
