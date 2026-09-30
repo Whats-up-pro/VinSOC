@@ -1,7 +1,7 @@
 """Tests for v2 package - validate grounding without question literal hints."""
 
 import pytest
-from pathlib import Path
+import duckdb
 
 from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import (
     LINKER_INSTRUCTIONS,
@@ -13,7 +13,19 @@ from evaluation.dualsql_lite_ctu_gpt5_v2.tools import CTUDatabaseTools
 from evaluation.dualsql_lite_ctu_gpt5_v2.runner import validate_linked_schema
 
 
-SNAPSHOT = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
+@pytest.fixture
+def tools(tmp_path):
+    """Unit tests use a synthetic snapshot available on both CI Python jobs."""
+    snapshot = tmp_path / "ctu-fixture.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute(
+            "CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR, protocol VARCHAR)"
+        )
+        connection.executemany("INSERT INTO network_flows VALUES (?, ?, ?)", [
+            ("ctu13_s5", "flow=From-Botnet-TCP", "TCP"),
+            ("ctu13_s7", "flow=From-Normal-UDP", "UDP"),
+        ])
+    return CTUDatabaseTools(snapshot)
 
 
 class TestPrompts:
@@ -38,10 +50,6 @@ class TestPrompts:
 
 class TestTools:
     """Test v2 tools."""
-
-    @pytest.fixture
-    def tools(self):
-        return CTUDatabaseTools(SNAPSHOT)
 
     def test_catalog_contains_ctu_values(self, tools):
         """Verify catalog has ctu13_s5/s7 in source_dataset."""
@@ -83,10 +91,6 @@ class TestTools:
 
 class TestValidation:
     """Test v2 linked schema validation."""
-
-    @pytest.fixture
-    def tools(self):
-        return CTUDatabaseTools(SNAPSHOT)
 
     def test_valid_value_with_provenance(self, tools):
         """Value found by tool should pass validation."""

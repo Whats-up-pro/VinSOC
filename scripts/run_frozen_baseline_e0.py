@@ -119,6 +119,9 @@ def main():
     parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
     args = parser.parse_args()
 
+    from scripts.frozen_run_guard import require_unconsumed_frozen
+    require_unconsumed_frozen()
+
     client = OpenAI(api_key=args.api_key or os.getenv("OPENAI_API_KEY"))
 
     cases = load_cases()

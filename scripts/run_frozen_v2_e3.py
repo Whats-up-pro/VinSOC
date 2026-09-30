@@ -307,6 +307,9 @@ def main():
     parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR)
     args = parser.parse_args()
 
+    from scripts.frozen_run_guard import require_unconsumed_frozen
+    require_unconsumed_frozen()
+
     api_key = args.api_key or os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("No API key provided")

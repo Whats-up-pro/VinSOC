@@ -7,6 +7,10 @@ from pathlib import Path
 from typing import Any
 
 TOOL_VERSION = "dualsql_lite_ctu_gpt5_v2_tools_v1"
+
+# Preserve the source-metadata API introduced at 92e20d5. The CTUDatabaseTools
+# implementation used by the recorded frozen attempts remains separate below.
+from evaluation.dualsql_lite_ctu_gpt5_v2.source_tools import V2DatabaseTools
 TOOL_SCHEMAS = [
     {"type": "function", "function": {"name": "database_profiler",
         "description": "Inspect table structure and column types.",

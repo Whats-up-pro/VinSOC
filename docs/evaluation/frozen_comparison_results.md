@@ -1,4 +1,9 @@
-# Frozen Evaluation Results: Baseline vs DualSQL v2
+# Historical Frozen Attempts: Baseline vs DualSQL v2
+
+> Eligibility audit: these are exploratory historical attempts, not accepted
+> frozen benchmark results under the approved protocol. See the
+> [protocol audit](ctu_frozen_protocol_audit_2026-09-30.md) and consumption lock.
+> Preserve the artifacts and do not rerun this holdout.
 
 **Date:** 2026-09-30  
 **Snapshot:** CTU-13 S1/S4 Frozen (3,945,672 rows)  
@@ -12,9 +17,9 @@
 | Condition | Accuracy | Syntax Valid | Cost |
 |-----------|----------|--------------|------|
 | **Baseline E0** | 0/8 (0%) | 8/8 | $0.004 |
-| **DualSQL v2 E3** | 2/8 (25%) | 8/8 | $0.010 |
+| **DualSQL v2 E3** | 2/8 (25%) | 3/8 per JSON | $0.010 reported, incomplete |
 
-### Improvement: +2 cases correct
+### Recorded score difference: +2 cases; no accepted improvement claim
 
 ---
 
@@ -33,7 +38,7 @@
 
 ---
 
-## Key Findings
+## Historical observations, excluded from further tuning
 
 ### 1. Value Grounding Works (Cases 001, 002)
 The linker successfully discovers `ctu13_s1` and `ctu13_s4` from `scenario 1` and `scenario 4` via value_search, enabling correct SQL generation.
@@ -42,11 +47,11 @@ The linker successfully discovers `ctu13_s1` and `ctu13_s4` from `scenario 1` an
 - Case 003: Wrong table name (plural vs singular)
 - Cases 004-008: Multi-clause SQL with aggregations, boolean logic, time ranges
 
-### 3. DualSQL Approach Validated
-v2 E3 achieves 2/8 vs baseline 0/8, proving that:
-- Schema linking via tools improves accuracy
-- Value grounding from database (not question text) works
-- Multi-turn with tools enables discovery
+### 3. Validation claim withdrawn
+The recorded 2/8 versus 0/8 difference does not establish that schema linking
+improves accuracy under the approved protocol. The required pre-run lock, CI,
+identity and cost evidence is missing. These attempts remain descriptive
+historical observations.
 
 ---
 
@@ -66,13 +71,13 @@ v2 E3 achieves 2/8 vs baseline 0/8, proving that:
 
 ## Conclusion
 
-DualSQL v2 E3 with Schema Linker + Generator + Tools achieves **25% accuracy** on frozen CTU-13 holdout vs **0% baseline** on the same cases. The approach successfully grounds stored values (`scenario 1` → `ctu13_s1`) via database tools, improving on one-shot generation.
+The scripts recorded v2 2/8 and baseline 0/8. These are not protocol-eligible
+frozen accuracy or generalization results. Preserve the artifacts and the
+original report at commit `cf46fb4`; eligibility and cost limitations are
+documented in the linked audit.
 
-However, 6/8 cases still fail due to:
-1. Table name errors (case 003)
-2. Complex SQL patterns (boolean logic, time ranges, aggregations)
-
-**Future work:** Improve generator prompt for complex SQL patterns, add table name validation.
+The earlier recommendation to adjust generator prompts from these holdout
+outcomes is withdrawn. Do not tune from these outputs or rerun this holdout.
 
 ---
 
