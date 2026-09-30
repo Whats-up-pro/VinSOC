@@ -589,11 +589,11 @@ Each case equals 12.5 percentage points. Claim a `strong pilot signal` only if t
 
 The lock contains all four report hashes, winner, exact deployable config, prompt/tool/catalog hashes, pricing identity, selection inputs, and tie-break trace.
 
-- [ ] **Step 5: Commit evidence only after selection passes**
+- [x] **Step 5: Commit evidence only after selection passes**
 
 Commit the three result directories, receipts, selection lock, and dev report. Run full CI on this evidence commit.
 
-- [ ] **Step 6: STOP FOR HUMAN REVIEW**
+- [x] **Step 6: STOP FOR HUMAN REVIEW**
 
 Do not run frozen.
 
