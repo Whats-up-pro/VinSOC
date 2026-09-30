@@ -528,7 +528,7 @@ If a dependency is missing, report the exact command and error. Do not call an u
 
 Stage named code, tests, lock, and workflow only. Push `master`. Record this full SHA as `IMPLEMENTATION_SHA`.
 
-- [ ] **Step 7: Wait for exact-SHA CI**
+- [x] **Step 7: Wait for exact-SHA CI**
 
 Both Python 3.11 and 3.12 must pass on `IMPLEMENTATION_SHA`. Do not use CI from an earlier or later SHA.
 
