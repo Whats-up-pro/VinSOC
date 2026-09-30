@@ -471,7 +471,7 @@ def build_selection(
 ) -> SelectionResult: ...
 ```
 
-- [ ] **Step 1: Test every selection tie-break and identity mismatch**
+- [x] **Step 1: Test every selection tie-break and identity mismatch**
 
 Order:
 
@@ -483,7 +483,7 @@ Order:
 
 Reject partial reports, different splits, logical snapshots, sources, scorer identities, model contracts, implementation SHAs among E1-E3, or prompt/tool/catalog drift.
 
-- [ ] **Step 2: Test workflow shape**
+- [x] **Step 2: Test workflow shape**
 
 Require:
 
@@ -495,7 +495,7 @@ Require:
 - no E0 dispatch;
 - no artifact upload containing source bytes or DuckDB files.
 
-- [ ] **Step 3: Reconstruct the exact dev snapshot in every run**
+- [x] **Step 3: Reconstruct the exact dev snapshot in every run**
 
 The workflow must:
 
@@ -509,11 +509,11 @@ The workflow must:
 8. clean source bytes and DuckDB files in an `if: always()` step;
 9. upload only credential-free JSON evidence.
 
-- [ ] **Step 4: Enforce checkout and paid gates**
+- [x] **Step 4: Enforce checkout and paid gates**
 
 The workflow runs only on `refs/heads/master`, validates `GITHUB_SHA` against local HEAD, requires the pinned model secret/value, and creates the OpenAI client only after snapshot, E0, price, budget, and account gates pass.
 
-- [ ] **Step 5: Run all offline verification**
+- [x] **Step 5: Run all offline verification**
 
 ```bash
 python -m pytest tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_ctu_gpt5_workflow.py tests/test_dualsql_tools.py tests/test_dualsql_agents.py tests/test_dualsql_experiments.py -q
@@ -524,11 +524,11 @@ git diff --check
 
 If a dependency is missing, report the exact command and error. Do not call an unrun test passed.
 
-- [ ] **Step 6: Commit the final implementation SHA**
+- [x] **Step 6: Commit the final implementation SHA**
 
 Stage named code, tests, lock, and workflow only. Push `master`. Record this full SHA as `IMPLEMENTATION_SHA`.
 
-- [ ] **Step 7: Wait for exact-SHA CI**
+- [x] **Step 7: Wait for exact-SHA CI**
 
 Both Python 3.11 and 3.12 must pass on `IMPLEMENTATION_SHA`. Do not use CI from an earlier or later SHA.
 

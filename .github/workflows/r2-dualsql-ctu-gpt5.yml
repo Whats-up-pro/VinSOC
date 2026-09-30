@@ -1,11 +1,10 @@
-name: R2 DualSQL CTU GPT-5 Mini
-run-name: dualsql-ctu-${{ inputs.condition }}
+name: R2 DualSQL-Lite CTU GPT-5 Mini
 
 on:
   workflow_dispatch:
     inputs:
       condition:
-        description: One CTU dev condition to execute after exact-SHA CI
+        description: Run exactly one locked development condition
         required: true
         type: choice
         options:
@@ -15,86 +14,188 @@ on:
 
 permissions:
   contents: read
-  actions: read
 
 concurrency:
-  group: dualsql-ctu-${{ inputs.condition }}
+  group: r2-dualsql-ctu-gpt5-${{ inputs.condition }}
   cancel-in-progress: false
 
 jobs:
-  condition:
-    if: github.ref == 'refs/heads/master'
+  run-one-condition:
+    if: ${{ github.ref == 'refs/heads/master' && github.run_attempt == 1 }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
-    env:
-      CTU_MANIFEST: evaluation/ctu_network_public/dataset_manifest.json
-      SNAPSHOT_DIR: ${{ runner.temp }}/dualsql_snapshots
-      EVIDENCE_DIR: ${{ runner.temp }}/dualsql_evidence
-      CONDITION: ${{ inputs.condition }}
-      GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Verify checkout and first attempt
+      - name: Checkout exact master SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Verify checkout and one-attempt gate
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
-          test "$GITHUB_REF" = "refs/heads/master"
-          test "$GITHUB_RUN_ATTEMPT" = "1"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-      - name: Verify exact-SHA CI and single dispatch
-        run: |
-          python - <<'PY'
-          import json, os, subprocess
+          test "$GITHUB_SHA" = "$EXPECTED_SHA"
+          test "$GITHUB_RUN_ATTEMPT" = "1"
+          test "$(git status --porcelain | wc -l)" = "0"
 
-          repo, sha = os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_SHA"]
-          def api(path):
-              return json.loads(subprocess.check_output(["gh", "api", path], text=True))
-
-          ci = api(f"repos/{repo}/actions/runs?head_sha={sha}&per_page=100")
-          if not any(run["head_sha"] == sha and run["name"] == "CI"
-                     and run["conclusion"] == "success" for run in ci["workflow_runs"]):
-              raise SystemExit("Full CI Python 3.11/3.12 is not green on GITHUB_SHA")
-          prior = api(f"repos/{repo}/actions/workflows/r2-dualsql-ctu-gpt5.yml/runs"
-                      "?event=workflow_dispatch&per_page=100")
-          title = "dualsql-ctu-" + os.environ["CONDITION"]
-          if any(str(run["id"]) != os.environ["GITHUB_RUN_ID"]
-                 and run["display_title"] == title for run in prior["workflow_runs"]):
-              raise SystemExit("This condition already has a dispatch; no rerun")
-          PY
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install pinned dependencies
+
+      - name: Install locked dependencies
         run: python -m pip install -r requirements.txt
-      - name: Download pinned CTU S5/S7 and verify two snapshots
+
+      - name: Download only pinned CTU S5 and S7 sources
         run: |
-          python -m evaluation.dualsql_lite_ctu_gpt5.workflow prepare \
-            --snapshot-dir "$SNAPSHOT_DIR" --evidence-dir "$EVIDENCE_DIR"
-      - name: Run exactly one condition after price, account and cost gates
+          python - <<'PY'
+          import hashlib
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          manifest_path = Path("evaluation/ctu_network_public/dataset_manifest.json")
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          expected = {
+              "ctu13_s5": (
+                  "capture20110815-2.binetflow",
+                  "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+                  "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-46/detailed-bidirectional-flow-labels/capture20110815-2.binetflow",
+              ),
+              "ctu13_s7": (
+                  "capture20110816-2.binetflow",
+                  "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+                  "https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-48/detailed-bidirectional-flow-labels/capture20110816-2.binetflow",
+              ),
+          }
+          sources = manifest.get("sources", [])
+          if {item.get("dataset_id") for item in sources} != set(expected):
+              raise SystemExit("Unexpected CTU source set")
+          for item in sources:
+              filename, digest, source_url = expected[item["dataset_id"]]
+              target = Path(item["path"])
+              if (target.name != filename or item.get("file_sha256") != digest
+                      or item.get("source_url") != source_url):
+                  raise SystemExit("Pinned source identity mismatch")
+              target.parent.mkdir(parents=True, exist_ok=True)
+              urllib.request.urlretrieve(source_url, target)
+              actual = hashlib.sha256(target.read_bytes()).hexdigest()
+              if actual != digest:
+                  raise SystemExit("Downloaded source checksum mismatch")
+          PY
+
+      - name: Build independent snapshot A
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot "$RUNNER_TEMP/snapshot-a.duckdb" \
+            --report "$RUNNER_TEMP/snapshot-a.json"
+
+      - name: Build independent snapshot B
+        run: |
+          python -m scripts.build_ctu_network_public_snapshot \
+            --manifest evaluation/ctu_network_public/dataset_manifest.json \
+            --snapshot "$RUNNER_TEMP/snapshot-b.duckdb" \
+            --report "$RUNNER_TEMP/snapshot-b.json"
+
+      - name: Verify snapshot and all offline gates
+        env:
+          CURRENT_INPUT_USD_M: ${{ vars.R2_GPT5_MINI_INPUT_USD_M }}
+          CURRENT_OUTPUT_USD_M: ${{ vars.R2_GPT5_MINI_OUTPUT_USD_M }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from evaluation.ctu_network_public.contract import validate
+          from evaluation.dualsql_lite_ctu_gpt5.contract import verify_e0_baseline
+          from evaluation.dualsql_lite_ctu_gpt5.runner import (
+              E0_REPORT, SERIES_CEILING_USD, conservative_preflight,
+          )
+          from evaluation.dualsql_lite_ctu_gpt5.tools import CTUDatabaseTools
+
+          a = Path(os.environ["RUNNER_TEMP"]) / "snapshot-a.duckdb"
+          b = Path(os.environ["RUNNER_TEMP"]) / "snapshot-b.duckdb"
+          lock_path = Path("evaluation/ctu_network_public/VERSION.lock")
+          first = validate(a, lock_path=lock_path)
+          second = validate(b, lock_path=lock_path)
+          if first["logical_snapshot_sha256"] != second["logical_snapshot_sha256"]:
+              raise SystemExit("Independent snapshot logical hashes differ")
+          if first["row_counts"].get("network_flows") != 243906:
+              raise SystemExit("Pinned CTU row count mismatch")
+          verify_e0_baseline(E0_REPORT)
+          bounds = conservative_preflight(CTUDatabaseTools(a).schema_context())
+          if sum(item["ceiling_usd"] for item in bounds.values()) >= SERIES_CEILING_USD:
+              raise SystemExit("Series preflight ceiling failed")
+          if (float(os.environ["CURRENT_INPUT_USD_M"]) != 0.25
+                  or float(os.environ["CURRENT_OUTPUT_USD_M"]) != 2.0):
+              raise SystemExit("Current official pricing differs from locked pricing")
+          PY
+
+      - name: Run paid condition
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_EVAL_MODEL: ${{ secrets.OPENAI_EVAL_MODEL }}
-          OPENAI_ORGANIZATION_ID: ${{ secrets.OPENAI_ORGANIZATION_ID }}
-          OPENAI_PROJECT_ID: ${{ secrets.OPENAI_PROJECT_ID }}
-          OPENAI_PRICE_CHECKED_UTC: ${{ vars.OPENAI_PRICE_CHECKED_UTC }}
-          OPENAI_CREDIT_CHECKED_UTC: ${{ vars.OPENAI_CREDIT_CHECKED_UTC }}
-          OPENAI_CURRENT_INPUT_USD_M: ${{ vars.OPENAI_CURRENT_INPUT_USD_M }}
-          OPENAI_CURRENT_OUTPUT_USD_M: ${{ vars.OPENAI_CURRENT_OUTPUT_USD_M }}
-          OPENAI_USABLE_CREDIT_USD: ${{ vars.OPENAI_USABLE_CREDIT_USD }}
-          OPENAI_SPEND_LIMIT_REMAINING_USD: ${{ vars.OPENAI_SPEND_LIMIT_REMAINING_USD }}
-          VINSOC_CUMULATIVE_KNOWN_USD: ${{ vars.VINSOC_CUMULATIVE_KNOWN_USD }}
+          VINSOC_EVAL_MODEL: ${{ secrets.VINSOC_EVAL_MODEL }}
+          PRICING_CHECKED_UTC: ${{ vars.R2_PRICING_CHECKED_UTC }}
+          CREDIT_CHECKED_UTC: ${{ vars.R2_CREDIT_CHECKED_UTC }}
+          ORG_PROJECT_VERIFIED: ${{ vars.R2_ORG_PROJECT_VERIFIED }}
+          USABLE_CREDIT_USD: ${{ vars.R2_USABLE_CREDIT_USD }}
+          SPEND_LIMIT_REMAINING_USD: ${{ vars.R2_SPEND_LIMIT_REMAINING_USD }}
+          CUMULATIVE_KNOWN_USD: ${{ vars.R2_CUMULATIVE_KNOWN_USD }}
+          TOTAL_AUTHORIZED_USD: ${{ vars.R2_TOTAL_AUTHORIZED_USD }}
+          CONDITION: ${{ inputs.condition }}
         run: |
-          python -m evaluation.dualsql_lite_ctu_gpt5.workflow run \
-            --condition "$CONDITION" --snapshot-dir "$SNAPSHOT_DIR" \
-            --evidence-dir "$EVIDENCE_DIR"
-      - name: Remove source bytes and DuckDB files
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from openai import OpenAI
+          from evaluation.dualsql_lite_ctu_gpt5.agents import MODEL
+          from evaluation.dualsql_lite_ctu_gpt5.contract import SERIES_LOCK
+          from evaluation.dualsql_lite_ctu_gpt5.runner import run_condition
+
+          if os.environ.get("VINSOC_EVAL_MODEL") != MODEL:
+              raise SystemExit("Pinned model secret mismatch")
+          if not os.environ.get("OPENAI_API_KEY"):
+              raise SystemExit("OPENAI_API_KEY is unavailable")
+          lock = json.loads(SERIES_LOCK.read_text(encoding="utf-8"))
+          lock["runtime_gates"] = {
+              "current_input_usd_per_million": 0.25,
+              "current_output_usd_per_million": 2.0,
+              "pricing_checked_utc": os.environ["PRICING_CHECKED_UTC"],
+              "credit_checked_utc": os.environ["CREDIT_CHECKED_UTC"],
+              "organization_project_verified": os.environ["ORG_PROJECT_VERIFIED"].lower() == "true",
+              "usable_credit_usd": float(os.environ["USABLE_CREDIT_USD"]),
+              "spend_limit_remaining_usd": float(os.environ["SPEND_LIMIT_REMAINING_USD"]),
+              "cumulative_known_usd": float(os.environ["CUMULATIVE_KNOWN_USD"]),
+              "total_authorized_usd": float(os.environ["TOTAL_AUTHORIZED_USD"]),
+          }
+          evidence = Path(os.environ["RUNNER_TEMP"]) / "evidence"
+          evidence.mkdir(parents=True, exist_ok=False)
+          output = evidence / f"{os.environ['CONDITION'].lower()}-report.json"
+          snapshot = Path(os.environ["RUNNER_TEMP"]) / "snapshot-a.duckdb"
+          run_condition(
+              os.environ["CONDITION"], snapshot, output,
+              lambda: OpenAI(max_retries=0), lock,
+          )
+          PY
+
+      - name: Cleanup source bytes and snapshots
         if: always()
         run: |
-          python -m evaluation.dualsql_lite_ctu_gpt5.workflow cleanup \
-            --snapshot-dir "$SNAPSHOT_DIR"
+          rm -f data/ctu_network_public/sources/capture20110815-2.binetflow
+          rm -f data/ctu_network_public/sources/capture20110816-2.binetflow
+          rm -f "$RUNNER_TEMP/snapshot-a.duckdb" "$RUNNER_TEMP/snapshot-b.duckdb"
+
       - name: Upload credential-free JSON evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dualsql-ctu-${{ inputs.condition }}-${{ github.run_id }}
-          path: ${{ runner.temp }}/dualsql_evidence/*.json
-          if-no-files-found: ignore
+          name: r2-dualsql-ctu-gpt5-${{ inputs.condition }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/evidence/*.json
+          if-no-files-found: error
           retention-days: 90
