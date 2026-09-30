@@ -1,0 +1,472 @@
+{
+  "case_results": [
+    {
+      "case_id": "ctu_sql_001",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 5",
+          "value": "ctu13_s5"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_002",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 7",
+          "value": "ctu13_s7"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_003",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 5",
+          "value": "ctu13_s5"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_004",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 5",
+          "value": "ctu13_s5"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_005",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 7",
+          "value": "ctu13_s7"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_006",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 5",
+          "value": "ctu13_s5"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_007",
+      "error": null,
+      "passed": true,
+      "references": [
+        {
+          "column": "source_dataset",
+          "evidence_class": "source_metadata",
+          "surface": "scenario 7",
+          "value": "ctu13_s7"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_sql_008",
+      "error": null,
+      "passed": true,
+      "references": []
+    }
+  ],
+  "catalog_sha256": "7e06a306686132062f61c1a7a6a30089e824bb3f20dc943d759b19f86f93ae40",
+  "gate_passed": true,
+  "negative_controls_passed": 2,
+  "no_reference_cases": [
+    "ctu_sql_008"
+  ],
+  "referenced_cases_resolved": 7,
+  "replay": [
+    {
+      "arguments": {
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_001",
+      "domain_columns": [],
+      "match_columns": [
+        "source_dataset"
+      ],
+      "match_values": [
+        "ctu13_s5"
+      ],
+      "resolution": "matched"
+    },
+    {
+      "arguments": {
+        "column": "source_dataset",
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [
+        "source_dataset"
+      ],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "source_row_id",
+        "query": "7",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_003",
+      "domain_columns": [],
+      "match_columns": [
+        "source_dataset"
+      ],
+      "match_values": [
+        "ctu13_s5"
+      ],
+      "resolution": "matched"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_004",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_006",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "source_dataset",
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_001",
+      "domain_columns": [],
+      "match_columns": [
+        "source_dataset"
+      ],
+      "match_values": [
+        "ctu13_s5"
+      ],
+      "resolution": "matched"
+    },
+    {
+      "arguments": {
+        "column": "source_dataset",
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [
+        "source_dataset"
+      ],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 7",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "Normal",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [],
+      "match_columns": [
+        "label"
+      ],
+      "match_values": [
+        "flow=From-Normal-V46-CVUT-WebServer",
+        "flow=From-Normal-V46-Grill",
+        "flow=From-Normal-V46-Jist",
+        "flow=From-Normal-V46-MatLab-Server",
+        "flow=From-Normal-V46-Stribrek",
+        "flow=From-Normal-V46-UDP-CVUT-DNS-Server",
+        "flow=From-Normal-V48-CVUT-WebServer",
+        "flow=From-Normal-V48-Grill",
+        "flow=From-Normal-V48-Jist",
+        "flow=From-Normal-V48-Stribrek"
+      ],
+      "resolution": "matched"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_003",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_003",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 7",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_005",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "7",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_005",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "source_dataset",
+        "query": "Scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_001",
+      "domain_columns": [],
+      "match_columns": [
+        "source_dataset"
+      ],
+      "match_values": [
+        "ctu13_s5"
+      ],
+      "resolution": "matched"
+    },
+    {
+      "arguments": {
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "query": "SELECT DISTINCT source_dataset FROM network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "query": "SELECT DISTINCT label FROM network_flows"
+      },
+      "case_id": "ctu_sql_002",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_003",
+      "domain_columns": [],
+      "match_columns": [
+        "source_dataset"
+      ],
+      "match_values": [
+        "ctu13_s5"
+      ],
+      "resolution": "matched"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_003",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_003",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_004",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 5",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_004",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario 7",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_005",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "7",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_005",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "scenario",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_006",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    },
+    {
+      "arguments": {
+        "column": "label",
+        "query": "DISTINCT label",
+        "table": "network_flows"
+      },
+      "case_id": "ctu_sql_008",
+      "domain_columns": [],
+      "match_columns": [],
+      "match_values": [],
+      "resolution": "unresolved"
+    }
+  ],
+  "replayed_call_count": 27,
+  "snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "source_manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+  "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+  "v1_report_sha256": {
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_lite_ctu_gpt5_v1\\36662231091\\E1.json": "ae528538a4291f7a99f3618b6b94876c0fe510e0937b917cb134e4148656f622",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_lite_ctu_gpt5_v1\\36662683274\\E2.json": "6bdd3bb513877b2c9d8035e7c74f7ad4826b2cfd9ce631a3e23ced3e85cd57af",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_lite_ctu_gpt5_v1\\36662943266\\E3.json": "23e18c9d2d7a1899d1506d9ee722a50c26ac2e07a9b7bc7c5b66358f09ec73b4"
+  }
+}
