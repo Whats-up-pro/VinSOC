@@ -2,9 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** AUTHORIZED FOR OFFLINE EXECUTION theo ch? th? ng??i d?ng ng?y 2026-09-30; paid/model workflow v?n b? c?m.
+**Phạm vi phiên remediation hiện tại:** Chỉ thị trực tiếp của người dùng yêu cầu hoàn tất Tasks 1-7 offline, zero API/model dispatch và STOP FOR HUMAN REVIEW. Các bổ sung Tasks 8-10 từ remote `4886b57` được giữ nguyên để review; không được thực thi trong phiên này. CLI live vẫn closed.
 
-**Goal:** Khôi phục CI, sửa đường chạy R2 và báo cáo để số liệu, safety, telemetry và provenance có thể kiểm chứng.
+**Status:** AUTHORIZED FOR REMEDIATION + LIVE R2 DEV VALIDATION. Người dùng đã duyệt ngày 2026-09-30: hoàn tất offline/CI rồi chạy một smoke E3 và, nếu smoke qua gate, một suite E3 dev. Tasks 8-10 thay thế điểm dừng offline trước đây. Không mở frozen.
+
+**Goal:** Khôi phục tính đúng của pipeline R2 và chứng minh đường chạy question -> linker -> DB tools -> generator -> safety -> execution -> scoring -> report bằng model thật trên dev.
 
 **Architecture:** Thống nhất tools và controller v2 trong package hiện có. Sử dụng scorer R2 đã khóa; các script frozen cũ được chặn trước provider creation. Artifact lịch sử giữ nguyên và được bổ sung hồ sơ đính chính riêng.
 
@@ -18,11 +20,11 @@
 
 - Làm trực tiếp trên `master` sau khi plan được duyệt. Fetch và fast-forward; nếu HEAD mới hơn audited baseline thì đối chiếu thay đổi trước khi sửa. Không reset/force-push về commit cũ.
 - Giữ nguyên `.env`, file untracked, thay đổi của người dùng, artifact lịch sử, source bytes và DuckDB snapshot.
-- Không workflow dispatch, model/API call, E0-E3 rerun, frozen inference, demo, R1 run, ThreatFox/OTRF download hoặc snapshot rebuild trong task này.
+- Tasks 1-7 chỉ kiểm chứng offline. Sau khi các gate đạt, Tasks 8-10 cho phép tối đa một smoke E3 và một suite E3 dev bằng API thật. Không E0/E1/E2/E0' rerun, frozen inference, demo SOC toàn hệ thống, R1 run, ThreatFox/OTRF download hoặc snapshot rebuild. Không tự retry lượt thất bại.
 - Chỉ dùng synthetic fixture và S5/S7 dev snapshot đã verify cho kiểm chứng offline. Không dùng S1/S4 hoặc output frozen để tối ưu prompt, retrieval, cap hay model.
 - Không sửa câu hỏi, gold SQL, comparator, split lock, artifact cũ, v1 selection lock hay prompt để cải thiện điểm.
 - No RL/fine-tune. Execution Accuracy vẫn là headline; chặn generator có thể làm điểm giảm nhưng phải báo cáo trung thực.
-- Contract cho fake requests: model `gpt-5-mini-2025-08-07`, `reasoning_effort=low`, cap 1000, temperature key vắng mặt, SDK retries 0. No-tool role phải bỏ key `tools`.
+- Contract cho fake và live requests: model `gpt-5-mini-2025-08-07`, `reasoning_effort=low`, cap 1000, temperature key vắng mặt, SDK retries 0. No-tool role phải bỏ key `tools`.
 - Mỗi role tối đa 5 model turns và 5 DB calls tổng cộng; chỉ 3 capability `database_profiler`, `value_search`, `sql_probe`.
 - Không raw exception, credential, prompt/IOC nhạy cảm trong public error. Không overwrite output path.
 - Mỗi checkbox chỉ đánh dấu sau khi verification liên quan thật sự pass. Không biến lỗi import thành test pass bằng skip/xfail/xóa test.
@@ -128,12 +130,12 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 
 **Files:** Modify `evaluation/dualsql_lite_ctu_gpt5_v2/experiment.py`; Create `tests/test_r2_v2_report_contract.py`; Create receipt bổ sung ở đường dẫn mới cạnh receipt Task 2. Mỗi receipt đã commit giữ nguyên bytes.
 
-**Interfaces:** `build_report_identity(snapshot_path: Path, manifest_path: Path, cases_dir: Path) -> dict[str, Any]` ghi git SHA, dirty-state, file/content hashes và model request contract. Schema report mới dùng raw counts/rates, explicit complete/partial status và eligibility reasons. Chỉ tạo report bằng fake client trong task này.
+**Interfaces:** `build_report_identity(snapshot_path: Path, manifest_path: Path, cases_dir: Path) -> dict[str, Any]` ghi git SHA, dirty-state, file/content hashes và model request contract. Schema report mới dùng raw counts/rates, explicit complete/partial status và eligibility reasons. Task 6 tạo report bằng fake client; live evidence chỉ được tạo theo Tasks 8-10.
 
 - [x] Test report fake-client có git SHA, exact condition, case IDs/hash, snapshot logical hash, sources, scorer/builder hash, prompt/tool/schema/catalog hash, serialized request contract, response IDs/model/usage, per-case score và cost completeness.
 - [x] Test output final/partial tồn tại thì reject, duplicate/missing case IDs reject, actual model/usage mismatch ghi safe failure và giữ partial evidence. Generic `--cases-dir` ngoài verified S5/S7 dev phải fail trước provider.
 - [x] Tính complete cost chỉ khi usage của tất cả attempted calls được xác nhận đầy đủ. Dirty implementation và incomplete evidence không được official eligibility. Fake-client report luôn có `official_eligible=false` với reason `synthetic_provider`; không tạo headline accuracy cho model thật từ fixture.
-- [x] CLI v2 tạo OpenAI client phải luôn fail-fast trước client creation cho đến khi task paid riêng được duyệt và triển khai đầy đủ gates. Fake-client entrypoint vẫn kiểm thử được. Budget/pricing/account gate và workflow paid mới thuộc task sau.
+- [x] Giữ CLI cũ fail-fast trước client creation. Fake-client entrypoint vẫn kiểm thử được. Chỉ entrypoint live mới của Task 8 được tạo client sau snapshot, identity, key-source, pricing và budget gates; hai entrypoint frozen lịch sử luôn bị chặn.
 - [x] History receipt liệt kê missing run-time provenance; backfill chỉ những field có bằng chứng trực tiếp (original log, response ID, exact request bytes). Ghi inferred/reconstructed riêng. Không dùng filesystem mtime làm run timestamp proof, không đặt `provenance_complete=true` từ các hash mới.
 - [x] Chạy report-contract tests; so sánh inventory artifact/E0/v1 selection ban đầu. Commit verification contract và receipt bổ sung ở path mới.
 
@@ -149,7 +151,7 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 - [ ] Chạy `python -m pytest -q`, targeted tests Tasks 1-6, `python -m compileall -q evaluation/dualsql_lite_ctu_gpt5_v2 scripts/audit_r2_historical_reports.py`, `python -m py_compile scripts/run_frozen_v2_e3.py scripts/run_frozen_baseline_e0.py`, `git diff --check`. Ghi command/output thực tế; thiếu dependency thì báo lỗi, không claim pass.
 - [ ] Kiểm staged diff chỉ có allowed code/tests/docs/new receipt; artifact cũ, `.env`, user edits không đổi. Commit/push trên master; ghi final SHA và CI URL.
 - [ ] Chờ CI Python 3.11 và 3.12 trên đúng final SHA xanh. Nếu fail thì sửa regression và đổi final SHA; không workflow model dispatch.
-- [ ] Hoàn thành report và STOP FOR HUMAN REVIEW.
+- [ ] Hoàn thành báo cáo offline, rồi tiếp tục Task 8 theo phê duyệt live mới. Không dừng xin lại quyền gọi API trong phạm vi đã duyệt; nếu một gate kỹ thuật/chi phí thất bại thì giữ evidence và báo blocker.
 
 ## Acceptance Criteria
 
@@ -160,12 +162,47 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 - Actual v2 scoring dùng evaluator/safety/comparator đã khóa; syntax validity độc lập execution success.
 - Offline S5/S7 grounding gate pass trên snapshot đã verify, hoặc blocker được ghi rõ và task chưa được claim hoàn tất.
 - Artifact lịch sử/E0/v1 selection SHA unchanged; corrected docs và receipt không fake retrospective provenance/cost.
-- Không có API call, paid suite, frozen rerun, prompt tuning, snapshot rebuild hoặc dataset download trong task này.
+- Tasks 1-7 có zero API calls. Phần live có tối đa một smoke E3 và một suite E3 dev, không retry; có evidence đầy đủ và chi phí trong bound. Không frozen rerun, prompt tuning, snapshot rebuild hoặc dataset download.
 
 ## Required Final Report
 
-Ghi initial/final SHA; file changed; command và output thực; implementation CI URL; inventory hashes unchanged; corrected historical counts; cost/provenance completeness; offline gate result; zero paid attempts; deviations/blockers; STOP FOR HUMAN REVIEW.
+Ghi initial SHA, LIVE_IMPLEMENTATION_SHA và final evidence SHA; files changed; command/output và exact-SHA CI URL; inventory hashes unchanged; corrected historical counts; cost/provenance completeness; offline gate; smoke và suite attempted/response counts, actual model, calls/tokens/cost, EX/syntax/execution/safety và từng error class; deviations/blockers; STOP FOR HUMAN REVIEW sau Task 10. Phân biệt kết quả smoke, dev accuracy và historical frozen evidence.
 
-## Gate Sau Remediation - Chưa Được Phép Chạy
+### Task 8: Triển khai entrypoint live R2 dev có kiểm soát
 
-Một plan riêng mới quyết định E0' (baseline + domain listing) và DualSQL comparison trên dev, model/budget/request lock và một lần chạy mỗi condition. Không dùng frozen cũ để chọn winner. Holdout mới cần nguồn/case chưa được dùng cho tuning và human approval trước khi mở. Gate này chờ review riêng.
+**Files:** Create `scripts/run_r2_v2_dev_live.py`, `tests/test_r2_v2_dev_live.py`; Modify `evaluation/dualsql_lite_ctu_gpt5_v2/experiment.py` chỉ khi cần nối runtime guard vào controller hiện tại.
+
+**Interfaces:** `run_live_dev(mode: Literal["smoke", "suite"], snapshot_path: Path, output_path: Path, client_factory: Callable, smoke_report_path: Path | None = None) -> dict[str, Any]`. CLI chỉ hỗ trợ condition E3, split dev S5/S7; smoke chỉ case `ctu_sql_001`, suite đúng 8 ID đã khóa. Entry point dùng actual controller, native DB tools và evaluator; không FakeProvider/fallback trong live mode.
+
+- [ ] Viết offline tests cho fixed condition/split, real-provider identity, retries 0, model/cap/reasoning/no-temperature contract; gold sentinel không có trong request.
+- [ ] Test mọi preflight failure chặn trước `client_factory()`: snapshot/source/split/hash mismatch, key-source conflict, pricing/budget không xác minh được, output tồn tại. Không log key, raw exception hoặc credential.
+- [ ] Budget mới: tổng trần bảo thủ của smoke + suite không quá USD 0.75, trong phần còn lại của ngân sách USD 2 đã duyệt. Smoke reserve tối đa USD 0.10. Chi phí lịch sử incomplete không được coi là 0; dùng thông tin tài khoản/ngân sách mới có thể xác minh để xác nhận khả năng chi trả. Không tự mua credit hay tăng spend limit.
+- [ ] Pin giá theo nguồn OpenAI chính thức và verification time ngay trước lượt live. Tính bound từ request/context đã serialize, cap 1000, tối đa 5 turns và 5 DB calls mỗi role. Trước từng API call reserve cả remaining bound; không dựa vào giá trị `estimated_cost_usd=0` để mở gate.
+- [ ] Test partial evidence được lưu trước/sau response, kể cả lỗi parsing/tool/provider. API 429/model unavailable/parameter mismatch thì dừng, lưu safe category và cost-unknown state. Không SDK retry, không đổi model/prompt rồi gọi lại.
+- [ ] Suite gate đọc immutable smoke report, yêu cầu cùng implementation SHA, snapshot/split/scorer/prompt/tool/schema/catalog/request identity. Smoke subset luôn `official_eligible=false`; report suite phải kiểm chứng eligibility theo dev protocol, không tự gán true.
+- [ ] Chạy targeted tests, full pytest, compile checks và `git diff --check`. Commit/push code/tests; ghi `LIVE_IMPLEMENTATION_SHA` và chờ CI Python 3.11/3.12 xanh trên đúng SHA đó.
+
+### Task 9: Một smoke E2E thật, rồi một suite E3 dev
+
+**Files:** Không commit bất kỳ tracked file nào giữa smoke và suite. Tạo evidence ở đường dẫn mới; commit sau khi phần live kết thúc.
+
+- [ ] Xác nhận checkout sạch đối với code thực thi, `origin/master == LIVE_IMPLEMENTATION_SHA`, CI đúng SHA xanh và verified dev snapshot đang có sẵn. Chạy preflight budget/account/key-source; không tự tải nguồn mới.
+- [ ] Chạy smoke E3 `ctu_sql_001` đúng một lần. SDK có thể có nhiều API turns trong role theo contract; đây là một smoke scenario, không phải một API request. Ghi toàn bộ attempted/response/tool calls và usage.
+- [ ] Smoke PASS khi actual provider/model đúng, usage hợp lệ, linker/tools/generator đã thực sự chạy, final SQL không rỗng và đi qua safety/DB execution, scorer/report hoàn tất, cost trong bound. EX không bắt buộc true: kết quả SQL sai gold vẫn là một quan sát hợp lệ. Nếu pipeline dừng vì lỗi linker/API/empty SQL/safety/execution thì smoke FAIL, không suite, không retry.
+- [ ] Nếu smoke PASS, chạy ngay một suite E3 trên đúng 8 dev cases và cùng SHA. Smoke case xuất hiện lại trong suite là lượt đo đã khai báo trước; không lựa chọn rerun riêng case sai.
+- [ ] Lỗi model từng case được ghi đúng và tính trong mẫu số 8. Khi runtime guard cho phép, tiếp tục các case còn lại; lỗi hạ tầng/provider hoặc vượt budget kết thúc partial run. Không loại bỏ case thất bại để tăng điểm.
+- [ ] Dùng inventory riêng để xác nhận artifact E0/E1-E3/v1/frozen lịch sử không đổi. Không đưa smoke vào numerator/denominator của suite accuracy.
+
+### Task 10: Commit live evidence và báo cáo, rồi human review
+
+**Files:** Append immutable evidence tại `results/evaluation_v1/ctu_network_public/dualsql_v2_remediation_live/<run-id>/`; Create `docs/evaluation/r2_remediation_live_results.md`; cập nhật remediation status/README chỉ từ evidence đã kiểm chứng.
+
+- [ ] Verify final/partial report identity, SQL/scoring trace, calls/tokens và sum cost của mọi observed response. Response thiếu usage phải giữ cost incomplete; không diễn giải thành cost 0.
+- [ ] Báo smoke riêng; suite có EX trên 8, syntax validity, execution success, safety rejection, model/DB calls, token usage, cost, latency và per-case error class. Nếu suite partial, ghi partial và số case thực sự hoàn tất, không công bố như suite complete.
+- [ ] Chỉ đối chiếu immutable E0 run `36520685612` nếu snapshot/split/scorer/model/request contracts tương thích và được verify. Không rerun E0. Ghi rõ E3/controller đã sửa; kết quả dev không chứng minh độ tổng quát trên holdout.
+- [ ] Commit evidence sau khi smoke/suite kết thúc hoặc dừng vì lỗi; push master, đọc evidence-commit CI. Không sửa code để làm đẹp kết quả live trong task này.
+- [ ] STOP FOR HUMAN REVIEW với bằng chứng live R2 E2E. Không claim demo SOC toàn hệ thống hoàn tất; không mở frozen S1/S4 đã consumed.
+
+## Phần Chờ Review Riêng
+
+Ablation E0' (baseline + domain listing), các condition E1/E2 khác, full SOC demo và holdout mới cần task riêng. Phê duyệt live R2 dev ở trên không cho phép chạy frozen cũ hoặc tự chọn nguồn/case holdout thay thế.
