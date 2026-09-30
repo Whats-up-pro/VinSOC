@@ -113,7 +113,7 @@ def _verified_inputs(snapshot: Path, series_lock: dict[str, Any]) -> tuple[list[
         raise FileNotFoundError("Verified CTU dev snapshot is unavailable")
     locked = json.loads(SERIES_LOCK.read_text(encoding="utf-8"))
     for key in ("version", "model", "reasoning_effort", "max_completion_tokens",
-                "max_retries", "pricing"):
+                "max_retries", "model_config_sha256", "pricing"):
         if series_lock.get(key) != locked.get(key):
             raise ValueError(f"Series identity mismatch: {key}")
     baseline = verify_e0_baseline(E0_REPORT, SERIES_LOCK)
@@ -205,15 +205,14 @@ def run_condition(
         "known_cost_usd": 0.0, "cost_unknown": False,
         "model_contract": {"model": MODEL, "reasoning_effort": REASONING_EFFORT,
                            "max_completion_tokens": CAP, "max_retries": 0},
-        "model_config_sha256": canonical_sha256({"model": MODEL,
-            "reasoning_effort": REASONING_EFFORT, "max_completion_tokens": CAP,
-            "max_retries": 0}),
+        "model_config_sha256": series_lock["model_config_sha256"],
         "provenance": {
             "split_sha256": identity["split_sha256"],
             "logical_snapshot_sha256": identity["logical_snapshot_sha256"],
             "source_file_sha256": identity["source_file_sha256"],
             "builder_scorer_sha256": identity["builder_scorer_sha256"],
             "e0_report_sha256": identity["e0_report_sha256"],
+            "model_config_sha256": series_lock["model_config_sha256"],
             "linker_prompt_sha256": _sha_text(LINKER_INSTRUCTIONS),
             "generator_prompt_sha256": _sha_text(GENERATOR_INSTRUCTIONS),
             "linker_prompt_version": LINKER_PROMPT_VERSION,

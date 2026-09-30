@@ -35,6 +35,9 @@ class BaselineEvidence:
     latency_ms: float = 0.0
     source_file_sha256: dict[str, str] | None = None
     builder_scorer_sha256: dict[str, str] | None = None
+    syntax_valid: int = 8
+    execution_success: int = 8
+    safety_rejected: int = 0
 
 
 def _require(condition: bool, field: str) -> None:
@@ -168,7 +171,7 @@ def verify_e0_baseline(
         system_prompt_sha256=provenance["system_prompt_sha256"],
         schema_context_sha256=provenance["schema_context_sha256"],
         model_calls=report["attempted_calls"],
-        latency_ms=sum(item["latency_ms"] for item in cases),
+        latency_ms=sum(float(item["latency_ms"]) for item in cases),
         source_file_sha256=provenance["source_file_sha256"],
         builder_scorer_sha256=provenance["builder_scorer_sha256"],
     )

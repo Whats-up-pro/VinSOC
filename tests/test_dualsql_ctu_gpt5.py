@@ -6,8 +6,10 @@ import copy
 import hashlib
 import importlib
 import json
+import sys
 from pathlib import Path
 
+import duckdb
 import pytest
 
 
@@ -177,6 +179,32 @@ def test_e0_descriptive_null_temperature_is_allowed(tmp_path):
 
 
 DEV_SNAPSHOT = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
+
+
+@pytest.fixture(autouse=True)
+def _isolated_dev_snapshot(tmp_path, monkeypatch):
+    """Exercise the CTU boundary without relying on a laptop-only DuckDB file."""
+    snapshot = tmp_path / "ctu_dev_fixture.duckdb"
+    rows = []
+    for index in range(25):
+        source = "ctu13_s5" if index < 13 else "ctu13_s7"
+        protocol = "TCP" if index % 2 == 0 else "UDP"
+        label = ("flow=From-Botnet-TCP" if index == 0
+                 else f"flow=Background-{protocol}")
+        rows.append((source, str(index + 1), f"2011-08-1{index % 9 + 1} 12:00:00",
+                     f"10.0.0.{index + 1}", "8.8.8.8", 1000 + index,
+                     80, protocol, label))
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute(
+            "CREATE TABLE network_flows("
+            "source_dataset VARCHAR, source_row_id VARCHAR, event_time TIMESTAMP, "
+            "src_ip VARCHAR, dst_ip VARCHAR, src_port INTEGER, dst_port INTEGER, "
+            "protocol VARCHAR, label VARCHAR)"
+        )
+        connection.executemany(
+            "INSERT INTO network_flows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", rows
+        )
+    monkeypatch.setattr(sys.modules[__name__], "DEV_SNAPSHOT", snapshot)
 
 
 def _tools():
@@ -472,6 +500,7 @@ def _runner_identity():
 def _runner_lock():
     return {"model": "gpt-5-mini-2025-08-07", "reasoning_effort": "low",
             "max_completion_tokens": 1000, "max_retries": 0,
+            "model_config_sha256": "9" * 64,
             "pricing": {"input_usd_per_million": 0.25,
                         "output_usd_per_million": 2.0,
                         "source": "https://developers.openai.com/api/docs/models/gpt-5-mini",
@@ -516,6 +545,8 @@ def test_ctu_runner_condition_semantics_and_complete_identity(
     assert payload["provenance"]["schema_context_sha256"]
     assert payload["provenance"]["split_sha256"] == "a" * 64
     assert payload["model_contract"]["max_retries"] == 0
+    assert payload["model_config_sha256"] == "9" * 64
+    assert payload["provenance"]["model_config_sha256"] == "9" * 64
     assert payload["known_cost_usd"] == pytest.approx(expected_calls * 0.000125)
     assert len(payload["serialized_requests"]) == expected_calls
     assert all("temperature" not in request for request in payload["serialized_requests"])
@@ -580,3 +611,151 @@ def test_ctu_runner_rejects_sdk_retries_before_first_model_call(tmp_path, monkey
     with pytest.raises(ValueError, match="SDK retries"):
         runner.run_condition("E2", snapshot, tmp_path / "result.json", lambda: client, _runner_lock())
     assert client.requests == []
+
+
+def _selection_report(condition, *, accurate=1, cost=0.01, calls=9, latency=100.0):
+    from evaluation.dualsql_lite_ctu_gpt5.runner import ConditionReport
+
+    case_ids = [f"ctu_sql_{index:03d}" for index in range(1, 9)]
+    case_results = [{
+        "case_id": case_id,
+        "syntax_valid": True,
+        "execution_success": True,
+        "execution_accurate": index < accurate,
+        "safety_rejected": False,
+    } for index, case_id in enumerate(case_ids)]
+    provider_calls = [{
+        "response_id": f"response-{index}",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "input_tokens": 100,
+        "output_tokens": 10,
+        "cost_usd": cost / calls,
+        "latency_ms": latency / calls,
+    } for index in range(calls)]
+    payload = {
+        "run_status": "complete",
+        "condition": condition,
+        "implementation_sha": "f" * 40,
+        "case_ids": case_ids,
+        "case_results": case_results,
+        "attempted_calls": calls,
+        "provider_calls": provider_calls,
+        "known_cost_usd": cost,
+        "cost_unknown": False,
+        "model_contract": {
+            "model": "gpt-5-mini-2025-08-07",
+            "reasoning_effort": "low",
+            "max_completion_tokens": 1000,
+            "max_retries": 0,
+        },
+        "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+        "metrics": {
+            "execution_accurate": accurate,
+            "syntax_valid": 8,
+            "execution_success": 8,
+            "safety_rejected": 0,
+        },
+        "provenance": {
+            "e0_report_sha256": REPORT_SHA256,
+            "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+            "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+            "source_file_sha256": {
+                "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+                "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680",
+            },
+            "builder_scorer_sha256": {
+                "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+                "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+                "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+                "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+            },
+            "model_config_sha256": "682254f85e2b6ca181d452643091eded385050edca13653e0d60c041c1814f58",
+            "linker_prompt_sha256": "1" * 64,
+            "generator_prompt_sha256": "2" * 64,
+            "tool_schema_sha256": "3" * 64,
+            "tool_implementation_sha256": "4" * 64,
+            "tool_version": "dualsql_lite_ctu_gpt5_tools_v2",
+            "catalog_sha256": "5" * 64,
+            "schema_context_sha256": "6" * 64,
+        },
+    }
+    return ConditionReport(Path(f"{condition}.json"), payload)
+
+
+def test_ctu_selection_uses_predeclared_tie_break_order():
+    from evaluation.dualsql_lite_ctu_gpt5.contract import verify_e0_baseline
+    from evaluation.dualsql_lite_ctu_gpt5.selection import build_selection
+
+    e0 = verify_e0_baseline(REPORT)
+    result = build_selection(
+        e0,
+        _selection_report("E1", accurate=4, cost=0.02, calls=10, latency=200),
+        _selection_report("E2", accurate=4, cost=0.01, calls=12, latency=100),
+        _selection_report("E3", accurate=3, cost=0.001, calls=1, latency=1),
+    )
+    assert result.winner == "E2"
+    assert result.ranking == ("E2", "E1", "E3", "E0")
+    assert result.payload["headline_metric"] == "execution_accuracy"
+
+
+@pytest.mark.parametrize("tie_field", ["cost", "calls", "latency", "simplicity"])
+def test_ctu_selection_tie_breaks_are_deterministic(tie_field):
+    from evaluation.dualsql_lite_ctu_gpt5.contract import verify_e0_baseline
+    from evaluation.dualsql_lite_ctu_gpt5.selection import build_selection
+
+    e0 = verify_e0_baseline(REPORT)
+    values = {
+        "E1": {"cost": 0.03, "calls": 12, "latency": 300},
+        "E2": {"cost": 0.03, "calls": 12, "latency": 300},
+        "E3": {"cost": 0.03, "calls": 12, "latency": 300},
+    }
+    if tie_field == "cost":
+        values["E2"]["cost"] = 0.02
+        expected = "E2"
+    elif tie_field == "calls":
+        values["E2"]["calls"] = 11
+        expected = "E2"
+    elif tie_field == "latency":
+        values["E2"]["latency"] = 200
+        expected = "E2"
+    else:
+        expected = "E1"
+    reports = [_selection_report(name, accurate=4, **values[name]) for name in ("E1", "E2", "E3")]
+    assert build_selection(e0, *reports).winner == expected
+
+
+@pytest.mark.parametrize("mutation", [
+    "partial", "split", "snapshot", "source", "scorer", "model_contract",
+    "model_config", "implementation", "prompt", "tool", "catalog",
+])
+def test_ctu_selection_rejects_incompatible_evidence(mutation):
+    from evaluation.dualsql_lite_ctu_gpt5.contract import verify_e0_baseline
+    from evaluation.dualsql_lite_ctu_gpt5.selection import build_selection
+
+    e0 = verify_e0_baseline(REPORT)
+    reports = [_selection_report(name) for name in ("E1", "E2", "E3")]
+    target = reports[2].payload
+    if mutation == "partial":
+        target["run_status"] = "partial"
+    elif mutation == "split":
+        target["provenance"]["split_sha256"] = "a" * 64
+    elif mutation == "snapshot":
+        target["provenance"]["logical_snapshot_sha256"] = "b" * 64
+    elif mutation == "source":
+        target["provenance"]["source_file_sha256"] = {"ctu13_s5": "c" * 64}
+    elif mutation == "scorer":
+        target["provenance"]["builder_scorer_sha256"] = {"scorer": "d" * 64}
+    elif mutation == "model_contract":
+        target["model_contract"]["max_completion_tokens"] = 999
+    elif mutation == "model_config":
+        target["model_config_sha256"] = "e" * 64
+    elif mutation == "implementation":
+        target["implementation_sha"] = "e" * 40
+    elif mutation == "prompt":
+        target["provenance"]["generator_prompt_sha256"] = "e" * 64
+    elif mutation == "tool":
+        target["provenance"]["tool_schema_sha256"] = "e" * 64
+    else:
+        target["provenance"]["catalog_sha256"] = "e" * 64
+    with pytest.raises(ValueError, match="selection"):
+        build_selection(e0, *reports)
