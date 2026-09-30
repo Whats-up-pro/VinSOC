@@ -60,4 +60,8 @@ data/public_pilot/
 data/ctu_network_public/sources/
 data/ctu_network_public/*.duckdb
 data/ctu_network_public/*-build-*.tmp
+data/ctu_network_frozen/snapshots/*.duckdb
+data/ctu_network_frozen/snapshots/build_work/
+data/ctu_network_frozen/sources/*.binetflow
+data/ctu_network_frozen/snapshots/*.tmp
 *.zip
