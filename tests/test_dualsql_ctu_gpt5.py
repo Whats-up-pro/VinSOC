@@ -262,6 +262,7 @@ class _RoleClient:
         from types import SimpleNamespace
 
         self.messages = iter(messages)
+        self.max_retries = 0
         self.requests = []
         self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
 
@@ -371,3 +372,211 @@ def test_ctu_role_omits_tools_for_no_tool_generator():
     result, _ = _run_test_role(client, tools=None, max_turns=1)
     assert result.content == "SELECT 1"
     assert "tools" not in client.requests[0]
+
+
+def test_ctu_runner_rejects_invalid_condition_and_existing_output_before_provider(tmp_path):
+    from evaluation.dualsql_lite_ctu_gpt5.runner import run_condition
+
+    created = []
+    factory = lambda: created.append(True)
+    output = tmp_path / "result.json"
+    with pytest.raises(ValueError, match="condition"):
+        run_condition("E0", tmp_path / "missing.duckdb", output, factory, {})
+    output.write_text("immutable", encoding="utf-8")
+    with pytest.raises(FileExistsError):
+        run_condition("E1", tmp_path / "missing.duckdb", output, factory, {})
+    assert output.read_text(encoding="utf-8") == "immutable" and not created
+
+
+def test_ctu_runner_preflight_covers_all_call_slots_under_series_ceiling():
+    from evaluation.dualsql_lite_ctu_gpt5.runner import conservative_preflight
+
+    bounds = conservative_preflight("network_flows(source_dataset VARCHAR, label VARCHAR)")
+    assert {name: item["max_calls"] for name, item in bounds.items()} == {
+        "E1": 48, "E2": 40, "E3": 80
+    }
+    assert sum(item["ceiling_usd"] for item in bounds.values()) < 0.75
+    assert all(item["ceiling_usd"] > 0 for item in bounds.values())
+
+
+def test_ctu_runner_preflight_blocks_provider_creation_on_bad_snapshot(tmp_path):
+    from evaluation.dualsql_lite_ctu_gpt5.runner import run_condition
+
+    created = []
+    with pytest.raises((ValueError, FileNotFoundError)):
+        run_condition("E1", tmp_path / "missing.duckdb", tmp_path / "result.json",
+                      lambda: created.append(True), {})
+    assert not created and not (tmp_path / "result.json").exists()
+
+
+def test_ctu_runner_records_charged_partial_on_provider_failure(tmp_path, monkeypatch):
+    from evaluation.dualsql_lite_ctu_gpt5 import runner
+    import duckdb
+
+    snapshot = tmp_path / "small.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute("CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR)")
+        connection.execute("INSERT INTO network_flows VALUES ('ctu13_s5', 'flow=Normal')")
+    case = _runner_case()
+    monkeypatch.setattr(runner, "_verified_inputs", lambda *_: ([case], _runner_identity()))
+
+    class FailingClient:
+        def __init__(self):
+            from types import SimpleNamespace
+
+            self.calls = 0
+            self.max_retries = 0
+            self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
+
+        def create(self, **request):
+            from types import SimpleNamespace
+
+            self.calls += 1
+            if self.calls == 1:
+                return SimpleNamespace(
+                    id="chatcmpl-test", model="gpt-5-mini-2025-08-07",
+                    usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50),
+                    choices=[SimpleNamespace(message=_role_message(
+                        calls=[("value_search", "{malformed")]))],
+                )
+            raise RuntimeError("simulated provider outage")
+
+    client = FailingClient()
+    output = tmp_path / "result.json"
+    with pytest.raises(RuntimeError, match="simulated provider outage"):
+        runner.run_condition("E2", snapshot, output, lambda: client, _runner_lock())
+    partial = json.loads((tmp_path / "result.partial.json").read_text(encoding="utf-8"))
+    assert partial["run_status"] == "partial"
+    assert partial["provider_calls"][0]["response_id"] == "chatcmpl-test"
+    assert partial["known_cost_usd"] == pytest.approx(0.000125)
+    assert client.calls == 2 and not output.exists()
+
+
+def _runner_case():
+    from evaluation.text_to_sql import SQLBenchmarkCase
+
+    return SQLBenchmarkCase(case_id="ctu_sql_001", question="Count rows",
+                            database_snapshot="small.duckdb",
+                            gold_sql=("SELECT count(*) FROM network_flows",),
+                            category="network", difficulty="basic",
+                            result_comparator="scalar")
+
+
+def _runner_identity():
+    return {"split_sha256": "a" * 64, "logical_snapshot_sha256": "b" * 64,
+            "source_file_sha256": {"ctu13_s5": "c" * 64},
+            "builder_scorer_sha256": {"evaluation/text_to_sql.py": "d" * 64},
+            "case_ids": ["ctu_sql_001"], "e0_report_sha256": "e" * 64}
+
+
+def _runner_lock():
+    return {"model": "gpt-5-mini-2025-08-07", "reasoning_effort": "low",
+            "max_completion_tokens": 1000, "max_retries": 0,
+            "pricing": {"input_usd_per_million": 0.25,
+                        "output_usd_per_million": 2.0,
+                        "source": "https://developers.openai.com/api/docs/models/gpt-5-mini",
+                        "verified_utc": "2026-09-29T10:33:37Z"},
+            "runtime_gates": {"current_input_usd_per_million": 0.25,
+                              "current_output_usd_per_million": 2.0,
+                              "pricing_checked_utc": "2026-09-30T00:00:00Z",
+                              "credit_checked_utc": "2026-09-30T00:00:00Z",
+                              "organization_project_verified": True,
+                              "usable_credit_usd": 2.0,
+                              "spend_limit_remaining_usd": 2.0,
+                              "cumulative_known_usd": 0.01979725,
+                              "total_authorized_usd": 2.0}}
+
+
+@pytest.mark.parametrize("condition,expected_calls", [("E1", 2), ("E2", 1), ("E3", 2)])
+def test_ctu_runner_condition_semantics_and_complete_identity(
+    tmp_path, monkeypatch, condition, expected_calls
+):
+    from evaluation.dualsql_lite_ctu_gpt5 import runner
+    import duckdb
+
+    snapshot = tmp_path / "small.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute("CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR)")
+        connection.execute("INSERT INTO network_flows VALUES ('ctu13_s5', 'flow=Normal')")
+    monkeypatch.setattr(runner, "_verified_inputs", lambda *_: ([_runner_case()], _runner_identity()))
+    messages = []
+    if condition in {"E1", "E3"}:
+        messages.append(_role_message(content='{"tables":[{"table":"network_flows","columns":["label"]}]}'))
+    messages.append(_role_message(content="SELECT count(*) FROM network_flows"))
+    client = _RoleClient(*messages)
+    output = tmp_path / "result.json"
+    result = runner.run_condition(condition, snapshot, output, lambda: client, _runner_lock())
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert result.execution_accurate == 1 and payload["run_status"] == "complete"
+    assert payload["metrics"]["execution_accurate"] == 1
+    assert len(payload["provider_calls"]) == expected_calls == len(client.requests)
+    assert payload["case_ids"] == ["ctu_sql_001"]
+    assert payload["provenance"]["catalog_sha256"]
+    assert payload["provenance"]["tool_implementation_sha256"]
+    assert payload["provenance"]["schema_context_sha256"]
+    assert payload["provenance"]["split_sha256"] == "a" * 64
+    assert payload["model_contract"]["max_retries"] == 0
+    assert payload["known_cost_usd"] == pytest.approx(expected_calls * 0.000125)
+    assert len(payload["serialized_requests"]) == expected_calls
+    assert all("temperature" not in request for request in payload["serialized_requests"])
+    assert all("gold_sql" not in json.dumps(request) for request in payload["serialized_requests"])
+    if condition == "E1":
+        assert "tools" in client.requests[0] and "tools" not in client.requests[1]
+    elif condition == "E2":
+        assert "tools" in client.requests[0]
+    else:
+        assert all("tools" in request for request in client.requests)
+    with pytest.raises(FileExistsError):
+        runner.run_condition(condition, snapshot, output, lambda: client, _runner_lock())
+
+
+@pytest.mark.parametrize("failure", ["wrong_model", "usage_mismatch"])
+def test_ctu_runner_keeps_charged_identity_error_in_partial(tmp_path, monkeypatch, failure):
+    from evaluation.dualsql_lite_ctu_gpt5 import runner
+    from types import SimpleNamespace
+    import duckdb
+
+    snapshot = tmp_path / "small.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute("CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR)")
+        connection.execute("INSERT INTO network_flows VALUES ('ctu13_s5', 'flow=Normal')")
+    monkeypatch.setattr(runner, "_verified_inputs", lambda *_: ([_runner_case()], _runner_identity()))
+
+    class BadClient:
+        def __init__(self):
+            self.max_retries = 0
+            self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
+
+        def create(self, **request):
+            usage = SimpleNamespace(prompt_tokens=100, completion_tokens=50,
+                                    total_tokens=151 if failure == "usage_mismatch" else 150)
+            return SimpleNamespace(id="chatcmpl-bad",
+                model="wrong-model" if failure == "wrong_model" else "gpt-5-mini-2025-08-07",
+                usage=usage,
+                choices=[SimpleNamespace(message=_role_message(content="SELECT 1"))])
+
+    output = tmp_path / "result.json"
+    with pytest.raises(ValueError):
+        runner.run_condition("E2", snapshot, output, lambda: BadClient(), _runner_lock())
+    partial = json.loads((tmp_path / "result.partial.json").read_text(encoding="utf-8"))
+    assert partial["run_status"] == "partial" and not output.exists()
+    if failure == "wrong_model":
+        assert partial["provider_calls"][0]["actual_model"] == "wrong-model"
+        assert partial["known_cost_usd"] == pytest.approx(0.000125)
+    else:
+        assert partial["cost_unknown"] is True
+
+
+def test_ctu_runner_rejects_sdk_retries_before_first_model_call(tmp_path, monkeypatch):
+    from evaluation.dualsql_lite_ctu_gpt5 import runner
+    import duckdb
+
+    snapshot = tmp_path / "small.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute("CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR)")
+    monkeypatch.setattr(runner, "_verified_inputs", lambda *_: ([_runner_case()], _runner_identity()))
+    client = _RoleClient(_role_message(content="SELECT 1"))
+    client.max_retries = 2
+    with pytest.raises(ValueError, match="SDK retries"):
+        runner.run_condition("E2", snapshot, tmp_path / "result.json", lambda: client, _runner_lock())
+    assert client.requests == []

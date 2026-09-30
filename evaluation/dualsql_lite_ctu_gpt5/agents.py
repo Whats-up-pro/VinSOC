@@ -431,10 +431,14 @@ def run_role(
         usage = getattr(response, "usage", None)
         input_tokens = getattr(usage, "prompt_tokens", None)
         output_tokens = getattr(usage, "completion_tokens", None)
+        total_tokens = getattr(usage, "total_tokens", None)
         if not isinstance(response_id, str) or not response_id:
             raise InvalidEvidenceRun("Provider response ID is missing")
         if (type(input_tokens) is not int or input_tokens <= 0
-                or type(output_tokens) is not int or not 0 <= output_tokens <= CAP):
+                or type(output_tokens) is not int or not 0 <= output_tokens <= CAP
+                or (total_tokens is not None and
+                    (type(total_tokens) is not int or
+                     total_tokens != input_tokens + output_tokens))):
             raise InvalidEvidenceRun("Provider charged usage is missing")
         call = ProviderCall(response_id, str(actual_model), input_tokens,
                             output_tokens, cost_usd(input_tokens, output_tokens),
