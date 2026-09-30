@@ -1,133 +1,106 @@
-"""Selection logic for CTU-only DualSQL-Lite GPT-5 Mini E0-E3 series."""
+"""Deterministic selection across immutable CTU E0 and one-shot E1-E3 reports."""
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Any
 
-from evaluation.dualsql_lite_ctu_gpt5.experiment import CONDITIONS, SERIES_VERSION
+from evaluation.dualsql_lite_ctu_gpt5.contract import BaselineEvidence
+from evaluation.dualsql_lite_ctu_gpt5.runner import ConditionReport
+
+CONDITIONS = ("E0", "E1", "E2", "E3")
+MODEL = "gpt-5-mini-2025-08-07"
+DRIFT_FIELDS = (
+    "linker_prompt_sha256", "generator_prompt_sha256", "tool_schema_sha256",
+    "tool_implementation_sha256", "catalog_sha256", "schema_context_sha256",
+)
 
 
-def load_report(path: Path) -> dict[str, Any]:
-    """Load a single condition report."""
-    for report_path in path.glob("*_report.json"):
-        with open(report_path) as f:
-            return json.load(f)
-    raise FileNotFoundError(f"No report found in {path}")
+@dataclass(frozen=True)
+class SelectionResult:
+    winner: str
+    rows: tuple[dict[str, Any], ...]
+    tiebreak_trace: tuple[str, ...]
+    implementation_sha: str
 
 
-def load_all_reports(base_dir: Path) -> dict[str, dict[str, Any]]:
-    """Load all E0-E3 reports from a series directory."""
-    reports = {}
-    for cond in CONDITIONS:
-        for report_dir in base_dir.glob(f"{cond.lower()}-*"):
-            if report_dir.is_dir():
-                try:
-                    reports[cond] = load_report(report_dir)
-                    break
-                except FileNotFoundError:
-                    continue
-    return reports
+def _verified_row(report: ConditionReport, e0: BaselineEvidence) -> dict[str, Any]:
+    payload = report.payload
+    condition = payload.get("condition")
+    if condition not in CONDITIONS[1:] or payload.get("run_status") != "complete":
+        raise ValueError("Condition report is partial or invalid")
+    ids = list(e0.case_ids)
+    results = payload.get("case_results", [])
+    if (payload.get("case_ids") != ids or len(results) != 8
+            or [item.get("case_id") for item in results] != ids
+            or len(set(ids)) != 8):
+        raise ValueError("Case identity or coverage differs")
+    provenance = payload.get("provenance", {})
+    expected = {"e0_report_sha256": e0.report_sha256,
+                "split_sha256": e0.split_sha256,
+                "logical_snapshot_sha256": e0.logical_snapshot_sha256,
+                "source_file_sha256": e0.source_file_sha256,
+                "builder_scorer_sha256": e0.builder_scorer_sha256}
+    if any(provenance.get(key) != value for key, value in expected.items()):
+        raise ValueError("Snapshot, split, source, scorer, or E0 identity differs")
+    contract = payload.get("model_contract", {})
+    if contract != {"model": MODEL, "reasoning_effort": "low",
+                    "max_completion_tokens": 1000, "max_retries": 0}:
+        raise ValueError("Model contract differs")
+    calls = payload.get("provider_calls", [])
+    if (payload.get("cost_unknown") is not False
+            or not isinstance(calls, list) or not calls
+            or payload.get("attempted_calls") != len(calls)):
+        raise ValueError("Response or usage coverage is incomplete")
+    for call in calls:
+        if (call.get("actual_model") != MODEL or not call.get("response_id")
+                or type(call.get("input_tokens")) is not int or call["input_tokens"] <= 0
+                or type(call.get("output_tokens")) is not int
+                or not 0 <= call["output_tokens"] <= 1000
+                or type(call.get("cost_usd")) not in {int, float}
+                or call["cost_usd"] < 0
+                or type(call.get("latency_ms")) not in {int, float}
+                or call["latency_ms"] < 0):
+            raise ValueError("Provider call identity or usage differs")
+    cost = sum(call["cost_usd"] for call in calls)
+    if abs(cost - payload.get("known_cost_usd", -1)) > 1e-9:
+        raise ValueError("Provider cost total differs")
+    score = sum(item.get("execution_accurate") is True for item in results)
+    if score != payload.get("metrics", {}).get("execution_accurate"):
+        raise ValueError("Execution Accuracy total differs")
+    sha = payload.get("implementation_sha")
+    if not isinstance(sha, str) or len(sha) != 40:
+        raise ValueError("Implementation SHA is absent")
+    return {"condition": condition, "execution_accurate": score,
+            "cost_usd": cost, "model_calls": len(calls),
+            "latency_ms": sum(call["latency_ms"] for call in calls),
+            "implementation_sha": sha,
+            "model_config_sha256": payload.get("model_config_sha256"),
+            "drift": {key: provenance.get(key) for key in DRIFT_FIELDS}}
 
 
-def select_winner(reports: list[dict[str, Any]]) -> dict[str, Any]:
-    """
-    Apply the predeclared selection order:
-    1. Higher Execution Accuracy
-    2. Lower calculated API cost
-    3. Fewer model calls
-    4. Lower latency
-    5. Simpler architecture (E0 > E1 > E2 > E3)
-    """
-    if not reports:
-        raise ValueError("No reports provided")
-
-    if {report["experiment_id"] for report in reports} != set(CONDITIONS):
-        missing = set(CONDITIONS) - {report["experiment_id"] for report in reports}
-        raise ValueError(f"Selection requires all four conditions; missing: {missing}")
-
-    if any(not report.get("eligible", False) for report in reports):
-        raise ValueError("Cannot select from ineligible experiment results")
-
-    def parse_accuracy(r: dict[str, Any]) -> int:
-        acc = r.get("metrics", {}).get("execution_accuracy", "0/0")
-        if "/" in acc:
-            return int(acc.split("/")[0])
-        return 0
-
-    def parse_cost(r: dict[str, Any]) -> float:
-        return r.get("total_cost_usd", 0.0)
-
-    def parse_calls(r: dict[str, Any]) -> int:
-        return r.get("model_calls", 0)
-
-    def parse_latency(r: dict[str, Any]) -> float:
-        return r.get("latency_ms", 0.0)
-
-    def simplicity_index(r: dict[str, Any]) -> int:
-        return CONDITIONS.index(r["experiment_id"])
-
-    return min(reports, key=lambda r: (
-        -parse_accuracy(r),
-        parse_cost(r),
-        parse_calls(r),
-        parse_latency(r),
-        simplicity_index(r)
-    ))
-
-
-def generate_selection_report(reports: dict[str, dict[str, Any]], winner: dict[str, Any]) -> dict[str, Any]:
-    """Generate a human-readable selection report."""
-    rows = []
-    for cond in CONDITIONS:
-        if cond not in reports:
-            rows.append({"condition": cond, "status": "NOT_RUN"})
-            continue
-        r = reports[cond]
-        acc = r.get("metrics", {}).get("execution_accuracy", "0/0")
-        rows.append({
-            "condition": cond,
-            "execution_accuracy": acc,
-            "cost_usd": f"${r.get('total_cost_usd', 0):.6f}",
-            "model_calls": r.get("model_calls", 0),
-            "latency_ms": round(r.get("latency_ms", 0), 1),
-            "eligible": r.get("eligible", False),
-        })
-
-    return {
-        "series_version": SERIES_VERSION,
-        "winner": {
-            "condition": winner["experiment_id"],
-            "execution_accuracy": winner.get("metrics", {}).get("execution_accuracy", "N/A"),
-            "cost_usd": winner.get("total_cost_usd", 0),
-            "model_calls": winner.get("model_calls", 0),
-        },
-        "all_conditions": rows,
-    }
-
-
-def main() -> int:
-    import argparse
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("results_dir", type=Path, help="Directory containing E0-E3 result directories")
-    parser.add_argument("--output", type=Path, help="Output path for selection report")
-    args = parser.parse_args()
-
-    reports = load_all_reports(args.results_dir)
-    if len(reports) < 4:
-        print(f"Warning: Only {len(reports)} conditions found: {list(reports.keys())}")
-
-    winner = select_winner(list(reports.values()))
-    selection = generate_selection_report(reports, winner)
-
-    print(json.dumps(selection, indent=2))
-    if args.output:
-        with open(args.output, "w") as f:
-            json.dump(selection, f, indent=2)
-
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+def build_selection(e0: BaselineEvidence, e1: ConditionReport,
+                    e2: ConditionReport, e3: ConditionReport) -> SelectionResult:
+    """Reject identity drift, then apply the predeclared five-stage tie-break."""
+    rows = [_verified_row(report, e0) for report in (e1, e2, e3)]
+    if [row["condition"] for row in rows] != list(CONDITIONS[1:]):
+        raise ValueError("E1, E2, E3 order is required")
+    first = rows[0]
+    for row in rows[1:]:
+        for key in ("implementation_sha", "model_config_sha256", "drift"):
+            if row[key] != first[key]:
+                raise ValueError(f"E1-E3 implementation or prompt/tool/catalog drift: {key}")
+    all_rows = [{"condition": "E0", "execution_accurate": e0.execution_accurate,
+                 "cost_usd": e0.known_cost_usd, "model_calls": e0.model_calls,
+                 "latency_ms": e0.latency_ms}] + [
+                     {key: row[key] for key in ("condition", "execution_accurate",
+                                               "cost_usd", "model_calls", "latency_ms")}
+                     for row in rows]
+    def key(row: dict[str, Any]) -> tuple[Any, ...]:
+        return (-row["execution_accurate"], row["cost_usd"],
+                row["model_calls"], row["latency_ms"],
+                CONDITIONS.index(row["condition"]))
+    ordered = sorted(all_rows, key=key)
+    return SelectionResult(ordered[0]["condition"], tuple(all_rows),
+                           tuple(row["condition"] for row in ordered),
+                           first["implementation_sha"])
