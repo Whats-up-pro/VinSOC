@@ -69,14 +69,14 @@ Hai run frozen cũ được gán trạng thái historical/exploratory, provenanc
 
 Chỉ scan hai thư mục `baseline_e0/` và `v2_e3/` đã pin trong inventory. Receipt mới không trở thành input của chính auditor. Public error chỉ chứa category và tên file an toàn.
 
-- [ ] Test fixture assert numerator khớp per-case flags, case IDs unique, report/per-case mismatch bị phát hiện; output cũ không bị overwrite; test monkeypatch provider và DuckDB access để fail.
-- [ ] Chạy targeted tests để ghi failure, implement auditor tối thiểu rồi chạy lại.
-- [ ] Auditor phải xác minh E0 EX 0/8, v2 E3 EX 2/8; E3 có 3 nonempty SQL chạy thành công theo flags lịch sử, 2 `EXEC_ERROR`, 3 `EMPTY_SQL`. Không đổi `EXEC_ERROR` thành `SYNTAX_ERROR`.
-- [ ] Báo cáo ghi metric `syntax_valid` của script cũ mang semantics thực thi; syntax validity đúng nghĩa chưa được verify trong task này. Nhận diện case 003/008 schema error và case 004/006/007 output rỗng. Mô tả case 005 là result mismatch.
-- [ ] Bỏ kết luận causal/validated. Ghi hai case khớp kết quả có stored-value grounding nhưng chưa tách được confound về complexity. Không kết luận fix nâng accuracy dựa trên số này.
-- [ ] Receipt lưu original file SHA-256, audited repository SHA, verification time, summary counts, missing provenance list và `official_eligible=false`. Hash mới chỉ xác nhận artifact hiện tại, không chứng minh code/request gốc.
-- [ ] Đánh dấu `cost_complete=false`, `cost_unknown=true`; giữ con số cũ dưới nhãn `reported_cost_usd`. Không suy ra total cost từ số turns, không đi vào account/API để bù dữ liệu.
-- [ ] Chạy auditor, targeted tests và `git diff --check`; commit auditor, test, receipt và docs. So sánh inventory để chứng minh JSON cũ không đổi.
+- [x] Test fixture assert numerator khớp per-case flags, case IDs unique, report/per-case mismatch bị phát hiện; output cũ không bị overwrite; test monkeypatch provider và DuckDB access để fail.
+- [x] Chạy targeted tests để ghi failure, implement auditor tối thiểu rồi chạy lại.
+- [x] Auditor phải xác minh E0 EX 0/8, v2 E3 EX 2/8; E3 có 3 nonempty SQL chạy thành công theo flags lịch sử, 2 `EXEC_ERROR`, 3 `EMPTY_SQL`. Không đổi `EXEC_ERROR` thành `SYNTAX_ERROR`.
+- [x] Báo cáo ghi metric `syntax_valid` của script cũ mang semantics thực thi; syntax validity đúng nghĩa chưa được verify trong task này. Nhận diện case 003/008 schema error và case 004/006/007 output rỗng. Mô tả case 005 là result mismatch.
+- [x] Bỏ kết luận causal/validated. Ghi hai case khớp kết quả có stored-value grounding nhưng chưa tách được confound về complexity. Không kết luận fix nâng accuracy dựa trên số này.
+- [x] Receipt lưu original file SHA-256, audited repository SHA, verification time, summary counts, missing provenance list và `official_eligible=false`. Hash mới chỉ xác nhận artifact hiện tại, không chứng minh code/request gốc.
+- [x] Đánh dấu `cost_complete=false`, `cost_unknown=true`; giữ con số cũ dưới nhãn `reported_cost_usd`. Không suy ra total cost từ số turns, không đi vào account/API để bù dữ liệu.
+- [x] Chạy auditor, targeted tests và `git diff --check`; commit auditor, test, receipt và docs. So sánh inventory để chứng minh JSON cũ không đổi.
 
 ### Task 3: Khôi phục tools interface và offline grounding gate
 
