@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import io
 from pathlib import Path
 
 import pytest
@@ -119,3 +121,104 @@ def test_selection_rejects_incompatible_evidence(mutation):
     reports[1] = ConditionReport(Path("E2.json"), changed)
     with pytest.raises(ValueError):
         build_selection(_e0(), *reports)
+
+
+WORKFLOW = Path(".github/workflows/r2-dualsql-ctu-gpt5.yml")
+
+
+def test_manual_workflow_has_one_condition_choice_and_no_rerun():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    dispatch = workflow.split("on:", 1)[1].split("permissions:", 1)[0]
+    assert "workflow_dispatch:" in dispatch
+    assert "push:" not in dispatch and "pull_request:" not in dispatch
+    assert "condition:" in dispatch and dispatch.count("type: choice") == 1
+    assert all(f"- {condition}" in dispatch for condition in ("E1", "E2", "E3"))
+    assert "- E0" not in dispatch and "- all" not in dispatch
+    assert "GITHUB_RUN_ATTEMPT" in workflow and '"1"' in workflow
+    assert "contents: read" in workflow
+
+
+def test_manual_workflow_reconstructs_two_verified_snapshots_before_provider():
+    workflow = WORKFLOW.read_text(encoding="utf-8")
+    assert "evaluation/ctu_network_public/dataset_manifest.json" in workflow
+    assert "python -m evaluation.dualsql_lite_ctu_gpt5.workflow prepare" in workflow
+    assert "python -m evaluation.dualsql_lite_ctu_gpt5.workflow run" in workflow
+    assert workflow.index("workflow prepare") < workflow.index("workflow run")
+    assert "Verify exact-SHA CI" in workflow
+    assert workflow.index("Verify exact-SHA CI") < workflow.index("workflow run")
+    assert "if: always()" in workflow
+    assert "workflow cleanup" in workflow
+    assert "dualsql_evidence/*.json" in workflow
+    assert "*.duckdb" not in workflow.split("uses: actions/upload-artifact@", 1)[1]
+    assert "OPENAI_EVAL_MODEL" in workflow and "OPENAI_API_KEY" in workflow
+
+
+def test_prepare_contract_uses_only_official_pinned_s5_s7_and_two_builds():
+    from evaluation.dualsql_lite_ctu_gpt5 import workflow
+    import inspect
+
+    source = inspect.getsource(workflow)
+    assert "ctu13_s5" in source and "ctu13_s7" in source
+    assert "mcfp.felk.cvut.cz" in source
+    assert "file_sha256" in source
+    assert source.count("build_ctu_network_snapshot") >= 1
+    assert "validate_dev_contract" in source
+    assert "logical_snapshot_sha256" in source
+    assert "243906" in source
+
+
+def test_prepare_performs_two_independent_builds_and_rejects_hash_drift(tmp_path, monkeypatch):
+    from evaluation.dualsql_lite_ctu_gpt5 import workflow
+
+    sources = [{"dataset_id": "ctu13_s5", "file_sha256": "1" * 64},
+               {"dataset_id": "ctu13_s7", "file_sha256": "2" * 64}]
+    downloaded = []
+    built = []
+    monkeypatch.setattr(workflow, "_sources", lambda *_: sources)
+    monkeypatch.setattr(workflow, "_download_pinned", lambda source: downloaded.append(source["dataset_id"]))
+
+    def fake_build(manifest, snapshot):
+        built.append(snapshot.name)
+        return {"content_sha256": "a" * 64}
+
+    monkeypatch.setattr(workflow, "build_ctu_network_snapshot", fake_build)
+    monkeypatch.setattr(workflow, "validate_dev_contract", lambda snapshot: {
+        "logical_snapshot_sha256": "a" * 64,
+        "row_counts": {"network_flows": 243906},
+        "source_row_counts": {"ctu13_s5": 129831, "ctu13_s7": 114075},
+    })
+    result = workflow.prepare(tmp_path / "first", tmp_path / "evidence")
+    assert downloaded == ["ctu13_s5", "ctu13_s7"]
+    assert built == ["ctu-dev-a.duckdb", "ctu-dev-b.duckdb"]
+    assert result["logical_snapshot_sha256"] == "a" * 64
+    assert sorted(path.name for path in (tmp_path / "evidence").glob("*.json")) == [
+        "build-a.json", "build-b.json"]
+
+    count = 0
+    def drifting_validate(snapshot):
+        nonlocal count
+        count += 1
+        return {"logical_snapshot_sha256": "a" * 64 if count == 1 else "b" * 64,
+                "row_counts": {"network_flows": 243906},
+                "source_row_counts": {"ctu13_s5": 129831, "ctu13_s7": 114075}}
+
+    monkeypatch.setattr(workflow, "validate_dev_contract", drifting_validate)
+    with pytest.raises(ValueError, match="logical hash mismatch"):
+        workflow.prepare(tmp_path / "second", tmp_path / "other_evidence")
+
+
+def test_pinned_download_rejects_source_checksum_mismatch(tmp_path, monkeypatch):
+    from evaluation.dualsql_lite_ctu_gpt5 import workflow
+
+    payload = b"fixture source bytes"
+    monkeypatch.setattr(workflow.urllib.request, "urlopen",
+                        lambda *_args, **_kwargs: io.BytesIO(payload))
+    valid = {"dataset_id": "ctu13_s5", "path": str(tmp_path / "valid.bin"),
+             "source_url": "https://mcfp.felk.cvut.cz/example",
+             "file_sha256": hashlib.sha256(payload).hexdigest()}
+    workflow._download_pinned(valid)
+    assert (tmp_path / "valid.bin").read_bytes() == payload
+    invalid = {**valid, "path": str(tmp_path / "invalid.bin"),
+               "file_sha256": "0" * 64}
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        workflow._download_pinned(invalid)

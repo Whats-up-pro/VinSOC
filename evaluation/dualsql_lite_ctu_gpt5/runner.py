@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import subprocess
 from dataclasses import asdict, dataclass
@@ -142,6 +143,8 @@ def _runtime_gates(series_lock: dict[str, Any], total_ceiling: float,
             or not gate.get("organization_project_verified")
             or type(gate.get("usable_credit_usd")) not in {int, float}
             or type(gate.get("spend_limit_remaining_usd")) not in {int, float}
+            or not math.isfinite(gate["usable_credit_usd"])
+            or not math.isfinite(gate["spend_limit_remaining_usd"])
             or gate["usable_credit_usd"] < condition_ceiling
             or gate["spend_limit_remaining_usd"] < condition_ceiling):
         raise ValueError("Account, credit, or spend-limit gate is unverified")
@@ -149,6 +152,7 @@ def _runtime_gates(series_lock: dict[str, Any], total_ceiling: float,
     cap = gate.get("total_authorized_usd")
     if (type(cumulative) not in {int, float} or cumulative < KNOWN_PRIOR_USD
             or type(cap) not in {int, float} or cap > 2.0
+            or not math.isfinite(cumulative) or not math.isfinite(cap)
             or cumulative + total_ceiling >= cap):
         raise ValueError("Cumulative series cost gate failed")
     return {"pricing_checked_utc": gate["pricing_checked_utc"],
@@ -261,6 +265,8 @@ def run_condition(
         report["provider_calls"].append(asdict(call))
         report["known_cost_usd"] += call.cost_usd
         _write_partial(partial, report)
+        if report["known_cost_usd"] + sum(slots[attempted:]) >= budget:
+            raise ValueError("Per-call cost gate failed after charged response")
 
     reader = SnapshotOnlyDuckDBSnapshot(snapshot)
     try:

@@ -306,18 +306,15 @@ def test_r2_benchmark_report_aggregates_execution_accuracy(tmp_path):
     benchmarks = tmp_path / "benchmarks"
     dev = benchmarks / "dev"
     dev.mkdir(parents=True)
-    (dev / "sql_001.json").write_text(
-        """{
-          "case_id": "sql_001",
-          "question": "How many network flows are present?",
-              "database_snapshot": "SNAPSHOT_PATH",
-              "gold_sql": ["SELECT count(*) AS total FROM network_flows"],
-              "category": "aggregation",
-              "difficulty": "basic",
-              "result_comparator": "scalar"
-        }""".replace("SNAPSHOT_PATH", str(snapshot.database_path)),
-        encoding="utf-8",
-    )
+    (dev / "sql_001.json").write_text(json.dumps({
+        "case_id": "sql_001",
+        "question": "How many network flows are present?",
+        "database_snapshot": str(snapshot.database_path),
+        "gold_sql": ["SELECT count(*) AS total FROM network_flows"],
+        "category": "aggregation",
+        "difficulty": "basic",
+        "result_comparator": "scalar",
+    }), encoding="utf-8")
     from evaluation.text_to_sql_snapshot import sha256_file
 
     manifest = tmp_path / "snapshot_manifest.json"

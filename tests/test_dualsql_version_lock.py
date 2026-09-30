@@ -4,15 +4,17 @@ import json
 import hashlib
 from pathlib import Path
 
-from evaluation.text_to_sql_snapshot import sha256_file
+def _portable_sha256(path: Path) -> str:
+    """Historical receipts hash LF bytes, independent of checkout line endings."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def test_dualsql_lock_pins_current_scorer_without_rewriting_pilot_history():
     new = json.loads(Path("evaluation/dualsql_lite/BASE.lock").read_text())
     old = json.loads(Path("evaluation/public_pilot/VERSION.lock").read_text())
     source = "vinsoc_data/duckdb_store.py"
-    assert new["scorer_file_sha256"][source] == sha256_file(Path(source))
     assert new["scorer_file_sha256"][source] != old["scorer_file_sha256"][source]
+    assert new["scorer_file_sha256"][source] == _portable_sha256(Path(source))
     assert new["r2_split_sha256"] == old["r2_split_sha256"]
     assert new["snapshot_content_sha256"] == old["snapshot_content_sha256"]
 
@@ -28,5 +30,6 @@ def test_selected_public_dev_configuration_is_locked_to_preserved_v4_artifacts()
     assert lock["results"]["E2"]["correct"] == 5
     assert lock["results"]["E0"]["cost_usd"] < lock["results"]["E2"]["cost_usd"]
     for experiment, expected in lock["artifact_sha256"].items():
-        actual = hashlib.sha256((directory / f"{experiment}.json").read_bytes()).hexdigest()
-        assert actual == expected
+        path = directory / f"{experiment}.json"
+        assert _portable_sha256(path) == expected
+        assert json.loads(path.read_text(encoding="utf-8"))

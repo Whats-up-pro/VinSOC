@@ -17,7 +17,7 @@ R2 = Path("evaluation/public_pilot/r2/public_dev")
 
 
 def _r1_cases():
-    return [json.loads(path.read_text()) for path in sorted(R1.glob("*.json"))]
+    return [json.loads(path.read_text(encoding="utf-8")) for path in sorted(R1.glob("*.json"))]
 
 
 def test_public_r1_has_eight_network_eight_endpoint_four_no_tool():

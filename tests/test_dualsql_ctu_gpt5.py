@@ -179,15 +179,44 @@ def test_e0_descriptive_null_temperature_is_allowed(tmp_path):
 DEV_SNAPSHOT = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
 
 
+def _small_ci_snapshot():
+    """Unit fixture for CI; the pinned full snapshot is verified separately offline."""
+    import os
+    import duckdb
+
+    path = Path(".vinsoc") / f"ctu_tools_unit_{os.getpid()}.duckdb"
+    if path.is_file():
+        return path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with duckdb.connect(str(path)) as connection:
+        connection.execute(
+            "CREATE TABLE network_flows(source_dataset VARCHAR, source_row_id VARCHAR, "
+            "label VARCHAR, protocol VARCHAR)"
+        )
+        connection.execute("CREATE TABLE dataset_provenance(secret VARCHAR)")
+        connection.executemany(
+            "INSERT INTO network_flows VALUES (?, ?, ?, ?)",
+            [("ctu13_s5", str(index), "flow=From-Botnet-TCP", "TCP")
+             for index in range(25)] +
+            [("ctu13_s7", "25", "flow=Normal-UDP", "UDP")],
+        )
+    return path
+
+
 def _tools():
+    import os
+
     module = importlib.import_module("evaluation.dualsql_lite_ctu_gpt5.tools")
     try:
-        return module.CTUDatabaseTools(DEV_SNAPSHOT)
+        return module.CTUDatabaseTools(
+            DEV_SNAPSHOT if DEV_SNAPSHOT.is_file()
+            and os.environ.get("VINSOC_TEST_SMALL_SNAPSHOT") != "1"
+            else _small_ci_snapshot())
     except AttributeError:
         pytest.fail("CTUDatabaseTools boundary is missing")
 
 
-def test_ctu_tools_expose_only_network_flows_and_real_dev_values():
+def test_ctu_tools_expose_only_network_flows_and_dev_value_shape():
     tools = _tools()
     profile = tools.database_profiler({})
     assert profile["ok"] is True
@@ -205,6 +234,14 @@ def test_ctu_tools_expose_only_network_flows_and_real_dev_values():
                 labels["evidence_id"], protocols["evidence_id"]}) == 4
     assert all(item["evidence_id"] == result["evidence_id"] for result in
                (sources, labels, protocols) for item in result["matches"])
+
+
+@pytest.mark.skipif(not DEV_SNAPSHOT.is_file(), reason="Pinned S5/S7 bytes are absent on CI")
+def test_ctu_real_dev_snapshot_values_are_covered_offline():
+    tools = importlib.import_module("evaluation.dualsql_lite_ctu_gpt5.tools").CTUDatabaseTools(
+        DEV_SNAPSHOT)
+    assert tools.value_search({"query": "ctu13_s5", "column": "source_dataset"})["matches"]
+    assert tools.value_search({"query": "ctu13_s7", "column": "source_dataset"})["matches"]
 
 
 def test_ctu_catalog_hash_is_deterministic_and_schema_has_no_frozen_hints():
@@ -580,3 +617,51 @@ def test_ctu_runner_rejects_sdk_retries_before_first_model_call(tmp_path, monkey
     with pytest.raises(ValueError, match="SDK retries"):
         runner.run_condition("E2", snapshot, tmp_path / "result.json", lambda: client, _runner_lock())
     assert client.requests == []
+
+
+def test_ctu_runner_rejects_nonfinite_credit_before_provider(tmp_path, monkeypatch):
+    from evaluation.dualsql_lite_ctu_gpt5 import runner
+    import duckdb
+
+    snapshot = tmp_path / "small.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute("CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR)")
+    monkeypatch.setattr(runner, "_verified_inputs", lambda *_: ([_runner_case()], _runner_identity()))
+    lock = _runner_lock()
+    lock["runtime_gates"]["usable_credit_usd"] = float("nan")
+    created = []
+    with pytest.raises(ValueError, match="credit"):
+        runner.run_condition("E2", snapshot, tmp_path / "result.json",
+                             lambda: created.append(True), lock)
+    assert created == []
+
+
+def test_ctu_runner_stops_after_charged_response_exceeds_budget(tmp_path, monkeypatch):
+    from evaluation.dualsql_lite_ctu_gpt5 import runner
+    from types import SimpleNamespace
+    import duckdb
+
+    snapshot = tmp_path / "small.duckdb"
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute("CREATE TABLE network_flows(source_dataset VARCHAR, label VARCHAR)")
+    monkeypatch.setattr(runner, "_verified_inputs", lambda *_: ([_runner_case()], _runner_identity()))
+
+    class ExpensiveClient:
+        max_retries = 0
+
+        def __init__(self):
+            self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
+
+        def create(self, **request):
+            return SimpleNamespace(id="charged-over-budget", model="gpt-5-mini-2025-08-07",
+                usage=SimpleNamespace(prompt_tokens=1_000_000, completion_tokens=1,
+                                      total_tokens=1_000_001),
+                choices=[SimpleNamespace(message=_role_message(content="SELECT 1"))])
+
+    output = tmp_path / "result.json"
+    with pytest.raises(ValueError, match="cost gate"):
+        runner.run_condition("E2", snapshot, output, lambda: ExpensiveClient(), _runner_lock())
+    partial = json.loads((tmp_path / "result.partial.json").read_text(encoding="utf-8"))
+    assert partial["known_cost_usd"] > partial["preflight"]["condition_ceiling_usd"]
+    assert partial["provider_calls"][0]["response_id"] == "charged-over-budget"
+    assert not output.exists()
