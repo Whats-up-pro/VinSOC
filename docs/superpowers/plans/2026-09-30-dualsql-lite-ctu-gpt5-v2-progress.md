@@ -55,3 +55,19 @@ This recovery made zero API calls.
 
 Eligibility details and immutable digests:
 [protocol audit](../../evaluation/ctu_frozen_protocol_audit_2026-09-30.md).
+
+## Remediation offline Tasks 1-7
+
+Initial SHA `abfac96967dabc9452b5422f7d86e7d0a579d126`, master = origin sau fetch/ff, tracked clean. Giữ recovery adapter/consumption lock/entrypoint closure/synthetic fixtures. Các thay đổi bổ sung và command/output đầy đủ trong [remediation status](../../evaluation/r2_remediation_status.md).
+
+- [x] Evidence inventory: 43 file trước/sau không đổi; 18 historical Git blob digests đã đối chiếu. E0/v1 selection không đổi.
+- [x] Auditor chỉ đọc JSON: E0 EX 0/8, E3 EX 2/8, execution success 3/8 theo flags cũ; 2 EXEC_ERROR, 3 EMPTY_SQL. Syntax validity đúng nghĩa/cost/provenance chưa đầy đủ. Append hai receipt mới, không overwrite.
+- [x] Unified V2 tools và gate snapshot S5/S7: 7 references, 008 no-reference, 2 negatives, 27 replay calls; exit 0.
+- [x] Một controller actual path, linker fail-closed, response trước parse, giữ usage trên mọi return, cap 5 turns/5 DB calls, no-tool bỏ key tools.
+- [x] Actual locked scorer/safety integration; synthetic fixtures kiểm syntax/schema/empty/unsafe/mismatch/ordered/duplicate. Không sửa scorer, gold hoặc prompt.
+- [x] Exclusive partial/final fake reports có current identity và cost completeness; `synthetic_provider`, không official eligibility; live client boundary closed.
+- [x] Full suite sau fresh-review fix: `python -m pytest -q` → 681 passed, 1612 warnings, 191.38s. Targeted Tasks 1-6 184 passed; review fix targeted 72 passed. Compileall/py_compile/diff exit 0. Implementation SHA `dcf9f2fe3ce619808a97208679f6febebdbfb83e`, [CI 36694506063](https://github.com/Whats-up-pro/VinSOC/actions/runs/36694506063) cả Python 3.11/3.12 success. Evidence-commit CI chờ trước final response.
+
+Ruling: remote `4886b57` thêm live Tasks 8-10 trong khi thực hiện, được giữ qua merge `ca9d78d`. Chỉ thị trực tiếp hiện tại yêu cầu zero API, không dispatch và STOP FOR HUMAN REVIEW, nên chưa thực thi continuation mới. Chi phí remediation $0; frozen vẫn consumed/closed. Không tạo provenance hồi tố, không gọi R1 hoặc E2E.
+
+Fresh reviewer phát hiện field thừa trong table handoff có thể lọt sang generator; regression RED 1 failed, đã reject keys ngoài table/columns và GREEN/full pass. Không có deferred minor. Final SHA và exact evidence-commit CI được báo ở thông báo nghiệm thu.

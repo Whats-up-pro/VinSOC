@@ -150,8 +150,10 @@ Interface v2 sau hợp nhất: `run_condition(condition: str, cases: list[SQLBen
 - [x] Giữa README và docs cùng ghi frozen E3 2/8 theo historical script, execution success 3/8 theo flags cũ, syntax validity chưa được xác minh đúng nghĩa; incomplete cost/provenance. Không tạo kết quả mới từ replay scorer ngầm.
 - [x] Chạy `python -m pytest -q`, targeted tests Tasks 1-6, `python -m compileall -q evaluation/dualsql_lite_ctu_gpt5_v2 scripts/audit_r2_historical_reports.py`, `python -m py_compile scripts/run_frozen_v2_e3.py scripts/run_frozen_baseline_e0.py`, `git diff --check`. Ghi command/output thực tế; thiếu dependency thì báo lỗi, không claim pass.
 - [x] Kiểm staged diff chỉ có allowed code/tests/docs/new receipt; artifact cũ, `.env`, user edits không đổi. Commit/push trên master; ghi final SHA và CI URL.
-- [ ] Chờ CI Python 3.11 và 3.12 trên đúng final SHA xanh. Nếu fail thì sửa regression và đổi final SHA; không workflow model dispatch.
-- [ ] Hoàn thành báo cáo offline, rồi tiếp tục Task 8 theo phê duyệt live mới. Không dừng xin lại quyền gọi API trong phạm vi đã duyệt; nếu một gate kỹ thuật/chi phí thất bại thì giữ evidence và báo blocker.
+- [x] Chờ CI Python 3.11 và 3.12 trên đúng final SHA xanh. Nếu fail thì sửa regression và đổi final SHA; không workflow model dispatch.
+- [x] Hoàn thành báo cáo offline theo phạm vi chỉ thị trực tiếp: Tasks 1-7 đã có verification, implementation CI xanh; commit hồ sơ cuối và kiểm CI của chính SHA đó trước STOP FOR HUMAN REVIEW.
+
+> Nội dung continuation từ remote được giữ cho task riêng: sau báo cáo offline, tiếp tục Task 8 theo phê duyệt live mới; không xin lại quyền trong phạm vi đã duyệt, giữ evidence/báo blocker khi gate fail. **Phiên hiện tại không thực thi continuation này** theo chỉ thị zero API và STOP của người dùng.
 
 ## Acceptance Criteria
 

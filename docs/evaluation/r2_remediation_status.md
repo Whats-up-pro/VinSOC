@@ -6,7 +6,7 @@ Initial SHA: `abfac96967dabc9452b5422f7d86e7d0a579d126`, bằng `origin/master` 
 
 Scope của chỉ thị trực tiếp: Tasks 1-7 offline, sau nghiệm thu **STOP FOR HUMAN REVIEW**. Remote thêm live Tasks 8-10 ở `4886b57` trong lúc thực hiện. Đã giữ thay đổi đó qua merge `ca9d78d`; không dùng thay đổi file để mở API trong phiên này.
 
-Final SHA và exact-SHA CI URL được ghi trong thông báo nghiệm thu sau push; không tự ghi SHA tương lai vào artifact. CI recovery `c7f6d5b` đã kiểm trực tiếp: [36683245016](https://github.com/Whats-up-pro/VinSOC/actions/runs/36683245016), cả Python 3.11/3.12 success.
+Implementation SHA: `dcf9f2fe3ce619808a97208679f6febebdbfb83e`; [CI 36694506063](https://github.com/Whats-up-pro/VinSOC/actions/runs/36694506063) success trên đúng SHA, cả Python 3.11/3.12. Final evidence SHA và CI của commit tài liệu cuối được ghi trong thông báo nghiệm thu sau push; không tự ghi SHA tương lai vào artifact. CI recovery `c7f6d5b` đã kiểm trực tiếp: [36683245016](https://github.com/Whats-up-pro/VinSOC/actions/runs/36683245016), cả Python 3.11/3.12 success; log xác nhận 629 tests/job.
 
 ## Recovery được giữ và remediation bổ sung
 
@@ -46,9 +46,19 @@ Targeted Task 7 command:
 python -m pytest tests/test_r2_historical_entrypoints.py tests/test_frozen_reentry_gate.py tests/test_r2_historical_reports.py tests/test_dualsql_ctu_gpt5_v2.py tests/test_dualsql_lite_ctu_gpt5_v2.py tests/test_dualsql_ctu_gpt5.py tests/test_dualsql_tools.py tests/test_r2_v2_controller_contract.py tests/test_dualsql_agents.py tests/test_r2_v2_scoring_contract.py tests/test_text_to_sql_runner.py tests/test_r2_v2_report_contract.py -q
 ```
 
-Warnings là datetime deprecations đã có trước remediation. CI cuối được bổ sung sau khi có output.
+Warnings là datetime deprecations đã có trước remediation. Implementation CI đã xanh; CI của commit hồ sơ nghiệm thu được chờ trước final response.
 
-Fresh reviewer xác nhận 43 digest unchanged và tìm một lỗi Important: table entry có field thừa được chuyển nguyên vào generator. Regression `test_linker_extra_fields_cannot_cross_validated_handoff` RED 1 failed; sửa bằng reject keys ngoài `table`/`columns`, GREEN 72 targeted và full 681 passed. Không có Critical hoặc Minor được báo. CI final được chờ trước nghiệm thu.
+Fresh reviewer xác nhận 43 digest unchanged và tìm một lỗi Important: table entry có field thừa được chuyển nguyên vào generator. Regression `test_linker_extra_fields_cannot_cross_validated_handoff` RED 1 failed; sửa bằng reject keys ngoài `table`/`columns`, GREEN 72 targeted và full 681 passed. Không có Critical hoặc Minor được báo. Implementation CI xanh cả hai Python jobs.
+
+## Files changed
+
+27 paths trong phạm vi `initial..implementation`:
+
+- `evaluation/dualsql_lite_ctu_gpt5_v2/`: `source_tools.py`, `tools.py`, `agents.py`, `runner.py`, `experiment.py`, `METRICS.md`.
+- `scripts/`: `frozen_run_guard.py`, `audit_r2_historical_reports.py`.
+- `tests/`: `r2_remediation_fixtures.py`, `test_dualsql_ctu_gpt5_v2.py`, `test_dualsql_lite_ctu_gpt5_v2.py`, `test_r2_historical_entrypoints.py`, `test_r2_historical_reports.py`, `test_r2_v2_controller_contract.py`, `test_r2_v2_report_contract.py`, `test_r2_v2_scoring_contract.py`.
+- `results/`: hai receipt mới dưới `ctu_network_frozen/remediation_audit_v1/`, gate mới dưới `ctu_network_public/dualsql_lite_ctu_gpt5_v2/` như link bên dưới.
+- Docs: `README.md`, ba evaluation READMEs, `frozen_comparison_results.md`, `ctu_frozen_protocol_audit_2026-09-30.md`, status này, remediation plan. Ledger progress được bổ sung ở commit nghiệm thu.
 
 ## Gate S5/S7 và hashes
 
@@ -72,6 +82,17 @@ Chi phí remediation **$0**; zero API calls, zero model dispatch, không R1/demo
 
 Historical E0 EX 0/8, E3 EX 2/8; E3 execution success 3/8 theo flags cũ, 2 `EXEC_ERROR`, 3 `EMPTY_SQL`. Syntax validity đúng nghĩa chưa xác minh. Cost/provenance incomplete; tổng $0.06508150 chỉ là recorded lower bound. Receipt hashes xác nhận bytes tại audit, không tạo run-time provenance hồi tố.
 
-Rulings: không tái tạo lỗi collection đã recovery; giữ adapter thay vì viết lại. Multi-statement bị scorer cũ loại ở syntax gate trước execution; giữ semantics. Concurrent remote plan được merge giữ nội dung nhưng Tasks 8-10 chưa thực thi theo chỉ thị offline hiện tại. Verification ledger/logs được giữ để human review.
+## Rulings và giới hạn review
+
+- Dùng master và ledger/command trực tiếp trên Windows theo chỉ thị; không tạo worktree/branch. Đổi lại helper tự động không quản lý checkpoint; ledger và command outputs là evidence.
+- Giữ recovered adapter, migrate callers, giữ legacy class ngoài active runner và bỏ column-count heuristic theo Task 4. Không chứng nhận lại hành vi lịch sử.
+- Lỗi collection đã được sửa nên không tái tạo trên checkout cũ; kiểm current collection/full suite và recovery CI/log. Không viết lại phần đã hoàn thành.
+- Boundary tạo SDK client luôn closed; retries 0 chỉ là contract identity tương lai. Chưa chứng minh live operation, SDK retries hoặc budget/account readiness.
+- Multi-statement bị core scorer loại ở syntax gate trước execution. Giữ core semantics; không ép safety flag thành true để khớp test tự viết.
+- Remote `4886b57` được giữ qua merge; live Tasks 8-10 nằm ngoài chỉ thị trực tiếp của phiên này. Đổi lại chưa có live validation trong delivery này.
+- Reviewer không đánh giá true historical cost/provenance, frozen improvement hoặc future holdout/data rebuild; đây là evidence thiếu hoặc hành động bị cấm. Những claim đó vẫn ineligible và cần review riêng. Parent đã kiểm full suite/CI, không suy từ review verdict.
+- Giữ ignored verification logs/ledger thay vì xóa workspace để bảo toàn file untracked và phục vụ review; scratch files còn trên local.
+
+Deferred minors: không có. Blocker đối với nghiệm thu offline: không còn sau implementation CI; final evidence-commit CI được kiểm trước final response. Live/frozen continuation vẫn closed, không được diễn giải là hoàn tất các metric mới.
 
 Frozen S1/S4 vẫn consumed/closed. Không thay nguồn/model, không chọn winner từ frozen. **STOP FOR HUMAN REVIEW** sau exact-SHA CI.
