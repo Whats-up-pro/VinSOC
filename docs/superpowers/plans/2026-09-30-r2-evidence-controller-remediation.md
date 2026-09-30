@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** DRAFT FOR HUMAN REVIEW. Chưa được phép thực thi. Phiên review chỉ tạo plan; implementation bắt đầu sau khi người dùng duyệt.
+**Status:** AUTHORIZED FOR OFFLINE EXECUTION theo ch? th? ng??i d?ng ng?y 2026-09-30; paid/model workflow v?n b? c?m.
 
 **Goal:** Khôi phục CI, sửa đường chạy R2 và báo cáo để số liệu, safety, telemetry và provenance có thể kiểm chứng.
 
@@ -54,12 +54,12 @@ Hai run frozen cũ được gán trạng thái historical/exploratory, provenanc
 
 **Interfaces:** Hai `main()` cũ fail-fast với safe category `HISTORICAL_ENTRYPOINT_DISABLED` trước khi tạo client, mở DB, tạo output hoặc gọi model. Run cũ vẫn truy vết được qua commit/script hash trong receipt.
 
-- [ ] Ghi initial SHA và `git status --short`; fetch `origin`, fast-forward master nếu không conflict. Nếu có overlap với thay đổi user thì STOP và báo file cụ thể.
-- [ ] Hash toàn bộ tracked artifact dưới `results/evaluation_v1/ctu_network_frozen/`, E0 dev run `36520685612` và v1 result/receipt/selection lock. Lưu inventory riêng để so sánh cuối task; không đọc/in `.env`.
-- [ ] Thêm `test_historical_main_stops_before_client_database_or_output` cho cả hai scripts: patch OpenAI constructor, DuckDB connect và output write để fail nếu bị gọi; assert category đúng và không có side effect.
-- [ ] Chạy `python -m pytest tests/test_r2_historical_entrypoints.py -q`; ghi failure thực tế trước patch. Chỉ chạy file này để lỗi collection của v2 chưa sửa không che verification.
-- [ ] Chặn hai entrypoint và chạy lại targeted test, `py_compile` hai scripts, `git diff --check`. Đọc diff để xác nhận không sửa artifact.
-- [ ] Commit riêng các file Task 1 sau khi verification pass. Không dispatch workflow.
+- [x] Ghi initial SHA và `git status --short`; fetch `origin`, fast-forward master nếu không conflict. Nếu có overlap với thay đổi user thì STOP và báo file cụ thể.
+- [x] Hash toàn bộ tracked artifact dưới `results/evaluation_v1/ctu_network_frozen/`, E0 dev run `36520685612` và v1 result/receipt/selection lock. Lưu inventory riêng để so sánh cuối task; không đọc/in `.env`.
+- [x] Thêm `test_historical_main_stops_before_client_database_or_output` cho cả hai scripts: patch OpenAI constructor, DuckDB connect và output write để fail nếu bị gọi; assert category đúng và không có side effect.
+- [x] Chạy `python -m pytest tests/test_r2_historical_entrypoints.py -q`; ghi failure thực tế trước patch. Chỉ chạy file này để lỗi collection của v2 chưa sửa không che verification.
+- [x] Chặn hai entrypoint và chạy lại targeted test, `py_compile` hai scripts, `git diff --check`. Đọc diff để xác nhận không sửa artifact.
+- [x] Commit riêng các file Task 1 sau khi verification pass. Không dispatch workflow.
 
 ### Task 2: Đính chính báo cáo từ artifact bất biến
 

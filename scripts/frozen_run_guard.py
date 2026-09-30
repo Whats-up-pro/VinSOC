@@ -17,10 +17,10 @@ def require_unconsumed_frozen(registry: Path = REGISTRY) -> None:
     try:
         state = json.loads(Path(registry).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
-        raise FrozenRunBlocked("Frozen registry is missing or invalid; API gate is closed") from exc
+        raise FrozenRunBlocked("HISTORICAL_ENTRYPOINT_DISABLED: Frozen registry is missing or invalid; API gate is closed") from exc
     if state.get("consumed") is True:
         raise FrozenRunBlocked(
-            "Frozen holdout was already consumed; preserve historical artifacts and do not rerun"
+            "HISTORICAL_ENTRYPOINT_DISABLED: Frozen holdout was already consumed; preserve historical artifacts and do not rerun"
         )
     # These historical entry points have no approved replacement protocol.
-    raise FrozenRunBlocked("Frozen registry has no approved unconsumed protocol; API gate is closed")
+    raise FrozenRunBlocked("HISTORICAL_ENTRYPOINT_DISABLED: Frozen registry has no approved unconsumed protocol; API gate is closed")
