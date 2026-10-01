@@ -13,11 +13,11 @@ TOOL_VERSION = "dualsql_lite_ctu_gpt5_v2_remediation_tools_v1"
 from evaluation.dualsql_lite_ctu_gpt5_v2.source_tools import V2DatabaseTools
 TOOL_SCHEMAS = [
     {"type": "function", "function": {"name": "database_profiler",
-        "description": "Inspect table structure and column types.",
+        "description": "Inspect table structure and column types. Returns column names and types (INTEGER, VARCHAR, etc.). Use this first to understand which columns support value_search.",
         "parameters": {"type": "object", "properties": {
             "table": {"type": "string"}}, "additionalProperties": False}}},
     {"type": "function", "function": {"name": "value_search",
-        "description": "Search actual stored values. Returns exact table.column.value matches.",
+        "description": "Search stored values. For VARCHAR columns only - INTEGER columns (dst_port, bytes_out, etc.) return no results. Use database_profiler first to check column type.",
         "parameters": {"type": "object", "properties": {
             "query": {"type": "string", "description": "Search term"},
             "table": {"type": "string"},
@@ -116,6 +116,26 @@ class CTUDatabaseTools:
 
         if not query or not isinstance(query, str):
             return {"ok": False, "error_type": "INVALID_ARGUMENTS"}
+
+        # Check if column is INTEGER type (no value search needed)
+        column_type = None
+        if table and column:
+            for t, cols in self.schema.items():
+                if t == table:
+                    for c in cols:
+                        if c["name"] == column:
+                            column_type = c["type"].upper()
+                            break
+
+        # INTEGER columns: return hint instead of searching
+        if column_type in {"INTEGER", "BIGINT", "SMALLINT", "HUGEINT"}:
+            return {
+                "ok": True,
+                "resolution": "INTEGER_COLUMN_NO_SEARCH",
+                "hint": "Use SQL aggregation (COUNT, GROUP BY) for integer columns instead of value search.",
+                "column_type": column_type,
+                "query": query,
+            }
 
         # Build candidates
         candidates = [v for v in self.catalog
