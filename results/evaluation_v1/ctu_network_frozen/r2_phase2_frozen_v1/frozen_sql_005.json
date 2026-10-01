@@ -1,0 +1,1695 @@
+{
+  "case_id": "frozen_sql_005",
+  "condition": "E3",
+  "roles": {
+    "linker": {
+      "content": "{\n  \"tables\": [\n    {\n      \"table\": \"network_flows\",\n      \"columns\": [\n        \"source_dataset\",\n        \"label\",\n        \"protocol\"\n      ]\n    }\n  ],\n  \"grounded_values\": [\n    {\n      \"table\": \"network_flows\",\n      \"column\": \"source_dataset\",\n      \"value\": \"ctu13_s4\"\n    },\n    {\n      \"table\": \"network_flows\",\n      \"column\": \"label\",\n      \"value\": \"flow=From-Botnet-V42-ICMP\"\n    }\n  ]\n}",
+      "turns": 2,
+      "tool_count": 3,
+      "error": null,
+      "linked_schema": {
+        "error": null,
+        "contract_identity": "r2_generalized_controller_provenance_v3",
+        "tables": [
+          {
+            "table": "network_flows",
+            "columns": [
+              "source_dataset",
+              "label",
+              "protocol"
+            ]
+          }
+        ],
+        "grounded_values": [
+          {
+            "column": "source_dataset",
+            "value": "ctu13_s4",
+            "table": "network_flows",
+            "evidence_id": "controller-source-metadata",
+            "evidence_class": "source_metadata"
+          },
+          {
+            "table": "network_flows",
+            "column": "source_dataset",
+            "value": "ctu13_s4",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "ARP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "ICMP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "IGMP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "IPV6",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "IPV6-ICMP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "PIM",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "RTCP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "RTP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "TCP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "UDP",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "UDT",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol",
+            "value": "UNAS",
+            "evidence_id": "ev-000020"
+          },
+          {
+            "table": "network_flows",
+            "column": "source_dataset",
+            "value": "ctu13_s4",
+            "evidence_id": "ev-000021"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-ICMP",
+            "evidence_id": "ev-000022"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-Attempt",
+            "evidence_id": "ev-000022"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM",
+            "evidence_id": "ev-000022"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000022"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000022"
+          }
+        ],
+        "source_metadata": [
+          {
+            "surface": "scenario 4",
+            "column": "source_dataset",
+            "value": "ctu13_s4",
+            "evidence_class": "source_metadata"
+          }
+        ],
+        "question_literals": [
+          {
+            "surface": "4",
+            "kind": "numeric_constraint"
+          }
+        ],
+        "typed_constraints": [],
+        "grouping_predicates": [
+          {
+            "table": "network_flows",
+            "column": "label",
+            "operator": "ILIKE",
+            "pattern": "%flow=From-Botnet%",
+            "escape": "\\",
+            "case_insensitive": true,
+            "surface": "flow=From-Botnet",
+            "witness": {
+              "table": "network_flows",
+              "column": "label",
+              "value": "flow=From-Botnet-V42-ICMP",
+              "evidence_id": "ev-000022",
+              "match_basis": "substring"
+            },
+            "evidence_id": "ev-000022",
+            "domain_complete": false
+          }
+        ],
+        "unresolved_literals": [],
+        "catalog_samples_are_closed_domains": false
+      },
+      "usage": [
+        {
+          "role": "linker",
+          "turn": 1,
+          "response_id": "chatcmpl-EU7aNQT6DgCvUUM7zyNk5mJtU5WIN",
+          "model": "gpt-5-mini-2025-08-07",
+          "input_tokens": 749,
+          "output_tokens": 292,
+          "total_tokens": 1041,
+          "usage_complete": true,
+          "cost_usd": 0.00077125,
+          "latency_ms": 3644.899999955669,
+          "response": {
+            "content": null,
+            "finish_reason": "tool_calls",
+            "tool_calls": [
+              {
+                "id": "call_91UeZ5MINIRKfGeTcqSWcYEi",
+                "function": {
+                  "name": "database_profiler",
+                  "arguments": "{\"table\": \"network_flows\"}"
+                }
+              },
+              {
+                "id": "call_g7VSnRTYhJ9zTWFh1mfJkxAN",
+                "function": {
+                  "name": "value_search",
+                  "arguments": "{\"query\": \"ctu13_s4\", \"table\": \"network_flows\", \"column\": \"source_dataset\"}"
+                }
+              },
+              {
+                "id": "call_3OZmRq62kNkzJvzg4lx1xc97",
+                "function": {
+                  "name": "value_search",
+                  "arguments": "{\"query\": \"flow=From-Botnet\", \"table\": \"network_flows\", \"column\": \"label\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "role": "linker",
+          "turn": 2,
+          "response_id": "chatcmpl-EU7aRwluwjR4eamDUoarbQegUUqmK",
+          "model": "gpt-5-mini-2025-08-07",
+          "input_tokens": 2007,
+          "output_tokens": 321,
+          "total_tokens": 2328,
+          "usage_complete": true,
+          "cost_usd": 0.00114375,
+          "latency_ms": 2657.5151999713853,
+          "response": {
+            "content": "{\n  \"tables\": [\n    {\n      \"table\": \"network_flows\",\n      \"columns\": [\n        \"source_dataset\",\n        \"label\",\n        \"protocol\"\n      ]\n    }\n  ],\n  \"grounded_values\": [\n    {\n      \"table\": \"network_flows\",\n      \"column\": \"source_dataset\",\n      \"value\": \"ctu13_s4\"\n    },\n    {\n      \"table\": \"network_flows\",\n      \"column\": \"label\",\n      \"value\": \"flow=From-Botnet-V42-ICMP\"\n    }\n  ]\n}",
+            "finish_reason": "stop",
+            "tool_calls": []
+          }
+        }
+      ],
+      "trajectory": [
+        {
+          "role": "linker",
+          "turn": 1,
+          "tool_call_id": "call_91UeZ5MINIRKfGeTcqSWcYEi",
+          "tool": "database_profiler",
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "ok": true,
+            "evidence_id": "ev-000020",
+            "tables": [
+              {
+                "name": "network_flows",
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ]
+              }
+            ],
+            "domains": {
+              "source_dataset": [
+                {
+                  "value": "ctu13_s1",
+                  "evidence_id": "ev-000020",
+                  "source_name": "ctu 13 scenario 1"
+                },
+                {
+                  "value": "ctu13_s4",
+                  "evidence_id": "ev-000020",
+                  "source_name": "ctu 13 scenario 4"
+                }
+              ],
+              "protocol": [
+                {
+                  "value": "ARP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "ICMP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "IGMP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "IPV6",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "IPV6-ICMP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "PIM",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "RTCP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "RTP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "TCP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "UDP",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "UDT",
+                  "evidence_id": "ev-000020"
+                },
+                {
+                  "value": "UNAS",
+                  "evidence_id": "ev-000020"
+                }
+              ]
+            },
+            "truncated_domains": [],
+            "domain_completeness": {
+              "source_dataset": true,
+              "protocol": true
+            }
+          }
+        },
+        {
+          "role": "linker",
+          "turn": 1,
+          "tool_call_id": "call_g7VSnRTYhJ9zTWFh1mfJkxAN",
+          "tool": "value_search",
+          "arguments": {
+            "query": "ctu13_s4",
+            "table": "network_flows",
+            "column": "source_dataset"
+          },
+          "result": {
+            "ok": true,
+            "evidence_id": "ev-000021",
+            "matches": [
+              {
+                "table": "network_flows",
+                "column": "source_dataset",
+                "value": "ctu13_s4",
+                "evidence_id": "ev-000021",
+                "match_basis": "source_metadata"
+              }
+            ],
+            "resolution": "matched",
+            "truncated": false,
+            "domain": [],
+            "domain_complete": false,
+            "grouping_predicates": []
+          }
+        },
+        {
+          "role": "linker",
+          "turn": 1,
+          "tool_call_id": "call_3OZmRq62kNkzJvzg4lx1xc97",
+          "tool": "value_search",
+          "arguments": {
+            "query": "flow=From-Botnet",
+            "table": "network_flows",
+            "column": "label"
+          },
+          "result": {
+            "ok": true,
+            "evidence_id": "ev-000022",
+            "matches": [
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-ICMP",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-Attempt",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC53-HTTP-Not-Encrypted",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC54-Custom-Encryption",
+                "evidence_id": "ev-000022",
+                "match_basis": "substring"
+              }
+            ],
+            "resolution": "matched",
+            "truncated": true,
+            "domain": [],
+            "domain_complete": false,
+            "grouping_predicates": [
+              {
+                "table": "network_flows",
+                "column": "label",
+                "operator": "ILIKE",
+                "pattern": "%flow=From-Botnet%",
+                "escape": "\\",
+                "case_insensitive": true,
+                "surface": "flow=From-Botnet",
+                "witness": {
+                  "table": "network_flows",
+                  "column": "label",
+                  "value": "flow=From-Botnet-V42-ICMP",
+                  "evidence_id": "ev-000022",
+                  "match_basis": "substring"
+                },
+                "evidence_id": "ev-000022",
+                "domain_complete": false
+              }
+            ]
+          }
+        }
+      ],
+      "attempted_calls": 2,
+      "response_count": 2,
+      "cost_unknown": false
+    },
+    "generator": {
+      "content": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s4'\n  AND label ILIKE 'flow=From-Botnet%'\nGROUP BY protocol\nORDER BY flow_count DESC;",
+      "turns": 4,
+      "tool_count": 3,
+      "error": null,
+      "linked_schema": null,
+      "usage": [
+        {
+          "role": "generator",
+          "turn": 1,
+          "response_id": "chatcmpl-EU7aTKvnYMSVn8jcwrTMmYjNRtc3C",
+          "model": "gpt-5-mini-2025-08-07",
+          "input_tokens": 1388,
+          "output_tokens": 26,
+          "total_tokens": 1414,
+          "usage_complete": true,
+          "cost_usd": 0.000399,
+          "latency_ms": 1089.7981999441981,
+          "response": {
+            "content": null,
+            "finish_reason": "tool_calls",
+            "tool_calls": [
+              {
+                "id": "call_jee2a6qiM7nA4ycoyaDk504K",
+                "function": {
+                  "name": "database_profiler",
+                  "arguments": "{\"table\":\"network_flows\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "role": "generator",
+          "turn": 2,
+          "response_id": "chatcmpl-EU7aUQu5xkSWSm03mVtuH80R0d5vQ",
+          "model": "gpt-5-mini-2025-08-07",
+          "input_tokens": 1930,
+          "output_tokens": 103,
+          "total_tokens": 2033,
+          "usage_complete": true,
+          "cost_usd": 0.0006885,
+          "latency_ms": 1887.7536999061704,
+          "response": {
+            "content": null,
+            "finish_reason": "tool_calls",
+            "tool_calls": [
+              {
+                "id": "call_wfDCNaGUSfdKQh1gEUmiIUzq",
+                "function": {
+                  "name": "value_search",
+                  "arguments": "{\"query\":\"flow=From-Botnet%\",\"table\":\"network_flows\",\"column\":\"label\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "role": "generator",
+          "turn": 3,
+          "response_id": "chatcmpl-EU7aWVg3NUAxbSmcsDomCwUh8LnxR",
+          "model": "gpt-5-mini-2025-08-07",
+          "input_tokens": 2025,
+          "output_tokens": 102,
+          "total_tokens": 2127,
+          "usage_complete": true,
+          "cost_usd": 0.00071025,
+          "latency_ms": 1424.219699925743,
+          "response": {
+            "content": null,
+            "finish_reason": "tool_calls",
+            "tool_calls": [
+              {
+                "id": "call_m3BZBuZ2LTkYUlqwUmTa8SdQ",
+                "function": {
+                  "name": "value_search",
+                  "arguments": "{\"query\":\"flow=From-Botnet\",\"table\":\"network_flows\",\"column\":\"label\"}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "role": "generator",
+          "turn": 4,
+          "response_id": "chatcmpl-EU7aY8iQbpGyIXtRwx9LDimctSf0i",
+          "model": "gpt-5-mini-2025-08-07",
+          "input_tokens": 2613,
+          "output_tokens": 185,
+          "total_tokens": 2798,
+          "usage_complete": true,
+          "cost_usd": 0.00102325,
+          "latency_ms": 1923.984399996698,
+          "response": {
+            "content": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s4'\n  AND label ILIKE 'flow=From-Botnet%'\nGROUP BY protocol\nORDER BY flow_count DESC;",
+            "finish_reason": "stop",
+            "tool_calls": []
+          }
+        }
+      ],
+      "trajectory": [
+        {
+          "role": "generator",
+          "turn": 1,
+          "tool_call_id": "call_jee2a6qiM7nA4ycoyaDk504K",
+          "tool": "database_profiler",
+          "arguments": {
+            "table": "network_flows"
+          },
+          "result": {
+            "ok": true,
+            "evidence_id": "ev-000023",
+            "tables": [
+              {
+                "name": "network_flows",
+                "columns": [
+                  {
+                    "name": "source_dataset",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "source_row_id",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "event_time",
+                    "type": "TIMESTAMP"
+                  },
+                  {
+                    "name": "src_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "src_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "dst_ip",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "dst_port",
+                    "type": "INTEGER"
+                  },
+                  {
+                    "name": "protocol",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "action",
+                    "type": "VARCHAR"
+                  },
+                  {
+                    "name": "bytes_out",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "bytes_in",
+                    "type": "BIGINT"
+                  },
+                  {
+                    "name": "label",
+                    "type": "VARCHAR"
+                  }
+                ]
+              }
+            ],
+            "domains": {
+              "source_dataset": [
+                {
+                  "value": "ctu13_s1",
+                  "evidence_id": "ev-000023",
+                  "source_name": "ctu 13 scenario 1"
+                },
+                {
+                  "value": "ctu13_s4",
+                  "evidence_id": "ev-000023",
+                  "source_name": "ctu 13 scenario 4"
+                }
+              ],
+              "protocol": [
+                {
+                  "value": "ARP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "ICMP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "IGMP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "IPV6",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "IPV6-ICMP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "PIM",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "RTCP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "RTP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "TCP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "UDP",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "UDT",
+                  "evidence_id": "ev-000023"
+                },
+                {
+                  "value": "UNAS",
+                  "evidence_id": "ev-000023"
+                }
+              ]
+            },
+            "truncated_domains": [],
+            "domain_completeness": {
+              "source_dataset": true,
+              "protocol": true
+            }
+          }
+        },
+        {
+          "role": "generator",
+          "turn": 2,
+          "tool_call_id": "call_wfDCNaGUSfdKQh1gEUmiIUzq",
+          "tool": "value_search",
+          "arguments": {
+            "query": "flow=From-Botnet%",
+            "table": "network_flows",
+            "column": "label"
+          },
+          "result": {
+            "ok": true,
+            "evidence_id": "ev-000024",
+            "matches": [],
+            "resolution": "unresolved",
+            "truncated": false,
+            "domain": [],
+            "domain_complete": false,
+            "grouping_predicates": []
+          }
+        },
+        {
+          "role": "generator",
+          "turn": 3,
+          "tool_call_id": "call_m3BZBuZ2LTkYUlqwUmTa8SdQ",
+          "tool": "value_search",
+          "arguments": {
+            "query": "flow=From-Botnet",
+            "table": "network_flows",
+            "column": "label"
+          },
+          "result": {
+            "ok": true,
+            "evidence_id": "ev-000025",
+            "matches": [
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-ICMP",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-Attempt",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC53-HTTP-Not-Encrypted",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              },
+              {
+                "table": "network_flows",
+                "column": "label",
+                "value": "flow=From-Botnet-V42-TCP-CC54-Custom-Encryption",
+                "evidence_id": "ev-000025",
+                "match_basis": "substring"
+              }
+            ],
+            "resolution": "matched",
+            "truncated": true,
+            "domain": [],
+            "domain_complete": false,
+            "grouping_predicates": [
+              {
+                "table": "network_flows",
+                "column": "label",
+                "operator": "ILIKE",
+                "pattern": "%flow=From-Botnet%",
+                "escape": "\\",
+                "case_insensitive": true,
+                "surface": "flow=From-Botnet",
+                "witness": {
+                  "table": "network_flows",
+                  "column": "label",
+                  "value": "flow=From-Botnet-V42-ICMP",
+                  "evidence_id": "ev-000025",
+                  "match_basis": "substring"
+                },
+                "evidence_id": "ev-000025",
+                "domain_complete": false
+              }
+            ]
+          }
+        }
+      ],
+      "attempted_calls": 4,
+      "response_count": 4,
+      "cost_unknown": false
+    }
+  },
+  "linked_schema": {
+    "error": null,
+    "contract_identity": "r2_generalized_controller_provenance_v3",
+    "tables": [
+      {
+        "table": "network_flows",
+        "columns": [
+          "source_dataset",
+          "label",
+          "protocol"
+        ]
+      }
+    ],
+    "grounded_values": [
+      {
+        "column": "source_dataset",
+        "value": "ctu13_s4",
+        "table": "network_flows",
+        "evidence_id": "controller-source-metadata",
+        "evidence_class": "source_metadata"
+      },
+      {
+        "table": "network_flows",
+        "column": "source_dataset",
+        "value": "ctu13_s4",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "ARP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "ICMP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "IGMP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "IPV6",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "IPV6-ICMP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "PIM",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "RTCP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "RTP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "TCP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "UDP",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "UDT",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "protocol",
+        "value": "UNAS",
+        "evidence_id": "ev-000020"
+      },
+      {
+        "table": "network_flows",
+        "column": "source_dataset",
+        "value": "ctu13_s4",
+        "evidence_id": "ev-000021"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-ICMP",
+        "evidence_id": "ev-000022"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-Attempt",
+        "evidence_id": "ev-000022"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM",
+        "evidence_id": "ev-000022"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted",
+        "evidence_id": "ev-000022"
+      },
+      {
+        "table": "network_flows",
+        "column": "label",
+        "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted",
+        "evidence_id": "ev-000022"
+      }
+    ],
+    "source_metadata": [
+      {
+        "surface": "scenario 4",
+        "column": "source_dataset",
+        "value": "ctu13_s4",
+        "evidence_class": "source_metadata"
+      }
+    ],
+    "question_literals": [
+      {
+        "surface": "4",
+        "kind": "numeric_constraint"
+      }
+    ],
+    "typed_constraints": [],
+    "grouping_predicates": [
+      {
+        "table": "network_flows",
+        "column": "label",
+        "operator": "ILIKE",
+        "pattern": "%flow=From-Botnet%",
+        "escape": "\\",
+        "case_insensitive": true,
+        "surface": "flow=From-Botnet",
+        "witness": {
+          "table": "network_flows",
+          "column": "label",
+          "value": "flow=From-Botnet-V42-ICMP",
+          "evidence_id": "ev-000022",
+          "match_basis": "substring"
+        },
+        "evidence_id": "ev-000022",
+        "domain_complete": false
+      }
+    ],
+    "unresolved_literals": [],
+    "catalog_samples_are_closed_domains": false
+  },
+  "error_category": "OK",
+  "final_sql": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s4'\n  AND label ILIKE 'flow=From-Botnet%'\nGROUP BY protocol\nORDER BY flow_count DESC;",
+  "usage": [
+    {
+      "role": "linker",
+      "turn": 1,
+      "response_id": "chatcmpl-EU7aNQT6DgCvUUM7zyNk5mJtU5WIN",
+      "model": "gpt-5-mini-2025-08-07",
+      "input_tokens": 749,
+      "output_tokens": 292,
+      "total_tokens": 1041,
+      "usage_complete": true,
+      "cost_usd": 0.00077125,
+      "latency_ms": 3644.899999955669,
+      "response": {
+        "content": null,
+        "finish_reason": "tool_calls",
+        "tool_calls": [
+          {
+            "id": "call_91UeZ5MINIRKfGeTcqSWcYEi",
+            "function": {
+              "name": "database_profiler",
+              "arguments": "{\"table\": \"network_flows\"}"
+            }
+          },
+          {
+            "id": "call_g7VSnRTYhJ9zTWFh1mfJkxAN",
+            "function": {
+              "name": "value_search",
+              "arguments": "{\"query\": \"ctu13_s4\", \"table\": \"network_flows\", \"column\": \"source_dataset\"}"
+            }
+          },
+          {
+            "id": "call_3OZmRq62kNkzJvzg4lx1xc97",
+            "function": {
+              "name": "value_search",
+              "arguments": "{\"query\": \"flow=From-Botnet\", \"table\": \"network_flows\", \"column\": \"label\"}"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "role": "linker",
+      "turn": 2,
+      "response_id": "chatcmpl-EU7aRwluwjR4eamDUoarbQegUUqmK",
+      "model": "gpt-5-mini-2025-08-07",
+      "input_tokens": 2007,
+      "output_tokens": 321,
+      "total_tokens": 2328,
+      "usage_complete": true,
+      "cost_usd": 0.00114375,
+      "latency_ms": 2657.5151999713853,
+      "response": {
+        "content": "{\n  \"tables\": [\n    {\n      \"table\": \"network_flows\",\n      \"columns\": [\n        \"source_dataset\",\n        \"label\",\n        \"protocol\"\n      ]\n    }\n  ],\n  \"grounded_values\": [\n    {\n      \"table\": \"network_flows\",\n      \"column\": \"source_dataset\",\n      \"value\": \"ctu13_s4\"\n    },\n    {\n      \"table\": \"network_flows\",\n      \"column\": \"label\",\n      \"value\": \"flow=From-Botnet-V42-ICMP\"\n    }\n  ]\n}",
+        "finish_reason": "stop",
+        "tool_calls": []
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 1,
+      "response_id": "chatcmpl-EU7aTKvnYMSVn8jcwrTMmYjNRtc3C",
+      "model": "gpt-5-mini-2025-08-07",
+      "input_tokens": 1388,
+      "output_tokens": 26,
+      "total_tokens": 1414,
+      "usage_complete": true,
+      "cost_usd": 0.000399,
+      "latency_ms": 1089.7981999441981,
+      "response": {
+        "content": null,
+        "finish_reason": "tool_calls",
+        "tool_calls": [
+          {
+            "id": "call_jee2a6qiM7nA4ycoyaDk504K",
+            "function": {
+              "name": "database_profiler",
+              "arguments": "{\"table\":\"network_flows\"}"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 2,
+      "response_id": "chatcmpl-EU7aUQu5xkSWSm03mVtuH80R0d5vQ",
+      "model": "gpt-5-mini-2025-08-07",
+      "input_tokens": 1930,
+      "output_tokens": 103,
+      "total_tokens": 2033,
+      "usage_complete": true,
+      "cost_usd": 0.0006885,
+      "latency_ms": 1887.7536999061704,
+      "response": {
+        "content": null,
+        "finish_reason": "tool_calls",
+        "tool_calls": [
+          {
+            "id": "call_wfDCNaGUSfdKQh1gEUmiIUzq",
+            "function": {
+              "name": "value_search",
+              "arguments": "{\"query\":\"flow=From-Botnet%\",\"table\":\"network_flows\",\"column\":\"label\"}"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 3,
+      "response_id": "chatcmpl-EU7aWVg3NUAxbSmcsDomCwUh8LnxR",
+      "model": "gpt-5-mini-2025-08-07",
+      "input_tokens": 2025,
+      "output_tokens": 102,
+      "total_tokens": 2127,
+      "usage_complete": true,
+      "cost_usd": 0.00071025,
+      "latency_ms": 1424.219699925743,
+      "response": {
+        "content": null,
+        "finish_reason": "tool_calls",
+        "tool_calls": [
+          {
+            "id": "call_m3BZBuZ2LTkYUlqwUmTa8SdQ",
+            "function": {
+              "name": "value_search",
+              "arguments": "{\"query\":\"flow=From-Botnet\",\"table\":\"network_flows\",\"column\":\"label\"}"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 4,
+      "response_id": "chatcmpl-EU7aY8iQbpGyIXtRwx9LDimctSf0i",
+      "model": "gpt-5-mini-2025-08-07",
+      "input_tokens": 2613,
+      "output_tokens": 185,
+      "total_tokens": 2798,
+      "usage_complete": true,
+      "cost_usd": 0.00102325,
+      "latency_ms": 1923.984399996698,
+      "response": {
+        "content": "SELECT protocol, COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s4'\n  AND label ILIKE 'flow=From-Botnet%'\nGROUP BY protocol\nORDER BY flow_count DESC;",
+        "finish_reason": "stop",
+        "tool_calls": []
+      }
+    }
+  ],
+  "trajectory": [
+    {
+      "role": "linker",
+      "turn": 1,
+      "tool_call_id": "call_91UeZ5MINIRKfGeTcqSWcYEi",
+      "tool": "database_profiler",
+      "arguments": {
+        "table": "network_flows"
+      },
+      "result": {
+        "ok": true,
+        "evidence_id": "ev-000020",
+        "tables": [
+          {
+            "name": "network_flows",
+            "columns": [
+              {
+                "name": "source_dataset",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "source_row_id",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "event_time",
+                "type": "TIMESTAMP"
+              },
+              {
+                "name": "src_ip",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "src_port",
+                "type": "INTEGER"
+              },
+              {
+                "name": "dst_ip",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "dst_port",
+                "type": "INTEGER"
+              },
+              {
+                "name": "protocol",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "action",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "bytes_out",
+                "type": "BIGINT"
+              },
+              {
+                "name": "bytes_in",
+                "type": "BIGINT"
+              },
+              {
+                "name": "label",
+                "type": "VARCHAR"
+              }
+            ]
+          }
+        ],
+        "domains": {
+          "source_dataset": [
+            {
+              "value": "ctu13_s1",
+              "evidence_id": "ev-000020",
+              "source_name": "ctu 13 scenario 1"
+            },
+            {
+              "value": "ctu13_s4",
+              "evidence_id": "ev-000020",
+              "source_name": "ctu 13 scenario 4"
+            }
+          ],
+          "protocol": [
+            {
+              "value": "ARP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "ICMP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "IGMP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "IPV6",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "IPV6-ICMP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "PIM",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "RTCP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "RTP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "TCP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "UDP",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "UDT",
+              "evidence_id": "ev-000020"
+            },
+            {
+              "value": "UNAS",
+              "evidence_id": "ev-000020"
+            }
+          ]
+        },
+        "truncated_domains": [],
+        "domain_completeness": {
+          "source_dataset": true,
+          "protocol": true
+        }
+      }
+    },
+    {
+      "role": "linker",
+      "turn": 1,
+      "tool_call_id": "call_g7VSnRTYhJ9zTWFh1mfJkxAN",
+      "tool": "value_search",
+      "arguments": {
+        "query": "ctu13_s4",
+        "table": "network_flows",
+        "column": "source_dataset"
+      },
+      "result": {
+        "ok": true,
+        "evidence_id": "ev-000021",
+        "matches": [
+          {
+            "table": "network_flows",
+            "column": "source_dataset",
+            "value": "ctu13_s4",
+            "evidence_id": "ev-000021",
+            "match_basis": "source_metadata"
+          }
+        ],
+        "resolution": "matched",
+        "truncated": false,
+        "domain": [],
+        "domain_complete": false,
+        "grouping_predicates": []
+      }
+    },
+    {
+      "role": "linker",
+      "turn": 1,
+      "tool_call_id": "call_3OZmRq62kNkzJvzg4lx1xc97",
+      "tool": "value_search",
+      "arguments": {
+        "query": "flow=From-Botnet",
+        "table": "network_flows",
+        "column": "label"
+      },
+      "result": {
+        "ok": true,
+        "evidence_id": "ev-000022",
+        "matches": [
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-ICMP",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-Attempt",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC53-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC54-Custom-Encryption",
+            "evidence_id": "ev-000022",
+            "match_basis": "substring"
+          }
+        ],
+        "resolution": "matched",
+        "truncated": true,
+        "domain": [],
+        "domain_complete": false,
+        "grouping_predicates": [
+          {
+            "table": "network_flows",
+            "column": "label",
+            "operator": "ILIKE",
+            "pattern": "%flow=From-Botnet%",
+            "escape": "\\",
+            "case_insensitive": true,
+            "surface": "flow=From-Botnet",
+            "witness": {
+              "table": "network_flows",
+              "column": "label",
+              "value": "flow=From-Botnet-V42-ICMP",
+              "evidence_id": "ev-000022",
+              "match_basis": "substring"
+            },
+            "evidence_id": "ev-000022",
+            "domain_complete": false
+          }
+        ]
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 1,
+      "tool_call_id": "call_jee2a6qiM7nA4ycoyaDk504K",
+      "tool": "database_profiler",
+      "arguments": {
+        "table": "network_flows"
+      },
+      "result": {
+        "ok": true,
+        "evidence_id": "ev-000023",
+        "tables": [
+          {
+            "name": "network_flows",
+            "columns": [
+              {
+                "name": "source_dataset",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "source_row_id",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "event_time",
+                "type": "TIMESTAMP"
+              },
+              {
+                "name": "src_ip",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "src_port",
+                "type": "INTEGER"
+              },
+              {
+                "name": "dst_ip",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "dst_port",
+                "type": "INTEGER"
+              },
+              {
+                "name": "protocol",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "action",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "bytes_out",
+                "type": "BIGINT"
+              },
+              {
+                "name": "bytes_in",
+                "type": "BIGINT"
+              },
+              {
+                "name": "label",
+                "type": "VARCHAR"
+              }
+            ]
+          }
+        ],
+        "domains": {
+          "source_dataset": [
+            {
+              "value": "ctu13_s1",
+              "evidence_id": "ev-000023",
+              "source_name": "ctu 13 scenario 1"
+            },
+            {
+              "value": "ctu13_s4",
+              "evidence_id": "ev-000023",
+              "source_name": "ctu 13 scenario 4"
+            }
+          ],
+          "protocol": [
+            {
+              "value": "ARP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "ICMP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "IGMP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "IPV6",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "IPV6-ICMP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "PIM",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "RTCP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "RTP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "TCP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "UDP",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "UDT",
+              "evidence_id": "ev-000023"
+            },
+            {
+              "value": "UNAS",
+              "evidence_id": "ev-000023"
+            }
+          ]
+        },
+        "truncated_domains": [],
+        "domain_completeness": {
+          "source_dataset": true,
+          "protocol": true
+        }
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 2,
+      "tool_call_id": "call_wfDCNaGUSfdKQh1gEUmiIUzq",
+      "tool": "value_search",
+      "arguments": {
+        "query": "flow=From-Botnet%",
+        "table": "network_flows",
+        "column": "label"
+      },
+      "result": {
+        "ok": true,
+        "evidence_id": "ev-000024",
+        "matches": [],
+        "resolution": "unresolved",
+        "truncated": false,
+        "domain": [],
+        "domain_complete": false,
+        "grouping_predicates": []
+      }
+    },
+    {
+      "role": "generator",
+      "turn": 3,
+      "tool_call_id": "call_m3BZBuZ2LTkYUlqwUmTa8SdQ",
+      "tool": "value_search",
+      "arguments": {
+        "query": "flow=From-Botnet",
+        "table": "network_flows",
+        "column": "label"
+      },
+      "result": {
+        "ok": true,
+        "evidence_id": "ev-000025",
+        "matches": [
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-ICMP",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-Attempt",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-Attempt-SPAM",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC1-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC16-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC53-HTTP-Not-Encrypted",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          },
+          {
+            "table": "network_flows",
+            "column": "label",
+            "value": "flow=From-Botnet-V42-TCP-CC54-Custom-Encryption",
+            "evidence_id": "ev-000025",
+            "match_basis": "substring"
+          }
+        ],
+        "resolution": "matched",
+        "truncated": true,
+        "domain": [],
+        "domain_complete": false,
+        "grouping_predicates": [
+          {
+            "table": "network_flows",
+            "column": "label",
+            "operator": "ILIKE",
+            "pattern": "%flow=From-Botnet%",
+            "escape": "\\",
+            "case_insensitive": true,
+            "surface": "flow=From-Botnet",
+            "witness": {
+              "table": "network_flows",
+              "column": "label",
+              "value": "flow=From-Botnet-V42-ICMP",
+              "evidence_id": "ev-000025",
+              "match_basis": "substring"
+            },
+            "evidence_id": "ev-000025",
+            "domain_complete": false
+          }
+        ]
+      }
+    }
+  ],
+  "attempted_calls": 6,
+  "response_count": 6,
+  "cost_unknown": false,
+  "observed_cost_usd": 0.004736
+}
