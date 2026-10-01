@@ -1,0 +1,354 @@
+{
+  "api_calls": 0,
+  "counts": {
+    "execution_accurate": 1,
+    "execution_success": 4,
+    "safety_rejected": 0,
+    "syntax_valid": 4
+  },
+  "policy_identity": "r2_snapshot_select_ast_v2",
+  "policy_sha256": "302ab40bbe9af137fae53069930e2aa2f52d97125fcce1bfd1c8b1a2b9f4b590",
+  "records": [
+    {
+      "case_id": "ctu_sql_001",
+      "original_error_category": "RESULT_MISMATCH",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      },
+      "prediction": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s5'\n  AND label IN (\n    'flow=From-Botnet-V46-TCP-Attempt',\n    'flow=From-Botnet-V46-TCP-Attempt-SPAM',\n    'flow=From-Botnet-V46-TCP-CC1-HTTP-Not-Encrypted',\n    'flow=From-Botnet-V46-TCP-CC12-HTTP-Not-Encrypted',\n    'flow=From-Botnet-V46-TCP-CC5-Plain-HTTP-Encrypted-Data',\n    'flow=From-Botnet-V46-TCP-CC7-Custom-Encryption',\n    'flow=From-Botnet-V46-TCP-Established',\n    'flow=From-Botnet-V46-TCP-Established-Custom-Encryption-1',\n    'flow=From-Botnet-V46-TCP-Established-Custom-Encryption-8'\n  );",
+      "replay": {
+        "case_id": "ctu_sql_001",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "ctu_sql_002",
+      "original_error_category": "RESULT_MISMATCH",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      },
+      "prediction": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s7'\n  AND label IN (\n    'flow=From-Normal-V46-CVUT-WebServer',\n    'flow=From-Normal-V46-Grill',\n    'flow=From-Normal-V46-Jist',\n    'flow=From-Normal-V46-MatLab-Server',\n    'flow=From-Normal-V46-Stribrek',\n    'flow=From-Normal-V46-UDP-CVUT-DNS-Server',\n    'flow=From-Normal-V48-CVUT-WebServer',\n    'flow=From-Normal-V48-Grill',\n    'flow=From-Normal-V48-Jist',\n    'flow=From-Normal-V48-Stribrek'\n  );",
+      "replay": {
+        "case_id": "ctu_sql_002",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "ctu_sql_003",
+      "original_error_category": "TURN_LIMIT",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      },
+      "prediction": null,
+      "replay": {
+        "case_id": "ctu_sql_003",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      }
+    },
+    {
+      "case_id": "ctu_sql_004",
+      "original_error_category": "OK",
+      "original_flags": {
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      },
+      "prediction": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s5'\n  AND event_time >= TIMESTAMP '2011-08-15 16:43:20.931208'\n  AND event_time <  TIMESTAMP '2011-08-15 16:43:20.931209';",
+      "replay": {
+        "case_id": "ctu_sql_004",
+        "execution_accurate": true,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    },
+    {
+      "case_id": "ctu_sql_005",
+      "original_error_category": "TURN_LIMIT",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      },
+      "prediction": null,
+      "replay": {
+        "case_id": "ctu_sql_005",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      }
+    },
+    {
+      "case_id": "ctu_sql_006",
+      "original_error_category": "INVALID_TOOL_PROVENANCE",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      },
+      "prediction": null,
+      "replay": {
+        "case_id": "ctu_sql_006",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      }
+    },
+    {
+      "case_id": "ctu_sql_007",
+      "original_error_category": "INVALID_TOOL_PROVENANCE",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      },
+      "prediction": null,
+      "replay": {
+        "case_id": "ctu_sql_007",
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": false,
+        "syntax_valid": false
+      }
+    },
+    {
+      "case_id": "ctu_sql_008",
+      "original_error_category": "SAFETY_REJECTION",
+      "original_flags": {
+        "execution_accurate": false,
+        "execution_success": false,
+        "safety_rejected": true,
+        "syntax_valid": true
+      },
+      "prediction": "SELECT\n  source_dataset,\n  SUM(bytes_in + bytes_out) AS total_bytes,\n  SUM(bytes_in) AS total_bytes_in,\n  SUM(bytes_out) AS total_bytes_out\nFROM network_flows\nWHERE source_dataset IN ('ctu13_s5', 'ctu13_s7')\nGROUP BY source_dataset\nORDER BY source_dataset;",
+      "replay": {
+        "case_id": "ctu_sql_008",
+        "execution_accurate": false,
+        "execution_success": true,
+        "safety_rejected": false,
+        "syntax_valid": true
+      }
+    }
+  ],
+  "scope": "offline_prediction_replay_not_live_benchmark",
+  "snapshot": {
+    "builder_scorer_sha256": {
+      "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "case_ids": [
+      "ctu_sql_001",
+      "ctu_sql_002",
+      "ctu_sql_003",
+      "ctu_sql_004",
+      "ctu_sql_005",
+      "ctu_sql_006",
+      "ctu_sql_007",
+      "ctu_sql_008"
+    ],
+    "distinct_source_row_id": 243906,
+    "gold_results": {
+      "ctu_sql_001": {
+        "result_sha256": "efb2df7901882d7bba9600b8e6eeb14f25637401ee3f981cb59753087afc00de",
+        "row_count": 1
+      },
+      "ctu_sql_002": {
+        "result_sha256": "92ae11c21d7bfdb0e7b5ab47148b9fc6b9a2198ec553638a7f1a3ee435291c8a",
+        "row_count": 1
+      },
+      "ctu_sql_003": {
+        "result_sha256": "6b381b5beedb8c08a6c0b370fc440fefd948c5079b2700eadd0bf29033f2e49f",
+        "row_count": 1
+      },
+      "ctu_sql_004": {
+        "result_sha256": "e78b6b2ef0c79a52a59ac18225babf1fdc8ccac1258146aff6d5fd1f0be1254a",
+        "row_count": 1
+      },
+      "ctu_sql_005": {
+        "result_sha256": "8b4d3ce5d2cbe284ce96074955464ae75a20581f5fba50f29a3b02aa5c69915e",
+        "row_count": 1
+      },
+      "ctu_sql_006": {
+        "result_sha256": "2726918c87076ba67c86c4c6730d7a5b5b7167916ee222e573779dceea38033d",
+        "row_count": 5
+      },
+      "ctu_sql_007": {
+        "result_sha256": "6c1339a9f4f08ae3c5806ab5885412e389f2ca88206f0a3151b1e03acf9eac4c",
+        "row_count": 2
+      },
+      "ctu_sql_008": {
+        "result_sha256": "b1e66afdc9fb99556a8b2f8ce1549d3cdcbdccd81f2d6a508536701ae05a4ffe",
+        "row_count": 2
+      }
+    },
+    "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+    "row_counts": {
+      "network_flows": 243906
+    },
+    "schema": {
+      "dataset_provenance": [
+        [
+          "dataset_id",
+          "VARCHAR"
+        ],
+        [
+          "source_name",
+          "VARCHAR"
+        ],
+        [
+          "source_url",
+          "VARCHAR"
+        ],
+        [
+          "retrieved_at",
+          "TIMESTAMP"
+        ],
+        [
+          "file_sha256",
+          "VARCHAR"
+        ],
+        [
+          "license_note",
+          "VARCHAR"
+        ],
+        [
+          "schema_version",
+          "VARCHAR"
+        ]
+      ],
+      "network_flows": [
+        [
+          "source_dataset",
+          "VARCHAR"
+        ],
+        [
+          "source_row_id",
+          "VARCHAR"
+        ],
+        [
+          "event_time",
+          "TIMESTAMP"
+        ],
+        [
+          "src_ip",
+          "VARCHAR"
+        ],
+        [
+          "src_port",
+          "INTEGER"
+        ],
+        [
+          "dst_ip",
+          "VARCHAR"
+        ],
+        [
+          "dst_port",
+          "INTEGER"
+        ],
+        [
+          "protocol",
+          "VARCHAR"
+        ],
+        [
+          "action",
+          "VARCHAR"
+        ],
+        [
+          "bytes_out",
+          "BIGINT"
+        ],
+        [
+          "bytes_in",
+          "BIGINT"
+        ],
+        [
+          "label",
+          "VARCHAR"
+        ]
+      ]
+    },
+    "semantic_counterexamples": {
+      "boolean": {
+        "case_id": "ctu_sql_005",
+        "different_from_gold": true
+      },
+      "distinct": {
+        "case_id": "ctu_sql_003",
+        "different_from_gold": true
+      },
+      "ordering": {
+        "case_id": "ctu_sql_006",
+        "different_from_gold": true
+      },
+      "time_boundary": {
+        "case_id": "ctu_sql_004",
+        "different_from_gold": true
+      }
+    },
+    "source_file_sha256": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+    },
+    "source_row_counts": {
+      "ctu13_s5": 129831,
+      "ctu13_s7": 114075
+    },
+    "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+    "tables": [
+      "dataset_provenance",
+      "network_flows"
+    ],
+    "version": "ctu_network_public_dev_v1"
+  },
+  "source_hashes_after": {
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_001.json": "15bef6aaf0e037961d55a1671532137549f9d5a926ad4d552c60b9b38b3de50b",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_002.json": "c7947f114c2e58d946443e960ac480f8e1a7b912841aff2acb6c58479df2d987",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_003.json": "b6d85c5fc5e444ebdf538a0f4098af216bcde60941bc913b6135c502b61fca8b",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_004.json": "f77115a8b15fe62531be685082a5743f765f584d706abfd186b9e8baea8242d5",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_005.json": "b41f9ab7e986cc1866c5fc4c6ac9000d8d30721436b162bb07eaf9fae7993ff4",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_006.json": "1aa6459d4ec82a7c680dc8bc3fbc06f7785d2a537bda401ca5db56d57b25d85a",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_007.json": "034f502255289e317b79baa6476015b84f138f5d8245202f9da3e84628bf21bf",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_008.json": "b6d6164128efcfcf4249f5383320302bc36c3515a5d7d51bd8a068129530c64a",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\partial.jsonl": "f5b2b48ece785cf330e5e60724571db04af2fdb916136303c09a019c4c5d47e5",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\report.json": "1bdc6a20c4c402445719642c17d3d9f8cd3bc85e4d6fa40b5ba32c67f5023c25"
+  },
+  "source_hashes_before": {
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_001.json": "15bef6aaf0e037961d55a1671532137549f9d5a926ad4d552c60b9b38b3de50b",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_002.json": "c7947f114c2e58d946443e960ac480f8e1a7b912841aff2acb6c58479df2d987",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_003.json": "b6d85c5fc5e444ebdf538a0f4098af216bcde60941bc913b6135c502b61fca8b",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_004.json": "f77115a8b15fe62531be685082a5743f765f584d706abfd186b9e8baea8242d5",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_005.json": "b41f9ab7e986cc1866c5fc4c6ac9000d8d30721436b162bb07eaf9fae7993ff4",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_006.json": "1aa6459d4ec82a7c680dc8bc3fbc06f7785d2a537bda401ca5db56d57b25d85a",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_007.json": "034f502255289e317b79baa6476015b84f138f5d8245202f9da3e84628bf21bf",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\ctu_sql_008.json": "b6d6164128efcfcf4249f5383320302bc36c3515a5d7d51bd8a068129530c64a",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\partial.jsonl": "f5b2b48ece785cf330e5e60724571db04af2fdb916136303c09a019c4c5d47e5",
+    "results\\evaluation_v1\\ctu_network_public\\dualsql_v2_remediation_live\\20260930_90acf451\\suite\\report.json": "1bdc6a20c4c402445719642c17d3d9f8cd3bc85e4d6fa40b5ba32c67f5023c25"
+  }
+}
