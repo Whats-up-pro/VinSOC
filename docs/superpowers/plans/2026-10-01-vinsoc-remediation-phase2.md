@@ -20,11 +20,11 @@ Initial SHA: 28abd31bcc4349874f2e702fd7510a10578d38d9, equal to fetched origin/m
 - [x] Regression tests RED for SELECT whitespace/newline/tab/semicolon; deny multi-statement, writes, system/external access.
 - [x] Implement separate AST policy/snapshot adapter; tests GREEN.
 - [x] Replay all eight saved remediation predictions; verify source hashes unchanged and label replay scope.
-- [ ] Targeted tests, full pytest, compile and diff checks; commit/push, exact-SHA Python 3.11/3.12 CI.
+- [x] Targeted tests, full pytest, compile and diff checks; commit/push, exact-SHA Python 3.11/3.12 CI. Implementation `d6675dc54c1d2dae3cadc066f202b92deb95130a`, CI 36805715250 both jobs successful; 733 local tests pass.
 
 ### Task 2: Generalized controller provenance
 
-- [ ] Counter-example fixture tests RED; implement four semantic layers, controller-owned typed provenance and open pattern domains without case rules.
+- [x] Counter-example fixture tests RED; implement four semantic layers, controller-owned typed provenance and open pattern domains without case rules. 43 targeted tests pass; lock checksum `7d39379cce732044d8dd9a43b2d2b57b2b7da101ee4ace0a27af9286da49e7ef`.
 - [ ] Freeze new contract checksum; targeted/full verification, commit/push and exact-SHA CI.
 
 ### Task 3: One gated live R2 dev suite
