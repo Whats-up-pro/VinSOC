@@ -30,17 +30,17 @@ Initial SHA: 28abd31bcc4349874f2e702fd7510a10578d38d9, equal to fetched origin/m
 ### Task 3: One gated live R2 dev suite
 
 - [x] Separate one-consumption entrypoint and offline tests for gates/telemetry, no synthetic official eligibility; lock contract before live. Targeted 58 pass; full implementation 762 pass; contract v3 locked after one fresh review/fix pass.
-- [ ] Implementation commit/push and exact-SHA CI; snapshot/account/pricing/budget preflight.
-- [ ] One eight-case E3 suite, preserve all failures and charged usage; no retries or tuning.
+- [x] Implementation commit/push and exact-SHA CI; snapshot/account/pricing/budget preflight. `3f9d72ddc840d368b15b161881a94335c42eb03e`, CI 36808862542 both Python jobs successful. Fresh owner account confirmation, manifest/snapshot/contract checks and preflight PASS; suite ceiling $0.57024 below $0.75.
+- [x] One eight-case E3 suite, preserve all failures and charged usage; no retries or tuning. `20261001_3f9d72d/suite`: EX/syntax/execution 7/8, TOOL_LIMIT on 006; 44 attempts/responses, 34 database tool calls, usage-derived $0.02085850. Zero workflow model dispatch; no smoke, no rerun.
 
 ### Task 4: R1 winner and frozen governance
 
-- [ ] Verify immutable R1 dev reports and selection rule; create winner_lock.json with source hashes, caveats and offline compatibility evidence.
-- [ ] Verify consumed S1/S4 lock; record no eligible R2 holdout and keep both frozen tracks closed.
+- [x] Verify immutable R1 dev reports and selection rule; create winner_lock.json with source hashes, caveats and offline compatibility evidence. GPT-4.1 mini 22/24 selected over GPT-5 mini 19/24; captured prompt/schema/24-case split/scorer identities verified. `python -m evaluation.tool_calling.frozen_compatibility` passed for eight cases with zero model calls. Disclose 11/24 gold adjudicated after model output; no new R1 inference/tuning.
+- [x] Verify consumed S1/S4 lock; record no eligible R2 holdout and keep both frozen tracks closed. `consumed=true`, `protocol_eligible=false`; R1 winner lock has `frozen_authorized=false`. No frozen inference or replacement data construction.
 
 ### Task 5: Evidence handoff
 
-- [ ] Artifact-derived identity/error/usage/cost tables; independent historical contexts, no continuous improvement claims.
+- [x] Artifact-derived identity/error/usage/cost tables; independent historical contexts, no continuous improvement claims. New append-only receipts in `results/evaluation_v1/phase2_handoff/20261001/`; source artifacts and all 185 protected hashes verified unchanged, response IDs unique and cached-aware cost recomputed.
 - [ ] Verify all original hashes unchanged, review, commit/push and final exact-SHA CI; STOP FOR HUMAN REVIEW.
 
 ## Verification record

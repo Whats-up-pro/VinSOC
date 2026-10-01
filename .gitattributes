@@ -3,3 +3,5 @@ results/evaluation_v1/ctu_network_public/r2_phase2_policy_replay/** -text whites
 results/evaluation_v1/ctu_network_public/r2_phase2_live/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 evaluation/r2_phase2/CONTRACT.lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 evaluation/r2_phase2/CONTRACT_v3.lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+evaluation/tool_calling/winner_lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+results/evaluation_v1/phase2_handoff/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

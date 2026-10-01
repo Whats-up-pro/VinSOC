@@ -1,0 +1,24 @@
+{
+  "hash_basis": "raw file bytes; new paths marked -text in Git attributes",
+  "sha256": {
+    "evaluation/r2_phase2/CONTRACT.lock.json": "7d39379cce732044d8dd9a43b2d2b57b2b7da101ee4ace0a27af9286da49e7ef",
+    "evaluation/r2_phase2/CONTRACT_v3.lock.json": "a8d43578b892d93c41c723ff8841f24e0b02aa2861048b5c92661d01f46ff132",
+    "evaluation/tool_calling/winner_lock.json": "dd520c4d9da7430d55d083cc66246f4de4a432aaf536108565bae070745269e9",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_001.json": "86d7b4896794fdcbe4400c13fccc0be9cfaadb10cad1c782a02aa5745826c201",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_002.json": "89a3f253959efc86cc0d3b6ca5e5f80b05c4d88539970920bc68789f55d4fcc1",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_003.json": "1218199128c8bddc0a554852400ad1ac73e12ad0f0e18e33c7718be7270c969c",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_004.json": "496b4189d0722101972d61cbf6c639e3a89129788d36ba94d777135e3cf73eb1",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_005.json": "2a6616ba9648201f612bd08e0280f3d9e5222190ea4b36d7fc8d7ac0cc8ab63e",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_006.json": "9e9d1607475709050df833f321bee3b198147e2a13812735ddf4d9811742bc55",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_007.json": "cf12ef93f7251c752cbe3c6d089441bda863c3f6c44a12804fff5cace83eccdb",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/ctu_sql_008.json": "4a9d3808642f6d793390bcc7f241bfd57c9b391e1fabae24084056d6ca55853e",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/partial.jsonl": "1a3a1dd3464701d2dff4f0a6f39de0ee0b9eb09df7c97884096dbe445d8a6fec",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json": "cb14da306ba0cd4bc92f0d239b037da976ef2867cde61e57395fa5f570dc039a",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/r2_phase2_live_e3_v1/suite.claim.json": "23007a7a1f7cecd45a732efc089dabb83def401c6b55ac0d506aee9d7a6c7f26",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_policy_replay/20261001/report.json": "9cb225ead5a23e4c088562c78b5fe38af751de9d434f7a4e895401ef774015f0",
+    "results/evaluation_v1/phase2_handoff/20261001/historical_hash_audit.json": "989849c6837e11f312d239c8626c9391ad4a778e993da5d7360fd581f99c3e2b",
+    "results/evaluation_v1/phase2_handoff/20261001/implementation_ci.json": "2761fca4c94f78491e0c641a67af51cd13904cca6f2bf4d17fd863eb636a50e3",
+    "results/evaluation_v1/phase2_handoff/20261001/live_acceptance.json": "799b8afc9b1d84ffd07c41104e0ab8750a17dd3cfafa43f7e9a1b5a6592ee293",
+    "results/evaluation_v1/phase2_handoff/20261001/r1_compatibility.json": "aab2fecd040cfab6392ef0e605ef65e8f3d1b0b2138cc853e223af6e6792381a"
+  }
+}

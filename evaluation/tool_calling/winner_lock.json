@@ -1,0 +1,117 @@
+{
+  "benchmark_split_sha256": "d8e68968a390a09d502a3da01319611f546a6d0189a30e0fe0c316550d0aa259",
+  "caveats": [
+    "11/24 gold cases adjudicated after seeing the original model output; dev v2 is not an independent holdout",
+    "GPT-4.1 mini uses temperature=0; GPT-5 mini omits temperature and uses reasoning_effort=low",
+    "Historical provenance is referenced from artifacts, never reconstructed from current source hashes",
+    "This declarative selection lock does not itself grant runtime frozen authorization"
+  ],
+  "compatibility_lock_path": "evaluation/tool_calling/benchmarks/frozen/COMPATIBILITY.lock",
+  "compatibility_lock_raw_sha256": "5b51bc9fc89d8d6dc49b418114f3b76caeda32bdda88389a61531223dd985744",
+  "compatibility_scope": "Offline structure/schema/scorer and prompt checks only; zero inference and tool execution",
+  "frozen_authorized": false,
+  "other_candidate": {
+    "aggregate": {
+      "argument_field_accuracy": 1.0,
+      "case_count": 24,
+      "critical_argument_accuracy": 1.0,
+      "exact_call_f1": 0.9355,
+      "exact_call_precision": 0.9355,
+      "exact_call_recall": 0.9355,
+      "execution_error_rate": 0.0,
+      "forbidden_tool_rate": 0.0,
+      "mean_latency_ms": 2693.66,
+      "no_tool_accuracy": 0.8,
+      "ordering_accuracy": null,
+      "p95_latency_ms": 6933.33,
+      "provider_error_rate": 0.0,
+      "run_id": "36531679435",
+      "tool_f1": 0.9355,
+      "tool_precision": 0.9355,
+      "tool_recall": 0.9355,
+      "tool_set_exact_match_rate": 0.7917,
+      "trajectory_success_rate": 0.7917
+    },
+    "artifact": "results/evaluation_v1/r1/gpt5_model_only/36531679435/r1-gpt5-result.json",
+    "artifact_raw_sha256": "aa653f3950a0c886faa5b4945c048fe8aad45fb96a90879b9584f9ef4e7f6178",
+    "case_count": 24,
+    "case_success_count": 19,
+    "config": {
+      "max_completion_tokens": 1000,
+      "max_retries": 0,
+      "model": "gpt-5-mini-2025-08-07",
+      "provider": "openai",
+      "reasoning_effort": "low",
+      "temperature": null
+    },
+    "cost_usd": 0.01595,
+    "failed_case_ids": [
+      "case_002",
+      "case_005",
+      "case_009",
+      "case_019",
+      "case_020"
+    ],
+    "historical_evaluator_sha": "eec657fe29e8c06844f72952eb0cb14f519a7530",
+    "input_tokens": 20104,
+    "output_tokens": 5462
+  },
+  "production_schema_sha256": "aa214e730b1e3eb3ba03fdb08488dcfda4bc33b3c6d4c84700951f87e9c11ff0",
+  "prompt_sha256": "21f87b197c1bf1206d4a36e111853bddf6ea623bab58a5da311ccbcb61d7780b",
+  "prompt_tuning_closed": true,
+  "scorer_sha256": "271aa8ba8b65548f1d17648945ac62cc18b2370fa85c4aa210c155c9154b9149",
+  "selection_basis": "Higher immutable dev-v2 case success: 22/24 versus 19/24; no tie breaker needed",
+  "selection_order": [
+    "case_success",
+    "critical_argument_accuracy",
+    "exact_call_f1",
+    "lower_forbidden_tool_rate",
+    "lower_cost",
+    "lower_latency",
+    "simpler_configuration"
+  ],
+  "selection_rule_source": "docs/superpowers/specs/2026-09-28-vinsoc-r1-r2-finalization-design.md#56",
+  "version": "r1_dev_v2_winner_v1",
+  "winner": {
+    "aggregate": {
+      "argument_field_accuracy": 1.0,
+      "case_count": 24,
+      "critical_argument_accuracy": 1.0,
+      "exact_call_f1": 0.9508,
+      "exact_call_precision": 0.9667,
+      "exact_call_recall": 0.9355,
+      "execution_error_rate": 0.0,
+      "forbidden_tool_rate": 0.0,
+      "mean_latency_ms": 1280.79,
+      "no_tool_accuracy": 1.0,
+      "ordering_accuracy": null,
+      "p95_latency_ms": 2501.81,
+      "provider_error_rate": 0.0,
+      "run_id": "r1_a1_dev_once",
+      "tool_f1": 0.9508,
+      "tool_precision": 0.9667,
+      "tool_recall": 0.9355,
+      "tool_set_exact_match_rate": 0.9167,
+      "trajectory_success_rate": 0.9167
+    },
+    "artifact": "results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json",
+    "artifact_raw_sha256": "f013febddda98faef7857ed20d07bbc84edcde2169a6917a0fca18bf4eb238e8",
+    "case_count": 24,
+    "case_success_count": 22,
+    "config": {
+      "max_completion_tokens": 1000,
+      "max_retries": 0,
+      "model": "gpt-4.1-mini-2025-04-14",
+      "provider": "openai",
+      "temperature": 0
+    },
+    "cost_usd": 0.010131199999999998,
+    "failed_case_ids": [
+      "case_002",
+      "case_015"
+    ],
+    "historical_evaluator_sha": "852e543b971b6d0c565fbab5f885178c17f8b8eb",
+    "input_tokens": 18088,
+    "output_tokens": 1810
+  }
+}

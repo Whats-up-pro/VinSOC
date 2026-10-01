@@ -65,6 +65,87 @@ Reviewer declined billing/account, real-provider availability, remote CI, full-s
 
 Final pre-live implementation verification: **58 targeted tests pass, 762 full tests pass / 1612 existing warnings / 138.07s**, compile checks and `git diff --check` exit 0; 185 protected hashes unchanged. New suite bound $0.57024 (80 calls maximum), window cap $0.75, fixed 20KB serialized request limit plus 512 framing tokens per call. Account gate is fresh owner confirmation for the correct project; no independent Billing lookup or credit purchase. Exact-SHA CI is required before the new live entrypoint can create the SDK client.
 
+## One phase-2 E3 dev live suite
+
+Implementation SHA **`3f9d72ddc840d368b15b161881a94335c42eb03e`**, equal to origin/master and tracked clean before inference. [CI 36808862542](https://github.com/Whats-up-pro/VinSOC/actions/runs/36808862542) passed full tests on Python 3.11 and 3.12 before client creation. The preceding offline checkpoints also passed: [Task 1 CI](https://github.com/Whats-up-pro/VinSOC/actions/runs/36805715250), [Task 2 CI](https://github.com/Whats-up-pro/VinSOC/actions/runs/36807482241). No commit or execution-code edit occurred between implementation CI and the suite.
+
+Commands actually run:
+
+```powershell
+python -m scripts.run_r2_phase2_dev_live --preflight-only --output results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite
+python -m scripts.run_r2_phase2_dev_live --output results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite
+```
+
+Preflight PASS; live exited 0 and recorded `status=complete`, `official_eligible=true`, no infrastructure or identity errors. Exactly one suite, eight cases, **no smoke, case retry, suite retry or model workflow dispatch**. Model returned **`gpt-5-mini-2025-08-07`** on all 44 responses; request low/1000/retries=0/default, no temperature. Persisted claim prevents another run under `r2_phase2_live_e3_v1`.
+
+[Live report](../../results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json), [full journal](../../results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/partial.jsonl), [acceptance receipt](../../results/evaluation_v1/phase2_handoff/20261001/live_acceptance.json), [artifact hashes](../../results/evaluation_v1/phase2_handoff/20261001/artifact_inventory.json). Every charged raw SDK response, tool call/result, final SQL and usage are retained before controller parsing. Aggregate denominator remains eight, including the framework failure.
+
+| Case | EX | Syntax | Execution | Error | API attempts/responses | DB tool calls | Usage-derived cost USD |
+|---|---:|---:|---:|---|---:|---:|---:|
+| ctu_sql_001 | 1 | 1 | 1 | OK | 6/6 | 4 | 0.00262280 |
+| ctu_sql_002 | 1 | 1 | 1 | OK | 6/6 | 4 | 0.00264240 |
+| ctu_sql_003 | 1 | 1 | 1 | OK | 4/4 | 3 | 0.00185450 |
+| ctu_sql_004 | 1 | 1 | 1 | OK | 6/6 | 5 | 0.00309055 |
+| ctu_sql_005 | 1 | 1 | 1 | OK | 8/8 | 6 | 0.00296115 |
+| ctu_sql_006 | 0 | 0 | 0 | TOOL_LIMIT, linker; no SQL | 3/3 | 5 | 0.00153075 |
+| ctu_sql_007 | 1 | 1 | 1 | OK | 5/5 | 3 | 0.00313930 |
+| ctu_sql_008 | 1 | 1 | 1 | OK | 6/6 | 4 | 0.00301705 |
+| Total | **7/8** | **7/8** | **7/8** | Framework failures **1/8** | **44/44** | **34** | **0.02085850** |
+
+EX/syntax/execution rates are **87.5%**. TURN_LIMIT, RESULT_MISMATCH, SAFETY_REJECTION and INVALID_TOOL_PROVENANCE counts are each zero in this new suite; TOOL_LIMIT is its own category, not relabeled. Database calls here count bounded profiler/search/probe tool executions; they do not claim to count every underlying catalog, validator or scorer SQL query. Sum of measured model-response latency: **85,576.4986 ms**, not end-to-end wall-clock latency.
+
+Case 006's linker used three model turns; its last charged response requested five searches together after two prior tool calls. Three were executed before the fixed five-tool cap stopped the role. Remaining requested tools and the entire charged response stay in telemetry; the generator was not called. No cap, prompt or contract adjustment was made after this outcome.
+
+Input **47,802** tokens including **8,960 cached**, output **5,462** tokens. Cached-aware pricing: `(input-cached)*0.25 + cached*0.025 + output*2`, divided by one million; [official model pricing](https://developers.openai.com/api/docs/models/gpt-5-mini.md). The receipt independently recomputes **$0.02085850**, below preflight bound **$0.57024** and authorized new window **$0.75**. This is token-derived cost, not a billing invoice. Known historical lower bound $0.08693465 plus this run gives **$0.10779315**; history remains incomplete and is not represented as exact total spend. No credit purchase or limit increase.
+
+This condition is **dev only**, under a new controller and SQL policy. Public pilot 5/8, CTU E0 0/8, previous remediation 1/8 and this run 7/8 are distinct experiments, not a continuous improvement series or proof of generalization. Old negative evidence is retained.
+
+### Locked identities
+
+| Identity | SHA-256 / source |
+|---|---|
+| Live Git SHA | `3f9d72ddc840d368b15b161881a94335c42eb03e` |
+| Controller contract v3 | `a8d43578b892d93c41c723ff8841f24e0b02aa2861048b5c92661d01f46ff132` |
+| SQL policy, normalized source | `302ab40bbe9af137fae53069930e2aa2f52d97125fcce1bfd1c8b1a2b9f4b590` |
+| DuckDB snapshot, raw binary | `0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9` |
+| Logical snapshot | `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c` |
+| Dataset manifest | `a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf` |
+| Source S5 | `ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c` |
+| Source S7 | `df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680` |
+| Core scorer, unchanged normalized source | `bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf` |
+
+Full case, prompt, tool, schema, runtime and code identities are in the original live report. New receipts explicitly distinguish current checks from archived provenance; current hashes never backfill old runs.
+
+## R1 winner and human gate
+
+[winner_lock.json](../../evaluation/tool_calling/winner_lock.json) selects pinned **`gpt-4.1-mini-2025-04-14`** by the existing rule's first metric, case success. No new proposal or prompt tuning; no R1 inference in this task. [Offline compatibility receipt](../../results/evaluation_v1/phase2_handoff/20261001/r1_compatibility.json) verifies the unchanged eight-case frozen structural lock, production schema and scorer, and checks current dev prompts against captured historical inputs. This does not measure frozen performance or reconstruct historical provenance.
+
+| Track / condition | Dev case success | Exact-call F1 | No-tool accuracy | Recorded usage cost USD | Frozen status |
+|---|---:|---:|---:|---:|---|
+| R1 historical baseline / selected GPT-4.1 mini | 22/24 (91.67%) | 0.9508 | 5/5 | 0.01013120 | Compatibility only; new human approval required |
+| R1 model-only GPT-5 mini | 19/24 (79.17%) | 0.9355 | 4/5 | 0.01595000 | No inference authorized |
+| R2 CTU historical E0 one-shot | EX 0/8 | N/A | N/A | 0.00384725 | Historical evidence, not holdout |
+| R2 previous remediation E3 | EX 1/8 | N/A | N/A | 0.01884615 suite only | Old S1/S4 consumed/ineligible |
+| R2 phase-2 controlled E3 | EX 7/8 | N/A | N/A | 0.02085850 | Dev only; no valid R2 holdout result |
+
+**11/24 R1 gold cases were adjudicated after seeing the original model output** (001, 003, 004, 006, 007, 009, 010, 011, 017, 018, 019); dev-v2 selection is not independent holdout evidence. Both reports match the same locked dev-v2 split/prompt/schema/scorer; model and request contracts differ: GPT-4.1 mini temperature=0 versus GPT-5 mini no temperature / reasoning low. Gold was not changed in this task. Captured historical evaluator SHAs and raw artifact digests are recorded in the winner lock.
+
+`python -m evaluation.tool_calling.frozen_compatibility` actually passed: eight cases, model_calls=0, case-directory digest `50e52b226f886fd04e6c856614d2df7ef9c2ce27e1cea5a78fecfafc072accf7`. Winner lock declares `frozen_authorized=false`; it is a governance selection record, not runtime permission. S1/S4 `CONSUMED.lock` remains `consumed=true`, `protocol_eligible=false`. No frozen inference, new holdout, dataset download, snapshot rebuild or demo.
+
+Historical R1 usage: selected GPT-4.1 mini **18,088 input / 1,810 output** tokens; GPT-5 mini **20,104 input / 5,462 output**. Winner failed cases 002/015; other candidate failed cases 002/005/009/019/020. Predictions, individual matching errors and category/difficulty breakdown remain in their source reports, referenced and raw-hashed by the lock; no new scoring or inference replaced those reports.
+
+## Evidence preservation and closure
+
+[Historical audit](../../results/evaluation_v1/phase2_handoff/20261001/historical_hash_audit.json) contains before/after raw checkout hashes for **185 protected files; all unchanged**. New inference files were audited read-only; report/case equality, unique response IDs, journal counts and usage-derived cost passed. The offline receipt generator initially rejected the baseline's archived status spelling `completed`; accepting the two existing status spellings (`completed`/`complete`) allowed validation without editing any report. This was not a paid rerun.
+
+No `.env` writes, untracked cleanup, reset, branch, PR or historical artifact edits were performed. No benchmark/gold/comparator/core scorer/old selection-lock changes. The sole new inference was the recorded E3 suite; offline phases used synthetic clients/fixtures and the verified existing snapshot.
+
+Raw digest of live report: `cb14da306ba0cd4bc92f0d239b037da976ef2867cde61e57395fa5f570dc039a`; winner lock: `dd520c4d9da7430d55d083cc66246f4de4a432aaf536108565bae070745269e9`; offline replay report: `9cb225ead5a23e4c088562c78b5fe38af751de9d434f7a4e895401ef774015f0`. New artifact inventory currently covers 19 files, independently rehashed after creation; immutable inference bytes are preserved with scoped Git attributes.
+
+Final evidence commit and its exact-SHA CI are post-commit gates; completion is reported only after both Python jobs are green. **STOP FOR HUMAN REVIEW** after this handoff; no additional experiments or E2E.
+
+Handoff verification actually run: `python -m pytest -q` **762 passed, 1612 existing warnings, 136.51s**, exit 0. `python -m py_compile` on all three phase-2 modules, both entrypoints, three regression-test files and the offline receipt generator: exit 0. `git diff --check`: exit 0. Read-only rehash of the 19 new artifact files: PASS; read-only check that both R1 reports cover exactly the same 24 unique dev IDs: PASS. No implementation source changed after the paid suite.
+
 ## Verification ledger
 
 - Regression RED against predecessor: 7 failed, 22 passed (layout, quoted identifiers/literals, unknown function and malformed syntax).

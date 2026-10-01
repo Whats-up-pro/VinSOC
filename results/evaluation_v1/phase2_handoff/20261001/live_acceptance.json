@@ -1,0 +1,111 @@
+{
+  "R1_frozen_authorized": false,
+  "R2_consumed": true,
+  "R2_protocol_eligible": false,
+  "case_errors": {
+    "ctu_sql_001": "OK",
+    "ctu_sql_002": "OK",
+    "ctu_sql_003": "OK",
+    "ctu_sql_004": "OK",
+    "ctu_sql_005": "OK",
+    "ctu_sql_006": "TOOL_LIMIT",
+    "ctu_sql_007": "OK",
+    "ctu_sql_008": "OK"
+  },
+  "historical_cost_complete": false,
+  "historical_recorded_lower_bound_usd": 0.08693465,
+  "identity": {
+    "case_file_sha256": {
+      "ctu_sql_001.json": "fa9716c2c3e4b6003ac318b2fd1a3eaae0bbf8911cb064afa903bb9a521a6a01",
+      "ctu_sql_002.json": "32efc3a4626745de328534a0352f1c7b91ed6ea33f8521d4da830bc3b5db4369",
+      "ctu_sql_003.json": "a3549ef91c560c41c9107c455d0c9e1427ac400c6da9e08b5a3f05c63badbd9c",
+      "ctu_sql_004.json": "7c81c91c72d2ab9e4e977847cd2892806d9517b49249d557ea6a94b426055456",
+      "ctu_sql_005.json": "52a96a8dccbd12ff753ac64eba57c05e9b39f4585578400b18dc2583c0235ce4",
+      "ctu_sql_006.json": "fd48a9cd974e28ec28b92380a0abd6b2a772ca64d7563c476b6e9f08c1749e9d",
+      "ctu_sql_007.json": "e02e75d0c57d9f227f7c209c48588d7211ca79c1d4926a266d5539669b802602",
+      "ctu_sql_008.json": "ff602ad2e3241df2f6f6c38aa9ba761b33e208c915613829ad2a8baca62aadad"
+    },
+    "catalog_sha256": "7e06a306686132062f61c1a7a6a30089e824bb3f20dc943d759b19f86f93ae40",
+    "condition": "E3",
+    "contract_identity": "r2_generalized_controller_provenance_v3",
+    "contract_sha256": "a8d43578b892d93c41c723ff8841f24e0b02aa2861048b5c92661d01f46ff132",
+    "controller_version": "r2_generalized_controller_v3",
+    "dirty_state": false,
+    "git_sha": "3f9d72ddc840d368b15b161881a94335c42eb03e",
+    "live_entrypoint_sha256": "1de8c2c3b9d59614263d1ccda0839c8a972d28a3a545e2927c485ab0562b2698",
+    "live_version": "r2_phase2_live_e3_v1",
+    "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+    "phase2_files_sha256": {
+      "evaluation/dualsql_lite_ctu_gpt5_v2/prompts.py": "9687b23208e0bcedbf86f42b975c76cc82c7d3c8b02ca8a58876191f35cd20be",
+      "evaluation/dualsql_lite_ctu_gpt5_v2/tools.py": "ad5299523d8772e061d301eeb9b15b884586cf6467653bebef31a337fb75f46a",
+      "evaluation/r2_phase2/grounding.py": "d3a3ac0131ed6e0bcbe56478a492b089bf0066060db311139f09ddac8bf74556",
+      "evaluation/r2_phase2/runner.py": "f28a4a02ab5b51f89f2cea1bdc3e7efa552108976eb8bb1e3c8c88cc9a3209b0",
+      "evaluation/r2_phase2/safety.py": "302ab40bbe9af137fae53069930e2aa2f52d97125fcce1bfd1c8b1a2b9f4b590"
+    },
+    "policy_identity": "r2_snapshot_select_ast_v2",
+    "pricing_usd_per_million": {
+      "cached_input": 0.025,
+      "input": 0.25,
+      "output": 2.0
+    },
+    "prompt_sha256": {
+      "file": "9687b23208e0bcedbf86f42b975c76cc82c7d3c8b02ca8a58876191f35cd20be"
+    },
+    "provenance_scope": "current phase2 dev only; no historical backfill or holdout claim",
+    "request_contract": {
+      "framing_tokens_reserve": 512,
+      "max_completion_tokens": 1000,
+      "max_role_database_calls": 5,
+      "max_role_turns": 5,
+      "model": "gpt-5-mini-2025-08-07",
+      "no_tool_key_omitted": true,
+      "reasoning_effort": "low",
+      "sdk_retries": 0,
+      "serialized_utf8_bytes_limit": 20000,
+      "service_tier": "default",
+      "temperature_key_present": false
+    },
+    "reused_sdk_guard_sha256": "2bc4fd8cde0a2bfa6448a9471103918d0775595446ec389ed304ef642b0b5350",
+    "runtime_versions": {
+      "duckdb": "1.5.5",
+      "httpx": "0.28.1",
+      "openai": "2.8.1"
+    },
+    "schema_sha256": "05a021287699345b0d2a0038b97d0e3bdaae545bca5417acc9fa47934e761631",
+    "scorer_builder_sha256": {
+      "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "snapshot_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+    "sources": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+    },
+    "split": "ctu_network_public_dev_v1",
+    "tool_implementation_sha256": {
+      "agents.py": "a70ca45abb22a7a63aa6f96c1c600355312d0df7d0bc8ca919196ef2c65fe3a5",
+      "experiment.py": "9f384a905680e33ab5eb685b3118a2e9709c527dd3ab5409c023b9138ecf8a12",
+      "runner.py": "9e2b3cf46e524f03e78bdc4c31d76071d90891922fdee05e4a6ea207bbe00ad7",
+      "source_tools.py": "93c5d91bb6c6368f30762197b32a02ee15ace7b34d30b5c155a22548f3b14519",
+      "tools.py": "ad5299523d8772e061d301eeb9b15b884586cf6467653bebef31a337fb75f46a"
+    },
+    "tool_schema_sha256": "9f1a7cd79c31780e47fb8f691495b92dc8d3e649a8b890066db7fd632aa83c81",
+    "tool_version": "r2_generalized_controller_provenance_v3"
+  },
+  "journal_event_counts": {
+    "attempt": 44,
+    "case": 8,
+    "controller_response": 44,
+    "identity": 1,
+    "sdk_response": 44,
+    "tool": 34
+  },
+  "known_cost_lower_bound_after_this_suite_usd": "0.10779315",
+  "report_raw_sha256": "cb14da306ba0cd4bc92f0d239b037da976ef2867cde61e57395fa5f570dc039a",
+  "response_ids_unique": true,
+  "scope": "one official phase-2 E3 dev suite; no eligible holdout claim",
+  "usage_derived_cost_usd": "0.02085850"
+}
