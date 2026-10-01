@@ -142,3 +142,19 @@ def test_low_cardinality_domain_fallback_is_observed_provenance(tmp_path):
     submitted=[{'table':'network_flows','column':'protocol','value':'TCP'}]
     event={'tool':'value_search','arguments':{'query':'no-match','column':'protocol'},'result':result}
     assert validate_link('Return TCP',selected,[event],tools,submitted)['error'] is None
+
+
+@pytest.mark.parametrize('sql',[
+    "SELECT *, protocol AS label FROM network_flows WHERE source_dataset='alpha'",
+    "SELECT protocol FROM network_flows AS f(source_dataset,protocol,label,n) WHERE source_dataset='alpha'",
+])
+def test_wildcard_or_relation_column_alias_cannot_certify_wrong_lineage(tmp_path,sql):
+    import duckdb
+    from evaluation.r2_phase2.grounding import Phase2Tools
+    old,manifest=make_tools(tmp_path)
+    with duckdb.connect(str(old.snapshot_path)) as connection:
+        connection.execute("UPDATE network_flows SET label='TCP',protocol='UDP' WHERE source_dataset='alpha'")
+        connection.execute("UPDATE network_flows SET protocol='TCP' WHERE source_dataset='beta'")
+    tools=Phase2Tools(old.snapshot_path,manifest)
+    result=tools.sql_probe({'sql':sql})
+    assert result['ok'] and result['column_provenance']=={} and result['matches']==[]

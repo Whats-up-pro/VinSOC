@@ -15,7 +15,7 @@ CAP = 1000
 REASONING_EFFORT = "low"
 MAX_TURNS = 5
 MAX_DB_CALLS = 5
-CONTROLLER_VERSION = "r2_generalized_controller_v2"
+CONTROLLER_VERSION = "r2_generalized_controller_v3"
 
 
 @dataclass

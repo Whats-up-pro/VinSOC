@@ -10,7 +10,7 @@ from evaluation.dualsql_lite_ctu_gpt5.tools import MAX_RESPONSE_BYTES, _size
 from evaluation.r2_phase2.safety import Phase2Snapshot, parse_select, validate_sql
 from vinsoc_data.duckdb_store import QuerySafetyError
 
-CONTRACT_IDENTITY = 'r2_generalized_controller_provenance_v2'
+CONTRACT_IDENTITY = 'r2_generalized_controller_provenance_v3'
 TEXT_TYPES = {'VARCHAR', 'TEXT'}
 
 
@@ -114,7 +114,8 @@ class Phase2Tools(V2DatabaseTools):
             relation = node.get('from_table', {})
             # Derived relations, joins, CTEs and expressions have no inferred lineage.
             if (relation.get('type') == 'BASE_TABLE' and relation.get('table_name','').casefold() == 'network_flows'
-                    and not node.get('cte_map', {}).get('map')):
+                    and not node.get('cte_map', {}).get('map') and not relation.get('column_name_alias')
+                    and not any(expr.get('class')=='STAR' for expr in node.get('select_list',[]))):
                 projected_names = Counter((expr.get('alias') or
                     (expr.get('column_names', [''])[-1] if expr.get('class')=='COLUMN_REF' else '')).casefold()
                     for expr in node.get('select_list',[]))

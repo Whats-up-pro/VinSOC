@@ -2,3 +2,4 @@ results/evaluation_v1/ctu_network_public/dualsql_v2_remediation_live/** -text wh
 results/evaluation_v1/ctu_network_public/r2_phase2_policy_replay/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 results/evaluation_v1/ctu_network_public/r2_phase2_live/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 evaluation/r2_phase2/CONTRACT.lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+evaluation/r2_phase2/CONTRACT_v3.lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

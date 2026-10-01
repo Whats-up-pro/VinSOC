@@ -1,0 +1,196 @@
+{
+  "cap": 1000,
+  "contract_identity": "r2_generalized_controller_provenance_v3",
+  "files_portable_sha256": {
+    "evaluation/dualsql_lite_ctu_gpt5_v2/prompts.py": "9687b23208e0bcedbf86f42b975c76cc82c7d3c8b02ca8a58876191f35cd20be",
+    "evaluation/dualsql_lite_ctu_gpt5_v2/tools.py": "ad5299523d8772e061d301eeb9b15b884586cf6467653bebef31a337fb75f46a",
+    "evaluation/r2_phase2/grounding.py": "d3a3ac0131ed6e0bcbe56478a492b089bf0066060db311139f09ddac8bf74556",
+    "evaluation/r2_phase2/runner.py": "f28a4a02ab5b51f89f2cea1bdc3e7efa552108976eb8bb1e3c8c88cc9a3209b0",
+    "evaluation/r2_phase2/safety.py": "302ab40bbe9af137fae53069930e2aa2f52d97125fcce1bfd1c8b1a2b9f4b590"
+  },
+  "max_role_tool_calls": 5,
+  "max_role_turns": 5,
+  "model": "gpt-5-mini-2025-08-07",
+  "probe_provenance": "direct unique typed column projection plus catalog witness; no wildcard or relation column aliases",
+  "prompts_modified": false,
+  "reasoning_effort": "low",
+  "scorer_modified": false,
+  "sdk_retries": 0,
+  "semantic_intent_proven": false,
+  "service_tier": "default",
+  "snapshot": {
+    "builder_scorer_sha256": {
+      "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "case_ids": [
+      "ctu_sql_001",
+      "ctu_sql_002",
+      "ctu_sql_003",
+      "ctu_sql_004",
+      "ctu_sql_005",
+      "ctu_sql_006",
+      "ctu_sql_007",
+      "ctu_sql_008"
+    ],
+    "distinct_source_row_id": 243906,
+    "gold_results": {
+      "ctu_sql_001": {
+        "result_sha256": "efb2df7901882d7bba9600b8e6eeb14f25637401ee3f981cb59753087afc00de",
+        "row_count": 1
+      },
+      "ctu_sql_002": {
+        "result_sha256": "92ae11c21d7bfdb0e7b5ab47148b9fc6b9a2198ec553638a7f1a3ee435291c8a",
+        "row_count": 1
+      },
+      "ctu_sql_003": {
+        "result_sha256": "6b381b5beedb8c08a6c0b370fc440fefd948c5079b2700eadd0bf29033f2e49f",
+        "row_count": 1
+      },
+      "ctu_sql_004": {
+        "result_sha256": "e78b6b2ef0c79a52a59ac18225babf1fdc8ccac1258146aff6d5fd1f0be1254a",
+        "row_count": 1
+      },
+      "ctu_sql_005": {
+        "result_sha256": "8b4d3ce5d2cbe284ce96074955464ae75a20581f5fba50f29a3b02aa5c69915e",
+        "row_count": 1
+      },
+      "ctu_sql_006": {
+        "result_sha256": "2726918c87076ba67c86c4c6730d7a5b5b7167916ee222e573779dceea38033d",
+        "row_count": 5
+      },
+      "ctu_sql_007": {
+        "result_sha256": "6c1339a9f4f08ae3c5806ab5885412e389f2ca88206f0a3151b1e03acf9eac4c",
+        "row_count": 2
+      },
+      "ctu_sql_008": {
+        "result_sha256": "b1e66afdc9fb99556a8b2f8ce1549d3cdcbdccd81f2d6a508536701ae05a4ffe",
+        "row_count": 2
+      }
+    },
+    "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+    "row_counts": {
+      "network_flows": 243906
+    },
+    "schema": {
+      "dataset_provenance": [
+        [
+          "dataset_id",
+          "VARCHAR"
+        ],
+        [
+          "source_name",
+          "VARCHAR"
+        ],
+        [
+          "source_url",
+          "VARCHAR"
+        ],
+        [
+          "retrieved_at",
+          "TIMESTAMP"
+        ],
+        [
+          "file_sha256",
+          "VARCHAR"
+        ],
+        [
+          "license_note",
+          "VARCHAR"
+        ],
+        [
+          "schema_version",
+          "VARCHAR"
+        ]
+      ],
+      "network_flows": [
+        [
+          "source_dataset",
+          "VARCHAR"
+        ],
+        [
+          "source_row_id",
+          "VARCHAR"
+        ],
+        [
+          "event_time",
+          "TIMESTAMP"
+        ],
+        [
+          "src_ip",
+          "VARCHAR"
+        ],
+        [
+          "src_port",
+          "INTEGER"
+        ],
+        [
+          "dst_ip",
+          "VARCHAR"
+        ],
+        [
+          "dst_port",
+          "INTEGER"
+        ],
+        [
+          "protocol",
+          "VARCHAR"
+        ],
+        [
+          "action",
+          "VARCHAR"
+        ],
+        [
+          "bytes_out",
+          "BIGINT"
+        ],
+        [
+          "bytes_in",
+          "BIGINT"
+        ],
+        [
+          "label",
+          "VARCHAR"
+        ]
+      ]
+    },
+    "semantic_counterexamples": {
+      "boolean": {
+        "case_id": "ctu_sql_005",
+        "different_from_gold": true
+      },
+      "distinct": {
+        "case_id": "ctu_sql_003",
+        "different_from_gold": true
+      },
+      "ordering": {
+        "case_id": "ctu_sql_006",
+        "different_from_gold": true
+      },
+      "time_boundary": {
+        "case_id": "ctu_sql_004",
+        "different_from_gold": true
+      }
+    },
+    "source_file_sha256": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+    },
+    "source_row_counts": {
+      "ctu13_s5": 129831,
+      "ctu13_s7": 114075
+    },
+    "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+    "tables": [
+      "dataset_provenance",
+      "network_flows"
+    ],
+    "version": "ctu_network_public_dev_v1"
+  },
+  "source_metadata_owner": "controller",
+  "truncated_search_is_closed": false,
+  "typed_constraints_require_search": false
+}

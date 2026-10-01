@@ -55,6 +55,16 @@ Counterexamples use synthetic alpha/beta captures, arbitrary quantities, a mixed
 
 Task 2 full suite on the final contract: `python -m pytest -q`: **747 passed, 1612 existing warnings, 201.86s**, exit 0. The earlier 745-pass run preceded the last two regression fixes and is not used as final verification. Compile, diff and 185 protected hash checks passed. Contract byte preservation is scoped to the new lock in `.gitattributes`.
 
+### Pre-live fresh review and version 3
+
+The fresh whole-branch reviewer confirmed a provenance defect for wildcard projection collisions and relation column aliases, where overlapping catalog values could mask a wrong column mapping. Both synthetic cases failed before the fix, then passed. Version 3 withholds probe lineage for wildcard projections or relation column aliases rather than guessing mappings; direct unique projections still work. The committed v2 lock remains unchanged at checksum `7d39379cce732044d8dd9a43b2d2b57b2b7da101ee4ace0a27af9286da49e7ef`; it was never used for paid inference.
+
+Live contract: `r2_generalized_controller_provenance_v3`, [CONTRACT_v3.lock.json](../../evaluation/r2_phase2/CONTRACT_v3.lock.json), SHA-256 `a8d43578b892d93c41c723ff8841f24e0b02aa2861048b5c92661d01f46ff132`. Source hashes and lock bytes are checked before client creation. A cleanup exception is also retained as `CLIENT_CLEANUP_ERROR`, with the final partial report and charged response usage preserved. The reviewer called it Minor; it was upgraded to Important because the handoff contract requires final/partial cost reporting. One fix pass, no second review, no deferred findings.
+
+Reviewer declined billing/account, real-provider availability, remote CI, full-suite validation, future evidence closure and independent historical rehashing. The parent verifies these gates: owner-confirmed credit (not independent Billing), provider/model guards fail closed, exact-SHA CI before inference, full tests before commit, and immutable inventories before/after. Future R1 lock and evidence closure remain work items, not completion claims.
+
+Final pre-live implementation verification: **58 targeted tests pass, 762 full tests pass / 1612 existing warnings / 138.07s**, compile checks and `git diff --check` exit 0; 185 protected hashes unchanged. New suite bound $0.57024 (80 calls maximum), window cap $0.75, fixed 20KB serialized request limit plus 512 framing tokens per call. Account gate is fresh owner confirmation for the correct project; no independent Billing lookup or credit purchase. Exact-SHA CI is required before the new live entrypoint can create the SDK client.
+
 ## Verification ledger
 
 - Regression RED against predecessor: 7 failed, 22 passed (layout, quoted identifiers/literals, unknown function and malformed syntax).

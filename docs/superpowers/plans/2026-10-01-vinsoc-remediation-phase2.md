@@ -25,11 +25,11 @@ Initial SHA: 28abd31bcc4349874f2e702fd7510a10578d38d9, equal to fetched origin/m
 ### Task 2: Generalized controller provenance
 
 - [x] Counter-example fixture tests RED; implement four semantic layers, controller-owned typed provenance and open pattern domains without case rules. 43 targeted tests pass; lock checksum `7d39379cce732044d8dd9a43b2d2b57b2b7da101ee4ace0a27af9286da49e7ef`.
-- [ ] Freeze new contract checksum; targeted/full verification, commit/push and exact-SHA CI.
+- [x] Freeze new contract checksum; targeted/full verification, commit/push and exact-SHA CI. `a0b4340c226c5ec1bc2cab2840b551558ad7fd1f`, CI 36807482241 both jobs successful; 747 full tests pass.
 
 ### Task 3: One gated live R2 dev suite
 
-- [ ] Separate one-consumption entrypoint and offline tests for gates/telemetry, no synthetic official eligibility; lock contract before live.
+- [x] Separate one-consumption entrypoint and offline tests for gates/telemetry, no synthetic official eligibility; lock contract before live. Targeted 58 pass; full implementation 762 pass; contract v3 locked after one fresh review/fix pass.
 - [ ] Implementation commit/push and exact-SHA CI; snapshot/account/pricing/budget preflight.
 - [ ] One eight-case E3 suite, preserve all failures and charged usage; no retries or tuning.
 
