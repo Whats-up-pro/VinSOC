@@ -41,7 +41,7 @@ Initial SHA: 28abd31bcc4349874f2e702fd7510a10578d38d9, equal to fetched origin/m
 ### Task 5: Evidence handoff
 
 - [x] Artifact-derived identity/error/usage/cost tables; independent historical contexts, no continuous improvement claims. New append-only receipts in `results/evaluation_v1/phase2_handoff/20261001/`; source artifacts and all 185 protected hashes verified unchanged, response IDs unique and cached-aware cost recomputed.
-- [ ] Verify all original hashes unchanged, review, commit/push and final exact-SHA CI; STOP FOR HUMAN REVIEW.
+- [x] Verify all original hashes unchanged, review, commit/push and exact-SHA CI; STOP FOR HUMAN REVIEW. Evidence commit `6534584dec76a3d8e89047e093d58ecd67339a69` pushed; CI 36810671538 passed full tests on both Python 3.11/3.12. Original 185 hashes and all 19 inventoried new artifact hashes still match. This checkbox was marked only after observed CI success. Closure documentation is committed separately and its exact-SHA CI must also pass before the final handoff; no further inference is authorized.
 
 ## Verification record
 
