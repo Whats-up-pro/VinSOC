@@ -73,11 +73,14 @@ class Phase2Tools(V2DatabaseTools):
         if isinstance(args, dict) and self.column_types.get(args.get('column')) not in TEXT_TYPES | {None}:
             if not isinstance(args.get('query'), str) or set(args) - {'query','table','column'} or args.get('table','network_flows') != 'network_flows':
                 return {'ok': False, 'error_type': 'INVALID_ARGUMENTS'}
-            return self._remember({'ok': True, 'evidence_id': self._evidence_id(), 'matches': [],
-                                  'resolution': 'typed_constraint_not_catalog_value',
-                                  'domain_complete': False, 'grouping_predicates': [],
-                                  'constraint_column': {'table':'network_flows','column':args['column'],
-                                                        'type':self.column_types[args['column']]}})
+            col_type = self.column_types[args['column']]
+            col_name = args['column']
+            return self._remember({
+                'ok': True, 'evidence_id': self._evidence_id(), 'matches': [],
+                'resolution': 'typed_constraint_not_catalog_value',
+                'domain_complete': False, 'grouping_predicates': [],
+                'constraint_column': {'table':'network_flows','column':col_name,'type':col_type},
+                'hint': col_type + ' column "' + col_name + '" has no catalog values. Use SQL aggregation (COUNT, GROUP BY) for analysis - do NOT continue value search.'})
         result = super().value_search(args)
         if not result.get('ok'):
             return result
