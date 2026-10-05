@@ -1,9 +1,14 @@
-# VinSOC: kịch bản demo sau phần kết quả
+# VinSOC: kịch bản 11 slide và demo có kiểm chứng
 
-**Đối tượng:** hội đồng kỹ thuật / reviewer. **Thời lượng:** 15–20 phút.
-**Mốc code đã kiểm:** Task2 `422ba0beeda0fa8f7dce2bfefc4296c151287695`; closure `1ea74db1a838d9f28535cf017eca0a1937c07e81`; sửa CLI `46f5a27723b880e39d593f5a25f769afad57308e`.
+**Đối tượng:** mentor, hội đồng kỹ thuật / reviewer. **Thời lượng:** 15–20 phút, gồm khoảng 9 phút nói theo slide, 5 phút mở artifact/rehearsal và thời gian Q&A.
+**Deck:** [VinSOC Evaluation Progress — 2026-10-05](https://www.canva.com/d/H14i_CJTqqk8VMm), 11 trang. Kịch bản dưới đây bám đúng thứ tự trang, không yêu cầu đổi bố cục deck.
 
-Đây là kịch bản trình bày và hướng dẫn thao tác. Việc viết tài liệu này không tạo lượt model mới, không tạo score mới và không mở frozen. Các lệnh rehearsal/replay dưới đây là đề xuất cho người trình diễn; chúng chưa được chạy để tạo artifact demo trong checkpoint viết tài liệu này. CLI/flags được đối chiếu với code hiện tại.
+**Mốc đối chiếu tài liệu:** `master@f544d9dc637e93a489218cb05918439cb1cb2c61`.
+**Mốc code:** audit Task 0+1 `bb462f30b30f29d1bba6207b4a96b2ad579875a9`; Task 2 `422ba0beeda0fa8f7dce2bfefc4296c151287695`; closure `1ea74db1a838d9f28535cf017eca0a1937c07e81`; sửa CLI `46f5a27723b880e39d593f5a25f769afad57308e`.
+
+**Đính chính tiến độ khi nói:** deck đang giữ checkpoint `bb462f3`, nên trang 1/9/11 ghi **774 tests**, trang 10 còn đặt typed grounding trong lộ trình. Đến mốc runbook này, Task 2 đã implement và CI **820 tests** trên mỗi Python 3.11/3.12; sửa CLI đã có CI **823 tests** trên mỗi phiên bản. Các số là checkpoints khác nhau, không ghi đè lịch sử. Task 2 không gọi model mới, chưa tạo lock v4 và chưa tạo full-suite score mới. R1 vẫn **22/24**, R2 CTU dev vẫn **7/8**. Khi trình bày trang 2 và 10 phải nói cập nhật này, không mô tả Task 2 vẫn chưa bắt đầu.
+
+Chỉ thay đổi kịch bản tài liệu. Các lệnh rehearsal/replay dưới đây dành cho người trình diễn, chưa được thực hiện trong lượt sửa runbook này. Không gọi API, mở frozen, tạo demo receipt hoặc tự mở gate paid. Giữ cách phân biệt kết quả model, replay offline, rehearsal và kiểm thử code.
 
 ## 1. Thông điệp xuyên suốt
 
@@ -19,37 +24,139 @@ Trên màn hình luôn đặt một trong ba nhãn:
 
 Fake transport trong unit tests là kiểm thử code. Nó không thuộc ba loại kết quả model/demo có dữ liệu trên và không được xuất thành accuracy.
 
-## 2. Kịch bản theo thời gian
+## 2. Thứ tự slide và thời gian
 
-| Phút | Màn hình / thao tác | Điểm cần nói |
+| Phút | Trang / màn hình | Thao tác |
 |---:|---|---|
-| 0–2 | Bảng R1/R2 và link artifact | Metric đo gì, mẫu bao nhiêu, kết quả còn thiếu gì |
-| 2–4 | Git SHA, CI, winner lock, snapshot hashes | Code được kiểm; dữ liệu và lịch sử được bảo toàn |
-| 4–7 | R2 case008 và case006 từ report | Một query đã chấm đúng và một TOOL_LIMIT được giữ nguyên |
-| 7–9 | Replay scorer offline | Người khác có thể chấm lại mà không trả phí model |
-| 9–13 | Botnet + Normal network rehearsal | Production tool, evidence ID, source row và thời gian CTU thật |
-| 13–16 | Trace live nếu đã mở gate; nếu chưa, trình bày contract và trạng thái | Arguments/assessment phải do model; citations chưa tự chứng minh mọi claim |
-| 16–20 | Q&A, lỗi CLI vừa sửa, các bước còn lại | DEV_VERIFIED / HOLDOUT_PENDING; không tuyên bố hoàn tất generalization |
+| 0–2 | 1–2: bìa, tóm tắt | Chốt hai kết quả dev, phạm vi CTU-only và trạng thái còn thiếu |
+| 2–4 | 3–4: phương pháp, kiến trúc | Phân biệt model run với audit; production tools với SQL evaluator |
+| 4–6 | 5–6: R1 | Giải thích case success, F1, no-tool; chọn cấu hình theo dev |
+| 6–9 | 7–8: R2 | Giải thích execution scoring, 7/8, case006 và usage/cost |
+| 9–14 | Tạm rời trang 8, mở artifact và rehearsal | Mở case008/case006 theo mục 5; replay mục 6; Botnet/Normal mục 7 nếu đã rehearsal trước |
+| 14–17 | Quay lại 9–11 | Đọc bảng lịch sử có caveat; cập nhật Task 2; chốt bước tiếp theo và nguồn |
+| 17–20 | Q&A | Dùng mục 10; không rerun model hoặc mở holdout để trả lời |
 
-## 3. Mở đầu: show kết quả trước
+Nếu thiếu snapshot hợp lệ hoặc chưa rehearsal, chỉ mở artifact đã lưu rồi quay lại trang 9. Nói rõ phần thao tác chưa thực hiện; không dùng output mẫu để giả một lần chạy. Phần live ở mục 8 chưa được mở, không chen vào thời lượng này để gọi API.
 
-### Lời dẫn
+## 3. Lời thoại theo từng trang
 
-> “R1 đo quyết định chọn tool, không thực thi tool trong suite này. R2 đo kết quả thực thi SQL so với gold trên snapshot đã khóa. CI xanh kiểm chứng code; nó không thay thế artifact accuracy.”
+Các đoạn trích là lời có thể đọc trực tiếp. Ghi chú “Chỉ vào” và “Thao tác” dành cho người trình diễn, không đọc thành lời. Không đọc hết các ô bảng khi một câu đã nêu kết luận.
 
-| Track / điều kiện | Metric đã có | Cost từ usage của lượt đó | Giới hạn |
-|---|---|---:|---|
-| R1 dev v2, GPT‑4.1 mini | 22/24 = 91.67%; exact-call F1 0.9508; no-tool 5/5 | $0.0101312 | Winner dev; 11/24 gold adjudicated sau khi xem output gốc |
-| R1 dev v2, GPT‑5 mini | 19/24 = 79.17%; F1 0.9355; no-tool 4/5 | $0.01595 | Model/request contract khác; không là frozen |
-| R2 CTU E0, run36520685612 | EX0/8; response/syntax/execution8/8 | Xem usage/cost trong artifact E0 | Điều kiện lịch sử riêng; immutable |
-| R2 remediation live lịch sử | EX1/8 | Xem artifact riêng | Không ghép với public pilot hoặc Phase2 thành đường cải tiến nhân quả |
-| R2 Phase2, SHA3f9d72d | EX7/8 = 87.5%; syntax7/8; execution7/8 | $0.02085850 | 8 dev cases; case006 TOOL_LIMIT giữ nguyên |
-| Post-INTEGER hint / Task2 v4 | Chưa có verified full-suite model score mới | Task2 inference mới $0 | 820 tests là code verification, không phải EX model |
-| Holdout | R1 chưa mở inference; R2 chưa có holdout độc lập hợp lệ | Chưa chạy trong checkpoint này | S1/S4 consumed, protocol-ineligible |
+### Trang 1 — Kết quả development đến 05/10/2026
 
-R1 GPT‑4.1 mini dùng temperature0; GPT‑5 mini bỏ temperature và dùng reasoning_effort low. Public-dev pilot5/8 thuộc snapshot/điều kiện riêng; không đặt cùng một đường tiến bộ với CTU E0, remediation và Phase2. Các cost trên không phải tổng hóa đơn hoặc số dư credit.
+**Chỉ vào:** 22/24, 7/8, 243.906 flows, 774 tests.
 
-### Mở artifact, không nhập số bằng tay
+> “VinSOC đang đo hai năng lực: model chọn tool và arguments ở R1, và sinh SQL trả đúng kết quả ở R2. Trên development, R1 đạt 22 trong 24 case; R2 CTU đạt 7 trong 8 case. Dữ liệu R2 gồm 243.906 network flows thật từ CTU Scenario 5 và 7. Đây là kết quả dev có artifact để kiểm tra. Đánh giá holdout độc lập và demo end-to-end hoàn chỉnh vẫn còn gate.”
+
+**Ghi chú số CI:** 774 trên slide thuộc `bb462f3`. Nếu hỏi mốc mới nhất, dẫn CI 823 ở mục 4, không đổi 774 thành số của một SHA khác.
+
+### Trang 2 — Tiến độ cụ thể
+
+**Chỉ vào:** Benchmark, Model run, Audit, Fix / E2E.
+
+> “Ba phần đã có bằng chứng là benchmark development, các lượt model thật đã lưu và audit lại cách chấm. Chữ Audit đã xong chỉ nói về Task 0+1 tại checkpoint của slide. Sau checkpoint đó, Task 2 đã bổ sung typed grounding và fixture phản ví dụ, CI đạt 820 tests. Chưa có lượt model mới để đo tác động của bản sửa. Bước tiếp theo là review, khóa contract cùng guard ngân sách, rồi mới mở đánh giá đối chứng và demo.”
+
+> “R1 đã chọn cấu hình dev. R2 còn case006 không tạo được SQL cuối trong lượt 7/8. S1/S4 đã consumed và chưa có execution score được xác minh, nên không dùng chúng làm bằng chứng holdout độc lập.”
+
+**Không nói:** “toàn bộ dự án xong”, “frozen đạt 100%”, hoặc “test tăng nên accuracy tăng”.
+
+### Trang 3 — Phương pháp và bằng chứng
+
+**Chỉ vào:** kiểm tra tích hợp, model thật + audit, replay 7/8 và 188 hashes.
+
+> “Mock được dùng để kiểm thử code, còn accuracy lấy từ response model thật đã lưu. Với R1, evaluator ghép prediction và gold một-một rồi kiểm tool cùng arguments. Với R2, evaluator chạy SQL trên snapshot khóa và so kết quả với gold. Audit Task 0+1 giữ nguyên 188 hashes lịch sử và chấm lại dev vẫn 7/8, không gọi model mới.”
+
+> “Task 2 bổ sung dữ liệu fixture để một query sai nhưng chạy được phải bị chấm sai: thiếu source filter, nhầm DISTINCT, biên thời gian, Boolean, wildcard hoặc top-k. Các fixture này kiểm độ phân biệt của scorer; chúng chưa tạo một accuracy mới của model.”
+
+**Giới hạn:** EX=true trên một snapshot chưa chứng minh query đúng trên mọi dữ liệu có thể có. Mở Task 2 receipt nếu hỏi chi tiết, không gộp 188 hashes của Task 0+1 với 287 protected files của checkpoint sau.
+
+### Trang 4 — Kiến trúc và ranh giới thực thi
+
+**Chỉ vào:** production domain tools, R1, R2, evidence và assessment.
+
+> “Production agent gọi domain tools bằng arguments có cấu trúc. R1 chỉ đo một lượt quyết định chọn tool và điền arguments; suite A1 không thực thi tool. R2 là evaluator riêng: model sinh SQL, safety gate kiểm query, DuckDB mở read-only và comparator chấm kết quả. Chúng tôi không đưa đường raw SQL của evaluator vào production agent.”
+
+> “Demo network sẽ kiểm luồng tool trả evidence có source row rồi assessment sử dụng evidence đó. Đây là phép kiểm end-to-end riêng, không suy ra từ hai điểm R1/R2.”
+
+### Trang 5 — R1: cách đo Tool Calling
+
+**Chỉ vào:** Request, Provider, Tool Calls, Matcher, Report.
+
+> “Evaluator đọc native tool-call objects thay vì đoán tool từ văn bản trả lời. Gold quy định tool và arguments cần có. Call thừa, thiếu, bị cấm hoặc sai argument đều có thể làm case thất bại. Report giữ predictions, arguments, match trace, provider telemetry và provenance để reviewer xem lại mà không gọi model.”
+
+> “Cấu hình thắng trên dev là gpt-4.1-mini-2025-04-14, temperature 0, cap 1.000 completion tokens và không retry. Một lượt dev v2 có usage-derived cost 0,0101312 đô.”
+
+**Lưu ý ô Argument Accuracy 100%:** đây là field accuracy theo denominator của evaluator. Nó không có nghĩa mọi case đều đúng; call thiếu/thừa vẫn bị phạt ở call metrics và case success.
+
+### Trang 6 — R1: đọc bảng kết quả dev v2
+
+**Chỉ vào:** từng hàng theo thứ tự bảng, sau đó dòng GPT-5 mini và caveat v1/v2.
+
+> “Case Success 22/24 nghĩa là 22 yêu cầu có quyết định hoàn toàn đúng theo gold và contract. Exact Call F1 là 95,08%, với precision 96,67% và recall 93,55%. F1 chấm từng call; case success chấm cả yêu cầu, nên một case có vài call đúng vẫn trượt nếu còn call sai hoặc thiếu.”
+
+> “No-tool 5/5 nghĩa là model xử lý đúng năm case không nên gọi tool. Tool Set Exact Match 22/24 kiểm tên tool và số lượng call, còn Exact Call F1 có thêm required argument values. Hai con số case-level trùng nhau trong run này, nhưng hai metric có định nghĩa khác nhau.”
+
+> “GPT-5 mini đạt 19/24, nên rule chọn theo dev case success giữ GPT-4.1 mini. Đây là lựa chọn giữa hai request contracts: GPT-4.1 mini dùng temperature 0, GPT-5 mini bỏ temperature và dùng reasoning low. Chưa kết luận một model tốt hơn trên mọi tác vụ.”
+
+**Caveat phải giữ:** v1 15/24 và v2 22/24 khác gold/schema; 11/24 gold cases đã adjudicate sau khi thấy output gốc. Dev v2 phục vụ phát triển và chọn cấu hình, không là holdout độc lập. R1 frozen chưa được cấp phép inference. Hai lỗi winner còn lại là `case_002`, `case_015`; chỉ mở trace dev đã lưu nếu được hỏi.
+
+### Trang 7 — R2: cách đo Text-to-SQL
+
+**Chỉ vào:** schema + values, safety, DuckDB, comparator.
+
+> “R2 đo query có trả đúng dữ liệu mà câu hỏi yêu cầu hay không. Query parse được là syntax validity; chạy được là execution success; trả accepted result mới là execution accuracy. Comparator xử lý scalar, hàng không có thứ tự và hàng có thứ tự theo contract của case. Safety rejection là trạng thái riêng.”
+
+> “Model cần hiểu cả kiểu cột và giá trị lưu trong DB. DualSQL-Lite dùng database tools để grounding trước khi sinh SQL. Bản Task 2 tách schema type khỏi chứng cứ literal trong DB: biết một cột là INTEGER không tự chứng minh một giá trị đã xuất hiện trong cột đó.”
+
+**Phạm vi phương pháp:** VinSOC sử dụng ý tưởng inference và DB grounding từ DualSQL, chưa train hoặc reproduce multi-agent RL của paper. Không gọi mọi run lịch sử E0 là cùng một cấu hình E0.
+
+### Trang 8 — R2: live result và audit cùng là 7/8
+
+**Chỉ vào:** hai cột Run 3f9d72d / Audit bb462f3, hàng case006, usage/cost.
+
+> “Cột trái là kết quả full dev Phase2 đã lưu tại implementation 3f9d72d. Cột phải là offline audit ở checkpoint bb462f3. Cả hai đều 7/8, tức 87,5% execution accuracy; syntax và execution success cũng 7/8. Safety rejection là 0/8. Audit giữ nguyên kết quả model, không sinh prediction mới.”
+
+> “Case006 kết thúc TOOL_LIMIT, không có final SQL và vẫn nằm trong mẫu số tám. Trong scorer, nó là NO_FINAL_SQL với EX=false. Chúng tôi không thay một case rerun vào suite cũ để công bố 8/8.”
+
+> “Lượt live có 44 attempted calls và 44 responses, cùng 34 database tool calls. Usage là 47.802 input tokens, gồm 8.960 cached input, và 5.462 output tokens. Chi phí tính từ usage là 0,0208585 đô. Đây là chi phí của run đó, không là tổng hóa đơn hoặc credit balance. Replay thêm zero model calls.”
+
+**Thao tác tiếp theo:** tạm rời slide, dùng mục 5 mở `ctu_sql_008` và `ctu_sql_006`. Case008 query nhóm theo dataset và ORDER BY, kết quả S5=129.831, S7=114.075. Đây là response SQL đã lưu, không phải gold được dán vào để diễn live. Các sample 001/004 trên slide là điểm dữ liệu của run, không chứng minh semantic correctness trên mọi snapshot.
+
+Nếu snapshot/outputs đã chuẩn bị và gate offline pass, chạy mục 6 replay rồi mục 7 rehearsal Botnet/Normal. Nếu chưa, chỉ trình bày report/trace và quay lại trang 9. Không gọi model tại đoạn này.
+
+### Trang 9 — So sánh lịch sử có kiểm soát
+
+**Chỉ vào:** từng hàng trước/sau và cột ý nghĩa.
+
+> “Bảng này ghi tiến độ theo phiên bản, không phải một đường cải thiện model duy nhất. R1 từ 15/24 sang 22/24 có thay gold và schema. Public pilot R2 từ 2/8 lên 5/8 là replay cùng SQL sau sửa scorer. CTU từ 0/8 lịch sử đến 7/8 Phase2 đã đổi model hoặc kiến trúc/request contract. Vì thế chưa dùng các delta này để chứng minh tác động riêng của một cải tiến.”
+
+> “Hàng audit dev 7/8 sang 7/8 cho thấy việc kiểm lại không nâng điểm. S1/S4 có tám saved predictions nhưng chưa qua snapshot identity gate, nên unscored. Đồng thời chúng đã consumed, không được tái sử dụng làm holdout độc lập.”
+
+**Đính chính số tests:** 774 thuộc audit `bb462f3`; Task 2 820 và CLI 823 là checkpoints mới đã có CI. Tăng số test không thay đổi điểm R2 7/8.
+
+### Trang 10 — Các gate còn lại
+
+**Chỉ vào:** typed grounding, contract v4, paired dev, demo E2E.
+
+> “Trang này giữ roadmap tại checkpoint slide. Đến runbook hiện tại, mục typed grounding và semantic counterexamples đã implement và qua CI 820 tests. Bản sửa chưa có lock v4 hoặc paid result mới. Gate tiếp theo là review và khóa release contract, attempt/cost guards cùng snapshot identities.”
+
+> “Sau khi mở gate, mới chạy một cặp E0/E3 trên cùng tám dev cases và cùng implementation SHA để đo tác động có control. Sau đó là demo network: model sinh arguments, production tool lấy evidence thật, model sinh assessment và factual checks kiểm claim. Hiện chưa gọi trạng thái đó là E2E COMPLETE.”
+
+> “Final track là CTU-only network. Ba nguồn ThreatFox/CTU/OTRF vẫn blocked, không nằm trên đường bắt buộc để hoàn tất demo này. Holdout độc lập cần authorization và ngân sách riêng; S1/S4 cũ không thay thế gate ấy.”
+
+**Không thao tác:** không tạo lock, rerun suite, smoke, retry hoặc dispatch paid workflow ngay trong bài trình bày. Kịch bản này không cấp quyền mở các gate tiếp theo.
+
+### Trang 11 — Nguồn và kết luận
+
+**Chỉ vào:** nguồn phương pháp, repo, CI.
+
+> “Nguồn phương pháp gồm native function calling, BFCL cho tool/no-tool evaluation, DualSQL cho hướng grounding và Zhong cùng cộng sự về semantic evaluation bằng test suites. Các nguồn này là cơ sở thiết kế; điểm VinSOC lấy từ artifact riêng của dự án, không phải điểm của các benchmark đó.”
+
+> “Hiện có R1 dev 22/24 và R2 CTU dev 7/8 có trace, usage và provenance. Task 0+1 đã kiểm lại cách chấm; Task 2 đã bổ sung typed grounding và phản ví dụ offline. Các bước còn lại là release gate v4, đánh giá đối chứng, demo model-driven có factual checks và holdout độc lập. Tôi giữ kết quả sai cùng giới hạn của chúng để reviewer có thể kiểm lại.”
+
+**Nếu kết thúc sau rehearsal:** nói rõ production tool đã chạy trên snapshot thật khi có receipt thực tế, nhưng arguments/assessment do script; không gọi đó là live model-driven E2E. Nếu chưa rehearsal, chỉ nói đã trình bày artifact và kế hoạch thao tác.
+
+### Mở artifact để đối chiếu lời nói
 
 ```powershell
 Set-Location D:\VINUNI_AI2026\Phase3_VinSOC
@@ -92,7 +199,7 @@ CI đã kiểm:
 
 - [Task2 implementation422ba0b](https://github.com/Whats-up-pro/VinSOC/actions/runs/37265105043): Python3.11/3.12,820 pass mỗi job.
 - [Task2 closure1ea74db](https://github.com/Whats-up-pro/VinSOC/actions/runs/37265511965): hai job xanh.
-- [CLI46f5a27](https://github.com/Whats-up-pro/VinSOC/actions/runs/37274201577): hai job xanh; lấy số pass từ log CI khi trình bày.
+- [CLI46f5a27](https://github.com/Whats-up-pro/VinSOC/actions/runs/37274201577): Python 3.11/3.12, **823 pass mỗi job** (log: 51.43s / 55.92s).
 - [Task2 completion receipt](../results/evaluation_v1/finalization_audit/20261005/task2/completion_receipt.json), [CLI offline receipt](../results/evaluation_v1/finalization_audit/20261005/cli_context/verification_receipt.json).
 
 ## 5. R2: mở một case đúng và một case lỗi
@@ -238,9 +345,9 @@ Lỗi `context=None` đã được tái hiện bằng fake provider và sửa tr
 
 **“Có reproduce DualSQL RL không?”** — Đây là inference-inspired architecture. Không tuyên bố đã train hoặc reproduce multi-agent RL.
 
-## 11. Kết thúc
+## 11. Kết thúc sau phần thao tác / Q&A
 
-> “Kết quả dev, prediction lỗi và chi phí đã được giữ trong artifact. Reviewer có thể chấm lại SQL offline và truy vết evidence. Những bước còn lại là khóa release v4, lượt dev có control, demo model-driven đã kiểm factual claims và holdout độc lập được human authorize. Trạng thái hiện tại là DEV_VERIFIED / HOLDOUT_PENDING.”
+> “Kết quả dev, prediction lỗi và chi phí đã được giữ trong artifact. Reviewer có thể chấm lại SQL offline và truy vết evidence. Task 2 đã implement và kiểm thử offline, chưa tạo score model mới. Những bước còn lại là khóa release v4, lượt dev có control, demo model-driven đã kiểm factual claims và holdout độc lập được human authorize. Trạng thái hiện tại là DEV_VERIFIED / HOLDOUT_PENDING.”
 
 ### Chuẩn bị trước buổi trình diễn
 
