@@ -1,0 +1,71 @@
+{
+  "case006": {
+    "execution_accurate": false,
+    "pipeline_error_category": "TOOL_LIMIT",
+    "scoring_error_category": "NO_FINAL_SQL"
+  },
+  "changed_protected_files": [],
+  "cost_unknown": false,
+  "created_utc": "2026-10-05T03:16:23.599611+00:00",
+  "deferred_minors": [
+    "Final: minor (deferred): unknown single-file case ID exits via KeyError rather than structured CASE_SET_MISMATCH; fail-closed, no output/false score, CLI polish remains.",
+    "Final: minor (deferred): missing/empty benchmark gold is rejected while loading cases before receipt creation; CLI reports VALIDATION_FAILED, no false score. Executable-but-invalid gold is recorded unscored; missing-gold receipt remains future polish."
+  ],
+  "dev_report_sha256": "32e80ba0674d22b5b13a4f90745116a7fa2ff0a55c9c72d72d99d760c4c976a7",
+  "dev_scored_cases": 8,
+  "env_modified_or_staged_by_agent": false,
+  "evidence_ci": {
+    "conclusion": "success",
+    "head_sha": "88bfb10e09904f376036b7a98fc551ca7994e67d",
+    "python_3_11": {
+      "conclusion": "success",
+      "passed": 774,
+      "seconds": 44.96
+    },
+    "python_3_12": {
+      "conclusion": "success",
+      "passed": 774,
+      "seconds": 47.91,
+      "warnings": 1609
+    },
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37257505644"
+  },
+  "execution_accurate_before_after": [
+    7,
+    7
+  ],
+  "final_documentation_closure_sha_and_ci": "Reported after commit/push in handoff; no self-referential provenance",
+  "frozen_report_sha256": "530809a3fa90baf2127fb3140387eb7072e3211ef7421dd6b8ea3270e4f789d5",
+  "frozen_saved_outputs": {
+    "consumed": true,
+    "protocol_eligible": false,
+    "reason": "SNAPSHOT_IDENTITY_UNVERIFIED",
+    "snapshot_or_gold_queries": 0,
+    "unscored_cases": 8
+  },
+  "implementation_sha": "c348c01eecef2b4cc989daf3f02af822176c7e8f",
+  "initial_sha": "f841bc926b0f00fdd2ba9d1c87b521851fd2dc74",
+  "limitations": [
+    "Historical v3 source-lock mismatch remains recorded, not overwritten",
+    "No verified full suite after INTEGER hint; existing official full suite remains7/8",
+    "No independent R2 holdout; S1/S4 consumed",
+    "Task2+ requires requested human review gate"
+  ],
+  "new_attempted_received_model_calls": [
+    0,
+    0
+  ],
+  "new_inference_cost_usd": 0,
+  "new_model_workflow_dispatches": 0,
+  "protected_historical_files": 188,
+  "receipt_sha256": {
+    "final_inventory.json": "9c5397866441c0ca84a42cad06eb9b8448ae12ec0943b79ad53d1b2704c33dad",
+    "initial_inventory.json": "6d697122cc8199409c8fcd893892795c09d6706cbed0b9eb036ab973fcef9c11",
+    "verification_receipt.json": "b5b4e8276fcd21114d9fdaca43a399e497a9e6f807387a9c89f9f31f52d4e1fd"
+  },
+  "remaining_tasks": "Tasks2-6 await requested human review; Task7 needs separate holdout authorization/budget",
+  "status": "TASK_0_1_VERIFIED_STOP_FOR_HUMAN_REVIEW",
+  "unrelated_untracked_modified_or_staged_by_agent": false,
+  "verified_evidence_sha": "88bfb10e09904f376036b7a98fc551ca7994e67d",
+  "version": "finalization_task01_completion_v1"
+}
