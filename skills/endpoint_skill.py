@@ -233,22 +233,20 @@ class EndpointSkill(BaseSkill):
         """Detect suspicious process relationships."""
         suspicious = []
 
-        # Build lookup for quick matching
-        process_map: Dict[str, Set[str]] = {}
-        for rel in process_tree:
-            parent = rel.get("parent", "").lower()
-            child = rel.get("child", "").lower()
-            if parent not in process_map:
-                process_map[parent] = set()
-            process_map[parent].add(child)
+        # Helper to extract filename from path
+        def get_filename(path: str) -> str:
+            if not path:
+                return ""
+            # Handle both Windows (backslash) and Unix (forward slash) paths
+            return path.rsplit("\\", 1)[-1].rsplit("/", 1)[-1].lower()
 
         # Check each relationship against patterns
         for rel in process_tree:
-            parent = rel.get("parent", "").lower()
-            child = rel.get("child", "").lower()
+            parent_name = get_filename(rel.get("parent", ""))
+            child_name = get_filename(rel.get("child", ""))
 
             for pattern in self.SUSPICIOUS_PATTERNS:
-                if pattern["parent"].lower() == parent and pattern["child"].lower() == child:
+                if pattern["parent"].lower() == parent_name and pattern["child"].lower() == child_name:
                     suspicious.append({
                         "parent": rel.get("parent"),
                         "child": rel.get("child"),
@@ -260,12 +258,12 @@ class EndpointSkill(BaseSkill):
 
         # Additional heuristic: suspicious if parent is common app and child is LOLBin
         for rel in process_tree:
-            parent = rel.get("parent", "").lower()
-            child = rel.get("child", "").lower()
+            parent_name = get_filename(rel.get("parent", ""))
+            child_name = get_filename(rel.get("child", ""))
 
             # Skip if already flagged
             already_flagged = any(
-                s["parent"].lower() == parent and s["child"].lower() == child
+                get_filename(s["parent"]).lower() == parent_name and get_filename(s["child"]).lower() == child_name
                 for s in suspicious
             )
             if already_flagged:
@@ -274,7 +272,7 @@ class EndpointSkill(BaseSkill):
             # Heuristic: common apps shouldn't spawn LOLBins directly
             common_apps = {"winword.exe", "excel.exe", "powerpnt.exe", "outlook.exe",
                          "chrome.exe", "firefox.exe", "msedge.exe"}
-            if parent in common_apps and child in self.LOLBIN_COMMANDS:
+            if parent_name in common_apps and child_name in self.LOLBIN_COMMANDS:
                 suspicious.append({
                     "parent": rel.get("parent"),
                     "child": rel.get("child"),
@@ -284,7 +282,7 @@ class EndpointSkill(BaseSkill):
                 })
 
             # Heuristic: scripted download/execution chains
-            if parent == "powershell.exe" and child in {"rundll32.exe", "mshta.exe"}:
+            if parent_name == "powershell.exe" and child_name in {"rundll32.exe", "mshta.exe"}:
                 suspicious.append({
                     "parent": rel.get("parent"),
                     "child": rel.get("child"),
@@ -294,7 +292,7 @@ class EndpointSkill(BaseSkill):
                 })
 
             # Heuristic: known ransomware executable launch
-            if "lockbit" in child or "ransom" in child:
+            if "lockbit" in child_name or "ransom" in child_name:
                 suspicious.append({
                     "parent": rel.get("parent"),
                     "child": rel.get("child"),
