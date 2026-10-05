@@ -1,0 +1,161 @@
+{
+  "artifact_sha256": {
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_001.json": "461f69a4121adc88532e01e88ddd58986784c2f8d9f393f78b881712aea6b43e",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_002.json": "dbfcdf7a1ed46f4287f20f2efe39b863380d96c6e4ad05a542f5dec173c21ff7",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_003.json": "bc5ebb0abbdd696c42583b493cf54f3528eddfce1fcd328e205a270c15548d70",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_004.json": "93bb941f42d14537e89a67fb7813864cf2f34f440ffbb1cdb6dec2e236d41b97",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_005.json": "f71ac120d32165e5949a9930218fb4a40b02534fef030178a557808f0163b017",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_006.json": "0c1953713146965089b077ac83949ba5d69c0defade7269adef57f0efa4c35d3",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_007.json": "5ac81a3906a5f9f2f46374eede2a0a2dd89465c8e431bb92b55b5741b30e4692",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/frozen_sql_008.json": "cbef9b7f3ffc547dcbfea7fc2e98ff85664df2a47eb4096c42492f1a207dc939",
+    "results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/report.json": "530809a3fa90baf2127fb3140387eb7072e3211ef7421dd6b8ea3270e4f789d5",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_001.json": "3ef583d850797dc1edf69ac30fc382f5465577b6956228f4afce72f92f751715",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_002.json": "0e4ebe0fab4b7e08201d04316c50d2629807b79b464ea2bd8f8769dfa3667313",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_003.json": "fa29b654427f6f658d8151cc5e538ff0ed25ec9b48a047dc8588711c97761af0",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_004.json": "ea5c9393b882b1f5249c0bd02a9c535f318d8bcc964dec695f0e5219ff48828d",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_005.json": "ffd358beb4cd2e16602aecfcdfe85c6a388531ab4b486633acb3a8bcc31e04e7",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_006.json": "82d3b148d504a58c24276edebf125cbefd239c9ada4e0c62284e347db8e56d0a",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_007.json": "f0f58c5ca1ec3bfc40e12fc780c23e2dd0eb0595ff87da4802cd2b44d43308b5",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/ctu_sql_008.json": "6210991d0013992653c8b818987deb6266434ef33db97953e95b46d0f237d808",
+    "results/evaluation_v1/finalization_audit/20261005/dev_replay/report.json": "32e80ba0674d22b5b13a4f90745116a7fa2ff0a55c9c72d72d99d760c4c976a7",
+    "results/evaluation_v1/finalization_audit/20261005/final_inventory.json": "9c5397866441c0ca84a42cad06eb9b8448ae12ec0943b79ad53d1b2704c33dad",
+    "results/evaluation_v1/finalization_audit/20261005/initial_inventory.json": "6d697122cc8199409c8fcd893892795c09d6706cbed0b9eb036ab973fcef9c11",
+    "results/evaluation_v1/finalization_audit/20261005/sync_receipt.json": "b8b610ad8fc1f357a0ee3d547143137c385b4f4d00cb29013aa5867f95b2f33e"
+  },
+  "before_after_dev_execution_accurate": [
+    7,
+    7
+  ],
+  "code_allowlist": [
+    ".gitattributes",
+    "PLAN.md",
+    "README.md",
+    "docs/evaluation/FINAL_EVALUATION_REPORT.md",
+    "docs/evaluation/phase2_results_2026-10-01.md",
+    "docs/superpowers/plans/2026-10-05-vinsoc-finalization-fix.md",
+    "evaluation/r2_phase2/scoring.py",
+    "scripts/audit_r2_saved_outputs.py",
+    "scripts/test_case006_integer_fix.py",
+    "tests/test_r2_saved_output_audit.py"
+  ],
+  "created_utc": "2026-10-05T02:56:22.097474+00:00",
+  "deferred_minors": [
+    "Final: minor (deferred): unknown single-file case ID exits via KeyError rather than structured CASE_SET_MISMATCH; fail-closed, no output/false score, CLI polish remains.",
+    "Final: minor (deferred): missing/empty benchmark gold is rejected while loading cases before receipt creation; CLI reports VALIDATION_FAILED, no false score. Executable-but-invalid gold is recorded unscored; missing-gold receipt remains future polish."
+  ],
+  "dev_case_count": 8,
+  "final_evidence_ci": "Pending evidence commit; final exact-SHA CI supplied in handoff, never self-referential SHA backfill",
+  "frozen_snapshot_or_gold_queries": 0,
+  "frozen_status": "closed; consumed=true, protocol_eligible=false; new saved outputs unscored",
+  "historical_dev": {
+    "attempted_calls": 44,
+    "cached_input_tokens": 8960,
+    "db_calls": 34,
+    "input_tokens": 47802,
+    "observed_cost_usd": 0.0208585,
+    "output_tokens": 5462,
+    "response_count": 44
+  },
+  "historical_files_changed": [],
+  "implementation_ci": {
+    "conclusion": "success",
+    "head_sha": "c348c01eecef2b4cc989daf3f02af822176c7e8f",
+    "python_3_11": {
+      "conclusion": "success",
+      "passed": 774,
+      "seconds": 45.51
+    },
+    "python_3_12": {
+      "conclusion": "success",
+      "passed": 774,
+      "seconds": 38.24,
+      "warnings": 1609
+    },
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37256566038"
+  },
+  "implementation_sha": "c348c01eecef2b4cc989daf3f02af822176c7e8f",
+  "initial_sha": "f841bc926b0f00fdd2ba9d1c87b521851fd2dc74",
+  "inventory_base_sha": "9b98b51e8e3f7ae8593122521ee63fe6417c5b8a",
+  "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "model_config": "No model/client instantiated; archived model/config retained in replay, not reassigned",
+  "model_workflow_dispatches": 0,
+  "new_attempted_model_calls": 0,
+  "new_cost_unknown": false,
+  "new_inference_cost_usd": 0,
+  "new_received_model_calls": 0,
+  "preserved_concurrent_commits": [
+    "9b98b51e8e3f7ae8593122521ee63fe6417c5b8a",
+    "9ff6ce3",
+    "9093f93c0cab704aaf232e28bf93d44ff45a1b73"
+  ],
+  "remaining_blockers_or_gates": [
+    "Historical v3 source-lock mismatch remains recorded, not overwritten",
+    "No verified full suite after INTEGER hint; existing official full suite remains7/8",
+    "No independent R2 holdout; S1/S4 consumed",
+    "Task2+ requires requested human review gate"
+  ],
+  "review": {
+    "important_fixed": "Incomplete frozen identity must match file/lock identity before query-bearing validator; RED1->GREEN12 and full774 pass",
+    "independently_checked_protected_hashes": 188,
+    "model": "gpt-6-astra",
+    "one_read_only_reviewer": true,
+    "reasoning": "high"
+  },
+  "rulings": [
+    "Ruling: user explicitly scopes the first delivery to Task 0+1 and review before subsequent work; stop there despite skill's continuous-all-tasks default. Cost if wrong: remaining tasks wait for intended review.",
+    "Ruling: direct master and preserved scratch/untracked are explicit user requirements; no worktree/branch/cleanup. Cost if wrong: repository remains shared, guarded by allowlisted staging and checks.",
+    "Ruling: spec's preferred S1/S4 holdout and earlier experiment order are superseded by updated consumed policy and paired-v4 plan. No frozen or paid execution in Task 0+1. Cost if wrong: holdout remains pending rather than making an invalid claim.",
+    "Ruling: case006 separate artifact exists locally as untracked; user plan's missing-artifact statement describes Git evidence availability. Preserve it, do not read/stage it in this delivery; do not splice into the archived suite. Cost if wrong: diagnostic remains outside this delivery, no headline impact.",
+    "Ruling: root PLAN.md repeated the same unsupported COMPLETE/8-of-8/generalization claim; added to Task1 documentation allowlist and corrected together with named reports. Cost if wrong: one extra documentation file, no implementation/benchmark change.",
+    "Ruling: code commit precedes replay receipt creation so the receipt records the actual committed implementation SHA without self-reference or historical backfill. Full verification/review before code commit; audit then evidence commit and exact final CI. Cost if wrong: an extra offline commit, zero API cost.",
+    "Final: Ruling: reviewer declined actual replay and exact-SHA CI before code commit; those remain acceptance gates to execute here. Cost if wrong: Task1 cannot be marked complete without receipts and both CI jobs.",
+    "Final: Ruling: later semantic/lock/live-journal/demo behaviors were not judged; user review gate limits this delivery to Task0+1, later tests/code stay pending. Cost if wrong: remaining finalization work waits for review.",
+    "Final: Ruling: concurrent CLI/demo commits were not reviewed here; preserve user changes and verify combined tree through full suite/CI, no claim of review coverage beyond task scope. Cost if wrong: unrelated behavior retains its own review responsibility."
+  ],
+  "scope": "Task 0+1 only; STOP FOR HUMAN REVIEW",
+  "snapshot_raw_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "snapshot_rebuilds_or_downloads": 0,
+  "verification": [
+    {
+      "command": "python -m pytest -q tests/test_r2_saved_output_audit.py --basetemp .superpowers/sdd/2026-10-05-vinsoc-finalization-fix/review-green -p no:cacheprovider",
+      "exit_code": 0,
+      "output": "12 passed in 3.17s"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "local_log_sha256": "151e5126ccdc5d0956cdbb89d339c76215bf7ff7b5f1f85183a8c8fcacb89245",
+      "local_runtime": "Python 3.13; required Python 3.11/3.12 verified in exact-SHA CI",
+      "output": "774 passed, 1612 warnings in 151.77s"
+    },
+    {
+      "command": "python -m py_compile evaluation/r2_phase2/scoring.py scripts/audit_r2_saved_outputs.py scripts/test_case006_integer_fix.py tests/test_r2_saved_output_audit.py",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m evaluation.ctu_network_public.contract --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb",
+      "exit_code": 0,
+      "output": "source bytes, gold, scorer, semantic traps and logical snapshot validated"
+    },
+    {
+      "command": "python -m scripts.audit_r2_saved_outputs --input results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite --cases-dir evaluation/ctu_network_public/dev --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output results/evaluation_v1/finalization_audit/20261005/dev_replay",
+      "exit_code": 0,
+      "output": "scored; EX7/8, syntax7/8, execution7/8; model_calls0, new_cost_usd0"
+    },
+    {
+      "command": "python -m scripts.audit_r2_saved_outputs --input results/evaluation_v1/ctu_network_frozen/r2_phase2_frozen_v1 --cases-dir evaluation/ctu_network_frozen/frozen --snapshot data/ctu_network_frozen/snapshots/ctu_frozen.duckdb --output results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored",
+      "outcome": "expected failed identity gate, not a scored pass; CLI defines return2, tool reported1; receipt independently checked",
+      "output": "unscored; all flags null; SNAPSHOT_IDENTITY_UNVERIFIED; model_calls0, new_cost_usd0",
+      "tool_reported_exit_code": 1
+    }
+  ],
+  "version": "vinsoc_finalization_task01_receipt_v1"
+}

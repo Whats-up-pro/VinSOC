@@ -44,6 +44,8 @@ The new S1/S4 prediction files under `r2_phase2_frozen_v1/` do not record the ex
 
 Initial inventory: [188 protected tracked files](../../results/evaluation_v1/finalization_audit/20261005/initial_inventory.json), raw checkout hashes, no .env/raw dataset files. Current replay receipts and exact implementation/evidence CI are linked after their actual verification in [the delivery plan](../superpowers/plans/2026-10-05-vinsoc-finalization-fix.md).
 
+Task0+1 replay implementation: `c348c01eecef2b4cc989daf3f02af822176c7e8f`. [CI](https://github.com/Whats-up-pro/VinSOC/actions/runs/37256566038) passed774 tests on each Python3.11/3.12. The [dev replay](../../results/evaluation_v1/finalization_audit/20261005/dev_replay/report.json) confirms7/8; the [consumed-frozen receipt](../../results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/report.json) leaves all8 unscored. Source hashes match before/after. [Verification receipt](../../results/evaluation_v1/finalization_audit/20261005/verification_receipt.json) records commands, hashes, zero model calls/cost and deferred diagnostic limitations.
+
 ## Remaining gates
 
 The approved next tasks are generic typed/semantic counterexamples, contract v4 and common paid guards, a matched E0/E3 dev pair, a production network demo with checked factual observations, and an artifact-derived reporting package. They require the requested Task 0+1 review and their own checks before execution. Holdout is a separate human-authorized task and budget; S1/S4 cannot be relabeled as fresh holdout.

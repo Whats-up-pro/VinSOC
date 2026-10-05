@@ -30,10 +30,13 @@ Interface: `score_prediction(case: SQLBenchmarkCase, record: dict, snapshot) -> 
 - [x] RED8 tests: missing helper interfaces and actual predecessor client-creation bug. First wrapper run hit pytest importer fixture issue, corrected before RED proof. Three extra RED boundary tests catch prediction splicing, single-file CLI scoring and output path traversal. GREEN11 tests.
 - [x] Evaluator/comparator reused; invalid/missing/truncated gold gives unscored validation failure, controller errors preserved. Correct/wrong/no-SQL/missing-snapshot fixtures verified.
 - [x] case006 wrapper is offline-only --input/--snapshot/--output; missing input exits INPUT_MISSING, existing saved wrong SQL scores RESULT_MISMATCH with zero client creation.
-- [ ] Replay the original eight-case dev suite on verified S5/S7; EX remains 7/8; source hashes match before/after.
-- [ ] Frozen saved predictions: absent verified run snapshot/case identity yields unscored / SNAPSHOT_IDENTITY_UNVERIFIED. No dataset download, model call or consumption-lock edit.
+- [x] Replay the original eight-case dev suite on verified S5/S7; EX remains 7/8; source hashes match before/after. [Dev receipt](../../../results/evaluation_v1/finalization_audit/20261005/dev_replay/report.json), replay implementation c348c01. Case006 pipeline TOOL_LIMIT / scoring NO_FINAL_SQL / EX=false.
+- [x] Frozen saved predictions: eight unscored / SNAPSHOT_IDENTITY_UNVERIFIED, missing archived run identity. [Diagnostic receipt](../../../results/evaluation_v1/finalization_audit/20261005/consumed_frozen_unscored/report.json). Nonzero CLI outcome is the intended failed identity gate, not a scored zero. No snapshot/gold query, download, model call or consumption-lock edit.
 - [x] Corrected final report, phase-2 results and README: scored full dev=7/8; no verified full suite after INTEGER fix; independent R2 holdout pending. Root PLAN.md also repeated the same unsupported headline and was added to the documentation allowlist. Historical JSON remains unchanged.
-- [ ] Targeted/full pytest, py_compile and git diff --check; one fresh read-only review of Task 0+1; allowlisted commit/push and exact-SHA CI Python 3.11/3.12.
+- [x] Verification/review and implementation commit/push: targeted12 pass after review fix, full774 pass; py_compile and git diff --check pass. Implementation c348c01eecef2b4cc989daf3f02af822176c7e8f; [exact-SHA CI](https://github.com/Whats-up-pro/VinSOC/actions/runs/37256566038): Python3.11 774 pass, Python3.12 774 pass. Reviewer independently checked188 unchanged hashes; incomplete frozen identity regression RED->GREEN; two CLI diagnostic minors deferred.
+- [ ] Evidence commit/push and final exact-SHA CI closure. Implementation verification above does not substitute for the final evidence gate.
+
+Checkpoint details, commands, artifact digests and rulings: [verification receipt](../../../results/evaluation_v1/finalization_audit/20261005/verification_receipt.json). Initial f841bc9; preserved incoming demo/CLI commits9ff6ce3 and9093f93. New attempted/received model calls0/0, new inference cost $0, no workflow dispatch. Historical predictions and v3 locks remain unchanged, including the previously recorded source-lock mismatch. Frozen remains closed; stop for human review before Task2.
 
 ## Subsequent tasks (not executed before Task 0+1 review)
 
