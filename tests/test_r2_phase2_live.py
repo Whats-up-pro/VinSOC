@@ -13,6 +13,11 @@ from tests.test_r2_v2_dev_live import sdk_factory, reply
 @pytest.fixture
 def live(tmp_path,monkeypatch):
     from scripts import run_r2_phase2_dev_live as module
+    from scripts import run_r2_v2_dev_live as guard_module
+    from evaluation.r2_phase2.tool_schemas_v4 import TOOL_SCHEMAS
+    # Synthetic transport only: exercise telemetry with the new evaluation schema.
+    # The historical production guard/lock remain unchanged and reject v4.
+    monkeypatch.setattr(guard_module, 'TOOL_SCHEMAS', TOOL_SCHEMAS)
     from evaluation.r2_phase2.grounding import Phase2Tools
     old,manifest=make_tools(tmp_path)
     tools=Phase2Tools(old.snapshot_path,manifest)
@@ -28,6 +33,15 @@ def live(tmp_path,monkeypatch):
     if hasattr(module,'load_gates'):
         monkeypatch.setattr(module,'load_gates',lambda:gates)
     return module,gates,tmp_path
+
+
+def test_v4_schema_cannot_bypass_historical_request_guard():
+    from scripts.run_r2_v2_dev_live import validate_request, GateError, MODEL
+    from evaluation.r2_phase2.tool_schemas_v4 import TOOL_SCHEMAS
+    with pytest.raises(GateError, match='REQUEST_CONTRACT_ERROR'):
+        validate_request({'model':MODEL,'reasoning_effort':'low',
+                          'max_completion_tokens':1000,'messages':[],
+                          'tools':TOOL_SCHEMAS})
 
 
 def pipeline():

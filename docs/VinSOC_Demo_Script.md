@@ -1,6 +1,8 @@
 # VinSOC - Demo Presentation Script
 ## Technical Mentor Review
 
+> Evidence status (2026-10-05): verified R2 full-suite dev **7/8**, case006 **TOOL_LIMIT**. Post-INTEGER-hint chưa có verified full-suite score. S1/S4 đã consumed, protocol_eligible=false; chưa có independent R2 holdout. R1 frozen mới kiểm tương thích offline, chưa có model accuracy. R1 dev-v2 có11/24 gold adjudicated sau khi xem model. Các sơ đồ/output minh họa dưới đây không phải receipt E2E đã nghiệm thu. Task2 chỉ offline; mọi lệnh live cần gate riêng.
+
 **Thời lượng:** 25-30 phút
 **Mục tiêu:** Chứng minh AI-assisted SOC investigation với evidence-grounded approach
 
@@ -151,7 +153,7 @@ Why?
 > 2. Phân biệt VARCHAR vs INTEGER columns
 > 3. Biết khi nào dùng aggregation vs search
 >
-> 8 dev cases (S5/S7) + 8 frozen cases (S1/S4)."
+> 8 dev cases (S5/S7); S1/S4 là historical consumed diagnostic, không phải independent holdout."
 
 ## Database Schema
 ```
@@ -228,115 +230,41 @@ python -c "from evaluation.ctu_network_public.contract import CASES; [print(f'{c
 
 ---
 
-# SLIDE 6: Case 006 - The Critical Fix (5 phút)
+# SLIDE 6: Case006 - lịch sử và regression offline (5 phút)
 
-## Script
-> "Case 006 là ví dụ điển hình về challenge này.
->
-> Question: 'Return the five scenario 5 destination ports with most flows'
->
-> Trước fix: Model gọi value_search trên dst_port (INTEGER). Không có results vì INTEGER không có catalog values. Model cố gọi lại... 5 lần → TOOL_LIMIT."
+Official suite3f9d72d giữ case006 **TOOL_LIMIT**, final_sql=null, EX=false.
+Trace thật: linker turn1 database_profiler; turn2 value_search trên dst_port với query ctu13_s5;
+turn3 yêu cầu batch5 search, chỉ3 call còn lại được thực thi trước cap. Tổng3 turns/5 DB calls;
+generator chưa được gọi. Không thay trace này bằng ví dụ năm lượt search liên tiếp.
 
-## ❌ Before Fix (TOOL_LIMIT)
+INTEGER hint là thay đổi code sau suite đó, chưa có verified full-suite score.
+Task2 kiểm generality bằng tên cột/top-k khác trên fixture tổng hợp và real DuckDB evaluator;
+fake transcript không phải kết quả model. Không nâng cap, ghép prediction hay chạy lại case để cứu điểm.
+
+## Offline replay
+```powershell
+python -m scripts.audit_r2_saved_outputs --input results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite --cases-dir evaluation/ctu_network_public/dev --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output .superpowers/reviewer-r2-replay-unique
 ```
-Model turn 1: value_search("dst_port", "80")
-Model turn 2: value_search("dst_port", "443")
-Model turn 3: value_search("dst_port", "22")
-Model turn 4: value_search("dst_port", "8080")
-Model turn 5: value_search("dst_port", "3306")
-→ TOOL_LIMIT: Model exhausted 5 tool calls
+Output phải là thư mục mới. Replay không gọi model, không overwrite nguồn và không phải lượt inference mới.
+Pipeline `OK` chỉ nghĩa là có SQL; EX phải lấy từ evaluator thực thi prediction và gold trên snapshot.
 
-❌ Final SQL: NONE (no generation)
-❌ Result: EX = 0
-```
 
-## Solution: INTEGER Hint
-```python
-# evaluation/r2_phase2/grounding.py - line 83
-'hint': col_type + ' column "' + col_name + '" has no catalog values. 
-         Use SQL aggregation (COUNT, GROUP BY) for analysis - 
-         do NOT continue value search.'
-```
+# SLIDE 7: Evidence-backed results (3 phút)
 
-## ✅ After Fix (EX)
-```
-Model turn 1: database_profiler()
-             ← "dst_port: INTEGER (no catalog values)"
-             
-Model turn 2: value_search("dst_port", "80")
-             ← "INTEGER column 'dst_port' has no catalog values.
-                 Use SQL aggregation (COUNT, GROUP BY)"
-             
-Model turn 3: [Generate SQL with GROUP BY]
+R1 dev-v2 winner GPT-4.1 mini22/24, exact-call F1 0.9508, no-tool5/5;
+GPT-5 mini19/24, F1 0.9355, no-tool4/5. Đây là decision-only dev, có caveat11/24 post-output adjudication.
 
-✅ Final SQL:
-SELECT dst_port, COUNT(*) AS flow_count
-FROM network_flows
-WHERE source_dataset = 'ctu13_s5'
-GROUP BY dst_port
-ORDER BY count(*) DESC
-LIMIT 5;
+| Điều kiện lịch sử riêng | Kết quả / giới hạn |
+|---|---|
+| CTU E0, run36520685612 | EX0/8, syntax/execution8/8 |
+| Remediation E3 | EX1/8; contract khác Phase2 |
+| Verified Phase2 suite, SHA3f9d72d | **EX7/8**, syntax/execution7/8;44 responses;$0.02085850 cho cả suite |
+| Post-INTEGER-hint | **Chưa có verified full-suite score**; test riêng không thay case006 trong suite cũ |
+| S1/S4 | **Consumed**, không protocol-eligible; prediction mới thiếu scoring/identity, unscored |
 
-✅ Result: EX = 1
-```
+Các hàng khác điều kiện; không trình bày chúng thành một thí nghiệm cải tiến có đối chứng.
+Chưa có independent R2 holdout hoặc bằng chứng generalization. Xem [báo cáo đính chính](evaluation/FINAL_EVALUATION_REPORT.md).
 
-## Demo Command 3: Verify Fix
-```bash
-python -c "
-from evaluation.r2_phase2.grounding import Phase2Tools
-tools = Phase2Tools('data/ctu_network_public/snapshots/ctu_dev.duckdb', None)
-result = tools.value_search({'table': 'network_flows', 'column': 'dst_port', 'query': '80'})
-print('Resolution:', result['resolution'])
-print('Hint:', result['hint'][:80], '...')
-"
-```
-
----
-
-# SLIDE 7: Final Results (3 phút)
-
-## Results Summary
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  VinSOC Evaluation Results                                        │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  R1 - Tool Calling (24 cases):                                  │
-│  ┌──────────────────┬────────┬──────────────────────────┐       │
-│  │ Model           │ EX     │ Notes                   │       │
-│  ├──────────────────┼────────┼──────────────────────────┤       │
-│  │ GPT-4.1 Mini ✓  │ 22/24  │ Winner: better select   │       │
-│  │ GPT-5 Mini      │ 19/24  │ Over-engineering        │       │
-│  └──────────────────┴────────┴──────────────────────────┘       │
-│                                                                  │
-│  R2 - Text-to-SQL (8 cases):                                    │
-│  ┌──────────────────┬────────┬──────────────────────────┐       │
-│  │ Version         │ EX     │ Notes                   │       │
-│  ├──────────────────┼────────┼──────────────────────────┤       │
-│  │ Baseline (v1)   │ 0/8    │ Naive one-shot         │       │
-│  │ DualSQL v1     │ 1/8    │ Linker added           │       │
-│  │ DualSQL v2     │ 7/8    │ Controller fixed       │       │
-│  │ Phase 2 (fix)  │ 8/8    │ INTEGER hint           │       │
-│  └──────────────────┴────────┴──────────────────────────┘       │
-│                                                                  │
-│  Frozen Holdout (S1/S4): 8/8 ✅                                 │
-│  → Proof of generalization on unseen data                       │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-```
-
-## Key Metrics
-```
-Cost per investigation:
-- R1: ~$0.01 (GPT-4.1 Mini)
-- R2: ~$0.02-0.03 (GPT-5 Mini, more turns)
-
-Accuracy:
-- R1 Tool Calling: 91.67%
-- R2 Text-to-SQL: 100% (dev + frozen)
-```
-
----
 
 # SLIDE 8: Method Comparison (3 phút)
 
@@ -353,7 +281,7 @@ Accuracy:
 │  Evidence         │ Logs separate     │ Unified store, traceable      │
 │  Reasoning        │ Manual            │ Model + human review          │
 │  False Positive   │ High (rules)     │ Lower (evidence-based)        │
-│  Scalability      │ Limited rules     │ Generalizes                  │
+│  Scalability      │ Limited rules     │ Not independently evaluated  │
 │  Cost             │ High (analyst)    │ Low (~$0.01/investigation)  │
 │                                                                         │
 │  Key Difference: VinSOC reasons about evidence, not just patterns       │
@@ -412,9 +340,9 @@ Accuracy:
 
 ### "Generalization?"
 ```
-→ Frozen holdout: 8/8 trên unseen data (S1/S4)
-→ Model học được pattern, không phải memorize
-→ INTEGER hint = transferrable knowledge
+→ S1/S4 đã consumed; chưa có independent R2 holdout
+→ INTEGER hint được kiểm offline trên synthetic fixtures, chưa có full-suite post-hint score
+→ Dev7/8 và demo không chứng minh generalization
 ```
 
 ---
@@ -435,34 +363,18 @@ python -c "from evaluation.ctu_network_public.contract import CASES; [print(c.st
 # Test INTEGER hint
 python -c "
 from evaluation.r2_phase2.grounding import Phase2Tools
-r = Phase2Tools('data/ctu_network_public/snapshots/ctu_dev.duckdb', None)
+from evaluation.ctu_network_public.contract import MANIFEST
+r = Phase2Tools('data/ctu_network_public/snapshots/ctu_dev.duckdb', MANIFEST)
 res = r.value_search({'table': 'network_flows', 'column': 'dst_port', 'query': '80'})
 print('Hint:', res['hint'][:60], '...')
 "
 ```
 
-## Full Investigation (requires API key)
-```bash
-# Run R1 case
-python -m evaluation.tool_calling run case_005 --provider openai --model gpt-4.1-mini-2025-04-14
+## Gated live investigation
 
-# Run R2 case
-python -c "
-from evaluation.r2_phase2.grounding import Phase2Tools
-from evaluation.r2_phase2.runner import run_case
-from evaluation.ctu_network_public.contract import MANIFEST, CASES
-from openai import OpenAI
-import json, os
-from dotenv import load_dotenv
-load_dotenv()
-
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-case = json.loads((CASES / 'ctu_sql_006.json').read_text())
-tools = Phase2Tools('data/ctu_network_public/snapshots/ctu_dev.duckdb', MANIFEST)
-result = run_case(case=type('Case', (), case)(), condition='E3', tools=tools, client=client, schema_context=tools.schema_context())
-print('EX:', result.get('error_category') == 'OK')
-"
-```
+Không gọi OpenAI trực tiếp từ tài liệu để rerun case006 hoặc suy EX từ pipeline OK.
+Lượt live/dev/demo phải dùng runner đã khóa, CI/identity/budget/attempt gate và authorization tương ứng.
+Task2 không cho phép live. Dùng offline replay ở Slide6 để tái chấm kết quả cũ.
 
 ## Run Tests
 ```bash

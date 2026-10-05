@@ -7,15 +7,15 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Callable
 
 from evaluation.r2_phase2.grounding import validate_link, Phase2Tools as V2DatabaseTools
-from evaluation.dualsql_lite_ctu_gpt5_v2.prompts import GENERATOR_INSTRUCTIONS, LINKER_INSTRUCTIONS
-from evaluation.dualsql_lite_ctu_gpt5_v2.tools import TOOL_SCHEMAS
+from evaluation.r2_phase2.prompts_v4 import GENERATOR_INSTRUCTIONS, LINKER_INSTRUCTIONS
+from evaluation.r2_phase2.tool_schemas_v4 import TOOL_SCHEMAS
 
 MODEL = "gpt-5-mini-2025-08-07"
 CAP = 1000
 REASONING_EFFORT = "low"
 MAX_TURNS = 5
 MAX_DB_CALLS = 5
-CONTROLLER_VERSION = "r2_generalized_controller_v3"
+CONTROLLER_VERSION = "r2_typed_controller_v4"
 
 
 @dataclass

@@ -1,6 +1,6 @@
 # VinSOC Finalization Fix
 
-Authority: user implementation plan dated 2026-10-05. Agent A is the sole writer and pushes directly to master. This delivery is Task 0+1; later tasks require the requested review gate. No paid or frozen execution is authorized by this delivery.
+Authority: user implementation plan dated 2026-10-05. Agent A is the sole writer and pushes directly to master. Task0+1 completed; the user has now authorized Task2 offline. Tasks3+ require the next review gate. No paid or frozen execution is authorized by this delivery.
 
 Spec: `docs/superpowers/specs/2026-09-28-vinsoc-r1-r2-finalization-design.md`, superseded where the user's updated plan explicitly changes experiment order, consumed-holdout policy, demo scope or budget.
 
@@ -38,7 +38,22 @@ Interface: `score_prediction(case: SQLBenchmarkCase, record: dict, snapshot) -> 
 
 Checkpoint details, commands, artifact digests and rulings: [verification receipt](../../../results/evaluation_v1/finalization_audit/20261005/verification_receipt.json). Initial f841bc9; preserved incoming demo/CLI commits9ff6ce3 and9093f93. New attempted/received model calls0/0, new inference cost $0, no workflow dispatch. Historical predictions and v3 locks remain unchanged, including the previously recorded source-lock mismatch. Frozen remains closed; stop for human review before Task2.
 
-## Subsequent tasks (not executed before Task 0+1 review)
+## Task2: Typed grounding and semantic counterexamples
+
+Initial master: bb462f30b30f29d1bba6207b4a96b2ad579875a9. Fetch verified HEAD=origin/master, ahead/behind0/0; tracked/staged clean. User approved this bounded implementation after Task0+1 review. No model calls, lock v4 or paid experiment in this task.
+
+- [x] Correct docs/VinSOC_Demo_Script.md and docs/VinSOC_Technical_Demo_Script.md: verified full dev7/8, post-INTEGER hint no full-suite score, S1/S4 consumed, no independent holdout or100%/generalization claim. Removed pipeline-OK-as-EX/live bypass snippet; use offline audit reference. Diff/claim search checked, no historical artifact edit.
+- [x] Regression RED before code:14fail31pass, plus malformed typed args/Unicode offset4fail45deselected. Arbitrary INTEGER columns slot_317/bucket_829, top-k7/3; numeric/timestamp hints and catalog provenance separated. Unknown column/wrong argument type/missing provenance already fail closed where existing; typed submitted-values and bypassed args exposed missing checks.
+- [x] Real-DuckDB evaluator counterexamples for source filter, prefix/contains, case and literal wildcards, DISTINCT, microsecond time bounds, Boolean precedence, top-k ties and ordered/unordered comparators. Wrong queries score RESULT_MISMATCH; hand-counted gold fixture results checked. Synthetic fixtures only, not model scores. Targeted91pass22.65s after fixes.
+- [x] Phase2 contract v4 code only after observed failures: new prompts_v4.py/tool_schemas_v4.py consumed by runner; numeric/time entries rejected from grounded_values, verified typed_columns separate. No historical DualSQL edits or cap increase. Added safety_v4.py because native LIKE/ILIKE ESCAPE AST gets schema=main and ASCII JSON serialization corrupts Unicode; narrowly normalize parser-generated operators via UTF8 token/location and reuse archived tree/connect/result boundaries. Explicit qualified functions stay rejected. Old safety.py/scorer/policies/locks unchanged; no lock v4 created.
+- [x] Targeted116 pass21.74s; full820 pass1612 warnings220.86s; py_compile9files and diff checks pass. One read-only review found Unicode semicolon offsets and Python casefold/ILIKE mismatch, both regression RED->GREEN in one fix pass. Native predicate witnesses now agree with DuckDB; archived safety.py unchanged. Removed remaining Generalizes claim. No Task2 deferred minors; 287 protected hashes and snapshot binary unchanged, model calls0/cost0.
+- [ ] Allowlisted commit/push master, exact-SHA CI Python3.11/3.12; completion receipt, then STOP FOR HUMAN REVIEW before Task3.
+
+Review focus: schema type cannot certify a stored literal; numeric/timestamp grounded_values cannot cross as catalog witnesses; observed provenance must match controller memory. Explicit search mode/case/escaped wildcard must describe the returned witness/predicate. Wrong but executable SQL must score false on fixture, with headline locked-dev metric unaffected. No gold/example SQL, benchmark IDs or CTU-specific mapping in runtime prompts/logic; no cap increase. Historical locks/results and production schemas unchanged.
+
+Initial inventory: [287 protected files](../../../results/evaluation_v1/finalization_audit/20261005/task2/initial_inventory.json). Concurrent external commit5ae01e2 adds docs/VinSOC_Final_Presentation_Script.md only; preserved and excluded from this two-document task. The third document was not reviewed or changed here. All287 historical hashes remain equal so far; final receipt/CI pending.
+
+## Subsequent task gates
 
 - [ ] Task 2: Generic typed grounding and semantic counterexamples; versioned prompts/schema, benchmark/core comparator unchanged.
 - [ ] Task 3: Contract v4 and shared attempt/cost guards; no model calls.
@@ -47,4 +62,4 @@ Checkpoint details, commands, artifact digests and rulings: [verification receip
 - [ ] Task 6: Artifact-derived reproducible dev/report package, DEV_VERIFIED / HOLDOUT_PENDING.
 - [ ] Task 7: Separate human holdout authorization/budget; S1/S4 may never be reused as independent holdout.
 
-Each checkpoint records initial/implementation/final remote SHA, changed allowlist, actual commands/results, CI, immutable artifact digests, zero/actual calls, cost and blockers. Tests and replay are not new model results. Stop after Task 0+1 for its requested review gate.
+Each checkpoint records initial/implementation/final remote SHA, changed allowlist, actual commands/results, CI, immutable artifact digests, zero/actual calls, cost and blockers. Tests and replay are not new model results. Current delivery stops after Task2 for human review; Task3+ remain pending.

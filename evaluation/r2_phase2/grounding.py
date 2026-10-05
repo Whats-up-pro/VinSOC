@@ -7,15 +7,25 @@ from pathlib import Path
 
 from evaluation.dualsql_lite_ctu_gpt5_v2.source_tools import V2DatabaseTools
 from evaluation.dualsql_lite_ctu_gpt5.tools import MAX_RESPONSE_BYTES, _size
-from evaluation.r2_phase2.safety import Phase2Snapshot, parse_select, validate_sql
+from evaluation.r2_phase2.safety_v4 import Phase2V4Snapshot as Phase2Snapshot, parse_select, validate_sql
 from vinsoc_data.duckdb_store import QuerySafetyError
 
-CONTRACT_IDENTITY = 'r2_generalized_controller_provenance_v3'
+CONTRACT_IDENTITY = 'r2_typed_controller_provenance_v4'
 TEXT_TYPES = {'VARCHAR', 'TEXT'}
 
 
-def _pattern(query):
-    return '%' + query.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%'
+def _pattern(query, mode='contains'):
+    escaped = query.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
+    return ('%' if mode == 'contains' else '') + escaped + ('%' if mode != 'exact' else '')
+
+
+def _constraint_kind(dtype):
+    if dtype in {'TINYINT', 'SMALLINT', 'INTEGER', 'BIGINT', 'HUGEINT', 'UTINYINT', 'USMALLINT',
+                 'UINTEGER', 'UBIGINT', 'UHUGEINT', 'FLOAT', 'REAL', 'DOUBLE'} or dtype.startswith('DECIMAL('):
+        return 'numeric_constraint'
+    if dtype in {'DATE', 'TIME'} or dtype.startswith('TIMESTAMP'):
+        return 'timestamp_constraint'
+    return None
 
 
 class Phase2Tools(V2DatabaseTools):
@@ -63,39 +73,67 @@ class Phase2Tools(V2DatabaseTools):
         return self._remember(result)
 
     def value_search(self, args):
-        if (isinstance(args,dict) and args.get('column') is None and isinstance(args.get('query'),str)
-                and re.fullmatch(r'-?\d+(?:\.\d+)?|\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?)?', args['query'].strip())):
-            if set(args)-{'query','table','column'} or args.get('table','network_flows')!='network_flows':
-                return {'ok':False,'error_type':'INVALID_ARGUMENTS'}
+        if not isinstance(args, dict) or set(args) - {'query', 'table', 'column', 'match_mode', 'case_sensitive'}:
+            return {'ok': False, 'error_type': 'INVALID_ARGUMENTS'}
+        query, column = args.get('query'), args.get('column')
+        mode, sensitive = args.get('match_mode', 'contains'), args.get('case_sensitive', False)
+        if (not isinstance(query, str) or not query.strip() or len(query) > 200
+                or args.get('table', 'network_flows') != 'network_flows'
+                or (column is not None and (not isinstance(column, str) or column not in self.column_types))
+                or mode not in ('exact', 'prefix', 'contains') or type(sensitive) is not bool):
+            return {'ok': False, 'error_type': 'INVALID_ARGUMENTS'}
+        query = query.strip()
+        if (column is None and re.fullmatch(
+                r'-?\d+(?:\.\d+)?|\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?)?', query)):
             return self._remember({'ok':True,'evidence_id':self._evidence_id(),'matches':[],
                                   'resolution':'typed_constraint_not_catalog_value','domain_complete':False,
                                   'grouping_predicates':[]})
-        if isinstance(args, dict) and self.column_types.get(args.get('column')) not in TEXT_TYPES | {None}:
-            if not isinstance(args.get('query'), str) or set(args) - {'query','table','column'} or args.get('table','network_flows') != 'network_flows':
-                return {'ok': False, 'error_type': 'INVALID_ARGUMENTS'}
-            col_type = self.column_types[args['column']]
-            col_name = args['column']
+        if column is not None and self.column_types[column] not in TEXT_TYPES:
+            col_type = self.column_types[column]
+            kind = _constraint_kind(col_type)
+            if kind is None:
+                return {'ok': False, 'error_type': 'UNSUPPORTED_COLUMN_TYPE'}
             return self._remember({
                 'ok': True, 'evidence_id': self._evidence_id(), 'matches': [],
                 'resolution': 'typed_constraint_not_catalog_value',
                 'domain_complete': False, 'grouping_predicates': [],
-                'constraint_column': {'table':'network_flows','column':col_name,'type':col_type},
-                'hint': col_type + ' column "' + col_name + '" has no catalog values. Use SQL aggregation (COUNT, GROUP BY) for analysis - do NOT continue value search.'})
-        result = super().value_search(args)
+                'constraint_column': {'table':'network_flows','column':column,'type':col_type},
+                'constraint_hint': {'kind': kind, 'catalog_grounding_required': False},
+                'hint': f'{col_type} column "{column}": use its verified type in SQL; no catalog search required. '
+                        'This schema hint does not prove any constraint value exists.'})
+        result = super().value_search({k: v for k, v in args.items() if k in {'query', 'table', 'column'}})
         if not result.get('ok'):
             return result
+        # Filter the observed catalog before truncation, not a substring sample.
+        aliases = [m for m in result['matches'] if m.get('match_basis') == 'source_metadata' and mode != 'prefix']
+        matches = list(aliases)
+        candidates = [item for item in self.catalog if column is None or item['column'] == column]
+        operator = 'LIKE' if sensitive else 'ILIKE'
+        # A witness must satisfy exactly the emitted DuckDB predicate. Python
+        # casefold expands characters (e.g. sharp-s) that ILIKE does not expand.
+        with self._connect() as connection:
+            hits = {row[0] for row in connection.execute(
+                f'SELECT value FROM UNNEST(?) AS observed(value) WHERE value {operator} ? ESCAPE ?',
+                [[item['value'] for item in candidates], _pattern(query, mode), '\\']).fetchall()}
+        for item in candidates:
+            if item['value'] in hits and not any(m['column'] == item['column'] and m['value'] == item['value'] for m in matches):
+                matches.append({**item, 'evidence_id': result['evidence_id'], 'match_basis': 'substring'})
+        result['truncated'] = len(matches) > 50
+        result['matches'] = matches[:50]
+        result['resolution'] = 'matched' if matches else 'unresolved'
+        result['domain'] = ([{'value': v, 'evidence_id': result['evidence_id']} for v in self.domains[column]]
+                            if not matches and column in self.domains else [])
         result['domain_complete'] = False  # search samples are never a closed domain
+        result['match_mode'], result['case_sensitive'] = mode, sensitive
         result['grouping_predicates'] = []
-        query = args['query'].strip()
         for match in result['matches']:
-            if (match.get('match_basis') == 'substring' and len(query) >= 2
-                    and query.casefold() in match['value'].casefold()
-                    and match['value'].casefold() != query.casefold()):
+            if match.get('match_basis') == 'substring':
                 if any(p['column'] == match['column'] for p in result['grouping_predicates']):
                     continue
                 result['grouping_predicates'].append({
-                    'table':'network_flows','column':match['column'], 'operator':'ILIKE',
-                    'pattern':_pattern(query), 'escape':'\\', 'case_insensitive': True,
+                    'table':'network_flows','column':match['column'], 'operator':operator,
+                    'pattern':_pattern(query, mode), 'escape':'\\', 'case_insensitive': not sensitive,
+                    'match_mode': mode,
                     'surface': query, 'witness': match, 'evidence_id': result['evidence_id'],
                     'domain_complete':False})
         # Bounded output prioritizes the pattern witness over enumerating samples.
@@ -200,7 +238,6 @@ def validate_link(question, selected, trajectory, tools, submitted_values=None):
             if entry not in values:
                 values.append(entry)
         predicates.extend(p for p in result.get('grouping_predicates',[]) if p['column'] in columns)
-    constraints = []
     for item in submitted_values or []:
         if not isinstance(item,dict) or set(item)-{'table','column','value','evidence_id'}:
             return rejected('INVALID_TOOL_PROVENANCE')
@@ -208,18 +245,23 @@ def validate_link(question, selected, trajectory, tools, submitted_values=None):
         if item.get('table')!='network_flows' or column not in columns:
             return rejected('INVALID_TOOL_PROVENANCE')
         if tools.column_types[column] not in TEXT_TYPES:
-            # Model values cannot become provenance for typed constraints.
-            constraints.append({'column':column,'type':tools.column_types[column],
-                                'submitted_value':item.get('value'),'catalog_grounding_required':False})
-            continue
+            # This array is catalog provenance, not a channel for model-authored typed values.
+            return rejected('INVALID_TOOL_PROVENANCE')
         exact = any(all(item.get(k)==v[k] for k in ('table','column','value')) and
                     ('evidence_id' not in item or item['evidence_id']==v['evidence_id']) for v in values)
         pattern = any(item.get('value')==p['surface'] and column==p['column'] and
                       ('evidence_id' not in item or item['evidence_id']==p['evidence_id']) for p in predicates)
         if not exact and not pattern:
             return rejected('INVALID_TOOL_PROVENANCE')
+    literals = tools.question_literals(question)
+    typed_columns = [{'table': 'network_flows', 'column': c, 'type': allowed[c],
+                      'kind': _constraint_kind(allowed[c]), 'evidence_id': 'controller-schema-metadata',
+                      'evidence_class': 'schema_metadata', 'catalog_grounding_required': False}
+                     for c in columns if _constraint_kind(allowed[c])]
+    constraints = [{**literal, 'origin': 'question_literal', 'catalog_grounding_required': False}
+                   for literal in literals if literal['kind'] in {'numeric_constraint', 'timestamp_constraint'}]
     return {'error':None,'contract_identity':CONTRACT_IDENTITY,'tables':selected,
             'grounded_values':values[:20], 'source_metadata':references,
-            'question_literals':tools.question_literals(question), 'typed_constraints':constraints,
+            'question_literals':literals, 'typed_constraints':constraints, 'typed_columns':typed_columns,
             'grouping_predicates':predicates, 'unresolved_literals':[],
             'catalog_samples_are_closed_domains':False}

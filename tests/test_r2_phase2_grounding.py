@@ -158,3 +158,84 @@ def test_wildcard_or_relation_column_alias_cannot_certify_wrong_lineage(tmp_path
     tools=Phase2Tools(old.snapshot_path,manifest)
     result=tools.sql_probe({'sql':sql})
     assert result['ok'] and result['column_provenance']=={} and result['matches']==[]
+
+
+@pytest.mark.parametrize('column,query,kind', [
+    ('slot_317', '7', 'numeric_constraint'),
+    ('volume', '19', 'numeric_constraint'),
+    ('weight', '2.75', 'numeric_constraint'),
+    ('observed_at', '2024-02-03T00:00:00', 'timestamp_constraint'),
+])
+def test_typed_hint_is_schema_metadata_not_catalog_witness(tmp_path, column, query, kind):
+    from tests.r2_phase2_semantic_fixtures import typed_tools
+    tools = typed_tools(tmp_path, 'slot_317')
+    result = tools.value_search({'column': column, 'query': query})
+    assert result['ok'] and result['resolution'] == 'typed_constraint_not_catalog_value'
+    assert result['matches'] == [] and result['domain_complete'] is False
+    assert result['constraint_hint']['kind'] == kind
+    assert result['constraint_hint']['catalog_grounding_required'] is False
+    assert result['constraint_column']['type'] == tools.column_types[column]
+    assert tools.observed_evidence[result['evidence_id']] == result
+
+
+@pytest.mark.parametrize('value,evidence', [('7', None), ('invented', None), (7, 'forged')])
+def test_typed_submitted_values_cannot_become_catalog_provenance(tmp_path, value, evidence):
+    from evaluation.r2_phase2.grounding import validate_link
+    from tests.r2_phase2_semantic_fixtures import typed_tools
+    tools = typed_tools(tmp_path, 'slot_317')
+    submitted = {'table': 'network_flows', 'column': 'slot_317', 'value': value}
+    if evidence is not None:
+        submitted['evidence_id'] = evidence
+    result = validate_link('Return top7 categories', [{'table': 'network_flows', 'columns': ['slot_317']}],
+                           [], tools, [submitted])
+    assert result['error'] == 'INVALID_TOOL_PROVENANCE'
+    assert result['grounded_values'] == []
+
+
+def test_unknown_column_wrong_argument_type_and_missing_text_provenance_fail_closed(tmp_path):
+    from evaluation.r2_phase2.grounding import validate_link
+    from tests.r2_phase2_semantic_fixtures import typed_tools
+    tools = typed_tools(tmp_path, 'slot_317')
+    assert tools.value_search({'column': 'absent', 'query': '7'})['ok'] is False
+    assert tools.value_search({'column': 'slot_317', 'query': 7})['ok'] is False
+    assert validate_link('Return categories', [{'table': 'network_flows', 'columns': ['absent']}],
+                         [], tools)['error'] == 'INVALID_LINKED_SCHEMA'
+    assert validate_link('Return Class-1', [{'table': 'network_flows', 'columns': ['label']}], [], tools,
+                         [{'table': 'network_flows', 'column': 'label', 'value': 'Class-1'}]
+                         )['error'] == 'INVALID_TOOL_PROVENANCE'
+
+
+@pytest.mark.parametrize('args', [{'column': [], 'query': '7'},
+    {'column': 'slot_317', 'query': ''}, {'column': 'slot_317', 'query': '7' * 201}])
+def test_typed_search_does_not_bypass_argument_validation(tmp_path, args):
+    from tests.r2_phase2_semantic_fixtures import typed_tools
+    tools = typed_tools(tmp_path, 'slot_317')
+    assert tools.value_search(args)['ok'] is False
+
+
+@pytest.mark.parametrize('column,k', [('slot_317', 7), ('bucket_829', 3)])
+def test_arbitrary_integer_top_k_pipeline_scores_with_real_evaluator(tmp_path, column, k):
+    from evaluation.r2_phase2.runner import run_case
+    from evaluation.r2_phase2.scoring import score_prediction
+    from tests.r2_phase2_semantic_fixtures import typed_tools, semantic_snapshot as Phase2Snapshot
+    tools = typed_tools(tmp_path, column)
+    sql = (f'SELECT "{column}", COUNT(*) AS n FROM network_flows WHERE source_dataset=\'omega\' '
+           f'GROUP BY "{column}" ORDER BY n DESC, "{column}" ASC LIMIT {k}')
+    fixture_case = case(f'Return the top {k} {column} categories from Lab Run 41 by count, '
+                        'breaking ties by category ascending', sql, 'ordered_rows')
+    # Scripted transport only: real tools, handoff/controller and execution evaluator.
+    client = FakeClient([
+        response(calls=[call('database_profiler', '{}', 'profile')]),
+        response(calls=[call('value_search', json.dumps({'column': column, 'query': str(k)}), 'typed')]),
+        response(json.dumps({'tables': [{'table': 'network_flows', 'columns': ['source_dataset', column]}],
+                             'grounded_values': []})), response(sql)])
+    record = run_case(fixture_case, 'E3', tools, client, tools.schema_context())
+    assert record['error_category'] == 'OK'
+    linked = record['linked_schema']
+    assert linked['typed_columns'][0]['column'] == column
+    assert linked['typed_columns'][0]['type'] == 'INTEGER'
+    assert all(v['column'] != column for v in linked['grounded_values'])
+    assert record['roles']['linker']['tool_count'] == 2
+    assert record['roles']['linker']['turns'] == 3
+    result = score_prediction(fixture_case, record, Phase2Snapshot(tools.snapshot_path))
+    assert result['execution_accurate'] is True and result['execution_success'] is True

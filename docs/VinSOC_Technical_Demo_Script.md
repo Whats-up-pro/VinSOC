@@ -1,5 +1,7 @@
 # VinSOC - Technical Demo Script for Mentor
 
+> Evidence status (2026-10-05): verified R2 full-suite dev **7/8**, case006 **TOOL_LIMIT**. Post-INTEGER-hint chưa có verified full-suite score. S1/S4 đã consumed, protocol_eligible=false; chưa có independent R2 holdout. R1 frozen mới kiểm tương thích offline, chưa có model accuracy. R1 dev-v2 có11/24 gold adjudicated sau khi xem model. Các sơ đồ/output minh họa dưới đây không phải receipt E2E đã nghiệm thu. Task2 chỉ offline; mọi lệnh live cần gate riêng.
+
 **Duration:** 20-30 minutes
 **Audience:** Technical mentor with SOC/security background
 **Goal:** Demonstrate AI-assisted SOC investigation with evidence-grounded approach
@@ -151,7 +153,7 @@ GPT-5 Mini selection:
 CTU-13 Network Flows Database:
 - 4M+ rows, 12 columns
 - Types: VARCHAR, INTEGER, BIGINT, TIMESTAMP
-- 8 dev cases (S5/S7), 8 frozen cases (S1/S4)
+- 8 dev cases (S5/S7); S1/S4 đã consumed, không độc lập/protocol-eligible
 
 Example Question:
   "Return the five scenario 5 destination ports with most flows"
@@ -189,80 +191,31 @@ Model needs to know:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Demo Command 3: Run R2 Phase2 Cases
-```bash
-# List Phase2 cases
-python -c "
-from evaluation.ctu_network_public.contract import CASES
-for c in sorted(CASES.glob('ctu_sql_*.json'))[:3]:
-    import json
-    d = json.loads(c.read_text())
-    print(f'{d[\"case_id\"]}: {d[\"question\"][:60]}...')
-"
+### Demo Command3: Offline R2 scoring
 
-# Run one case
-python -c "
-from evaluation.r2_phase2.grounding import Phase2Tools
-from evaluation.r2_phase2.runner import run_case
-from evaluation.ctu_network_public.contract import MANIFEST, CASES
-from openai import OpenAI
-import json, os
-from dotenv import load_dotenv
-load_dotenv()
-
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-case = json.loads((CASES / 'ctu_sql_006.json').read_text())
-
-tools = Phase2Tools(
-    snapshot='data/ctu_network_public/snapshots/ctu_dev.duckdb',
-    manifest=MANIFEST
-)
-
-result = run_case(
-    case=type('Case', (), case)(),
-    condition='E3',
-    tools=tools,
-    client=client,
-    schema_context=tools.schema_context(),
-)
-
-print(f'EX: {result.get(\"error_category\") == \"OK\"}')
-print(f'SQL: {result.get(\"final_sql\", \"N/A\")[:100]}')
-"
+```powershell
+python -m scripts.audit_r2_saved_outputs --input results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite --cases-dir evaluation/ctu_network_public/dev --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output .superpowers/reviewer-r2-replay-unique
 ```
+Output phải là thư mục mới. Replay không gọi model, không overwrite nguồn và không phải lượt inference mới.
+Pipeline `OK` chỉ nghĩa là có SQL; EX phải lấy từ evaluator thực thi prediction và gold trên snapshot.
 
-### Case 006: The Critical Fix
+### Case006: preserved failure
 
-**❌ BEFORE (TOOL_LIMIT - before fix):**
-```
-Model called: value_search("dst_port", "80")
-→ No results (INTEGER column has no catalog values)
-→ Model tried again... 5 times → TOOL_LIMIT
-```
+Official suite:3 linker turns,5 DB calls, TOOL_LIMIT, generator không chạy, final_sql=null, EX=false.
+Post-INTEGER hint là code change, chưa có verified full-suite model score.
 
-**✅ AFTER (EX - after fix):**
-```
-Model called: value_search("dst_port", "80")
-← Received hint: "INTEGER column 'dst_port' has no catalog values. 
-                 Use SQL aggregation (COUNT, GROUP BY)"
-Model switched to: GROUP BY dst_port ORDER BY count(*) DESC LIMIT 5
-```
+### R2 results
 
-### Final R2 Results
-```
-┌─────────────────────────────────────────────────────────┐
-│  R2 Text-to-SQL Results                                │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Baseline (one-shot):     EX 0/8  ← naive approach     │
-│  DualSQL v1:             EX 1/8  ← linker added       │
-│  DualSQL v2:             EX 7/8  ← controller fixed    │
-│  DualSQL Phase 2:        EX 8/8  ← INTEGER hint fix    │
-│                                                         │
-│  Frozen Holdout (S1/S4): EX 8/8  ← generalization!     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
+| Điều kiện lịch sử riêng | Kết quả / giới hạn |
+|---|---|
+| CTU E0, run36520685612 | EX0/8, syntax/execution8/8 |
+| Remediation E3 | EX1/8; contract khác Phase2 |
+| Verified Phase2 suite, SHA3f9d72d | **EX7/8**, syntax/execution7/8;44 responses;$0.02085850 cho cả suite |
+| Post-INTEGER-hint | **Chưa có verified full-suite score**; test riêng không thay case006 trong suite cũ |
+| S1/S4 | **Consumed**, không protocol-eligible; prediction mới thiếu scoring/identity, unscored |
+
+Các hàng khác điều kiện; không trình bày chúng thành một thí nghiệm cải tiến có đối chứng.
+Chưa có independent R2 holdout hoặc bằng chứng generalization. Xem [báo cáo đính chính](evaluation/FINAL_EVALUATION_REPORT.md).
 
 ---
 
@@ -314,42 +267,19 @@ Every conclusion links to specific evidence:
 ## Part 6: Summary (2 phút)
 
 ### Results Summary
-```
-┌─────────────────────────────────────────────────────────┐
-│  VinSOC Evaluation Results                              │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  R1 - Tool Calling:                                     │
-│  ┌──────────────┬────────┬─────────────────┐           │
-│  │ Dev (24)    │ 91.67% │ GPT-4.1 Mini ✓  │           │
-│  │ Frozen (8)  │ 100%   │ Compatible      │           │
-│  └──────────────┴────────┴─────────────────┘           │
-│                                                         │
-│  R2 - Text-to-SQL:                                     │
-│  ┌──────────────┬────────┬─────────────────┐           │
-│  │ Dev (8)     │ 8/8    │ EX ✓            │           │
-│  │ Frozen (8)  │ 8/8    │ EX ✓            │           │
-│  └──────────────┴────────┴─────────────────┘           │
-│                                                         │
-│  Proof of generalization: 8/8 on unseen frozen data     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
 
-### Key Learnings
-```
-1. Smaller model + better tool selection > larger model
-   → GPT-4.1 Mini (91.67%) > GPT-5 Mini (79.17%)
+| Track | Verified development evidence | Holdout status |
+|---|---|---|
+| R1 | GPT-4.1 mini22/24; F1 0.9508; no-tool5/5;11/24 post-output adjudication caveat | Compatibility only; frozen inference chưa được mở |
+| R2 | Phase2 full suite7/8; case006 TOOL_LIMIT; post-INTEGER hint chưa có full-suite score | S1/S4 consumed; chưa có independent R2 holdout |
 
-2. INTEGER column handling is critical
-   → Hint mechanism prevents TOOL_LIMIT failures
+### Limits
 
-3. Evidence-grounding prevents hallucinations
-   → Every conclusion must cite specific evidence IDs
+- Synthetic typed-grounding/counterexample tests kiểm code/evaluator, không đo model accuracy.
+- IDs hợp lệ không tự chứng minh factual claims đúng; demo E2E cần receipt/evidence/fact checks riêng.
+- R1 và R2 là hai metric khác nhau; demo không vào accuracy benchmark.
+- Dev score, offline compatibility và green CI không phải proof of generalization.
 
-4. Frozen holdout validates generalization
-   → 8/8 on unseen data proves real improvement
-```
 
 ### Demo Commands Reference
 ```bash
