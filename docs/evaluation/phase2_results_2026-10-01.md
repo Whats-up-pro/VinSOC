@@ -1,62 +1,26 @@
-# Phase 2 Results: 7/8 EX
+# Phase-2 E3: immutable scored dev result
 
-**Date:** 2026-10-01  
-**Run:** `r2_phase2_live/20261001_3f9d72d`  
-**Condition:** E3 (DualSQL v2 with Linker + Generator + Tools)
+Original run: `r2_phase2_live/20261001_3f9d72d/suite`; implementation SHA `3f9d72ddc840d368b15b161881a94335c42eb03e`. Updated reporting correction: 2026-10-05.
 
----
+**Execution Accuracy 7/8 (87.5%), Syntax Validity 7/8, Execution Success 7/8.** [The complete original report](../../results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json) records 44 attempts/responses, 34 database tool calls and usage-derived cost **$0.02085850**.
 
-## Results
+| Case | Original EX | Pipeline / scored outcome |
+|---|---:|---|
+| ctu_sql_001 | 1 | OK |
+| ctu_sql_002 | 1 | OK |
+| ctu_sql_003 | 1 | OK |
+| ctu_sql_004 | 1 | OK |
+| ctu_sql_005 | 1 | OK |
+| ctu_sql_006 | 0 | TOOL_LIMIT; generator not invoked; no final SQL |
+| ctu_sql_007 | 1 | OK |
+| ctu_sql_008 | 1 | OK |
 
-| Case | Result | Error |
-|------|--------|-------|
-| ctu_sql_001 | PASS | OK |
-| ctu_sql_002 | PASS | OK |
-| ctu_sql_003 | PASS | OK |
-| ctu_sql_004 | PASS | OK |
-| ctu_sql_005 | PASS | OK |
-| ctu_sql_006 | **FAIL** | TOOL_LIMIT |
-| ctu_sql_007 | PASS | OK |
-| ctu_sql_008 | PASS | OK |
+Case006's linker used five tool calls in three model turns: one profiler call, a search for a source ID in integer `dst_port`, then three port-value searches before stopping at the cap. The last charged response requested five searches together; unexecuted requested calls remain in telemetry.
 
-**Score: 7/8 EX (87.5%)**
+Later INTEGER hints changed prompts/tools/grounding. That is a different implementation. There is **no verified full suite after that change** in tracked evidence. A separate case006 prediction cannot be added to seven previous predictions to create an 8/8 headline. Pipeline `error_category=OK` establishes generation completion, not execution accuracy.
 
----
+The 2026-10-05 offline scorer reuses `evaluate_sql_case()` and the unchanged comparator. It retains pipeline errors separately and validates gold infrastructure. Replay source hashes must remain identical before/after; all eight original predictions remain in the denominator. Replay is not a new model result.
 
-## Case 006 Analysis: TOOL_LIMIT
+[Governance and original identities](r2_phase2_governance.md), [corrected report](FINAL_EVALUATION_REPORT.md), [Task 0+1 delivery plan](../superpowers/plans/2026-10-05-vinsoc-finalization-fix.md).
 
-**Question:** "Return the five scenario 5 destination ports with most flows"
-
-**Root Cause:**
-
-| Turn | Call | Result |
-|------|------|--------|
-| 1 | `database_profiler` | Schema OK, found domains |
-| 2 | `value_search(dst_port, "ctu13_s5")` | No match (dst_port is INTEGER) |
-| 3 | `value_search(dst_port, "80")` | No match |
-| 3 | `value_search(dst_port, "443")` | No match |
-| 3 | `value_search(dst_port, "53")` | No match |
-
-**Problem:** Model tried to search specific port values in `dst_port` (INTEGER column), but:
-1. INTEGER columns don't have catalog values to search
-2. This case needs SQL aggregation (`GROUP BY dst_port ORDER BY count(*) DESC LIMIT 5`)
-3. Model spent all 5 tool calls searching non-existent port values
-
-**Fix needed:** Prompts should distinguish INTEGER columns (use aggregation) vs VARCHAR columns (use value search).
-
----
-
-## Progress Summary
-
-| Version | Score | Delta |
-|---------|-------|-------|
-| v1 E3 (old) | 0/8 | baseline |
-| v2 Remediation | 1/8 | +1 |
-| **Phase 2** | **7/8** | +7 |
-
----
-
-## Files
-
-- Results: `results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/`
-- Commit: `6534584`
+Historical E0, remediation, public pilot and this phase-2 run are distinct conditions; the earlier delta/progress timeline was not a matched experiment. No independent R2 holdout is available: S1/S4 is consumed and protocol-ineligible. Status: **DEV_VERIFIED / HOLDOUT_PENDING**.

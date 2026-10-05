@@ -14,12 +14,14 @@ Evidence gồm `OBSERVED`, `DERIVED`, `EXTERNAL_INTEL`; nhận định phải tr
 
 | Track | Bộ dữ liệu / metric | Evidence và giới hạn |
 |---|---|---|
-| R1 tool calling | 24 dev, trong đó 5 no-tool; 8 frozen | Decision-only đo production tool/arguments, không thực thi tool. A2/MockProvider là regression, không phải model accuracy. |
-| R2 CTU dev S5/S7 | 8 case; Execution Accuracy | [E0 GPT-5 Mini](results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json) immutable 0/8. [E3 remediation live](docs/evaluation/r2_remediation_live_results.md): EX 1/8, syntax 4/8, execution 3/8; một lượt dev, không holdout. [v1 report](docs/evaluation/r2_dualsql_ctu_gpt5_dev.md) giữ riêng. |
+| R1 tool calling | 24 dev, trong đó 5 no-tool; 8 frozen | Winner GPT-4.1 mini 22/24, F1 0.9508, no-tool 5/5; GPT-5 mini 19/24, F1 0.9355, no-tool 4/5. 11/24 gold dev-v2 adjudicated sau khi xem model. Decision-only, không thực thi tool; frozen vẫn cần authorization riêng. |
+| R2 CTU dev S5/S7 | 8 case; Execution Accuracy | [Phase-2 E3 đã chấm](results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json): **EX 7/8**, case006 TOOL_LIMIT, 44 responses, $0.02085850. Sau INTEGER hint chưa có verified full suite; không ghép test riêng thành 8/8. [E0](results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json) 0/8 và [remediation E3](docs/evaluation/r2_remediation_live_results.md) 1/8 là các điều kiện lịch sử riêng. |
 | R2 CTU S1/S4 lịch sử | 8 case, holdout đã consumed | Script cũ báo E0 EX 0/8, E3 EX 2/8; E3 execution success 3/8 theo flags cũ. Syntax validity đúng nghĩa chưa xác minh; cost/provenance incomplete. Không đủ frozen eligibility. |
 | R2 legacy three-source | 8 dev + 6 frozen | ThreatFox/CTU/OTRF contract riêng; snapshot CTU không chứng minh bộ three-source đã hoàn tất. |
 
 Các kết quả dev không chứng minh generalization trên holdout. Xem [đính chính frozen](docs/evaluation/frozen_comparison_results.md), [protocol audit](docs/evaluation/ctu_frozen_protocol_audit_2026-09-30.md) và [remediation status](docs/evaluation/r2_remediation_status.md).
+
+Trạng thái: **DEV_VERIFIED / HOLDOUT_PENDING**. JSON S1/S4 mới thiếu execution-scoring và verified run identity; pipeline `OK` không phải EX. [Báo cáo đính chính](docs/evaluation/FINAL_EVALUATION_REPORT.md) và [plan Task 0+1](docs/superpowers/plans/2026-10-05-vinsoc-finalization-fix.md) giữ frozen closed và cung cấp offline scorer/audit không gọi API.
 
 Remediation giữ adapter source metadata, một controller fail-closed, telemetry trước parse, locked scorer và output append-only. Tasks 1-7 đã nghiệm thu offline; Tasks 8-10 được duyệt riêng và đã chạy một smoke + một suite E3 trên exact-SHA CI xanh. Tổng live cost từ usage $0.02185315; [trace, lỗi từng case và hashes](docs/evaluation/r2_remediation_live_results.md). Series live đã consumed; CLI offline cũ và frozen entrypoints vẫn closed. **STOP FOR HUMAN REVIEW**, không tự chạy tiếp thí nghiệm hoặc demo.
 

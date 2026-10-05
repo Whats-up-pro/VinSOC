@@ -1,116 +1,51 @@
-# VinSOC Phase 3 - Final Evaluation Report
+# VinSOC evaluation evidence status
 
-**Date:** 2026-10-01  
-**Status:** COMPLETE
+Updated 2026-10-05. Status: **DEV_VERIFIED / HOLDOUT_PENDING**.
 
----
+This correction supersedes the earlier COMPLETE / Perfect / 8-of-8 / proof-of-generalization headlines in this document. They exceeded the recorded evidence. Historical JSON, questions, gold SQL, comparators and consumption locks remain unchanged.
 
-## Executive Summary
+## Artifact-backed results
 
-DualSQL Phase 2 với INTEGER column hint đạt **8/8 EX** trên cả Dev và Frozen holdout.
+| Track / condition | Metric | Recorded cost USD | Evidence and limits |
+|---|---|---:|---|
+| R1 dev-v2 GPT-4.1 mini winner | 22/24 case success; exact-call F1 0.9508; no-tool 5/5 | 0.01013120 | [Winner lock](../../evaluation/tool_calling/winner_lock.json); decision-only, no tool execution |
+| R1 dev-v2 GPT-5 mini model-only | 19/24; exact-call F1 0.9355; no-tool 4/5 | 0.01595000 | [Source report](../../results/evaluation_v1/r1/gpt5_model_only/36531679435/r1-gpt5-result.json); different model/request contract |
+| R2 CTU E0, run 36520685612 | EX 0/8; syntax/execution 8/8 | 0.00384725 | [Immutable report](../../results/evaluation_v1/ctu_network_public/gpt5_e0/36520685612/ctu-r2-result.json) |
+| R2 previous remediation E3 | EX 1/8; syntax 4/8; execution 3/8 | 0.01884615 suite only | [Original evidence](../../results/evaluation_v1/ctu_network_public/dualsql_v2_remediation_live/20260930_90acf451/suite/report.json) |
+| R2 phase-2 E3, implementation 3f9d72d | **EX 7/8 (87.5%); syntax/execution 7/8** | **0.02085850** | [Original full suite](../../results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json); 44 attempted/received API calls |
+| Post-INTEGER-hint version | **No verified full-suite score** | Not established as a complete suite | Separate case006 output cannot replace a failed prediction in the older suite |
+| R2 S1/S4 | **No independent, protocol-eligible holdout result** | Historical cost incomplete | [CONSUMED.lock](../../evaluation/ctu_network_frozen/CONSUMED.lock): consumed=true, protocol_eligible=false |
 
-| Benchmark | Score | Status |
-|-----------|-------|--------|
-| R2 Dev (CTU S5/S7) | **8/8** | ✅ Perfect |
-| R2 Frozen (CTU S1/S4) | **8/8** | ✅ Perfect |
+Conditions differ in prompts, tool/controller interaction and safety contracts. The earlier public-dev pilot used a different snapshot; it is not a matched control. The rows above are separate observations and do not establish a causal improvement sequence. DualSQL here is inference-inspired architecture, not a reproduced training or multi-agent reinforcement-learning result.
 
----
+**R1 caveat:** 11/24 dev-v2 gold cases were adjudicated after seeing the original model output. This is development evidence, not an independent holdout. GPT-4.1 mini used temperature=0; GPT-5 mini omitted temperature and used reasoning_effort=low. No new tuning or dev run is needed to confirm these historical counts. R1 frozen compatibility passed offline; frozen inference still requires separate human authorization.
 
-## R1: Tool Calling (24 cases)
+## Case006 and the scoring correction
 
-| Model | Score | Status |
-|-------|-------|--------|
-| GPT-4.1 Mini | 22/24 (91.67%) | ✅ Baseline Winner |
-| GPT-5 Mini | 19/24 (79.17%) | ❌ Not selected |
+The official phase-2 suite preserves case006 as **TOOL_LIMIT**: three linker turns, five executed tool calls, generator not invoked, final_sql=null, EX=false. Its charged responses are retained. Searching integer ports exhausted the tool cap, but a later separately generated SQL statement does not change that run's denominator or numerator.
 
-**Note:** Khác request contract → so sánh không hoàn toàn công bằng.
+The old `test_case006_integer_fix.py` printed execution_accurate from `error_category == 'OK'`. `run_case()` uses OK to mean the pipeline produced SQL; execution scoring occurs separately. The wrapper is now offline-only and delegates to `evaluation/r2_phase2/scoring.py`, which calls the unchanged `evaluate_sql_case()` and comparator through the versioned read-only snapshot policy.
 
----
+Replay preserves both `pipeline_error_category` and `scoring_error_category`. Executable wrong SQL receives EX=false / RESULT_MISMATCH. Missing final SQL preserves TOOL_LIMIT and scores false. Missing snapshot or invalid gold has `scoring_status=unscored`, null score flags and failed validation; infrastructure errors are not model failures.
 
-## R2: Text-to-SQL (8 cases)
+## Offline audit and reproduction
 
-### Progress Timeline
+Task 0+1 uses zero new model calls and zero API inference spend. Tests use explicitly synthetic DuckDB fixtures. Replay is deterministic evaluation of archived predictions, not a new model run.
 
-| Version | Dev Score | Delta | Notes |
-|---------|-----------|-------|-------|
-| v1 E3 | 0/8 | baseline | Model dùng label nhầm |
-| v2 Remediation | 1/8 | +1 | Case 004 sửa được |
-| Phase 2 (old) | 7/8 | +7 | Còn Case 006 TOOL_LIMIT |
-| **Phase 2 (fixed)** | **8/8** | **+8** | INTEGER hint fix |
-
-### Key Fix: INTEGER Column Handling
-
-**Problem:** Case 006 (`dst_port` aggregation) gây TOOL_LIMIT vì model search INTEGER column thay vì dùng SQL aggregation.
-
-**Solution:**
-```python
-# grounding.py - Phase2Tools.value_search()
-{
-    'resolution': 'typed_constraint_not_catalog_value',
-    'hint': 'INTEGER column "dst_port" has no catalog values. Use SQL aggregation (COUNT, GROUP BY) for analysis - do NOT continue value search.'
-}
+```powershell
+python -m scripts.audit_r2_saved_outputs --input results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite --cases-dir evaluation/ctu_network_public/dev --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output results/evaluation_v1/finalization_audit/20261005/dev_replay
 ```
 
-**Result:** Model đọc hint và dùng `GROUP BY dst_port ORDER BY count(*) DESC LIMIT 5`.
+Output must be a fresh directory. A rerun for reviewer reproduction needs another new output path; source files are never overwritten. Full-suite source report and per-case files must agree; separate predictions cannot be spliced into an archived report. A single saved file produces a single-prediction diagnostic, not a full suite.
 
----
+The verified S5/S7 snapshot has 243,906 flows (S5=129,831; S7=114,075), logical SHA-256 `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`. Its manifest, source bytes, gold checksums and unchanged scorer are checked with the existing CTU validator. Runtime prediction SQL is evaluated offline; production models are not offered raw SQL access.
 
-## Frozen Holdout Evaluation
+The new S1/S4 prediction files under `r2_phase2_frozen_v1/` do not record the execution-scoring flags or a verified run snapshot/case identity. They receive an **unscored / SNAPSHOT_IDENTITY_UNVERIFIED** diagnostic receipt. No frozen snapshot is queried when that identity is missing, no data is downloaded, and CONSUMED.lock remains unchanged. Even a future offline replay would remain consumed-frozen diagnostic evidence, never an independent holdout score.
 
-| Dataset | Cases | Score |
-|---------|-------|-------|
-| CTU S1/S4 (holdout) | 8 | **8/8** |
+Initial inventory: [188 protected tracked files](../../results/evaluation_v1/finalization_audit/20261005/initial_inventory.json), raw checkout hashes, no .env/raw dataset files. Current replay receipts and exact implementation/evidence CI are linked after their actual verification in [the delivery plan](../superpowers/plans/2026-10-05-vinsoc-finalization-fix.md).
 
-**Frozen snapshot:**
-- Logical SHA: `0251bbe1a2bdca6acc4f181cf7342ec03b2e04048ab747c8625dbfc0b5d03ea4`
-- S1 rows: 2,824,609
-- S4 rows: 1,121,063
-- Total: 3,945,672
+## Remaining gates
 
----
+The approved next tasks are generic typed/semantic counterexamples, contract v4 and common paid guards, a matched E0/E3 dev pair, a production network demo with checked factual observations, and an artifact-derived reporting package. They require the requested Task 0+1 review and their own checks before execution. Holdout is a separate human-authorized task and budget; S1/S4 cannot be relabeled as fresh holdout.
 
-## Technical Details
-
-### Architecture
-- **Linker:** Schema discovery + value grounding via tools
-- **Generator:** SQL generation với linked schema
-- **Controller:** Fail-closed, max 5 turns, max 5 tool calls
-
-### Model Parameters
-| Parameter | Value |
-|-----------|-------|
-| Model | `gpt-5-mini-2025-08-07` |
-| reasoning_effort | `low` |
-| max_completion_tokens | 1000 |
-| temperature | `null` |
-
-### Tools
-| Tool | Purpose |
-|------|---------|
-| `database_profiler` | Inspect schema + column types |
-| `value_search` | Find VARCHAR catalog values |
-| `sql_probe` | Bounded SQL inspection |
-
----
-
-## Files
-
-### Results
-- Dev: `results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/`
-- Frozen: `results/evaluation_v1/ctu_network_frozen/r2_phase2_frozen_v1/`
-
-### Code
-- Phase2 tools: `evaluation/r2_phase2/grounding.py`
-- Runner: `evaluation/r2_phase2/runner.py`
-
----
-
-## Conclusion
-
-1. **INTEGER column handling** là fix quan trọng nhất - giúp model phân biệt aggregation vs value search
-2. **8/8 EX** trên cả Dev và Frozen = proof of generalization
-3. **DualSQL approach** (Linker + Generator + Tools) cải thiện đáng kể so với one-shot
-
----
-
-**Commit:** `499e9ae`
+Token-derived costs are not billing invoices. Historical spend remains a lower bound where usage is missing. Demo traces, valid citation IDs and green CI do not supply benchmark accuracy or prove generalization. No final E2E success is claimed by this report.

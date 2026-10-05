@@ -5,3 +5,4 @@ evaluation/r2_phase2/CONTRACT.lock.json -text whitespace=blank-at-eol,blank-at-e
 evaluation/r2_phase2/CONTRACT_v3.lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 evaluation/tool_calling/winner_lock.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 results/evaluation_v1/phase2_handoff/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+results/evaluation_v1/finalization_audit/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
