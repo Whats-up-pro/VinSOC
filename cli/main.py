@@ -6,9 +6,14 @@ Command-line interface for conducting AI-assisted SOC investigations.
 """
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
+
+# Load .env file if exists
+from dotenv import load_dotenv
+load_dotenv()
 
 from rich.console import Console
 from rich.panel import Panel
@@ -316,6 +321,9 @@ def run_direct_investigation(
     console.print(f"[cyan]Using provider:[/cyan] {provider}/{model}")
     console.print("\n[cyan]Running investigation...[/cyan]\n")
 
+    # Use ScriptedHumanReviewGate for non-interactive demo mode
+    from agent.hitl import ScriptedHumanReviewGate
+
     case = run_investigation(
         indicator=indicator,
         indicator_type=indicator_type,
@@ -328,7 +336,7 @@ def run_direct_investigation(
         monthly_budget_usd=monthly_budget_usd,
         budget_ledger_path=budget_ledger_path,
         duckdb_snapshot_path=duckdb_snapshot_path,
-        human_review_gate=ConsoleHumanReviewGate(),
+        human_review_gate=ScriptedHumanReviewGate(),
     )
 
     display_case(case)
