@@ -92,6 +92,17 @@ Các đoạn trích là lời có thể đọc trực tiếp. Ghi chú “Chỉ 
 
 **Chỉ vào:** từng hàng theo thứ tự bảng, sau đó dòng GPT-5 mini và caveat v1/v2.
 
+| Điều kiện dev v2 | Model / request contract | Case success | Exact-call F1 | No-tool | Usage (input / output) | Cost từ usage |
+|---|---|---:|---:|---:|---:|---:|
+| Winner | `gpt-4.1-mini-2025-04-14`; temperature=0; cap=1000; retries=0 | 22/24 (91,67%) | 0,9508 | 5/5 | 18.088 / 1.810 | $0,0101312 |
+| Comparator lịch sử | `gpt-5-mini-2025-08-07`; reasoning=low; không gửi temperature; cap=1000; retries=0 | 19/24 (79,17%) | 0,9355 | 4/5 | 20.104 / 5.462 | $0,0159500 |
+
+| Winner case-level | Giá trị |
+|---|---:|
+| Tool-set exact match | 22/24 (91,67%) |
+| Precision / recall | 0,9667 / 0,9355 |
+| Case không đạt | `case_002`, `case_015` |
+
 > “Case Success 22/24 nghĩa là 22 yêu cầu có quyết định hoàn toàn đúng theo gold và contract. Exact Call F1 là 95,08%, với precision 96,67% và recall 93,55%. F1 chấm từng call; case success chấm cả yêu cầu, nên một case có vài call đúng vẫn trượt nếu còn call sai hoặc thiếu.”
 
 > “No-tool 5/5 nghĩa là model xử lý đúng năm case không nên gọi tool. Tool Set Exact Match 22/24 kiểm tên tool và số lượng call, còn Exact Call F1 có thêm required argument values. Hai con số case-level trùng nhau trong run này, nhưng hai metric có định nghĩa khác nhau.”
@@ -113,6 +124,33 @@ Các đoạn trích là lời có thể đọc trực tiếp. Ghi chú “Chỉ 
 ### Trang 8 — R2: live result và audit cùng là 7/8
 
 **Chỉ vào:** hai cột Run 3f9d72d / Audit bb462f3, hàng case006, usage/cost.
+
+| Case | Pipeline error | Syntax | Execution | EX | Diễn giải |
+|---|---|---:|---:|---:|---|
+| `ctu_sql_001` | `OK` | ✓ | ✓ | ✓ | Đã chấm bằng snapshot S5/S7 đã khóa |
+| `ctu_sql_002` | `OK` | ✓ | ✓ | ✓ | Đã chấm bằng snapshot S5/S7 đã khóa |
+| `ctu_sql_003` | `OK` | ✓ | ✓ | ✓ | Đã chấm bằng snapshot S5/S7 đã khóa |
+| `ctu_sql_004` | `OK` | ✓ | ✓ | ✓ | Đã chấm bằng snapshot S5/S7 đã khóa |
+| `ctu_sql_005` | `OK` | ✓ | ✓ | ✓ | Đã chấm bằng snapshot S5/S7 đã khóa |
+| `ctu_sql_006` | `TOOL_LIMIT` | ✗ | ✗ | ✗ | Không có final SQL; offline scorer: `NO_FINAL_SQL` |
+| `ctu_sql_007` | `OK` | ✓ | ✓ | ✓ | Đã chấm bằng snapshot S5/S7 đã khóa |
+| `ctu_sql_008` | `OK` | ✓ | ✓ | ✓ | Group/count theo `source_dataset`, có thứ tự |
+
+| R2 Phase2 suite lịch sử | Giá trị |
+|---|---:|
+| Implementation SHA | `3f9d72ddc840d368b15b161881a94335c42eb03e` |
+| Syntax / execution success / execution accuracy | 7/8 / 7/8 / 7/8 |
+| Safety rejection | 0/8 |
+| Attempted / received model calls; DB calls | 44 / 44; 34 |
+| Input / cached input / output tokens | 47.802 / 8.960 / 5.462 |
+| Usage-derived cost | $0,02085850 (complete) |
+
+| Lượt hoặc kết quả chưa có | Trạng thái trình bày |
+|---|---|
+| Post-INTEGER / typed-grounding full suite | Chưa chạy; không suy ra score từ unit tests |
+| R2 v4 E0 và E3 paired dev | Chưa mở: cần Task3 contract, identity, budget và exact-SHA CI |
+| Network demo model-driven | Chưa mở: cần shared ledger và factual validator |
+| R1 frozen; R2 holdout độc lập | Chưa được authorize; S1/S4 đã consumed |
 
 > “Cột trái là kết quả full dev Phase2 đã lưu tại implementation 3f9d72d. Cột phải là offline audit ở checkpoint bb462f3. Cả hai đều 7/8, tức 87,5% execution accuracy; syntax và execution success cũng 7/8. Safety rejection là 0/8. Audit giữ nguyên kết quả model, không sinh prediction mới.”
 
