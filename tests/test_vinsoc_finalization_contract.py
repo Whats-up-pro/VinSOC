@@ -53,8 +53,11 @@ def test_release_lock_verifier_rejects_changed_source_before_client(tmp_path: Pa
 def test_current_v4_lock_binds_verified_snapshot_and_controller_sources():
     from evaluation.finalization.contract import verify_release_inputs
 
+    snapshot = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
+    if not snapshot.is_file():
+        pytest.skip("The locked snapshot is an ignored local evaluation input, absent from CI.")
     lock = verify_release_inputs(
-        Path("data/ctu_network_public/snapshots/ctu_dev.duckdb"),
+        snapshot,
         Path("evaluation/r2_phase2/CONTRACT_v4.lock.json"),
     )
     assert lock["contract_identity"] == "r2_finalization_v4"
