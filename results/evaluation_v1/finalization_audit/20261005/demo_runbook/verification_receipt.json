@@ -1,0 +1,59 @@
+{
+  "accuracy_claim_source": "Immutable R1 winner lock and R2 Phase2 suite, separate historical conditions; no fabricated outputs",
+  "agent_initiated_provider_calls": 0,
+  "checks": [
+    {
+      "command": "PowerShell native Parser.ParseInput on fenced powershell blocks",
+      "result": "7 blocks,0 syntax errors,0 executed blocks"
+    },
+    {
+      "command": "python -m scripts.audit_r2_saved_outputs --help",
+      "result": "exit0; input/cases-dir/snapshot/output verified"
+    },
+    {
+      "command": "python -m scripts.demo_ctu_network_public --help",
+      "result": "exit0; snapshot/scenario/output verified; no --live used"
+    },
+    {
+      "command": "python -m evaluation.ctu_network_public.contract --help",
+      "result": "exit0; snapshot flag verified; no --write-lock used"
+    },
+    {
+      "command": "Markdown relative-link metadata check",
+      "result": "9 links,all local targets exist"
+    },
+    {
+      "command": "git diff --check",
+      "result": "exit0"
+    },
+    {
+      "command": "Protected historical file SHA256 comparison",
+      "result": "287 unchanged"
+    }
+  ],
+  "cli_exact_ci": {
+    "conclusion": "success",
+    "headSha": "46f5a27723b880e39d593f5a25f769afad57308e",
+    "jobs": {
+      "test (3.11)": "823 passed in51.43s",
+      "test (3.12)": "823 passed,1654 warnings in55.92s"
+    },
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37274201577"
+  },
+  "cli_implementation_sha": "46f5a27723b880e39d593f5a25f769afad57308e",
+  "document": "docs/VinSOC_Verified_Demo_Runbook_2026-10-05.md",
+  "document_sha256": "1c2dcdd1fefec676a881a4bdec6e8a76ad1ad3082c4df35f5073d8791d7ab7d3",
+  "failed_check_attempt": "check.ps1 file execution blocked by Windows ExecutionPolicy; not a pass. No policy modification/bypass; native parser used inline to inspect documentation as data.",
+  "final_commit_ci": "Exact final documentation SHA CI supplied in handoff; not self-referenced as implementation identity",
+  "frozen_closed": true,
+  "initial_sha": "46f5a27723b880e39d593f5a25f769afad57308e",
+  "live_status": "Future release/budget/account/identity/exactCI/attempt gates required; current model-driven entrypoint not treated as final gated proof",
+  "model_workflow_dispatches": 0,
+  "new_demo_execution": false,
+  "new_inference_cost_usd": 0,
+  "rehearsal_executed": false,
+  "replay_executed": false,
+  "task3_authorized": false,
+  "third_incoming_presentation_document": "Preserved; this is a new verified runbook, not an overwrite",
+  "version": "verified_demo_runbook_documentation_v1"
+}
