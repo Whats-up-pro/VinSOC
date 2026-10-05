@@ -1,0 +1,26 @@
+{
+  "contract_identity": "r2_finalization_v4",
+  "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+  "model": "gpt-5-mini-2025-08-07",
+  "request_contract": {
+    "max_completion_tokens": 1000,
+    "reasoning_effort": "low",
+    "sdk_retries": 0,
+    "service_tier": "default",
+    "temperature": "omitted"
+  },
+  "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+  "files_portable_sha256": {
+    "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+    "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+    "evaluation/r2_phase2/grounding.py": "ec8a498e4cc0f0c6cce6a58e1f24588d6be822478959bf185b9e1b1d836396bb",
+    "evaluation/r2_phase2/prompts_v4.py": "3403b31f1392c69ff439bdbca7c4e729038ee98580925ae3adad9e0a1d571645",
+    "evaluation/r2_phase2/runner.py": "dac14e1dde846e8b9ec9e9346c3d696f9975653ddc9a0ecf86c6584beafd2b79",
+    "evaluation/r2_phase2/safety_v4.py": "5a7a4fcedb0e66cf2372baaddc4456ca68a2c2a6a029d23be6df529443638273",
+    "evaluation/r2_phase2/scoring.py": "fed644553662b3b3e660b97f71255711439a8a9ad88137908bb9e4d5a3d96cf9",
+    "evaluation/r2_phase2/tool_schemas_v4.py": "cccecd662764395fa26c38dcccc9c9c7258ec744c430869fcdaf1bc235931fd9",
+    "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf"
+  }
+}

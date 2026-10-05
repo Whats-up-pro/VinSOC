@@ -219,13 +219,19 @@ def preflight(mode, snapshot_path, output_path, smoke_report_path=None, require_
 
 
 class GuardedSDK:
-    def __init__(self, client, append, previous_cost, max_calls, suite_reserve_calls=0):
+    def __init__(self, client, append, previous_cost, max_calls, suite_reserve_calls=0,
+                 request_validator=None, bound=None, budget_usd=.75, pricing=None, model=None):
         if (not isinstance(client, OpenAI) or client.max_retries != 0
                 or str(client.base_url).rstrip("/") != "https://api.openai.com/v1"):
             raise GateError("PROVIDER_CONTRACT_ERROR")
         self.client, self.append = client, append
         self.previous_cost, self.max_calls = previous_cost, max_calls
         self.suite_reserve_calls = suite_reserve_calls
+        self.request_validator = request_validator or validate_request
+        self.bound = bound or preflight_bound()
+        self.budget_usd = budget_usd
+        self.pricing = pricing or PRICES
+        self.model = model or MODEL
         self.attempts = self.responses = 0
         self.usage = []
         self.cost = 0.0
@@ -239,9 +245,9 @@ class GuardedSDK:
         try:
             if self.error:
                 raise GateError(self.error)
-            validate_request(request)
+            self.request_validator(request)
             remaining = self.max_calls - self.attempts
-            if remaining <= 0 or self.previous_cost + self.cost + (remaining + self.suite_reserve_calls) * preflight_bound()["per_call_ceiling_usd"] > .75 + 1e-12:
+            if remaining <= 0 or self.previous_cost + self.cost + (remaining + self.suite_reserve_calls) * self.bound["per_call_ceiling_usd"] > self.budget_usd + 1e-12:
                 raise GateError("BUDGET_EXCEEDED")
         except GateError as error:
             self.error = str(error)
@@ -269,7 +275,7 @@ class GuardedSDK:
                     and type(total) is int and total == inp + out
                     and type(cached) is int and 0 <= cached <= inp)
         tier = getattr(response, "service_tier", None)
-        cost = ((inp - cached) * PRICES["input"] + cached * PRICES["cached_input"] + out * PRICES["output"]) / 1e6 if complete and response.model == MODEL and tier == "default" else None
+        cost = ((inp - cached) * self.pricing["input"] + cached * self.pricing["cached_input"] + out * self.pricing["output"]) / 1e6 if complete and response.model == self.model and tier == "default" else None
         self.last = {"response_id": response.id, "model": response.model, "input_tokens": inp,
                      "cached_input_tokens": cached, "output_tokens": out, "total_tokens": total,
                      "usage_complete": complete, "service_tier": tier, "cost_usd": cost,
@@ -284,7 +290,7 @@ class GuardedSDK:
         except Exception:
             self.error = "TELEMETRY_WRITE_ERROR"
             raise GateError(self.error) from None
-        self.error = ("MODEL_IDENTITY_MISMATCH" if response.model != MODEL else
+        self.error = ("MODEL_IDENTITY_MISMATCH" if response.model != self.model else
                       "USAGE_INCOMPLETE" if not complete else "SERVICE_TIER_MISMATCH" if tier != "default" else None)
         return response
 

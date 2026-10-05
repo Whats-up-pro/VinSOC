@@ -15,6 +15,7 @@ from evaluation.r2_phase2.safety import Phase2Snapshot as SnapshotOnlyDuckDBSnap
 from evaluation.dualsql_lite_ctu_gpt5_v2.experiment import score_record
 
 VERSION = 'r2_phase2_live_e3_v1'
+HISTORICAL_ENTRYPOINT_STATUS = 'RETIRED_FAIL_CLOSED'
 ATTEMPTS_ROOT = Path('results/evaluation_v1/ctu_network_public/r2_phase2_live') / VERSION
 GATES_PATH = Path('.superpowers/sdd/2026-10-01-vinsoc-remediation-phase2/live-gates.json')
 CONTRACT_PATH = Path('evaluation/r2_phase2/CONTRACT_v3.lock.json')
@@ -194,6 +195,9 @@ def run_suite(snapshot_path: Path, output_path: Path, client_factory: Callable) 
 
 
 def main():
+    # This historical entrypoint has a v3 lock that does not cover the v4
+    # controller. It must never be used to create a new paid attempt.
+    raise GateError('HISTORICAL_ENTRYPOINT_RETIRED_USE_FINALIZATION_V4')
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--preflight-only',action='store_true')
