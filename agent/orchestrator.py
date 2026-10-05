@@ -925,14 +925,14 @@ class InvestigationOrchestrator:
         if traceability_violations:
             self.security_flags.append(f"traceability_violation:{len(traceability_violations)}")
 
+        initial_indicator = {"type": indicator_type, "value": indicator}
+        if context is not None:
+            initial_indicator["context"] = context
+
         case = InvestigationCase(
             case_id=self.case_id,
             created_at=datetime.utcnow().isoformat(),
-            initial_indicator={
-                "type": indicator_type,
-                "value": indicator,
-                "context": context
-            },
+            initial_indicator=initial_indicator,
             tool_trace=[tc.to_dict() for tc in tool_calls],
             evidence=[ev.to_dict() for ev in evidence],
             hypotheses=[hypothesis.to_dict() for hypothesis in hypotheses],
