@@ -1,0 +1,291 @@
+{
+  "fixture_only": true,
+  "evidence_kind": "synthetic_transport",
+  "official_eligible": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "scope": "Controller integration with scripted fake replies and real synthetic DuckDB data, not benchmark accuracy",
+  "fixture_code_sha256": "026d28e95d6bd4b914f47d00ba6615d609351cc323c6245666cbad1e661de45d",
+  "fixture_logical_sha256": "046f861af83fa79ff1dd5a879c1ceece8ba7c8ccab29389ef1857c3aa64b3f7b",
+  "record": {
+    "case_id": "synthetic_task2_integration",
+    "database_id": "shop",
+    "question": "Top 2 orders by units above 1",
+    "condition": "E3",
+    "final_sql": "SELECT id, units FROM orders WHERE units > 1 ORDER BY units DESC, id LIMIT 2",
+    "error_category": "OK",
+    "attempted_calls": 4,
+    "response_count": 4,
+    "responses": [
+      {
+        "role": "linker",
+        "response": {
+          "response_id": "synthetic-1",
+          "actual_model": "synthetic",
+          "usage": {
+            "prompt_tokens": 10,
+            "completion_tokens": 10
+          },
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "tool-1",
+              "function": {
+                "name": "database_profiler",
+                "arguments": "{\"table\": \"orders\"}"
+              }
+            }
+          ]
+        },
+        "latency_seconds": 3.310013562440872e-05,
+        "request_sha256": "5b04177e9d03f6102ed4e08bd524830fd16d06ff96de0bb0b01f96e5e5dea9c3"
+      },
+      {
+        "role": "linker",
+        "response": {
+          "response_id": "synthetic-2",
+          "actual_model": "synthetic",
+          "usage": {
+            "prompt_tokens": 10,
+            "completion_tokens": 10
+          },
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "tool-2",
+              "function": {
+                "name": "value_search",
+                "arguments": "{\"table\": \"orders\", \"column\": \"units\", \"query\": \"1\"}"
+              }
+            }
+          ]
+        },
+        "latency_seconds": 2.2300053387880325e-05,
+        "request_sha256": "aca35fd0a58d1bf971cbd86be6ba105207741e5eb41727ffce1b6e4c7173199f"
+      },
+      {
+        "role": "linker",
+        "response": {
+          "response_id": "synthetic-3",
+          "actual_model": "synthetic",
+          "usage": {
+            "prompt_tokens": 10,
+            "completion_tokens": 10
+          },
+          "content": "{\"tables\": [\"orders\"], \"columns\": [{\"table\": \"orders\", \"column\": \"id\"}, {\"table\": \"orders\", \"column\": \"units\"}], \"relationships\": [], \"grounded_values\": [], \"constraints\": [{\"kind\": \"numeric_threshold\", \"table\": \"orders\", \"column\": \"units\", \"operator\": \">\", \"value\": 1}, {\"kind\": \"limit\", \"value\": 2}]}"
+        },
+        "latency_seconds": 1.6799895092844963e-05,
+        "request_sha256": "81508d9335448f962bb7b6dd5dd3a5dd07cb3f5ec772318bdaaf963356a74b10"
+      },
+      {
+        "role": "generator",
+        "response": {
+          "response_id": "synthetic-4",
+          "actual_model": "synthetic",
+          "usage": {
+            "prompt_tokens": 10,
+            "completion_tokens": 10
+          },
+          "content": "{\"sql\": \"SELECT id, units FROM orders WHERE units > 1 ORDER BY units DESC, id LIMIT 2\"}"
+        },
+        "latency_seconds": 1.0699965059757233e-05,
+        "request_sha256": "a4db1759b169f54efb464198b1752842db9f6a62a1f9de84e8ab56aec64c82f9"
+      }
+    ],
+    "trajectory": [
+      {
+        "tool": "database_profiler",
+        "arguments": {
+          "table": "orders"
+        },
+        "result": {
+          "database_id": "shop",
+          "snapshot_identity": "046f861af83fa79ff1dd5a879c1ceece8ba7c8ccab29389ef1857c3aa64b3f7b",
+          "table": "orders",
+          "row_count": 3,
+          "columns": [
+            {
+              "name": "id",
+              "type": "BIGINT",
+              "distinct_count": 3
+            },
+            {
+              "name": "customer_id",
+              "type": "BIGINT",
+              "distinct_count": 2
+            },
+            {
+              "name": "amount",
+              "type": "DOUBLE",
+              "distinct_count": 3
+            },
+            {
+              "name": "units",
+              "type": "BIGINT",
+              "distinct_count": 3
+            },
+            {
+              "name": "occurred_at",
+              "type": "VARCHAR",
+              "distinct_count": 3
+            }
+          ],
+          "relationships": [
+            {
+              "from_table": "orders",
+              "from_column": "customer_id",
+              "to_table": "customers",
+              "to_column": "id"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "value_search",
+        "arguments": {
+          "table": "orders",
+          "column": "units",
+          "query": "1"
+        },
+        "result": {
+          "database_id": "shop",
+          "snapshot_identity": "046f861af83fa79ff1dd5a879c1ceece8ba7c8ccab29389ef1857c3aa64b3f7b",
+          "table": "orders",
+          "column": "units",
+          "type": "BIGINT",
+          "resolution": "typed_constraint",
+          "matches": [],
+          "domain_complete": false,
+          "constraint_hint": {
+            "kind": "typed_threshold",
+            "literal": "1",
+            "type": "BIGINT"
+          }
+        }
+      }
+    ],
+    "official_eligible": false,
+    "evidence_kind": "synthetic_transport",
+    "external_model_calls": 0,
+    "linked_schema": {
+      "tables": [
+        "orders"
+      ],
+      "columns": [
+        {
+          "table": "orders",
+          "column": "id"
+        },
+        {
+          "table": "orders",
+          "column": "units"
+        }
+      ],
+      "relationships": [],
+      "grounded_values": [],
+      "constraints": [
+        {
+          "kind": "numeric_threshold",
+          "table": "orders",
+          "column": "units",
+          "operator": ">",
+          "value": 1
+        },
+        {
+          "kind": "limit",
+          "value": 2
+        }
+      ],
+      "database_id": "shop",
+      "snapshot_identity": "046f861af83fa79ff1dd5a879c1ceece8ba7c8ccab29389ef1857c3aa64b3f7b"
+    },
+    "db_calls": 1,
+    "wall_seconds": 0.044972100062295794
+  },
+  "telemetry": [
+    {
+      "role": "linker",
+      "response": {
+        "response_id": "synthetic-1",
+        "actual_model": "synthetic",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "tool-1",
+            "function": {
+              "name": "database_profiler",
+              "arguments": "{\"table\": \"orders\"}"
+            }
+          }
+        ]
+      },
+      "latency_seconds": 3.310013562440872e-05,
+      "request_sha256": "5b04177e9d03f6102ed4e08bd524830fd16d06ff96de0bb0b01f96e5e5dea9c3"
+    },
+    {
+      "role": "linker",
+      "response": {
+        "response_id": "synthetic-2",
+        "actual_model": "synthetic",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "tool-2",
+            "function": {
+              "name": "value_search",
+              "arguments": "{\"table\": \"orders\", \"column\": \"units\", \"query\": \"1\"}"
+            }
+          }
+        ]
+      },
+      "latency_seconds": 2.2300053387880325e-05,
+      "request_sha256": "aca35fd0a58d1bf971cbd86be6ba105207741e5eb41727ffce1b6e4c7173199f"
+    },
+    {
+      "role": "linker",
+      "response": {
+        "response_id": "synthetic-3",
+        "actual_model": "synthetic",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "content": "{\"tables\": [\"orders\"], \"columns\": [{\"table\": \"orders\", \"column\": \"id\"}, {\"table\": \"orders\", \"column\": \"units\"}], \"relationships\": [], \"grounded_values\": [], \"constraints\": [{\"kind\": \"numeric_threshold\", \"table\": \"orders\", \"column\": \"units\", \"operator\": \">\", \"value\": 1}, {\"kind\": \"limit\", \"value\": 2}]}"
+      },
+      "latency_seconds": 1.6799895092844963e-05,
+      "request_sha256": "81508d9335448f962bb7b6dd5dd3a5dd07cb3f5ec772318bdaaf963356a74b10"
+    },
+    {
+      "role": "generator",
+      "response": {
+        "response_id": "synthetic-4",
+        "actual_model": "synthetic",
+        "usage": {
+          "prompt_tokens": 10,
+          "completion_tokens": 10
+        },
+        "content": "{\"sql\": \"SELECT id, units FROM orders WHERE units > 1 ORDER BY units DESC, id LIMIT 2\"}"
+      },
+      "latency_seconds": 1.0699965059757233e-05,
+      "request_sha256": "a4db1759b169f54efb464198b1752842db9f6a62a1f9de84e8ab56aec64c82f9"
+    }
+  ],
+  "actual_fixture_rows": [
+    [
+      10,
+      9
+    ],
+    [
+      12,
+      3
+    ]
+  ]
+}

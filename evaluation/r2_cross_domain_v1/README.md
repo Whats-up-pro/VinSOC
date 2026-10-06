@@ -1,7 +1,7 @@
 # Cross-domain Text-to-SQL: source and registry
 
-This namespace implements the offline source/registry stage of the approved
-`r2_cross_domain_v1` protocol. It contains no model client and no live evaluation
+This namespace implements the offline source/registry and generic pipeline stages of the approved
+`r2_cross_domain_v1` protocol. It contains no external model client and no live evaluation
 results. CTU Phase 2 remains a separate historical benchmark (verified dev EX 7/8).
 
 The manifest pins the official Spider 1.0 archive acquired on 2026-10-05. Its
@@ -51,3 +51,28 @@ Source data and adapted database metadata follow
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 This subset will not be presented as an official Spider score or an independent
 model-pretraining holdout.
+
+## Generic pipeline (offline)
+
+`DatabaseTools` executes bounded read-only queries on a verified multi-table
+catalog. Its SQLGlot AST policy is independent of the archived single-table
+policy. Tool witnesses identify database, snapshot, table, column, type and value;
+the controller validates those identities before accepting linked values.
+Numeric/time thresholds and LIMIT quantities are typed constraints. Small complete
+string domains expose citable witnesses; truncated searches are never closed domains.
+
+`run_case` accepts only the three-field `RuntimeCase` and synthetic transport
+until the release adapter is implemented and authorized. E0 has one decision;
+E3 has at most three linker and three generator requests, with twelve DB calls.
+Responses are journaled before parsing. Generation `OK` is not execution accuracy.
+The 32 KiB request safety cap is not a proof of the proposed 6,144-token billing bound.
+
+```powershell
+python -m pytest -q tests/test_r2_cross_domain_pipeline.py tests/test_r2_cross_domain_data.py tests/test_r2_cross_domain_selection.py
+```
+
+`offline_task2/integration_trace.json` is a scripted fake-client trace over a
+synthetic DuckDB fixture, not a model benchmark. It preserves its trace-time
+fixture code hash; the execution receipt records the final tested source bundle
+separately. Gold SQL parity, 96-case locking, semantic stress tests, module metrics
+and any expansion-specific paid authorization remain later gates.

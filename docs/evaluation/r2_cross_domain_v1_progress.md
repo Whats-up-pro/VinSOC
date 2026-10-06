@@ -19,7 +19,8 @@ were changed in this continuation.
 - [x] Preservation inventory: 245 historical tracked files and locks unchanged.
 - [x] Focused tests: 18 passed; full repository tests: 848 passed, 1654 warnings.
 - [x] Compile checks and staged diff/allowlist verification.
-- [ ] Push and exact-SHA CI Python 3.11/3.12. Check completion against Actions.
+- [x] Push Task 1 `516a02dda409a9ef7ebaf63dd47d42ba294ca4b8`; exact-SHA CI
+  Python 3.11/3.12 successful: https://github.com/Whats-up-pro/VinSOC/actions/runs/37402308323.
 
 Artifacts live under `evaluation/r2_cross_domain_v1`: manifest, registry,
 source/member receipts, 12 two-build receipts, qualification/exclusion report,
@@ -42,7 +43,33 @@ Original/adapted gold SQL parity, final domain annotations, CTU calibration/new
 cases, semantic instances and the 96-case benchmark lock remain Task 3 gates.
 The candidate inventory is not an evaluation lock and cannot authorize inference.
 
-Task 2 generic tools/controller, Task 3 benchmark/gold/semantic lock, and Task 4
-statistics/telemetry/release are pending. Paid Tasks 5/6 need expansion-specific
+## Task 2: generic pipeline (base `516a02d`)
+
+- [x] Watch regression failures before implementation: typed constraints, derived
+  time predicates, forged catalog metadata, safe CASE/EXISTS, COUNT(*) without
+  invented columns, invalid tool arguments, SQLite connection closure and domain witnesses.
+- [x] Independent multi-table AST policy; read-only DuckDB tools with timeout,
+  row/payload caps, twelve executed DB calls and qualified catalog witnesses.
+- [x] Typed numeric/time thresholds, LIMIT and derived expressions do not require
+  catalog-value existence probes. Truncated domains cannot prove absence.
+- [x] Generic linker/controller; three model turns per role. Runtime DTO has no gold.
+  Live transport remains closed until the release gate; synthetic results are ineligible.
+- [x] Synthetic integration trace uses actual fixture DuckDB rows, four fake
+  responses and one DB tool call; zero external model calls.
+- [x] Targeted tests: 64 passed. SQLite cleanup regression reproduced and fixed
+  through explicit connection closure, preserving the initial negative receipt.
+- [x] Final full suite: 894 passed, 1654 warnings (106.70 seconds).
+- [x] Compile checks, staged diff/allowlist and preservation receipt: 245 older
+  protected files and all 21 Task 1 artifact JSON files retain their exact bytes.
+- [ ] Commit/push and exact-SHA CI Python 3.11/3.12.
+
+Ruling: complete domains of at most eight values expose controller-issued
+`domain_witnesses` so the linker can cite observed values without another search.
+Search matches remain distinct from domain witnesses; larger/truncated domains
+are not treated as complete witness lists. This is a generic bounded interface,
+not a CTU mapping or a call-cap increase.
+
+Task 3 benchmark/gold/semantic lock and Task 4 statistics/telemetry/release remain
+pending. Paid Tasks 5/6 need expansion-specific
 budget/release authorization; the old $0.75 authorization is not reused.
 Model calls: **0**. New inference cost: **$0**. S1/S4 remain consumed/closed.

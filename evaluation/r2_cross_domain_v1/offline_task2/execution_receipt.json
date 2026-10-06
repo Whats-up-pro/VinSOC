@@ -1,0 +1,53 @@
+{
+  "task": 2,
+  "base_sha": "516a02dda409a9ef7ebaf63dd47d42ba294ca4b8",
+  "verified_at_utc": "2026-10-06T03:17:26.233863+00:00",
+  "commands": [
+    {
+      "command": "python -m pytest -q tests/test_r2_cross_domain_pipeline.py tests/test_r2_cross_domain_data.py tests/test_r2_cross_domain_selection.py",
+      "exit_code": 0,
+      "result": "64 passed"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "result": "894 passed, 1654 warnings in 106.70s (0:01:46)"
+    },
+    {
+      "command": "py_compile.compile(path, doraise=True) for each changed Python file",
+      "exit_code": 0,
+      "files": [
+        "evaluation/r2_cross_domain_v1/data.py",
+        "evaluation/r2_cross_domain_v1/models.py",
+        "evaluation/r2_cross_domain_v1/safety.py",
+        "evaluation/r2_cross_domain_v1/tools.py",
+        "evaluation/r2_cross_domain_v1/grounding.py",
+        "evaluation/r2_cross_domain_v1/prompts.py",
+        "evaluation/r2_cross_domain_v1/tool_schemas.py",
+        "evaluation/r2_cross_domain_v1/controller.py",
+        "tests/test_r2_cross_domain_pipeline.py"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "evaluation/r2_cross_domain_v1/data.py": "f423c7456bb4077ce967dad4829319bfb12727c66f2cacb9fcfb9dd57592f375",
+    "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+    "evaluation/r2_cross_domain_v1/safety.py": "543687a34e05ac6566f43639a02ddbffc1a6f012ea04d77cfc387827ad913b79",
+    "evaluation/r2_cross_domain_v1/tools.py": "f5e8963affe6891ee2b963546a26701c26ec480840e9a79c6b956e8c3367b863",
+    "evaluation/r2_cross_domain_v1/grounding.py": "667c394a243cff9c7d1b2cfee1d1faf3a59b52ed2b6920f3577fe8fe3cc2ced3",
+    "evaluation/r2_cross_domain_v1/prompts.py": "3dc3d32aa00886975ced3585caa1bf98ff92ace18ff63b547b545d8fa30b9d7b",
+    "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+    "evaluation/r2_cross_domain_v1/controller.py": "558d7aa2b367e3be4d82ef2bfc06df1a66cf23f19df8726f54e79ba8842973f7",
+    "tests/test_r2_cross_domain_pipeline.py": "d169dcc5f44c35322a89edc246d54697e118e24d4c4c79aaeb798648437b9c65"
+  },
+  "historical_files_verified": 245,
+  "historical_bytes_unchanged": true,
+  "task1_artifact_json_count_verified": 21,
+  "protected_inventory_identity": "55510afb3ac3a9d5b8149c129bf4747cb0efc99bf5fda65fa03deeba0ec19a14",
+  "trace_sha256": "03d26b0b1e1644d896adc39d5c07f5f6c807a78286289b6460fc736a2d412fd8",
+  "trace_provenance_note": "Trace retains the fixture hash recorded during its execution; final source hash above includes subsequent formatting and added regression tests. No historical provenance is reconstructed.",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "frozen_closed": true,
+  "official_model_result": false
+}

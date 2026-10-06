@@ -1,0 +1,11 @@
+{
+  "fixture_only": true,
+  "evidence_kind": "offline_trace_attempt",
+  "outcome": "failed",
+  "stage": "fixture_cleanup",
+  "error_class": "PermissionError",
+  "windows_error_code": 32,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "finding": "SQLite source reader did not explicitly close its connection; regression reproduced non-closure. Source reader and fixture now close their owned connections."
+}

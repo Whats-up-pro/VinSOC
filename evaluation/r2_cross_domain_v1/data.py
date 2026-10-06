@@ -7,6 +7,7 @@ import json
 import sqlite3
 import zipfile
 from collections import Counter
+from contextlib import closing
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path, PurePosixPath
@@ -95,7 +96,7 @@ def _sqlite_type(type_name: str) -> str:
 
 def _read_sqlite(source: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, list[tuple[Any, ...]]]]:
     uri = f"file:{source.resolve().as_posix()}?mode=ro"
-    with sqlite3.connect(uri, uri=True) as connection:
+    with closing(sqlite3.connect(uri, uri=True)) as connection:
         tables = [
             row[0]
             for row in connection.execute(
@@ -173,10 +174,25 @@ def _snapshot_content_hash(database_id: str, schema: list[dict[str, Any]], rows:
     ).hexdigest()
 
 
-def _verify_duckdb_snapshot(destination: Path, schema: list[dict[str, Any]], database_id: str) -> tuple[dict[str, int], str]:
+def _verify_duckdb_snapshot(
+    destination: Path,
+    schema: list[dict[str, Any]],
+    database_id: str,
+    expected_logical_sha256: str | None = None,
+    relationships: list[dict[str, Any]] | None = None,
+) -> tuple[dict[str, int], str]:
     """Reopen the created DuckDB file read-only and hash its actual rows."""
     connection = duckdb.connect(str(destination), read_only=True)
     try:
+        actual_tables = {row[0] for row in connection.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='main' AND table_type='BASE TABLE'").fetchall()}
+        if actual_tables != {table["name"] for table in schema}:
+            raise RegistryError("CATALOG_SCHEMA_MISMATCH")
+        for table in schema:
+            actual = connection.execute(f"PRAGMA table_info({_quote(table['name'])})").fetchall()
+            actual_columns = [(row[1], row[2].replace(" ", "")) for row in actual]
+            expected_columns = [(column["name"], column["duckdb_type"].replace(" ", "")) for column in table["columns"]]
+            if actual_columns != expected_columns:
+                raise RegistryError("CATALOG_SCHEMA_MISMATCH")
         rows = {
             table["name"]: connection.execute(f"SELECT * FROM {_quote(table['name'])}").fetchall()
             for table in schema
@@ -184,6 +200,8 @@ def _verify_duckdb_snapshot(destination: Path, schema: list[dict[str, Any]], dat
     finally:
         connection.close()
     counts = {table: len(table_rows) for table, table_rows in sorted(rows.items())}
+    if expected_logical_sha256 is not None and _logical_hash(database_id, schema, relationships or [], rows) != expected_logical_sha256:
+        raise RegistryError("CATALOG_LOGICAL_IDENTITY_MISMATCH")
     return counts, _snapshot_content_hash(database_id, schema, rows)
 
 
@@ -327,7 +345,7 @@ class DatabaseContext:
         expected = selected.get("duckdb_binary_sha256")
         if not expected or not snapshot.is_file() or hashlib.sha256(snapshot.read_bytes()).hexdigest() != expected:
             raise RegistryError("SNAPSHOT_CHECKSUM_MISMATCH")
-        counts, content = _verify_duckdb_snapshot(snapshot, selected["schema"], database_id)
+        counts, content = _verify_duckdb_snapshot(snapshot, selected["schema"], database_id, selected["logical_sha256"], selected["relationships"])
         if counts != selected["row_counts"] or content != selected["duckdb_content_sha256"]:
             raise RegistryError("SNAPSHOT_CONTENT_MISMATCH")
         return cls(database_id, snapshot, selected)

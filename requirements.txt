@@ -20,3 +20,4 @@ mypy>=1.0.0
 # environment variable management
 python-dotenv>=1.0.0
 duckdb>=1.1.0,<2.0.0
+sqlglot==30.21.0
