@@ -1,0 +1,220 @@
+{
+  "case_id": "ctu_cross_116e46aecde5564d",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_a66df39658c724ae50242884baaeaba29b1bf1ba4d8d5008f4a61cc1cc1634f4",
+      "fixture_0ba7a7fe2a6a5c1d09172ce996756646e10c46d56410e5a5193e79821f5878e1"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT src_ip, src_port FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'IGMP' AND src_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip, src_port, dst_ip FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, src_port, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'IGMP' OR src_port IS NULL",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, src_port, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' OR protocol = 'IGMP' AND src_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, src_port, dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND protocol = 'IGMP' AND src_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, src_port, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol <> 'IGMP' AND src_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT src_ip, src_port, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'IGMP' AND src_port IS NULL AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_port"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "IGMP"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "is",
+          "stage": "where",
+          "expression": "network_flows.src_port IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "src_port"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'IGMP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "IGMP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'IGMP' AND network_flows.src_port IS NULL"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_a66df39658c724ae50242884baaeaba29b1bf1ba4d8d5008f4a61cc1cc1634f4",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "a66df39658c724ae50242884baaeaba29b1bf1ba4d8d5008f4a61cc1cc1634f4",
+      "constraints_verified": true,
+      "logical_sha256": "7a9612cb928546fecfbb2b04a33cbe5b6cfc5791e70063455b64cd95c72c0db1"
+    },
+    {
+      "instance_id": "fixture_0ba7a7fe2a6a5c1d09172ce996756646e10c46d56410e5a5193e79821f5878e1",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "0ba7a7fe2a6a5c1d09172ce996756646e10c46d56410e5a5193e79821f5878e1",
+      "constraints_verified": true,
+      "logical_sha256": "3193b81367351a23c67ffa7d9470eec674672f92109e277973f16c5c63a4618d"
+    }
+  ]
+}

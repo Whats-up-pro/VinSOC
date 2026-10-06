@@ -1,0 +1,714 @@
+{
+  "fixture_only": true,
+  "seed": 20261005,
+  "database_id": "flight_2",
+  "schema": [
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "uid",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Airline",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Abbreviation",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Country",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "airlines"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "City",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "AirportCode",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 1,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "AirportName",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Country",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "CountryAbbrev",
+          "not_null": false,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "airports"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Airline",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "FlightNo",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 2,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "SourceAirport",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "DestAirport",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "flights"
+    }
+  ],
+  "relationships": [
+    {
+      "from_column": "DestAirport",
+      "from_table": "flights",
+      "to_column": "AirportCode",
+      "to_table": "airports"
+    },
+    {
+      "from_column": "SourceAirport",
+      "from_table": "flights",
+      "to_column": "AirportCode",
+      "to_table": "airports"
+    }
+  ],
+  "rows": {
+    "airlines": [
+      [
+        1,
+        "fixture_A",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        4,
+        "JetBlue Airways",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        5,
+        "xJetBlue Airways",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        6,
+        "JetBlue Airways_tail",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        7,
+        "jetblue airways",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        8,
+        "JETBLUE AIRWAYS",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        9,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        10,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        11,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        "JetBlue Airways",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        13,
+        "xJetBlue Airways",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        14,
+        "JetBlue Airways_tail",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        15,
+        "jetblue airways",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        16,
+        "JETBLUE AIRWAYS",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        17,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        18,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        19,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        20,
+        "JetBlue Airways",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        21,
+        "xJetBlue Airways",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        22,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        "jetblue airways",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        24,
+        "JETBLUE AIRWAYS",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        25,
+        "fixture_A",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        28,
+        "JetBlue Airways",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        29,
+        "JetBlue Airways",
+        "fixture_B",
+        "fixture_C"
+      ]
+    ],
+    "airports": [
+      [
+        "fixture_C",
+        "1",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "2",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "3",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "4",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "5",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "6",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "7",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "8",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "9",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "10",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        null,
+        "11",
+        null,
+        null,
+        null
+      ],
+      [
+        "fixture_B",
+        "12",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "13",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "14",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "15",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "16",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "17",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "18",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "19",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "20",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "21",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        null,
+        "22",
+        null,
+        null,
+        null
+      ],
+      [
+        "fixture_A",
+        "23",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "24",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "25",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_A",
+        "26",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        "fixture_B",
+        "27",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        "fixture_C",
+        "28",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        "fixture_C",
+        "29",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B"
+      ]
+    ],
+    "flights": [
+      [
+        2,
+        1,
+        "1",
+        "1"
+      ],
+      [
+        5,
+        2,
+        "2",
+        "2"
+      ],
+      [
+        17,
+        3,
+        "3",
+        "3"
+      ],
+      [
+        0,
+        4,
+        "4",
+        "4"
+      ],
+      [
+        1,
+        5,
+        "5",
+        "5"
+      ],
+      [
+        2,
+        6,
+        "6",
+        "6"
+      ],
+      [
+        5,
+        7,
+        "7",
+        "7"
+      ],
+      [
+        17,
+        8,
+        "8",
+        "8"
+      ],
+      [
+        0,
+        9,
+        "9",
+        "9"
+      ],
+      [
+        1,
+        10,
+        "10",
+        "10"
+      ],
+      [
+        2,
+        11,
+        null,
+        null
+      ],
+      [
+        5,
+        12,
+        "12",
+        "12"
+      ],
+      [
+        17,
+        13,
+        "13",
+        "13"
+      ],
+      [
+        0,
+        14,
+        "14",
+        "14"
+      ],
+      [
+        1,
+        15,
+        "1",
+        "1"
+      ],
+      [
+        2,
+        16,
+        "2",
+        "2"
+      ],
+      [
+        5,
+        17,
+        "3",
+        "3"
+      ],
+      [
+        17,
+        18,
+        "4",
+        "4"
+      ],
+      [
+        0,
+        19,
+        "5",
+        "5"
+      ],
+      [
+        1,
+        20,
+        "6",
+        "6"
+      ],
+      [
+        2,
+        21,
+        "7",
+        "7"
+      ],
+      [
+        5,
+        22,
+        null,
+        null
+      ],
+      [
+        17,
+        23,
+        "9",
+        "9"
+      ],
+      [
+        0,
+        24,
+        "10",
+        "10"
+      ],
+      [
+        1,
+        25,
+        "11",
+        "11"
+      ],
+      [
+        2,
+        26,
+        "12",
+        "12"
+      ],
+      [
+        5,
+        27,
+        "13",
+        "13"
+      ],
+      [
+        17,
+        28,
+        "14",
+        "14"
+      ],
+      [
+        2,
+        29,
+        "1",
+        "1"
+      ]
+    ]
+  },
+  "generator_policy": "typed_constants_declared_keys_v1",
+  "generation_is_not_semantic_validation": true
+}

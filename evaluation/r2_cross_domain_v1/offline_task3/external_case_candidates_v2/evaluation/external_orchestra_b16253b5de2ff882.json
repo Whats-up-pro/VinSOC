@@ -1,0 +1,113 @@
+{
+  "reference": {
+    "case_id": "external_orchestra_b16253b5de2ff882",
+    "database_id": "orchestra",
+    "question": "What are the names of conductors whose nationalities are not \"USA\"?",
+    "gold_sql": "SELECT Name FROM conductor WHERE Nationality <> 'USA'",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+    "accepted_links": [
+      {
+        "tables": [
+          "conductor"
+        ],
+        "columns": [
+          {
+            "table": "conductor",
+            "column": "Name"
+          },
+          {
+            "table": "conductor",
+            "column": "Nationality"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "conductor",
+            "column": "Nationality",
+            "operator": "!=",
+            "value": "USA"
+          }
+        ],
+        "constraints": [],
+        "predicates": [
+          {
+            "operator": "neq",
+            "stage": "where",
+            "expression": "conductor.nationality <> 'USA'",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": "USA",
+                "value_type": "string"
+              }
+            ],
+            "column_dependencies": [
+              {
+                "table": "conductor",
+                "column": "Nationality"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "where",
+            "expression": "conductor.nationality <> 'USA'"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+    "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+    "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+    "adapted_sql": "SELECT Name FROM conductor WHERE Nationality <> 'USA'",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 6,
+    "duckdb_row_count": 6,
+    "sqlite_result_sha256": "2a9feeeba8ea89e313c93fe415f4a8ae479ed9f72a1fdd2619d914f0de6b7611",
+    "duckdb_result_sha256": "2a9feeeba8ea89e313c93fe415f4a8ae479ed9f72a1fdd2619d914f0de6b7611",
+    "sample_original_rows": [
+      [
+        "Igor Stravinsky"
+      ],
+      [
+        "Paul Jorgensen"
+      ],
+      [
+        "Charles Dutoit"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Igor Stravinsky"
+      ],
+      [
+        "Paul Jorgensen"
+      ],
+      [
+        "Charles Dutoit"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

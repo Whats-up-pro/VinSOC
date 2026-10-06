@@ -1,0 +1,2372 @@
+{
+  "fixture_only": true,
+  "seed": 20261005,
+  "database_id": "dog_kennels",
+  "schema": [
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "breed_code",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "breed_name",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(80)"
+        }
+      ],
+      "name": "Breeds"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "charge_id",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "charge_type",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DECIMAL(38, 10)",
+          "name": "charge_amount",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "DECIMAL(19,4)"
+        }
+      ],
+      "name": "Charges"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "dog_id",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "owner_id",
+          "not_null": true,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "abandoned_yn",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(1)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "breed_code",
+          "not_null": true,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "size_code",
+          "not_null": true,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "name",
+          "not_null": false,
+          "ordinal": 5,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "age",
+          "not_null": false,
+          "ordinal": 6,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "date_of_birth",
+          "not_null": false,
+          "ordinal": 7,
+          "primary_key_position": 0,
+          "sqlite_type": "DATETIME"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "gender",
+          "not_null": false,
+          "ordinal": 8,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(1)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "weight",
+          "not_null": false,
+          "ordinal": 9,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "date_arrived",
+          "not_null": false,
+          "ordinal": 10,
+          "primary_key_position": 0,
+          "sqlite_type": "DATETIME"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "date_adopted",
+          "not_null": false,
+          "ordinal": 11,
+          "primary_key_position": 0,
+          "sqlite_type": "DATETIME"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "date_departed",
+          "not_null": false,
+          "ordinal": 12,
+          "primary_key_position": 0,
+          "sqlite_type": "DATETIME"
+        }
+      ],
+      "name": "Dogs"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "owner_id",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "first_name",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "last_name",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "street",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "city",
+          "not_null": false,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "state",
+          "not_null": false,
+          "ordinal": 5,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "zip_code",
+          "not_null": false,
+          "ordinal": 6,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "email_address",
+          "not_null": false,
+          "ordinal": 7,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "home_phone",
+          "not_null": false,
+          "ordinal": 8,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "cell_number",
+          "not_null": false,
+          "ordinal": 9,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        }
+      ],
+      "name": "Owners"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "professional_id",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "role_code",
+          "not_null": true,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "first_name",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "street",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "city",
+          "not_null": false,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "state",
+          "not_null": false,
+          "ordinal": 5,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "zip_code",
+          "not_null": false,
+          "ordinal": 6,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "last_name",
+          "not_null": false,
+          "ordinal": 7,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "email_address",
+          "not_null": false,
+          "ordinal": 8,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(50)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "home_phone",
+          "not_null": false,
+          "ordinal": 9,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "cell_number",
+          "not_null": false,
+          "ordinal": 10,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(20)"
+        }
+      ],
+      "name": "Professionals"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "size_code",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "size_description",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(80)"
+        }
+      ],
+      "name": "Sizes"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "treatment_type_code",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "treatment_type_description",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(80)"
+        }
+      ],
+      "name": "Treatment_Types"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "treatment_id",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "dog_id",
+          "not_null": true,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "professional_id",
+          "not_null": true,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "treatment_type_code",
+          "not_null": true,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "VARCHAR(10)"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "date_of_treatment",
+          "not_null": false,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "DATETIME"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DECIMAL(38, 10)",
+          "name": "cost_of_treatment",
+          "not_null": false,
+          "ordinal": 5,
+          "primary_key_position": 0,
+          "sqlite_type": "DECIMAL(19,4)"
+        }
+      ],
+      "name": "Treatments"
+    }
+  ],
+  "relationships": [
+    {
+      "from_column": "breed_code",
+      "from_table": "Dogs",
+      "to_column": "breed_code",
+      "to_table": "Breeds"
+    },
+    {
+      "from_column": "dog_id",
+      "from_table": "Treatments",
+      "to_column": "dog_id",
+      "to_table": "Dogs"
+    },
+    {
+      "from_column": "owner_id",
+      "from_table": "Dogs",
+      "to_column": "owner_id",
+      "to_table": "Owners"
+    },
+    {
+      "from_column": "owner_id",
+      "from_table": "Dogs",
+      "to_column": "owner_id",
+      "to_table": "Owners"
+    },
+    {
+      "from_column": "professional_id",
+      "from_table": "Treatments",
+      "to_column": "professional_id",
+      "to_table": "Professionals"
+    },
+    {
+      "from_column": "size_code",
+      "from_table": "Dogs",
+      "to_column": "size_code",
+      "to_table": "Sizes"
+    },
+    {
+      "from_column": "treatment_type_code",
+      "from_table": "Treatments",
+      "to_column": "treatment_type_code",
+      "to_table": "Treatment_Types"
+    }
+  ],
+  "rows": {
+    "Breeds": [
+      [
+        "1",
+        "fixture_A"
+      ],
+      [
+        "2",
+        "fixture_B"
+      ],
+      [
+        "3",
+        "fixture_C"
+      ],
+      [
+        "4",
+        "fixture_A"
+      ],
+      [
+        "5",
+        "fixture_B"
+      ],
+      [
+        "6",
+        "fixture_C"
+      ],
+      [
+        "7",
+        "fixture_A"
+      ],
+      [
+        "8",
+        "fixture_B"
+      ],
+      [
+        "9",
+        "fixture_C"
+      ],
+      [
+        "10",
+        "fixture_A"
+      ],
+      [
+        "11",
+        null
+      ],
+      [
+        "12",
+        "fixture_C"
+      ],
+      [
+        "13",
+        "fixture_A"
+      ],
+      [
+        "14",
+        "fixture_B"
+      ],
+      [
+        "15",
+        "fixture_C"
+      ],
+      [
+        "16",
+        "fixture_A"
+      ],
+      [
+        "17",
+        "fixture_B"
+      ],
+      [
+        "18",
+        "fixture_C"
+      ],
+      [
+        "19",
+        "fixture_A"
+      ],
+      [
+        "20",
+        "fixture_B"
+      ],
+      [
+        "21",
+        "fixture_C"
+      ],
+      [
+        "22",
+        null
+      ],
+      [
+        "23",
+        "fixture_B"
+      ],
+      [
+        "24",
+        "fixture_C"
+      ],
+      [
+        "25",
+        "fixture_A"
+      ],
+      [
+        "26",
+        "fixture_B"
+      ],
+      [
+        "27",
+        "fixture_C"
+      ],
+      [
+        "28",
+        "fixture_A"
+      ]
+    ],
+    "Charges": [
+      [
+        1,
+        "fixture_A",
+        2
+      ],
+      [
+        2,
+        "fixture_B",
+        5
+      ],
+      [
+        3,
+        "fixture_C",
+        17
+      ],
+      [
+        4,
+        "fixture_A",
+        0
+      ],
+      [
+        5,
+        "fixture_B",
+        1
+      ],
+      [
+        6,
+        "fixture_C",
+        2
+      ],
+      [
+        7,
+        "fixture_A",
+        5
+      ],
+      [
+        8,
+        "fixture_B",
+        17
+      ],
+      [
+        9,
+        "fixture_C",
+        0
+      ],
+      [
+        10,
+        "fixture_A",
+        1
+      ],
+      [
+        11,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        5
+      ],
+      [
+        13,
+        "fixture_A",
+        17
+      ],
+      [
+        14,
+        "fixture_B",
+        0
+      ],
+      [
+        15,
+        "fixture_C",
+        1
+      ],
+      [
+        16,
+        "fixture_A",
+        2
+      ],
+      [
+        17,
+        "fixture_B",
+        5
+      ],
+      [
+        18,
+        "fixture_C",
+        17
+      ],
+      [
+        19,
+        "fixture_A",
+        0
+      ],
+      [
+        20,
+        "fixture_B",
+        1
+      ],
+      [
+        21,
+        "fixture_C",
+        2
+      ],
+      [
+        22,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        17
+      ],
+      [
+        24,
+        "fixture_C",
+        0
+      ],
+      [
+        25,
+        "fixture_A",
+        1
+      ],
+      [
+        26,
+        "fixture_B",
+        2
+      ],
+      [
+        27,
+        "fixture_C",
+        5
+      ],
+      [
+        28,
+        "fixture_A",
+        17
+      ]
+    ],
+    "Dogs": [
+      [
+        1,
+        1,
+        "fixture_C",
+        "1",
+        "1",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        2,
+        2,
+        "fixture_A",
+        "2",
+        "2",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        3,
+        3,
+        "fixture_B",
+        "3",
+        "3",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        4,
+        4,
+        "fixture_C",
+        "4",
+        "4",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        5,
+        5,
+        "fixture_A",
+        "5",
+        "5",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        6,
+        6,
+        "fixture_B",
+        "6",
+        "6",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        7,
+        7,
+        "fixture_C",
+        "7",
+        "7",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        8,
+        8,
+        "fixture_A",
+        "8",
+        "8",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        9,
+        9,
+        "fixture_B",
+        "9",
+        "9",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        10,
+        10,
+        "fixture_C",
+        "10",
+        "10",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        11,
+        11,
+        null,
+        "11",
+        "11",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        12,
+        "fixture_B",
+        "12",
+        "12",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        13,
+        13,
+        "fixture_C",
+        "13",
+        "13",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        14,
+        14,
+        "fixture_A",
+        "14",
+        "14",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        15,
+        1,
+        "fixture_B",
+        "1",
+        "1",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        16,
+        2,
+        "fixture_C",
+        "2",
+        "2",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        17,
+        3,
+        "fixture_A",
+        "3",
+        "3",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        18,
+        4,
+        "fixture_B",
+        "4",
+        "4",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        19,
+        5,
+        "fixture_C",
+        "5",
+        "5",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        20,
+        6,
+        "fixture_A",
+        "6",
+        "6",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        21,
+        7,
+        "fixture_B",
+        "7",
+        "7",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        22,
+        8,
+        null,
+        "8",
+        "8",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        9,
+        "fixture_A",
+        "9",
+        "9",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        24,
+        10,
+        "fixture_B",
+        "10",
+        "10",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        25,
+        11,
+        "fixture_C",
+        "11",
+        "11",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        26,
+        12,
+        "fixture_A",
+        "12",
+        "12",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        27,
+        13,
+        "fixture_B",
+        "13",
+        "13",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        28,
+        14,
+        "fixture_C",
+        "14",
+        "14",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C"
+      ]
+    ],
+    "Owners": [
+      [
+        1,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        2,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        3,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        4,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        5,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        6,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        7,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        8,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        9,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        10,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        11,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        13,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        14,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        15,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        16,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        17,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        18,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        19,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        20,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        21,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        22,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        24,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        25,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        26,
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        27,
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        28,
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A"
+      ]
+    ],
+    "Professionals": [
+      [
+        1,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        4,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        5,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        6,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        7,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        8,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        9,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        10,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        11,
+        "fixture_B",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        13,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        14,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        15,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        16,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        17,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        18,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        19,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        20,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        21,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        22,
+        "fixture_A",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        24,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        25,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        "fixture_A",
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        28,
+        "fixture_A",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        "fixture_B",
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ]
+    ],
+    "Sizes": [
+      [
+        "1",
+        "fixture_C"
+      ],
+      [
+        "2",
+        "fixture_A"
+      ],
+      [
+        "3",
+        "fixture_B"
+      ],
+      [
+        "4",
+        "fixture_C"
+      ],
+      [
+        "5",
+        "fixture_A"
+      ],
+      [
+        "6",
+        "fixture_B"
+      ],
+      [
+        "7",
+        "fixture_C"
+      ],
+      [
+        "8",
+        "fixture_A"
+      ],
+      [
+        "9",
+        "fixture_B"
+      ],
+      [
+        "10",
+        "fixture_C"
+      ],
+      [
+        "11",
+        null
+      ],
+      [
+        "12",
+        "fixture_B"
+      ],
+      [
+        "13",
+        "fixture_C"
+      ],
+      [
+        "14",
+        "fixture_A"
+      ],
+      [
+        "15",
+        "fixture_B"
+      ],
+      [
+        "16",
+        "fixture_C"
+      ],
+      [
+        "17",
+        "fixture_A"
+      ],
+      [
+        "18",
+        "fixture_B"
+      ],
+      [
+        "19",
+        "fixture_C"
+      ],
+      [
+        "20",
+        "fixture_A"
+      ],
+      [
+        "21",
+        "fixture_B"
+      ],
+      [
+        "22",
+        null
+      ],
+      [
+        "23",
+        "fixture_A"
+      ],
+      [
+        "24",
+        "fixture_B"
+      ],
+      [
+        "25",
+        "fixture_C"
+      ],
+      [
+        "26",
+        "fixture_A"
+      ],
+      [
+        "27",
+        "fixture_B"
+      ],
+      [
+        "28",
+        "fixture_C"
+      ]
+    ],
+    "Treatment_Types": [
+      [
+        "1",
+        "fixture_C"
+      ],
+      [
+        "2",
+        "fixture_A"
+      ],
+      [
+        "3",
+        "fixture_B"
+      ],
+      [
+        "4",
+        "fixture_C"
+      ],
+      [
+        "5",
+        "fixture_A"
+      ],
+      [
+        "6",
+        "fixture_B"
+      ],
+      [
+        "7",
+        "fixture_C"
+      ],
+      [
+        "8",
+        "fixture_A"
+      ],
+      [
+        "9",
+        "fixture_B"
+      ],
+      [
+        "10",
+        "fixture_C"
+      ],
+      [
+        "11",
+        null
+      ],
+      [
+        "12",
+        "fixture_B"
+      ],
+      [
+        "13",
+        "fixture_C"
+      ],
+      [
+        "14",
+        "fixture_A"
+      ],
+      [
+        "15",
+        "fixture_B"
+      ],
+      [
+        "16",
+        "fixture_C"
+      ],
+      [
+        "17",
+        "fixture_A"
+      ],
+      [
+        "18",
+        "fixture_B"
+      ],
+      [
+        "19",
+        "fixture_C"
+      ],
+      [
+        "20",
+        "fixture_A"
+      ],
+      [
+        "21",
+        "fixture_B"
+      ],
+      [
+        "22",
+        null
+      ],
+      [
+        "23",
+        "fixture_A"
+      ],
+      [
+        "24",
+        "fixture_B"
+      ],
+      [
+        "25",
+        "fixture_C"
+      ],
+      [
+        "26",
+        "fixture_A"
+      ],
+      [
+        "27",
+        "fixture_B"
+      ],
+      [
+        "28",
+        "fixture_C"
+      ]
+    ],
+    "Treatments": [
+      [
+        1,
+        1,
+        1,
+        "1",
+        "fixture_B",
+        5
+      ],
+      [
+        2,
+        2,
+        2,
+        "2",
+        "fixture_C",
+        17
+      ],
+      [
+        3,
+        3,
+        3,
+        "3",
+        "fixture_A",
+        0
+      ],
+      [
+        4,
+        4,
+        4,
+        "4",
+        "fixture_B",
+        1
+      ],
+      [
+        5,
+        5,
+        5,
+        "5",
+        "fixture_C",
+        2
+      ],
+      [
+        6,
+        6,
+        6,
+        "6",
+        "fixture_A",
+        5
+      ],
+      [
+        7,
+        7,
+        7,
+        "7",
+        "fixture_B",
+        17
+      ],
+      [
+        8,
+        8,
+        8,
+        "8",
+        "fixture_C",
+        0
+      ],
+      [
+        9,
+        9,
+        9,
+        "9",
+        "fixture_A",
+        1
+      ],
+      [
+        10,
+        10,
+        10,
+        "10",
+        "fixture_B",
+        2
+      ],
+      [
+        11,
+        11,
+        11,
+        "11",
+        null,
+        null
+      ],
+      [
+        12,
+        12,
+        12,
+        "12",
+        "fixture_A",
+        17
+      ],
+      [
+        13,
+        13,
+        13,
+        "13",
+        "fixture_B",
+        0
+      ],
+      [
+        14,
+        14,
+        14,
+        "14",
+        "fixture_C",
+        1
+      ],
+      [
+        15,
+        1,
+        1,
+        "1",
+        "fixture_A",
+        2
+      ],
+      [
+        16,
+        2,
+        2,
+        "2",
+        "fixture_B",
+        5
+      ],
+      [
+        17,
+        3,
+        3,
+        "3",
+        "fixture_C",
+        17
+      ],
+      [
+        18,
+        4,
+        4,
+        "4",
+        "fixture_A",
+        0
+      ],
+      [
+        19,
+        5,
+        5,
+        "5",
+        "fixture_B",
+        1
+      ],
+      [
+        20,
+        6,
+        6,
+        "6",
+        "fixture_C",
+        2
+      ],
+      [
+        21,
+        7,
+        7,
+        "7",
+        "fixture_A",
+        5
+      ],
+      [
+        22,
+        8,
+        8,
+        "8",
+        null,
+        null
+      ],
+      [
+        23,
+        9,
+        9,
+        "9",
+        "fixture_C",
+        0
+      ],
+      [
+        24,
+        10,
+        10,
+        "10",
+        "fixture_A",
+        1
+      ],
+      [
+        25,
+        11,
+        11,
+        "11",
+        "fixture_B",
+        2
+      ],
+      [
+        26,
+        12,
+        12,
+        "12",
+        "fixture_C",
+        5
+      ],
+      [
+        27,
+        13,
+        13,
+        "13",
+        "fixture_A",
+        17
+      ],
+      [
+        28,
+        14,
+        14,
+        "14",
+        "fixture_B",
+        0
+      ]
+    ]
+  },
+  "generator_policy": "typed_constants_declared_keys_v1",
+  "generation_is_not_semantic_validation": true
+}

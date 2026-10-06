@@ -1,0 +1,197 @@
+{
+  "case_id": "ctu_cross_da1bacf7b6a0d616",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_054ad9f34367353a933be9a196c1bdb581064d29bb49d33cb2d5eb3542ca540e",
+      "fixture_622c03bcdeebeb13d95af4b6733482728e6c04ae96b9470c8fed88541e8f3b8e"
+    ],
+    "gold_result_digests": [
+      "9a0204e3f340606a5a7647ef7504849f38dfa09bee09026f8e0d3d2bde52f18a",
+      "bcc0d98d191bb0557eadde8b8b6c214d682a3237ec28468a68e47c4f487365ab"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT CAST(event_time AS DATE) AS day FROM network_flows WHERE source_dataset = 'ctu13_s5' AND STARTS_WITH(label, 'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(NULL) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND STARTS_WITH(label, 'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(*) FROM network_flows GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s5' OR STARTS_WITH(label, 'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND STARTS_WITH(label, 'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day DESC",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(*) FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND STARTS_WITH(label, 'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "prefix_contains",
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND CONTAINS(label, 'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT CAST(event_time AS DATE) AS day, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND STARTS_WITH(label, 'flow=From-Botnet') AND TRUE GROUP BY CAST(event_time AS DATE) ORDER BY day",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "startswith",
+          "stage": "where",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Botnet')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Botnet",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND STARTS_WITH(network_flows.label, 'flow=From-Botnet')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_054ad9f34367353a933be9a196c1bdb581064d29bb49d33cb2d5eb3542ca540e",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "054ad9f34367353a933be9a196c1bdb581064d29bb49d33cb2d5eb3542ca540e",
+      "constraints_verified": true,
+      "logical_sha256": "c06328d8adb6d362b7e1ac3824e8cf74da50a52aa3cd4c27937aca66140c6aff"
+    },
+    {
+      "instance_id": "fixture_622c03bcdeebeb13d95af4b6733482728e6c04ae96b9470c8fed88541e8f3b8e",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "622c03bcdeebeb13d95af4b6733482728e6c04ae96b9470c8fed88541e8f3b8e",
+      "constraints_verified": true,
+      "logical_sha256": "25207b5208ec4ee39a851b000897b5b360da4aafd7baa1e3fa2d1e54f773a995"
+    }
+  ]
+}

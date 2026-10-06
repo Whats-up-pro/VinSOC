@@ -1,0 +1,114 @@
+{
+  "case_id": "external_course_teach_a90c07d9d5fb849e",
+  "database_id": "course_teach",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_28935887963e411f03ad7ee37281e309094bdee3af9f1e0cf2937e68000af6c2",
+      "fixture_ed702a8816dbeb82ed10442d2802b4e1c8ea8077b59dcc57cbd874a1e0115f59"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Name FROM teacher",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Name FROM teacher WHERE NOT Teacher_id IN (SELECT Teacher_id FROM course_arrange WHERE TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 1,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "course_arrange",
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "course_arrange",
+          "column": "Teacher_ID"
+        },
+        {
+          "table": "teacher",
+          "column": "Name"
+        },
+        {
+          "table": "teacher",
+          "column": "Teacher_ID"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "in",
+          "stage": "where",
+          "expression": "teacher.teacher_id IN (SELECT course_arrange.teacher_id AS teacher_id FROM course_arrange AS course_arrange)",
+          "negated": true,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "course_arrange",
+              "column": "Teacher_ID"
+            },
+            {
+              "table": "teacher",
+              "column": "Teacher_ID"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "NOT teacher.teacher_id IN (SELECT course_arrange.teacher_id AS teacher_id FROM course_arrange AS course_arrange)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_28935887963e411f03ad7ee37281e309094bdee3af9f1e0cf2937e68000af6c2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "28935887963e411f03ad7ee37281e309094bdee3af9f1e0cf2937e68000af6c2",
+      "constraints_verified": true,
+      "logical_sha256": "948663ef0d5fae5ac6fb06870701919dc4d1b91a474568f4de01c029ab462503"
+    },
+    {
+      "instance_id": "fixture_ed702a8816dbeb82ed10442d2802b4e1c8ea8077b59dcc57cbd874a1e0115f59",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "ed702a8816dbeb82ed10442d2802b4e1c8ea8077b59dcc57cbd874a1e0115f59",
+      "constraints_verified": true,
+      "logical_sha256": "c5b6f9b27d9390251e6715c215c787df1c199f4b69e2f0b9bdb366263fa4af3e"
+    }
+  ]
+}

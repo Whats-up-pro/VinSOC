@@ -1,0 +1,177 @@
+{
+  "case_id": "external_course_teach_58a6ed9ee32a1545",
+  "database_id": "course_teach",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_66c392bd11f2de44c799650033b8e488a98ea1a442ba8e6063d591dbbd1280c9",
+      "fixture_c4b448ca79efb43b597dbab5d9c80acbec25e2ce129cbbffe94bb31cd5030508"
+    ],
+    "gold_result_digests": [
+      "7cc85be9f0ae191084e232a445c404719e727730e1c1be664112d7f50114a1c8",
+      "b6953220c11efb9107551be028fce111f366f9282798d577250edcc9ca9dcebf"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT name FROM teacher",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT name FROM teacher WHERE hometown = 'little lever urban district'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT name FROM teacher WHERE hometown <> 'little lever urban district' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "teacher",
+          "column": "Hometown"
+        },
+        {
+          "table": "teacher",
+          "column": "Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "teacher",
+          "column": "Hometown",
+          "operator": "!=",
+          "value": "little lever urban district"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "neq",
+          "stage": "where",
+          "expression": "teacher.hometown <> 'little lever urban district'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "little lever urban district",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "teacher",
+              "column": "Hometown"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "teacher.hometown <> 'little lever urban district'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_66c392bd11f2de44c799650033b8e488a98ea1a442ba8e6063d591dbbd1280c9",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "66c392bd11f2de44c799650033b8e488a98ea1a442ba8e6063d591dbbd1280c9",
+      "constraints_verified": true,
+      "logical_sha256": "2ac80dc1e8fbe26fadf40280919c8052580780cdbc18f7584f5848e9e3393765"
+    },
+    {
+      "instance_id": "fixture_c4b448ca79efb43b597dbab5d9c80acbec25e2ce129cbbffe94bb31cd5030508",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "c4b448ca79efb43b597dbab5d9c80acbec25e2ce129cbbffe94bb31cd5030508",
+      "constraints_verified": true,
+      "logical_sha256": "b93670ccb43965d5bf14573510aad363a8a96d065c363c33c8d6cf5bbc8580e5"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "case_id": "external_concert_singer_646e7fc8042c34c2",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_b2303ffbfbdfcceaa9dcf4bc8cb7c13023a37509fbe6125af733edbb5c0b8730",
+      "fixture_10d9a5f33205f1287e41e551f88bc8f0347b17215ff429f335ddf95d5a03368c"
+    ],
+    "gold_result_digests": [
+      "0b107bd3c9155a1c8c54cef95d632da5eaf3ceb8027ac5140ef42717c7ca8e59",
+      "0b107bd3c9155a1c8c54cef95d632da5eaf3ceb8027ac5140ef42717c7ca8e59"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T2.name FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "limit",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 LEFT JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id <> T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year > '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) ASC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(NULL) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' AND TRUE GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 8,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": false,
+      "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          2
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B",
+          17
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B",
+          17
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B",
+          17
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "concert",
+        "stadium"
+      ],
+      "columns": [
+        {
+          "table": "concert",
+          "column": "Stadium_ID"
+        },
+        {
+          "table": "concert",
+          "column": "Year"
+        },
+        {
+          "table": "stadium",
+          "column": "Capacity"
+        },
+        {
+          "table": "stadium",
+          "column": "Name"
+        },
+        {
+          "table": "stadium",
+          "column": "Stadium_ID"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Stadium_ID",
+          "from_table": "concert",
+          "to_column": "Stadium_ID",
+          "to_table": "stadium"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 1
+        },
+        {
+          "table": "concert",
+          "column": "Year",
+          "kind": "lexical_threshold",
+          "operator": ">=",
+          "value": "2014"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.stadium_id = t2.stadium_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Stadium_ID"
+            },
+            {
+              "table": "stadium",
+              "column": "Stadium_ID"
+            }
+          ]
+        },
+        {
+          "operator": "gte",
+          "stage": "where",
+          "expression": "t1.year >= '2014'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2014",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.stadium_id = t2.stadium_id"
+        },
+        {
+          "stage": "where",
+          "expression": "t1.year >= '2014'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_b2303ffbfbdfcceaa9dcf4bc8cb7c13023a37509fbe6125af733edbb5c0b8730",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "b2303ffbfbdfcceaa9dcf4bc8cb7c13023a37509fbe6125af733edbb5c0b8730",
+      "constraints_verified": true,
+      "logical_sha256": "72e0025685888cd17d97600425649da2cb67dbbd2d4bcf2b80873b1adeb7cb4e"
+    },
+    {
+      "instance_id": "fixture_10d9a5f33205f1287e41e551f88bc8f0347b17215ff429f335ddf95d5a03368c",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "10d9a5f33205f1287e41e551f88bc8f0347b17215ff429f335ddf95d5a03368c",
+      "constraints_verified": true,
+      "logical_sha256": "8c74bbe94609d630952421631f5483edb2893913656d11bf6d5307ef6e3db4dd"
+    }
+  ]
+}

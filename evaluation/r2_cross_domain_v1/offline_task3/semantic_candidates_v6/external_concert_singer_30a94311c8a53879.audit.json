@@ -1,0 +1,213 @@
+{
+  "case_id": "external_concert_singer_30a94311c8a53879",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "fixture_5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b"
+    ],
+    "gold_result_digests": [
+      "824ea83912b5d1d0bff19fe08ab7ee2658857d54e9c54d88dd6c5d0e3de70d00",
+      "147dc25c1faf7093ca2578ef9477dbee51a281babf8273b12ad30c54b03d4b70"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T2.name FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id GROUP BY T1.stadium_id, T2.name",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT T2.name, COUNT(NULL) FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id GROUP BY T1.stadium_id, T2.name",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T2.name, COUNT(*) FROM concert AS T1 LEFT JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id GROUP BY T1.stadium_id, T2.name",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.name, COUNT(*) FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id <> T2.stadium_id GROUP BY T1.stadium_id, T2.name",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T2.name, COUNT(*) FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE TRUE GROUP BY T1.stadium_id, T2.name",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B",
+          2
+        ],
+        [
+          "fixture_B",
+          2
+        ],
+        [
+          null,
+          1
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B",
+          2
+        ],
+        [
+          "fixture_C",
+          2
+        ],
+        [
+          "fixture_A",
+          2
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B",
+          3
+        ],
+        [
+          "fixture_B",
+          2
+        ],
+        [
+          null,
+          1
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B",
+          3
+        ],
+        [
+          "fixture_C",
+          2
+        ],
+        [
+          "fixture_A",
+          2
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "concert",
+        "stadium"
+      ],
+      "columns": [
+        {
+          "table": "concert",
+          "column": "Stadium_ID"
+        },
+        {
+          "table": "stadium",
+          "column": "Name"
+        },
+        {
+          "table": "stadium",
+          "column": "Stadium_ID"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Stadium_ID",
+          "from_table": "concert",
+          "to_column": "Stadium_ID",
+          "to_table": "stadium"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.stadium_id = t2.stadium_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Stadium_ID"
+            },
+            {
+              "table": "stadium",
+              "column": "Stadium_ID"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.stadium_id = t2.stadium_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "constraints_verified": true,
+      "logical_sha256": "fe859e3296e9e6bb121ce628d4e583b4fc174f9ad9b7911cec717af7e45f8af1"
+    },
+    {
+      "instance_id": "fixture_5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b",
+      "constraints_verified": true,
+      "logical_sha256": "95b45047124a3adbf9aa2c830b242dee6105f02ca932f1d25c08f27ab43e4933"
+    }
+  ]
+}

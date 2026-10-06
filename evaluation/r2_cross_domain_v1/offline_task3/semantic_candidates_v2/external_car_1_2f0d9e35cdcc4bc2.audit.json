@@ -1,0 +1,223 @@
+{
+  "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+  "database_id": "car_1",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_2e758c2fdb755982c5f09a3c27a45dba3309710ef90c1f77589ccfd2c9148da4",
+      "fixture_082caf43a6825db3e4599bf2467312ba11a50ba74bf0b6475d2704e9d9b13c9c"
+    ],
+    "gold_result_digests": [
+      "e986e7eef4ddd173b75cb3b260cbfeaa0be100b8259545213384a0db5c9049b5",
+      "9715aa4e8f628eb24fd872e6adb6273b127526ea7013ec7ac8c7f07fcf191764"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.model FROM CAR_NAMES AS T1 LEFT JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.Weight < (SELECT AVG(Weight) FROM CARS_DATA)",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId <> T2.Id WHERE T2.Weight < (SELECT AVG(Weight) FROM CARS_DATA)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.Weight <= (SELECT AVG(Weight) FROM CARS_DATA)",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.Weight < (SELECT AVG(Weight) FROM CARS_DATA WHERE TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "car_names",
+        "cars_data"
+      ],
+      "columns": [
+        {
+          "table": "car_names",
+          "column": "MakeId"
+        },
+        {
+          "table": "car_names",
+          "column": "Model"
+        },
+        {
+          "table": "cars_data",
+          "column": "Id"
+        },
+        {
+          "table": "cars_data",
+          "column": "Weight"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Id",
+          "from_table": "cars_data",
+          "to_column": "MakeId",
+          "to_table": "car_names"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.makeid = t2.id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "car_names",
+              "column": "MakeId"
+            },
+            {
+              "table": "cars_data",
+              "column": "Id"
+            }
+          ]
+        },
+        {
+          "operator": "lt",
+          "stage": "where",
+          "expression": "t2.weight < (SELECT AVG(cars_data.weight) AS _col_0 FROM cars_data AS cars_data)",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "cars_data",
+              "column": "Weight"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.makeid = t2.id"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.weight < (SELECT AVG(cars_data.weight) AS _col_0 FROM cars_data AS cars_data)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_2e758c2fdb755982c5f09a3c27a45dba3309710ef90c1f77589ccfd2c9148da4",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "2e758c2fdb755982c5f09a3c27a45dba3309710ef90c1f77589ccfd2c9148da4",
+      "constraints_verified": true,
+      "logical_sha256": "ee100a5f25071c33edc8a29248e5dc135b384b87aec9c47d0b3f3b9fc188a0de"
+    },
+    {
+      "instance_id": "fixture_082caf43a6825db3e4599bf2467312ba11a50ba74bf0b6475d2704e9d9b13c9c",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "082caf43a6825db3e4599bf2467312ba11a50ba74bf0b6475d2704e9d9b13c9c",
+      "constraints_verified": true,
+      "logical_sha256": "d5423a87fab6e163ffc0a5a131106de2085741f4531961f0beae56055f587b4e"
+    }
+  ]
+}

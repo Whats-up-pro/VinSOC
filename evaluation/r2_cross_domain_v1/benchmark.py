@@ -75,6 +75,21 @@ def adapt_sqlite_gold(sql, schema):
         # SQLite TEXT affinity converts a numeric literal to text before comparison.
         # Do not let DuckDB choose a different implicit numeric comparison.
         for predicate in scope.expression.walk(prune=lambda node: node is not scope.expression and isinstance(node, (exp.Select, exp.Subquery))):
+            if isinstance(predicate, exp.Like):
+                if not (isinstance(predicate.this, exp.Column) and declared_type(predicate.this) == "VARCHAR"):
+                    raise BenchmarkError("UNPROVEN_SQLITE_LIKE_INPUT_TYPE")
+                parent = predicate.parent
+                if isinstance(parent, exp.Escape):
+                    escape = parent.expression
+                    if not isinstance(escape, exp.Literal) or not escape.is_string or len(escape.this) != 1 or escape.this.isascii() and escape.this.isalpha():
+                        raise BenchmarkError("UNSUPPORTED_SQLITE_LIKE_ESCAPE")
+                # SQLite's default LIKE folds ASCII only. ILIKE / LOWER would
+                # incorrectly fold non-ASCII letters. Preserve wildcards and
+                # safe escape characters while translating exactly A-Z.
+                for key in ("this", "expression"):
+                    predicate.set(key, exp.Anonymous(this="TRANSLATE", expressions=[predicate.args[key].copy(),
+                        exp.Literal.string("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), exp.Literal.string("abcdefghijklmnopqrstuvwxyz")]))
+                transformations.append({"rule": "sqlite_like_ascii_nocase"})
             if isinstance(predicate, (exp.EQ, exp.NEQ, exp.GT, exp.GTE, exp.LT, exp.LTE)):
                 left, right = predicate.this, predicate.expression
                 for column, literal in ((left, right), (right, left)):

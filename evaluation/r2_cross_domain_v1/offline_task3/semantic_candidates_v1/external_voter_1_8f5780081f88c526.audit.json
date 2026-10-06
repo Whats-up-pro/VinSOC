@@ -1,0 +1,85 @@
+{
+  "case_id": "external_voter_1_8f5780081f88c526",
+  "database_id": "voter_1",
+  "split": "calibration",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+      "fixture_99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7"
+    ],
+    "gold_result_digests": [
+      "c5994cda75501bb24d48414e98be6bdb75ff5a7419df4a6b5d93e2409bbe3974",
+      "e4ee3b592627f072316d67e40a22514c93b366e99efadec115f7985d48ce8644"
+    ],
+    "mutant_results": [
+      {
+        "family": "ordering",
+        "sql": "SELECT contestant_number, contestant_name FROM contestants ORDER BY contestant_name ASC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT contestant_number, contestant_name FROM contestants WHERE TRUE ORDER BY contestant_name DESC",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 1,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    false,
+    false
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "CONTESTANTS"
+      ],
+      "columns": [
+        {
+          "table": "CONTESTANTS",
+          "column": "contestant_name"
+        },
+        {
+          "table": "CONTESTANTS",
+          "column": "contestant_number"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+      "constraints_verified": true,
+      "logical_sha256": "1b20b9d5eff1b722b16e19a18275c82917064afcdba24c78cb8fb54d18e67bfa"
+    },
+    {
+      "instance_id": "fixture_99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7",
+      "constraints_verified": true,
+      "logical_sha256": "6945d92d72655cdc1ad121530db421fd7ce3028e22fb0e6d63bbecd484a20e15"
+    }
+  ]
+}

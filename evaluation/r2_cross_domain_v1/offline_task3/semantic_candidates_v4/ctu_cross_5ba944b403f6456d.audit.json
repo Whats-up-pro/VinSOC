@@ -1,0 +1,234 @@
+{
+  "case_id": "ctu_cross_5ba944b403f6456d",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_8b62e17ec22b237affa30fb2410cb7d59d10a04d75f4257460b83c0f6f53d69a",
+      "fixture_7b0881d9ee42fb0c666e661e455c62a9a14a4c6e882ced0b71aa92b529ea1811"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'ICMP' AND bytes_out > 1000",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip, bytes_out FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, bytes_out FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'ICMP' OR bytes_out > 1000",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, bytes_out FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'ICMP' AND bytes_out > 1000",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, bytes_out FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'ICMP' AND bytes_out >= 1000",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, bytes_out FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'ICMP' AND bytes_out > 1000",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, bytes_out FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'ICMP' AND bytes_out > 1000",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT src_ip, bytes_out FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'ICMP' AND bytes_out > 1000 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "ICMP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 1000
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.bytes_out > 1000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'ICMP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ICMP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'ICMP' AND network_flows.bytes_out > 1000"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_8b62e17ec22b237affa30fb2410cb7d59d10a04d75f4257460b83c0f6f53d69a",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "8b62e17ec22b237affa30fb2410cb7d59d10a04d75f4257460b83c0f6f53d69a",
+      "constraints_verified": true,
+      "logical_sha256": "edf994fc6ab98362f76fd8852efc19d835cb6ea22422d6a2b9aa5cf69c9c3c9a"
+    },
+    {
+      "instance_id": "fixture_7b0881d9ee42fb0c666e661e455c62a9a14a4c6e882ced0b71aa92b529ea1811",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "7b0881d9ee42fb0c666e661e455c62a9a14a4c6e882ced0b71aa92b529ea1811",
+      "constraints_verified": true,
+      "logical_sha256": "f1e87c56bd8d4d4bdd9112c6a91857636611959b594e9fd6b4396df445a86341"
+    }
+  ]
+}

@@ -1,0 +1,3193 @@
+{
+  "scope": "candidate_semantic_validation_not_benchmark_or_model_score",
+  "created_at_utc": "2026-10-06T06:59:36.274718+00:00",
+  "source_code_sha256_before_execution": {
+    "scripts/audit_r2_cross_domain_semantics.py": "813914f984a9c5d3badf99df8683a6cc5280fff4cf6ee6f3377a0effa2870176",
+    "evaluation/r2_cross_domain_v1/annotations.py": "0107c2db62b419e25f3812dc21b117d830a77f009e07e863c9a5a4af5073c1f3",
+    "evaluation/r2_cross_domain_v1/fixture_generation.py": "98b0c10226372f5b24d470c6a8184204bce9b6d7936a6a3a41e3a03447d511e0",
+    "evaluation/r2_cross_domain_v1/semantic_instances.py": "d82515c414e1cf839871feb151c670d38479dd1eb5cb9eaef1d99480d8b73d7e",
+    "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb"
+  },
+  "registry_sha256": "f592dfe86ebf12f957e716f135be0471b0e5170fd1eef7fe2d11c65e246545df",
+  "ctu_audit_sha256": "cf286fe196c21145702e978630f5fbee0c00fef59b784c21db760af668a63afe",
+  "case_count": 120,
+  "passed": 105,
+  "blocked": [
+    {
+      "case_id": "external_student_transcripts_tracking_c22f6125462fef09",
+      "database_id": "student_transcripts_tracking",
+      "split": "calibration",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+          "fixture_a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2"
+        ],
+        "gold_result_digests": [
+          "f7ff4462ba541fdb39058f36eee18db71db4c1e6a0c381ab06f42d990c13bfd2",
+          "b3319469d3edc02158308ef83e031e7f5bd8f8aeda200fa9ebb944e07e1fe1a8"
+        ],
+        "mutant_results": [
+          {
+            "family": "projection",
+            "sql": "SELECT T1.address_id, T1.line_1 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "limit",
+            "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "join_kind",
+            "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 LEFT JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id <> T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) ASC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              true,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(NULL) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id WHERE TRUE GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 6,
+        "semantic_mutants_killed": 4,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              14,
+              "fixture_B",
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              1,
+              "fixture_A",
+              "fixture_A"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              1,
+              "fixture_A",
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              1,
+              "fixture_A",
+              "fixture_B"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "Addresses",
+            "Students"
+          ],
+          "columns": [
+            {
+              "table": "Addresses",
+              "column": "address_id"
+            },
+            {
+              "table": "Addresses",
+              "column": "line_1"
+            },
+            {
+              "table": "Addresses",
+              "column": "line_2"
+            },
+            {
+              "table": "Students",
+              "column": "current_address_id"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "current_address_id",
+              "from_table": "Students",
+              "to_column": "address_id",
+              "to_table": "Addresses"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.address_id = t2.current_address_id",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "Addresses",
+                  "column": "address_id"
+                },
+                {
+                  "table": "Students",
+                  "column": "current_address_id"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.address_id = t2.current_address_id"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+          "constraints_verified": true,
+          "logical_sha256": "c61230575e30b303b9748196a8c1195f2631cc54afb743a554cb6673d3485611"
+        },
+        {
+          "instance_id": "fixture_a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2",
+          "constraints_verified": true,
+          "logical_sha256": "902fdff3524c8a0792ec13b7806690a4d6b588b81a29b5518101ed844a7f57be"
+        }
+      ]
+    },
+    {
+      "case_id": "external_voter_1_8f5780081f88c526",
+      "database_id": "voter_1",
+      "split": "calibration",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+          "fixture_99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7"
+        ],
+        "gold_result_digests": [
+          "c5994cda75501bb24d48414e98be6bdb75ff5a7419df4a6b5d93e2409bbe3974",
+          "e4ee3b592627f072316d67e40a22514c93b366e99efadec115f7985d48ce8644"
+        ],
+        "mutant_results": [
+          {
+            "family": "projection",
+            "sql": "SELECT contestant_number FROM contestants ORDER BY contestant_name DESC",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT contestant_number, contestant_name FROM contestants ORDER BY contestant_name ASC",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT contestant_number, contestant_name FROM contestants WHERE TRUE ORDER BY contestant_name DESC",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 2,
+        "semantic_mutants_killed": 2,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_ORDER_TIE",
+          "sample_sqlite_rows": [
+            [
+              1,
+              "fixture_C"
+            ],
+            [
+              4,
+              "fixture_C"
+            ],
+            [
+              7,
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              28,
+              "fixture_C"
+            ],
+            [
+              22,
+              "fixture_C"
+            ],
+            [
+              4,
+              "fixture_C"
+            ]
+          ]
+        },
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_ORDER_TIE",
+          "sample_sqlite_rows": [
+            [
+              1,
+              "fixture_C"
+            ],
+            [
+              4,
+              "fixture_C"
+            ],
+            [
+              7,
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              13,
+              "fixture_C"
+            ],
+            [
+              34,
+              "fixture_C"
+            ],
+            [
+              31,
+              "fixture_C"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "CONTESTANTS"
+          ],
+          "columns": [
+            {
+              "table": "CONTESTANTS",
+              "column": "contestant_name"
+            },
+            {
+              "table": "CONTESTANTS",
+              "column": "contestant_number"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "predicates": [],
+          "boolean_structure": [],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+          "constraints_verified": true,
+          "logical_sha256": "1b20b9d5eff1b722b16e19a18275c82917064afcdba24c78cb8fb54d18e67bfa"
+        },
+        {
+          "instance_id": "fixture_99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7",
+          "constraints_verified": true,
+          "logical_sha256": "6945d92d72655cdc1ad121530db421fd7ce3028e22fb0e6d63bbecd484a20e15"
+        }
+      ]
+    },
+    {
+      "case_id": "external_car_1_d2631c6c19d42cc9",
+      "database_id": "car_1",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_2e758c2fdb755982c5f09a3c27a45dba3309710ef90c1f77589ccfd2c9148da4",
+          "fixture_082caf43a6825db3e4599bf2467312ba11a50ba74bf0b6475d2704e9d9b13c9c"
+        ],
+        "gold_result_digests": [
+          "f1fc34cf50704f286c2d35993bec25fd3497d44f09e19df417e972504bc553c3",
+          "f5563088e4540321f65cc5f76353dc5b0350fd4a0808d61b1ca039ae28657400"
+        ],
+        "mutant_results": [
+          {
+            "family": "limit",
+            "sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "join_kind",
+            "sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 LEFT JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country <> T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) ASC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(NULL) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId WHERE TRUE GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 5,
+        "semantic_mutants_killed": 3,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_A"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_B"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_C"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "car_makers",
+            "countries"
+          ],
+          "columns": [
+            {
+              "table": "car_makers",
+              "column": "Country"
+            },
+            {
+              "table": "countries",
+              "column": "CountryId"
+            },
+            {
+              "table": "countries",
+              "column": "CountryName"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "Country",
+              "from_table": "car_makers",
+              "to_column": "CountryId",
+              "to_table": "countries"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.country = t2.countryid",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "car_makers",
+                  "column": "Country"
+                },
+                {
+                  "table": "countries",
+                  "column": "CountryId"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.country = t2.countryid"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_2e758c2fdb755982c5f09a3c27a45dba3309710ef90c1f77589ccfd2c9148da4",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "2e758c2fdb755982c5f09a3c27a45dba3309710ef90c1f77589ccfd2c9148da4",
+          "constraints_verified": true,
+          "logical_sha256": "ee100a5f25071c33edc8a29248e5dc135b384b87aec9c47d0b3f3b9fc188a0de"
+        },
+        {
+          "instance_id": "fixture_082caf43a6825db3e4599bf2467312ba11a50ba74bf0b6475d2704e9d9b13c9c",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "082caf43a6825db3e4599bf2467312ba11a50ba74bf0b6475d2704e9d9b13c9c",
+          "constraints_verified": true,
+          "logical_sha256": "d5423a87fab6e163ffc0a5a131106de2085741f4531961f0beae56055f587b4e"
+        }
+      ]
+    },
+    {
+      "case_id": "external_concert_singer_646e7fc8042c34c2",
+      "database_id": "concert_singer",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_b2303ffbfbdfcceaa9dcf4bc8cb7c13023a37509fbe6125af733edbb5c0b8730",
+          "fixture_10d9a5f33205f1287e41e551f88bc8f0347b17215ff429f335ddf95d5a03368c"
+        ],
+        "gold_result_digests": [
+          "0b107bd3c9155a1c8c54cef95d632da5eaf3ceb8027ac5140ef42717c7ca8e59",
+          "0b107bd3c9155a1c8c54cef95d632da5eaf3ceb8027ac5140ef42717c7ca8e59"
+        ],
+        "mutant_results": [
+          {
+            "family": "projection",
+            "sql": "SELECT T2.name FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "limit",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "join_kind",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 LEFT JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id <> T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year > '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) ASC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(NULL) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' AND TRUE GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 8,
+        "semantic_mutants_killed": 4,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_C",
+              2
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_B",
+              17
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              "fixture_B",
+              17
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_B",
+              17
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "concert",
+            "stadium"
+          ],
+          "columns": [
+            {
+              "table": "concert",
+              "column": "Stadium_ID"
+            },
+            {
+              "table": "concert",
+              "column": "Year"
+            },
+            {
+              "table": "stadium",
+              "column": "Capacity"
+            },
+            {
+              "table": "stadium",
+              "column": "Name"
+            },
+            {
+              "table": "stadium",
+              "column": "Stadium_ID"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "Stadium_ID",
+              "from_table": "concert",
+              "to_column": "Stadium_ID",
+              "to_table": "stadium"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            },
+            {
+              "table": "concert",
+              "column": "Year",
+              "kind": "lexical_threshold",
+              "operator": ">=",
+              "value": "2014"
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.stadium_id = t2.stadium_id",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "concert",
+                  "column": "Stadium_ID"
+                },
+                {
+                  "table": "stadium",
+                  "column": "Stadium_ID"
+                }
+              ]
+            },
+            {
+              "operator": "gte",
+              "stage": "where",
+              "expression": "t1.year >= '2014'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "2014",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "concert",
+                  "column": "Year"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.stadium_id = t2.stadium_id"
+            },
+            {
+              "stage": "where",
+              "expression": "t1.year >= '2014'"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_b2303ffbfbdfcceaa9dcf4bc8cb7c13023a37509fbe6125af733edbb5c0b8730",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "b2303ffbfbdfcceaa9dcf4bc8cb7c13023a37509fbe6125af733edbb5c0b8730",
+          "constraints_verified": true,
+          "logical_sha256": "72e0025685888cd17d97600425649da2cb67dbbd2d4bcf2b80873b1adeb7cb4e"
+        },
+        {
+          "instance_id": "fixture_10d9a5f33205f1287e41e551f88bc8f0347b17215ff429f335ddf95d5a03368c",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "10d9a5f33205f1287e41e551f88bc8f0347b17215ff429f335ddf95d5a03368c",
+          "constraints_verified": true,
+          "logical_sha256": "8c74bbe94609d630952421631f5483edb2893913656d11bf6d5307ef6e3db4dd"
+        }
+      ]
+    },
+    {
+      "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+      "database_id": "dog_kennels",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+          "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530"
+        ],
+        "gold_result_digests": [
+          "3e5d1c43d9a2d9c1525037e2d8995c0749e1f66f04875d2250f5dfb83cbafe65",
+          "156fd1dffc7b12e974ef409b13992f3be3c16cfc45aada04678afbf34130d5ae"
+        ],
+        "mutant_results": [
+          {
+            "family": "set_operation",
+            "sql": "SELECT state FROM Owners UNION SELECT state FROM Professionals",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT state FROM Owners WHERE TRUE INTERSECT SELECT state FROM Professionals WHERE TRUE",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 1,
+        "semantic_mutants_killed": 0,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              null
+            ],
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_C"
+            ],
+            [
+              "fixture_A"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              null
+            ],
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_C"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "Owners",
+            "Professionals"
+          ],
+          "columns": [
+            {
+              "table": "Owners",
+              "column": "state"
+            },
+            {
+              "table": "Professionals",
+              "column": "state"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "predicates": [],
+          "boolean_structure": [],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+          "constraints_verified": true,
+          "logical_sha256": "958dd102321fc74194cf6cbe363edb4d9f4161e074e9af378b917f3d426e007d"
+        },
+        {
+          "instance_id": "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+          "constraints_verified": true,
+          "logical_sha256": "ebdcee3e9fb4bfc0ecf4113e403162f0c98f7b13bc89a89eab4b25380ebacf41"
+        }
+      ]
+    },
+    {
+      "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+      "database_id": "dog_kennels",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+          "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530"
+        ],
+        "gold_result_digests": [
+          "343c0afa042a166b75ba6f3441a7686f3359432615fe061b026663177e60c966",
+          "368f49ae7d93dcf66cc47b031a6be2e2f0e286d309e28bc8f171b042c6ef4832"
+        ],
+        "mutant_results": [
+          {
+            "family": "projection",
+            "sql": "SELECT T1.owner_id, T2.first_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "limit",
+            "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "join_kind",
+            "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 LEFT JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id <> T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) ASC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              true,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(NULL) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id WHERE TRUE GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 6,
+        "semantic_mutants_killed": 4,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              14,
+              "fixture_C",
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              1,
+              "fixture_B",
+              "fixture_A"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              1,
+              "fixture_C",
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              1,
+              "fixture_C",
+              "fixture_B"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "Dogs",
+            "Owners"
+          ],
+          "columns": [
+            {
+              "table": "Dogs",
+              "column": "owner_id"
+            },
+            {
+              "table": "Owners",
+              "column": "first_name"
+            },
+            {
+              "table": "Owners",
+              "column": "last_name"
+            },
+            {
+              "table": "Owners",
+              "column": "owner_id"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "owner_id",
+              "from_table": "Dogs",
+              "to_column": "owner_id",
+              "to_table": "Owners"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.owner_id = t2.owner_id",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "Dogs",
+                  "column": "owner_id"
+                },
+                {
+                  "table": "Owners",
+                  "column": "owner_id"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.owner_id = t2.owner_id"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+          "constraints_verified": true,
+          "logical_sha256": "958dd102321fc74194cf6cbe363edb4d9f4161e074e9af378b917f3d426e007d"
+        },
+        {
+          "instance_id": "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+          "constraints_verified": true,
+          "logical_sha256": "ebdcee3e9fb4bfc0ecf4113e403162f0c98f7b13bc89a89eab4b25380ebacf41"
+        }
+      ]
+    },
+    {
+      "case_id": "external_flight_2_524cdfeb29fc83c9",
+      "database_id": "flight_2",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_8d22508b7a4bb4cd5825a67850df69748b777e37582ac135cf358a6d75aecd41",
+          "fixture_a5080ff10165b3118cbc44092bdb3541d2580c1702b2455bccdf9e0b2c781343"
+        ],
+        "gold_result_digests": [
+          "1e6af445e72bfc69b552addd00f77fd6bc2d11b94e47a4a17c14221cc486a7fc",
+          "1e6af445e72bfc69b552addd00f77fd6bc2d11b94e47a4a17c14221cc486a7fc"
+        ],
+        "mutant_results": [
+          {
+            "family": "limit",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport OR T1.AirportCode = T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(*) DESC LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "join_kind",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 LEFT JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport OR T1.AirportCode = T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boolean",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport AND T1.AirportCode = T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport OR T1.AirportCode = T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(*) ASC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode <> T2.DestAirport OR T1.AirportCode = T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport OR T1.AirportCode <> T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(*) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport OR T1.AirportCode = T2.SourceAirport GROUP BY T1.AirportCode ORDER BY COUNT(NULL) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T1.AirportCode FROM AIRPORTS AS T1 JOIN FLIGHTS AS T2 ON T1.AirportCode = T2.DestAirport OR T1.AirportCode = T2.SourceAirport WHERE TRUE GROUP BY T1.AirportCode ORDER BY COUNT(*) DESC LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 7,
+        "semantic_mutants_killed": 2,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "9"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "1"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              "1"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "1"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "airports",
+            "flights"
+          ],
+          "columns": [
+            {
+              "table": "airports",
+              "column": "AirportCode"
+            },
+            {
+              "table": "flights",
+              "column": "DestAirport"
+            },
+            {
+              "table": "flights",
+              "column": "SourceAirport"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "DestAirport",
+              "from_table": "flights",
+              "to_column": "AirportCode",
+              "to_table": "airports"
+            },
+            {
+              "from_column": "SourceAirport",
+              "from_table": "flights",
+              "to_column": "AirportCode",
+              "to_table": "airports"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.airportcode = t2.destairport",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "airports",
+                  "column": "AirportCode"
+                },
+                {
+                  "table": "flights",
+                  "column": "DestAirport"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.airportcode = t2.sourceairport",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "airports",
+                  "column": "AirportCode"
+                },
+                {
+                  "table": "flights",
+                  "column": "SourceAirport"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.airportcode = t2.destairport OR t1.airportcode = t2.sourceairport"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_8d22508b7a4bb4cd5825a67850df69748b777e37582ac135cf358a6d75aecd41",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "8d22508b7a4bb4cd5825a67850df69748b777e37582ac135cf358a6d75aecd41",
+          "constraints_verified": true,
+          "logical_sha256": "535c51e97dab33a8fd8bd19f26a16b7467450396334a20a82cbced6962d116ed"
+        },
+        {
+          "instance_id": "fixture_a5080ff10165b3118cbc44092bdb3541d2580c1702b2455bccdf9e0b2c781343",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "a5080ff10165b3118cbc44092bdb3541d2580c1702b2455bccdf9e0b2c781343",
+          "constraints_verified": true,
+          "logical_sha256": "6b13e549e255ad12fdbaa5c928b78e3dc37093b26df7921fc9dc4fadd03ed5ba"
+        }
+      ]
+    },
+    {
+      "case_id": "external_orchestra_333cd27fe66308a4",
+      "database_id": "orchestra",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_0983d6d0a9a4e7d9610ad4876ad72ae50d2cd31f8da574662ef29ad29a751d05",
+          "fixture_6349a01c1b0fcd4b35ccdcd97d450d584228d77db72dbff88dccde43a27d42d3"
+        ],
+        "gold_result_digests": [
+          "b3f8c830daed70f9cddbd500da3417b2e95863995a91a5a01a60e8e2bd0bf648",
+          "10ed3fa2d80f735143c59c55b64f0cbe3221aa10bdf7ec9f62fce24c62d901a8"
+        ],
+        "mutant_results": [
+          {
+            "family": "set_operation",
+            "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 UNION SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT Record_Company FROM orchestra INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 INTERSECT SELECT Record_Company FROM orchestra",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded <= 2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded >= 2003",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 AND TRUE INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003 AND TRUE",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 5,
+        "semantic_mutants_killed": 0,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_C"
+            ],
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "PASS",
+          "sample_sqlite_rows": [
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_C"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "orchestra"
+          ],
+          "columns": [
+            {
+              "table": "orchestra",
+              "column": "Record_Company"
+            },
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded",
+              "kind": "numeric_threshold",
+              "operator": "<",
+              "value": 2003
+            },
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded",
+              "kind": "numeric_threshold",
+              "operator": ">",
+              "value": 2003
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "lt",
+              "stage": "where",
+              "expression": "orchestra.year_of_founded < 2003",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": 2003,
+                  "value_type": "numeric"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "orchestra",
+                  "column": "Year_of_Founded"
+                }
+              ]
+            },
+            {
+              "operator": "gt",
+              "stage": "where",
+              "expression": "orchestra.year_of_founded > 2003",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": 2003,
+                  "value_type": "numeric"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "orchestra",
+                  "column": "Year_of_Founded"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "where",
+              "expression": "orchestra.year_of_founded < 2003"
+            },
+            {
+              "stage": "where",
+              "expression": "orchestra.year_of_founded > 2003"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_0983d6d0a9a4e7d9610ad4876ad72ae50d2cd31f8da574662ef29ad29a751d05",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "0983d6d0a9a4e7d9610ad4876ad72ae50d2cd31f8da574662ef29ad29a751d05",
+          "constraints_verified": true,
+          "logical_sha256": "c5dac1d17714a89705dfdc0224c0f23713c9bcc8e36db1b054e3c48b82330fca"
+        },
+        {
+          "instance_id": "fixture_6349a01c1b0fcd4b35ccdcd97d450d584228d77db72dbff88dccde43a27d42d3",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "6349a01c1b0fcd4b35ccdcd97d450d584228d77db72dbff88dccde43a27d42d3",
+          "constraints_verified": true,
+          "logical_sha256": "8852405b9044a78cebc2ced8db3c9dee2e8fc78751db9c332ef58022cc516fdd"
+        }
+      ]
+    },
+    {
+      "case_id": "external_orchestra_5b4b58f26c903ada",
+      "database_id": "orchestra",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+          "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a"
+        ],
+        "gold_result_digests": [
+          "f1fc34cf50704f286c2d35993bec25fd3497d44f09e19df417e972504bc553c3",
+          "f5563088e4540321f65cc5f76353dc5b0350fd4a0808d61b1ca039ae28657400"
+        ],
+        "mutant_results": [
+          {
+            "family": "limit",
+            "sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) ASC LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(NULL) DESC LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT Record_Company FROM orchestra WHERE TRUE GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 3,
+        "semantic_mutants_killed": 2,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": true,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_B"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_B"
+            ]
+          ]
+        },
+        {
+          "parity": true,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_C"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "orchestra"
+          ],
+          "columns": [
+            {
+              "table": "orchestra",
+              "column": "Record_Company"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            }
+          ],
+          "predicates": [],
+          "boolean_structure": [],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+          "constraints_verified": true,
+          "logical_sha256": "038438386a65e3c55c57733c1d1610b3948093ee976065518030478347bc8ab1"
+        },
+        {
+          "instance_id": "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+          "constraints_verified": true,
+          "logical_sha256": "c6d0e0e000276017add371192737d2e32a86d71d4afca1368fc59c15cca0da69"
+        }
+      ]
+    },
+    {
+      "case_id": "external_poker_player_71688949908bf92a",
+      "database_id": "poker_player",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+          "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09"
+        ],
+        "gold_result_digests": [
+          "302abc989848c78c3a85eaa0370cfe04c6f2bf25ec882d744e5247ce61a39928",
+          "430dab50219e0f706031d77e60e6ff934a2fc0ceffca469bdb35e6f13e93dab2"
+        ],
+        "mutant_results": [
+          {
+            "family": "join_kind",
+            "sql": "SELECT T1.Name FROM people AS T1 LEFT JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Final_Table_Made NULLS FIRST",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID <> T2.People_ID ORDER BY T2.Final_Table_Made NULLS FIRST",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Final_Table_Made DESC NULLS FIRST",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID WHERE TRUE ORDER BY T2.Final_Table_Made NULLS FIRST",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 3,
+        "semantic_mutants_killed": 3,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_ORDER_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_C"
+            ],
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_A"
+            ]
+          ]
+        },
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_ORDER_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_C"
+            ],
+            [
+              "fixture_B"
+            ],
+            [
+              "fixture_A"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_A"
+            ],
+            [
+              "fixture_C"
+            ],
+            [
+              "fixture_B"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "people",
+            "poker_player"
+          ],
+          "columns": [
+            {
+              "table": "people",
+              "column": "Name"
+            },
+            {
+              "table": "people",
+              "column": "People_ID"
+            },
+            {
+              "table": "poker_player",
+              "column": "Final_Table_Made"
+            },
+            {
+              "table": "poker_player",
+              "column": "People_ID"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "People_ID",
+              "from_table": "poker_player",
+              "to_column": "People_ID",
+              "to_table": "people"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.people_id = t2.people_id",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "people",
+                  "column": "People_ID"
+                },
+                {
+                  "table": "poker_player",
+                  "column": "People_ID"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.people_id = t2.people_id"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+          "constraints_verified": true,
+          "logical_sha256": "3ebc30f1de6b69e610a69e674efd38e423090ad6986b1f5d79353e5e8108972a"
+        },
+        {
+          "instance_id": "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+          "constraints_verified": true,
+          "logical_sha256": "5cb80889403ba4377ee7c78ae47c5d28169d23a98a31af82e75dbbcd8bd8557d"
+        }
+      ]
+    },
+    {
+      "case_id": "external_poker_player_7c5178d1ef2b95d4",
+      "database_id": "poker_player",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+          "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09"
+        ],
+        "gold_result_digests": [
+          "f1fc34cf50704f286c2d35993bec25fd3497d44f09e19df417e972504bc553c3",
+          "f5563088e4540321f65cc5f76353dc5b0350fd4a0808d61b1ca039ae28657400"
+        ],
+        "mutant_results": [
+          {
+            "family": "limit",
+            "sql": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Earnings ASC NULLS FIRST LIMIT 2",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "join_kind",
+            "sql": "SELECT T1.Birth_Date FROM people AS T1 LEFT JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Earnings ASC NULLS FIRST LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID <> T2.People_ID ORDER BY T2.Earnings ASC NULLS FIRST LIMIT 1",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Earnings DESC NULLS FIRST LIMIT 1",
+            "status": "KILLED",
+            "instance_matches": [
+              false,
+              false
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID WHERE TRUE ORDER BY T2.Earnings ASC NULLS FIRST LIMIT 1",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 4,
+        "semantic_mutants_killed": 3,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_C"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_B"
+            ]
+          ]
+        },
+        {
+          "parity": false,
+          "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+          "sample_sqlite_rows": [
+            [
+              "fixture_A"
+            ]
+          ],
+          "sample_duckdb_rows": [
+            [
+              "fixture_C"
+            ]
+          ]
+        }
+      ],
+      "updated_annotations": [
+        {
+          "tables": [
+            "people",
+            "poker_player"
+          ],
+          "columns": [
+            {
+              "table": "people",
+              "column": "Birth_Date"
+            },
+            {
+              "table": "people",
+              "column": "People_ID"
+            },
+            {
+              "table": "poker_player",
+              "column": "Earnings"
+            },
+            {
+              "table": "poker_player",
+              "column": "People_ID"
+            }
+          ],
+          "relationships": [
+            {
+              "from_column": "People_ID",
+              "from_table": "poker_player",
+              "to_column": "People_ID",
+              "to_table": "people"
+            }
+          ],
+          "stored_values": [],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 1
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "join",
+              "expression": "t1.people_id = t2.people_id",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "people",
+                  "column": "People_ID"
+                },
+                {
+                  "table": "poker_player",
+                  "column": "People_ID"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "join",
+              "expression": "t1.people_id = t2.people_id"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+          "constraints_verified": true,
+          "logical_sha256": "3ebc30f1de6b69e610a69e674efd38e423090ad6986b1f5d79353e5e8108972a"
+        },
+        {
+          "instance_id": "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+          "constraints_verified": true,
+          "logical_sha256": "5cb80889403ba4377ee7c78ae47c5d28169d23a98a31af82e75dbbcd8bd8557d"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_cross_4bd089aa77684ec3",
+      "database_id": "ctu_dev",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab"
+        ],
+        "gold_result_digests": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "mutant_results": [
+          {
+            "family": "projection",
+            "sql": "SELECT label FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY label HAVING COUNT(*) >= 100 ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT label, COUNT(NULL) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY label HAVING COUNT(*) >= 100 ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT label, COUNT(*) FROM network_flows GROUP BY label HAVING COUNT(*) >= 100 ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "group_having",
+            "sql": "SELECT label, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY label ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT label, COUNT(*) FROM network_flows WHERE source_dataset <> 'ctu13_s7' GROUP BY label HAVING COUNT(*) >= 100 ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT label, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY label HAVING COUNT(*) > 100 ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT label, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY label HAVING COUNT(*) >= 100 ORDER BY label DESC",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "null_count",
+            "sql": "SELECT label, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY label HAVING COUNT(NULL) >= 100 ORDER BY label",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT label, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE GROUP BY label HAVING COUNT(*) >= 100 ORDER BY label",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 8,
+        "semantic_mutants_killed": 0,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [],
+      "updated_annotations": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "derived_expression",
+              "expression": "COUNT(*)",
+              "operator": ">=",
+              "value": 100,
+              "value_type": "numeric"
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s7",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            },
+            {
+              "operator": "gte",
+              "stage": "having",
+              "expression": "COUNT(*) >= 100",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": 100,
+                  "value_type": "numeric"
+                }
+              ],
+              "column_dependencies": []
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'"
+            },
+            {
+              "stage": "having",
+              "expression": "COUNT(*) >= 100"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "constraints_verified": true,
+          "logical_sha256": "39fd271941324922d4f13a7fac9add51e77662a1ad8c23b4f1b12a697ade056c"
+        },
+        {
+          "instance_id": "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+          "constraints_verified": true,
+          "logical_sha256": "cfe0f17f5ac686311a41db07d4aa367a612a5d2f0372b88ee09e37978eaaba43"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "database_id": "ctu_dev",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab"
+        ],
+        "gold_result_digests": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "mutant_results": [
+          {
+            "family": "missing_filter",
+            "sql": "SELECT protocol FROM network_flows GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "group_having",
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol ORDER BY protocol",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset <> 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) >= (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "ordering",
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol DESC",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows) ORDER BY protocol",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset <> 'ctu13_s7') ORDER BY protocol",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE) ORDER BY protocol",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 7,
+        "semantic_mutants_killed": 0,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [],
+      "updated_annotations": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s7",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            },
+            {
+              "operator": "gt",
+              "stage": "having",
+              "expression": "AVG(network_flows.bytes_out) > (SELECT AVG(network_flows.bytes_out) AS _col_0 FROM network_flows AS network_flows WHERE network_flows.source_dataset = 'ctu13_s7')",
+              "negated": false,
+              "escape": null,
+              "literals": [],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "bytes_out"
+                },
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s7",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'"
+            },
+            {
+              "stage": "having",
+              "expression": "AVG(network_flows.bytes_out) > (SELECT AVG(network_flows.bytes_out) AS _col_0 FROM network_flows AS network_flows WHERE network_flows.source_dataset = 'ctu13_s7')"
+            },
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "constraints_verified": true,
+          "logical_sha256": "39fd271941324922d4f13a7fac9add51e77662a1ad8c23b4f1b12a697ade056c"
+        },
+        {
+          "instance_id": "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+          "constraints_verified": true,
+          "logical_sha256": "cfe0f17f5ac686311a41db07d4aa367a612a5d2f0372b88ee09e37978eaaba43"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_cross_71164969e0e0277e",
+      "database_id": "ctu_dev",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab"
+        ],
+        "gold_result_digests": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "mutant_results": [
+          {
+            "family": "set_operation",
+            "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' UNION SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT src_ip FROM network_flows INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' INTERSECT SELECT src_ip FROM network_flows",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT src_ip FROM network_flows WHERE source_dataset <> 'ctu13_s5' INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7'",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND TRUE INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 5,
+        "semantic_mutants_killed": 0,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [],
+      "updated_annotations": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "predicates": [
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s5'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s5",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s7",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s5'"
+            },
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+          "constraints_verified": true,
+          "logical_sha256": "39fd271941324922d4f13a7fac9add51e77662a1ad8c23b4f1b12a697ade056c"
+        },
+        {
+          "instance_id": "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+          "constraints_verified": true,
+          "logical_sha256": "cfe0f17f5ac686311a41db07d4aa367a612a5d2f0372b88ee09e37978eaaba43"
+        }
+      ]
+    },
+    {
+      "case_id": "ctu_cross_708b66575657429a",
+      "database_id": "ctu_dev",
+      "split": "evaluation",
+      "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+      "semantic": {
+        "scope": "fixture_only_semantic_validation",
+        "external_model_calls": 0,
+        "instance_ids": [
+          "fixture_bff23d1d18f801e2ff9c0d77b718fb8782c75d26ba16756633aa3ecb6968ed0a",
+          "fixture_c0c9386ebe2e12ae4524230a24af262c7200aad0c21bd2bc93ff09396d018bad"
+        ],
+        "gold_result_digests": [
+          "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da",
+          "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da"
+        ],
+        "mutant_results": [
+          {
+            "family": "null_count",
+            "sql": "SELECT COUNT(NULL) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "set_operation",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) UNION SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "missing_filter",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boolean",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' OR event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boolean",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' OR event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boolean",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boolean",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' OR protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time >= CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          },
+          {
+            "family": "boundary",
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol <> 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+            "status": "NOT_DISTINGUISHED",
+            "instance_matches": [
+              true,
+              true
+            ],
+            "errors": []
+          }
+        ],
+        "equivalent_controls": [
+          {
+            "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) AND TRUE INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP) AND TRUE) AS shared WHERE TRUE",
+            "accepted": true
+          }
+        ],
+        "semantic_mutants_executable": 14,
+        "semantic_mutants_killed": 0,
+        "equivalent_controls_accepted": 1
+      },
+      "fixture_sqlite_duckdb_parity": [],
+      "updated_annotations": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "TCP"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "TCP"
+            }
+          ],
+          "constraints": [
+            {
+              "table": "network_flows",
+              "column": "event_time",
+              "kind": "time_threshold",
+              "operator": ">",
+              "value": "2011-08-15 17:00:00"
+            },
+            {
+              "table": "network_flows",
+              "column": "event_time",
+              "kind": "time_threshold",
+              "operator": ">",
+              "value": "2011-08-16 14:00:00"
+            }
+          ],
+          "predicates": [
+            {
+              "operator": "gt",
+              "stage": "where",
+              "expression": "network_flows.event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "2011-08-15 17:00:00",
+                  "value_type": "timestamp",
+                  "cast_type": "TIMESTAMP"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "event_time"
+                }
+              ]
+            },
+            {
+              "operator": "gt",
+              "stage": "where",
+              "expression": "network_flows.event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "2011-08-16 14:00:00",
+                  "value_type": "timestamp",
+                  "cast_type": "TIMESTAMP"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "event_time"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s5'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s5",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.protocol = 'TCP'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "TCP",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "protocol"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "ctu13_s7",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "source_dataset"
+                }
+              ]
+            },
+            {
+              "operator": "eq",
+              "stage": "where",
+              "expression": "network_flows.protocol = 'TCP'",
+              "negated": false,
+              "escape": null,
+              "literals": [
+                {
+                  "value": "TCP",
+                  "value_type": "string"
+                }
+              ],
+              "column_dependencies": [
+                {
+                  "table": "network_flows",
+                  "column": "protocol"
+                }
+              ]
+            }
+          ],
+          "boolean_structure": [
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'TCP' AND network_flows.event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)"
+            },
+            {
+              "stage": "where",
+              "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'TCP' AND network_flows.event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)"
+            }
+          ],
+          "annotations_complete": true,
+          "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+        }
+      ],
+      "fixture_identities": [
+        {
+          "instance_id": "fixture_bff23d1d18f801e2ff9c0d77b718fb8782c75d26ba16756633aa3ecb6968ed0a",
+          "fixture_only": true,
+          "seed": 20261005,
+          "spec_sha256": "bff23d1d18f801e2ff9c0d77b718fb8782c75d26ba16756633aa3ecb6968ed0a",
+          "constraints_verified": true,
+          "logical_sha256": "b205e7704bc2ac2e470a5a538605cda750e8ae65536c31d4e1c0b4f2b5cf0c16"
+        },
+        {
+          "instance_id": "fixture_c0c9386ebe2e12ae4524230a24af262c7200aad0c21bd2bc93ff09396d018bad",
+          "fixture_only": true,
+          "seed": 20261006,
+          "spec_sha256": "c0c9386ebe2e12ae4524230a24af262c7200aad0c21bd2bc93ff09396d018bad",
+          "constraints_verified": true,
+          "logical_sha256": "30bb502a64d07858dcdcb4827a56a74567a19181715cd531b21573f85499db03"
+        }
+      ]
+    }
+  ],
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "benchmark_locked": false
+}

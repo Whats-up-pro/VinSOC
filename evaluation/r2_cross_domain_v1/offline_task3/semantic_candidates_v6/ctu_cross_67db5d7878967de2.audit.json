@@ -1,0 +1,193 @@
+{
+  "case_id": "ctu_cross_67db5d7878967de2",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c1fd8b6ec064115f0c7e4225d1db8481228ea3085ea208c82d6b8475336da2c8",
+      "fixture_32e37512f4fce1e46712ba382d8d560a498e6ecdc51b1eef1dac1ed02195e529"
+    ],
+    "gold_result_digests": [
+      "76de2129119b044dd7d84bfc6051197e93051de88b5ec11385da84db7114c1a7",
+      "76de2129119b044dd7d84bfc6051197e93051de88b5ec11385da84db7114c1a7"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'UDP'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(DISTINCT src_port) FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "distinct",
+        "sql": "SELECT COUNT(src_port) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'UDP'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(DISTINCT src_port) FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'UDP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(DISTINCT src_port) FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'UDP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(DISTINCT src_port) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'UDP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(DISTINCT src_port) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'UDP' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_port"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "UDP"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'UDP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "UDP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'UDP'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c1fd8b6ec064115f0c7e4225d1db8481228ea3085ea208c82d6b8475336da2c8",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c1fd8b6ec064115f0c7e4225d1db8481228ea3085ea208c82d6b8475336da2c8",
+      "constraints_verified": true,
+      "logical_sha256": "7936b1426201f55abcb4ab6069a226acfec9bc30f71319089082f25883d1e700"
+    },
+    {
+      "instance_id": "fixture_32e37512f4fce1e46712ba382d8d560a498e6ecdc51b1eef1dac1ed02195e529",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "32e37512f4fce1e46712ba382d8d560a498e6ecdc51b1eef1dac1ed02195e529",
+      "constraints_verified": true,
+      "logical_sha256": "e5d6bee721718b669613ada8027e94267fb2e469ecd891b6e1ad2a17b7dce20e"
+    }
+  ]
+}

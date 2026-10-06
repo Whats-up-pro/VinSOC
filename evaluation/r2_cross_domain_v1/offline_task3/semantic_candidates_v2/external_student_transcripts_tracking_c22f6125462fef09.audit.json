@@ -1,0 +1,214 @@
+{
+  "case_id": "external_student_transcripts_tracking_c22f6125462fef09",
+  "database_id": "student_transcripts_tracking",
+  "split": "calibration",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+      "fixture_a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2"
+    ],
+    "gold_result_digests": [
+      "f7ff4462ba541fdb39058f36eee18db71db4c1e6a0c381ab06f42d990c13bfd2",
+      "b3319469d3edc02158308ef83e031e7f5bd8f8aeda200fa9ebb944e07e1fe1a8"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T1.address_id, T1.line_1 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "limit",
+        "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 LEFT JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id <> T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) ASC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(NULL) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id WHERE TRUE GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": false,
+      "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+      "sample_sqlite_rows": [
+        [
+          14,
+          "fixture_B",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          1,
+          "fixture_A",
+          "fixture_A"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          1,
+          "fixture_A",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          1,
+          "fixture_A",
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Addresses",
+        "Students"
+      ],
+      "columns": [
+        {
+          "table": "Addresses",
+          "column": "address_id"
+        },
+        {
+          "table": "Addresses",
+          "column": "line_1"
+        },
+        {
+          "table": "Addresses",
+          "column": "line_2"
+        },
+        {
+          "table": "Students",
+          "column": "current_address_id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "current_address_id",
+          "from_table": "Students",
+          "to_column": "address_id",
+          "to_table": "Addresses"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 1
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.address_id = t2.current_address_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Addresses",
+              "column": "address_id"
+            },
+            {
+              "table": "Students",
+              "column": "current_address_id"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.address_id = t2.current_address_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+      "constraints_verified": true,
+      "logical_sha256": "c61230575e30b303b9748196a8c1195f2631cc54afb743a554cb6673d3485611"
+    },
+    {
+      "instance_id": "fixture_a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2",
+      "constraints_verified": true,
+      "logical_sha256": "902fdff3524c8a0792ec13b7806690a4d6b588b81a29b5518101ed844a7f57be"
+    }
+  ]
+}

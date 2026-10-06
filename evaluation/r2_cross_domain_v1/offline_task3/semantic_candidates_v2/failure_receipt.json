@@ -1,0 +1,11 @@
+{
+  "status": "PARTIAL_OFFLINE_FAILURE",
+  "retained_case_records": 42,
+  "expected_cases": 120,
+  "error_category": "DECIMAL_SERIALIZATION_FAILURE",
+  "exit_code": 1,
+  "producer_source_identity": "not_durably_recorded_before_crash; not reconstructed from current code",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "benchmark_locked": false
+}

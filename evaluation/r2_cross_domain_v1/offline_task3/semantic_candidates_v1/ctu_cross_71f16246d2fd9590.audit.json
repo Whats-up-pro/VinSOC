@@ -1,0 +1,127 @@
+{
+  "case_id": "ctu_cross_71f16246d2fd9590",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_f6853d0df30a1c8e3bd1c190b2481c02779bb9901b5b7a97540db930a5f7794b",
+      "fixture_148dff09e645e38aa6661accb5b7aa682a0cfdcabfd07edac19dbd30bf42de67"
+    ],
+    "gold_result_digests": [
+      "156b66b9b0641c645b09a17b93660815cffa87d07145e052087427fc2d92c790",
+      "81b42876f68e1138641a4386839c080c8678306725e15a5c58b64fc634a44890"
+    ],
+    "mutant_results": [
+      {
+        "family": "ordering",
+        "sql": "WITH totals AS (SELECT source_dataset, COUNT(*) AS n, SUM(CASE WHEN STARTS_WITH(label, 'flow=From-Botnet') THEN 1 ELSE 0 END) AS bot FROM network_flows GROUP BY source_dataset) SELECT source_dataset, bot * 1.0 / NULLIF(n, 0) FROM totals ORDER BY source_dataset DESC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "WITH totals AS (SELECT source_dataset, COUNT(*) AS n, COUNT(CASE WHEN STARTS_WITH(label, 'flow=From-Botnet') THEN 1 ELSE 0 END) AS bot FROM network_flows GROUP BY source_dataset) SELECT source_dataset, bot * 1.0 / NULLIF(n, 0) FROM totals ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "prefix_contains",
+        "sql": "WITH totals AS (SELECT source_dataset, COUNT(*) AS n, SUM(CASE WHEN CONTAINS(label, 'flow=From-Botnet') THEN 1 ELSE 0 END) AS bot FROM network_flows GROUP BY source_dataset) SELECT source_dataset, bot * 1.0 / NULLIF(n, 0) FROM totals ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "WITH totals AS (SELECT source_dataset, COUNT(*) AS n, SUM(CASE WHEN STARTS_WITH(label, 'flow=From-Botnet') THEN 1 ELSE 0 END) AS bot FROM network_flows WHERE TRUE GROUP BY source_dataset) SELECT source_dataset, bot * 1.0 / NULLIF(n, 0) FROM totals WHERE TRUE ORDER BY source_dataset",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "startswith",
+          "stage": "expression",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Botnet')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Botnet",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "if",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Botnet')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_f6853d0df30a1c8e3bd1c190b2481c02779bb9901b5b7a97540db930a5f7794b",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "f6853d0df30a1c8e3bd1c190b2481c02779bb9901b5b7a97540db930a5f7794b",
+      "constraints_verified": true,
+      "logical_sha256": "fd9f5cb0273b15b351cd8be80078795cd99a94829ff297c2c1959be64f987c5c"
+    },
+    {
+      "instance_id": "fixture_148dff09e645e38aa6661accb5b7aa682a0cfdcabfd07edac19dbd30bf42de67",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "148dff09e645e38aa6661accb5b7aa682a0cfdcabfd07edac19dbd30bf42de67",
+      "constraints_verified": true,
+      "logical_sha256": "b473d630e1ff17542d68e8ea8fd118c3bd7f48577ceb13e8b42c5ce13c56d0ec"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "case_id": "external_course_teach_58a6ed9ee32a1545",
+  "database_id": "course_teach",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_91f91672f5d8729fab6841025ed8e729e4e20986dc580a469d0f893e9bb6f250",
+      "fixture_e410f9d51998d3ff594c26446490524a7c843158387fa975065c225ee374ac85"
+    ],
+    "gold_result_digests": [
+      "7cc85be9f0ae191084e232a445c404719e727730e1c1be664112d7f50114a1c8",
+      "b6953220c11efb9107551be028fce111f366f9282798d577250edcc9ca9dcebf"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT name FROM teacher",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT name FROM teacher WHERE hometown = 'little lever urban district'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT name FROM teacher WHERE hometown <> 'little lever urban district' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "teacher",
+          "column": "Hometown"
+        },
+        {
+          "table": "teacher",
+          "column": "Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "teacher",
+          "column": "Hometown",
+          "operator": "!=",
+          "value": "little lever urban district"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "neq",
+          "stage": "where",
+          "expression": "teacher.hometown <> 'little lever urban district'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "little lever urban district",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "teacher",
+              "column": "Hometown"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "teacher.hometown <> 'little lever urban district'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_91f91672f5d8729fab6841025ed8e729e4e20986dc580a469d0f893e9bb6f250",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "91f91672f5d8729fab6841025ed8e729e4e20986dc580a469d0f893e9bb6f250",
+      "constraints_verified": true,
+      "logical_sha256": "f1eb6c1f487709fbf5837e086a69e7ecb9972e4c71e71f18ada688bf4b2119e1"
+    },
+    {
+      "instance_id": "fixture_e410f9d51998d3ff594c26446490524a7c843158387fa975065c225ee374ac85",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "e410f9d51998d3ff594c26446490524a7c843158387fa975065c225ee374ac85",
+      "constraints_verified": true,
+      "logical_sha256": "a82078904689401379c9be980d83022e5cf3dd0533b08fcd1ab7864aeea5b663"
+    }
+  ]
+}

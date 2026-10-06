@@ -1,0 +1,203 @@
+{
+  "case_id": "external_tvshow_5dd917867752c83a",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_a1ba89375e9387813dde25453cf26bd0c39ae5bfa9d66667852a19cd4afc5738",
+      "fixture_9d9930f794bcdae1a19f93becd08e3bddb35b8c3efd431b77165e14760e50d93"
+    ],
+    "gold_result_digests": [
+      "0122a57d206189c1ed74fdb2aaa78d958a80f8004cc2ccb3dc0d28a6391c0b97",
+      "5df885fbdcac5af2bcd92528b359b9843527a27a8357485609cbe38324178912"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT Pixel_aspect_ratio_PAR FROM tv_channel WHERE LANGUAGE <> 'English'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Pixel_aspect_ratio_PAR, country FROM tv_channel",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Pixel_aspect_ratio_PAR, country FROM tv_channel WHERE LANGUAGE = 'English'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Pixel_aspect_ratio_PAR, country FROM tv_channel WHERE LANGUAGE <> 'English' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "TV_Channel",
+          "column": "Country"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Language"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Pixel_aspect_ratio_PAR"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "TV_Channel",
+          "column": "Language",
+          "operator": "!=",
+          "value": "English"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "neq",
+          "stage": "where",
+          "expression": "tv_channel.language <> 'English'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "English",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "Language"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "tv_channel.language <> 'English'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_a1ba89375e9387813dde25453cf26bd0c39ae5bfa9d66667852a19cd4afc5738",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "a1ba89375e9387813dde25453cf26bd0c39ae5bfa9d66667852a19cd4afc5738",
+      "constraints_verified": true,
+      "logical_sha256": "70e6e67605329e7f21bde2e8639720babe22df492ae1582faa8e3d4d19fa4910"
+    },
+    {
+      "instance_id": "fixture_9d9930f794bcdae1a19f93becd08e3bddb35b8c3efd431b77165e14760e50d93",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "9d9930f794bcdae1a19f93becd08e3bddb35b8c3efd431b77165e14760e50d93",
+      "constraints_verified": true,
+      "logical_sha256": "c832b658b1bc01be7e340a3f6ee17b588ff34e950c9702bd038a9259cbc7e222"
+    }
+  ]
+}

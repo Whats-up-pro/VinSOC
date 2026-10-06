@@ -1,0 +1,235 @@
+{
+  "case_id": "external_flight_2_59060b10db344a2c",
+  "database_id": "flight_2",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_11774716d895c4e138f801eebedc057daf8f142bf913af5be777581f3315c6a2",
+      "fixture_f37be1025777906b2cae4a84b4b680d3b1e5b56f018cd80ab304f368a15e57f9"
+    ],
+    "gold_result_digests": [
+      "22fa103d6fa0ba7d6489a33ab1f45979151559169be6e4776c29568e2315c84c",
+      "0bc2418aa477af871a4ec2c6894d7289464ed46336ce34482de6e45ce449fe4e"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 LEFT JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City = 'Aberdeen'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport <> T2.AirportCode WHERE T2.City = 'Aberdeen'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City <> 'Aberdeen'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City = 'Aberdeen' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          5
+        ],
+        [
+          13
+        ],
+        [
+          19
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          5
+        ],
+        [
+          13
+        ],
+        [
+          19
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          2
+        ],
+        [
+          10
+        ],
+        [
+          19
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          2
+        ],
+        [
+          10
+        ],
+        [
+          19
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "airports",
+        "flights"
+      ],
+      "columns": [
+        {
+          "table": "airports",
+          "column": "AirportCode"
+        },
+        {
+          "table": "airports",
+          "column": "City"
+        },
+        {
+          "table": "flights",
+          "column": "DestAirport"
+        },
+        {
+          "table": "flights",
+          "column": "FlightNo"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "DestAirport",
+          "from_table": "flights",
+          "to_column": "AirportCode",
+          "to_table": "airports"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "airports",
+          "column": "City",
+          "operator": "=",
+          "value": "Aberdeen"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.destairport = t2.airportcode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "AirportCode"
+            },
+            {
+              "table": "flights",
+              "column": "DestAirport"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.city = 'Aberdeen'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Aberdeen",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "City"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.destairport = t2.airportcode"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.city = 'Aberdeen'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_11774716d895c4e138f801eebedc057daf8f142bf913af5be777581f3315c6a2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "11774716d895c4e138f801eebedc057daf8f142bf913af5be777581f3315c6a2",
+      "constraints_verified": true,
+      "logical_sha256": "4499d95e226354747ce31dad8bb7768e3511d81722614fc8dee62ae52d0e1470"
+    },
+    {
+      "instance_id": "fixture_f37be1025777906b2cae4a84b4b680d3b1e5b56f018cd80ab304f368a15e57f9",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "f37be1025777906b2cae4a84b4b680d3b1e5b56f018cd80ab304f368a15e57f9",
+      "constraints_verified": true,
+      "logical_sha256": "7fa7f09776dd5df073678d7b0c6e7d8089413da0b6099a7b4e400cdf88c5d561"
+    }
+  ]
+}

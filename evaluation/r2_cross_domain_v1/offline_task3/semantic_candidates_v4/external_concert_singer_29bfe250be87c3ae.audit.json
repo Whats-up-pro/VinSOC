@@ -1,0 +1,165 @@
+{
+  "case_id": "external_concert_singer_29bfe250be87c3ae",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "fixture_5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b"
+    ],
+    "gold_result_digests": [
+      "b372a6305dfe8f54f055632d90c7dc778918b0f56b6962f967e38484a4cd19cc",
+      "532ebe6df72022f4718029ed38cff2fbde794b24afad54d3204c3558328932ee"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT song_name FROM singer",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT song_name FROM singer WHERE age >= (SELECT AVG(age) FROM singer)",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT song_name FROM singer WHERE age > (SELECT AVG(age) FROM singer WHERE TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "singer"
+      ],
+      "columns": [
+        {
+          "table": "singer",
+          "column": "Age"
+        },
+        {
+          "table": "singer",
+          "column": "Song_Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "singer.age > (SELECT AVG(singer.age) AS _col_0 FROM singer AS singer)",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "singer",
+              "column": "Age"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "singer.age > (SELECT AVG(singer.age) AS _col_0 FROM singer AS singer)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "constraints_verified": true,
+      "logical_sha256": "fe859e3296e9e6bb121ce628d4e583b4fc174f9ad9b7911cec717af7e45f8af1"
+    },
+    {
+      "instance_id": "fixture_5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b",
+      "constraints_verified": true,
+      "logical_sha256": "95b45047124a3adbf9aa2c830b242dee6105f02ca932f1d25c08f27ab43e4933"
+    }
+  ]
+}

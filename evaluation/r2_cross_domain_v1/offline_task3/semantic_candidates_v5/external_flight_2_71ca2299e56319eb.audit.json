@@ -1,0 +1,159 @@
+{
+  "case_id": "external_flight_2_71ca2299e56319eb",
+  "database_id": "flight_2",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_34dfa9d4b21d9f560bb0f1f708f6530900b53665863e45a29a89b3974bb16784",
+      "fixture_37e24d7ca746d3a8f4df48929b4f4cf9e12ca2738df32fef3dd5382b6025250a"
+    ],
+    "gold_result_digests": [
+      "0874e2070c8cb9320e4e9d3e3140ad8ad50b4fca18f64dc23f9be967c54ebff3",
+      "d6ef6a14ae299031eab197e2ae220ba7defc01846469d44910de9238b5316bd3"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(NULL) FROM AIRLINES WHERE Country = 'USA'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM AIRLINES",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM AIRLINES WHERE Country <> 'USA'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM AIRLINES WHERE Country = 'USA' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          4
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          4
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          5
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          5
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "airlines"
+      ],
+      "columns": [
+        {
+          "table": "airlines",
+          "column": "Country"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "airlines",
+          "column": "Country",
+          "operator": "=",
+          "value": "USA"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "airlines.country = 'USA'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "USA",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airlines",
+              "column": "Country"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "airlines.country = 'USA'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_34dfa9d4b21d9f560bb0f1f708f6530900b53665863e45a29a89b3974bb16784",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "34dfa9d4b21d9f560bb0f1f708f6530900b53665863e45a29a89b3974bb16784",
+      "constraints_verified": true,
+      "logical_sha256": "81250e142307e22abebe532b8779e18eec1907b68281589aefcc13fc89d69ca3"
+    },
+    {
+      "instance_id": "fixture_37e24d7ca746d3a8f4df48929b4f4cf9e12ca2738df32fef3dd5382b6025250a",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "37e24d7ca746d3a8f4df48929b4f4cf9e12ca2738df32fef3dd5382b6025250a",
+      "constraints_verified": true,
+      "logical_sha256": "957ef1477fe9b1cab710dadda7afa093e3872d30558938ac1f5b7e3de4d636b6"
+    }
+  ]
+}

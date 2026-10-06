@@ -1,0 +1,235 @@
+{
+  "case_id": "external_tvshow_cbea1679ac94abfa",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_1722f48f04d9fef3dba79601f63c2051a6dc8892eea0b08892959d048ed4d3e4",
+      "fixture_6b4b7661e426e845af204111069a1bcf06335c0f18856f7c7fde8f7c89ca3752"
+    ],
+    "gold_result_digests": [
+      "669def7b5ceff2fac51bc742803abbc6d40c0e459ae59a9e6153a12440a842f7",
+      "42b7f3e25a058a4d4ab35d98b59fb3e8bb4b156d0bd63a774feea1a2369952e0"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.series_name FROM TV_Channel AS T1 LEFT JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = 'The Rise of the Blue Beetle!'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id <> T2.Channel WHERE T2.Title = 'The Rise of the Blue Beetle!'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title <> 'The Rise of the Blue Beetle!'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = 'The Rise of the Blue Beetle!' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Cartoon",
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "Cartoon",
+          "column": "Channel"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Title"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "id"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "series_name"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Channel",
+          "from_table": "Cartoon",
+          "to_column": "id",
+          "to_table": "TV_Channel"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "Cartoon",
+          "column": "Title",
+          "operator": "=",
+          "value": "The Rise of the Blue Beetle!"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.id = t2.channel",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Channel"
+            },
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.title = 'The Rise of the Blue Beetle!'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "The Rise of the Blue Beetle!",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Title"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.id = t2.channel"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.title = 'The Rise of the Blue Beetle!'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_1722f48f04d9fef3dba79601f63c2051a6dc8892eea0b08892959d048ed4d3e4",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "1722f48f04d9fef3dba79601f63c2051a6dc8892eea0b08892959d048ed4d3e4",
+      "constraints_verified": true,
+      "logical_sha256": "5b87196ae2e51461d72f84b582b103d79fc955844b4f12066e7a2099c3496d57"
+    },
+    {
+      "instance_id": "fixture_6b4b7661e426e845af204111069a1bcf06335c0f18856f7c7fde8f7c89ca3752",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "6b4b7661e426e845af204111069a1bcf06335c0f18856f7c7fde8f7c89ca3752",
+      "constraints_verified": true,
+      "logical_sha256": "8fa4e2b933c4060ce61c94e877d54ae4c5c5693bf9bbdc5baebb3a3de7b64a84"
+    }
+  ]
+}

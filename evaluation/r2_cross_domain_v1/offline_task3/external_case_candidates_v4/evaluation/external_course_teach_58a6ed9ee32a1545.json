@@ -1,0 +1,118 @@
+{
+  "reference": {
+    "case_id": "external_course_teach_58a6ed9ee32a1545",
+    "database_id": "course_teach",
+    "question": "List the name of teachers whose hometown is not `` Little Lever Urban District '' .",
+    "gold_sql": "SELECT name FROM teacher WHERE hometown <> 'little lever urban district'",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "6cf95dba1c2e30fc080c51f594792db537749fd9b4ca39d7dae512321d451162",
+    "accepted_links": [
+      {
+        "tables": [
+          "teacher"
+        ],
+        "columns": [
+          {
+            "table": "teacher",
+            "column": "Hometown"
+          },
+          {
+            "table": "teacher",
+            "column": "Name"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "teacher",
+            "column": "Hometown",
+            "operator": "!=",
+            "value": "little lever urban district"
+          }
+        ],
+        "constraints": [],
+        "predicates": [
+          {
+            "operator": "neq",
+            "stage": "where",
+            "expression": "teacher.hometown <> 'little lever urban district'",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": "little lever urban district",
+                "value_type": "string"
+              }
+            ],
+            "column_dependencies": [
+              {
+                "table": "teacher",
+                "column": "Hometown"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "where",
+            "expression": "teacher.hometown <> 'little lever urban district'"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "select name from teacher where hometown != \"little lever urban district\"",
+    "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+    "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+    "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "select name from teacher where hometown != \"little lever urban district\"",
+    "adapted_sql": "SELECT name FROM teacher WHERE hometown <> 'little lever urban district'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "little lever urban district"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 7,
+    "duckdb_row_count": 7,
+    "sqlite_result_sha256": "be8ec36a86ca9e5d92c29c8c8aa954911050d0d32f7090d9e00c774a662303d7",
+    "duckdb_result_sha256": "be8ec36a86ca9e5d92c29c8c8aa954911050d0d32f7090d9e00c774a662303d7",
+    "sample_original_rows": [
+      [
+        "Joseph Huts"
+      ],
+      [
+        "Gustaaf Deloor"
+      ],
+      [
+        "Vicente Carretero"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Joseph Huts"
+      ],
+      [
+        "Gustaaf Deloor"
+      ],
+      [
+        "Vicente Carretero"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

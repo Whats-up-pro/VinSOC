@@ -1,0 +1,65 @@
+{
+  "case_id": "external_concert_singer_db703ee8469f32e5",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "fixture_5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b"
+    ],
+    "gold_result_digests": [
+      "7c20a3fd3aef5e6e904c558b8237d0bf15b0da4dacfaa284439fa27193cb1e94",
+      "07d429b760265c311cc80eea4e6812d0fcd548826820b43fa12df449719e6403"
+    ],
+    "mutant_results": [],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM singer WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 0,
+    "semantic_mutants_killed": 0,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "singer"
+      ],
+      "columns": [],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "fb2bb884b95aaef95f09af6b8c5d9ee004d54983b6a60940738fdde25801d7f6",
+      "constraints_verified": true,
+      "logical_sha256": "fe859e3296e9e6bb121ce628d4e583b4fc174f9ad9b7911cec717af7e45f8af1"
+    },
+    {
+      "instance_id": "fixture_5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "5e9e412f524bd7ee73d29275f3ebdfe89d321aa7d15d06c2e27ff35b69c6c67b",
+      "constraints_verified": true,
+      "logical_sha256": "95b45047124a3adbf9aa2c830b242dee6105f02ca932f1d25c08f27ab43e4933"
+    }
+  ]
+}

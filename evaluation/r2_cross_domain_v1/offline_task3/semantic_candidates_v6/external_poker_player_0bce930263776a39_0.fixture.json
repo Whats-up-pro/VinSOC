@@ -1,0 +1,597 @@
+{
+  "fixture_only": true,
+  "seed": 20261005,
+  "database_id": "poker_player",
+  "schema": [
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "People_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Nationality",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Name",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Birth_Date",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DOUBLE",
+          "name": "Height",
+          "not_null": false,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "REAL"
+        }
+      ],
+      "name": "people"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Poker_Player_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "People_ID",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DOUBLE",
+          "name": "Final_Table_Made",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "REAL"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DOUBLE",
+          "name": "Best_Finish",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "REAL"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DOUBLE",
+          "name": "Money_Rank",
+          "not_null": false,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "REAL"
+        },
+        {
+          "default": null,
+          "duckdb_type": "DOUBLE",
+          "name": "Earnings",
+          "not_null": false,
+          "ordinal": 5,
+          "primary_key_position": 0,
+          "sqlite_type": "REAL"
+        }
+      ],
+      "name": "poker_player"
+    }
+  ],
+  "relationships": [
+    {
+      "from_column": "People_ID",
+      "from_table": "poker_player",
+      "to_column": "People_ID",
+      "to_table": "people"
+    }
+  ],
+  "rows": {
+    "people": [
+      [
+        1,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        17
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        199
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        200
+      ],
+      [
+        4,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        201
+      ],
+      [
+        5,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        0
+      ],
+      [
+        6,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        1
+      ],
+      [
+        7,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        2
+      ],
+      [
+        8,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        5
+      ],
+      [
+        9,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        17
+      ],
+      [
+        10,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        199
+      ],
+      [
+        11,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        201
+      ],
+      [
+        13,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        0
+      ],
+      [
+        14,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1
+      ],
+      [
+        15,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2
+      ],
+      [
+        16,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        5
+      ],
+      [
+        17,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        17
+      ],
+      [
+        18,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        199
+      ],
+      [
+        19,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        200
+      ],
+      [
+        20,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        201
+      ],
+      [
+        21,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        0
+      ],
+      [
+        22,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        2
+      ],
+      [
+        24,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        5
+      ],
+      [
+        25,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        17
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        199
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        200
+      ],
+      [
+        28,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        201
+      ],
+      [
+        29,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        199
+      ],
+      [
+        30,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        200
+      ],
+      [
+        31,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        201
+      ]
+    ],
+    "poker_player": [
+      [
+        1,
+        1,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        2,
+        2,
+        1,
+        17,
+        17,
+        2
+      ],
+      [
+        3,
+        3,
+        2,
+        0,
+        0,
+        5
+      ],
+      [
+        4,
+        4,
+        5,
+        1,
+        1,
+        17
+      ],
+      [
+        5,
+        5,
+        17,
+        2,
+        2,
+        0
+      ],
+      [
+        6,
+        6,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        7,
+        7,
+        1,
+        17,
+        17,
+        2
+      ],
+      [
+        8,
+        8,
+        2,
+        0,
+        0,
+        5
+      ],
+      [
+        9,
+        9,
+        5,
+        1,
+        1,
+        17
+      ],
+      [
+        10,
+        10,
+        17,
+        2,
+        2,
+        0
+      ],
+      [
+        11,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        12,
+        1,
+        17,
+        17,
+        2
+      ],
+      [
+        13,
+        13,
+        2,
+        0,
+        0,
+        5
+      ],
+      [
+        14,
+        14,
+        5,
+        1,
+        1,
+        17
+      ],
+      [
+        15,
+        15,
+        17,
+        2,
+        2,
+        0
+      ],
+      [
+        16,
+        1,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        17,
+        2,
+        1,
+        17,
+        17,
+        2
+      ],
+      [
+        18,
+        3,
+        2,
+        0,
+        0,
+        5
+      ],
+      [
+        19,
+        4,
+        5,
+        1,
+        1,
+        17
+      ],
+      [
+        20,
+        5,
+        17,
+        2,
+        2,
+        0
+      ],
+      [
+        21,
+        6,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        22,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        8,
+        2,
+        0,
+        0,
+        5
+      ],
+      [
+        24,
+        9,
+        5,
+        1,
+        1,
+        17
+      ],
+      [
+        25,
+        10,
+        17,
+        2,
+        2,
+        0
+      ],
+      [
+        26,
+        11,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        27,
+        12,
+        1,
+        17,
+        17,
+        2
+      ],
+      [
+        28,
+        13,
+        2,
+        0,
+        0,
+        5
+      ],
+      [
+        29,
+        14,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        30,
+        15,
+        0,
+        5,
+        5,
+        1
+      ],
+      [
+        31,
+        1,
+        0,
+        5,
+        5,
+        1
+      ]
+    ]
+  },
+  "generator_policy": "typed_constants_declared_keys_v1",
+  "generation_is_not_semantic_validation": true
+}

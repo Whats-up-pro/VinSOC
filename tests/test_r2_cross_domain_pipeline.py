@@ -246,6 +246,24 @@ def test_linker_turn_limit_keeps_denominator_and_all_telemetry(context):
     assert record["db_calls"] == 3
 
 
+def test_completed_linker_is_retained_when_generator_reaches_turn_limit(context):
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from evaluation.r2_cross_domain_v1.models import RuntimeCase
+    from evaluation.r2_cross_domain_v1.controller import run_case
+    class FakeClient:
+        transport_kind = "synthetic"
+        count = 0
+        def request(self, request):
+            self.count += 1
+            if self.count == 1:
+                return {"content": json.dumps({"tables": ["customers"], "columns": [], "relationships": [], "grounded_values": [], "constraints": []})}
+            return {"tool_calls": [{"id": f"call-{self.count}", "function": {"name": "database_profiler", "arguments": {"table": "customers"}}}]}
+    record = run_case(RuntimeCase("fixture", "shop", "Count customers"), "E3", DatabaseTools(context), FakeClient(), lambda event: None)
+    assert record["error_category"] == "TOOL_LIMIT"
+    assert record["linked_schema"]["tables"] == ["customers"]
+    assert record["response_count"] == 4
+
+
 def test_domain_prefix_is_witnessed_without_closed_domain_or_case_folding(context):
     from evaluation.r2_cross_domain_v1.tools import DatabaseTools
     from evaluation.r2_cross_domain_v1.grounding import GroundingError, validate_link

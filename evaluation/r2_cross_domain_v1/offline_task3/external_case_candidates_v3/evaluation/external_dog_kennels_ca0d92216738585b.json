@@ -1,0 +1,171 @@
+{
+  "reference": {
+    "case_id": "external_dog_kennels_ca0d92216738585b",
+    "database_id": "dog_kennels",
+    "question": "What are the id, role, and first name of the professionals who have performed two or more treatments?",
+    "gold_sql": "SELECT T1.professional_id, T1.role_code, T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id = T2.professional_id GROUP BY T1.professional_id, T1.role_code, T1.first_name HAVING COUNT(*) >= 2",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having"
+    ],
+    "family_id": "96b5c99c74ce3662012443abb3062088bbb8b68c09994f8070d578ff4e93db29",
+    "accepted_links": [
+      {
+        "tables": [
+          "Professionals",
+          "Treatments"
+        ],
+        "columns": [
+          {
+            "table": "Professionals",
+            "column": "first_name"
+          },
+          {
+            "table": "Professionals",
+            "column": "professional_id"
+          },
+          {
+            "table": "Professionals",
+            "column": "role_code"
+          },
+          {
+            "table": "Treatments",
+            "column": "professional_id"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "professional_id",
+            "from_table": "Treatments",
+            "to_column": "professional_id",
+            "to_table": "Professionals"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "derived_expression",
+            "expression": "COUNT(*)",
+            "operator": ">=",
+            "value": 2,
+            "value_type": "numeric"
+          }
+        ],
+        "predicates": [
+          {
+            "operator": "eq",
+            "stage": "join",
+            "expression": "t1.professional_id = t2.professional_id",
+            "negated": false,
+            "escape": null,
+            "literals": [],
+            "column_dependencies": [
+              {
+                "table": "Professionals",
+                "column": "professional_id"
+              },
+              {
+                "table": "Treatments",
+                "column": "professional_id"
+              }
+            ]
+          },
+          {
+            "operator": "gte",
+            "stage": "having",
+            "expression": "COUNT(*) >= 2",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": 2,
+                "value_type": "numeric"
+              }
+            ],
+            "column_dependencies": []
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "join",
+            "expression": "t1.professional_id = t2.professional_id"
+          },
+          {
+            "stage": "having",
+            "expression": "COUNT(*) >= 2"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.professional_id ,  T1.role_code ,  T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id GROUP BY T1.professional_id HAVING count(*)  >=  2",
+    "source_sqlite_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+    "base_snapshot_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+    "base_snapshot_logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.professional_id ,  T1.role_code ,  T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id GROUP BY T1.professional_id HAVING count(*)  >=  2",
+    "adapted_sql": "SELECT T1.professional_id, T1.role_code, T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id = T2.professional_id GROUP BY T1.professional_id, T1.role_code, T1.first_name HAVING COUNT(*) >= 2",
+    "transformations": [
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.role_code"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.first_name"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 6,
+    "duckdb_row_count": 6,
+    "sqlite_result_sha256": "308746783c5442b34cae853344a53592dc46df1a60c691c8d915d95b43d03f4c",
+    "duckdb_result_sha256": "308746783c5442b34cae853344a53592dc46df1a60c691c8d915d95b43d03f4c",
+    "sample_original_rows": [
+      [
+        4,
+        "Veterenarian",
+        "Vernice"
+      ],
+      [
+        6,
+        "Veterenarian",
+        "Ruben"
+      ],
+      [
+        8,
+        "Employee",
+        "Karley"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        4,
+        "Veterenarian",
+        "Vernice"
+      ],
+      [
+        6,
+        "Veterenarian",
+        "Ruben"
+      ],
+      [
+        8,
+        "Employee",
+        "Karley"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "case_id": "ctu_cross_111e791fb862cf30",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_695d7c8f0b5328650934b2e534c3ff08eb4daa577a586724cd0eac7b3e374b58",
+      "fixture_ee87827c845163cd34a36d1238cdab8c84bff6daa059b37a6732d236c9e28b6e"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "status": "NONEXECUTABLE",
+        "instance_matches": [
+          null,
+          null
+        ],
+        "errors": [
+          {
+            "instance_id": "fixture_695d7c8f0b5328650934b2e534c3ff08eb4daa577a586724cd0eac7b3e374b58",
+            "error_type": "ToolError"
+          },
+          {
+            "instance_id": "fixture_ee87827c845163cd34a36d1238cdab8c84bff6daa059b37a6732d236c9e28b6e",
+            "error_type": "ToolError"
+          }
+        ]
+      },
+      {
+        "family": "limit",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 4",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT dst_ip, COUNT(NULL) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' OR protocol = 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'UDP' GROUP BY dst_ip ORDER BY n ASC, dst_ip ASC LIMIT 3",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip DESC LIMIT 3",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND protocol = 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol <> 'UDP' GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT dst_ip, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'UDP' AND TRUE GROUP BY dst_ip ORDER BY n DESC, dst_ip ASC LIMIT 3",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 8,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "UDP"
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 3
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'UDP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "UDP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'UDP'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_695d7c8f0b5328650934b2e534c3ff08eb4daa577a586724cd0eac7b3e374b58",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "695d7c8f0b5328650934b2e534c3ff08eb4daa577a586724cd0eac7b3e374b58",
+      "constraints_verified": true,
+      "logical_sha256": "e79267239d2aa61576368ecae0dd03377a72837892953dacc139bad5bd3201dc"
+    },
+    {
+      "instance_id": "fixture_ee87827c845163cd34a36d1238cdab8c84bff6daa059b37a6732d236c9e28b6e",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "ee87827c845163cd34a36d1238cdab8c84bff6daa059b37a6732d236c9e28b6e",
+      "constraints_verified": true,
+      "logical_sha256": "6348802bc0a33426939565e9e62f9cbb217731553b7a43e09fd2a341b5131ad3"
+    }
+  ]
+}

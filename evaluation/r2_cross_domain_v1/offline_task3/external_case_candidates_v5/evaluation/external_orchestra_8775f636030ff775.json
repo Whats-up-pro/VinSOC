@@ -1,0 +1,85 @@
+{
+  "reference": {
+    "case_id": "external_orchestra_8775f636030ff775",
+    "database_id": "orchestra",
+    "question": "Please show the different record companies and the corresponding number of orchestras.",
+    "gold_sql": "SELECT Record_Company, COUNT(*) FROM orchestra GROUP BY Record_Company",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "group_having"
+    ],
+    "family_id": "c0ef0ccf0a22a4d7efe37ea678314353605e251d840c3d1e5d7d7786c7d6668f",
+    "accepted_links": [
+      {
+        "tables": [
+          "orchestra"
+        ],
+        "columns": [
+          {
+            "table": "orchestra",
+            "column": "Record_Company"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Record_Company ,  COUNT(*) FROM orchestra GROUP BY Record_Company",
+    "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+    "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Record_Company ,  COUNT(*) FROM orchestra GROUP BY Record_Company",
+    "adapted_sql": "SELECT Record_Company, COUNT(*) FROM orchestra GROUP BY Record_Company",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 11,
+    "duckdb_row_count": 11,
+    "sqlite_result_sha256": "4d975725603e09d2189e2cec49b21d66c13b8b8cf6968c4a7bd6d04e6cf4f550",
+    "duckdb_result_sha256": "66915cf97a02445b841aa05620cd6c8b13c9df9a4daeb2df0fab64b0ab6d9e4b",
+    "sample_original_rows": [
+      [
+        "Columbia Masterworks",
+        1
+      ],
+      [
+        "Decca Records",
+        2
+      ],
+      [
+        "Delos Records",
+        1
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Mercury Records",
+        1
+      ],
+      [
+        "Columbia Masterworks",
+        1
+      ],
+      [
+        "Philips",
+        1
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "case_id": "external_tvshow_1c60aeabf088515a",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_3b1e44652be615fab66db8e4772126f3058896a4724b721fc8db0d59688e0586",
+      "fixture_def8437bbdec3d4c8514cb514633fb2c2c154a5a2934424486b550d8d37427d6"
+    ],
+    "gold_result_digests": [
+      "f1fc34cf50704f286c2d35993bec25fd3497d44f09e19df417e972504bc553c3",
+      "a6aef8f23f164651ebe9e70fa8d0356e9cb1a63b5a3f224a70d6e24b3eb507b8"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T2.Episode FROM TV_Channel AS T1 LEFT JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id <> T2.Channel WHERE T1.series_name = 'Sky Radio'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name <> 'Sky Radio'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "TV_Channel",
+        "TV_series"
+      ],
+      "columns": [
+        {
+          "table": "TV_Channel",
+          "column": "id"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "series_name"
+        },
+        {
+          "table": "TV_series",
+          "column": "Channel"
+        },
+        {
+          "table": "TV_series",
+          "column": "Episode"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Channel",
+          "from_table": "TV_series",
+          "to_column": "id",
+          "to_table": "TV_Channel"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "TV_Channel",
+          "column": "series_name",
+          "operator": "=",
+          "value": "Sky Radio"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.id = t2.channel",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            },
+            {
+              "table": "TV_series",
+              "column": "Channel"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t1.series_name = 'Sky Radio'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Sky Radio",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "series_name"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.id = t2.channel"
+        },
+        {
+          "stage": "where",
+          "expression": "t1.series_name = 'Sky Radio'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_3b1e44652be615fab66db8e4772126f3058896a4724b721fc8db0d59688e0586",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "3b1e44652be615fab66db8e4772126f3058896a4724b721fc8db0d59688e0586",
+      "constraints_verified": true,
+      "logical_sha256": "6d458078e4166f5736800e264123187973f7c2e33cf766b84d195542b0c24f73"
+    },
+    {
+      "instance_id": "fixture_def8437bbdec3d4c8514cb514633fb2c2c154a5a2934424486b550d8d37427d6",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "def8437bbdec3d4c8514cb514633fb2c2c154a5a2934424486b550d8d37427d6",
+      "constraints_verified": true,
+      "logical_sha256": "3b029c5ccee8b710395945c80a825a4d8040220561d6e9948a3df6f389798955"
+    }
+  ]
+}

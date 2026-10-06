@@ -1,0 +1,243 @@
+{
+  "case_id": "ctu_cross_2e05412218fcc02f",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_9d56203090565b4e2b0374b3333335cb686c41578533e384d7a8d5ff6bd39e40",
+      "fixture_ac9f0869afa57b68467539cb490244e40a43bd5418605f07e752a20a63df0c86"
+    ],
+    "gold_result_digests": [
+      "46fedb156f9fdfe71d67d2154e5f7db32d35dcc16cac64cd692ebdec6349fd9c",
+      "8413e8bfb6e68cc1247edc0df275565d28a142b874a61868bad42753e853d791"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 OR bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' OR bytes_out > 1000000 AND bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in <> 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out >= 1000000 AND bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in = 0 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 7,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in",
+          "kind": "numeric_threshold",
+          "operator": "=",
+          "value": 0
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 1000000
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.bytes_in = 0",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 0,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.bytes_out > 1000000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1000000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.bytes_out > 1000000 AND network_flows.bytes_in = 0"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_9d56203090565b4e2b0374b3333335cb686c41578533e384d7a8d5ff6bd39e40",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "9d56203090565b4e2b0374b3333335cb686c41578533e384d7a8d5ff6bd39e40",
+      "constraints_verified": true,
+      "logical_sha256": "40f06906857a29733b2f58221b35b66b757cc11b1cf8efa14282028e8d2829d3"
+    },
+    {
+      "instance_id": "fixture_ac9f0869afa57b68467539cb490244e40a43bd5418605f07e752a20a63df0c86",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "ac9f0869afa57b68467539cb490244e40a43bd5418605f07e752a20a63df0c86",
+      "constraints_verified": true,
+      "logical_sha256": "831c828e5303d4d4b29131c7d73ad300b6e21e7d07908f4e3ef787b88bd0db73"
+    }
+  ]
+}

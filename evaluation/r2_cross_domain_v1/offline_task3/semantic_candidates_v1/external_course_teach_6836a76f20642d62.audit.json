@@ -1,0 +1,131 @@
+{
+  "case_id": "external_course_teach_6836a76f20642d62",
+  "database_id": "course_teach",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_28935887963e411f03ad7ee37281e309094bdee3af9f1e0cf2937e68000af6c2",
+      "fixture_ed702a8816dbeb82ed10442d2802b4e1c8ea8077b59dcc57cbd874a1e0115f59"
+    ],
+    "gold_result_digests": [
+      "9a98e581bdd975b9b62e848109e7acba6235b5b6c63791998e8b0273b33785e0",
+      "b17b9e113ed8627280c63ede83a0ada7513c256a67788c5e856b9182bc08f57f"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T2.Name, COUNT(*) FROM course_arrange AS T1 LEFT JOIN teacher AS T2 ON T1.Teacher_ID = T2.Teacher_ID GROUP BY T2.Name",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.Name, COUNT(*) FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID <> T2.Teacher_ID GROUP BY T2.Name",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T2.Name, COUNT(*) FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID = T2.Teacher_ID WHERE TRUE GROUP BY T2.Name",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "course_arrange",
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "course_arrange",
+          "column": "Teacher_ID"
+        },
+        {
+          "table": "teacher",
+          "column": "Name"
+        },
+        {
+          "table": "teacher",
+          "column": "Teacher_ID"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Teacher_ID",
+          "from_table": "course_arrange",
+          "to_column": "Teacher_ID",
+          "to_table": "teacher"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.teacher_id = t2.teacher_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "course_arrange",
+              "column": "Teacher_ID"
+            },
+            {
+              "table": "teacher",
+              "column": "Teacher_ID"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.teacher_id = t2.teacher_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_28935887963e411f03ad7ee37281e309094bdee3af9f1e0cf2937e68000af6c2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "28935887963e411f03ad7ee37281e309094bdee3af9f1e0cf2937e68000af6c2",
+      "constraints_verified": true,
+      "logical_sha256": "948663ef0d5fae5ac6fb06870701919dc4d1b91a474568f4de01c029ab462503"
+    },
+    {
+      "instance_id": "fixture_ed702a8816dbeb82ed10442d2802b4e1c8ea8077b59dcc57cbd874a1e0115f59",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "ed702a8816dbeb82ed10442d2802b4e1c8ea8077b59dcc57cbd874a1e0115f59",
+      "constraints_verified": true,
+      "logical_sha256": "c5b6f9b27d9390251e6715c215c787df1c199f4b69e2f0b9bdb366263fa4af3e"
+    }
+  ]
+}

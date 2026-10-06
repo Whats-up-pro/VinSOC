@@ -1,0 +1,153 @@
+{
+  "case_id": "external_orchestra_8775f636030ff775",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a"
+    ],
+    "gold_result_digests": [
+      "8cd6e8dcd2ebf42a62bca484bca7375a175ccd1b7242d99b5db29c286eb24acc",
+      "2c814a1e85fb0a491e9385e2c8c360f62fb3a4c08b5bc5de8aef9f66a8f0d217"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT Record_Company, COUNT(NULL) FROM orchestra GROUP BY Record_Company",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Record_Company, COUNT(*) FROM orchestra WHERE TRUE GROUP BY Record_Company",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          null,
+          2
+        ],
+        [
+          "fixture_A",
+          9
+        ],
+        [
+          "fixture_B",
+          9
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B",
+          9
+        ],
+        [
+          "fixture_C",
+          8
+        ],
+        [
+          "fixture_A",
+          9
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          null,
+          3
+        ],
+        [
+          "fixture_A",
+          11
+        ],
+        [
+          "fixture_B",
+          10
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          11
+        ],
+        [
+          "fixture_A",
+          11
+        ],
+        [
+          "fixture_B",
+          10
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "orchestra"
+      ],
+      "columns": [
+        {
+          "table": "orchestra",
+          "column": "Record_Company"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "constraints_verified": true,
+      "logical_sha256": "038438386a65e3c55c57733c1d1610b3948093ee976065518030478347bc8ab1"
+    },
+    {
+      "instance_id": "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+      "constraints_verified": true,
+      "logical_sha256": "c6d0e0e000276017add371192737d2e32a86d71d4afca1368fc59c15cca0da69"
+    }
+  ]
+}

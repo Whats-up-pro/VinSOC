@@ -1,0 +1,178 @@
+{
+  "case_id": "external_orchestra_333cd27fe66308a4",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_0983d6d0a9a4e7d9610ad4876ad72ae50d2cd31f8da574662ef29ad29a751d05",
+      "fixture_6349a01c1b0fcd4b35ccdcd97d450d584228d77db72dbff88dccde43a27d42d3"
+    ],
+    "gold_result_digests": [
+      "b3f8c830daed70f9cddbd500da3417b2e95863995a91a5a01a60e8e2bd0bf648",
+      "10ed3fa2d80f735143c59c55b64f0cbe3221aa10bdf7ec9f62fce24c62d901a8"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Record_Company FROM orchestra INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 INTERSECT SELECT Record_Company FROM orchestra",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded <= 2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded >= 2003",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 AND TRUE INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 0,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "orchestra"
+      ],
+      "columns": [
+        {
+          "table": "orchestra",
+          "column": "Record_Company"
+        },
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded",
+          "kind": "numeric_threshold",
+          "operator": "<",
+          "value": 2003
+        },
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 2003
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lt",
+          "stage": "where",
+          "expression": "orchestra.year_of_founded < 2003",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 2003,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "orchestra.year_of_founded > 2003",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 2003,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "orchestra.year_of_founded < 2003"
+        },
+        {
+          "stage": "where",
+          "expression": "orchestra.year_of_founded > 2003"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_0983d6d0a9a4e7d9610ad4876ad72ae50d2cd31f8da574662ef29ad29a751d05",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "0983d6d0a9a4e7d9610ad4876ad72ae50d2cd31f8da574662ef29ad29a751d05",
+      "constraints_verified": true,
+      "logical_sha256": "c5dac1d17714a89705dfdc0224c0f23713c9bcc8e36db1b054e3c48b82330fca"
+    },
+    {
+      "instance_id": "fixture_6349a01c1b0fcd4b35ccdcd97d450d584228d77db72dbff88dccde43a27d42d3",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "6349a01c1b0fcd4b35ccdcd97d450d584228d77db72dbff88dccde43a27d42d3",
+      "constraints_verified": true,
+      "logical_sha256": "8852405b9044a78cebc2ced8db3c9dee2e8fc78751db9c332ef58022cc516fdd"
+    }
+  ]
+}

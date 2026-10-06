@@ -1,0 +1,236 @@
+{
+  "case_id": "external_orchestra_7d626e678d642e36",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_f773fa0f807ae220875e5ecd67cf8e47e11f9321ac60527bb9ae31c72acd7974",
+      "fixture_3b28cee5239143092cc69a2535f4250842d6bc1edcdf0aa1203115f9b4929a7d"
+    ],
+    "gold_result_digests": [
+      "d42fb0544aa8fbd686722ae705766916cccfadf9b4615c924e0715bf84e145ac",
+      "166d248d5cfa4487afc40718afad254cf43b1d53541911332e22d4bb92db05a9"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.Name FROM conductor AS T1 LEFT JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE Year_of_Founded > 2008",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID <> T2.Conductor_ID WHERE Year_of_Founded > 2008",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE Year_of_Founded >= 2008",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE Year_of_Founded > 2008 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "conductor",
+        "orchestra"
+      ],
+      "columns": [
+        {
+          "table": "conductor",
+          "column": "Conductor_ID"
+        },
+        {
+          "table": "conductor",
+          "column": "Name"
+        },
+        {
+          "table": "orchestra",
+          "column": "Conductor_ID"
+        },
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Conductor_ID",
+          "from_table": "orchestra",
+          "to_column": "Conductor_ID",
+          "to_table": "conductor"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 2008
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.conductor_id = t2.conductor_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "conductor",
+              "column": "Conductor_ID"
+            },
+            {
+              "table": "orchestra",
+              "column": "Conductor_ID"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "t2.year_of_founded > 2008",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 2008,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.conductor_id = t2.conductor_id"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.year_of_founded > 2008"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_f773fa0f807ae220875e5ecd67cf8e47e11f9321ac60527bb9ae31c72acd7974",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "f773fa0f807ae220875e5ecd67cf8e47e11f9321ac60527bb9ae31c72acd7974",
+      "constraints_verified": true,
+      "logical_sha256": "74e5a88fc3c083243be9ba800b031a5d7a47275a7fa326061f504b438da25c72"
+    },
+    {
+      "instance_id": "fixture_3b28cee5239143092cc69a2535f4250842d6bc1edcdf0aa1203115f9b4929a7d",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "3b28cee5239143092cc69a2535f4250842d6bc1edcdf0aa1203115f9b4929a7d",
+      "constraints_verified": true,
+      "logical_sha256": "4d5e5383b7ee48067d41ad24ee3b68091cbe17f5c08d40f707d3f7f334c51d11"
+    }
+  ]
+}

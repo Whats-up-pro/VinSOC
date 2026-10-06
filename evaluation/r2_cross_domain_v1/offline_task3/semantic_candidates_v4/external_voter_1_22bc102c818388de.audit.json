@@ -1,0 +1,277 @@
+{
+  "case_id": "external_voter_1_22bc102c818388de",
+  "database_id": "voter_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_dc812f53e412efac8009713e5175af92fce79761bd273f6ae8a810d0912345ef",
+      "fixture_15e369b8bc2296a9d542c9d93206674d45506eb5eeabd0e732bc2ecce88dac20"
+    ],
+    "gold_result_digests": [
+      "296fef734eeade99cd8cc42908089abe5af39a56f9f70ae838ed2fd55333224f",
+      "66c4470e14448ac0af523078b5a884df502ef2d3fcc73d42cb74db4e18fe8d84"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T2.created, T2.state FROM contestants AS T1 JOIN votes AS T2 ON T1.contestant_number = T2.contestant_number WHERE T1.contestant_name = 'Tabatha Gehling'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T2.created, T2.state, T2.phone_number FROM contestants AS T1 LEFT JOIN votes AS T2 ON T1.contestant_number = T2.contestant_number WHERE T1.contestant_name = 'Tabatha Gehling'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T2.created, T2.state, T2.phone_number FROM contestants AS T1 JOIN votes AS T2 ON T1.contestant_number = T2.contestant_number",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.created, T2.state, T2.phone_number FROM contestants AS T1 JOIN votes AS T2 ON T1.contestant_number <> T2.contestant_number WHERE T1.contestant_name = 'Tabatha Gehling'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.created, T2.state, T2.phone_number FROM contestants AS T1 JOIN votes AS T2 ON T1.contestant_number = T2.contestant_number WHERE T1.contestant_name <> 'Tabatha Gehling'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T2.created, T2.state, T2.phone_number FROM contestants AS T1 JOIN votes AS T2 ON T1.contestant_number = T2.contestant_number WHERE T1.contestant_name = 'Tabatha Gehling' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A",
+          "fixture_A",
+          5
+        ],
+        [
+          "fixture_C",
+          "fixture_A",
+          1
+        ],
+        [
+          "fixture_C",
+          "fixture_A",
+          2
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A",
+          "fixture_A",
+          5
+        ],
+        [
+          "fixture_C",
+          "fixture_A",
+          1
+        ],
+        [
+          "fixture_C",
+          "fixture_A",
+          2
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_B",
+          17
+        ],
+        [
+          "fixture_B",
+          "fixture_B",
+          2
+        ],
+        [
+          "fixture_B",
+          "fixture_B",
+          1
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_B",
+          17
+        ],
+        [
+          "fixture_B",
+          "fixture_B",
+          2
+        ],
+        [
+          "fixture_B",
+          "fixture_B",
+          1
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "CONTESTANTS",
+        "VOTES"
+      ],
+      "columns": [
+        {
+          "table": "CONTESTANTS",
+          "column": "contestant_name"
+        },
+        {
+          "table": "CONTESTANTS",
+          "column": "contestant_number"
+        },
+        {
+          "table": "VOTES",
+          "column": "contestant_number"
+        },
+        {
+          "table": "VOTES",
+          "column": "created"
+        },
+        {
+          "table": "VOTES",
+          "column": "phone_number"
+        },
+        {
+          "table": "VOTES",
+          "column": "state"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "contestant_number",
+          "from_table": "VOTES",
+          "to_column": "contestant_number",
+          "to_table": "CONTESTANTS"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "CONTESTANTS",
+          "column": "contestant_name",
+          "operator": "=",
+          "value": "Tabatha Gehling"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.contestant_number = t2.contestant_number",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "CONTESTANTS",
+              "column": "contestant_number"
+            },
+            {
+              "table": "VOTES",
+              "column": "contestant_number"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t1.contestant_name = 'Tabatha Gehling'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Tabatha Gehling",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "CONTESTANTS",
+              "column": "contestant_name"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.contestant_number = t2.contestant_number"
+        },
+        {
+          "stage": "where",
+          "expression": "t1.contestant_name = 'Tabatha Gehling'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_dc812f53e412efac8009713e5175af92fce79761bd273f6ae8a810d0912345ef",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "dc812f53e412efac8009713e5175af92fce79761bd273f6ae8a810d0912345ef",
+      "constraints_verified": true,
+      "logical_sha256": "e3bcc7d60b2a78c5aa0948d3ba3dcc30db9c4d55a80bacbeadea5a5a2f8cacc7"
+    },
+    {
+      "instance_id": "fixture_15e369b8bc2296a9d542c9d93206674d45506eb5eeabd0e732bc2ecce88dac20",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "15e369b8bc2296a9d542c9d93206674d45506eb5eeabd0e732bc2ecce88dac20",
+      "constraints_verified": true,
+      "logical_sha256": "35b11e19824186d6d1ad5c3902ea4a13469f47b189dc3c1961da5e4a0439f968"
+    }
+  ]
+}

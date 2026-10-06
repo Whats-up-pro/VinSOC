@@ -1,0 +1,95 @@
+{
+  "reference": {
+    "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+    "database_id": "cre_Doc_Template_Mgt",
+    "question": "What are the codes of template types that have fewer than 3 templates?",
+    "gold_sql": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING COUNT(*) < 3",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "group_having"
+    ],
+    "family_id": "d3b9ebeaf577c67eadd4e0c33d4d5287826907e13d9c79ba256582772c42a13e",
+    "accepted_links": [
+      {
+        "tables": [
+          "Templates"
+        ],
+        "columns": [
+          {
+            "table": "Templates",
+            "column": "Template_Type_Code"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "derived_expression",
+            "expression": "COUNT(*)",
+            "operator": "<",
+            "value": 3,
+            "value_type": "numeric"
+          }
+        ],
+        "predicates": [
+          {
+            "operator": "lt",
+            "stage": "having",
+            "expression": "COUNT(*) < 3",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": 3,
+                "value_type": "numeric"
+              }
+            ],
+            "column_dependencies": []
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "having",
+            "expression": "COUNT(*) < 3"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING count(*)  <  3",
+    "source_sqlite_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5",
+    "base_snapshot_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+    "base_snapshot_logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING count(*)  <  3",
+    "adapted_sql": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING COUNT(*) < 3",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "a9aedaed41a21b0e8851e18220cfb323e93f1b25728880c2b0259c3b17adca03",
+    "duckdb_result_sha256": "a9aedaed41a21b0e8851e18220cfb323e93f1b25728880c2b0259c3b17adca03",
+    "sample_original_rows": [
+      [
+        "CV"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "CV"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

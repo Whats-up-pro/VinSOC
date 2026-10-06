@@ -1,0 +1,112 @@
+{
+  "case_id": "ctu_cross_5c5ade01fccce004",
+  "database_id": "ctu_dev",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_a7d7d3cb5dad1b77ffa24bf789cda938ab55b6ccb8b8c9d58180237c8de3757c",
+      "fixture_b871cc70123209c92fd73eb62acdf798b7dc860469de103407ee110bf6ba8f93"
+    ],
+    "gold_result_digests": [
+      "8b3c77b0dc8c23490a912402ff7aaa63e6f9fc2c60418450b369f4c3be318aa5",
+      "8b3c77b0dc8c23490a912402ff7aaa63e6f9fc2c60418450b369f4c3be318aa5"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT source_dataset FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT source_dataset, DATE_DIFF('SECOND', MIN(event_time), MIN(event_time)) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT source_dataset, DATE_DIFF('SECOND', MAX(event_time), MAX(event_time)) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT source_dataset, DATE_DIFF('SECOND', MIN(event_time), MAX(event_time)) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset DESC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT source_dataset, DATE_DIFF('SECOND', MIN(event_time), MAX(event_time)) FROM network_flows WHERE TRUE GROUP BY source_dataset ORDER BY source_dataset",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_a7d7d3cb5dad1b77ffa24bf789cda938ab55b6ccb8b8c9d58180237c8de3757c",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "a7d7d3cb5dad1b77ffa24bf789cda938ab55b6ccb8b8c9d58180237c8de3757c",
+      "constraints_verified": true,
+      "logical_sha256": "6996fbf633bc6afa43afc14db6e4e3574bb2e6b7e2c0f1731554b5e09770cd5b"
+    },
+    {
+      "instance_id": "fixture_b871cc70123209c92fd73eb62acdf798b7dc860469de103407ee110bf6ba8f93",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "b871cc70123209c92fd73eb62acdf798b7dc860469de103407ee110bf6ba8f93",
+      "constraints_verified": true,
+      "logical_sha256": "02f468ee8dc968c0bd0743bf1ee4bb95750f707025570cc4b533c10e16c24163"
+    }
+  ]
+}

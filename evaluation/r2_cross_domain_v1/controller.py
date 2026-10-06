@@ -85,6 +85,7 @@ def run_case(runtime_case: RuntimeCase, condition, tools: DatabaseTools, client,
                 answer = json.loads(response.get("content", ""))
                 if role == "linker":
                     linked = validate_link(runtime_case.question, answer, tools.trajectory, tools.context)
+                    record["linked_schema"] = deepcopy(linked)
                 else:
                     if not isinstance(answer, dict) or not isinstance(answer.get("sql"), str):
                         raise ValueError("INVALID_FINAL_SQL")

@@ -1,0 +1,167 @@
+{
+  "reference": {
+    "case_id": "external_concert_singer_646e7fc8042c34c2",
+    "database_id": "concert_singer",
+    "question": "Show the stadium name and capacity with most number of concerts in year 2014 or after.",
+    "gold_sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having",
+      "order_limit"
+    ],
+    "family_id": "ff8b847378e18e0bf37f6123fc61ce3392bb16a316de568637ecaf32d446e3dd",
+    "accepted_links": [
+      {
+        "tables": [
+          "concert",
+          "stadium"
+        ],
+        "columns": [
+          {
+            "table": "concert",
+            "column": "Stadium_ID"
+          },
+          {
+            "table": "concert",
+            "column": "Year"
+          },
+          {
+            "table": "stadium",
+            "column": "Capacity"
+          },
+          {
+            "table": "stadium",
+            "column": "Name"
+          },
+          {
+            "table": "stadium",
+            "column": "Stadium_ID"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Stadium_ID",
+            "from_table": "concert",
+            "to_column": "Stadium_ID",
+            "to_table": "stadium"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "limit",
+            "value": 1
+          },
+          {
+            "table": "concert",
+            "column": "Year",
+            "kind": "lexical_threshold",
+            "operator": ">=",
+            "value": "2014"
+          }
+        ],
+        "predicates": [
+          {
+            "operator": "eq",
+            "stage": "join",
+            "expression": "t1.stadium_id = t2.stadium_id",
+            "negated": false,
+            "escape": null,
+            "literals": [],
+            "column_dependencies": [
+              {
+                "table": "concert",
+                "column": "Stadium_ID"
+              },
+              {
+                "table": "stadium",
+                "column": "Stadium_ID"
+              }
+            ]
+          },
+          {
+            "operator": "gte",
+            "stage": "where",
+            "expression": "t1.year >= '2014'",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": "2014",
+                "value_type": "string"
+              }
+            ],
+            "column_dependencies": [
+              {
+                "table": "concert",
+                "column": "Year"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "join",
+            "expression": "t1.stadium_id = t2.stadium_id"
+          },
+          {
+            "stage": "where",
+            "expression": "t1.year >= '2014'"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT T2.name ,  T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id  =  T2.stadium_id WHERE T1.year  >=  2014 GROUP BY T2.stadium_id ORDER BY count(*) DESC LIMIT 1",
+    "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+    "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+    "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T2.name ,  T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id  =  T2.stadium_id WHERE T1.year  >=  2014 GROUP BY T2.stadium_id ORDER BY count(*) DESC LIMIT 1",
+    "adapted_sql": "SELECT T2.name, T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.stadium_id WHERE T1.year >= '2014' GROUP BY T2.stadium_id, T2.name, T2.capacity ORDER BY COUNT(*) DESC LIMIT 1",
+    "transformations": [
+      {
+        "rule": "sqlite_text_affinity_numeric_literal",
+        "literal": "2014"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T2.name"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T2.capacity"
+      }
+    ],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "6cb52df110f06ec28cf347c3fec0bd1614c0e808603b12773b6ebf2783f26723",
+    "duckdb_result_sha256": "6cb52df110f06ec28cf347c3fec0bd1614c0e808603b12773b6ebf2783f26723",
+    "sample_original_rows": [
+      [
+        "Somerset Park",
+        11998
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Somerset Park",
+        11998
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

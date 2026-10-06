@@ -1,0 +1,127 @@
+{
+  "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+  "database_id": "student_transcripts_tracking",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_ff6be6f818bf4956d6b0f16d981e35c50d00389cf43dfbc75e7428cd89ba8afb",
+      "fixture_f97807ea14f2e5e61bf56538696a84254c743afec9028c9739de09dacdf281dc"
+    ],
+    "gold_result_digests": [
+      "0504ae25e3127a4025a28ed9949ccd4f3f6057e6d4eafdefb38d927613d2101a",
+      "453c6ee1caef2bdd50b85a2b3b313af306f09c816738cf34c523b81d846243cd"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT section_description FROM Sections",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT section_description FROM Sections WHERE section_name <> 'h'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT section_description FROM Sections WHERE section_name = 'h' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Sections"
+      ],
+      "columns": [
+        {
+          "table": "Sections",
+          "column": "section_description"
+        },
+        {
+          "table": "Sections",
+          "column": "section_name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Sections",
+          "column": "section_name",
+          "operator": "=",
+          "value": "h"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "sections.section_name = 'h'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "h",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Sections",
+              "column": "section_name"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "sections.section_name = 'h'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_ff6be6f818bf4956d6b0f16d981e35c50d00389cf43dfbc75e7428cd89ba8afb",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "ff6be6f818bf4956d6b0f16d981e35c50d00389cf43dfbc75e7428cd89ba8afb",
+      "constraints_verified": true,
+      "logical_sha256": "76a56b9b5665939583e29d5a2b1247bb84001146b5bec6ed51b49df22f43351a"
+    },
+    {
+      "instance_id": "fixture_f97807ea14f2e5e61bf56538696a84254c743afec9028c9739de09dacdf281dc",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "f97807ea14f2e5e61bf56538696a84254c743afec9028c9739de09dacdf281dc",
+      "constraints_verified": true,
+      "logical_sha256": "b3675dbc8dd5866ea2247897dd375e4f80c376e3db790a6bb9e39bad99752661"
+    }
+  ]
+}

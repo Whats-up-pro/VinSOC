@@ -1,0 +1,204 @@
+{
+  "case_id": "external_orchestra_09dfdff61fbbeb1a",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_ab32e0edd2fc1db27146f0d9d73bce338665b61dbec5d521dc57d7d5c84d580b",
+      "fixture_408a33ba4741d7ddb709d3415022536147ada0683bd036b902f3fce747bfa785"
+    ],
+    "gold_result_digests": [
+      "d6ef6a14ae299031eab197e2ae220ba7defc01846469d44910de9238b5316bd3",
+      "64081c1decaec832fd888bee6b9d3b4407c399d19da9c5b60f179fc306268151"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(NULL) FROM orchestra WHERE Major_Record_Format = 'CD' OR Major_Record_Format = 'DVD'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM orchestra",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM orchestra WHERE Major_Record_Format = 'CD' AND Major_Record_Format = 'DVD'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM orchestra WHERE Major_Record_Format <> 'CD' OR Major_Record_Format = 'DVD'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM orchestra WHERE Major_Record_Format = 'CD' OR Major_Record_Format <> 'DVD'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM orchestra WHERE Major_Record_Format = 'CD' OR Major_Record_Format = 'DVD' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          5
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          5
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          8
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          8
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "orchestra"
+      ],
+      "columns": [
+        {
+          "table": "orchestra",
+          "column": "Major_Record_Format"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "orchestra",
+          "column": "Major_Record_Format",
+          "operator": "=",
+          "value": "CD"
+        },
+        {
+          "table": "orchestra",
+          "column": "Major_Record_Format",
+          "operator": "=",
+          "value": "DVD"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "orchestra.major_record_format = 'CD'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "CD",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Major_Record_Format"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "orchestra.major_record_format = 'DVD'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "DVD",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Major_Record_Format"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "orchestra.major_record_format = 'CD' OR orchestra.major_record_format = 'DVD'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_ab32e0edd2fc1db27146f0d9d73bce338665b61dbec5d521dc57d7d5c84d580b",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "ab32e0edd2fc1db27146f0d9d73bce338665b61dbec5d521dc57d7d5c84d580b",
+      "constraints_verified": true,
+      "logical_sha256": "1bdbab62c1391a69f2b7b7707740aa46d2033a202cd83cc0eae11cda8c7f91fe"
+    },
+    {
+      "instance_id": "fixture_408a33ba4741d7ddb709d3415022536147ada0683bd036b902f3fce747bfa785",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "408a33ba4741d7ddb709d3415022536147ada0683bd036b902f3fce747bfa785",
+      "constraints_verified": true,
+      "logical_sha256": "f5005af320ebbe9a4b1f7a4604d6a2e56cfc2a8d6ce41533e22792ee57563d52"
+    }
+  ]
+}

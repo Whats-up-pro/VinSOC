@@ -1,0 +1,124 @@
+{
+  "case_id": "external_car_1_c3c5143d74d3437c",
+  "database_id": "car_1",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_7d9f7e23e1caf65c328c750023ad17bcb9c1d9971b0638b53e0a2d58530b02d2",
+      "fixture_842040061b44a2bcd7effa60ba5bb8a439010ce6885792c0140be56f5c6beae2"
+    ],
+    "gold_result_digests": [
+      "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5",
+      "0874e2070c8cb9320e4e9d3e3140ad8ad50b4fca18f64dc23f9be967c54ebff3"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM CARS_DATA",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM CARS_DATA WHERE YEAR <> 1980",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM CARS_DATA WHERE YEAR = 1980 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "cars_data"
+      ],
+      "columns": [
+        {
+          "table": "cars_data",
+          "column": "Year"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "cars_data",
+          "column": "Year",
+          "kind": "numeric_threshold",
+          "operator": "=",
+          "value": 1980
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "cars_data.year = 1980",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1980,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "cars_data",
+              "column": "Year"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "cars_data.year = 1980"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_7d9f7e23e1caf65c328c750023ad17bcb9c1d9971b0638b53e0a2d58530b02d2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "7d9f7e23e1caf65c328c750023ad17bcb9c1d9971b0638b53e0a2d58530b02d2",
+      "constraints_verified": true,
+      "logical_sha256": "b08e5f08789bf7ee5a16dc9e93aa8c6b6838eae4bcb0ef43d845e366aa6df205"
+    },
+    {
+      "instance_id": "fixture_842040061b44a2bcd7effa60ba5bb8a439010ce6885792c0140be56f5c6beae2",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "842040061b44a2bcd7effa60ba5bb8a439010ce6885792c0140be56f5c6beae2",
+      "constraints_verified": true,
+      "logical_sha256": "7cf996ceccb46226ea8b695c2ddb3e429bee0f7534ab3bea6bf404868a107226"
+    }
+  ]
+}

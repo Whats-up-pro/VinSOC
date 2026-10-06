@@ -1,0 +1,207 @@
+{
+  "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a"
+    ],
+    "gold_result_digests": [
+      "67499542927ee11d82a69e02de79c83586d6d3c3a81f1a300153838bad22a36e",
+      "ab159538bbaaaf7ebe51f022be0453f627c892349c175212df955c3d3eb880b8"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.Name, T2.Orchestra FROM conductor AS T1 LEFT JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.Name, T2.Orchestra FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID <> T2.Conductor_ID",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.Name, T2.Orchestra FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_B"
+        ],
+        [
+          "fixture_A",
+          "fixture_C"
+        ],
+        [
+          "fixture_B",
+          "fixture_A"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_B"
+        ],
+        [
+          "fixture_A",
+          "fixture_C"
+        ],
+        [
+          "fixture_B",
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "conductor",
+        "orchestra"
+      ],
+      "columns": [
+        {
+          "table": "conductor",
+          "column": "Conductor_ID"
+        },
+        {
+          "table": "conductor",
+          "column": "Name"
+        },
+        {
+          "table": "orchestra",
+          "column": "Conductor_ID"
+        },
+        {
+          "table": "orchestra",
+          "column": "Orchestra"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Conductor_ID",
+          "from_table": "orchestra",
+          "to_column": "Conductor_ID",
+          "to_table": "conductor"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.conductor_id = t2.conductor_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "conductor",
+              "column": "Conductor_ID"
+            },
+            {
+              "table": "orchestra",
+              "column": "Conductor_ID"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.conductor_id = t2.conductor_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "constraints_verified": true,
+      "logical_sha256": "038438386a65e3c55c57733c1d1610b3948093ee976065518030478347bc8ab1"
+    },
+    {
+      "instance_id": "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+      "constraints_verified": true,
+      "logical_sha256": "c6d0e0e000276017add371192737d2e32a86d71d4afca1368fc59c15cca0da69"
+    }
+  ]
+}

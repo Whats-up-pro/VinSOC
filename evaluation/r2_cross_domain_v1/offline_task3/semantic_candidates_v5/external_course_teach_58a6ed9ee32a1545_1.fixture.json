@@ -1,0 +1,712 @@
+{
+  "fixture_only": true,
+  "seed": 20261006,
+  "database_id": "course_teach",
+  "schema": [
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Course_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Staring_Date",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Course",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "course"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Course_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Teacher_ID",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 2,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Grade",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 3,
+          "sqlite_type": "INT"
+        }
+      ],
+      "name": "course_arrange"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Teacher_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Name",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Age",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Hometown",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "teacher"
+    }
+  ],
+  "relationships": [
+    {
+      "from_column": "Course_ID",
+      "from_table": "course_arrange",
+      "to_column": "Course_ID",
+      "to_table": "course"
+    },
+    {
+      "from_column": "Teacher_ID",
+      "from_table": "course_arrange",
+      "to_column": "Teacher_ID",
+      "to_table": "teacher"
+    }
+  ],
+  "rows": {
+    "course": [
+      [
+        1,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        4,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        5,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        6,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        7,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        8,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        9,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        10,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        11,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        13,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        14,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        15,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        16,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        17,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        18,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        19,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        20,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        21,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        22,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        24,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        25,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        28,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        29,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        30,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        31,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        32,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        33,
+        null,
+        null
+      ],
+      [
+        34,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        35,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        36,
+        "fixture_A",
+        "fixture_A"
+      ]
+    ],
+    "course_arrange": [
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        2,
+        2
+      ],
+      [
+        3,
+        3,
+        3
+      ],
+      [
+        4,
+        4,
+        4
+      ],
+      [
+        5,
+        5,
+        5
+      ],
+      [
+        6,
+        6,
+        6
+      ],
+      [
+        7,
+        7,
+        7
+      ],
+      [
+        8,
+        8,
+        8
+      ],
+      [
+        9,
+        9,
+        9
+      ],
+      [
+        10,
+        10,
+        10
+      ],
+      [
+        11,
+        11,
+        11
+      ],
+      [
+        12,
+        12,
+        12
+      ],
+      [
+        13,
+        13,
+        13
+      ],
+      [
+        14,
+        14,
+        14
+      ],
+      [
+        15,
+        15,
+        15
+      ],
+      [
+        16,
+        16,
+        16
+      ],
+      [
+        17,
+        17,
+        17
+      ],
+      [
+        18,
+        18,
+        18
+      ],
+      [
+        19,
+        19,
+        19
+      ],
+      [
+        20,
+        20,
+        20
+      ],
+      [
+        21,
+        21,
+        21
+      ],
+      [
+        22,
+        22,
+        22
+      ],
+      [
+        23,
+        23,
+        23
+      ],
+      [
+        24,
+        24,
+        24
+      ],
+      [
+        25,
+        25,
+        25
+      ],
+      [
+        26,
+        26,
+        26
+      ],
+      [
+        27,
+        27,
+        27
+      ],
+      [
+        28,
+        28,
+        28
+      ],
+      [
+        29,
+        29,
+        29
+      ],
+      [
+        30,
+        30,
+        30
+      ],
+      [
+        31,
+        31,
+        31
+      ],
+      [
+        32,
+        32,
+        32
+      ],
+      [
+        33,
+        33,
+        33
+      ],
+      [
+        34,
+        34,
+        34
+      ],
+      [
+        35,
+        35,
+        35
+      ],
+      [
+        36,
+        36,
+        36
+      ]
+    ],
+    "teacher": [
+      [
+        1,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_C",
+        "little lever urban district"
+      ],
+      [
+        4,
+        "fixture_A",
+        "fixture_A",
+        "xlittle lever urban district"
+      ],
+      [
+        5,
+        "fixture_B",
+        "fixture_B",
+        "little lever urban district_tail"
+      ],
+      [
+        6,
+        "fixture_C",
+        "fixture_C",
+        "LITTLE LEVER URBAN DISTRICT"
+      ],
+      [
+        7,
+        "fixture_A",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        8,
+        "fixture_B",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        9,
+        "fixture_C",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        10,
+        "fixture_A",
+        "fixture_A",
+        "little lever urban district"
+      ],
+      [
+        11,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        "fixture_C",
+        "little lever urban district_tail"
+      ],
+      [
+        13,
+        "fixture_A",
+        "fixture_A",
+        "LITTLE LEVER URBAN DISTRICT"
+      ],
+      [
+        14,
+        "fixture_B",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        15,
+        "fixture_C",
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        16,
+        "fixture_A",
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        17,
+        "fixture_B",
+        "fixture_B",
+        "little lever urban district"
+      ],
+      [
+        18,
+        "fixture_C",
+        "fixture_C",
+        "xlittle lever urban district"
+      ],
+      [
+        19,
+        "fixture_A",
+        "fixture_A",
+        "little lever urban district_tail"
+      ],
+      [
+        20,
+        "fixture_B",
+        "fixture_B",
+        "LITTLE LEVER URBAN DISTRICT"
+      ],
+      [
+        21,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        22,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        24,
+        "fixture_C",
+        "fixture_C",
+        "little lever urban district"
+      ],
+      [
+        25,
+        "fixture_A",
+        "fixture_A",
+        "xlittle lever urban district"
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_B",
+        "little lever urban district_tail"
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_C",
+        "LITTLE LEVER URBAN DISTRICT"
+      ],
+      [
+        28,
+        "fixture_A",
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        29,
+        "fixture_B",
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        30,
+        "fixture_C",
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        31,
+        "fixture_A",
+        "fixture_A",
+        "little lever urban district"
+      ],
+      [
+        32,
+        "fixture_B",
+        "fixture_B",
+        "xlittle lever urban district"
+      ],
+      [
+        33,
+        null,
+        null,
+        null
+      ],
+      [
+        34,
+        "fixture_A",
+        "fixture_A",
+        "LITTLE LEVER URBAN DISTRICT"
+      ],
+      [
+        35,
+        "fixture_B",
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        36,
+        "fixture_A",
+        "fixture_A",
+        "little lever urban district"
+      ]
+    ]
+  },
+  "generator_policy": "typed_constants_declared_keys_v1",
+  "generation_is_not_semantic_validation": true
+}

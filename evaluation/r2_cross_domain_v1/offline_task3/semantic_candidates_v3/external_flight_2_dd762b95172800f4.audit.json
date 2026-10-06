@@ -1,0 +1,132 @@
+{
+  "case_id": "external_flight_2_dd762b95172800f4",
+  "database_id": "flight_2",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_8d22508b7a4bb4cd5825a67850df69748b777e37582ac135cf358a6d75aecd41",
+      "fixture_a5080ff10165b3118cbc44092bdb3541d2580c1702b2455bccdf9e0b2c781343"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT AirportName FROM Airports",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT AirportName FROM Airports WHERE NOT AirportCode IN (SELECT SourceAirport FROM Flights WHERE TRUE UNION SELECT DestAirport FROM Flights WHERE TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 1,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [],
+      "sample_duckdb_rows": []
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [],
+      "sample_duckdb_rows": []
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "airports",
+        "flights"
+      ],
+      "columns": [
+        {
+          "table": "airports",
+          "column": "AirportCode"
+        },
+        {
+          "table": "airports",
+          "column": "AirportName"
+        },
+        {
+          "table": "flights",
+          "column": "DestAirport"
+        },
+        {
+          "table": "flights",
+          "column": "SourceAirport"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "in",
+          "stage": "where",
+          "expression": "airports.airportcode IN (SELECT flights.sourceairport AS sourceairport FROM flights AS flights UNION SELECT flights.destairport AS destairport FROM flights AS flights)",
+          "negated": true,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "AirportCode"
+            },
+            {
+              "table": "flights",
+              "column": "DestAirport"
+            },
+            {
+              "table": "flights",
+              "column": "SourceAirport"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "NOT airports.airportcode IN (SELECT flights.sourceairport AS sourceairport FROM flights AS flights UNION SELECT flights.destairport AS destairport FROM flights AS flights)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_8d22508b7a4bb4cd5825a67850df69748b777e37582ac135cf358a6d75aecd41",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "8d22508b7a4bb4cd5825a67850df69748b777e37582ac135cf358a6d75aecd41",
+      "constraints_verified": true,
+      "logical_sha256": "535c51e97dab33a8fd8bd19f26a16b7467450396334a20a82cbced6962d116ed"
+    },
+    {
+      "instance_id": "fixture_a5080ff10165b3118cbc44092bdb3541d2580c1702b2455bccdf9e0b2c781343",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "a5080ff10165b3118cbc44092bdb3541d2580c1702b2455bccdf9e0b2c781343",
+      "constraints_verified": true,
+      "logical_sha256": "6b13e549e255ad12fdbaa5c928b78e3dc37093b26df7921fc9dc4fadd03ed5ba"
+    }
+  ]
+}

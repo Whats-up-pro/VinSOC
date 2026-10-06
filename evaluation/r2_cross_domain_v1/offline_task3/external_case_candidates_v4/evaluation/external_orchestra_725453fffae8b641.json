@@ -1,0 +1,100 @@
+{
+  "reference": {
+    "case_id": "external_orchestra_725453fffae8b641",
+    "database_id": "orchestra",
+    "question": "List the names of orchestras that have no performance.",
+    "gold_sql": "SELECT Orchestra FROM orchestra WHERE NOT Orchestra_ID IN (SELECT Orchestra_ID FROM performance)",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "nested"
+    ],
+    "family_id": "e3351d4cf2e31c02590531c68d9148ad3ce7e3ec2e000cbfe804a19647d82597",
+    "accepted_links": [
+      {
+        "tables": [
+          "orchestra",
+          "performance"
+        ],
+        "columns": [
+          {
+            "table": "orchestra",
+            "column": "Orchestra"
+          },
+          {
+            "table": "orchestra",
+            "column": "Orchestra_ID"
+          },
+          {
+            "table": "performance",
+            "column": "Orchestra_ID"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [
+          {
+            "operator": "in",
+            "stage": "where",
+            "expression": "orchestra.orchestra_id IN (SELECT performance.orchestra_id AS orchestra_id FROM performance AS performance)",
+            "negated": true,
+            "escape": null,
+            "literals": [],
+            "column_dependencies": [
+              {
+                "table": "orchestra",
+                "column": "Orchestra_ID"
+              },
+              {
+                "table": "performance",
+                "column": "Orchestra_ID"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "where",
+            "expression": "NOT orchestra.orchestra_id IN (SELECT performance.orchestra_id AS orchestra_id FROM performance AS performance)"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Orchestra FROM orchestra WHERE Orchestra_ID NOT IN (SELECT Orchestra_ID FROM performance)",
+    "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+    "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Orchestra FROM orchestra WHERE Orchestra_ID NOT IN (SELECT Orchestra_ID FROM performance)",
+    "adapted_sql": "SELECT Orchestra FROM orchestra WHERE NOT Orchestra_ID IN (SELECT Orchestra_ID FROM performance)",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "6a11baa2e6500589f536799b17ba5512a255764cacaa26c01baec4304da833dd",
+    "duckdb_result_sha256": "6a11baa2e6500589f536799b17ba5512a255764cacaa26c01baec4304da833dd",
+    "sample_original_rows": [
+      [
+        "San Francisco Symphony Orchestra"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "San Francisco Symphony Orchestra"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

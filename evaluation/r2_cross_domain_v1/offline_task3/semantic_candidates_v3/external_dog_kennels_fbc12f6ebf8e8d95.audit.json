@@ -1,0 +1,214 @@
+{
+  "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+  "database_id": "dog_kennels",
+  "split": "evaluation",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+      "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530"
+    ],
+    "gold_result_digests": [
+      "343c0afa042a166b75ba6f3441a7686f3359432615fe061b026663177e60c966",
+      "368f49ae7d93dcf66cc47b031a6be2e2f0e286d309e28bc8f171b042c6ef4832"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T1.owner_id, T2.first_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "limit",
+        "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 LEFT JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id <> T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) ASC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(NULL) DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id WHERE TRUE GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": false,
+      "ordering_validation": "AMBIGUOUS_LIMIT_TIE",
+      "sample_sqlite_rows": [
+        [
+          14,
+          "fixture_C",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          1,
+          "fixture_B",
+          "fixture_A"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          1,
+          "fixture_C",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          1,
+          "fixture_C",
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Dogs",
+        "Owners"
+      ],
+      "columns": [
+        {
+          "table": "Dogs",
+          "column": "owner_id"
+        },
+        {
+          "table": "Owners",
+          "column": "first_name"
+        },
+        {
+          "table": "Owners",
+          "column": "last_name"
+        },
+        {
+          "table": "Owners",
+          "column": "owner_id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "owner_id",
+          "from_table": "Dogs",
+          "to_column": "owner_id",
+          "to_table": "Owners"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 1
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.owner_id = t2.owner_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Dogs",
+              "column": "owner_id"
+            },
+            {
+              "table": "Owners",
+              "column": "owner_id"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.owner_id = t2.owner_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+      "constraints_verified": true,
+      "logical_sha256": "958dd102321fc74194cf6cbe363edb4d9f4161e074e9af378b917f3d426e007d"
+    },
+    {
+      "instance_id": "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+      "constraints_verified": true,
+      "logical_sha256": "ebdcee3e9fb4bfc0ecf4113e403162f0c98f7b13bc89a89eab4b25380ebacf41"
+    }
+  ]
+}

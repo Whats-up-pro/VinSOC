@@ -1,0 +1,176 @@
+{
+  "case_id": "external_world_1_329e92f0874dea47",
+  "database_id": "world_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_3a736a7370425483c8c22ce9524b9754e02bdf15fdb6149c818176ad703c1a9a",
+      "fixture_bde2cab0890bbc937e6f49abce2d1449fe97b14460ce47fcefd5aee20c709ce1"
+    ],
+    "gold_result_digests": [
+      "865825ea0909ed38297f7f551fc6ca6d9da81699ad31f0c00ad52ef923d06203",
+      "865825ea0909ed38297f7f551fc6ca6d9da81699ad31f0c00ad52ef923d06203"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT AVG(LifeExpectancy) FROM country",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT AVG(LifeExpectancy) FROM country WHERE Continent = 'Africa' OR GovernmentForm = 'Republic'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT AVG(LifeExpectancy) FROM country WHERE Continent <> 'Africa' AND GovernmentForm = 'Republic'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT AVG(LifeExpectancy) FROM country WHERE Continent = 'Africa' AND GovernmentForm <> 'Republic'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT AVG(LifeExpectancy) FROM country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "country"
+      ],
+      "columns": [
+        {
+          "table": "country",
+          "column": "Continent"
+        },
+        {
+          "table": "country",
+          "column": "GovernmentForm"
+        },
+        {
+          "table": "country",
+          "column": "LifeExpectancy"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "country",
+          "column": "Continent",
+          "operator": "=",
+          "value": "Africa"
+        },
+        {
+          "table": "country",
+          "column": "GovernmentForm",
+          "operator": "=",
+          "value": "Republic"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "country.continent = 'Africa'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Africa",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Continent"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "country.governmentform = 'Republic'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Republic",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "GovernmentForm"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "country.continent = 'Africa' AND country.governmentform = 'Republic'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_3a736a7370425483c8c22ce9524b9754e02bdf15fdb6149c818176ad703c1a9a",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "3a736a7370425483c8c22ce9524b9754e02bdf15fdb6149c818176ad703c1a9a",
+      "constraints_verified": true,
+      "logical_sha256": "a4d09e837f31c6040a669ab76e4d19114608fe7a3f70210447d56c8d1dc4d8f8"
+    },
+    {
+      "instance_id": "fixture_bde2cab0890bbc937e6f49abce2d1449fe97b14460ce47fcefd5aee20c709ce1",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "bde2cab0890bbc937e6f49abce2d1449fe97b14460ce47fcefd5aee20c709ce1",
+      "constraints_verified": true,
+      "logical_sha256": "8bf90def28a366ba6717f18e1293e3900a11cd00d5c8969106f37f4db7d45ed8"
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "case_id": "ctu_cross_1dc9e35510939cd9",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_3823f6fbe3eea88a68817947fd936e4be1ef8d18649319a779e5cd5acb122e7a",
+      "fixture_55d702d92f7d9652a2240907f94f3a056b6038f8eb262d5c00960c053989c6ac"
+    ],
+    "gold_result_digests": [
+      "0be493d08bcb0ef612fc252fe26478b3c0ba8fa05f53f2730bd451a12cad1c84",
+      "5b4f19d32b5be8e7fb4f7489d01e69b3911043387c3543cc3690753aa73804b2"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'RTCP' AND bytes_out = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT dst_ip, dst_port FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT dst_ip, dst_port FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'RTCP' OR bytes_out = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT dst_ip, dst_port FROM network_flows WHERE source_dataset = 'ctu13_s7' OR protocol = 'RTCP' AND bytes_out = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_ip, dst_port FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'RTCP' AND bytes_out <> 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_ip, dst_port FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND protocol = 'RTCP' AND bytes_out = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_ip, dst_port FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol <> 'RTCP' AND bytes_out = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT dst_ip, dst_port FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'RTCP' AND bytes_out = 0 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 7,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_port"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "RTCP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "numeric_threshold",
+          "operator": "=",
+          "value": 0
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.bytes_out = 0",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 0,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'RTCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "RTCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'RTCP' AND network_flows.bytes_out = 0"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_3823f6fbe3eea88a68817947fd936e4be1ef8d18649319a779e5cd5acb122e7a",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "3823f6fbe3eea88a68817947fd936e4be1ef8d18649319a779e5cd5acb122e7a",
+      "constraints_verified": true,
+      "logical_sha256": "5399eb3430dacebb42cb7017d0da4719c11d7aff791023b04da3507d2aa24dcc"
+    },
+    {
+      "instance_id": "fixture_55d702d92f7d9652a2240907f94f3a056b6038f8eb262d5c00960c053989c6ac",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "55d702d92f7d9652a2240907f94f3a056b6038f8eb262d5c00960c053989c6ac",
+      "constraints_verified": true,
+      "logical_sha256": "492e8cfeeb4fedca192503a724f8bbd81adc92b0981576a41613beca0f96528c"
+    }
+  ]
+}

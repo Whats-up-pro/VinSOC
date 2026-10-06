@@ -1,0 +1,400 @@
+{
+  "case_id": "external_tvshow_38dfbde79a7487e2",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_cbd1c02edc32a94a0cbcf186cfe1cff8c82d39e698a4959de7273f3b664a645e",
+      "fixture_9a81b2e46c79880f875e9a2a298c6aab84e1cecb9e4f39dedd12a520c6e44fff"
+    ],
+    "gold_result_digests": [
+      "b0f103de641f25fed9f5c5fa3be762f4c25a2b72178d1f972ba189b3208403a6",
+      "d202fc52e343138fe0ea5de063597bb0ee0504bafb90b1807a9502a9a39febf1"
+    ],
+    "mutant_results": [
+      {
+        "family": "set_operation",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' UNION SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "set_operation",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' EXCEPT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "projection",
+        "sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NONEXECUTABLE",
+        "instance_matches": [
+          null,
+          null
+        ],
+        "errors": [
+          {
+            "instance_id": "fixture_cbd1c02edc32a94a0cbcf186cfe1cff8c82d39e698a4959de7273f3b664a645e",
+            "error_type": "ToolError"
+          },
+          {
+            "instance_id": "fixture_9a81b2e46c79880f875e9a2a298c6aab84e1cecb9e4f39dedd12a520c6e44fff",
+            "error_type": "ToolError"
+          }
+        ]
+      },
+      {
+        "family": "projection",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NONEXECUTABLE",
+        "instance_matches": [
+          null,
+          null
+        ],
+        "errors": [
+          {
+            "instance_id": "fixture_cbd1c02edc32a94a0cbcf186cfe1cff8c82d39e698a4959de7273f3b664a645e",
+            "error_type": "ToolError"
+          },
+          {
+            "instance_id": "fixture_9a81b2e46c79880f875e9a2a298c6aab84e1cecb9e4f39dedd12a520c6e44fff",
+            "error_type": "ToolError"
+          }
+        ]
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 LEFT JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 LEFT JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id <> T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by <> 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id <> T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by <> 'Ben Jones'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' AND TRUE INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 10,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A",
+          "fixture_C"
+        ],
+        [
+          "fixture_B",
+          "fixture_A"
+        ],
+        [
+          "fixture_C",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A",
+          "fixture_C"
+        ],
+        [
+          "fixture_C",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Cartoon",
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "Cartoon",
+          "column": "Channel"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Directed_by"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Country"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "id"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "series_name"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Channel",
+          "from_table": "Cartoon",
+          "to_column": "id",
+          "to_table": "TV_Channel"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by",
+          "operator": "=",
+          "value": "Michael Chang"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Directed_by",
+          "operator": "=",
+          "value": "Ben Jones"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.id = t2.channel",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Channel"
+            },
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.directed_by = 'Michael Chang'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Michael Chang",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.id = t2.channel",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Channel"
+            },
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.directed_by = 'Ben Jones'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Ben Jones",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.id = t2.channel"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.directed_by = 'Michael Chang'"
+        },
+        {
+          "stage": "join",
+          "expression": "t1.id = t2.channel"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.directed_by = 'Ben Jones'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_cbd1c02edc32a94a0cbcf186cfe1cff8c82d39e698a4959de7273f3b664a645e",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "cbd1c02edc32a94a0cbcf186cfe1cff8c82d39e698a4959de7273f3b664a645e",
+      "constraints_verified": true,
+      "logical_sha256": "8bf1293a8ff8812c576630f8dce22922f0799d3fc652b8ad4ef9a54b7dbfac75"
+    },
+    {
+      "instance_id": "fixture_9a81b2e46c79880f875e9a2a298c6aab84e1cecb9e4f39dedd12a520c6e44fff",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "9a81b2e46c79880f875e9a2a298c6aab84e1cecb9e4f39dedd12a520c6e44fff",
+      "constraints_verified": true,
+      "logical_sha256": "8fd81953feee4b0fecfa0d852cecc5d5a5335dd3d89b6c927cfcc18ebd54c72e"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "task": 3,
+  "checkpoint": "semantic infrastructure; benchmark gate pending",
+  "base_sha": "62da30100cac9375691a2d82587fde48f23f7a51",
+  "verified_at_utc": "2026-10-06T07:37:35.448355+00:00",
+  "commands": [
+    {
+      "command": "python -m pytest -q tests/test_r2_cross_domain_*.py",
+      "exit_code": 0,
+      "result": "119 passed"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "result": "949 passed, 1654 warnings in 167.76s (0:02:47)"
+    },
+    {
+      "command": "py_compile.compile(path, doraise=True)",
+      "exit_code": 0,
+      "files": [
+        "evaluation/r2_cross_domain_v1/annotations.py",
+        "evaluation/r2_cross_domain_v1/benchmark.py",
+        "evaluation/r2_cross_domain_v1/case_preparation.py",
+        "evaluation/r2_cross_domain_v1/controller.py",
+        "evaluation/r2_cross_domain_v1/safety.py",
+        "scripts/prepare_r2_cross_domain_cases.py",
+        "tests/test_r2_cross_domain_annotations.py",
+        "tests/test_r2_cross_domain_gold.py",
+        "tests/test_r2_cross_domain_pipeline.py",
+        "evaluation/r2_cross_domain_v1/fixture_generation.py",
+        "evaluation/r2_cross_domain_v1/module_metrics.py",
+        "evaluation/r2_cross_domain_v1/semantic_instances.py",
+        "scripts/audit_r2_cross_domain_semantics.py",
+        "tests/test_r2_cross_domain_module_metrics.py",
+        "tests/test_r2_cross_domain_semantic_exclusions.py",
+        "tests/test_r2_cross_domain_semantic_instances.py"
+      ]
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "tested_source_sha256": {
+    "evaluation/r2_cross_domain_v1/annotations.py": "0107c2db62b419e25f3812dc21b117d830a77f009e07e863c9a5a4af5073c1f3",
+    "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+    "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+    "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+    "scripts/prepare_r2_cross_domain_cases.py": "59a941649dccd0f4ecfa77652ec4e9999860ad83b26c2399bd013a5e50480cdc",
+    "tests/test_r2_cross_domain_annotations.py": "8598c20987bda7dd4dbf4384a43c84c02964a11d8068b077fd8b3e25fe80799c",
+    "tests/test_r2_cross_domain_gold.py": "f5b3c6f4aefc35fa6bbda72508f2f364de42f34cf3362a9c74b3ddf391821ad2",
+    "tests/test_r2_cross_domain_pipeline.py": "03884c728c363dd71c3db97444c3119fc26de69935a248be25220d573756b2a8",
+    "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+    "evaluation/r2_cross_domain_v1/module_metrics.py": "38d4063251f9b2dbe6cbc310c9eb838db36e0261bbea70edb58329a910103f8b",
+    "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+    "scripts/audit_r2_cross_domain_semantics.py": "813914f984a9c5d3badf99df8683a6cc5280fff4cf6ee6f3377a0effa2870176",
+    "tests/test_r2_cross_domain_module_metrics.py": "0d3641b698f860346187bad75e11143205a883f3d5ec47f44df1d7b914fe04b3",
+    "tests/test_r2_cross_domain_semantic_exclusions.py": "01c5fe102ddba89d0161a4918b74748fcd64af616ee9be60287567298f5db9f8",
+    "tests/test_r2_cross_domain_semantic_instances.py": "625d6890a1bb96e6c7ed7e080c9eec7e04f0cd3e4a1bc4de7edb0291269860b2"
+  },
+  "producer_identity_note": "Tested source hashes are not retroactive producer identities. Each audit retains its original started receipt; v2 crash lacked producer capture and remains explicitly limited.",
+  "semantic_audit_counts": {
+    "v1": 90,
+    "v3": 105,
+    "v4": 109,
+    "v5": 119,
+    "v6": 119
+  },
+  "candidate_count": 120,
+  "protected_historical_file_count": 245,
+  "prior_artifact_json_count_verified": 114,
+  "historical_bytes_unchanged": true,
+  "protected_inventory_identity": "55510afb3ac3a9d5b8149c129bf4747cb0efc99bf5fda65fa03deeba0ec19a14",
+  "benchmark_locked": false,
+  "release_eligible": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "frozen_closed": true
+}

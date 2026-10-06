@@ -1,0 +1,187 @@
+{
+  "case_id": "ctu_cross_cd58f61cdff78fbc",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_3ed8a52a9da9dd7a05920e8f40074831ccca4b44ecaa88a22b8ab2b8b30eb805",
+      "fixture_4ac8fd7a2d44ab990e126e0613aac46ec689d4178102df7964fc1986c692dfb2"
+    ],
+    "gold_result_digests": [
+      "c98d5b3320cf9b1c154c7caa08f970e6132c2c42e89afb9958b8102ded1a9422",
+      "f0c75030bcbac62a7f657769ea1b10921164edd4f439a61b78adb836c3643aae"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'RSVP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip, dst_ip FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'RSVP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'RSVP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'RSVP'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'RSVP' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "RSVP"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'RSVP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "RSVP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'RSVP'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_3ed8a52a9da9dd7a05920e8f40074831ccca4b44ecaa88a22b8ab2b8b30eb805",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "3ed8a52a9da9dd7a05920e8f40074831ccca4b44ecaa88a22b8ab2b8b30eb805",
+      "constraints_verified": true,
+      "logical_sha256": "960b744f0ff261d6cf16fef1d817023f1257f4f5fc1c0448e03d8bb045076e94"
+    },
+    {
+      "instance_id": "fixture_4ac8fd7a2d44ab990e126e0613aac46ec689d4178102df7964fc1986c692dfb2",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "4ac8fd7a2d44ab990e126e0613aac46ec689d4178102df7964fc1986c692dfb2",
+      "constraints_verified": true,
+      "logical_sha256": "66d5f4484e02ea7152687762cbad8dbddf9277b431bf5b40742417ffb7276b45"
+    }
+  ]
+}

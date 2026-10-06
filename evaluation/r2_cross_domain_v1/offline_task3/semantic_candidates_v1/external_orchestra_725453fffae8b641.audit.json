@@ -1,0 +1,114 @@
+{
+  "case_id": "external_orchestra_725453fffae8b641",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Orchestra FROM orchestra",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Orchestra FROM orchestra WHERE NOT Orchestra_ID IN (SELECT Orchestra_ID FROM performance WHERE TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 1,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "orchestra",
+        "performance"
+      ],
+      "columns": [
+        {
+          "table": "orchestra",
+          "column": "Orchestra"
+        },
+        {
+          "table": "orchestra",
+          "column": "Orchestra_ID"
+        },
+        {
+          "table": "performance",
+          "column": "Orchestra_ID"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "in",
+          "stage": "where",
+          "expression": "orchestra.orchestra_id IN (SELECT performance.orchestra_id AS orchestra_id FROM performance AS performance)",
+          "negated": true,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Orchestra_ID"
+            },
+            {
+              "table": "performance",
+              "column": "Orchestra_ID"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "NOT orchestra.orchestra_id IN (SELECT performance.orchestra_id AS orchestra_id FROM performance AS performance)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "99c4629cced620a287fd9dd73274ab262047ab6e41c0f9f9f75f7c6c65d9ddb4",
+      "constraints_verified": true,
+      "logical_sha256": "038438386a65e3c55c57733c1d1610b3948093ee976065518030478347bc8ab1"
+    },
+    {
+      "instance_id": "fixture_422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "422b4cfd7bc5191a0400a998f3e5fb7193eaaf104686e75cd9420fa580ca035a",
+      "constraints_verified": true,
+      "logical_sha256": "c6d0e0e000276017add371192737d2e32a86d71d4afca1368fc59c15cca0da69"
+    }
+  ]
+}

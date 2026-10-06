@@ -1,0 +1,112 @@
+{
+  "case_id": "ctu_cross_779935acae78c536",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+      "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab"
+    ],
+    "gold_result_digests": [
+      "f5db70155b339b9604a6a3cea41dad02110f461060674e6afe2fa51a3dbae867",
+      "48d41c3e390b001cc5d36ae186b92425d2bc978f0be93fb7ed7da84853e3a46b"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT source_dataset FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT source_dataset, COUNT(*) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "distinct",
+        "sql": "SELECT source_dataset, COUNT(src_ip) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT source_dataset, COUNT(DISTINCT src_ip) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset DESC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT source_dataset, COUNT(DISTINCT src_ip) FROM network_flows WHERE TRUE GROUP BY source_dataset ORDER BY source_dataset",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+      "constraints_verified": true,
+      "logical_sha256": "39fd271941324922d4f13a7fac9add51e77662a1ad8c23b4f1b12a697ade056c"
+    },
+    {
+      "instance_id": "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+      "constraints_verified": true,
+      "logical_sha256": "cfe0f17f5ac686311a41db07d4aa367a612a5d2f0372b88ee09e37978eaaba43"
+    }
+  ]
+}

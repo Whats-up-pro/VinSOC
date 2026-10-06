@@ -1,0 +1,82 @@
+[
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+    "database_id": "cre_Doc_Template_Mgt",
+    "question": "What are the codes of template types that have fewer than 3 templates?"
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+    "database_id": "cre_Doc_Template_Mgt",
+    "question": "What are the type codes and descriptions for all template types?"
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+    "database_id": "cre_Doc_Template_Mgt",
+    "question": "What is the template type descriptions for template type code \"AD\"."
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+    "database_id": "cre_Doc_Template_Mgt",
+    "question": "What are the template ids of any templates used in more than a single document?"
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+    "database_id": "student_transcripts_tracking",
+    "question": "Who are enrolled in 2 degree programs in one semester? List the first name, middle name and last name and the id."
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+    "database_id": "student_transcripts_tracking",
+    "question": "How many courses in total are listed?"
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+    "database_id": "student_transcripts_tracking",
+    "question": "What is the description for the section named h?"
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+    "database_id": "student_transcripts_tracking",
+    "question": "When was the last transcript released?"
+  },
+  {
+    "case_id": "external_voter_1_f220617d91c88779",
+    "database_id": "voter_1",
+    "question": "How many states are there?"
+  },
+  {
+    "case_id": "external_voter_1_958013b9b7385ffa",
+    "database_id": "voter_1",
+    "question": "What are the maximum and minimum values of area codes?"
+  },
+  {
+    "case_id": "external_voter_1_4426d844af6ad576",
+    "database_id": "voter_1",
+    "question": "What is last date created of votes from the state 'CA'?"
+  },
+  {
+    "case_id": "external_voter_1_22bc102c818388de",
+    "database_id": "voter_1",
+    "question": "What are the create dates, states, and phone numbers of the votes that were for the contestant named 'Tabatha Gehling'?"
+  },
+  {
+    "case_id": "external_world_1_118fd339fffc525f",
+    "database_id": "world_1",
+    "question": "Which countries have greater area than that of any country in Europe?"
+  },
+  {
+    "case_id": "external_world_1_c16f04754e67aa3c",
+    "database_id": "world_1",
+    "question": "What are the countries where either English or Dutch is the official language ?"
+  },
+  {
+    "case_id": "external_world_1_c87de933bb535d25",
+    "database_id": "world_1",
+    "question": "Find the average life expectancy and total population for each continent where the average life expectancy is shorter than 72?"
+  },
+  {
+    "case_id": "external_world_1_329e92f0874dea47",
+    "database_id": "world_1",
+    "question": "Give the average life expectancy for countries in Africa which are republics?"
+  }
+]

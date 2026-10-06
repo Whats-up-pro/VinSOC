@@ -1,0 +1,131 @@
+{
+  "case_id": "external_voter_1_958013b9b7385ffa",
+  "database_id": "voter_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+      "fixture_99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7"
+    ],
+    "gold_result_digests": [
+      "c62609d7a2ddf4b79d0979f9de7f27aabce61e8d0589736bd020db4af6a91233",
+      "01f12ba522c0fbb0d928ff2bac87abbcf26d55143f7f1ce37b1415a0ad029986"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT MAX(area_code) FROM area_code_state",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT MIN(area_code), MIN(area_code) FROM area_code_state",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT MAX(area_code), MAX(area_code) FROM area_code_state",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT MAX(area_code), MIN(area_code) FROM area_code_state WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          28,
+          1
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          28,
+          1
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          35,
+          1
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          35,
+          1
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "AREA_CODE_STATE"
+      ],
+      "columns": [
+        {
+          "table": "AREA_CODE_STATE",
+          "column": "area_code"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "d3facc7e88f2d28c6e9393ded73310a345b513768226dc18484095ba979a9c50",
+      "constraints_verified": true,
+      "logical_sha256": "1b20b9d5eff1b722b16e19a18275c82917064afcdba24c78cb8fb54d18e67bfa"
+    },
+    {
+      "instance_id": "fixture_99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "99a8dc63f9ea2b444e62e599f791de86f2c6a4b7d9e00ec9988125882de6c5d7",
+      "constraints_verified": true,
+      "logical_sha256": "6945d92d72655cdc1ad121530db421fd7ce3028e22fb0e6d63bbecd484a20e15"
+    }
+  ]
+}

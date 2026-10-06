@@ -1,0 +1,200 @@
+{
+  "case_id": "ctu_cross_0b9805ee5f7a7aca",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+      "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab"
+    ],
+    "gold_result_digests": [
+      "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da",
+      "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id DESC) AS rn FROM network_flows WHERE source_dataset = 'ctu13_s7') SELECT COUNT(NULL) FROM ranked WHERE rn = 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id DESC) AS rn FROM network_flows WHERE source_dataset = 'ctu13_s7') SELECT COUNT(*) FROM ranked",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id DESC) AS rn FROM network_flows WHERE source_dataset = 'ctu13_s7') SELECT COUNT(*) FROM ranked WHERE rn <> 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id DESC) AS rn FROM network_flows) SELECT COUNT(*) FROM ranked WHERE rn = 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id DESC) AS rn FROM network_flows WHERE source_dataset <> 'ctu13_s7') SELECT COUNT(*) FROM ranked WHERE rn = 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time ASC, source_row_id DESC) AS rn FROM network_flows WHERE source_dataset = 'ctu13_s7') SELECT COUNT(*) FROM ranked WHERE rn = 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id ASC) AS rn FROM network_flows WHERE source_dataset = 'ctu13_s7') SELECT COUNT(*) FROM ranked WHERE rn = 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER (PARTITION BY src_ip ORDER BY event_time DESC, source_row_id DESC) AS rn FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE) SELECT COUNT(*) FROM ranked WHERE rn = 1 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_row_id"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "ranked.rn = 1",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": []
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "ranked.rn = 1"
+        },
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "bf714809c52a817109eb917c7430289a0b57be193f23d0401d9f57ffb0a039b2",
+      "constraints_verified": true,
+      "logical_sha256": "39fd271941324922d4f13a7fac9add51e77662a1ad8c23b4f1b12a697ade056c"
+    },
+    {
+      "instance_id": "fixture_88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "88eaab4e05ae744be7e187a14611059acde595220e64d6b357b66d06182cefab",
+      "constraints_verified": true,
+      "logical_sha256": "cfe0f17f5ac686311a41db07d4aa367a612a5d2f0372b88ee09e37978eaaba43"
+    }
+  ]
+}

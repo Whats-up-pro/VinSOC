@@ -1,0 +1,217 @@
+{
+  "case_id": "external_dog_kennels_f04053f680e52ed3",
+  "database_id": "dog_kennels",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+      "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530"
+    ],
+    "gold_result_digests": [
+      "7b0ea05e74ebdf6e4ad72bb9fdc353588ca31f6e2e214bc377ae3e303c2ca0ff",
+      "7b0ea05e74ebdf6e4ad72bb9fdc353588ca31f6e2e214bc377ae3e303c2ca0ff"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT DISTINCT T1.date_arrived FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id = T2.dog_id",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "distinct",
+        "sql": "SELECT T1.date_arrived, T1.date_departed FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id = T2.dog_id",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT DISTINCT T1.date_arrived, T1.date_departed FROM Dogs AS T1 LEFT JOIN Treatments AS T2 ON T1.dog_id = T2.dog_id",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT DISTINCT T1.date_arrived, T1.date_departed FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id <> T2.dog_id",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT DISTINCT T1.date_arrived, T1.date_departed FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id = T2.dog_id WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_A"
+        ],
+        [
+          "fixture_B",
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Dogs",
+        "Treatments"
+      ],
+      "columns": [
+        {
+          "table": "Dogs",
+          "column": "date_arrived"
+        },
+        {
+          "table": "Dogs",
+          "column": "date_departed"
+        },
+        {
+          "table": "Dogs",
+          "column": "dog_id"
+        },
+        {
+          "table": "Treatments",
+          "column": "dog_id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "dog_id",
+          "from_table": "Treatments",
+          "to_column": "dog_id",
+          "to_table": "Dogs"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.dog_id = t2.dog_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Dogs",
+              "column": "dog_id"
+            },
+            {
+              "table": "Treatments",
+              "column": "dog_id"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.dog_id = t2.dog_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "a5c75e1eaaaa927cfff2b9bb047c9832cdb349204215049819d0e0cfc062251e",
+      "constraints_verified": true,
+      "logical_sha256": "958dd102321fc74194cf6cbe363edb4d9f4161e074e9af378b917f3d426e007d"
+    },
+    {
+      "instance_id": "fixture_f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "f80168d54e980b4d8cee2542d2361fa4044f91f862d3e10369d4b315d5d2d530",
+      "constraints_verified": true,
+      "logical_sha256": "ebdcee3e9fb4bfc0ecf4113e403162f0c98f7b13bc89a89eab4b25380ebacf41"
+    }
+  ]
+}

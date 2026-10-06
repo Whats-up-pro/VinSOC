@@ -32,3 +32,46 @@ def test_ambiguous_reference_column_is_not_guessed(context):
     from evaluation.r2_cross_domain_v1.annotations import annotate_reference, AnnotationError
     with pytest.raises(AnnotationError):
         annotate_reference("SELECT id FROM people JOIN orders ON people.id=orders.person_id", context)
+
+
+def test_predicate_annotations_cover_patterns_null_membership_and_ranges(context):
+    from evaluation.r2_cross_domain_v1.annotations import annotate_reference
+    sql = """SELECT name FROM people WHERE name LIKE 'A\\_%' ESCAPE '\\'
+             AND name IS NOT NULL AND id BETWEEN -3 AND 17 AND id IN (1, 9)"""
+    alternative = annotate_reference(sql, context)[0]
+    assert alternative["annotations_complete"]
+    predicates = alternative["predicates"]
+    assert {item["operator"] for item in predicates} >= {"like", "is", "between", "in"}
+    pattern = next(item for item in predicates if item["operator"] == "like")
+    assert pattern["escape"] == "\\"
+    assert pattern["column_dependencies"] == [{"table": "people", "column": "name"}]
+    assert pattern["negated"] is False
+    assert next(item for item in predicates if item["operator"] == "is")["negated"]
+    assert any(item["value"] == -3 for item in next(item for item in predicates if item["operator"] == "between")["literals"])
+
+
+def test_annotations_include_aggregate_derived_and_reversed_constraints(context):
+    from evaluation.r2_cross_domain_v1.annotations import annotate_reference
+    alternative = annotate_reference("SELECT person_id, SUM(amount) FROM orders WHERE 12 < amount GROUP BY person_id HAVING SUM(amount)>19", context)[0]
+    assert {item["stage"] for item in alternative["predicates"]} == {"where", "having"}
+    assert {item["value"] for item in alternative["constraints"]} >= {12, 19}
+    assert any(item["kind"] == "derived_expression" for item in alternative["constraints"])
+    direct = next(item for item in alternative["constraints"] if item["kind"] == "numeric_threshold")
+    assert direct["operator"] == ">" and direct["column"] == "amount"
+
+
+def test_annotations_include_timestamp_cast_and_correlated_subquery(context):
+    from evaluation.r2_cross_domain_v1.annotations import annotate_reference
+    alternative = annotate_reference("""SELECT p.name FROM people p WHERE EXISTS
+      (SELECT 1 FROM orders o WHERE o.person_id=p.id AND CAST(o.amount AS DOUBLE)>3)
+      AND CAST(p.name AS TIMESTAMP)>=TIMESTAMP '2020-01-01 00:00:00'""", context)[0]
+    assert alternative["annotations_complete"]
+    assert any(item["kind"] == "derived_expression" and item.get("value_type") == "timestamp" for item in alternative["constraints"])
+    assert any(item["operator"] == "exists" for item in alternative["predicates"])
+
+
+def test_boolean_function_predicate_and_boolean_structure_are_annotated(context):
+    from evaluation.r2_cross_domain_v1.annotations import annotate_reference
+    alternative = annotate_reference("SELECT name FROM people WHERE starts_with(name,'A') OR (id=2 AND name IS NULL)", context)[0]
+    assert "startswith" in {item["operator"] for item in alternative["predicates"]}
+    assert alternative["boolean_structure"][0]["expression"].startswith("STARTS_WITH")

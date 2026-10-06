@@ -1,0 +1,135 @@
+{
+  "case_id": "ctu_cross_94d3c478d5858048",
+  "database_id": "ctu_dev",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_7854126153bd9bd4851045fb1da56ef55571f7660a3513cd0d813cce7e53f7c3",
+      "fixture_030cd725128c4065d45221d6b49293247753ded50ccfa4bd38d719b68c26539d"
+    ],
+    "gold_result_digests": [
+      "989297a0a0a961439f838c8b82123e21ac9f7e0e5ee69affa6fe8ec211cd02ba",
+      "37edfab3f3a5ade9e0c92b40e893f0792c9bd3ecb73efbc7421b525f3cf52361"
+    ],
+    "mutant_results": [
+      {
+        "family": "ordering",
+        "sql": "SELECT source_dataset, SUM(CASE WHEN bytes_out = 0 THEN 1 ELSE 0 END) * 1.0 / COUNT(*) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset DESC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT source_dataset, COUNT(CASE WHEN bytes_out = 0 THEN 1 ELSE 0 END) * 1.0 / COUNT(*) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT source_dataset, SUM(CASE WHEN bytes_out <> 0 THEN 1 ELSE 0 END) * 1.0 / COUNT(*) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT source_dataset, SUM(CASE WHEN bytes_out = 0 THEN 1 ELSE 0 END) * 1.0 / COUNT(*) FROM network_flows WHERE TRUE GROUP BY source_dataset ORDER BY source_dataset",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "numeric_threshold",
+          "operator": "=",
+          "value": 0
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "expression",
+          "expression": "network_flows.bytes_out = 0",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 0,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "if",
+          "expression": "network_flows.bytes_out = 0"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_7854126153bd9bd4851045fb1da56ef55571f7660a3513cd0d813cce7e53f7c3",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "7854126153bd9bd4851045fb1da56ef55571f7660a3513cd0d813cce7e53f7c3",
+      "constraints_verified": true,
+      "logical_sha256": "113cd252b2abc3d458701cfc667852444dd4f3939cd638c89c69a0cd8b558979"
+    },
+    {
+      "instance_id": "fixture_030cd725128c4065d45221d6b49293247753ded50ccfa4bd38d719b68c26539d",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "030cd725128c4065d45221d6b49293247753ded50ccfa4bd38d719b68c26539d",
+      "constraints_verified": true,
+      "logical_sha256": "ce2e61a0b64e07182f179f4536c057f64abd169a809266fa3ebb64e0b16893b9"
+    }
+  ]
+}

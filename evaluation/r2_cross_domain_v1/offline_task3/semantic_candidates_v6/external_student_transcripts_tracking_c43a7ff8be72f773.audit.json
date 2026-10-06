@@ -1,0 +1,291 @@
+{
+  "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+  "database_id": "student_transcripts_tracking",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+      "fixture_a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2"
+    ],
+    "gold_result_digests": [
+      "2862b6232de8046677c5c52cde998fcb5673b14fc811cdba7584ecaa50897e3a",
+      "db7bc174e357091af7520d553b9b493ffe8eb8b1518fab6073dba6d1b85e7270"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 LEFT JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "group_having",
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id <> T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) <> 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(NULL) = 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id WHERE TRUE GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_A",
+          "fixture_C",
+          1
+        ],
+        [
+          "fixture_A",
+          "fixture_B",
+          "fixture_A",
+          2
+        ],
+        [
+          "fixture_B",
+          "fixture_C",
+          "fixture_B",
+          3
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_A",
+          "fixture_C",
+          1
+        ],
+        [
+          "fixture_A",
+          "fixture_B",
+          "fixture_A",
+          2
+        ],
+        [
+          "fixture_B",
+          "fixture_C",
+          "fixture_B",
+          3
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_C",
+          "fixture_A",
+          2
+        ],
+        [
+          "fixture_A",
+          "fixture_A",
+          "fixture_B",
+          3
+        ],
+        [
+          "fixture_B",
+          "fixture_B",
+          "fixture_C",
+          4
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_C",
+          "fixture_A",
+          2
+        ],
+        [
+          "fixture_A",
+          "fixture_A",
+          "fixture_B",
+          3
+        ],
+        [
+          "fixture_B",
+          "fixture_B",
+          "fixture_C",
+          4
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Student_Enrolment",
+        "Students"
+      ],
+      "columns": [
+        {
+          "table": "Student_Enrolment",
+          "column": "student_id"
+        },
+        {
+          "table": "Students",
+          "column": "first_name"
+        },
+        {
+          "table": "Students",
+          "column": "last_name"
+        },
+        {
+          "table": "Students",
+          "column": "middle_name"
+        },
+        {
+          "table": "Students",
+          "column": "student_id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "student_id",
+          "from_table": "Student_Enrolment",
+          "to_column": "student_id",
+          "to_table": "Students"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "derived_expression",
+          "expression": "COUNT(*)",
+          "operator": "=",
+          "value": 2,
+          "value_type": "numeric"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.student_id = t2.student_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Student_Enrolment",
+              "column": "student_id"
+            },
+            {
+              "table": "Students",
+              "column": "student_id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "having",
+          "expression": "COUNT(*) = 2",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 2,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": []
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.student_id = t2.student_id"
+        },
+        {
+          "stage": "having",
+          "expression": "COUNT(*) = 2"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "ce29a6ea081491640f909eb0e01f5bc1bd9bede369b45a7d04fc98866369ca96",
+      "constraints_verified": true,
+      "logical_sha256": "c61230575e30b303b9748196a8c1195f2631cc54afb743a554cb6673d3485611"
+    },
+    {
+      "instance_id": "fixture_a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "a3cddf621e8ecd7ad69e587bdb86311ad3a67994f45359252cbbab576ef0cab2",
+      "constraints_verified": true,
+      "logical_sha256": "902fdff3524c8a0792ec13b7806690a4d6b588b81a29b5518101ed844a7f57be"
+    }
+  ]
+}

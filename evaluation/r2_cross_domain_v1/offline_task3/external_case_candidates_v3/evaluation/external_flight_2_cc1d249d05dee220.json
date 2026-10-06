@@ -1,0 +1,60 @@
+{
+  "reference": {
+    "case_id": "external_flight_2_cc1d249d05dee220",
+    "database_id": "flight_2",
+    "question": "Return the number of flights.",
+    "gold_sql": "SELECT COUNT(*) FROM FLIGHTS",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "80282313cf18d09db359d519b54178bce20ff7f9df40c460999726079a3b94a1",
+    "accepted_links": [
+      {
+        "tables": [
+          "flights"
+        ],
+        "columns": [],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT count(*) FROM FLIGHTS",
+    "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+    "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+    "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT count(*) FROM FLIGHTS",
+    "adapted_sql": "SELECT COUNT(*) FROM FLIGHTS",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "4f0586bba131ddc2c7386d9e3b8d043a239811a72db8aae374ae69c07bd491e5",
+    "duckdb_result_sha256": "4f0586bba131ddc2c7386d9e3b8d043a239811a72db8aae374ae69c07bd491e5",
+    "sample_original_rows": [
+      [
+        1200
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        1200
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

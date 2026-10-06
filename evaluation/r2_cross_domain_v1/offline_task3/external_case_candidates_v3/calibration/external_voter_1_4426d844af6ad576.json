@@ -1,0 +1,101 @@
+{
+  "reference": {
+    "case_id": "external_voter_1_4426d844af6ad576",
+    "database_id": "voter_1",
+    "question": "What is last date created of votes from the state 'CA'?",
+    "gold_sql": "SELECT MAX(created) FROM votes WHERE state = 'CA'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "5321df618d2c969f172d609b1941f56b2e8653299228bc96cd7853b87bb89440",
+    "accepted_links": [
+      {
+        "tables": [
+          "VOTES"
+        ],
+        "columns": [
+          {
+            "table": "VOTES",
+            "column": "created"
+          },
+          {
+            "table": "VOTES",
+            "column": "state"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "VOTES",
+            "column": "state",
+            "operator": "=",
+            "value": "CA"
+          }
+        ],
+        "constraints": [],
+        "predicates": [
+          {
+            "operator": "eq",
+            "stage": "where",
+            "expression": "votes.state = 'CA'",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": "CA",
+                "value_type": "string"
+              }
+            ],
+            "column_dependencies": [
+              {
+                "table": "VOTES",
+                "column": "state"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "where",
+            "expression": "votes.state = 'CA'"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT max(created) FROM votes WHERE state  =  'CA'",
+    "source_sqlite_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+    "base_snapshot_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+    "base_snapshot_logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT max(created) FROM votes WHERE state  =  'CA'",
+    "adapted_sql": "SELECT MAX(created) FROM votes WHERE state = 'CA'",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "3ce0dc00c35b6a01443e78fca20dfa586ad27cf6952a48885e7bdd5c1674cf5d",
+    "duckdb_result_sha256": "3ce0dc00c35b6a01443e78fca20dfa586ad27cf6952a48885e7bdd5c1674cf5d",
+    "sample_original_rows": [
+      [
+        "2018-03-09 19:03:39"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "2018-03-09 19:03:39"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "case_id": "external_tvshow_73697be8b93729ee",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_e05785a76fa8a43febc05853cf80081e1c68f58d8f0c907587a62932d8de680f",
+      "fixture_38c63e1c8b2f6cfa36ada0ff9237d56c2a2418880baf067194c99f48b797f1e2"
+    ],
+    "gold_result_digests": [
+      "68fe63241bb9e72f94143ceb7ed8afba5fca1d967fc29dcba0231a08a1b67978",
+      "d382096ea3946d76ee755a85fd5f9d39670133cfce9748a1348b3d19daf825ec"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Title FROM Cartoon",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Title FROM Cartoon WHERE Directed_by <> 'Ben Jones'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Title FROM Cartoon WHERE Directed_by = 'Ben Jones' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Cartoon"
+      ],
+      "columns": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Title"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by",
+          "operator": "=",
+          "value": "Ben Jones"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Ben Jones",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_e05785a76fa8a43febc05853cf80081e1c68f58d8f0c907587a62932d8de680f",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "e05785a76fa8a43febc05853cf80081e1c68f58d8f0c907587a62932d8de680f",
+      "constraints_verified": true,
+      "logical_sha256": "4230c1acd47fd072fae50bf41a9ce68351decbae9e4dee71df3720e416618303"
+    },
+    {
+      "instance_id": "fixture_38c63e1c8b2f6cfa36ada0ff9237d56c2a2418880baf067194c99f48b797f1e2",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "38c63e1c8b2f6cfa36ada0ff9237d56c2a2418880baf067194c99f48b797f1e2",
+      "constraints_verified": true,
+      "logical_sha256": "440dd3963b9504118e63fe0cde824e4a0075fc32aa4e2ed4c646f80f2adcdf45"
+    }
+  ]
+}

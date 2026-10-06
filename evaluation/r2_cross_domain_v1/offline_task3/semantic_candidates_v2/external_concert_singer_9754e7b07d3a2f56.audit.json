@@ -1,0 +1,190 @@
+{
+  "case_id": "external_concert_singer_9754e7b07d3a2f56",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_e93ef9b01e28b698f5a86c6cf2298a55cf7582a5ab99465b8365816f90629079",
+      "fixture_a3f82a4dbabcafadbc72361e7e05fd6cddf0c8234a042ff2a825ccd9e1e391ab"
+    ],
+    "gold_result_digests": [
+      "d6dd9039a9b0a18124fe5929a08f7828ef77debc71e24f9c5616deea64059a0d",
+      "1510336bffdababe646a856ce24bed83954e05bf58fbd19489500e23c000ba20"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT LOCATION FROM stadium WHERE capacity BETWEEN 5000 AND 10000",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT LOCATION, name FROM stadium",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT LOCATION, name FROM stadium WHERE capacity BETWEEN 5000 AND 10000 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "stadium"
+      ],
+      "columns": [
+        {
+          "table": "stadium",
+          "column": "Capacity"
+        },
+        {
+          "table": "stadium",
+          "column": "Location"
+        },
+        {
+          "table": "stadium",
+          "column": "Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "between",
+          "stage": "where",
+          "expression": "stadium.capacity BETWEEN 5000 AND 10000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 5000,
+              "value_type": "numeric"
+            },
+            {
+              "value": 10000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "stadium",
+              "column": "Capacity"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "stadium.capacity BETWEEN 5000 AND 10000"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_e93ef9b01e28b698f5a86c6cf2298a55cf7582a5ab99465b8365816f90629079",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "e93ef9b01e28b698f5a86c6cf2298a55cf7582a5ab99465b8365816f90629079",
+      "constraints_verified": true,
+      "logical_sha256": "8708eaeffacbc6e451be934569e0ac280c6eab04095bdd0884200f35df6fa76d"
+    },
+    {
+      "instance_id": "fixture_a3f82a4dbabcafadbc72361e7e05fd6cddf0c8234a042ff2a825ccd9e1e391ab",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "a3f82a4dbabcafadbc72361e7e05fd6cddf0c8234a042ff2a825ccd9e1e391ab",
+      "constraints_verified": true,
+      "logical_sha256": "671c87057be2828ab706a18a0e07032e9c05e1bbea451bf37cc2893d2b453c36"
+    }
+  ]
+}

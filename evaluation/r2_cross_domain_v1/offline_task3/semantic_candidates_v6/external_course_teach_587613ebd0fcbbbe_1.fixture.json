@@ -1,0 +1,712 @@
+{
+  "fixture_only": true,
+  "seed": 20261006,
+  "database_id": "course_teach",
+  "schema": [
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Course_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Staring_Date",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Course",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "course"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Course_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Teacher_ID",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 2,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Grade",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 3,
+          "sqlite_type": "INT"
+        }
+      ],
+      "name": "course_arrange"
+    },
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "Teacher_ID",
+          "not_null": false,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Name",
+          "not_null": false,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Age",
+          "not_null": false,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": null,
+          "duckdb_type": "VARCHAR",
+          "name": "Hometown",
+          "not_null": false,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        }
+      ],
+      "name": "teacher"
+    }
+  ],
+  "relationships": [
+    {
+      "from_column": "Course_ID",
+      "from_table": "course_arrange",
+      "to_column": "Course_ID",
+      "to_table": "course"
+    },
+    {
+      "from_column": "Teacher_ID",
+      "from_table": "course_arrange",
+      "to_column": "Teacher_ID",
+      "to_table": "teacher"
+    }
+  ],
+  "rows": {
+    "course": [
+      [
+        1,
+        "fixture_A",
+        "MATH"
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        4,
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        5,
+        "fixture_B",
+        "Math"
+      ],
+      [
+        6,
+        "fixture_C",
+        "xMath"
+      ],
+      [
+        7,
+        "fixture_A",
+        "Math_tail"
+      ],
+      [
+        8,
+        "fixture_B",
+        "math"
+      ],
+      [
+        9,
+        "fixture_C",
+        "MATH"
+      ],
+      [
+        10,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        11,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        "fixture_C"
+      ],
+      [
+        13,
+        "fixture_A",
+        "Math"
+      ],
+      [
+        14,
+        "fixture_B",
+        "xMath"
+      ],
+      [
+        15,
+        "fixture_C",
+        "Math_tail"
+      ],
+      [
+        16,
+        "fixture_A",
+        "math"
+      ],
+      [
+        17,
+        "fixture_B",
+        "MATH"
+      ],
+      [
+        18,
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        19,
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        20,
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        21,
+        "fixture_C",
+        "Math"
+      ],
+      [
+        22,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        "Math_tail"
+      ],
+      [
+        24,
+        "fixture_C",
+        "math"
+      ],
+      [
+        25,
+        "fixture_A",
+        "MATH"
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_A"
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_B"
+      ],
+      [
+        28,
+        "fixture_A",
+        "fixture_C"
+      ],
+      [
+        29,
+        "fixture_B",
+        "Math"
+      ],
+      [
+        30,
+        "fixture_C",
+        "xMath"
+      ],
+      [
+        31,
+        "fixture_A",
+        "Math_tail"
+      ],
+      [
+        32,
+        "fixture_B",
+        "math"
+      ],
+      [
+        33,
+        null,
+        null
+      ],
+      [
+        34,
+        "fixture_A",
+        "fixture_A"
+      ],
+      [
+        35,
+        "fixture_B",
+        "fixture_B"
+      ],
+      [
+        36,
+        "fixture_A",
+        "Math"
+      ]
+    ],
+    "course_arrange": [
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        2,
+        2
+      ],
+      [
+        3,
+        3,
+        3
+      ],
+      [
+        4,
+        4,
+        4
+      ],
+      [
+        5,
+        5,
+        5
+      ],
+      [
+        6,
+        6,
+        6
+      ],
+      [
+        7,
+        7,
+        7
+      ],
+      [
+        8,
+        8,
+        8
+      ],
+      [
+        9,
+        9,
+        9
+      ],
+      [
+        10,
+        10,
+        10
+      ],
+      [
+        11,
+        11,
+        11
+      ],
+      [
+        12,
+        12,
+        12
+      ],
+      [
+        13,
+        13,
+        13
+      ],
+      [
+        14,
+        14,
+        14
+      ],
+      [
+        15,
+        15,
+        15
+      ],
+      [
+        16,
+        16,
+        16
+      ],
+      [
+        17,
+        17,
+        17
+      ],
+      [
+        18,
+        18,
+        18
+      ],
+      [
+        19,
+        19,
+        19
+      ],
+      [
+        20,
+        20,
+        20
+      ],
+      [
+        21,
+        21,
+        21
+      ],
+      [
+        22,
+        22,
+        22
+      ],
+      [
+        23,
+        23,
+        23
+      ],
+      [
+        24,
+        24,
+        24
+      ],
+      [
+        25,
+        25,
+        25
+      ],
+      [
+        26,
+        26,
+        26
+      ],
+      [
+        27,
+        27,
+        27
+      ],
+      [
+        28,
+        28,
+        28
+      ],
+      [
+        29,
+        29,
+        29
+      ],
+      [
+        30,
+        30,
+        30
+      ],
+      [
+        31,
+        31,
+        31
+      ],
+      [
+        32,
+        32,
+        32
+      ],
+      [
+        33,
+        33,
+        33
+      ],
+      [
+        34,
+        34,
+        34
+      ],
+      [
+        35,
+        35,
+        35
+      ],
+      [
+        36,
+        36,
+        36
+      ]
+    ],
+    "teacher": [
+      [
+        1,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        2,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        3,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        4,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        5,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        6,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        7,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        8,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        9,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        10,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        11,
+        null,
+        null,
+        null
+      ],
+      [
+        12,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        13,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        14,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        15,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        16,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        17,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        18,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        19,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        20,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        21,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        22,
+        null,
+        null,
+        null
+      ],
+      [
+        23,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        24,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        25,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        26,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        27,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        28,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        29,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        30,
+        "fixture_C",
+        "fixture_C",
+        "fixture_A"
+      ],
+      [
+        31,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        32,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        33,
+        null,
+        null,
+        null
+      ],
+      [
+        34,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ],
+      [
+        35,
+        "fixture_B",
+        "fixture_B",
+        "fixture_C"
+      ],
+      [
+        36,
+        "fixture_A",
+        "fixture_A",
+        "fixture_B"
+      ]
+    ]
+  },
+  "generator_policy": "typed_constants_declared_keys_v1",
+  "generation_is_not_semantic_validation": true
+}

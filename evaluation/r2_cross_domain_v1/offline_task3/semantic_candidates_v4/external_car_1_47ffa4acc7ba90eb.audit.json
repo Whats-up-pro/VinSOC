@@ -1,0 +1,254 @@
+{
+  "case_id": "external_car_1_47ffa4acc7ba90eb",
+  "database_id": "car_1",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_beeb26e30abebb489f602dd79df8ad208b2b1c137d72eaadf4aafa4911462bf7",
+      "fixture_92bf302cdfc54036ddfdd281003eeeebb583b057d0bd53af281e858709226a90"
+    ],
+    "gold_result_digests": [
+      "7b4ccaf525fe03cd73d929ca52ddfef897ed4d5ccc37c4e91a1442cdbb605b8d",
+      "6be3fb94e88e5b9848823dff86b597c8b23b69de5cfff507b1974dbb3da786b1"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT T2.horsepower FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders = 3 ORDER BY T2.horsepower DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "limit",
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders = 3 ORDER BY T2.horsepower DESC LIMIT 2",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 LEFT JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders = 3 ORDER BY T2.horsepower DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id ORDER BY T2.horsepower DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId <> T2.Id WHERE T2.cylinders = 3 ORDER BY T2.horsepower DESC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders <> 3 ORDER BY T2.horsepower DESC LIMIT 1",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders = 3 ORDER BY T2.horsepower ASC LIMIT 1",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T2.horsepower, T1.Make FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders = 3 AND TRUE ORDER BY T2.horsepower DESC LIMIT 1",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "car_names",
+        "cars_data"
+      ],
+      "columns": [
+        {
+          "table": "car_names",
+          "column": "Make"
+        },
+        {
+          "table": "car_names",
+          "column": "MakeId"
+        },
+        {
+          "table": "cars_data",
+          "column": "Cylinders"
+        },
+        {
+          "table": "cars_data",
+          "column": "Horsepower"
+        },
+        {
+          "table": "cars_data",
+          "column": "Id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Id",
+          "from_table": "cars_data",
+          "to_column": "MakeId",
+          "to_table": "car_names"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 1
+        },
+        {
+          "table": "cars_data",
+          "column": "Cylinders",
+          "kind": "numeric_threshold",
+          "operator": "=",
+          "value": 3
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.makeid = t2.id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "car_names",
+              "column": "MakeId"
+            },
+            {
+              "table": "cars_data",
+              "column": "Id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.cylinders = 3",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 3,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "cars_data",
+              "column": "Cylinders"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.makeid = t2.id"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.cylinders = 3"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_beeb26e30abebb489f602dd79df8ad208b2b1c137d72eaadf4aafa4911462bf7",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "beeb26e30abebb489f602dd79df8ad208b2b1c137d72eaadf4aafa4911462bf7",
+      "constraints_verified": true,
+      "logical_sha256": "bdab60a13bd219ffbc9231af1c3ff145576673f6c73b0baf446da9d4a5e736ee"
+    },
+    {
+      "instance_id": "fixture_92bf302cdfc54036ddfdd281003eeeebb583b057d0bd53af281e858709226a90",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "92bf302cdfc54036ddfdd281003eeeebb583b057d0bd53af281e858709226a90",
+      "constraints_verified": true,
+      "logical_sha256": "8515f18f6c8b89d540b53448a52dd76fcad605dfaacf0a9585e1afffffcd668e"
+    }
+  ]
+}

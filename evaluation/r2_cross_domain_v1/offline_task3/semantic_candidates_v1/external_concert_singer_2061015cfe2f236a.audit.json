@@ -1,0 +1,168 @@
+{
+  "case_id": "external_concert_singer_2061015cfe2f236a",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_3345bf266d88cfe676947875cc2ee3ae6480331a362b9ebcfd2f00ba78c7d0c9",
+      "fixture_6cc0b2108ad81bb7aa656f5a40dc2b43d021393d7ae4ff15425539e212746a43"
+    ],
+    "gold_result_digests": [
+      "d6ef6a14ae299031eab197e2ae220ba7defc01846469d44910de9238b5316bd3",
+      "684526b25ad7e566814d51c883d640d86f97d2f4700d80915938b231f32966aa"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM concert",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' AND YEAR = '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR <> '2014' OR YEAR = '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' OR YEAR <> '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' OR YEAR = '2015' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "concert"
+      ],
+      "columns": [
+        {
+          "table": "concert",
+          "column": "Year"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "concert",
+          "column": "Year",
+          "operator": "=",
+          "value": "2014"
+        },
+        {
+          "table": "concert",
+          "column": "Year",
+          "operator": "=",
+          "value": "2015"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "concert.year = '2014'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2014",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "concert.year = '2015'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2015",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "concert.year = '2014' OR concert.year = '2015'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_3345bf266d88cfe676947875cc2ee3ae6480331a362b9ebcfd2f00ba78c7d0c9",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "3345bf266d88cfe676947875cc2ee3ae6480331a362b9ebcfd2f00ba78c7d0c9",
+      "constraints_verified": true,
+      "logical_sha256": "e54c41069399fe176261029a4bd473bfadb299a646bda712e115350131d5f491"
+    },
+    {
+      "instance_id": "fixture_6cc0b2108ad81bb7aa656f5a40dc2b43d021393d7ae4ff15425539e212746a43",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "6cc0b2108ad81bb7aa656f5a40dc2b43d021393d7ae4ff15425539e212746a43",
+      "constraints_verified": true,
+      "logical_sha256": "366d9e569a8baad8d5932763cc8f0e61c96d023076c261f67d73f2c41e809543"
+    }
+  ]
+}

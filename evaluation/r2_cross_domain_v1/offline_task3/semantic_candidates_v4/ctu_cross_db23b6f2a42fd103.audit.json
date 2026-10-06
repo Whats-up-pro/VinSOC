@@ -1,0 +1,235 @@
+{
+  "case_id": "ctu_cross_db23b6f2a42fd103",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_cca231d585d355efb8401b5a1e8b1fbbf236120e9d9489302115edde7a0dc0e9",
+      "fixture_a8127d186c10921397a032471cdeb9aff86fc0f28ea8f8d450f90d064c7b8e7c"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT event_time FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'RTP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT event_time, action FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT event_time, action FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'RTP' OR event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT event_time, action FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'RTP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT event_time, action FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'RTP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT event_time, action FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'RTP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT event_time, action FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'RTP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT event_time, action FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'RTP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "action"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "RTP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "event_time",
+          "kind": "time_threshold",
+          "operator": ">=",
+          "value": "2011-08-15 17:00:00"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "gte",
+          "stage": "where",
+          "expression": "network_flows.event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2011-08-15 17:00:00",
+              "value_type": "timestamp",
+              "cast_type": "TIMESTAMP"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'RTP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "RTP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'RTP' AND network_flows.event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_cca231d585d355efb8401b5a1e8b1fbbf236120e9d9489302115edde7a0dc0e9",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "cca231d585d355efb8401b5a1e8b1fbbf236120e9d9489302115edde7a0dc0e9",
+      "constraints_verified": true,
+      "logical_sha256": "9c8b1d2d130fad8b8ba7be084f911e1b882dd437f00fe8d12db9626f4bdc82e2"
+    },
+    {
+      "instance_id": "fixture_a8127d186c10921397a032471cdeb9aff86fc0f28ea8f8d450f90d064c7b8e7c",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "a8127d186c10921397a032471cdeb9aff86fc0f28ea8f8d450f90d064c7b8e7c",
+      "constraints_verified": true,
+      "logical_sha256": "fabb1453065846fc6ad82aa3e32abd75c03e6aec6f27c61d16a5d8b1963f4009"
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "case_id": "ctu_cross_8b3e2e65524280d5",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c420ebc50c68803562d9efc6666d5fb1986072edcdcc4b9aec5ca0597566307b",
+      "fixture_12a3816b53eb5119a8ea0e34965709ccd0b4305645de53f9bfbe69439abb4ffd"
+    ],
+    "gold_result_digests": [
+      "76730ae14cc7b0eaf5e351c15e443460f39dc21bcb387f427bce9c9efd11ead9",
+      "76730ae14cc7b0eaf5e351c15e443460f39dc21bcb387f427bce9c9efd11ead9"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT dst_port FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "NONEXECUTABLE",
+        "instance_matches": [
+          null,
+          null
+        ],
+        "errors": [
+          {
+            "instance_id": "fixture_c420ebc50c68803562d9efc6666d5fb1986072edcdcc4b9aec5ca0597566307b",
+            "error_type": "ToolError"
+          },
+          {
+            "instance_id": "fixture_12a3816b53eb5119a8ea0e34965709ccd0b4305645de53f9bfbe69439abb4ffd",
+            "error_type": "ToolError"
+          }
+        ]
+      },
+      {
+        "family": "limit",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 8",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT dst_port, COUNT(NULL) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' OR dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n ASC, dst_port ASC LIMIT 7",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port DESC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port < 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'TCP' AND dst_port <= 1024 GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT dst_port, COUNT(*) AS n FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND dst_port <= 1024 AND TRUE GROUP BY dst_port ORDER BY n DESC, dst_port ASC LIMIT 7",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 10,
+    "semantic_mutants_killed": 8,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_port"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "TCP"
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 7
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_port",
+          "kind": "numeric_threshold",
+          "operator": "<=",
+          "value": 1024
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lte",
+          "stage": "where",
+          "expression": "network_flows.dst_port <= 1024",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1024,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'TCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "TCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'TCP' AND network_flows.dst_port <= 1024"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c420ebc50c68803562d9efc6666d5fb1986072edcdcc4b9aec5ca0597566307b",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c420ebc50c68803562d9efc6666d5fb1986072edcdcc4b9aec5ca0597566307b",
+      "constraints_verified": true,
+      "logical_sha256": "c5d1720ad62c6deaec71eededd40f2d35807b997b23d5dfd1ef67710c5ba48e6"
+    },
+    {
+      "instance_id": "fixture_12a3816b53eb5119a8ea0e34965709ccd0b4305645de53f9bfbe69439abb4ffd",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "12a3816b53eb5119a8ea0e34965709ccd0b4305645de53f9bfbe69439abb4ffd",
+      "constraints_verified": true,
+      "logical_sha256": "0128c0610ff800b2923d2fdd1fd7fcc4e6b7b3b5d074dc85633325dedf771787"
+    }
+  ]
+}

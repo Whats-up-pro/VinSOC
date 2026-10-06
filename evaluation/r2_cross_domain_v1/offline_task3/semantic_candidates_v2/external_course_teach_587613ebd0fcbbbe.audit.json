@@ -1,0 +1,292 @@
+{
+  "case_id": "external_course_teach_587613ebd0fcbbbe",
+  "database_id": "course_teach",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_8d8b30870526d84987563d32ebcc83efe05e50dd54d1e32a4fa4cda0be2aa164",
+      "fixture_a52f523c0eeefede2785343133bc9c12ec320276b184b453a7e818a97622b0aa"
+    ],
+    "gold_result_digests": [
+      "f13e9c639062b26c718f7d36ff4bc019bdd49491bb0fb2dfc7aebc13be87e2db",
+      "cd9a2a46b32de5f22c43f2a9caa0b8cd4079fa0e26226bb406c8b4086934e318"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 LEFT JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID LEFT JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID <> T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID <> T3.Teacher_ID WHERE T2.Course = 'Math'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course <> 'Math'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "course",
+        "course_arrange",
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "course",
+          "column": "Course"
+        },
+        {
+          "table": "course",
+          "column": "Course_ID"
+        },
+        {
+          "table": "course_arrange",
+          "column": "Course_ID"
+        },
+        {
+          "table": "course_arrange",
+          "column": "Teacher_ID"
+        },
+        {
+          "table": "teacher",
+          "column": "Name"
+        },
+        {
+          "table": "teacher",
+          "column": "Teacher_ID"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Course_ID",
+          "from_table": "course_arrange",
+          "to_column": "Course_ID",
+          "to_table": "course"
+        },
+        {
+          "from_column": "Teacher_ID",
+          "from_table": "course_arrange",
+          "to_column": "Teacher_ID",
+          "to_table": "teacher"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "course",
+          "column": "Course",
+          "operator": "=",
+          "value": "Math"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.course_id = t2.course_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "course",
+              "column": "Course_ID"
+            },
+            {
+              "table": "course_arrange",
+              "column": "Course_ID"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.teacher_id = t3.teacher_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "course_arrange",
+              "column": "Teacher_ID"
+            },
+            {
+              "table": "teacher",
+              "column": "Teacher_ID"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.course = 'Math'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Math",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "course",
+              "column": "Course"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.course_id = t2.course_id"
+        },
+        {
+          "stage": "join",
+          "expression": "t1.teacher_id = t3.teacher_id"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.course = 'Math'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_8d8b30870526d84987563d32ebcc83efe05e50dd54d1e32a4fa4cda0be2aa164",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "8d8b30870526d84987563d32ebcc83efe05e50dd54d1e32a4fa4cda0be2aa164",
+      "constraints_verified": true,
+      "logical_sha256": "66a79d00851e28303f6cefc147f4a5713d7d611982b08b51f00b83c329dba049"
+    },
+    {
+      "instance_id": "fixture_a52f523c0eeefede2785343133bc9c12ec320276b184b453a7e818a97622b0aa",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "a52f523c0eeefede2785343133bc9c12ec320276b184b453a7e818a97622b0aa",
+      "constraints_verified": true,
+      "logical_sha256": "0ea3204bd4ea66a7c7dfefac192974ee8cfd58ce8d695ed2b5cb82ca6765e4e6"
+    }
+  ]
+}

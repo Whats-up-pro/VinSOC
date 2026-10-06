@@ -1,0 +1,138 @@
+{
+  "reference": {
+    "case_id": "external_flight_2_59060b10db344a2c",
+    "database_id": "flight_2",
+    "question": "Give the flight numbers of flights arriving in Aberdeen.",
+    "gold_sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City = 'Aberdeen'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join"
+    ],
+    "family_id": "82d36a6a99305d93aaf9906c32a2dc435a62500d595ffc3bb5b4699891d992ac",
+    "accepted_links": [
+      {
+        "tables": [
+          "airports",
+          "flights"
+        ],
+        "columns": [
+          {
+            "table": "airports",
+            "column": "AirportCode"
+          },
+          {
+            "table": "airports",
+            "column": "City"
+          },
+          {
+            "table": "flights",
+            "column": "DestAirport"
+          },
+          {
+            "table": "flights",
+            "column": "FlightNo"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "DestAirport",
+            "from_table": "flights",
+            "to_column": "AirportCode",
+            "to_table": "airports"
+          }
+        ],
+        "stored_values": [
+          {
+            "table": "airports",
+            "column": "City",
+            "operator": "=",
+            "value": "Aberdeen"
+          }
+        ],
+        "constraints": [],
+        "predicates": [
+          {
+            "operator": "eq",
+            "stage": "join",
+            "expression": "t1.destairport = t2.airportcode",
+            "negated": false,
+            "escape": null,
+            "literals": [],
+            "column_dependencies": [
+              {
+                "table": "airports",
+                "column": "AirportCode"
+              },
+              {
+                "table": "flights",
+                "column": "DestAirport"
+              }
+            ]
+          },
+          {
+            "operator": "eq",
+            "stage": "where",
+            "expression": "t2.city = 'Aberdeen'",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": "Aberdeen",
+                "value_type": "string"
+              }
+            ],
+            "column_dependencies": [
+              {
+                "table": "airports",
+                "column": "City"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "join",
+            "expression": "t1.destairport = t2.airportcode"
+          },
+          {
+            "stage": "where",
+            "expression": "t2.city = 'Aberdeen'"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport   =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+    "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+    "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+    "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport   =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+    "adapted_sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City = 'Aberdeen'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Aberdeen"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 0,
+    "duckdb_row_count": 0,
+    "sqlite_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "duckdb_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "sample_original_rows": [],
+    "sample_adapted_rows": [],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

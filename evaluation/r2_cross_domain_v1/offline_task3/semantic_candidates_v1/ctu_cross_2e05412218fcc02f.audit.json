@@ -1,0 +1,233 @@
+{
+  "case_id": "ctu_cross_2e05412218fcc02f",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_2620931b88ee9cb37613d6383455d02462eb11e1a47cf87cece342dd9fef78aa",
+      "fixture_fa6c71118c505232517af5861d60edd48ac6ef4a5e6c1b8d4d145048ce84c7d0"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 OR bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' OR bytes_out > 1000000 AND bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in <> 0",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in = 0",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out >= 1000000 AND bytes_in = 0",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT src_ip, dst_ip, protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND bytes_out > 1000000 AND bytes_in = 0 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in",
+          "kind": "numeric_threshold",
+          "operator": "=",
+          "value": 0
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 1000000
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.bytes_in = 0",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 0,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.bytes_out > 1000000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1000000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.bytes_out > 1000000 AND network_flows.bytes_in = 0"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_2620931b88ee9cb37613d6383455d02462eb11e1a47cf87cece342dd9fef78aa",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "2620931b88ee9cb37613d6383455d02462eb11e1a47cf87cece342dd9fef78aa",
+      "constraints_verified": true,
+      "logical_sha256": "8c327598a3913ac89a570a2ec57b32d7ce309f7f6611e946f0a9e4b0a09d4f12"
+    },
+    {
+      "instance_id": "fixture_fa6c71118c505232517af5861d60edd48ac6ef4a5e6c1b8d4d145048ce84c7d0",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "fa6c71118c505232517af5861d60edd48ac6ef4a5e6c1b8d4d145048ce84c7d0",
+      "constraints_verified": true,
+      "logical_sha256": "3a245a78b94012e91a08d3f7025d94f489add287b9714f3d181d3c5a4e174384"
+    }
+  ]
+}

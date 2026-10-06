@@ -1,0 +1,187 @@
+{
+  "case_id": "ctu_cross_feab49e4a48ff3aa",
+  "database_id": "ctu_dev",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "fixture_91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df"
+    ],
+    "gold_result_digests": [
+      "2bbebaefc4d22405b82ba3c94e34135bb17734dc02bceeae3b011391756d257c",
+      "2bbebaefc4d22405b82ba3c94e34135bb17734dc02bceeae3b011391756d257c"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND dst_port IS NULL GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT protocol, COUNT(NULL) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND dst_port IS NULL GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT protocol, COUNT(*) FROM network_flows GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT protocol, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' OR dst_port IS NULL GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT protocol, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND dst_port IS NULL GROUP BY protocol ORDER BY protocol DESC",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT protocol, COUNT(*) FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND dst_port IS NULL GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT protocol, COUNT(*) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND dst_port IS NULL AND TRUE GROUP BY protocol ORDER BY protocol",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_port"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "is",
+          "stage": "where",
+          "expression": "network_flows.dst_port IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.dst_port IS NULL"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "constraints_verified": true,
+      "logical_sha256": "db9c4ae042e379bf7032ced214d3fde9549153fda64fef0ed4175ce8372e7510"
+    },
+    {
+      "instance_id": "fixture_91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df",
+      "constraints_verified": true,
+      "logical_sha256": "5b60036f8b6b84ead9e63354313ea14e53729490397a660959c1ff4c76de5c34"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "case_id": "ctu_cross_71164969e0e0277e",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_20ccdfe61f35568410394f1d004e0e3ca79e846ee35a3da7c33465b5b07bae8c",
+      "fixture_56b0987a241c49ca95edd1bdea7eb3b773b11d1b0801a68d11cbd3bb878cca19"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "47d4513f6949aa81577ca8f040bb6852c97419f5a92d66216bcd81ba359efc9d"
+    ],
+    "mutant_results": [
+      {
+        "family": "set_operation",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' UNION SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "set_operation",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' EXCEPT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip FROM network_flows INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' INTERSECT SELECT src_ip FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset <> 'ctu13_s5' INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND TRUE INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 6,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'"
+        },
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_20ccdfe61f35568410394f1d004e0e3ca79e846ee35a3da7c33465b5b07bae8c",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "20ccdfe61f35568410394f1d004e0e3ca79e846ee35a3da7c33465b5b07bae8c",
+      "constraints_verified": true,
+      "logical_sha256": "d5fc033b0e53635d001b23895bc5c6718babc2c5003450ecae7d26d6367b8ece"
+    },
+    {
+      "instance_id": "fixture_56b0987a241c49ca95edd1bdea7eb3b773b11d1b0801a68d11cbd3bb878cca19",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "56b0987a241c49ca95edd1bdea7eb3b773b11d1b0801a68d11cbd3bb878cca19",
+      "constraints_verified": true,
+      "logical_sha256": "49d328d968b2e2b1b1e28aa9642259637cfbc0e17d0078f0bac7772668eaf93d"
+    }
+  ]
+}

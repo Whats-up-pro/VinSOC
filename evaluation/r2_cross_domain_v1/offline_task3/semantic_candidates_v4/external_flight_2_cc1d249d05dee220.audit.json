@@ -1,0 +1,8 @@
+{
+  "case_id": "external_flight_2_cc1d249d05dee220",
+  "database_id": "flight_2",
+  "split": "evaluation",
+  "status": "FIXTURE_AUDIT_ERROR",
+  "error_type": "ValueError",
+  "safe_error_code": "FIXTURE_PRIMARY_KEY_INVALID"
+}

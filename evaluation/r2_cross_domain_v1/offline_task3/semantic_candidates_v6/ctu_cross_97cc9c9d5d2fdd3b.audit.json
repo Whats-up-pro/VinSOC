@@ -1,0 +1,180 @@
+{
+  "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+  "database_id": "ctu_dev",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_33476956511feeead4e1f456879e4f12b1a8f488ecde39cad56524191aa0ebf6",
+      "fixture_e0dabd82237a9b7d9115fd4febabccd25f404b585cc8891185abbc6fedec79a7"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT source_dataset FROM network_flows WHERE src_port IS NULL AND STARTS_WITH(label, 'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT source_dataset, COUNT(NULL) FROM network_flows WHERE src_port IS NULL AND STARTS_WITH(label, 'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT source_dataset, COUNT(*) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT source_dataset, COUNT(*) FROM network_flows WHERE src_port IS NULL OR STARTS_WITH(label, 'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT source_dataset, COUNT(*) FROM network_flows WHERE src_port IS NULL AND STARTS_WITH(label, 'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset DESC",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "prefix_contains",
+        "sql": "SELECT source_dataset, COUNT(*) FROM network_flows WHERE src_port IS NULL AND CONTAINS(label, 'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT source_dataset, COUNT(*) FROM network_flows WHERE src_port IS NULL AND STARTS_WITH(label, 'flow=From-Normal') AND TRUE GROUP BY source_dataset ORDER BY source_dataset",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_port"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "is",
+          "stage": "where",
+          "expression": "network_flows.src_port IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "src_port"
+            }
+          ]
+        },
+        {
+          "operator": "startswith",
+          "stage": "where",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Normal')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Normal",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.src_port IS NULL AND STARTS_WITH(network_flows.label, 'flow=From-Normal')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_33476956511feeead4e1f456879e4f12b1a8f488ecde39cad56524191aa0ebf6",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "33476956511feeead4e1f456879e4f12b1a8f488ecde39cad56524191aa0ebf6",
+      "constraints_verified": true,
+      "logical_sha256": "b93f45ffadb2884e2812736f70ede126150f60d0ca57fc8e5154a3d4f160aee4"
+    },
+    {
+      "instance_id": "fixture_e0dabd82237a9b7d9115fd4febabccd25f404b585cc8891185abbc6fedec79a7",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "e0dabd82237a9b7d9115fd4febabccd25f404b585cc8891185abbc6fedec79a7",
+      "constraints_verified": true,
+      "logical_sha256": "f11a68a12dd4af132b23e933368116c7985d7be5307a767ec25e0ee9b55b46bd"
+    }
+  ]
+}

@@ -117,7 +117,9 @@ Case preparation continuation:
   and 96 evaluation candidates. Original rejected candidate receipt is unchanged.
 - [x] Checkpoint verification: 82 targeted / 912 full tests pass; compile and
   preservation checks pass (245 protected files and 28 earlier artifact JSONs).
-- [ ] Candidate checkpoint commit/push and exact-SHA CI.
+- [x] Candidate checkpoint commit/push `62da30100cac9375691a2d82587fde48f23f7a51`;
+  exact-SHA Python 3.11/3.12 CI successful:
+  https://github.com/Whats-up-pro/VinSOC/actions/runs/37423537492.
 - [ ] Full semantic instances and complete annotations.
 
 Ruling: reject the unbounded UDP IP-pair listing candidate before any inference
@@ -130,3 +132,54 @@ Task 3 benchmark/semantic lock and Task 4 statistics/telemetry/release remain
 pending. Paid Tasks 5/6 need expansion-specific
 budget/release authorization; the old $0.75 authorization is not reused.
 Model calls: **0**. New inference cost: **$0**. S1/S4 remain consumed/closed.
+
+### Task 3 semantic continuation (not complete)
+
+- [x] Four new annotation regressions RED/GREEN: patterns/escape, NULL/IN/BETWEEN,
+  reversed and aggregate thresholds, timestamp casts/correlation, Boolean functions.
+- [x] Module item metrics retain exact numerator/denominator, one consistent
+  reference alternative, NA empty sets/stage absence and conditional coverage.
+  Provenance verifies actual values; a self-consistent fabricated witness fails.
+- [x] Controller regression RED/GREEN: completed linker output survives generator
+  TOOL_LIMIT, so downstream failure does not erase module coverage.
+- [x] Synthetic engine builds verified PK/FK/NULL fixtures, executes intentional
+  wrong queries and equivalent controls. Syntax errors are not semantic kills.
+- [x] Initial 120-case semantic audit: 90 pass, 30 blocked; receipt preserved.
+  This is fixture validation, not model accuracy or an accepted benchmark gate.
+- [x] SQLite LIKE ASCII/mixed-case/Unicode/escape regressions: two RED, then all
+  three GREEN after the generic adapter correction.
+- [x] Candidate v2 materialization: 80 external base gold parity checks pass;
+  producer hashes recorded before execution, original candidates unchanged.
+- [x] Semantic v2 audit stops after 42 saved records on Decimal serialization.
+  RED/GREEN writer regression fixes this offline failure. Partial evidence is
+  retained; no provider call or cost was involved.
+- [ ] Final semantic audit, full verification, commit/push and exact-SHA CI.
+- [ ] Resolve per-case semantic/dialect/order exclusions and quotas before lock.
+
+Semantic checkpoint verification:
+- [x] Audits v3/v4/v5/v6 retain respectively 105/109/119/119 PASS out of 120.
+  v6 has one unresolved source ORDER tie; it is not an accepted benchmark gate.
+- [x] Source-order failures are excluded only with executed fixture evidence;
+  generator failures and undistinguished mutants are retained and repaired, never
+  used to remove questions. All selection is before inference.
+- [x] Final focused command: `python -m pytest -q tests/test_r2_cross_domain_*.py`:
+  119 passed. Full `python -m pytest -q`: 949 passed, 1654 existing warnings.
+- [ ] Semantic checkpoint commit/push and exact-SHA CI.
+
+The final benchmark, runtime CTU registry, oracle subset and release remain pending.
+Module metrics currently verify schema items and typed mappings, not every possible
+equivalent predicate representation. No lock or new model accuracy is claimed.
+
+Ruling: SQLite default LIKE requires ASCII-only folding, not DuckDB ILIKE/Unicode
+LOWER. The new-version adapter uses explicit TRANSLATE on both operands; non-ASCII
+letters and safe escape characters retain their semantics. Unproved operand types
+and ASCII-letter escape characters are rejected. This changes only pre-inference
+adapted candidate gold, never original source SQL or historical benchmark/gold.
+
+Ruling: source gold with unresolved ORDER/LIMIT ties is blocked even if two engines
+happen to produce the same base rows. Fixtures must preserve the ambiguity as a
+data/semantic exclusion; do not add a tie breaker to the source gold to rescue it.
+
+Ruling: a synthetic generator is not a coverage certificate. NOT_DISTINGUISHED
+mutants and failed parity remain explicit failures; they cannot be counted as
+semantic kills or silently omitted from the data gate.

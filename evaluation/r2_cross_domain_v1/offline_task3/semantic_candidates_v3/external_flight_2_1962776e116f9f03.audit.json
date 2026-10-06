@@ -1,0 +1,177 @@
+{
+  "case_id": "external_flight_2_1962776e116f9f03",
+  "database_id": "flight_2",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_59aefd9a52981e492b920b05942d20c0ce99efc55295521b57bf7e11e9960c36",
+      "fixture_aec537f1bcb5dcfa5319bc321baf927070479977ca05620fa8284521010bf73c"
+    ],
+    "gold_result_digests": [
+      "cd9a2a46b32de5f22c43f2a9caa0b8cd4079fa0e26226bb406c8b4086934e318",
+      "cd9a2a46b32de5f22c43f2a9caa0b8cd4079fa0e26226bb406c8b4086934e318"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Abbreviation FROM AIRLINES",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Abbreviation FROM AIRLINES WHERE Airline <> 'JetBlue Airways'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Abbreviation FROM AIRLINES WHERE Airline = 'JetBlue Airways' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "airlines"
+      ],
+      "columns": [
+        {
+          "table": "airlines",
+          "column": "Abbreviation"
+        },
+        {
+          "table": "airlines",
+          "column": "Airline"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "airlines",
+          "column": "Airline",
+          "operator": "=",
+          "value": "JetBlue Airways"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "airlines.airline = 'JetBlue Airways'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "JetBlue Airways",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airlines",
+              "column": "Airline"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "airlines.airline = 'JetBlue Airways'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_59aefd9a52981e492b920b05942d20c0ce99efc55295521b57bf7e11e9960c36",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "59aefd9a52981e492b920b05942d20c0ce99efc55295521b57bf7e11e9960c36",
+      "constraints_verified": true,
+      "logical_sha256": "125c672c994de7d51f5d28c8bd9d2b019758bc4bde8b5718e17f4956072741ca"
+    },
+    {
+      "instance_id": "fixture_aec537f1bcb5dcfa5319bc321baf927070479977ca05620fa8284521010bf73c",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "aec537f1bcb5dcfa5319bc321baf927070479977ca05620fa8284521010bf73c",
+      "constraints_verified": true,
+      "logical_sha256": "c9e0132bbd4c8ae07f9c45e7b96ac53128f0df65c827113f1b247ee2a1ac1c5c"
+    }
+  ]
+}

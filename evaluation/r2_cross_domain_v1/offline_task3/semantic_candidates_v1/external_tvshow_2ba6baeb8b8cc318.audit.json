@@ -1,0 +1,172 @@
+{
+  "case_id": "external_tvshow_2ba6baeb8b8cc318",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_e05785a76fa8a43febc05853cf80081e1c68f58d8f0c907587a62932d8de680f",
+      "fixture_38c63e1c8b2f6cfa36ada0ff9237d56c2a2418880baf067194c99f48b797f1e2"
+    ],
+    "gold_result_digests": [
+      "256939d3a8ede869890c1b75c6812e3e9cd1db1a52f079bee334678ed7dcfacd",
+      "fe210b286b2c017e8cf42ed3705405c01e5f522c1a0637182d04b34a3000a0a5"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT package_option FROM TV_Channel",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon WHERE directed_by <> 'Ben Jones')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon WHERE directed_by = 'Ben Jones' AND TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Cartoon",
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "Cartoon",
+          "column": "Channel"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Directed_by"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Package_Option"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "id"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by",
+          "operator": "=",
+          "value": "Ben Jones"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "in",
+          "stage": "where",
+          "expression": "tv_channel.id IN (SELECT cartoon.channel AS channel FROM cartoon AS cartoon WHERE cartoon.directed_by = 'Ben Jones')",
+          "negated": true,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Channel"
+            },
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            },
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Ben Jones",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "NOT tv_channel.id IN (SELECT cartoon.channel AS channel FROM cartoon AS cartoon WHERE cartoon.directed_by = 'Ben Jones')"
+        },
+        {
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_e05785a76fa8a43febc05853cf80081e1c68f58d8f0c907587a62932d8de680f",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "e05785a76fa8a43febc05853cf80081e1c68f58d8f0c907587a62932d8de680f",
+      "constraints_verified": true,
+      "logical_sha256": "4230c1acd47fd072fae50bf41a9ce68351decbae9e4dee71df3720e416618303"
+    },
+    {
+      "instance_id": "fixture_38c63e1c8b2f6cfa36ada0ff9237d56c2a2418880baf067194c99f48b797f1e2",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "38c63e1c8b2f6cfa36ada0ff9237d56c2a2418880baf067194c99f48b797f1e2",
+      "constraints_verified": true,
+      "logical_sha256": "440dd3963b9504118e63fe0cde824e4a0075fc32aa4e2ed4c646f80f2adcdf45"
+    }
+  ]
+}

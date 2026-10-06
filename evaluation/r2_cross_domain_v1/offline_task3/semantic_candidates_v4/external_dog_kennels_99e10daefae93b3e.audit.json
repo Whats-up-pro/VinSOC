@@ -1,0 +1,222 @@
+{
+  "case_id": "external_dog_kennels_99e10daefae93b3e",
+  "database_id": "dog_kennels",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_0cc5a931267a72f652cabd232f30538cb60a8518cc02d22739411fc4756c00c9",
+      "fixture_974d194a0101af623974f4cd21a0cadae2b5a0dd7fdafeb81fd01a9f7c9bf558"
+    ],
+    "gold_result_digests": [
+      "f13e9c639062b26c718f7d36ff4bc019bdd49491bb0fb2dfc7aebc13be87e2db",
+      "a769d64367efd048dc5992569a93d22c43dd678e0f3a11f7a5504964e493bcb7"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT email_address FROM Professionals",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT email_address FROM Professionals WHERE state = 'Hawaii' AND state = 'Wisconsin'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT email_address FROM Professionals WHERE state <> 'Hawaii' OR state = 'Wisconsin'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT email_address FROM Professionals WHERE state = 'Hawaii' OR state <> 'Wisconsin'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT email_address FROM Professionals WHERE state = 'Hawaii' OR state = 'Wisconsin' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Professionals"
+      ],
+      "columns": [
+        {
+          "table": "Professionals",
+          "column": "email_address"
+        },
+        {
+          "table": "Professionals",
+          "column": "state"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Professionals",
+          "column": "state",
+          "operator": "=",
+          "value": "Hawaii"
+        },
+        {
+          "table": "Professionals",
+          "column": "state",
+          "operator": "=",
+          "value": "Wisconsin"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "professionals.state = 'Hawaii'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Hawaii",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Professionals",
+              "column": "state"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "professionals.state = 'Wisconsin'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Wisconsin",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Professionals",
+              "column": "state"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "professionals.state = 'Hawaii' OR professionals.state = 'Wisconsin'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_0cc5a931267a72f652cabd232f30538cb60a8518cc02d22739411fc4756c00c9",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "0cc5a931267a72f652cabd232f30538cb60a8518cc02d22739411fc4756c00c9",
+      "constraints_verified": true,
+      "logical_sha256": "cc88a64cd26f5595601da31bc032993b2e349b6af834715909960c6e4cb8f439"
+    },
+    {
+      "instance_id": "fixture_974d194a0101af623974f4cd21a0cadae2b5a0dd7fdafeb81fd01a9f7c9bf558",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "974d194a0101af623974f4cd21a0cadae2b5a0dd7fdafeb81fd01a9f7c9bf558",
+      "constraints_verified": true,
+      "logical_sha256": "b1ffed51baad53a6deadeed634da47b96cc36e4aaca7c26a05d4e38b5088c740"
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "case_id": "external_world_1_c16f04754e67aa3c",
+  "database_id": "world_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_a92b1f3de68303474220e433358c00b766a8aaeb808ccd0bc4fc4856b67a3e83",
+      "fixture_3803af8596de832c2d21b7272bbb3b5cd67e7102caae3a1122e29e3c9fa642ab"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT t1.name FROM country AS t1 LEFT JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "join_kind",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 LEFT JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code <> t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' OR isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code <> t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' OR isofficial = 't'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language <> 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial <> 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language <> 'dutch' AND isofficial = 't'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial <> 't'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' AND TRUE UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 12,
+    "semantic_mutants_killed": 6,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "country",
+        "countrylanguage"
+      ],
+      "columns": [
+        {
+          "table": "country",
+          "column": "Code"
+        },
+        {
+          "table": "country",
+          "column": "Name"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "CountryCode"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "IsOfficial"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "Language"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "CountryCode",
+          "from_table": "countrylanguage",
+          "to_column": "Code",
+          "to_table": "country"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "countrylanguage",
+          "column": "Language",
+          "operator": "=",
+          "value": "english"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "IsOfficial",
+          "operator": "=",
+          "value": "t"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "Language",
+          "operator": "=",
+          "value": "dutch"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "IsOfficial",
+          "operator": "=",
+          "value": "t"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Code"
+            },
+            {
+              "table": "countrylanguage",
+              "column": "CountryCode"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Code"
+            },
+            {
+              "table": "countrylanguage",
+              "column": "CountryCode"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.language = 'english'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "english",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "Language"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.isofficial = 't'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "t",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "IsOfficial"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.language = 'dutch'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "dutch",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "Language"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.isofficial = 't'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "t",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "IsOfficial"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.language = 'english' AND t2.isofficial = 't'"
+        },
+        {
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.language = 'dutch' AND t2.isofficial = 't'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_a92b1f3de68303474220e433358c00b766a8aaeb808ccd0bc4fc4856b67a3e83",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "a92b1f3de68303474220e433358c00b766a8aaeb808ccd0bc4fc4856b67a3e83",
+      "constraints_verified": true,
+      "logical_sha256": "756ceb55de3dffc5459d2ba51fb518283173276ecf744c0585d142334e22d345"
+    },
+    {
+      "instance_id": "fixture_3803af8596de832c2d21b7272bbb3b5cd67e7102caae3a1122e29e3c9fa642ab",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "3803af8596de832c2d21b7272bbb3b5cd67e7102caae3a1122e29e3c9fa642ab",
+      "constraints_verified": true,
+      "logical_sha256": "8144afab7931e7b8ea730dda5390c11d4bf6026dd7302d05189b15231d7359b4"
+    }
+  ]
+}

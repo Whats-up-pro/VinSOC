@@ -1,0 +1,89 @@
+{
+  "reference": {
+    "case_id": "external_voter_1_8f5780081f88c526",
+    "database_id": "voter_1",
+    "question": "List the contestant numbers and names, ordered by contestant name descending.",
+    "gold_sql": "SELECT contestant_number, contestant_name FROM contestants ORDER BY contestant_name DESC",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "order_limit"
+    ],
+    "family_id": "db0545d401328f14fe943f68d65270db45cd5802edae00f4816f1fa33de0b2fb",
+    "accepted_links": [
+      {
+        "tables": [
+          "CONTESTANTS"
+        ],
+        "columns": [
+          {
+            "table": "CONTESTANTS",
+            "column": "contestant_name"
+          },
+          {
+            "table": "CONTESTANTS",
+            "column": "contestant_number"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT contestant_number ,  contestant_name FROM contestants ORDER BY contestant_name DESC",
+    "source_sqlite_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+    "base_snapshot_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+    "base_snapshot_logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT contestant_number ,  contestant_name FROM contestants ORDER BY contestant_name DESC",
+    "adapted_sql": "SELECT contestant_number, contestant_name FROM contestants ORDER BY contestant_name DESC",
+    "transformations": [],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 11,
+    "duckdb_row_count": 11,
+    "sqlite_result_sha256": "252e8ae2eb9802edddcd46c0c16a46506068127665e74c36969bdb11ca1333b6",
+    "duckdb_result_sha256": "252e8ae2eb9802edddcd46c0c16a46506068127665e74c36969bdb11ca1333b6",
+    "sample_original_rows": [
+      [
+        2,
+        "Tabatha Gehling"
+      ],
+      [
+        8,
+        "Nita Coster"
+      ],
+      [
+        11,
+        "Loraine NygrenTania Mattioli"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        2,
+        "Tabatha Gehling"
+      ],
+      [
+        8,
+        "Nita Coster"
+      ],
+      [
+        11,
+        "Loraine NygrenTania Mattioli"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

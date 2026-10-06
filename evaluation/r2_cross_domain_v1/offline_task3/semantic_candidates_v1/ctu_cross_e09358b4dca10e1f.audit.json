@@ -1,0 +1,214 @@
+{
+  "case_id": "ctu_cross_e09358b4dca10e1f",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_b8631359e23955cfe9aa82c2de49cd921c1ac125485cd7357b2dbc64a228b07c",
+      "fixture_2e72ac7340d7aa5c2fa9c12057d638cec6e996a814be9ba2868574a2afb750d5"
+    ],
+    "gold_result_digests": [
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT event_time, src_ip, dst_ip FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT event_time, src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'ARP' OR dst_port IS NULL",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT event_time, src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' OR protocol = 'ARP' AND dst_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT event_time, src_ip, dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND protocol = 'ARP' AND dst_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT event_time, src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol <> 'ARP' AND dst_port IS NULL",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT event_time, src_ip, dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'ARP' AND dst_port IS NULL AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_port"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "ARP"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "is",
+          "stage": "where",
+          "expression": "network_flows.dst_port IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'ARP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ARP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'ARP' AND network_flows.dst_port IS NULL"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_b8631359e23955cfe9aa82c2de49cd921c1ac125485cd7357b2dbc64a228b07c",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "b8631359e23955cfe9aa82c2de49cd921c1ac125485cd7357b2dbc64a228b07c",
+      "constraints_verified": true,
+      "logical_sha256": "0557a1fba1c59605de86e2c06a4b2f19715d9d58166a21db0939a8a5067b6bfc"
+    },
+    {
+      "instance_id": "fixture_2e72ac7340d7aa5c2fa9c12057d638cec6e996a814be9ba2868574a2afb750d5",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "2e72ac7340d7aa5c2fa9c12057d638cec6e996a814be9ba2868574a2afb750d5",
+      "constraints_verified": true,
+      "logical_sha256": "a4b59c570717b8e62e5dc2d76be370e25d828974880eaf7dc07d18725ba6ee88"
+    }
+  ]
+}

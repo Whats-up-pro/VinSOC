@@ -1,0 +1,226 @@
+{
+  "case_id": "external_world_1_c87de933bb535d25",
+  "database_id": "world_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_1008f3163847a17feecb488e12b0df45f601b1a48f715bc7c863d0b99f88be6c",
+      "fixture_ca4ef0f0e5eb08b32ccde4c18b92e6816eefd02c337e04d0bc82c2a88b8e758c"
+    ],
+    "gold_result_digests": [
+      "5d7950f6daac0a6d89e7980725d1ccaf25944073ef9d2bb7e3ed9f61d9602e6d",
+      "2aff6a761aa252af6fe59975ed45f05e47efcb06ae94ec026afff87124b1714c"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy) FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT COUNT(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "group_having",
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) <= 72",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country WHERE TRUE GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          45,
+          39.25,
+          "fixture_A"
+        ],
+        [
+          33,
+          26.77777777777778,
+          "fixture_B"
+        ],
+        [
+          50,
+          43.75,
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          50,
+          43.75,
+          "fixture_C"
+        ],
+        [
+          45,
+          39.25,
+          "fixture_A"
+        ],
+        [
+          33,
+          26.77777777777778,
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          69,
+          30.09090909090909,
+          "fixture_A"
+        ],
+        [
+          50,
+          31.6,
+          "fixture_B"
+        ],
+        [
+          71,
+          43.07142857142857,
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          71,
+          43.07142857142857,
+          "fixture_C"
+        ],
+        [
+          69,
+          30.09090909090909,
+          "fixture_A"
+        ],
+        [
+          50,
+          31.6,
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "country"
+      ],
+      "columns": [
+        {
+          "table": "country",
+          "column": "Continent"
+        },
+        {
+          "table": "country",
+          "column": "LifeExpectancy"
+        },
+        {
+          "table": "country",
+          "column": "Population"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "derived_expression",
+          "expression": "AVG(country.lifeexpectancy)",
+          "operator": "<",
+          "value": 72,
+          "value_type": "numeric"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lt",
+          "stage": "having",
+          "expression": "AVG(country.lifeexpectancy) < 72",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 72,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "LifeExpectancy"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "having",
+          "expression": "AVG(country.lifeexpectancy) < 72"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_1008f3163847a17feecb488e12b0df45f601b1a48f715bc7c863d0b99f88be6c",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "1008f3163847a17feecb488e12b0df45f601b1a48f715bc7c863d0b99f88be6c",
+      "constraints_verified": true,
+      "logical_sha256": "38bf95ce6386ef2f2306c4cb2f4bdebb68fbeb6e83703f2aa98a477704cfe187"
+    },
+    {
+      "instance_id": "fixture_ca4ef0f0e5eb08b32ccde4c18b92e6816eefd02c337e04d0bc82c2a88b8e758c",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "ca4ef0f0e5eb08b32ccde4c18b92e6816eefd02c337e04d0bc82c2a88b8e758c",
+      "constraints_verified": true,
+      "logical_sha256": "97b9eb2c91f9e750c859845bb3da00a6f9a40ea4d9c154cebdc89ca50d91e65e"
+    }
+  ]
+}

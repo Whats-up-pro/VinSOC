@@ -1,0 +1,142 @@
+{
+  "case_id": "external_world_1_c87de933bb535d25",
+  "database_id": "world_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_658932e3a9c3e35dc6332bd0267ec29670ce9bc06964174a85794771223ce63d",
+      "fixture_4a5be98297da0a35cf5626742fa11c3c6a366b644a9c45d9a2a3675fd791ce7e"
+    ],
+    "gold_result_digests": [
+      "827821c3889817aa634ab2de76ee9261b00fdb4f36ea10dbe2974fe5842d8a44",
+      "a0a03c54cab30daa994a72c33d912a7c800c7393a4d455d9772f2797d125f808"
+    ],
+    "mutant_results": [
+      {
+        "family": "aggregate",
+        "sql": "SELECT COUNT(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "group_having",
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) <= 72",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country WHERE TRUE GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "country"
+      ],
+      "columns": [
+        {
+          "table": "country",
+          "column": "Continent"
+        },
+        {
+          "table": "country",
+          "column": "LifeExpectancy"
+        },
+        {
+          "table": "country",
+          "column": "Population"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "derived_expression",
+          "expression": "AVG(country.lifeexpectancy)",
+          "operator": "<",
+          "value": 72,
+          "value_type": "numeric"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lt",
+          "stage": "having",
+          "expression": "AVG(country.lifeexpectancy) < 72",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 72,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "LifeExpectancy"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "having",
+          "expression": "AVG(country.lifeexpectancy) < 72"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_658932e3a9c3e35dc6332bd0267ec29670ce9bc06964174a85794771223ce63d",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "658932e3a9c3e35dc6332bd0267ec29670ce9bc06964174a85794771223ce63d",
+      "constraints_verified": true,
+      "logical_sha256": "1d4cb6759d7a6650017d024bcb393ed1db7d717052faf927039fb976cf9f0754"
+    },
+    {
+      "instance_id": "fixture_4a5be98297da0a35cf5626742fa11c3c6a366b644a9c45d9a2a3675fd791ce7e",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "4a5be98297da0a35cf5626742fa11c3c6a366b644a9c45d9a2a3675fd791ce7e",
+      "constraints_verified": true,
+      "logical_sha256": "e81972b37148793bdc2bd5dc4c3879c84075a83f2ac4fc3f1f4441d9ddf3d1f7"
+    }
+  ]
+}

@@ -1,0 +1,1653 @@
+{
+  "scope": "External candidate materialization only; CTU and semantic gates pending",
+  "prepared_at_utc": "2026-10-06T06:51:07.547444+00:00",
+  "source_archive_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+  "source_code_sha256_before_execution": {
+    "scripts/prepare_r2_cross_domain_cases.py": "9617c71445354c1c677eddee8cc1be77d0fa72d38d7bf9c85a141568f5ad7a6c",
+    "evaluation/r2_cross_domain_v1/case_preparation.py": "7f02a325a161ca1352a3c4491333ab8c3dbcc4bbe672271ba26b8972cdc00c11",
+    "evaluation/r2_cross_domain_v1/annotations.py": "0107c2db62b419e25f3812dc21b117d830a77f009e07e863c9a5a4af5073c1f3",
+    "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+    "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae"
+  },
+  "dev_member_sha256": "30d64a3fccde493226df79687aed9e4a1c0129525baf44f29c0573d914d758a4",
+  "registry_sha256": "f592dfe86ebf12f957e716f135be0471b0e5170fd1eef7fe2d11c65e246545df",
+  "qualification_sha256": "97497388d1e6dee4eccda8b0c8e0d7153656b24eda4198e824b4346f3df3b0a1",
+  "selection_seed": 20261005,
+  "selection": {
+    "calibration": [
+      {
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "database_id": "cre_Doc_Template_Mgt",
+        "question": "What are the codes of template types that have fewer than 3 templates?",
+        "family_id": "d3b9ebeaf577c67eadd4e0c33d4d5287826907e13d9c79ba256582772c42a13e",
+        "difficulty": "medium",
+        "features": [
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+        "database_id": "cre_Doc_Template_Mgt",
+        "question": "What are the type codes and descriptions for all template types?",
+        "family_id": "61633bbd3fe5effab52895de51f1a3ff8ede6933b2c84bb3d9ad00fbb5de56f0",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+        "database_id": "cre_Doc_Template_Mgt",
+        "question": "What is the template type descriptions for template type code \"AD\".",
+        "family_id": "c0e367be7616f6e439744550f1bf3ef8c53d9aaa0e4ed48107d3624a4f5a3e29",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "database_id": "cre_Doc_Template_Mgt",
+        "question": "What are the template ids of any templates used in more than a single document?",
+        "family_id": "08adb6cf4f454356a7133470f4a576322ab264f8959d916469f1eef0f1fa1a04",
+        "difficulty": "medium",
+        "features": [
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "database_id": "student_transcripts_tracking",
+        "question": "Who are enrolled in 2 degree programs in one semester? List the first name, middle name and last name and the id.",
+        "family_id": "dc66fc86d9395bd5eb045e44f65bde7aad7949a358776168f72d785fcb75c2a2",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+        "database_id": "student_transcripts_tracking",
+        "question": "How many courses in total are listed?",
+        "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+        "database_id": "student_transcripts_tracking",
+        "question": "What is the description for the section named h?",
+        "family_id": "fd244a7a95fdca2defa1887e0c2784a6fff19d2e6b39eb6d72b99dae06bc696d",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_student_transcripts_tracking_c22f6125462fef09",
+        "database_id": "student_transcripts_tracking",
+        "question": "Which address holds the most number of students currently? List the address id and all lines.",
+        "family_id": "e3a966fd32bcda1b922bc8c7a24703f9592cf829210fc65f5fe381840dc652c7",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_voter_1_8f5780081f88c526",
+        "database_id": "voter_1",
+        "question": "List the contestant numbers and names, ordered by contestant name descending.",
+        "family_id": "db0545d401328f14fe943f68d65270db45cd5802edae00f4816f1fa33de0b2fb",
+        "difficulty": "medium",
+        "features": [
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_voter_1_f220617d91c88779",
+        "database_id": "voter_1",
+        "question": "How many states are there?",
+        "family_id": "b5f07927cad363408a84c5784e757ef45fc9ac113d94a1fe290ded2e3e258108",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "database_id": "voter_1",
+        "question": "What are the maximum and minimum values of area codes?",
+        "family_id": "e9f3d0fc68e4dd9e6a6448459242451304222973df1148d5c0b486a29c891935",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_voter_1_4426d844af6ad576",
+        "database_id": "voter_1",
+        "question": "What is last date created of votes from the state 'CA'?",
+        "family_id": "5321df618d2c969f172d609b1941f56b2e8653299228bc96cd7853b87bb89440",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_world_1_118fd339fffc525f",
+        "database_id": "world_1",
+        "question": "Which countries have greater area than that of any country in Europe?",
+        "family_id": "00ee100d8d9c235f6ca8d3a5ecd35f099b5cd7877c84b9c33ac016c0b7310ee4",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "database_id": "world_1",
+        "question": "What are the countries where either English or Dutch is the official language ?",
+        "family_id": "4bc9d61116a8580d9149e11731bd4f2a057efac985bf13cab9a3547103d4da02",
+        "difficulty": "advanced",
+        "features": [
+          "join",
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_world_1_c87de933bb535d25",
+        "database_id": "world_1",
+        "question": "Find the average life expectancy and total population for each continent where the average life expectancy is shorter than 72?",
+        "family_id": "b714d935d932387dbab1c2b33b212b1ce4eaa50002cc233c8e3bcec2efbd66e0",
+        "difficulty": "medium",
+        "features": [
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_world_1_329e92f0874dea47",
+        "database_id": "world_1",
+        "question": "Give the average life expectancy for countries in Africa which are republics?",
+        "family_id": "555d07132ae3000c138f24e63918ffffa50657cc87cc59a3c4f129c8a2b22e44",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      }
+    ],
+    "evaluation": [
+      {
+        "case_id": "external_car_1_fdc8ee399ddc765f",
+        "database_id": "car_1",
+        "question": "What are the makers and models?",
+        "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 2
+      },
+      {
+        "case_id": "external_car_1_72878d40e5fc2141",
+        "database_id": "car_1",
+        "question": "What are all the makers and models?",
+        "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 2
+      },
+      {
+        "case_id": "external_car_1_a3e424fdba9f79c4",
+        "database_id": "car_1",
+        "question": "What is the number of car models that are produced by each maker and what is the id and full name of each maker?",
+        "family_id": "1e0cd2a5a4a99f4e23c0e93cf8a854a2b3cd2032cacef26b46f0f558561d5616",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_car_1_d2631c6c19d42cc9",
+        "database_id": "car_1",
+        "question": "What is the name of the country with the most car makers?",
+        "family_id": "d53221067d19523674f965d946143e0de89ffb435b56d3544593e33247613bf2",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_car_1_55cf1874c71b6fee",
+        "database_id": "car_1",
+        "question": "How many countries are listed?",
+        "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_car_1_c3c5143d74d3437c",
+        "database_id": "car_1",
+        "question": "how many cars were produced in 1980?",
+        "family_id": "8ffedbe9fb5a3950e553e1d57a823db8fd5d0ee4d0155c2b6198c88babde30d9",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+        "database_id": "car_1",
+        "question": "Find the model of the car whose weight is below the average weight.",
+        "family_id": "5cd591e07d5dd23fe7104a6770dbb00bd09c7a1081c4d3803aae1f484b93e550",
+        "difficulty": "advanced",
+        "features": [
+          "join",
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_car_1_95e1de6f7f4b01d9",
+        "database_id": "car_1",
+        "question": "What are the names of the countries with no car makers?",
+        "family_id": "ec82ce5aa901e85bd0453b372f72282c63fecd3f6789b294d4d10cfac92a7334",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_9754e7b07d3a2f56",
+        "database_id": "concert_singer",
+        "question": "What are the locations and names of all stations with capacity between 5000 and 10000?",
+        "family_id": "0ceb2ccf9657b7d2e0b37fec6eaa626fd50415d7b1cf79b9bcb54812a462a302",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_4d9fb537dd762b49",
+        "database_id": "concert_singer",
+        "question": "what is the name and nation of the singer who have a song having 'Hey' in its name?",
+        "family_id": "85d9ec1e47a575c2a1c316043b89a5f7cbe80727e2407367eecc9d993b01343b",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_1313c062638e8562",
+        "database_id": "concert_singer",
+        "question": "What are the names of the singers and number of concerts for each person?",
+        "family_id": "c22a240288d6a8e28d877315ca5413275e179435c8f66110388c15a71a3add08",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_646e7fc8042c34c2",
+        "database_id": "concert_singer",
+        "question": "Show the stadium name and capacity with most number of concerts in year 2014 or after.",
+        "family_id": "ff8b847378e18e0bf37f6123fc61ce3392bb16a316de568637ecaf32d446e3dd",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_2061015cfe2f236a",
+        "database_id": "concert_singer",
+        "question": "How many concerts are there in year 2014 or 2015?",
+        "family_id": "3a63a2e60e385bdafdb4b2bbbdbd2cf93cdc23a8c4c382f300d8fdc7f84512f7",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_db703ee8469f32e5",
+        "database_id": "concert_singer",
+        "question": "How many singers do we have?",
+        "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_6264302aa07ba2e8",
+        "database_id": "concert_singer",
+        "question": "Find the number of concerts happened in the stadium with the highest capacity .",
+        "family_id": "a2ec3b8c171cb908129c5c6c9b7d491e6194be7efddd30f0da4697c2cc872654",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_concert_singer_29bfe250be87c3ae",
+        "database_id": "concert_singer",
+        "question": "List all song names by singers above the average age.",
+        "family_id": "9b4b7b551d687a3f2e1221e4ac1eba55b62ddd9307f4cbfa77f1c01b99b052d6",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_a15b937a6c3852e4",
+        "database_id": "course_teach",
+        "question": "What are the age and hometown of teachers?",
+        "family_id": "794a019de1715c5ff4315146bd20879c7e938bf2eb3b9ffe99c3a05ae3aa2a58",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_58a6ed9ee32a1545",
+        "database_id": "course_teach",
+        "question": "List the name of teachers whose hometown is not `` Little Lever Urban District '' .",
+        "family_id": "6cf95dba1c2e30fc080c51f594792db537749fd9b4ca39d7dae512321d451162",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_d5ccd60dd0513e62",
+        "database_id": "course_teach",
+        "question": "Show names of teachers that teach at least two courses.",
+        "family_id": "b91848626f355481d12cf78f9acecc5c5f82359ebe583e20a11f543b1372dc5b",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_6836a76f20642d62",
+        "database_id": "course_teach",
+        "question": "What are the names of the teachers and how many courses do they teach?",
+        "family_id": "f66468c93cf9c8238dde0f628180dcc0b051f1df0e8e72844c5248a779b4200f",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_2498449e2c383821",
+        "database_id": "course_teach",
+        "question": "For each hometown, how many teachers are there?",
+        "family_id": "013f3a27ac26f9ce4d19483edc474f1d30da43484fdcc68311f0dc44ba86d958",
+        "difficulty": "medium",
+        "features": [
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+        "database_id": "course_teach",
+        "question": "What are the names of the teachers ordered by ascending age?",
+        "family_id": "8fd5e2b0ab0fa3f4665b81a664eba0c7ad8db69081a09ae19065818d96223485",
+        "difficulty": "medium",
+        "features": [
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_a90c07d9d5fb849e",
+        "database_id": "course_teach",
+        "question": "What are the names of the teachers whose courses have not been arranged?",
+        "family_id": "a5ec082cfbb382566a37da73f0ad90a0a93471b436aa25429a63e603e5e61849",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_course_teach_587613ebd0fcbbbe",
+        "database_id": "course_teach",
+        "question": "Show the name of the teacher for the math course.",
+        "family_id": "10781ab9324ca1115864204aaa5c9b3256556e7dc95343efc778d1dec2d0c22e",
+        "difficulty": "advanced",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_99e10daefae93b3e",
+        "database_id": "dog_kennels",
+        "question": "List the emails of the professionals who live in the state of Hawaii or the state of Wisconsin.",
+        "family_id": "8bce8fbdf8a1b38357e2eb336d7ae7293afe31bc5bbc3177300e80babdfbc12e",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_3bed1d18ea095e48",
+        "database_id": "dog_kennels",
+        "question": "Return the first name, last name and email of the owners living in a state whose name contains the substring 'North'.",
+        "family_id": "08e7eee49fe96767ec2cc9569c9d6a4fc9fa6353dde8ff064d4973c7ce37ae84",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_ca0d92216738585b",
+        "database_id": "dog_kennels",
+        "question": "What are the id, role, and first name of the professionals who have performed two or more treatments?",
+        "family_id": "96b5c99c74ce3662012443abb3062088bbb8b68c09994f8070d578ff4e93db29",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_e21e6915192151fc",
+        "database_id": "dog_kennels",
+        "question": "List each owner's first name, last name, and the size of his for her dog.",
+        "family_id": "811ae44bf45fde661d21b5e2594a9fcc0e72a15e38d230f6d8c60d2e71e41562",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+        "database_id": "dog_kennels",
+        "question": "Return the owner id, first name and last name of the owner who has the most dogs.",
+        "family_id": "62b33a97ba0041cd81d52a5a45aada590de10bfc2208a5dc30a059f1394c351b",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_5f29631b7287aefb",
+        "database_id": "dog_kennels",
+        "question": "How much does the most expensive charge type costs?",
+        "family_id": "c6a2a0b2190ef4e88cef2fdce9034fc282411c4b070ff310758bd676b057faf3",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+        "database_id": "dog_kennels",
+        "question": "Find the states where both owners and professionals live.",
+        "family_id": "fa9961c6dfba93c8fbba0f19c8db3fbdecdf51cc9badc3998a03858fbcf5a144",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_dog_kennels_b9c87e441963b8d0",
+        "database_id": "dog_kennels",
+        "question": "How many dogs have not gone through any treatment?",
+        "family_id": "4acf0be6b505716bbacfe51c68fcb6fd9b85e9ec2ffae519d428918c91fdcbee",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_ba7a417281056dea",
+        "database_id": "flight_2",
+        "question": "Give the airport code and airport name corresonding to the city Anthony.",
+        "family_id": "cf6efee01ccc6fc9f5f9e80c8b33ed87223402ccf4ce48fdb11028ddffff7f40",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_1962776e116f9f03",
+        "database_id": "flight_2",
+        "question": "What is the abbreviation of Airline \"JetBlue Airways\"?",
+        "family_id": "b54d1f07b1a65f85eb78e06593f938a0c485718288fa8403e104654d114ab58a",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_6b0856d8343233e0",
+        "database_id": "flight_2",
+        "question": "Return the number of flights arriving in Aberdeen.",
+        "family_id": "1e97423832a642bbd9d39e10d4b5ba688a87a32a4915441141c48ef4cec2438c",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_59060b10db344a2c",
+        "database_id": "flight_2",
+        "question": "Give the flight numbers of flights arriving in Aberdeen.",
+        "family_id": "82d36a6a99305d93aaf9906c32a2dc435a62500d595ffc3bb5b4699891d992ac",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_71ca2299e56319eb",
+        "database_id": "flight_2",
+        "question": "How many airlines are from USA?",
+        "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_524cdfeb29fc83c9",
+        "database_id": "flight_2",
+        "question": "What is the airport code of the airport with the most flights?",
+        "family_id": "1d3c2110f40fbf3b663455be71c851b9904af88f6c9ead6031352c9939bef205",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "group_having",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_dd762b95172800f4",
+        "database_id": "flight_2",
+        "question": "Which airports do not have departing or arriving flights?",
+        "family_id": "993e7b4524d239060fde31aa01cff202eb977c57bb07525c90d43bf86eb708f9",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_flight_2_1bbdb29fd76588bf",
+        "database_id": "flight_2",
+        "question": "How many flights fly from Aberdeen to Ashley?",
+        "family_id": "91823857d983e9e19f21d9acd38e3f107819ff103cb7c89fd65eb71e2e2e8b3e",
+        "difficulty": "advanced",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_orchestra_b16253b5de2ff882",
+        "database_id": "orchestra",
+        "question": "What are the names of conductors whose nationalities are not \"USA\"?",
+        "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 2
+      },
+      {
+        "case_id": "external_orchestra_9e252dcacdf09bde",
+        "database_id": "orchestra",
+        "question": "Return the names of conductors that do not have the nationality \"USA\".",
+        "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 2
+      },
+      {
+        "case_id": "external_orchestra_7d626e678d642e36",
+        "database_id": "orchestra",
+        "question": "Please show the name of the conductor that has conducted orchestras founded after 2008.",
+        "family_id": "b13b199fa7986621f6704d7b80cd5cc3332cb630ba59b1ccfc79a2c69aaa78bf",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+        "database_id": "orchestra",
+        "question": "What are the names of conductors as well as the corresonding orchestras that they have conducted?",
+        "family_id": "a494313e6e5adbfc8a9e0375d93e1a0d45d746ebe424a2f6b6f33dcf48a23854",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_orchestra_09dfdff61fbbeb1a",
+        "database_id": "orchestra",
+        "question": "Count the number of orchestras that have CD or DVD as their record format.",
+        "family_id": "f6755692f1d31534d7b28f9088378d99490752a1567a72ee6c17c50c74be80c4",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_orchestra_5b4b58f26c903ada",
+        "database_id": "orchestra",
+        "question": "What is the record company used by the greatest number of orchestras?",
+        "family_id": "cfece66edccf2391223851a94146a87692e37792bd856754442309113b43a44d",
+        "difficulty": "medium",
+        "features": [
+          "group_having",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_orchestra_725453fffae8b641",
+        "database_id": "orchestra",
+        "question": "List the names of orchestras that have no performance.",
+        "family_id": "e3351d4cf2e31c02590531c68d9148ad3ce7e3ec2e000cbfe804a19647d82597",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_orchestra_333cd27fe66308a4",
+        "database_id": "orchestra",
+        "question": "Show the record companies shared by orchestras founded before 2003 and after 2003.",
+        "family_id": "dab310f59f7fba671b0a02cb617660ac5a79921ed526d91778e49aaa64014a47",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_827c6d91a2ccdded",
+        "database_id": "poker_player",
+        "question": "What are the names of people who are not from Russia?",
+        "family_id": "8c849e0ac6cc957d563c0ae1fbe5742151c60a9e0905a77bb57609f5ecfb1cad",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_0c1c58daeade41a0",
+        "database_id": "poker_player",
+        "question": "List the final tables made and the best finishes of poker players.",
+        "family_id": "b31a103718305d7113cb0c0f73a2c8e092f8991373c83bc0f6711d35bfdfe1ef",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_71688949908bf92a",
+        "database_id": "poker_player",
+        "question": "What are the names of poker players, ordered ascending by the number of final tables they have made?",
+        "family_id": "8dfe5dc0c0328e393493f1f2637ef7cf7a90a44f6e3dd3bb0131bd00742a7a83",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_7c5178d1ef2b95d4",
+        "database_id": "poker_player",
+        "question": "Return the birth date of the poker player with the lowest earnings.",
+        "family_id": "ba1c274d637d3eb2e87d98fafd643096f9a587b4af465d8bc96c9df99f3490d1",
+        "difficulty": "medium",
+        "features": [
+          "join",
+          "order_limit"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_af17ae8ff067eded",
+        "database_id": "poker_player",
+        "question": "How many distinct nationalities are there?",
+        "family_id": "e83965bdd1470e9995b5145391cb44a7571770c5e449f2de4e0d0bddf5c891ad",
+        "difficulty": "medium",
+        "features": [
+          "distinct"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_27c0d318d77ddd08",
+        "database_id": "poker_player",
+        "question": "Return the maximum final tables made across all poker players who have earnings below 200000.",
+        "family_id": "939c43b6189ac801aeb8116edf06b7db384d500cc22515149a1c19c23ee0805d",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_poker_player_635f76c3b3aa43fc",
+        "database_id": "poker_player",
+        "question": "List the names of people that are not poker players.",
+        "family_id": "bf007869d39f42b206e2e9e0a00a916da0c50ec57fedaf17733b2b250186e9a9",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 2
+      },
+      {
+        "case_id": "external_poker_player_311ebb051349222c",
+        "database_id": "poker_player",
+        "question": "What are the names of people who do not play poker?",
+        "family_id": "bf007869d39f42b206e2e9e0a00a916da0c50ec57fedaf17733b2b250186e9a9",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 2
+      },
+      {
+        "case_id": "external_tvshow_73697be8b93729ee",
+        "database_id": "tvshow",
+        "question": "List all cartoon directed by \"Ben Jones\".",
+        "family_id": "2ead0ebc575a4f2a462b1eaeb7adeb10a1882ab496b3596eec51ffae7e8a775a",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_5dd917867752c83a",
+        "database_id": "tvshow",
+        "question": "What is the pixel aspect ratio and country of origin for all TV channels that do not use English?",
+        "family_id": "2afde9ac98fa3123bde411df33a7f82ecdc333ece1e9bc97c9584145fa6556fe",
+        "difficulty": "basic",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_cbea1679ac94abfa",
+        "database_id": "tvshow",
+        "question": "What is the series name of the TV Channel that shows the cartoon \"The Rise of the Blue Beetle\"?",
+        "family_id": "88fb45d83e0fbdcfe81ba25b116da4145eeea144f705182d83d622b46c41eab8",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_55ce63ef8ba641ea",
+        "database_id": "tvshow",
+        "question": "What is the title of all the cartools that are on the TV Channel with the series name \"Sky Radio\"?",
+        "family_id": "d86d848b7ff05200629c21469a2e745d18f8789614f44b66fee3cebb0b8a0ea7",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_1c60aeabf088515a",
+        "database_id": "tvshow",
+        "question": "List the Episode of all  TV series showed on TV Channel with series name \"Sky Radio\".",
+        "family_id": "16065e40b6e416b4ffbce3318ffcddff6c94e133ee5e11ff9b7817ab5ee5c6e7",
+        "difficulty": "medium",
+        "features": [
+          "join"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_f476e6a3b7fb5098",
+        "database_id": "tvshow",
+        "question": "How many TV Channels use the English language?",
+        "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+        "difficulty": "medium",
+        "features": [],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_2ba6baeb8b8cc318",
+        "database_id": "tvshow",
+        "question": "What are the package options of all tv channels that are not playing any cartoons directed by Ben Jones?",
+        "family_id": "d83d4d2556fe19ca61a3e529c5f0a368f004583b31fa45e5755ca1a0c72f17aa",
+        "difficulty": "advanced",
+        "features": [
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      },
+      {
+        "case_id": "external_tvshow_38dfbde79a7487e2",
+        "database_id": "tvshow",
+        "question": "Find the series name and country of the tv channel that is playing some cartoons directed by Ben Jones and Michael Chang?",
+        "family_id": "b785d69969e63924bfa3c8033b22c698e3bfb292d20f7deb3ddb8073d263732a",
+        "difficulty": "advanced",
+        "features": [
+          "join",
+          "nested"
+        ],
+        "selected_family_multiplicity": 1
+      }
+    ],
+    "evaluation_feature_counts": {
+      "join": 23,
+      "group_having": 11,
+      "order_limit": 8,
+      "nested": 14,
+      "distinct": 1
+    },
+    "independence_assumed": false,
+    "unique_evaluation_families": 61,
+    "status": "CANDIDATES_NOT_BENCHMARK_LOCKED_GOLD_PARITY_PENDING",
+    "selection_seed": 20261005,
+    "selection_policy": "SHA-256 order within rubric buckets, prefer distinct families; prefer two medium JOINs and one advanced nested per database when available"
+  },
+  "produced": [
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "path": "calibration/external_cre_Doc_Template_Mgt_ef44290ad6270a09.json",
+      "sha256": "3f968050e5b94392c8fd4eaf37a1c5f3fbb10764d7c2ad603b74e5659f7f8317"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "path": "calibration/external_cre_Doc_Template_Mgt_b984c822618acc41.json",
+      "sha256": "73f0d21716ae8039f99eecb9152cf7f56e8f8a335ab529f2b4f7acb8887834e8"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "path": "calibration/external_cre_Doc_Template_Mgt_b09d57548c5ae624.json",
+      "sha256": "b30b44c1a54d2086bfb58aa94d0fb07950d2fbf9075631883279aec7f4569918"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "path": "calibration/external_cre_Doc_Template_Mgt_90f685508b260d35.json",
+      "sha256": "eb18b0279eeed95e742bc1e71dbf07cf9b4055a42a5220cbffd7289ee0ad549f"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "path": "calibration/external_student_transcripts_tracking_c43a7ff8be72f773.json",
+      "sha256": "4d2ce9ac1ac9f2adabc1d640e66465fe45a4220bdd1802b2abde23c8f13f3293"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "path": "calibration/external_student_transcripts_tracking_1325bbd55bd47c1b.json",
+      "sha256": "bdd719e851ba97ded2882ecf7fd7ea319b85d17f27d0f9aafa33852b8e0b5390"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "path": "calibration/external_student_transcripts_tracking_8895afc977f48f4f.json",
+      "sha256": "e262f880fcbc7965a6b8bf80905dd0b2b82ce51587b1aa0740265c59aad38c98"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_c22f6125462fef09",
+      "path": "calibration/external_student_transcripts_tracking_c22f6125462fef09.json",
+      "sha256": "4ab44ed39eae49b33227263828e9345e1ce64adf7a046595fb463fe10c1db897"
+    },
+    {
+      "case_id": "external_voter_1_8f5780081f88c526",
+      "path": "calibration/external_voter_1_8f5780081f88c526.json",
+      "sha256": "2f2529134c882fb458bb8fae42f383bed4def2c978047811d030ad351adce461"
+    },
+    {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "path": "calibration/external_voter_1_f220617d91c88779.json",
+      "sha256": "e433f22c809e0339e6c2583ee3af76f36fbfd4db1388983cb05e940ba12a4b55"
+    },
+    {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "path": "calibration/external_voter_1_958013b9b7385ffa.json",
+      "sha256": "c4fd1c62d360b3c944e6385ec952922dc7a1f6fe861e0728f729e7b5fd053eee"
+    },
+    {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "path": "calibration/external_voter_1_4426d844af6ad576.json",
+      "sha256": "146bf9a5504ae4d3349dd43f96bb369af8211a5fa56ec33675ac21ad1aebb01f"
+    },
+    {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "path": "calibration/external_world_1_118fd339fffc525f.json",
+      "sha256": "89d3af9054b4886c94801f352da8b3ccda253280f9614f68a7f9ac0c741bc327"
+    },
+    {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "path": "calibration/external_world_1_c16f04754e67aa3c.json",
+      "sha256": "1e4aaf4fc58c6b396d0552653ff38b133726899db884fa2e8fb4d41c8cc18579"
+    },
+    {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "path": "calibration/external_world_1_c87de933bb535d25.json",
+      "sha256": "460fc324564b68be812abcb412cf37f214dec0a55bf6bfbda6377f3a4f6c52a6"
+    },
+    {
+      "case_id": "external_world_1_329e92f0874dea47",
+      "path": "calibration/external_world_1_329e92f0874dea47.json",
+      "sha256": "3f78ec9320537f15be80a91fdab69fdaa46198e023def6edc6091eb1043b8bc6"
+    },
+    {
+      "case_id": "external_car_1_fdc8ee399ddc765f",
+      "path": "evaluation/external_car_1_fdc8ee399ddc765f.json",
+      "sha256": "3cc944fa5c75f523df160d317857fd90e447c8d2e6a7293a7612836452f745e8"
+    },
+    {
+      "case_id": "external_car_1_72878d40e5fc2141",
+      "path": "evaluation/external_car_1_72878d40e5fc2141.json",
+      "sha256": "04c9832a7c7d8a6cc40adf6d685d6f3e901c92501632cb8d2121cc12210e0078"
+    },
+    {
+      "case_id": "external_car_1_a3e424fdba9f79c4",
+      "path": "evaluation/external_car_1_a3e424fdba9f79c4.json",
+      "sha256": "199e7b36ffd8522f7f31cf63a33ae841296e4d2985f73756b0200560d92c84a1"
+    },
+    {
+      "case_id": "external_car_1_d2631c6c19d42cc9",
+      "path": "evaluation/external_car_1_d2631c6c19d42cc9.json",
+      "sha256": "b373299ca617ea96eaa830570dd407413d6656fa702b03623a158925371e3667"
+    },
+    {
+      "case_id": "external_car_1_55cf1874c71b6fee",
+      "path": "evaluation/external_car_1_55cf1874c71b6fee.json",
+      "sha256": "7aaa16ea7a948b973b34558776578322bd20be495bfa8c6bab8809a860af710d"
+    },
+    {
+      "case_id": "external_car_1_c3c5143d74d3437c",
+      "path": "evaluation/external_car_1_c3c5143d74d3437c.json",
+      "sha256": "6184b2439720ca4aefb7a6c63c60b202b8847979583976fc5cd7304d3b73b211"
+    },
+    {
+      "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+      "path": "evaluation/external_car_1_2f0d9e35cdcc4bc2.json",
+      "sha256": "3f3d0379f8a79e72b6b953905b862cb7741b6f4f6d3f38ba0594fe5011afdb4e"
+    },
+    {
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "path": "evaluation/external_car_1_95e1de6f7f4b01d9.json",
+      "sha256": "ccc0ffb7211e9a72f338c6abf8f8079f7d75350d20f0a20ec3725851a0e0fa7f"
+    },
+    {
+      "case_id": "external_concert_singer_9754e7b07d3a2f56",
+      "path": "evaluation/external_concert_singer_9754e7b07d3a2f56.json",
+      "sha256": "9ed02ac852021b2d6b05a13fe015bc36f89dfc7990091b9f12949e8bac32df3e"
+    },
+    {
+      "case_id": "external_concert_singer_4d9fb537dd762b49",
+      "path": "evaluation/external_concert_singer_4d9fb537dd762b49.json",
+      "sha256": "7a29ba66da49ee8287e815892d7fee4a88ecb1eaf79dcca88feb3b976e18a355"
+    },
+    {
+      "case_id": "external_concert_singer_1313c062638e8562",
+      "path": "evaluation/external_concert_singer_1313c062638e8562.json",
+      "sha256": "4f415a5d82605440b7dcdee44464eb73092b519d01614c1f96a1f13307165a34"
+    },
+    {
+      "case_id": "external_concert_singer_646e7fc8042c34c2",
+      "path": "evaluation/external_concert_singer_646e7fc8042c34c2.json",
+      "sha256": "b8c5950b0ce49df99cec4f738ba684b20b4933bdea98420655b2c9cfa8b2afd6"
+    },
+    {
+      "case_id": "external_concert_singer_2061015cfe2f236a",
+      "path": "evaluation/external_concert_singer_2061015cfe2f236a.json",
+      "sha256": "ac65c653037d7295a9beaa076e1d38125b4c6d1d9fbbbb1fe4184c589e5cb87b"
+    },
+    {
+      "case_id": "external_concert_singer_db703ee8469f32e5",
+      "path": "evaluation/external_concert_singer_db703ee8469f32e5.json",
+      "sha256": "83cf46f7545201f14906a3d7d94b202b280627f4dc5fff7fb64d3a4c88f6910d"
+    },
+    {
+      "case_id": "external_concert_singer_6264302aa07ba2e8",
+      "path": "evaluation/external_concert_singer_6264302aa07ba2e8.json",
+      "sha256": "25f147740867cb9d76a0e2f0c6103f07bbc4ed0b295a7dfc6baf9717af10ef1b"
+    },
+    {
+      "case_id": "external_concert_singer_29bfe250be87c3ae",
+      "path": "evaluation/external_concert_singer_29bfe250be87c3ae.json",
+      "sha256": "5a58b3959ccba35b2646a45e5e982a3112cdfe084f0c8894432c4f135fa69513"
+    },
+    {
+      "case_id": "external_course_teach_a15b937a6c3852e4",
+      "path": "evaluation/external_course_teach_a15b937a6c3852e4.json",
+      "sha256": "43524574ced68f9c4d189e1d96722e93d47f0700d7e8f3ad16e04873c396a25f"
+    },
+    {
+      "case_id": "external_course_teach_58a6ed9ee32a1545",
+      "path": "evaluation/external_course_teach_58a6ed9ee32a1545.json",
+      "sha256": "d28e3c3889e97f788c7f12855c4e5a86b6a4af978e49e737594b4e609793783c"
+    },
+    {
+      "case_id": "external_course_teach_d5ccd60dd0513e62",
+      "path": "evaluation/external_course_teach_d5ccd60dd0513e62.json",
+      "sha256": "c82350aa0cd5ff4e2dd7f93e5c2a624920e21007e80a5749eaf9ab67d1dbb40f"
+    },
+    {
+      "case_id": "external_course_teach_6836a76f20642d62",
+      "path": "evaluation/external_course_teach_6836a76f20642d62.json",
+      "sha256": "008b866626e3457691bb1ebcd97f1ac42f9cdd95b62e2ceaa7e4115c3818f229"
+    },
+    {
+      "case_id": "external_course_teach_2498449e2c383821",
+      "path": "evaluation/external_course_teach_2498449e2c383821.json",
+      "sha256": "f100cae2e37d583abce53a382377f62709cbe660b03ba7cc9a95fac91c022465"
+    },
+    {
+      "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+      "path": "evaluation/external_course_teach_2d5c36e81b6f4fdc.json",
+      "sha256": "aeb1e740fd6d0adefc2a123ce1c8c1c45cc188f606f2555702fa4de0950ad648"
+    },
+    {
+      "case_id": "external_course_teach_a90c07d9d5fb849e",
+      "path": "evaluation/external_course_teach_a90c07d9d5fb849e.json",
+      "sha256": "8410181758540ff6c4ce30fd4a066959e92d27e656124588d97f291a1ff2ca12"
+    },
+    {
+      "case_id": "external_course_teach_587613ebd0fcbbbe",
+      "path": "evaluation/external_course_teach_587613ebd0fcbbbe.json",
+      "sha256": "e044c215db73beae351a0f081e0f30e11b60572383a83205d2c733662bce9a25"
+    },
+    {
+      "case_id": "external_dog_kennels_99e10daefae93b3e",
+      "path": "evaluation/external_dog_kennels_99e10daefae93b3e.json",
+      "sha256": "0bb754d0f5e90273594ca830abcec71d51d1de4a5be8c6164e9b27136f39ecd0"
+    },
+    {
+      "case_id": "external_dog_kennels_3bed1d18ea095e48",
+      "path": "evaluation/external_dog_kennels_3bed1d18ea095e48.json",
+      "sha256": "11c1a4e9f3656ebaf76e0d126eb432610c20a66873acd209e5065430b6034b53"
+    },
+    {
+      "case_id": "external_dog_kennels_ca0d92216738585b",
+      "path": "evaluation/external_dog_kennels_ca0d92216738585b.json",
+      "sha256": "a75dd62c4b2ebd0f072b5bf38c5012209c1815d3edc3abb5e46f2345f5f7b239"
+    },
+    {
+      "case_id": "external_dog_kennels_e21e6915192151fc",
+      "path": "evaluation/external_dog_kennels_e21e6915192151fc.json",
+      "sha256": "93ba5883f4d857753f56db0eb777f9d01c2478c434d5bbe2a8bfceeb026f39c5"
+    },
+    {
+      "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+      "path": "evaluation/external_dog_kennels_fbc12f6ebf8e8d95.json",
+      "sha256": "c3233d27890cea41e666f1a9432c7fbe689dd96f0aa8396cb02449e590297fb2"
+    },
+    {
+      "case_id": "external_dog_kennels_5f29631b7287aefb",
+      "path": "evaluation/external_dog_kennels_5f29631b7287aefb.json",
+      "sha256": "b358659bd2ab79db4accd3e20e198e79a9c3b7c6fac6ec9a7304890414255ba8"
+    },
+    {
+      "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+      "path": "evaluation/external_dog_kennels_14fcc7dd73ceab81.json",
+      "sha256": "1ffe4f4626ad3cbaed634dacaf8ea6e7d35354fa10ce32665736bfa87dc8f13a"
+    },
+    {
+      "case_id": "external_dog_kennels_b9c87e441963b8d0",
+      "path": "evaluation/external_dog_kennels_b9c87e441963b8d0.json",
+      "sha256": "ddab8d9685e64aa9cda574982166ff1a4de05a5bcb1ddb643f3ff770225b702e"
+    },
+    {
+      "case_id": "external_flight_2_ba7a417281056dea",
+      "path": "evaluation/external_flight_2_ba7a417281056dea.json",
+      "sha256": "562b9bf1ebd6481c698b8105ffbde335d074c26aa83aaf0f05bdf0b0dbe0b171"
+    },
+    {
+      "case_id": "external_flight_2_1962776e116f9f03",
+      "path": "evaluation/external_flight_2_1962776e116f9f03.json",
+      "sha256": "32a76f4fa7d473522d0818bcbbba4f094946b0469bf1f9f26af082655d0b01ab"
+    },
+    {
+      "case_id": "external_flight_2_6b0856d8343233e0",
+      "path": "evaluation/external_flight_2_6b0856d8343233e0.json",
+      "sha256": "77d8b563c0c7ab620e0ab8f4d66db2d87e7fc76d431b7de01f2111087dee128c"
+    },
+    {
+      "case_id": "external_flight_2_59060b10db344a2c",
+      "path": "evaluation/external_flight_2_59060b10db344a2c.json",
+      "sha256": "2fba4871f0c7d9c945a46e9b61b29f01c061f64bf7cd0cecae7ec503f0db64f5"
+    },
+    {
+      "case_id": "external_flight_2_71ca2299e56319eb",
+      "path": "evaluation/external_flight_2_71ca2299e56319eb.json",
+      "sha256": "16c2c7551ed65309a860fe38e2979aa96cd8d41cf2f127813201a41b4cf6a7f6"
+    },
+    {
+      "case_id": "external_flight_2_524cdfeb29fc83c9",
+      "path": "evaluation/external_flight_2_524cdfeb29fc83c9.json",
+      "sha256": "0bd5a229ae8433be4f3641af6cd2d89cdf4c466517177749afc6aee87b1a4afe"
+    },
+    {
+      "case_id": "external_flight_2_dd762b95172800f4",
+      "path": "evaluation/external_flight_2_dd762b95172800f4.json",
+      "sha256": "0c7d9990c443ea706fbdb9ed154a49bfdffb4c46555c43086f07e8180587c21e"
+    },
+    {
+      "case_id": "external_flight_2_1bbdb29fd76588bf",
+      "path": "evaluation/external_flight_2_1bbdb29fd76588bf.json",
+      "sha256": "29373cfe3f8e6392444e97f8644b98c0c2abbae254f4ade11fc2b1e0b7c56599"
+    },
+    {
+      "case_id": "external_orchestra_b16253b5de2ff882",
+      "path": "evaluation/external_orchestra_b16253b5de2ff882.json",
+      "sha256": "643d5e77af60bcf3517a97818bb833ecb730350614c437267e55823158292a0e"
+    },
+    {
+      "case_id": "external_orchestra_9e252dcacdf09bde",
+      "path": "evaluation/external_orchestra_9e252dcacdf09bde.json",
+      "sha256": "347780cafe9ad039e547887b04c43ec51a3e00776e9950a6b544d4a71c9edc1c"
+    },
+    {
+      "case_id": "external_orchestra_7d626e678d642e36",
+      "path": "evaluation/external_orchestra_7d626e678d642e36.json",
+      "sha256": "c164ee7112e7588e111e05df252ccdbb967f099e5a723a91759108fdafe8cc9e"
+    },
+    {
+      "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+      "path": "evaluation/external_orchestra_fba9b3fa38f6cf1c.json",
+      "sha256": "e777ad69a1659b32e5620ec16c8516376d5163d8cd0e4ae09c31ae9cc074b9a9"
+    },
+    {
+      "case_id": "external_orchestra_09dfdff61fbbeb1a",
+      "path": "evaluation/external_orchestra_09dfdff61fbbeb1a.json",
+      "sha256": "b5bb858a4e4e36794c9dbed43e406a54fa7831a56787bca58070d0e1eaa24be9"
+    },
+    {
+      "case_id": "external_orchestra_5b4b58f26c903ada",
+      "path": "evaluation/external_orchestra_5b4b58f26c903ada.json",
+      "sha256": "4b0b71ca8f26950af78422956259222241489bed857f203298224989ce8b41fa"
+    },
+    {
+      "case_id": "external_orchestra_725453fffae8b641",
+      "path": "evaluation/external_orchestra_725453fffae8b641.json",
+      "sha256": "90d84e09255c365c70c2c202863ff8c2667fecd6b1376f0010eb7248ea05e54a"
+    },
+    {
+      "case_id": "external_orchestra_333cd27fe66308a4",
+      "path": "evaluation/external_orchestra_333cd27fe66308a4.json",
+      "sha256": "6c3579fc2653ed839981121de07e1aaaa84c3907276b3301787ad9260416e97b"
+    },
+    {
+      "case_id": "external_poker_player_827c6d91a2ccdded",
+      "path": "evaluation/external_poker_player_827c6d91a2ccdded.json",
+      "sha256": "fd253a04e90b067751cd9f1b0a4c68f63b8c1668bde49c46d415a9a81a1144b7"
+    },
+    {
+      "case_id": "external_poker_player_0c1c58daeade41a0",
+      "path": "evaluation/external_poker_player_0c1c58daeade41a0.json",
+      "sha256": "cb9d4d18ee441e8843530b16463b18e14cb89ecb6665f9410015acb271f5b840"
+    },
+    {
+      "case_id": "external_poker_player_71688949908bf92a",
+      "path": "evaluation/external_poker_player_71688949908bf92a.json",
+      "sha256": "f8faa200b02dcb20aa2dbec4bc5f8f775fe0c094a0332b9fa2274e9fabb195a2"
+    },
+    {
+      "case_id": "external_poker_player_7c5178d1ef2b95d4",
+      "path": "evaluation/external_poker_player_7c5178d1ef2b95d4.json",
+      "sha256": "0d9b3a42d1def9f428dbe2eb8702310c76022bcddabc74728624a372c718a27f"
+    },
+    {
+      "case_id": "external_poker_player_af17ae8ff067eded",
+      "path": "evaluation/external_poker_player_af17ae8ff067eded.json",
+      "sha256": "4677bcf91afd6e3379588ffe3568500703f8cdacd625ec822007d965458968e1"
+    },
+    {
+      "case_id": "external_poker_player_27c0d318d77ddd08",
+      "path": "evaluation/external_poker_player_27c0d318d77ddd08.json",
+      "sha256": "83c4a623616b8ae74615c820b4dbb556f430a2a291f0ce19d244ad98fa179dda"
+    },
+    {
+      "case_id": "external_poker_player_635f76c3b3aa43fc",
+      "path": "evaluation/external_poker_player_635f76c3b3aa43fc.json",
+      "sha256": "f43b5d2f2d6db0568a973046a48a01f98cdf528f56671742bc9db83a51e15fcf"
+    },
+    {
+      "case_id": "external_poker_player_311ebb051349222c",
+      "path": "evaluation/external_poker_player_311ebb051349222c.json",
+      "sha256": "3ffbdd54f45d1a284e4c0f4079dbfc6e9e61cabc0cd7d16f3459eb03c8bf8dc8"
+    },
+    {
+      "case_id": "external_tvshow_73697be8b93729ee",
+      "path": "evaluation/external_tvshow_73697be8b93729ee.json",
+      "sha256": "f065895b315161f97d9c2eb6ebd398033587b8d04436136d2e853b8d8b6a026a"
+    },
+    {
+      "case_id": "external_tvshow_5dd917867752c83a",
+      "path": "evaluation/external_tvshow_5dd917867752c83a.json",
+      "sha256": "8e6263390338425d4a3d0bd288816652a051ae71a83740fe4bb92d2eebd50cc8"
+    },
+    {
+      "case_id": "external_tvshow_cbea1679ac94abfa",
+      "path": "evaluation/external_tvshow_cbea1679ac94abfa.json",
+      "sha256": "62c05cf9b31ff4f8e366761e3fc281cf1bfd3a0427f51ed95479fc88919de689"
+    },
+    {
+      "case_id": "external_tvshow_55ce63ef8ba641ea",
+      "path": "evaluation/external_tvshow_55ce63ef8ba641ea.json",
+      "sha256": "1d596f2eaf4e36c162b4e80ac6783867e5ce8d2b744fb51140c28d5e18e3a68d"
+    },
+    {
+      "case_id": "external_tvshow_1c60aeabf088515a",
+      "path": "evaluation/external_tvshow_1c60aeabf088515a.json",
+      "sha256": "1e81efcb11290cfe1e46236902e09d2ba88d22e9bbed357ad8e5550c82e23161"
+    },
+    {
+      "case_id": "external_tvshow_f476e6a3b7fb5098",
+      "path": "evaluation/external_tvshow_f476e6a3b7fb5098.json",
+      "sha256": "64a959962e03c5cd11296d3c83e976b2526d79d93d606c3d13dadb3794b0c3a8"
+    },
+    {
+      "case_id": "external_tvshow_2ba6baeb8b8cc318",
+      "path": "evaluation/external_tvshow_2ba6baeb8b8cc318.json",
+      "sha256": "d285d8356cb3df9585c6cfbf570750f65b49ed4fdb6fece923a156038f9a29c9"
+    },
+    {
+      "case_id": "external_tvshow_38dfbde79a7487e2",
+      "path": "evaluation/external_tvshow_38dfbde79a7487e2.json",
+      "sha256": "fff7859b37f5daed92889fe825dc9e0764317d9d932332a43ff09dfe84dc78fc"
+    }
+  ],
+  "errors": [],
+  "pre_inference_exclusions": [
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b19dbbbbc8ff4717",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b32d91b62f2fe5ee",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b2d8624b9949ace2",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_d31653adb6048bb1",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_aec6c83fdd905c37",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_87910ea689b38ff4",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_f1bb5d9fd286e057",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "GOLD_RESULT_PARITY_MISMATCH"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_6cdcd021cb5a1507",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "GOLD_RESULT_PARITY_MISMATCH"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_c5b01c19f67c4a1c",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_bfff9f679de62154",
+      "database_id": "cre_Doc_Template_Mgt",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_87e4e219032de54e",
+      "database_id": "student_transcripts_tracking",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_a586a83956fc3d04",
+      "database_id": "student_transcripts_tracking",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_7e9b035be6057ea1",
+      "database_id": "student_transcripts_tracking",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_fb5dcfb0623f004e",
+      "database_id": "student_transcripts_tracking",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_d4d3ec96f1dd5203",
+      "database_id": "student_transcripts_tracking",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_258c4041f26b3f00",
+      "database_id": "student_transcripts_tracking",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_bf50b83a43475afd",
+      "database_id": "student_transcripts_tracking",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_300fe64c14db3cb9",
+      "database_id": "student_transcripts_tracking",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_voter_1_cceaed4adb96f705",
+      "database_id": "voter_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_voter_1_e865c7574e534409",
+      "database_id": "voter_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_voter_1_0a13e99dbaecd958",
+      "database_id": "voter_1",
+      "reason": "GOLD_RESULT_PARITY_MISMATCH"
+    },
+    {
+      "case_id": "external_world_1_18b86975605c2ae6",
+      "database_id": "world_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_world_1_c9a33b5463e27d93",
+      "database_id": "world_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_world_1_0c5b70a688e60774",
+      "database_id": "world_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_world_1_abc711a4c45ba6a5",
+      "database_id": "world_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_world_1_ee8d69a9458d78d7",
+      "database_id": "world_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_world_1_a0ab228e71cb15cf",
+      "database_id": "world_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_world_1_ea2528640c5e0fcc",
+      "database_id": "world_1",
+      "reason": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_world_1_12648127c22e995b",
+      "database_id": "world_1",
+      "reason": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_concert_singer_5f2c0c5ba8e9e568",
+      "database_id": "concert_singer",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_concert_singer_57cbbcbc9298ae37",
+      "database_id": "concert_singer",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_concert_singer_f5b4895f969fbf4d",
+      "database_id": "concert_singer",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_concert_singer_7c4b8d115e321d7b",
+      "database_id": "concert_singer",
+      "reason": "UNSUPPORTED_MIXED_AFFINITY"
+    },
+    {
+      "case_id": "external_concert_singer_9f9ee13fc0b5b9ff",
+      "database_id": "concert_singer",
+      "reason": "UNSUPPORTED_MIXED_AFFINITY"
+    },
+    {
+      "case_id": "external_car_1_781c728f6055544b",
+      "database_id": "car_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_car_1_8775fbee1d74f2d8",
+      "database_id": "car_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_car_1_598e3f6072fa187b",
+      "database_id": "car_1",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_car_1_1d1051ea19e262a7",
+      "database_id": "car_1",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_car_1_d57fbde24676284c",
+      "database_id": "car_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_car_1_d0f9f3a5f3a5bb22",
+      "database_id": "car_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_car_1_0c1b6dfeaae0b1b2",
+      "database_id": "car_1",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_car_1_4aa421134542fcf0",
+      "database_id": "car_1",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_car_1_2f095150ac847497",
+      "database_id": "car_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_car_1_e372f96abd4c4c90",
+      "database_id": "car_1",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_flight_2_3545cd676df88a7d",
+      "database_id": "flight_2",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_flight_2_ac2885ef5c0f11d4",
+      "database_id": "flight_2",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_flight_2_76fad759ed10c0b7",
+      "database_id": "flight_2",
+      "reason": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_flight_2_d0e01c5424d13a17",
+      "database_id": "flight_2",
+      "reason": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_course_teach_5d3f07d443b76433",
+      "database_id": "course_teach",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_course_teach_17155c70dac2fade",
+      "database_id": "course_teach",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_course_teach_57feb1c01607baa2",
+      "database_id": "course_teach",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_course_teach_040e2bacc41bb376",
+      "database_id": "course_teach",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_tvshow_f9147151009ef002",
+      "database_id": "tvshow",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_tvshow_d0a6ccc5e640853f",
+      "database_id": "tvshow",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_tvshow_c4222e6800e844ff",
+      "database_id": "tvshow",
+      "reason": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_tvshow_57253ae9262985ea",
+      "database_id": "tvshow",
+      "reason": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_orchestra_0c50d58b4bed1f8a",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_a41eac2fba85405e",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_d77cd71a5555717e",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_a86873e53ae09c49",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_f79f2cb437e17375",
+      "database_id": "orchestra",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:ParserException"
+    },
+    {
+      "case_id": "external_orchestra_9811cba713935abb",
+      "database_id": "orchestra",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:ParserException"
+    },
+    {
+      "case_id": "external_orchestra_c74460ba500441c5",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_87ac5281a2165f92",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_b638f22bbd8828a8",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_orchestra_2fcc5834278757a9",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_LIMIT_TIE"
+    },
+    {
+      "case_id": "external_orchestra_9fc3f0bcfc6e15c1",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_orchestra_493a762825881d8d",
+      "database_id": "orchestra",
+      "reason": "AMBIGUOUS_ORDER_TIE"
+    },
+    {
+      "case_id": "external_dog_kennels_1ed7ef401aea49aa",
+      "database_id": "dog_kennels",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_dog_kennels_5b7d6eb04ba5e083",
+      "database_id": "dog_kennels",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_dog_kennels_a29fc6509de510cc",
+      "database_id": "dog_kennels",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_dog_kennels_4a02667c246865bf",
+      "database_id": "dog_kennels",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_dog_kennels_62037d810a394f7d",
+      "database_id": "dog_kennels",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_dog_kennels_3ae722e0e2399a46",
+      "database_id": "dog_kennels",
+      "reason": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    }
+  ],
+  "external_cases_produced": 80,
+  "benchmark_locked": false,
+  "release_eligible": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "license": "CC BY-SA 4.0",
+  "attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds"
+}

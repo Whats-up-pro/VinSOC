@@ -163,3 +163,18 @@ def test_scoring_preserves_decimal_and_duplicate_select_column_positions(tmp_pat
     assert score_case(reference, {"final_sql": "SELECT SUM(CAST(amount AS DOUBLE)) FROM items"}, instances)["execution_accurate"]
     reference = ReferenceCase("fixture", "items", "Two values", "SELECT id, amount FROM items", "unordered_multiset", "basic", [], "family", [])
     assert not score_case(reference, {"final_sql": "SELECT id AS x, id AS x FROM items"}, instances)["execution_accurate"]
+@pytest.mark.parametrize("predicate,expected", [("name LIKE '%Hey%'", 3), ("name LIKE 'Ä'", 1), ("name LIKE 'a\\_b' ESCAPE '\\'", 2)])
+def test_sqlite_like_adapter_preserves_ascii_nocase_without_unicode_casefold(tmp_path, predicate, expected):
+    import sqlite3
+    from contextlib import closing
+    from evaluation.r2_cross_domain_v1.data import build_duckdb_snapshot, DatabaseContext
+    from evaluation.r2_cross_domain_v1.benchmark import validate_gold_parity
+    source = tmp_path / "like.sqlite"
+    with closing(sqlite3.connect(source)) as connection, connection:
+        connection.execute("CREATE TABLE words (id INTEGER PRIMARY KEY, name TEXT)")
+        connection.executemany("INSERT INTO words VALUES (?,?)", [(1,"Hey"),(2,"hey"),(3,"HEY"),(4,"Ä"),(5,"ä"),(6,"a_b"),(7,"A_B"),(8,None)])
+    identity = build_duckdb_snapshot(source, tmp_path / "like.duckdb", "like_fixture")
+    context = DatabaseContext("like_fixture", tmp_path / "like.duckdb", identity)
+    report = validate_gold_parity("SELECT COUNT(*) FROM words WHERE " + predicate, source, context, "scalar")
+    assert report["parity"]
+    assert report["sample_adapted_rows"] == [[expected]]

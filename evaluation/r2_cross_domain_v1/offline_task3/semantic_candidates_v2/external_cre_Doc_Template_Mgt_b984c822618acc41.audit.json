@@ -1,0 +1,147 @@
+{
+  "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+  "database_id": "cre_Doc_Template_Mgt",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_67bcdbc9f2912561bb606807cb08eb08bc83ca7124617a23a15c01870d577c8a",
+      "fixture_997205cd7c707d33f0ca6eb760ec1621df8c328120418de27118dffba7c85d11"
+    ],
+    "gold_result_digests": [
+      "ad6a75f1bd85ab7bb50f7269af4a3cf18dca36a9425748c48706957f1354f5ad",
+      "c103931e9d1822eb0543a23087cf73bae9dd59332ea13c5b349d365546d61755"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT template_type_code FROM Ref_template_types",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT template_type_code, template_type_description FROM Ref_template_types WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 1,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "1",
+          "fixture_A"
+        ],
+        [
+          "2",
+          "fixture_B"
+        ],
+        [
+          "3",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "1",
+          "fixture_A"
+        ],
+        [
+          "2",
+          "fixture_B"
+        ],
+        [
+          "3",
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "1",
+          "fixture_C"
+        ],
+        [
+          "2",
+          "fixture_A"
+        ],
+        [
+          "3",
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "1",
+          "fixture_C"
+        ],
+        [
+          "2",
+          "fixture_A"
+        ],
+        [
+          "3",
+          "fixture_B"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Ref_Template_Types"
+      ],
+      "columns": [
+        {
+          "table": "Ref_Template_Types",
+          "column": "Template_Type_Code"
+        },
+        {
+          "table": "Ref_Template_Types",
+          "column": "Template_Type_Description"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_67bcdbc9f2912561bb606807cb08eb08bc83ca7124617a23a15c01870d577c8a",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "67bcdbc9f2912561bb606807cb08eb08bc83ca7124617a23a15c01870d577c8a",
+      "constraints_verified": true,
+      "logical_sha256": "200d561b07dbe20fcfab6abedf85aabfc2019bfc23d9c2e8fc58aa6ef134c2fb"
+    },
+    {
+      "instance_id": "fixture_997205cd7c707d33f0ca6eb760ec1621df8c328120418de27118dffba7c85d11",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "997205cd7c707d33f0ca6eb760ec1621df8c328120418de27118dffba7c85d11",
+      "constraints_verified": true,
+      "logical_sha256": "32fff6236fa6d310d95bd3f1858e9fe88ac8dc3b91ac23b6b2ffa9e776e143ad"
+    }
+  ]
+}

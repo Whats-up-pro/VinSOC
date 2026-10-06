@@ -1,0 +1,228 @@
+{
+  "case_id": "external_dog_kennels_3bed1d18ea095e48",
+  "database_id": "dog_kennels",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_fe361e1f13f236ce991fb6e127d3b6dc7713ded5076bee8b399ace32d134fc3c",
+      "fixture_caf072abdd512d91650a58d91edc0cf056e0c4d2870233d471cba1cf71b05d70"
+    ],
+    "gold_result_digests": [
+      "1f7c74246290a94fe866680cbd75484ca595599ff93e50dcb721288e95bdc2d1",
+      "ffe0a335c0d0ab4b1cb13bd2c215edc7dd060d70e9320823fb3a440e3c6fbf68"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT first_name, last_name FROM Owners WHERE TRANSLATE(state, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%North%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT first_name, last_name, email_address FROM Owners",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "case_sensitivity",
+        "sql": "SELECT first_name, last_name, email_address FROM Owners WHERE TRANSLATE(state, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') ILIKE TRANSLATE('%North%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT first_name, last_name, email_address FROM Owners WHERE TRANSLATE(state, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%North%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B",
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_B",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_C",
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B",
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_C",
+          "fixture_B",
+          "fixture_C"
+        ],
+        [
+          "fixture_A",
+          "fixture_C",
+          "fixture_A"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_A",
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_B",
+          "fixture_A",
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_B",
+          "fixture_B"
+        ],
+        [
+          "fixture_A",
+          "fixture_C",
+          "fixture_C"
+        ],
+        [
+          "fixture_B",
+          "fixture_A",
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Owners"
+      ],
+      "columns": [
+        {
+          "table": "Owners",
+          "column": "email_address"
+        },
+        {
+          "table": "Owners",
+          "column": "first_name"
+        },
+        {
+          "table": "Owners",
+          "column": "last_name"
+        },
+        {
+          "table": "Owners",
+          "column": "state"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "like",
+          "stage": "where",
+          "expression": "TRANSLATE(owners.state, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%North%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              "value_type": "string"
+            },
+            {
+              "value": "abcdefghijklmnopqrstuvwxyz",
+              "value_type": "string"
+            },
+            {
+              "value": "%North%",
+              "value_type": "string"
+            },
+            {
+              "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              "value_type": "string"
+            },
+            {
+              "value": "abcdefghijklmnopqrstuvwxyz",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Owners",
+              "column": "state"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "TRANSLATE(owners.state, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%North%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_fe361e1f13f236ce991fb6e127d3b6dc7713ded5076bee8b399ace32d134fc3c",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "fe361e1f13f236ce991fb6e127d3b6dc7713ded5076bee8b399ace32d134fc3c",
+      "constraints_verified": true,
+      "logical_sha256": "25e5aa7f46cb13f41997c09b4cbeabe50d70a5e0f9f7c1f4e8e05ed9cb4ab34a"
+    },
+    {
+      "instance_id": "fixture_caf072abdd512d91650a58d91edc0cf056e0c4d2870233d471cba1cf71b05d70",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "caf072abdd512d91650a58d91edc0cf056e0c4d2870233d471cba1cf71b05d70",
+      "constraints_verified": true,
+      "logical_sha256": "2b9a572d3ad0f539f900589cb3245176bb5fc41f9e4a6aa215049f7db05ad5c1"
+    }
+  ]
+}

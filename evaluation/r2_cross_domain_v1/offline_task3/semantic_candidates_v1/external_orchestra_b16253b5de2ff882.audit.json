@@ -1,0 +1,127 @@
+{
+  "case_id": "external_orchestra_b16253b5de2ff882",
+  "database_id": "orchestra",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_f44cfe3e5c3ce9926cfb41247ef4066a3f6cd6b5f3196850bb8cae70fbca8457",
+      "fixture_3c9df5a4b33caf61bace1da973fceb905b0c30bb11cc7b6ab7051c68a899bfaa"
+    ],
+    "gold_result_digests": [
+      "0a720260ad20252a345e0f4d7e14a710d1c133e656b8ce476563cd9c0f5fd145",
+      "634b74d3e0bafd10b111b75f5f868a5eafa267409d43abc48bbba987ff7b2bf3"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Name FROM conductor",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Name FROM conductor WHERE Nationality = 'USA'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Name FROM conductor WHERE Nationality <> 'USA' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    true,
+    true
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "conductor"
+      ],
+      "columns": [
+        {
+          "table": "conductor",
+          "column": "Name"
+        },
+        {
+          "table": "conductor",
+          "column": "Nationality"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "conductor",
+          "column": "Nationality",
+          "operator": "!=",
+          "value": "USA"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "neq",
+          "stage": "where",
+          "expression": "conductor.nationality <> 'USA'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "USA",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "conductor",
+              "column": "Nationality"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "conductor.nationality <> 'USA'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_f44cfe3e5c3ce9926cfb41247ef4066a3f6cd6b5f3196850bb8cae70fbca8457",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "f44cfe3e5c3ce9926cfb41247ef4066a3f6cd6b5f3196850bb8cae70fbca8457",
+      "constraints_verified": true,
+      "logical_sha256": "4b18b8e12dbc049b5656dbb82a3c65ce8cd66381cd6623873ba6d5585d21e587"
+    },
+    {
+      "instance_id": "fixture_3c9df5a4b33caf61bace1da973fceb905b0c30bb11cc7b6ab7051c68a899bfaa",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "3c9df5a4b33caf61bace1da973fceb905b0c30bb11cc7b6ab7051c68a899bfaa",
+      "constraints_verified": true,
+      "logical_sha256": "8b5651fb3d2ad47c07626ae2da85550d11922481a4051f67c8929bc966489d26"
+    }
+  ]
+}

@@ -1,0 +1,1312 @@
+{
+  "fixture_only": true,
+  "seed": 20261006,
+  "database_id": "world_1",
+  "schema": [
+    {
+      "columns": [
+        {
+          "default": null,
+          "duckdb_type": "BIGINT",
+          "name": "ID",
+          "not_null": true,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "Name",
+          "not_null": true,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "char(35)"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "CountryCode",
+          "not_null": true,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "char(3)"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "District",
+          "not_null": true,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "char(20)"
+        },
+        {
+          "default": "'0'",
+          "duckdb_type": "BIGINT",
+          "name": "Population",
+          "not_null": true,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        }
+      ],
+      "name": "city"
+    },
+    {
+      "columns": [
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "Code",
+          "not_null": true,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "char(3)"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "Name",
+          "not_null": true,
+          "ordinal": 1,
+          "primary_key_position": 0,
+          "sqlite_type": "char(52)"
+        },
+        {
+          "default": "'Asia'",
+          "duckdb_type": "VARCHAR",
+          "name": "Continent",
+          "not_null": true,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "Region",
+          "not_null": true,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "char(26)"
+        },
+        {
+          "default": "'0.00'",
+          "duckdb_type": "DOUBLE",
+          "name": "SurfaceArea",
+          "not_null": true,
+          "ordinal": 4,
+          "primary_key_position": 0,
+          "sqlite_type": "float(10,2)"
+        },
+        {
+          "default": "NULL",
+          "duckdb_type": "BIGINT",
+          "name": "IndepYear",
+          "not_null": false,
+          "ordinal": 5,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": "'0'",
+          "duckdb_type": "BIGINT",
+          "name": "Population",
+          "not_null": true,
+          "ordinal": 6,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": "NULL",
+          "duckdb_type": "DOUBLE",
+          "name": "LifeExpectancy",
+          "not_null": false,
+          "ordinal": 7,
+          "primary_key_position": 0,
+          "sqlite_type": "float(3,1)"
+        },
+        {
+          "default": "NULL",
+          "duckdb_type": "DOUBLE",
+          "name": "GNP",
+          "not_null": false,
+          "ordinal": 8,
+          "primary_key_position": 0,
+          "sqlite_type": "float(10,2)"
+        },
+        {
+          "default": "NULL",
+          "duckdb_type": "DOUBLE",
+          "name": "GNPOld",
+          "not_null": false,
+          "ordinal": 9,
+          "primary_key_position": 0,
+          "sqlite_type": "float(10,2)"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "LocalName",
+          "not_null": true,
+          "ordinal": 10,
+          "primary_key_position": 0,
+          "sqlite_type": "char(45)"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "GovernmentForm",
+          "not_null": true,
+          "ordinal": 11,
+          "primary_key_position": 0,
+          "sqlite_type": "char(45)"
+        },
+        {
+          "default": "NULL",
+          "duckdb_type": "VARCHAR",
+          "name": "HeadOfState",
+          "not_null": false,
+          "ordinal": 12,
+          "primary_key_position": 0,
+          "sqlite_type": "char(60)"
+        },
+        {
+          "default": "NULL",
+          "duckdb_type": "BIGINT",
+          "name": "Capital",
+          "not_null": false,
+          "ordinal": 13,
+          "primary_key_position": 0,
+          "sqlite_type": "INTEGER"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "Code2",
+          "not_null": true,
+          "ordinal": 14,
+          "primary_key_position": 0,
+          "sqlite_type": "char(2)"
+        }
+      ],
+      "name": "country"
+    },
+    {
+      "columns": [
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "CountryCode",
+          "not_null": true,
+          "ordinal": 0,
+          "primary_key_position": 1,
+          "sqlite_type": "char(3)"
+        },
+        {
+          "default": "''",
+          "duckdb_type": "VARCHAR",
+          "name": "Language",
+          "not_null": true,
+          "ordinal": 1,
+          "primary_key_position": 2,
+          "sqlite_type": "char(30)"
+        },
+        {
+          "default": "'F'",
+          "duckdb_type": "VARCHAR",
+          "name": "IsOfficial",
+          "not_null": true,
+          "ordinal": 2,
+          "primary_key_position": 0,
+          "sqlite_type": "TEXT"
+        },
+        {
+          "default": "'0.0'",
+          "duckdb_type": "DOUBLE",
+          "name": "Percentage",
+          "not_null": true,
+          "ordinal": 3,
+          "primary_key_position": 0,
+          "sqlite_type": "float(4,1)"
+        }
+      ],
+      "name": "countrylanguage"
+    }
+  ],
+  "relationships": [
+    {
+      "from_column": "CountryCode",
+      "from_table": "city",
+      "to_column": "Code",
+      "to_table": "country"
+    },
+    {
+      "from_column": "CountryCode",
+      "from_table": "countrylanguage",
+      "to_column": "Code",
+      "to_table": "country"
+    }
+  ],
+  "rows": {
+    "city": [
+      [
+        1,
+        "fixture_A",
+        "1",
+        "fixture_C",
+        17
+      ],
+      [
+        2,
+        "fixture_B",
+        "2",
+        "fixture_A",
+        0
+      ],
+      [
+        3,
+        "fixture_C",
+        "3",
+        "fixture_B",
+        1
+      ],
+      [
+        4,
+        "fixture_A",
+        "4",
+        "fixture_C",
+        2
+      ],
+      [
+        5,
+        "fixture_B",
+        "5",
+        "fixture_A",
+        5
+      ],
+      [
+        6,
+        "fixture_C",
+        "6",
+        "fixture_B",
+        17
+      ],
+      [
+        7,
+        "fixture_A",
+        "7",
+        "fixture_C",
+        0
+      ],
+      [
+        8,
+        "fixture_B",
+        "8",
+        "fixture_A",
+        1
+      ],
+      [
+        9,
+        "fixture_C",
+        "9",
+        "fixture_B",
+        2
+      ],
+      [
+        10,
+        "fixture_A",
+        "10",
+        "fixture_C",
+        5
+      ],
+      [
+        11,
+        "fixture_B",
+        "11",
+        "fixture_A",
+        17
+      ],
+      [
+        12,
+        "fixture_C",
+        "12",
+        "fixture_B",
+        0
+      ],
+      [
+        13,
+        "fixture_A",
+        "13",
+        "fixture_C",
+        1
+      ],
+      [
+        14,
+        "fixture_B",
+        "14",
+        "fixture_A",
+        2
+      ],
+      [
+        15,
+        "fixture_C",
+        "15",
+        "fixture_B",
+        5
+      ],
+      [
+        16,
+        "fixture_A",
+        "16",
+        "fixture_C",
+        17
+      ],
+      [
+        17,
+        "fixture_B",
+        "17",
+        "fixture_A",
+        0
+      ],
+      [
+        18,
+        "fixture_C",
+        "1",
+        "fixture_B",
+        1
+      ],
+      [
+        19,
+        "fixture_A",
+        "2",
+        "fixture_C",
+        2
+      ],
+      [
+        20,
+        "fixture_B",
+        "3",
+        "fixture_A",
+        5
+      ],
+      [
+        21,
+        "fixture_C",
+        "4",
+        "fixture_B",
+        17
+      ],
+      [
+        22,
+        "fixture_A",
+        "5",
+        "fixture_C",
+        0
+      ],
+      [
+        23,
+        "fixture_B",
+        "6",
+        "fixture_A",
+        1
+      ],
+      [
+        24,
+        "fixture_C",
+        "7",
+        "fixture_B",
+        2
+      ],
+      [
+        25,
+        "fixture_A",
+        "8",
+        "fixture_C",
+        5
+      ],
+      [
+        26,
+        "fixture_B",
+        "9",
+        "fixture_A",
+        17
+      ],
+      [
+        27,
+        "fixture_C",
+        "10",
+        "fixture_B",
+        0
+      ],
+      [
+        28,
+        "fixture_A",
+        "11",
+        "fixture_C",
+        1
+      ],
+      [
+        29,
+        "fixture_B",
+        "12",
+        "fixture_A",
+        2
+      ],
+      [
+        30,
+        "fixture_C",
+        "13",
+        "fixture_B",
+        5
+      ],
+      [
+        31,
+        "fixture_A",
+        "14",
+        "fixture_C",
+        17
+      ],
+      [
+        32,
+        "fixture_B",
+        "15",
+        "fixture_A",
+        0
+      ],
+      [
+        33,
+        "fixture_C",
+        "16",
+        "fixture_B",
+        1
+      ],
+      [
+        34,
+        "fixture_A",
+        "17",
+        "fixture_C",
+        2
+      ],
+      [
+        35,
+        "fixture_B",
+        "1",
+        "fixture_A",
+        5
+      ]
+    ],
+    "country": [
+      [
+        "1",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1,
+        2,
+        5,
+        71,
+        17,
+        17,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        5,
+        "fixture_B"
+      ],
+      [
+        "2",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2,
+        5,
+        17,
+        72,
+        0,
+        0,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        17,
+        "fixture_C"
+      ],
+      [
+        "3",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        5,
+        17,
+        0,
+        73,
+        1,
+        1,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        0,
+        "fixture_A"
+      ],
+      [
+        "4",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        17,
+        0,
+        1,
+        0,
+        2,
+        2,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1,
+        "fixture_B"
+      ],
+      [
+        "5",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        0,
+        1,
+        2,
+        1,
+        5,
+        5,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2,
+        "fixture_C"
+      ],
+      [
+        "6",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        1,
+        2,
+        5,
+        2,
+        17,
+        17,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        5,
+        "fixture_A"
+      ],
+      [
+        "7",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        2,
+        5,
+        17,
+        5,
+        0,
+        0,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        17,
+        "fixture_B"
+      ],
+      [
+        "8",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        5,
+        17,
+        0,
+        17,
+        1,
+        1,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        0,
+        "fixture_C"
+      ],
+      [
+        "9",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        17,
+        0,
+        1,
+        71,
+        2,
+        2,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        1,
+        "fixture_A"
+      ],
+      [
+        "10",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        0,
+        1,
+        2,
+        72,
+        5,
+        5,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        2,
+        "fixture_B"
+      ],
+      [
+        "11",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        1,
+        null,
+        5,
+        null,
+        null,
+        null,
+        "fixture_C",
+        "fixture_A",
+        null,
+        null,
+        "fixture_C"
+      ],
+      [
+        "12",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        2,
+        5,
+        17,
+        0,
+        0,
+        0,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        17,
+        "fixture_A"
+      ],
+      [
+        "13",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        5,
+        17,
+        0,
+        1,
+        1,
+        1,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        0,
+        "fixture_B"
+      ],
+      [
+        "14",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        17,
+        0,
+        1,
+        2,
+        2,
+        2,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        1,
+        "fixture_C"
+      ],
+      [
+        "15",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        0,
+        1,
+        2,
+        5,
+        5,
+        5,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        2,
+        "fixture_A"
+      ],
+      [
+        "16",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1,
+        2,
+        5,
+        17,
+        17,
+        17,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        5,
+        "fixture_B"
+      ],
+      [
+        "17",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2,
+        5,
+        17,
+        71,
+        0,
+        0,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        17,
+        "fixture_C"
+      ],
+      [
+        "18",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        5,
+        17,
+        0,
+        72,
+        1,
+        1,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        0,
+        "fixture_A"
+      ],
+      [
+        "19",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        17,
+        0,
+        1,
+        73,
+        2,
+        2,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1,
+        "fixture_B"
+      ],
+      [
+        "20",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        0,
+        1,
+        2,
+        0,
+        5,
+        5,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2,
+        "fixture_C"
+      ],
+      [
+        "21",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        1,
+        2,
+        5,
+        1,
+        17,
+        17,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        5,
+        "fixture_A"
+      ],
+      [
+        "22",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        2,
+        null,
+        17,
+        null,
+        null,
+        null,
+        "fixture_B",
+        "fixture_C",
+        null,
+        null,
+        "fixture_B"
+      ],
+      [
+        "23",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        5,
+        17,
+        0,
+        5,
+        1,
+        1,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        0,
+        "fixture_C"
+      ],
+      [
+        "24",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        17,
+        0,
+        1,
+        17,
+        2,
+        2,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        1,
+        "fixture_A"
+      ],
+      [
+        "25",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        0,
+        1,
+        2,
+        71,
+        5,
+        5,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        2,
+        "fixture_B"
+      ],
+      [
+        "26",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        1,
+        2,
+        5,
+        72,
+        17,
+        17,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        5,
+        "fixture_C"
+      ],
+      [
+        "27",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        2,
+        5,
+        17,
+        73,
+        0,
+        0,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        17,
+        "fixture_A"
+      ],
+      [
+        "28",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        5,
+        17,
+        0,
+        0,
+        1,
+        1,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        0,
+        "fixture_B"
+      ],
+      [
+        "29",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        17,
+        0,
+        1,
+        1,
+        2,
+        2,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        1,
+        "fixture_C"
+      ],
+      [
+        "30",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        0,
+        1,
+        2,
+        2,
+        5,
+        5,
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        2,
+        "fixture_A"
+      ],
+      [
+        "31",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1,
+        2,
+        5,
+        5,
+        17,
+        17,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        5,
+        "fixture_B"
+      ],
+      [
+        "32",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2,
+        5,
+        17,
+        17,
+        0,
+        0,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        17,
+        "fixture_C"
+      ],
+      [
+        "33",
+        "fixture_A",
+        "fixture_B",
+        "fixture_B",
+        5,
+        null,
+        0,
+        null,
+        null,
+        null,
+        "fixture_A",
+        "fixture_B",
+        null,
+        null,
+        "fixture_A"
+      ],
+      [
+        "34",
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        17,
+        0,
+        1,
+        72,
+        2,
+        2,
+        "fixture_B",
+        "fixture_C",
+        "fixture_C",
+        1,
+        "fixture_B"
+      ],
+      [
+        "35",
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        0,
+        1,
+        2,
+        73,
+        5,
+        5,
+        "fixture_C",
+        "fixture_A",
+        "fixture_A",
+        2,
+        "fixture_C"
+      ]
+    ],
+    "countrylanguage": [
+      [
+        "1",
+        "1",
+        "fixture_A",
+        0
+      ],
+      [
+        "2",
+        "2",
+        "fixture_B",
+        1
+      ],
+      [
+        "3",
+        "3",
+        "fixture_C",
+        2
+      ],
+      [
+        "4",
+        "4",
+        "fixture_A",
+        5
+      ],
+      [
+        "5",
+        "5",
+        "fixture_B",
+        17
+      ],
+      [
+        "6",
+        "6",
+        "fixture_C",
+        0
+      ],
+      [
+        "7",
+        "7",
+        "fixture_A",
+        1
+      ],
+      [
+        "8",
+        "8",
+        "fixture_B",
+        2
+      ],
+      [
+        "9",
+        "9",
+        "fixture_C",
+        5
+      ],
+      [
+        "10",
+        "10",
+        "fixture_A",
+        17
+      ],
+      [
+        "11",
+        "11",
+        "fixture_B",
+        0
+      ],
+      [
+        "12",
+        "12",
+        "fixture_C",
+        1
+      ],
+      [
+        "13",
+        "13",
+        "fixture_A",
+        2
+      ],
+      [
+        "14",
+        "14",
+        "fixture_B",
+        5
+      ],
+      [
+        "15",
+        "15",
+        "fixture_C",
+        17
+      ],
+      [
+        "16",
+        "16",
+        "fixture_A",
+        0
+      ],
+      [
+        "17",
+        "17",
+        "fixture_B",
+        1
+      ],
+      [
+        "18",
+        "18",
+        "fixture_C",
+        2
+      ],
+      [
+        "19",
+        "19",
+        "fixture_A",
+        5
+      ],
+      [
+        "20",
+        "20",
+        "fixture_B",
+        17
+      ],
+      [
+        "21",
+        "21",
+        "fixture_C",
+        0
+      ],
+      [
+        "22",
+        "22",
+        "fixture_A",
+        1
+      ],
+      [
+        "23",
+        "23",
+        "fixture_B",
+        2
+      ],
+      [
+        "24",
+        "24",
+        "fixture_C",
+        5
+      ],
+      [
+        "25",
+        "25",
+        "fixture_A",
+        17
+      ],
+      [
+        "26",
+        "26",
+        "fixture_B",
+        0
+      ],
+      [
+        "27",
+        "27",
+        "fixture_C",
+        1
+      ],
+      [
+        "28",
+        "28",
+        "fixture_A",
+        2
+      ],
+      [
+        "29",
+        "29",
+        "fixture_B",
+        5
+      ],
+      [
+        "30",
+        "30",
+        "fixture_C",
+        17
+      ],
+      [
+        "31",
+        "31",
+        "fixture_A",
+        0
+      ],
+      [
+        "32",
+        "32",
+        "fixture_B",
+        1
+      ],
+      [
+        "33",
+        "33",
+        "fixture_C",
+        2
+      ],
+      [
+        "34",
+        "34",
+        "fixture_A",
+        5
+      ],
+      [
+        "35",
+        "35",
+        "fixture_B",
+        17
+      ]
+    ]
+  },
+  "generator_policy": "typed_constants_declared_keys_v1",
+  "generation_is_not_semantic_validation": true
+}

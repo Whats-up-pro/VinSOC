@@ -1,0 +1,117 @@
+{
+  "case_id": "external_poker_player_af17ae8ff067eded",
+  "database_id": "poker_player",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+      "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09"
+    ],
+    "gold_result_digests": [
+      "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5",
+      "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(*) FROM people",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "distinct",
+        "sql": "SELECT COUNT(Nationality) FROM people",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(DISTINCT Nationality) FROM people WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          3
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          3
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          3
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          3
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "people"
+      ],
+      "columns": [
+        {
+          "table": "people",
+          "column": "Nationality"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+      "constraints_verified": true,
+      "logical_sha256": "3ebc30f1de6b69e610a69e674efd38e423090ad6986b1f5d79353e5e8108972a"
+    },
+    {
+      "instance_id": "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+      "constraints_verified": true,
+      "logical_sha256": "5cb80889403ba4377ee7c78ae47c5d28169d23a98a31af82e75dbbcd8bd8557d"
+    }
+  ]
+}
