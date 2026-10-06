@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+    "duckdb_content_sha256": "071f4bcd650aaadd9169153ab5dab1322818973480f4b98f93fc26dce5983d41",
+    "logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+    "source_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "73911bcd19b8b613370cc7fafb89cf32668759d8768ffb02efc3a2e3f9e6ada5",
+    "duckdb_content_sha256": "071f4bcd650aaadd9169153ab5dab1322818973480f4b98f93fc26dce5983d41",
+    "logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+    "source_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486"
+  },
+  "database_id": "dog_kennels",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/dog_kennels/dog_kennels.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

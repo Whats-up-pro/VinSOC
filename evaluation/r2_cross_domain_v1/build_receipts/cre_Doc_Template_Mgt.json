@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+    "duckdb_content_sha256": "b12857847eefb2d8775ad4ac50e4b6efb778e998a895dd24a6c51bb10bcc9fa3",
+    "logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+    "source_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "7413a1fbcd287a95f31f8d8e2cae8bffe89064496798376d2410b0595935d4d5",
+    "duckdb_content_sha256": "b12857847eefb2d8775ad4ac50e4b6efb778e998a895dd24a6c51bb10bcc9fa3",
+    "logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+    "source_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5"
+  },
+  "database_id": "cre_Doc_Template_Mgt",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/cre_Doc_Template_Mgt/cre_Doc_Template_Mgt.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

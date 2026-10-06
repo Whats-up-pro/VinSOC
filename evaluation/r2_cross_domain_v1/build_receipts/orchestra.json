@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "duckdb_content_sha256": "ae3c7e62f77d7e158853ba3edb94fd7a3891d83961a1deb2943c8c05bb7667ee",
+    "logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "source_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "f91e1215ac063fe92fb55d3c3a3a6216e4f25182beed9ae793437343f609cfec",
+    "duckdb_content_sha256": "ae3c7e62f77d7e158853ba3edb94fd7a3891d83961a1deb2943c8c05bb7667ee",
+    "logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "source_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86"
+  },
+  "database_id": "orchestra",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/orchestra/orchestra.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

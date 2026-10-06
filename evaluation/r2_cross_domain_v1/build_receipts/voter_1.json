@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+    "duckdb_content_sha256": "2f2877ef49d3092c83d3566a2ed57048784543b4c7926f7fccb70dd7935dfa1a",
+    "logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+    "source_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "2f3a997a87abcfc80694b03adf9306d137a6f6eb0be5698bb51cb30bbee0b000",
+    "duckdb_content_sha256": "2f2877ef49d3092c83d3566a2ed57048784543b4c7926f7fccb70dd7935dfa1a",
+    "logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+    "source_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531"
+  },
+  "database_id": "voter_1",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/voter_1/voter_1.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+    "duckdb_content_sha256": "68399b6b9e655981e8c0de6f0ed3b7c96559ee2f4590ae4050ec5e1b58e144cc",
+    "logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+    "source_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "1e28449aaf0a9172ebd827e2f8816e605fc7c55019d76827512728fb6e34963f",
+    "duckdb_content_sha256": "68399b6b9e655981e8c0de6f0ed3b7c96559ee2f4590ae4050ec5e1b58e144cc",
+    "logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+    "source_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56"
+  },
+  "database_id": "student_transcripts_tracking",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/student_transcripts_tracking/student_transcripts_tracking.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

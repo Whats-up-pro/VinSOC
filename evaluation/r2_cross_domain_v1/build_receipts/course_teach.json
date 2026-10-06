@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+    "duckdb_content_sha256": "d97951917bcafc0661d63e6d858e59af0b266827d63932d4b79eec94e84d04a1",
+    "logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "source_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "63d56db63a3632eec49e232fc4c244e08fd493f2e3ec0dc72d250c7acbc1f266",
+    "duckdb_content_sha256": "d97951917bcafc0661d63e6d858e59af0b266827d63932d4b79eec94e84d04a1",
+    "logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "source_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793"
+  },
+  "database_id": "course_teach",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/course_teach/course_teach.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

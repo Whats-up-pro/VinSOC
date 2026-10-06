@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+    "duckdb_content_sha256": "5f0dea4bc478c0f663ea4dcb4c42275dc791034214f91f4d5cc08594907f3b2b",
+    "logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "source_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "a5c85b763eee173a37d621a765632d98d30ff2a2aab25815294f206950675c97",
+    "duckdb_content_sha256": "5f0dea4bc478c0f663ea4dcb4c42275dc791034214f91f4d5cc08594907f3b2b",
+    "logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "source_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4"
+  },
+  "database_id": "tvshow",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/tvshow/tvshow.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

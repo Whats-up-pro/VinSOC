@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+    "duckdb_content_sha256": "978cc1ab0972842720accf368b19ac856d50813b7e0e779fccc660a12715a4af",
+    "logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+    "source_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "e361a5054ce882c99c42f15e760c3d58b6c22b7278f54cc71ca65a37731ec9f9",
+    "duckdb_content_sha256": "978cc1ab0972842720accf368b19ac856d50813b7e0e779fccc660a12715a4af",
+    "logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+    "source_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65"
+  },
+  "database_id": "world_1",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/world_1/world_1.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

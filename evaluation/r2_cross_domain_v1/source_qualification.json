@@ -1,0 +1,250 @@
+{
+  "databases": {
+    "battle_death": {
+      "difficulty_counts": {
+        "advanced": 4,
+        "basic": 4,
+        "medium": 8
+      },
+      "evaluation_quota_eligible": true,
+      "selected": false,
+      "source_question_count": 16,
+      "sqlite_readable": true,
+      "unique_family_count": 16
+    },
+    "car_1": {
+      "difficulty_counts": {
+        "advanced": 28,
+        "basic": 2,
+        "medium": 62
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 92,
+      "sqlite_readable": true,
+      "unique_family_count": 47
+    },
+    "concert_singer": {
+      "difficulty_counts": {
+        "advanced": 13,
+        "basic": 4,
+        "medium": 28
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 45,
+      "sqlite_readable": true,
+      "unique_family_count": 25
+    },
+    "course_teach": {
+      "difficulty_counts": {
+        "advanced": 8,
+        "basic": 6,
+        "medium": 16
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 30,
+      "sqlite_readable": true,
+      "unique_family_count": 15
+    },
+    "cre_Doc_Template_Mgt": {
+      "difficulty_counts": {
+        "advanced": 8,
+        "basic": 20,
+        "medium": 56
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 84,
+      "sqlite_readable": true,
+      "unique_family_count": 42
+    },
+    "dog_kennels": {
+      "difficulty_counts": {
+        "advanced": 32,
+        "basic": 14,
+        "medium": 36
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 82,
+      "sqlite_readable": true,
+      "unique_family_count": 41
+    },
+    "employee_hire_evaluation": {
+      "difficulty_counts": {
+        "advanced": 8,
+        "basic": 2,
+        "medium": 28
+      },
+      "evaluation_quota_eligible": true,
+      "selected": false,
+      "source_question_count": 38,
+      "sqlite_readable": true,
+      "unique_family_count": 19
+    },
+    "flight_2": {
+      "difficulty_counts": {
+        "advanced": 10,
+        "basic": 20,
+        "medium": 50
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 80,
+      "sqlite_readable": true,
+      "unique_family_count": 40
+    },
+    "museum_visit": {
+      "difficulty_counts": {
+        "advanced": 4,
+        "basic": 1,
+        "medium": 13
+      },
+      "evaluation_quota_eligible": false,
+      "selected": false,
+      "source_question_count": 18,
+      "sqlite_readable": true,
+      "unique_family_count": 18
+    },
+    "network_1": {
+      "difficulty_counts": {
+        "advanced": 14,
+        "basic": 10,
+        "medium": 32
+      },
+      "evaluation_quota_eligible": true,
+      "selected": false,
+      "source_question_count": 56,
+      "sqlite_readable": true,
+      "unique_family_count": 28
+    },
+    "orchestra": {
+      "difficulty_counts": {
+        "advanced": 4,
+        "basic": 2,
+        "medium": 34
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 40,
+      "sqlite_readable": true,
+      "unique_family_count": 20
+    },
+    "pets_1": {
+      "difficulty_counts": {
+        "advanced": 16,
+        "basic": 2,
+        "medium": 24
+      },
+      "evaluation_quota_eligible": true,
+      "selected": false,
+      "source_question_count": 42,
+      "sqlite_readable": true,
+      "unique_family_count": 21
+    },
+    "poker_player": {
+      "difficulty_counts": {
+        "advanced": 2,
+        "basic": 4,
+        "medium": 34
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 40,
+      "sqlite_readable": true,
+      "unique_family_count": 20
+    },
+    "real_estate_properties": {
+      "difficulty_counts": {
+        "advanced": 1,
+        "medium": 3
+      },
+      "evaluation_quota_eligible": false,
+      "selected": false,
+      "source_question_count": 4,
+      "sqlite_readable": true,
+      "unique_family_count": 4
+    },
+    "singer": {
+      "difficulty_counts": {
+        "advanced": 4,
+        "basic": 6,
+        "medium": 20
+      },
+      "evaluation_quota_eligible": true,
+      "selected": false,
+      "source_question_count": 30,
+      "sqlite_readable": true,
+      "unique_family_count": 15
+    },
+    "student_transcripts_tracking": {
+      "difficulty_counts": {
+        "advanced": 8,
+        "basic": 16,
+        "medium": 54
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 78,
+      "sqlite_readable": true,
+      "unique_family_count": 39
+    },
+    "tvshow": {
+      "difficulty_counts": {
+        "advanced": 8,
+        "basic": 16,
+        "medium": 38
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 62,
+      "sqlite_readable": true,
+      "unique_family_count": 31
+    },
+    "voter_1": {
+      "difficulty_counts": {
+        "advanced": 2,
+        "basic": 3,
+        "medium": 10
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 15,
+      "sqlite_readable": true,
+      "unique_family_count": 15
+    },
+    "world_1": {
+      "difficulty_counts": {
+        "advanced": 28,
+        "basic": 12,
+        "medium": 80
+      },
+      "evaluation_quota_eligible": true,
+      "selected": true,
+      "source_question_count": 120,
+      "sqlite_readable": true,
+      "unique_family_count": 63
+    },
+    "wta_1": {
+      "difficulty_counts": {
+        "advanced": 4,
+        "basic": 2,
+        "medium": 56
+      },
+      "evaluation_quota_eligible": true,
+      "selected": false,
+      "source_question_count": 62,
+      "sqlite_readable": false,
+      "unique_family_count": 31
+    }
+  },
+  "difficulty_rubric": {
+    "advanced": "nested SELECT, set operation, or at least three FROM table units",
+    "basic": "otherwise a single-table SELECT with optional predicates",
+    "medium": "otherwise JOIN, GROUP/HAVING, ORDER/LIMIT, aggregate or DISTINCT"
+  },
+  "family_independence_assumed": false,
+  "sufficient_for_8_external_evaluation_databases": true
+}

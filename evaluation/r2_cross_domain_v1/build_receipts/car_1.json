@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+    "duckdb_content_sha256": "af28cfa12464806a3380ca84393c2ac77cfb906aee2421415a748aeb4f966e28",
+    "logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "source_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "f75b31d6f16abd0d44e4008529e5b0c6be097f25adf2f9e696d2e0c71de69918",
+    "duckdb_content_sha256": "af28cfa12464806a3380ca84393c2ac77cfb906aee2421415a748aeb4f966e28",
+    "logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "source_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709"
+  },
+  "database_id": "car_1",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/car_1/car_1.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

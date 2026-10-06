@@ -1,0 +1,8 @@
+{
+  "all_logical_identities_match": true,
+  "all_sqlite_duckdb_content_matches": true,
+  "database_count": 12,
+  "gold_sql_dialect_parity": "PENDING_BENCHMARK_QUALIFICATION_TASK_3",
+  "note": "Binary hashes identify each build; logical hashes compare source content across independent builds.",
+  "registry_content_sha256": "1672942ac3495d7a26e8784f1523209c4f700d2e3fba1b00f95611390aa2edfa"
+}

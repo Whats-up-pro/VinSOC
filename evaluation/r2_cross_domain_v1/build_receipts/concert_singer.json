@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+    "duckdb_content_sha256": "1ee9716a0f9e30936053e36ca695b3aaa176c8e182e1f016650f6b0dd5732b7c",
+    "logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+    "source_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "360bbe205f15083f7228eb6fb0f47542ac74afd84cc700105f973bc75064fab4",
+    "duckdb_content_sha256": "1ee9716a0f9e30936053e36ca695b3aaa176c8e182e1f016650f6b0dd5732b7c",
+    "logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+    "source_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d"
+  },
+  "database_id": "concert_singer",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/concert_singer/concert_singer.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

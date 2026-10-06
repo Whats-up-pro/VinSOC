@@ -1,0 +1,859 @@
+{
+  "calibration": [
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "medium",
+      "family_id": "d3b9ebeaf577c67eadd4e0c33d4d5287826907e13d9c79ba256582772c42a13e",
+      "features": [
+        "group_having"
+      ],
+      "question": "What are the codes of template types that have fewer than 3 templates?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "basic",
+      "family_id": "61633bbd3fe5effab52895de51f1a3ff8ede6933b2c84bb3d9ad00fbb5de56f0",
+      "features": [],
+      "question": "What are the type codes and descriptions for all template types?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "basic",
+      "family_id": "c0e367be7616f6e439744550f1bf3ef8c53d9aaa0e4ed48107d3624a4f5a3e29",
+      "features": [],
+      "question": "What is the template type descriptions for template type code \"AD\".",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "medium",
+      "family_id": "08adb6cf4f454356a7133470f4a576322ab264f8959d916469f1eef0f1fa1a04",
+      "features": [
+        "group_having"
+      ],
+      "question": "What are the template ids of any templates used in more than a single document?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "medium",
+      "family_id": "dc66fc86d9395bd5eb045e44f65bde7aad7949a358776168f72d785fcb75c2a2",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "Who are enrolled in 2 degree programs in one semester? List the first name, middle name and last name and the id.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_fb5dcfb0623f004e",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "medium",
+      "family_id": "84948be1cac1e0bb65a3d2317a97efe6fd76917ce58e30be14c47815b4be64ab",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the name of the course with the most students enrolled?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "medium",
+      "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+      "features": [],
+      "question": "How many courses in total are listed?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "basic",
+      "family_id": "fd244a7a95fdca2defa1887e0c2784a6fff19d2e6b39eb6d72b99dae06bc696d",
+      "features": [],
+      "question": "What is the description for the section named h?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_voter_1_8f5780081f88c526",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "db0545d401328f14fe943f68d65270db45cd5802edae00f4816f1fa33de0b2fb",
+      "features": [
+        "order_limit"
+      ],
+      "question": "List the contestant numbers and names, ordered by contestant name descending.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "b5f07927cad363408a84c5784e757ef45fc9ac113d94a1fe290ded2e3e258108",
+      "features": [],
+      "question": "How many states are there?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "e9f3d0fc68e4dd9e6a6448459242451304222973df1148d5c0b486a29c891935",
+      "features": [],
+      "question": "What are the maximum and minimum values of area codes?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "5321df618d2c969f172d609b1941f56b2e8653299228bc96cd7853b87bb89440",
+      "features": [],
+      "question": "What is last date created of votes from the state 'CA'?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "database_id": "world_1",
+      "difficulty": "advanced",
+      "family_id": "00ee100d8d9c235f6ca8d3a5ecd35f099b5cd7877c84b9c33ac016c0b7310ee4",
+      "features": [
+        "nested"
+      ],
+      "question": "Which countries have greater area than that of any country in Europe?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_world_1_abc711a4c45ba6a5",
+      "database_id": "world_1",
+      "difficulty": "medium",
+      "family_id": "cfa6fbabecdc5eccbe160bd200bab7922a2cdd83ae9b2101f531a51445191e2b",
+      "features": [
+        "order_limit"
+      ],
+      "question": "Give the name, year of independence, and surface area of the country that has the lowest population.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "database_id": "world_1",
+      "difficulty": "advanced",
+      "family_id": "4bc9d61116a8580d9149e11731bd4f2a057efac985bf13cab9a3547103d4da02",
+      "features": [
+        "join",
+        "nested"
+      ],
+      "question": "What are the countries where either English or Dutch is the official language ?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "database_id": "world_1",
+      "difficulty": "medium",
+      "family_id": "b714d935d932387dbab1c2b33b212b1ce4eaa50002cc233c8e3bcec2efbd66e0",
+      "features": [
+        "group_having"
+      ],
+      "question": "Find the average life expectancy and total population for each continent where the average life expectancy is shorter than 72?",
+      "selected_family_multiplicity": 1
+    }
+  ],
+  "evaluation": [
+    {
+      "case_id": "external_car_1_fdc8ee399ddc765f",
+      "database_id": "car_1",
+      "difficulty": "basic",
+      "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+      "features": [],
+      "question": "What are the makers and models?",
+      "selected_family_multiplicity": 2
+    },
+    {
+      "case_id": "external_car_1_72878d40e5fc2141",
+      "database_id": "car_1",
+      "difficulty": "basic",
+      "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+      "features": [],
+      "question": "What are all the makers and models?",
+      "selected_family_multiplicity": 2
+    },
+    {
+      "case_id": "external_car_1_a3e424fdba9f79c4",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "1e0cd2a5a4a99f4e23c0e93cf8a854a2b3cd2032cacef26b46f0f558561d5616",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What is the number of car models that are produced by each maker and what is the id and full name of each maker?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_car_1_d2631c6c19d42cc9",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "d53221067d19523674f965d946143e0de89ffb435b56d3544593e33247613bf2",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the name of the country with the most car makers?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_car_1_55cf1874c71b6fee",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+      "features": [],
+      "question": "How many countries are listed?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_car_1_c3c5143d74d3437c",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "8ffedbe9fb5a3950e553e1d57a823db8fd5d0ee4d0155c2b6198c88babde30d9",
+      "features": [],
+      "question": "how many cars were produced in 1980?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+      "database_id": "car_1",
+      "difficulty": "advanced",
+      "family_id": "5cd591e07d5dd23fe7104a6770dbb00bd09c7a1081c4d3803aae1f484b93e550",
+      "features": [
+        "join",
+        "nested"
+      ],
+      "question": "Find the model of the car whose weight is below the average weight.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "database_id": "car_1",
+      "difficulty": "advanced",
+      "family_id": "ec82ce5aa901e85bd0453b372f72282c63fecd3f6789b294d4d10cfac92a7334",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the names of the countries with no car makers?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_9754e7b07d3a2f56",
+      "database_id": "concert_singer",
+      "difficulty": "basic",
+      "family_id": "0ceb2ccf9657b7d2e0b37fec6eaa626fd50415d7b1cf79b9bcb54812a462a302",
+      "features": [],
+      "question": "What are the locations and names of all stations with capacity between 5000 and 10000?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_4d9fb537dd762b49",
+      "database_id": "concert_singer",
+      "difficulty": "basic",
+      "family_id": "85d9ec1e47a575c2a1c316043b89a5f7cbe80727e2407367eecc9d993b01343b",
+      "features": [],
+      "question": "what is the name and nation of the singer who have a song having 'Hey' in its name?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_1313c062638e8562",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "c22a240288d6a8e28d877315ca5413275e179435c8f66110388c15a71a3add08",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What are the names of the singers and number of concerts for each person?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_646e7fc8042c34c2",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "ff8b847378e18e0bf37f6123fc61ce3392bb16a316de568637ecaf32d446e3dd",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "Show the stadium name and capacity with most number of concerts in year 2014 or after.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_2061015cfe2f236a",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "3a63a2e60e385bdafdb4b2bbbdbd2cf93cdc23a8c4c382f300d8fdc7f84512f7",
+      "features": [],
+      "question": "How many concerts are there in year 2014 or 2015?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_db703ee8469f32e5",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+      "features": [],
+      "question": "How many singers do we have?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_6264302aa07ba2e8",
+      "database_id": "concert_singer",
+      "difficulty": "advanced",
+      "family_id": "a2ec3b8c171cb908129c5c6c9b7d491e6194be7efddd30f0da4697c2cc872654",
+      "features": [
+        "nested"
+      ],
+      "question": "Find the number of concerts happened in the stadium with the highest capacity .",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_concert_singer_7c4b8d115e321d7b",
+      "database_id": "concert_singer",
+      "difficulty": "advanced",
+      "family_id": "20e3a3a64b0a225bd569e3d9e10ad323f1e78f3b149a9ef9b42247392e92adfc",
+      "features": [
+        "nested"
+      ],
+      "question": "Show the stadium names without any concert.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_a15b937a6c3852e4",
+      "database_id": "course_teach",
+      "difficulty": "basic",
+      "family_id": "794a019de1715c5ff4315146bd20879c7e938bf2eb3b9ffe99c3a05ae3aa2a58",
+      "features": [],
+      "question": "What are the age and hometown of teachers?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_58a6ed9ee32a1545",
+      "database_id": "course_teach",
+      "difficulty": "basic",
+      "family_id": "6cf95dba1c2e30fc080c51f594792db537749fd9b4ca39d7dae512321d451162",
+      "features": [],
+      "question": "List the name of teachers whose hometown is not `` Little Lever Urban District '' .",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_d5ccd60dd0513e62",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "b91848626f355481d12cf78f9acecc5c5f82359ebe583e20a11f543b1372dc5b",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "Show names of teachers that teach at least two courses.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_6836a76f20642d62",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "f66468c93cf9c8238dde0f628180dcc0b051f1df0e8e72844c5248a779b4200f",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What are the names of the teachers and how many courses do they teach?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_5d3f07d443b76433",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "befaa8195976e3ce6ba49795a3d66ec288f416b6d4745ac6cc509270dd0ff96e",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "question": "List the most common hometown of teachers.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_2498449e2c383821",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "013f3a27ac26f9ce4d19483edc474f1d30da43484fdcc68311f0dc44ba86d958",
+      "features": [
+        "group_having"
+      ],
+      "question": "For each hometown, how many teachers are there?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_a90c07d9d5fb849e",
+      "database_id": "course_teach",
+      "difficulty": "advanced",
+      "family_id": "a5ec082cfbb382566a37da73f0ad90a0a93471b436aa25429a63e603e5e61849",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the names of the teachers whose courses have not been arranged?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_course_teach_587613ebd0fcbbbe",
+      "database_id": "course_teach",
+      "difficulty": "advanced",
+      "family_id": "10781ab9324ca1115864204aaa5c9b3256556e7dc95343efc778d1dec2d0c22e",
+      "features": [
+        "join"
+      ],
+      "question": "Show the name of the teacher for the math course.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_99e10daefae93b3e",
+      "database_id": "dog_kennels",
+      "difficulty": "basic",
+      "family_id": "8bce8fbdf8a1b38357e2eb336d7ae7293afe31bc5bbc3177300e80babdfbc12e",
+      "features": [],
+      "question": "List the emails of the professionals who live in the state of Hawaii or the state of Wisconsin.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_3bed1d18ea095e48",
+      "database_id": "dog_kennels",
+      "difficulty": "basic",
+      "family_id": "08e7eee49fe96767ec2cc9569c9d6a4fc9fa6353dde8ff064d4973c7ce37ae84",
+      "features": [],
+      "question": "Return the first name, last name and email of the owners living in a state whose name contains the substring 'North'.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_ca0d92216738585b",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "96b5c99c74ce3662012443abb3062088bbb8b68c09994f8070d578ff4e93db29",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What are the id, role, and first name of the professionals who have performed two or more treatments?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_e21e6915192151fc",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "811ae44bf45fde661d21b5e2594a9fcc0e72a15e38d230f6d8c60d2e71e41562",
+      "features": [
+        "join"
+      ],
+      "question": "List each owner's first name, last name, and the size of his for her dog.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "62b33a97ba0041cd81d52a5a45aada590de10bfc2208a5dc30a059f1394c351b",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "Return the owner id, first name and last name of the owner who has the most dogs.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_5f29631b7287aefb",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "c6a2a0b2190ef4e88cef2fdce9034fc282411c4b070ff310758bd676b057faf3",
+      "features": [],
+      "question": "How much does the most expensive charge type costs?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+      "database_id": "dog_kennels",
+      "difficulty": "advanced",
+      "family_id": "fa9961c6dfba93c8fbba0f19c8db3fbdecdf51cc9badc3998a03858fbcf5a144",
+      "features": [
+        "nested"
+      ],
+      "question": "Find the states where both owners and professionals live.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_dog_kennels_b9c87e441963b8d0",
+      "database_id": "dog_kennels",
+      "difficulty": "advanced",
+      "family_id": "4acf0be6b505716bbacfe51c68fcb6fd9b85e9ec2ffae519d428918c91fdcbee",
+      "features": [
+        "nested"
+      ],
+      "question": "How many dogs have not gone through any treatment?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_ba7a417281056dea",
+      "database_id": "flight_2",
+      "difficulty": "basic",
+      "family_id": "cf6efee01ccc6fc9f5f9e80c8b33ed87223402ccf4ce48fdb11028ddffff7f40",
+      "features": [],
+      "question": "Give the airport code and airport name corresonding to the city Anthony.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_1962776e116f9f03",
+      "database_id": "flight_2",
+      "difficulty": "basic",
+      "family_id": "b54d1f07b1a65f85eb78e06593f938a0c485718288fa8403e104654d114ab58a",
+      "features": [],
+      "question": "What is the abbreviation of Airline \"JetBlue Airways\"?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_6b0856d8343233e0",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "1e97423832a642bbd9d39e10d4b5ba688a87a32a4915441141c48ef4cec2438c",
+      "features": [
+        "join"
+      ],
+      "question": "Return the number of flights arriving in Aberdeen.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_59060b10db344a2c",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "82d36a6a99305d93aaf9906c32a2dc435a62500d595ffc3bb5b4699891d992ac",
+      "features": [
+        "join"
+      ],
+      "question": "Give the flight numbers of flights arriving in Aberdeen.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_71ca2299e56319eb",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+      "features": [],
+      "question": "How many airlines are from USA?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_76fad759ed10c0b7",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "be01e04494c1fb5b3d75b49a016737889df9c6cab3bbf3e805c5f33cae72fa88",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "Find the abbreviation and country of the airline that has fewest number of flights?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_dd762b95172800f4",
+      "database_id": "flight_2",
+      "difficulty": "advanced",
+      "family_id": "993e7b4524d239060fde31aa01cff202eb977c57bb07525c90d43bf86eb708f9",
+      "features": [
+        "nested"
+      ],
+      "question": "Which airports do not have departing or arriving flights?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_flight_2_1bbdb29fd76588bf",
+      "database_id": "flight_2",
+      "difficulty": "advanced",
+      "family_id": "91823857d983e9e19f21d9acd38e3f107819ff103cb7c89fd65eb71e2e2e8b3e",
+      "features": [
+        "join"
+      ],
+      "question": "How many flights fly from Aberdeen to Ashley?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_orchestra_b16253b5de2ff882",
+      "database_id": "orchestra",
+      "difficulty": "basic",
+      "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+      "features": [],
+      "question": "What are the names of conductors whose nationalities are not \"USA\"?",
+      "selected_family_multiplicity": 2
+    },
+    {
+      "case_id": "external_orchestra_9e252dcacdf09bde",
+      "database_id": "orchestra",
+      "difficulty": "basic",
+      "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+      "features": [],
+      "question": "Return the names of conductors that do not have the nationality \"USA\".",
+      "selected_family_multiplicity": 2
+    },
+    {
+      "case_id": "external_orchestra_2fcc5834278757a9",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "ff1ecbad9278a01db5037fe3277bd5f81c269685afe9884c054a905801e36ad4",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the name of the conductor who has conducted the most orchestras?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_orchestra_7d626e678d642e36",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "b13b199fa7986621f6704d7b80cd5cc3332cb630ba59b1ccfc79a2c69aaa78bf",
+      "features": [
+        "join"
+      ],
+      "question": "Please show the name of the conductor that has conducted orchestras founded after 2008.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_orchestra_09dfdff61fbbeb1a",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "f6755692f1d31534d7b28f9088378d99490752a1567a72ee6c17c50c74be80c4",
+      "features": [],
+      "question": "Count the number of orchestras that have CD or DVD as their record format.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_orchestra_5b4b58f26c903ada",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "cfece66edccf2391223851a94146a87692e37792bd856754442309113b43a44d",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the record company used by the greatest number of orchestras?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_orchestra_725453fffae8b641",
+      "database_id": "orchestra",
+      "difficulty": "advanced",
+      "family_id": "e3351d4cf2e31c02590531c68d9148ad3ce7e3ec2e000cbfe804a19647d82597",
+      "features": [
+        "nested"
+      ],
+      "question": "List the names of orchestras that have no performance.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_orchestra_333cd27fe66308a4",
+      "database_id": "orchestra",
+      "difficulty": "advanced",
+      "family_id": "dab310f59f7fba671b0a02cb617660ac5a79921ed526d91778e49aaa64014a47",
+      "features": [
+        "nested"
+      ],
+      "question": "Show the record companies shared by orchestras founded before 2003 and after 2003.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_827c6d91a2ccdded",
+      "database_id": "poker_player",
+      "difficulty": "basic",
+      "family_id": "8c849e0ac6cc957d563c0ae1fbe5742151c60a9e0905a77bb57609f5ecfb1cad",
+      "features": [],
+      "question": "What are the names of people who are not from Russia?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_0c1c58daeade41a0",
+      "database_id": "poker_player",
+      "difficulty": "basic",
+      "family_id": "b31a103718305d7113cb0c0f73a2c8e092f8991373c83bc0f6711d35bfdfe1ef",
+      "features": [],
+      "question": "List the final tables made and the best finishes of poker players.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_71688949908bf92a",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "8dfe5dc0c0328e393493f1f2637ef7cf7a90a44f6e3dd3bb0131bd00742a7a83",
+      "features": [
+        "join",
+        "order_limit"
+      ],
+      "question": "What are the names of poker players, ordered ascending by the number of final tables they have made?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_7c5178d1ef2b95d4",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "ba1c274d637d3eb2e87d98fafd643096f9a587b4af465d8bc96c9df99f3490d1",
+      "features": [
+        "join",
+        "order_limit"
+      ],
+      "question": "Return the birth date of the poker player with the lowest earnings.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_af17ae8ff067eded",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "e83965bdd1470e9995b5145391cb44a7571770c5e449f2de4e0d0bddf5c891ad",
+      "features": [
+        "distinct"
+      ],
+      "question": "How many distinct nationalities are there?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_27c0d318d77ddd08",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "939c43b6189ac801aeb8116edf06b7db384d500cc22515149a1c19c23ee0805d",
+      "features": [],
+      "question": "Return the maximum final tables made across all poker players who have earnings below 200000.",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_poker_player_635f76c3b3aa43fc",
+      "database_id": "poker_player",
+      "difficulty": "advanced",
+      "family_id": "bf007869d39f42b206e2e9e0a00a916da0c50ec57fedaf17733b2b250186e9a9",
+      "features": [
+        "nested"
+      ],
+      "question": "List the names of people that are not poker players.",
+      "selected_family_multiplicity": 2
+    },
+    {
+      "case_id": "external_poker_player_311ebb051349222c",
+      "database_id": "poker_player",
+      "difficulty": "advanced",
+      "family_id": "bf007869d39f42b206e2e9e0a00a916da0c50ec57fedaf17733b2b250186e9a9",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the names of people who do not play poker?",
+      "selected_family_multiplicity": 2
+    },
+    {
+      "case_id": "external_tvshow_73697be8b93729ee",
+      "database_id": "tvshow",
+      "difficulty": "basic",
+      "family_id": "2ead0ebc575a4f2a462b1eaeb7adeb10a1882ab496b3596eec51ffae7e8a775a",
+      "features": [],
+      "question": "List all cartoon directed by \"Ben Jones\".",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_5dd917867752c83a",
+      "database_id": "tvshow",
+      "difficulty": "basic",
+      "family_id": "2afde9ac98fa3123bde411df33a7f82ecdc333ece1e9bc97c9584145fa6556fe",
+      "features": [],
+      "question": "What is the pixel aspect ratio and country of origin for all TV channels that do not use English?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_cbea1679ac94abfa",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "88fb45d83e0fbdcfe81ba25b116da4145eeea144f705182d83d622b46c41eab8",
+      "features": [
+        "join"
+      ],
+      "question": "What is the series name of the TV Channel that shows the cartoon \"The Rise of the Blue Beetle\"?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_55ce63ef8ba641ea",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "d86d848b7ff05200629c21469a2e745d18f8789614f44b66fee3cebb0b8a0ea7",
+      "features": [
+        "join"
+      ],
+      "question": "What is the title of all the cartools that are on the TV Channel with the series name \"Sky Radio\"?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_1c60aeabf088515a",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "16065e40b6e416b4ffbce3318ffcddff6c94e133ee5e11ff9b7817ab5ee5c6e7",
+      "features": [
+        "join"
+      ],
+      "question": "List the Episode of all  TV series showed on TV Channel with series name \"Sky Radio\".",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_f476e6a3b7fb5098",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+      "features": [],
+      "question": "How many TV Channels use the English language?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_2ba6baeb8b8cc318",
+      "database_id": "tvshow",
+      "difficulty": "advanced",
+      "family_id": "d83d4d2556fe19ca61a3e529c5f0a368f004583b31fa45e5755ca1a0c72f17aa",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the package options of all tv channels that are not playing any cartoons directed by Ben Jones?",
+      "selected_family_multiplicity": 1
+    },
+    {
+      "case_id": "external_tvshow_38dfbde79a7487e2",
+      "database_id": "tvshow",
+      "difficulty": "advanced",
+      "family_id": "b785d69969e63924bfa3c8033b22c698e3bfb292d20f7deb3ddb8073d263732a",
+      "features": [
+        "join",
+        "nested"
+      ],
+      "question": "Find the series name and country of the tv channel that is playing some cartoons directed by Ben Jones and Michael Chang?",
+      "selected_family_multiplicity": 1
+    }
+  ],
+  "evaluation_feature_counts": {
+    "distinct": 1,
+    "group_having": 13,
+    "join": 23,
+    "nested": 14,
+    "order_limit": 9
+  },
+  "independence_assumed": false,
+  "selection_policy": "SHA-256 order within rubric buckets, prefer distinct families; prefer two medium JOINs and one advanced nested per database when available",
+  "selection_seed": 20261005,
+  "status": "CANDIDATES_NOT_BENCHMARK_LOCKED_GOLD_PARITY_PENDING",
+  "unique_evaluation_families": 61
+}

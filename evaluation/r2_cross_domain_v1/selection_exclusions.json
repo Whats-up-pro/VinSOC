@@ -1,0 +1,34 @@
+[
+  {
+    "database_id": "battle_death",
+    "reason": "NOT_SELECTED_BY_HASH_ORDER"
+  },
+  {
+    "database_id": "employee_hire_evaluation",
+    "reason": "NOT_SELECTED_BY_HASH_ORDER"
+  },
+  {
+    "database_id": "museum_visit",
+    "reason": "DIFFICULTY_QUOTA_UNMET"
+  },
+  {
+    "database_id": "network_1",
+    "reason": "NOT_SELECTED_BY_HASH_ORDER"
+  },
+  {
+    "database_id": "pets_1",
+    "reason": "NOT_SELECTED_BY_HASH_ORDER"
+  },
+  {
+    "database_id": "real_estate_properties",
+    "reason": "QUESTION_COUNT_LT_8"
+  },
+  {
+    "database_id": "singer",
+    "reason": "NOT_SELECTED_BY_HASH_ORDER"
+  },
+  {
+    "database_id": "wta_1",
+    "reason": "SQLITE_READ_FAILED: wta_1.sqlite: OperationalError"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+    "duckdb_content_sha256": "93fe406380fec38e1ba66dfd8d37fa43f1735a658f6cc9a276e4cfc8e62bc2ca",
+    "logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+    "source_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "43e2273ba1a76ec8afaba38d4f34dec6c13fbde4101754a778bd552fcbf4fe54",
+    "duckdb_content_sha256": "93fe406380fec38e1ba66dfd8d37fa43f1735a658f6cc9a276e4cfc8e62bc2ca",
+    "logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+    "source_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af"
+  },
+  "database_id": "flight_2",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/flight_2/flight_2.sqlite",
+  "sqlite_duckdb_content_matches": true
+}

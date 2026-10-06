@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "source_id": "spider-1.0-dev",
+  "source_version": "Spider 1.0",
+  "official_project_url": "https://yale-lily.github.io/spider",
+  "official_repository_url": "https://github.com/taoyds/spider",
+  "download_url": "https://drive.usercontent.google.com/download?id=1403EGqzIDoHMdQF4c9Bkyl7dZLZ5Wt6J&export=download&confirm=t",
+  "license": "CC BY-SA 4.0",
+  "acquired_at_utc": "2026-10-05T10:33:25Z",
+  "archive_filename": "spider_data.zip",
+  "archive_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+  "archive_sha256_provenance": "Computed from the acquired official download; the publisher does not provide a SHA-256 on the cited source page.",
+  "archive_root": "spider_data",
+  "split_member": "spider_data/dev.json",
+  "schema_member": "spider_data/tables.json",
+  "sqlite_member_pattern": "spider_data/database/{database_id}/{database_id}.sqlite"
+}

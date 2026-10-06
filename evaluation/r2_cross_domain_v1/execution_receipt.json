@@ -1,0 +1,46 @@
+{
+  "initial_sha": "95cc81d3c751df881e914075d72cde715bbb9717",
+  "runtime": {
+    "python": "3.13.7",
+    "duckdb": "1.5.5",
+    "sqlite": "3.50.4"
+  },
+  "code_sha256": {
+    "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+    "evaluation/r2_cross_domain_v1/data.py": "30851add4522efcb4d7046bf9a059e49b9dd78e886ab7ee1b0042693d43377f3",
+    "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+    "scripts/prepare_r2_cross_domain.py": "2ff8544dce9b1e5681bc8c7bc6f079786a693a1495632016ced49bd46716155a",
+    "tests/test_r2_cross_domain_data.py": "e08c110ac572cfe637a6cb4c149ea5cea5edf16cee6fd87f7f2d06a592ea71a3",
+    "tests/test_r2_cross_domain_selection.py": "6fef7adbc74a837a0a89fca6114369d36427043df392ec60b6b9c94de5b5935f"
+  },
+  "log_sha256": {
+    ".vinsoc/cross-domain-task1-build.log": "499387e5680504c573c4c7215df75ee89d2826958aa4c16ebb75afc7182c38f6",
+    ".vinsoc/cross-domain-task1-focused.log": "41e80df8ec3a25a0b0f60f7cd2b444d70e5d0691628a9e240e37cfbd507fedcf",
+    ".vinsoc/cross-domain-task1-final-full.log": "4ffbf17678456294b6df4678a6f54db60018c6a32027469df8dd8530fdfc5953"
+  },
+  "commands": {
+    "build": "python -m scripts.prepare_r2_cross_domain --source spider-dev --output data/r2_cross_domain_v1 --metadata evaluation/r2_cross_domain_v1",
+    "focused": "python -m pytest -q tests/test_r2_cross_domain_data.py tests/test_r2_cross_domain_selection.py",
+    "full": "python -m pytest -q",
+    "compile": "python -m py_compile evaluation/r2_cross_domain_v1/__init__.py evaluation/r2_cross_domain_v1/data.py evaluation/r2_cross_domain_v1/selection.py scripts/prepare_r2_cross_domain.py tests/test_r2_cross_domain_data.py tests/test_r2_cross_domain_selection.py"
+  },
+  "verification": {
+    "focused": "18 passed",
+    "full": "848 passed, 1654 warnings",
+    "compile_exit_code": 0,
+    "staged_diff_check_exit_code": 0
+  },
+  "model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "gold_parity": "PENDING_TASK_3",
+  "benchmark_locked": false,
+  "build_code_sha256": {
+    "evaluation/r2_cross_domain_v1/__init__.py": "6270900e75f03279dde95973b6c74977bcbe09cdf9baee4a619ffb3e97b795b4",
+    "evaluation/r2_cross_domain_v1/data.py": "30851add4522efcb4d7046bf9a059e49b9dd78e886ab7ee1b0042693d43377f3",
+    "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+    "scripts/prepare_r2_cross_domain.py": "291d995c2f401ffe2c45632642ee77f020a5ea90fa7f3eed9ed873a85ec4e1d9",
+    "tests/test_r2_cross_domain_data.py": "d29904075485b22a71aac6f579ea5f9494f724544276d115b98ab9f9ed269200",
+    "tests/test_r2_cross_domain_selection.py": "6fef7adbc74a837a0a89fca6114369d36427043df392ec60b6b9c94de5b5935f"
+  },
+  "metadata_encoding_note": "After the build, new Task 1 text files were normalized to LF. The JSON writer fix is tested RED-to-GREEN. Build code identities and final tested release code identities are recorded separately."
+}

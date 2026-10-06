@@ -1,0 +1,19 @@
+{
+  "build_1": {
+    "duckdb_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+    "duckdb_content_sha256": "ce0f4501a5b9133d04a644e3f11291e0f52de331332222bbaa777067a0aa93bb",
+    "logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "source_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba"
+  },
+  "build_2": {
+    "duckdb_binary_sha256": "791aad0431351db57e284a1af3a4b371b52cf7fb3179d1f25f30aed15aa28117",
+    "duckdb_content_sha256": "ce0f4501a5b9133d04a644e3f11291e0f52de331332222bbaa777067a0aa93bb",
+    "logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "source_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba"
+  },
+  "database_id": "poker_player",
+  "logical_identity_matches": true,
+  "reopened_read_only": true,
+  "source_sqlite_member": "spider_data/database/poker_player/poker_player.sqlite",
+  "sqlite_duckdb_content_matches": true
+}
