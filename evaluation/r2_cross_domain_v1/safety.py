@@ -13,7 +13,7 @@ PURE_FUNCTIONS = frozenset({
     "COALESCE", "NULLIF", "CAST", "TRY_CAST", "EXTRACT", "DATE_DIFF", "DATEDIFF", "DATE_TRUNC",
     "STRFTIME", "STRPTIME", "SUBSTRING", "TRIM", "CONCAT", "CONCAT_WS", "REPLACE", "YEAR", "MONTH",
     "DAY", "ROW_NUMBER", "RANK", "DENSE_RANK", "LAG", "LEAD", "FIRST_VALUE", "LAST_VALUE",
-    "CASE", "IF", "EXISTS", "STARTS_WITH", "ENDS_WITH", "CONTAINS",
+    "CASE", "IF", "EXISTS", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "AND", "OR",
 })
 FORBIDDEN_NODES = frozenset({
     "Insert", "Update", "Delete", "Drop", "Create", "Alter", "Attach", "Detach", "Copy", "Install",

@@ -76,3 +76,25 @@ synthetic DuckDB fixture, not a model benchmark. It preserves its trace-time
 fixture code hash; the execution receipt records the final tested source bundle
 separately. Gold SQL parity, 96-case locking, semantic stress tests, module metrics
 and any expansion-specific paid authorization remain later gates.
+
+## Gold audit checkpoint (Task 3 in progress)
+
+```powershell
+python -m scripts.audit_r2_cross_domain_gold --all-registered --output evaluation/r2_cross_domain_v1/offline_task3/NEW_AUDIT.json
+```
+
+Choose a new output filename: receipts are never overwritten. Exit 2 reports that
+some source questions are blocked or mismatched; inspect the per-case records.
+It does not mean those questions were run on a model. The initial selected-candidate
+audit and subsequent all-registered audits are retained as separate policy-stage
+evidence. The strict audit checks 768 unique source IDs; 694 have verified base
+parity, 71 are blocked, three mismatch, and all twelve DB quotas remain available.
+This is source qualification, not 694 correct model predictions.
+
+The adapter preserves original SQL in the receipt, translates SQLite double-quoted
+strings, and extends GROUP BY only through verified declared-key dependencies.
+Unproved bare group columns, ambiguous ordering/ties and unproved mixed numeric/text
+IN conversions are rejected. Source questions rejected before inference must stay
+in the published exclusion inventory. Neither archived candidate bytes nor source
+gold are edited to fix a mismatch. Base parity is separate from the pending
+per-case adversarial semantic checks and the pending 96-case benchmark lock.

@@ -61,7 +61,8 @@ The candidate inventory is not an evaluation lock and cannot authorize inference
 - [x] Final full suite: 894 passed, 1654 warnings (106.70 seconds).
 - [x] Compile checks, staged diff/allowlist and preservation receipt: 245 older
   protected files and all 21 Task 1 artifact JSON files retain their exact bytes.
-- [ ] Commit/push and exact-SHA CI Python 3.11/3.12.
+- [x] Commit/push `4390c47fa5dde552b2027d6f32ee46039e9d076c`; exact-SHA CI
+  Python 3.11/3.12 successful: https://github.com/Whats-up-pro/VinSOC/actions/runs/37408302569.
 
 Ruling: complete domains of at most eight values expose controller-issued
 `domain_witnesses` so the linker can cite observed values without another search.
@@ -69,7 +70,39 @@ Search matches remain distinct from domain witnesses; larger/truncated domains
 are not treated as complete witness lists. This is a generic bounded interface,
 not a CTU mapping or a call-cap increase.
 
-Task 3 benchmark/gold/semantic lock and Task 4 statistics/telemetry/release remain
+## Task 3: evaluator/gold audit checkpoint (not complete)
+
+- [x] Reference DTO separates gold from runtime; real execution scoring preserves
+  pipeline failure, Decimal values, select-list positions and duplicate multiplicities.
+- [x] RED/GREEN for incorrect SQL after generation OK, SQLite quoted strings,
+  declared-key GROUP BY dependencies, Boolean safety and incomplete ORDER/LIMIT ties.
+- [x] Immutable initial candidate audit: 69/80 base parity, 3 mismatches, 8 blocked.
+- [x] Full registered-source audit: 768 unique IDs; initial conservative policy
+  704 base-parity verified, 59 blocked, 5 mismatches.
+- [x] Stricter ordered-tie audit: 694 base-parity verified, 71 blocked, 3 mismatches.
+  All twelve database question/difficulty quotas remain available in this pool.
+- [x] Checkpoint tests: 76 targeted and 906 full tests pass (1654 existing warnings);
+  compile, diff and preservation checks pass. 245 older protected files and 24
+  earlier cross-domain artifact JSON files retain their exact bytes.
+- [ ] Checkpoint commit/push and exact-SHA CI Python 3.11/3.12.
+- [ ] Materialize 24 calibration + 96 evaluation cases, annotations and oracle subset.
+- [ ] Two adversarial instances per case, executable mutants and equivalent controls.
+- [ ] Benchmark validation and lock. No benchmark lock has been created.
+
+The audit command deliberately exits 2 when any audited source case is blocked or
+mismatched. This is preserved negative data evidence, not a passing whole-source
+gold gate. Future selection may use only qualified cases in seeded order and must
+publish exclusions before inference; Task 1 candidate artifacts remain unchanged.
+
+Ruling: add dependent GROUP BY columns only when declared primary keys are verified
+non-null/unique and unconditional inner-join equalities establish the dependency.
+Reject arbitrary bare group columns; do not use ANY_VALUE to force gold to execute.
+Mixed numeric/text IN conversion remains unsupported: blind TRY_CAST can introduce
+NULL and change NOT IN semantics. Incomplete ORDER ties are rejected even when
+both engines accidentally choose the same rows. No gold SQL is rewritten to resolve
+ties or rescue parity. Base-instance parity does not prove universal semantic correctness.
+
+Task 3 benchmark/semantic lock and Task 4 statistics/telemetry/release remain
 pending. Paid Tasks 5/6 need expansion-specific
 budget/release authorization; the old $0.75 authorization is not reused.
 Model calls: **0**. New inference cost: **$0**. S1/S4 remain consumed/closed.

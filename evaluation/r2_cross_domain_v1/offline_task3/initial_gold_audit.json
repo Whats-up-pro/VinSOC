@@ -1,0 +1,3244 @@
+{
+  "scope": "Selected external candidates only, not a locked 96-case benchmark",
+  "audited_at_utc": "2026-10-06T03:25:13.364326+00:00",
+  "source_archive_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+  "manifest_sha256": "f8c5d755077d0f1c51059e66cc37553c0e6e186f452e4ae76de43dcc1ae2096d",
+  "registry_sha256": "f592dfe86ebf12f957e716f135be0471b0e5170fd1eef7fe2d11c65e246545df",
+  "candidate_inventory_sha256": "a5dd4a728dd37d13d05a1d0fffd3a6d109a94d4e15472b28b3eed03457801cdc",
+  "adapter_sha256": "2656dd3466f4e0815f941d2062dd087edf6de75ad08176b7df2ab7a8870bfa97",
+  "result_semantics_sha256": "8e80e8de3bdfda506fd1f8255782117dd74fc0b37845fdbbf09de6f351da2a0f",
+  "case_count": 80,
+  "status_counts": {
+    "BASE_PARITY_VERIFIED": 69,
+    "GOLD_RESULT_PARITY_MISMATCH": 3,
+    "GOLD_AUDIT_BLOCKED": 8
+  },
+  "all_selected_external_base_gold_parity_verified": false,
+  "benchmark_locked": false,
+  "paid_gate_open": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "case_results": [
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "medium",
+      "family_id": "d3b9ebeaf577c67eadd4e0c33d4d5287826907e13d9c79ba256582772c42a13e",
+      "features": [
+        "group_having"
+      ],
+      "question": "What are the codes of template types that have fewer than 3 templates?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING count(*)  <  3",
+      "original_sql": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING count(*)  <  3",
+      "adapted_sql": "SELECT template_type_code FROM Templates GROUP BY template_type_code HAVING COUNT(*) < 3",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "a9aedaed41a21b0e8851e18220cfb323e93f1b25728880c2b0259c3b17adca03",
+      "duckdb_result_sha256": "a9aedaed41a21b0e8851e18220cfb323e93f1b25728880c2b0259c3b17adca03",
+      "sample_original_rows": [
+        [
+          "CV"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "CV"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "basic",
+      "family_id": "61633bbd3fe5effab52895de51f1a3ff8ede6933b2c84bb3d9ad00fbb5de56f0",
+      "features": [],
+      "question": "What are the type codes and descriptions for all template types?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT template_type_code ,  template_type_description FROM Ref_template_types",
+      "original_sql": "SELECT template_type_code ,  template_type_description FROM Ref_template_types",
+      "adapted_sql": "SELECT template_type_code, template_type_description FROM Ref_template_types",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 5,
+      "duckdb_row_count": 5,
+      "sqlite_result_sha256": "81cda526d07663e8a78441f37a4864c1a2e3c313a40e2e68767e2d0be3036a74",
+      "duckdb_result_sha256": "81cda526d07663e8a78441f37a4864c1a2e3c313a40e2e68767e2d0be3036a74",
+      "sample_original_rows": [
+        [
+          "PPT",
+          "Presentation"
+        ],
+        [
+          "CV",
+          "CV"
+        ],
+        [
+          "AD",
+          "Advertisement"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "PPT",
+          "Presentation"
+        ],
+        [
+          "CV",
+          "CV"
+        ],
+        [
+          "AD",
+          "Advertisement"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "basic",
+      "family_id": "c0e367be7616f6e439744550f1bf3ef8c53d9aaa0e4ed48107d3624a4f5a3e29",
+      "features": [],
+      "question": "What is the template type descriptions for template type code \"AD\".",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT template_type_description FROM Ref_template_types WHERE template_type_code  =  \"AD\"",
+      "original_sql": "SELECT template_type_description FROM Ref_template_types WHERE template_type_code  =  \"AD\"",
+      "adapted_sql": "SELECT template_type_description FROM Ref_template_types WHERE template_type_code = 'AD'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "AD"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "971e08c06cfa8b5e338a1ed9f31f729d450bc35ce86a7cd5a2ef40a4edbd268e",
+      "duckdb_result_sha256": "971e08c06cfa8b5e338a1ed9f31f729d450bc35ce86a7cd5a2ef40a4edbd268e",
+      "sample_original_rows": [
+        [
+          "Advertisement"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Advertisement"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "database_id": "cre_Doc_Template_Mgt",
+      "difficulty": "medium",
+      "family_id": "08adb6cf4f454356a7133470f4a576322ab264f8959d916469f1eef0f1fa1a04",
+      "features": [
+        "group_having"
+      ],
+      "question": "What are the template ids of any templates used in more than a single document?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT template_id FROM Documents GROUP BY template_id HAVING count(*)  >  1",
+      "original_sql": "SELECT template_id FROM Documents GROUP BY template_id HAVING count(*)  >  1",
+      "adapted_sql": "SELECT template_id FROM Documents GROUP BY template_id HAVING COUNT(*) > 1",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 3,
+      "duckdb_row_count": 3,
+      "sqlite_result_sha256": "9e7d45af30d43e6c5743913b6685ec6b59474d2256a325884c55d475281d7777",
+      "duckdb_result_sha256": "9e7d45af30d43e6c5743913b6685ec6b59474d2256a325884c55d475281d7777",
+      "sample_original_rows": [
+        [
+          11
+        ],
+        [
+          14
+        ],
+        [
+          25
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          11
+        ],
+        [
+          14
+        ],
+        [
+          25
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "medium",
+      "family_id": "dc66fc86d9395bd5eb045e44f65bde7aad7949a358776168f72d785fcb75c2a2",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "Who are enrolled in 2 degree programs in one semester? List the first name, middle name and last name and the id.",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT T1.first_name ,  T1.middle_name ,  T1.last_name ,  T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id HAVING count(*)  =  2",
+      "original_sql": "SELECT T1.first_name ,  T1.middle_name ,  T1.last_name ,  T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id HAVING count(*)  =  2",
+      "adapted_sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T1.first_name"
+        },
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T1.middle_name"
+        },
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T1.last_name"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 3,
+      "duckdb_row_count": 3,
+      "sqlite_result_sha256": "9b7d51b19f3722025b38f9c971bb46425f4460e7a0511df7bfd86a06a513f156",
+      "duckdb_result_sha256": "9b7d51b19f3722025b38f9c971bb46425f4460e7a0511df7bfd86a06a513f156",
+      "sample_original_rows": [
+        [
+          "Jarvis",
+          "Aaliyah",
+          "Carroll",
+          4
+        ],
+        [
+          "Reva",
+          "Golda",
+          "Osinski",
+          9
+        ],
+        [
+          "Jordy",
+          "Osborne",
+          "Rempel",
+          14
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Jarvis",
+          "Aaliyah",
+          "Carroll",
+          4
+        ],
+        [
+          "Reva",
+          "Golda",
+          "Osinski",
+          9
+        ],
+        [
+          "Jordy",
+          "Osborne",
+          "Rempel",
+          14
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_fb5dcfb0623f004e",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "medium",
+      "family_id": "84948be1cac1e0bb65a3d2317a97efe6fd76917ce58e30be14c47815b4be64ab",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the name of the course with the most students enrolled?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT  T1.course_name FROM Courses AS T1 JOIN Student_Enrolment_Courses AS T2 ON T1.course_id  =  T2.course_id GROUP BY T1.course_name ORDER BY count(*) DESC LIMIT 1",
+      "original_sql": "SELECT  T1.course_name FROM Courses AS T1 JOIN Student_Enrolment_Courses AS T2 ON T1.course_id  =  T2.course_id GROUP BY T1.course_name ORDER BY count(*) DESC LIMIT 1",
+      "adapted_sql": "SELECT T1.course_name FROM Courses AS T1 JOIN Student_Enrolment_Courses AS T2 ON T1.course_id = T2.course_id GROUP BY T1.course_name ORDER BY COUNT(*) DESC LIMIT 1",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": false,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "ef183356d4d1235c1e9061f2f2407c75da1ea0eafb7229bf731b7a97433956c5",
+      "duckdb_result_sha256": "e4585ae22f606dd7911bb3fdc80b5409510b61494d0b69f41cd9e6975bbec8e6",
+      "sample_original_rows": [
+        [
+          "rs"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "math"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "GOLD_RESULT_PARITY_MISMATCH"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "medium",
+      "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+      "features": [],
+      "question": "How many courses in total are listed?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT count(*) FROM Courses",
+      "original_sql": "SELECT count(*) FROM Courses",
+      "adapted_sql": "SELECT COUNT(*) FROM Courses",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+      "duckdb_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+      "sample_original_rows": [
+        [
+          15
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          15
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "database_id": "student_transcripts_tracking",
+      "difficulty": "basic",
+      "family_id": "fd244a7a95fdca2defa1887e0c2784a6fff19d2e6b39eb6d72b99dae06bc696d",
+      "features": [],
+      "question": "What is the description for the section named h?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT section_description FROM Sections WHERE section_name  =  'h'",
+      "original_sql": "SELECT section_description FROM Sections WHERE section_name  =  'h'",
+      "adapted_sql": "SELECT section_description FROM Sections WHERE section_name = 'h'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "148a5ffd258ace8b36964f200f93c2f048365e6f4c4b2479a36804b0a542780f",
+      "duckdb_result_sha256": "148a5ffd258ace8b36964f200f93c2f048365e6f4c4b2479a36804b0a542780f",
+      "sample_original_rows": [
+        [
+          "et"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "et"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_voter_1_8f5780081f88c526",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "db0545d401328f14fe943f68d65270db45cd5802edae00f4816f1fa33de0b2fb",
+      "features": [
+        "order_limit"
+      ],
+      "question": "List the contestant numbers and names, ordered by contestant name descending.",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT contestant_number ,  contestant_name FROM contestants ORDER BY contestant_name DESC",
+      "original_sql": "SELECT contestant_number ,  contestant_name FROM contestants ORDER BY contestant_name DESC",
+      "adapted_sql": "SELECT contestant_number, contestant_name FROM contestants ORDER BY contestant_name DESC",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 11,
+      "duckdb_row_count": 11,
+      "sqlite_result_sha256": "252e8ae2eb9802edddcd46c0c16a46506068127665e74c36969bdb11ca1333b6",
+      "duckdb_result_sha256": "252e8ae2eb9802edddcd46c0c16a46506068127665e74c36969bdb11ca1333b6",
+      "sample_original_rows": [
+        [
+          2,
+          "Tabatha Gehling"
+        ],
+        [
+          8,
+          "Nita Coster"
+        ],
+        [
+          11,
+          "Loraine NygrenTania Mattioli"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          2,
+          "Tabatha Gehling"
+        ],
+        [
+          8,
+          "Nita Coster"
+        ],
+        [
+          11,
+          "Loraine NygrenTania Mattioli"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "b5f07927cad363408a84c5784e757ef45fc9ac113d94a1fe290ded2e3e258108",
+      "features": [],
+      "question": "How many states are there?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT count(*) FROM area_code_state",
+      "original_sql": "SELECT count(*) FROM area_code_state",
+      "adapted_sql": "SELECT COUNT(*) FROM area_code_state",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "f36539458667cccdef49fc3cd2befb42d65344d6466ab7305e32e27004669068",
+      "duckdb_result_sha256": "f36539458667cccdef49fc3cd2befb42d65344d6466ab7305e32e27004669068",
+      "sample_original_rows": [
+        [
+          305
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          305
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "e9f3d0fc68e4dd9e6a6448459242451304222973df1148d5c0b486a29c891935",
+      "features": [],
+      "question": "What are the maximum and minimum values of area codes?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT max(area_code) ,  min(area_code) FROM area_code_state",
+      "original_sql": "SELECT max(area_code) ,  min(area_code) FROM area_code_state",
+      "adapted_sql": "SELECT MAX(area_code), MIN(area_code) FROM area_code_state",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "39b82ce5bed6fa8d5964a0bf11e879616db597703e5680987aba7beea25e6f6d",
+      "duckdb_result_sha256": "39b82ce5bed6fa8d5964a0bf11e879616db597703e5680987aba7beea25e6f6d",
+      "sample_original_rows": [
+        [
+          989,
+          201
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          989,
+          201
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "database_id": "voter_1",
+      "difficulty": "medium",
+      "family_id": "5321df618d2c969f172d609b1941f56b2e8653299228bc96cd7853b87bb89440",
+      "features": [],
+      "question": "What is last date created of votes from the state 'CA'?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT max(created) FROM votes WHERE state  =  'CA'",
+      "original_sql": "SELECT max(created) FROM votes WHERE state  =  'CA'",
+      "adapted_sql": "SELECT MAX(created) FROM votes WHERE state = 'CA'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "3ce0dc00c35b6a01443e78fca20dfa586ad27cf6952a48885e7bdd5c1674cf5d",
+      "duckdb_result_sha256": "3ce0dc00c35b6a01443e78fca20dfa586ad27cf6952a48885e7bdd5c1674cf5d",
+      "sample_original_rows": [
+        [
+          "2018-03-09 19:03:39"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "2018-03-09 19:03:39"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "database_id": "world_1",
+      "difficulty": "advanced",
+      "family_id": "00ee100d8d9c235f6ca8d3a5ecd35f099b5cd7877c84b9c33ac016c0b7310ee4",
+      "features": [
+        "nested"
+      ],
+      "question": "Which countries have greater area than that of any country in Europe?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT Name FROM country WHERE SurfaceArea  >  (SELECT min(SurfaceArea) FROM country WHERE Continent  =  \"Europe\")",
+      "original_sql": "SELECT Name FROM country WHERE SurfaceArea  >  (SELECT min(SurfaceArea) FROM country WHERE Continent  =  \"Europe\")",
+      "adapted_sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MIN(SurfaceArea) FROM country WHERE Continent = 'Europe')",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Europe"
+        },
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Europe"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 238,
+      "duckdb_row_count": 238,
+      "sqlite_result_sha256": "436c7bd178917df5973e86d5c13b7e8dd170c9d7c4f620746b90418363cc9f8f",
+      "duckdb_result_sha256": "436c7bd178917df5973e86d5c13b7e8dd170c9d7c4f620746b90418363cc9f8f",
+      "sample_original_rows": [
+        [
+          "Aruba"
+        ],
+        [
+          "Afghanistan"
+        ],
+        [
+          "Angola"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Aruba"
+        ],
+        [
+          "Afghanistan"
+        ],
+        [
+          "Angola"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_world_1_abc711a4c45ba6a5",
+      "database_id": "world_1",
+      "difficulty": "medium",
+      "family_id": "cfa6fbabecdc5eccbe160bd200bab7922a2cdd83ae9b2101f531a51445191e2b",
+      "features": [
+        "order_limit"
+      ],
+      "question": "Give the name, year of independence, and surface area of the country that has the lowest population.",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT Name ,  SurfaceArea ,  IndepYear FROM country ORDER BY Population LIMIT 1",
+      "original_sql": "SELECT Name ,  SurfaceArea ,  IndepYear FROM country ORDER BY Population LIMIT 1",
+      "adapted_sql": "SELECT Name, SurfaceArea, IndepYear FROM country ORDER BY Population NULLS FIRST LIMIT 1",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "352b165303611ed84f7dfdd3b847acfb42c950dcb0427887e590d60064e1f786",
+      "duckdb_result_sha256": "352b165303611ed84f7dfdd3b847acfb42c950dcb0427887e590d60064e1f786",
+      "sample_original_rows": [
+        [
+          "Antarctica",
+          13120000.0,
+          null
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Antarctica",
+          13120000.0,
+          null
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "database_id": "world_1",
+      "difficulty": "advanced",
+      "family_id": "4bc9d61116a8580d9149e11731bd4f2a057efac985bf13cab9a3547103d4da02",
+      "features": [
+        "join",
+        "nested"
+      ],
+      "question": "What are the countries where either English or Dutch is the official language ?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"english\" and isofficial  =  \"t\" union select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"dutch\" and isofficial  =  \"t\"",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "FUNCTION_NOT_ALLOWLISTED"
+    },
+    {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "database_id": "world_1",
+      "difficulty": "medium",
+      "family_id": "b714d935d932387dbab1c2b33b212b1ce4eaa50002cc233c8e3bcec2efbd66e0",
+      "features": [
+        "group_having"
+      ],
+      "question": "Find the average life expectancy and total population for each continent where the average life expectancy is shorter than 72?",
+      "selected_family_multiplicity": 1,
+      "split": "calibration",
+      "source_query": "SELECT sum(Population) ,  avg(LifeExpectancy) ,  Continent FROM country GROUP BY Continent HAVING avg(LifeExpectancy)  <  72",
+      "original_sql": "SELECT sum(Population) ,  avg(LifeExpectancy) ,  Continent FROM country GROUP BY Continent HAVING avg(LifeExpectancy)  <  72",
+      "adapted_sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 4,
+      "duckdb_row_count": 4,
+      "sqlite_result_sha256": "3a5e3e075b01eef70efa0593e2150a395b3f3f5d0e4c909cd0d2eedd33a4478f",
+      "duckdb_result_sha256": "879d1879817ca3b3bf6218ff2e9daaffb8749df45aee813ec4a8a78330e1d0e3",
+      "sample_original_rows": [
+        [
+          784475000,
+          52.5719298245614,
+          "Africa"
+        ],
+        [
+          3705025700,
+          67.44117647058823,
+          "Asia"
+        ],
+        [
+          30401150,
+          69.715,
+          "Oceania"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          3705025700,
+          67.44117647058825,
+          "Asia"
+        ],
+        [
+          784475000,
+          52.571929824561394,
+          "Africa"
+        ],
+        [
+          345780000,
+          70.94615384615386,
+          "South America"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_fdc8ee399ddc765f",
+      "database_id": "car_1",
+      "difficulty": "basic",
+      "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+      "features": [],
+      "question": "What are the makers and models?",
+      "selected_family_multiplicity": 2,
+      "split": "evaluation",
+      "source_query": "SELECT Maker ,  Model FROM MODEL_LIST;",
+      "original_sql": "SELECT Maker ,  Model FROM MODEL_LIST;",
+      "adapted_sql": "SELECT Maker, Model FROM MODEL_LIST",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 36,
+      "duckdb_row_count": 36,
+      "sqlite_result_sha256": "27845dbb704576313194c9d54276a6ac2cf8e3a9995403b376015243e57fd0f5",
+      "duckdb_result_sha256": "27845dbb704576313194c9d54276a6ac2cf8e3a9995403b376015243e57fd0f5",
+      "sample_original_rows": [
+        [
+          1,
+          "amc"
+        ],
+        [
+          2,
+          "audi"
+        ],
+        [
+          3,
+          "bmw"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          1,
+          "amc"
+        ],
+        [
+          2,
+          "audi"
+        ],
+        [
+          3,
+          "bmw"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_72878d40e5fc2141",
+      "database_id": "car_1",
+      "difficulty": "basic",
+      "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+      "features": [],
+      "question": "What are all the makers and models?",
+      "selected_family_multiplicity": 2,
+      "split": "evaluation",
+      "source_query": "SELECT Maker ,  Model FROM MODEL_LIST;",
+      "original_sql": "SELECT Maker ,  Model FROM MODEL_LIST;",
+      "adapted_sql": "SELECT Maker, Model FROM MODEL_LIST",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 36,
+      "duckdb_row_count": 36,
+      "sqlite_result_sha256": "27845dbb704576313194c9d54276a6ac2cf8e3a9995403b376015243e57fd0f5",
+      "duckdb_result_sha256": "27845dbb704576313194c9d54276a6ac2cf8e3a9995403b376015243e57fd0f5",
+      "sample_original_rows": [
+        [
+          1,
+          "amc"
+        ],
+        [
+          2,
+          "audi"
+        ],
+        [
+          3,
+          "bmw"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          1,
+          "amc"
+        ],
+        [
+          2,
+          "audi"
+        ],
+        [
+          3,
+          "bmw"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_a3e424fdba9f79c4",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "1e0cd2a5a4a99f4e23c0e93cf8a854a2b3cd2032cacef26b46f0f558561d5616",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What is the number of car models that are produced by each maker and what is the id and full name of each maker?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Count(*) ,  T2.FullName ,  T2.id FROM MODEL_LIST AS T1 JOIN CAR_MAKERS AS T2 ON T1.Maker  =  T2.Id GROUP BY T2.id;",
+      "original_sql": "SELECT Count(*) ,  T2.FullName ,  T2.id FROM MODEL_LIST AS T1 JOIN CAR_MAKERS AS T2 ON T1.Maker  =  T2.Id GROUP BY T2.id;",
+      "adapted_sql": "SELECT COUNT(*), T2.FullName, T2.id FROM MODEL_LIST AS T1 JOIN CAR_MAKERS AS T2 ON T1.Maker = T2.Id GROUP BY T2.id, T2.FullName",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T2.FullName"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 22,
+      "duckdb_row_count": 22,
+      "sqlite_result_sha256": "42f568f63719874788d533ccb303944a5d67435d3bc21166f20787d9a558e009",
+      "duckdb_result_sha256": "42f568f63719874788d533ccb303944a5d67435d3bc21166f20787d9a558e009",
+      "sample_original_rows": [
+        [
+          1,
+          "American Motor Company",
+          1
+        ],
+        [
+          2,
+          "Volkswagen",
+          2
+        ],
+        [
+          1,
+          "BMW",
+          3
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          1,
+          "American Motor Company",
+          1
+        ],
+        [
+          2,
+          "Volkswagen",
+          2
+        ],
+        [
+          1,
+          "BMW",
+          3
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_d2631c6c19d42cc9",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "d53221067d19523674f965d946143e0de89ffb435b56d3544593e33247613bf2",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the name of the country with the most car makers?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country  =  T2.CountryId GROUP BY T1.Country ORDER BY Count(*) DESC LIMIT 1;",
+      "original_sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country  =  T2.CountryId GROUP BY T1.Country ORDER BY Count(*) DESC LIMIT 1;",
+      "adapted_sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 1",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T2.CountryName"
+        }
+      ],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "f0008d2b74ccb68f729ad644b8b605bf6fde3dd40b448a1ac8564745ff320efc",
+      "duckdb_result_sha256": "f0008d2b74ccb68f729ad644b8b605bf6fde3dd40b448a1ac8564745ff320efc",
+      "sample_original_rows": [
+        [
+          "japan"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "japan"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_55cf1874c71b6fee",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+      "features": [],
+      "question": "How many countries are listed?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM COUNTRIES;",
+      "original_sql": "SELECT count(*) FROM COUNTRIES;",
+      "adapted_sql": "SELECT COUNT(*) FROM COUNTRIES",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+      "duckdb_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+      "sample_original_rows": [
+        [
+          15
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          15
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_c3c5143d74d3437c",
+      "database_id": "car_1",
+      "difficulty": "medium",
+      "family_id": "8ffedbe9fb5a3950e553e1d57a823db8fd5d0ee4d0155c2b6198c88babde30d9",
+      "features": [],
+      "question": "how many cars were produced in 1980?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM CARS_DATA WHERE YEAR  =  1980;",
+      "original_sql": "SELECT count(*) FROM CARS_DATA WHERE YEAR  =  1980;",
+      "adapted_sql": "SELECT COUNT(*) FROM CARS_DATA WHERE YEAR = 1980",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "3a81fa5f196c18ceaf5a5ab52c5572f2a1b31d2510a5645bac701d99c50c53f5",
+      "duckdb_result_sha256": "3a81fa5f196c18ceaf5a5ab52c5572f2a1b31d2510a5645bac701d99c50c53f5",
+      "sample_original_rows": [
+        [
+          29
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          29
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+      "database_id": "car_1",
+      "difficulty": "advanced",
+      "family_id": "5cd591e07d5dd23fe7104a6770dbb00bd09c7a1081c4d3803aae1f484b93e550",
+      "features": [
+        "join",
+        "nested"
+      ],
+      "question": "Find the model of the car whose weight is below the average weight.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId  =  T2.Id WHERE T2.Weight  <  (SELECT avg(Weight) FROM CARS_DATA)",
+      "original_sql": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId  =  T2.Id WHERE T2.Weight  <  (SELECT avg(Weight) FROM CARS_DATA)",
+      "adapted_sql": "SELECT T1.model FROM CAR_NAMES AS T1 JOIN CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.Weight < (SELECT AVG(Weight) FROM CARS_DATA)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 230,
+      "duckdb_row_count": 230,
+      "sqlite_result_sha256": "0c9a22e68f1646d6e9d0a90d225804c275495d2c450966a420c21035beeb6b8c",
+      "duckdb_result_sha256": "0c9a22e68f1646d6e9d0a90d225804c275495d2c450966a420c21035beeb6b8c",
+      "sample_original_rows": [
+        [
+          "toyota"
+        ],
+        [
+          "plymouth"
+        ],
+        [
+          "amc"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "toyota"
+        ],
+        [
+          "plymouth"
+        ],
+        [
+          "amc"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "database_id": "car_1",
+      "difficulty": "advanced",
+      "family_id": "ec82ce5aa901e85bd0453b372f72282c63fecd3f6789b294d4d10cfac92a7334",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the names of the countries with no car makers?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId  =  T2.Country;",
+      "original_sql": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId  =  T2.Country;",
+      "adapted_sql": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId = T2.Country",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 7,
+      "duckdb_row_count": 7,
+      "sqlite_result_sha256": "c5917da564cf47cf80cfd517dae52d7a04e2b27d2309bfae0e8f373826df29b0",
+      "duckdb_result_sha256": "1dea02967d90e7db85965bfb6eb5a967ba0fa66d91f494af4cdc25c221695b38",
+      "sample_original_rows": [
+        [
+          "australia"
+        ],
+        [
+          "brazil"
+        ],
+        [
+          "egypt"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "russia"
+        ],
+        [
+          "nigeria"
+        ],
+        [
+          "australia"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_concert_singer_9754e7b07d3a2f56",
+      "database_id": "concert_singer",
+      "difficulty": "basic",
+      "family_id": "0ceb2ccf9657b7d2e0b37fec6eaa626fd50415d7b1cf79b9bcb54812a462a302",
+      "features": [],
+      "question": "What are the locations and names of all stations with capacity between 5000 and 10000?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT LOCATION ,  name FROM stadium WHERE capacity BETWEEN 5000 AND 10000",
+      "original_sql": "SELECT LOCATION ,  name FROM stadium WHERE capacity BETWEEN 5000 AND 10000",
+      "adapted_sql": "SELECT LOCATION, name FROM stadium WHERE capacity BETWEEN 5000 AND 10000",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 0,
+      "duckdb_row_count": 0,
+      "sqlite_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "duckdb_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sample_original_rows": [],
+      "sample_adapted_rows": [],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_concert_singer_4d9fb537dd762b49",
+      "database_id": "concert_singer",
+      "difficulty": "basic",
+      "family_id": "85d9ec1e47a575c2a1c316043b89a5f7cbe80727e2407367eecc9d993b01343b",
+      "features": [],
+      "question": "what is the name and nation of the singer who have a song having 'Hey' in its name?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT name ,  country FROM singer WHERE song_name LIKE '%Hey%'",
+      "original_sql": "SELECT name ,  country FROM singer WHERE song_name LIKE '%Hey%'",
+      "adapted_sql": "SELECT name, country FROM singer WHERE song_name LIKE '%Hey%'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "ea2044d675f77ca355009021dfc26c15db779888a1537ac37c9259f634fc4075",
+      "duckdb_result_sha256": "ea2044d675f77ca355009021dfc26c15db779888a1537ac37c9259f634fc4075",
+      "sample_original_rows": [
+        [
+          "Justin Brown",
+          "France"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Justin Brown",
+          "France"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_concert_singer_1313c062638e8562",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "c22a240288d6a8e28d877315ca5413275e179435c8f66110388c15a71a3add08",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What are the names of the singers and number of concerts for each person?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.name ,  count(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id  =  T2.singer_id GROUP BY T2.singer_id",
+      "original_sql": "SELECT T2.name ,  count(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id  =  T2.singer_id GROUP BY T2.singer_id",
+      "adapted_sql": "SELECT T2.name, COUNT(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id = T2.singer_id GROUP BY T2.singer_id, T2.name",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T2.name"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 5,
+      "duckdb_row_count": 5,
+      "sqlite_result_sha256": "9c1e668e4d6fafc1ed128313f85a42e4a698fd95ee1565c629d094c0aa40d3b7",
+      "duckdb_result_sha256": "422b08ac4ea8834251c1ca36ae86561c6e94362a4bfde2f8a0d701d7e7856b60",
+      "sample_original_rows": [
+        [
+          "Timbaland",
+          2
+        ],
+        [
+          "Justin Brown",
+          3
+        ],
+        [
+          "Rose White",
+          1
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Timbaland",
+          2
+        ],
+        [
+          "Justin Brown",
+          3
+        ],
+        [
+          "John Nizinik",
+          2
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_concert_singer_646e7fc8042c34c2",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "ff8b847378e18e0bf37f6123fc61ce3392bb16a316de568637ecaf32d446e3dd",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "Show the stadium name and capacity with most number of concerts in year 2014 or after.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.name ,  T2.capacity FROM concert AS T1 JOIN stadium AS T2 ON T1.stadium_id  =  T2.stadium_id WHERE T1.year  >=  2014 GROUP BY T2.stadium_id ORDER BY count(*) DESC LIMIT 1",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_concert_singer_2061015cfe2f236a",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "3a63a2e60e385bdafdb4b2bbbdbd2cf93cdc23a8c4c382f300d8fdc7f84512f7",
+      "features": [],
+      "question": "How many concerts are there in year 2014 or 2015?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM concert WHERE YEAR  =  2014 OR YEAR  =  2015",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "FUNCTION_NOT_ALLOWLISTED"
+    },
+    {
+      "case_id": "external_concert_singer_db703ee8469f32e5",
+      "database_id": "concert_singer",
+      "difficulty": "medium",
+      "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+      "features": [],
+      "question": "How many singers do we have?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM singer",
+      "original_sql": "SELECT count(*) FROM singer",
+      "adapted_sql": "SELECT COUNT(*) FROM singer",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "7447bf6052f1cff5aafe954c5a8902d5564088a98b8cfcee33c9648b131c7154",
+      "duckdb_result_sha256": "7447bf6052f1cff5aafe954c5a8902d5564088a98b8cfcee33c9648b131c7154",
+      "sample_original_rows": [
+        [
+          6
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          6
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_concert_singer_6264302aa07ba2e8",
+      "database_id": "concert_singer",
+      "difficulty": "advanced",
+      "family_id": "a2ec3b8c171cb908129c5c6c9b7d491e6194be7efddd30f0da4697c2cc872654",
+      "features": [
+        "nested"
+      ],
+      "question": "Find the number of concerts happened in the stadium with the highest capacity .",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "select count(*) from concert where stadium_id = (select stadium_id from stadium order by capacity desc limit 1)",
+      "original_sql": "select count(*) from concert where stadium_id = (select stadium_id from stadium order by capacity desc limit 1)",
+      "adapted_sql": "SELECT COUNT(*) FROM concert WHERE stadium_id = (SELECT stadium_id FROM stadium ORDER BY capacity DESC LIMIT 1)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da",
+      "duckdb_result_sha256": "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da",
+      "sample_original_rows": [
+        [
+          0
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          0
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_concert_singer_7c4b8d115e321d7b",
+      "database_id": "concert_singer",
+      "difficulty": "advanced",
+      "family_id": "20e3a3a64b0a225bd569e3d9e10ad323f1e78f3b149a9ef9b42247392e92adfc",
+      "features": [
+        "nested"
+      ],
+      "question": "Show the stadium names without any concert.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT name FROM stadium WHERE stadium_id NOT IN (SELECT stadium_id FROM concert)",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "ADAPTED_GOLD_EXECUTION_ERROR:BinderException"
+    },
+    {
+      "case_id": "external_course_teach_a15b937a6c3852e4",
+      "database_id": "course_teach",
+      "difficulty": "basic",
+      "family_id": "794a019de1715c5ff4315146bd20879c7e938bf2eb3b9ffe99c3a05ae3aa2a58",
+      "features": [],
+      "question": "What are the age and hometown of teachers?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Age ,  Hometown FROM teacher",
+      "original_sql": "SELECT Age ,  Hometown FROM teacher",
+      "adapted_sql": "SELECT Age, Hometown FROM teacher",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 7,
+      "duckdb_row_count": 7,
+      "sqlite_result_sha256": "838f3d42b8bcf62347538a3aa1b5a648e514c4960e34990087d97e390874c13d",
+      "duckdb_result_sha256": "838f3d42b8bcf62347538a3aa1b5a648e514c4960e34990087d97e390874c13d",
+      "sample_original_rows": [
+        [
+          "32",
+          "Blackrod Urban District"
+        ],
+        [
+          "29",
+          "Bolton County Borough"
+        ],
+        [
+          "26",
+          "Farnworth Municipal Borough"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "32",
+          "Blackrod Urban District"
+        ],
+        [
+          "29",
+          "Bolton County Borough"
+        ],
+        [
+          "26",
+          "Farnworth Municipal Borough"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_course_teach_58a6ed9ee32a1545",
+      "database_id": "course_teach",
+      "difficulty": "basic",
+      "family_id": "6cf95dba1c2e30fc080c51f594792db537749fd9b4ca39d7dae512321d451162",
+      "features": [],
+      "question": "List the name of teachers whose hometown is not `` Little Lever Urban District '' .",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "select name from teacher where hometown != \"little lever urban district\"",
+      "original_sql": "select name from teacher where hometown != \"little lever urban district\"",
+      "adapted_sql": "SELECT name FROM teacher WHERE hometown <> 'little lever urban district'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "little lever urban district"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 7,
+      "duckdb_row_count": 7,
+      "sqlite_result_sha256": "be8ec36a86ca9e5d92c29c8c8aa954911050d0d32f7090d9e00c774a662303d7",
+      "duckdb_result_sha256": "be8ec36a86ca9e5d92c29c8c8aa954911050d0d32f7090d9e00c774a662303d7",
+      "sample_original_rows": [
+        [
+          "Joseph Huts"
+        ],
+        [
+          "Gustaaf Deloor"
+        ],
+        [
+          "Vicente Carretero"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Joseph Huts"
+        ],
+        [
+          "Gustaaf Deloor"
+        ],
+        [
+          "Vicente Carretero"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_course_teach_d5ccd60dd0513e62",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "b91848626f355481d12cf78f9acecc5c5f82359ebe583e20a11f543b1372dc5b",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "Show names of teachers that teach at least two courses.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.Name FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID  =  T2.Teacher_ID GROUP BY T2.Name HAVING COUNT(*)  >=  2",
+      "original_sql": "SELECT T2.Name FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID  =  T2.Teacher_ID GROUP BY T2.Name HAVING COUNT(*)  >=  2",
+      "adapted_sql": "SELECT T2.Name FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID = T2.Teacher_ID GROUP BY T2.Name HAVING COUNT(*) >= 2",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "5c82d990db0b31d28975c3d2efd9b0df492a358c77d1f90e76226b14f712265c",
+      "duckdb_result_sha256": "5c82d990db0b31d28975c3d2efd9b0df492a358c77d1f90e76226b14f712265c",
+      "sample_original_rows": [
+        [
+          "Anne Walker"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Anne Walker"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_course_teach_6836a76f20642d62",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "f66468c93cf9c8238dde0f628180dcc0b051f1df0e8e72844c5248a779b4200f",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What are the names of the teachers and how many courses do they teach?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.Name ,  COUNT(*) FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID  =  T2.Teacher_ID GROUP BY T2.Name",
+      "original_sql": "SELECT T2.Name ,  COUNT(*) FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID  =  T2.Teacher_ID GROUP BY T2.Name",
+      "adapted_sql": "SELECT T2.Name, COUNT(*) FROM course_arrange AS T1 JOIN teacher AS T2 ON T1.Teacher_ID = T2.Teacher_ID GROUP BY T2.Name",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 5,
+      "duckdb_row_count": 5,
+      "sqlite_result_sha256": "06be1f38dd36f5fa5221c5176331dc86b4607d4458ad10fd8dace7df5769118d",
+      "duckdb_result_sha256": "f915a0d4672f6e6f448a98f793081bf1999a42d8ea75a228e8ac60b3ccdc20d7",
+      "sample_original_rows": [
+        [
+          "Anne Walker",
+          2
+        ],
+        [
+          "Gustaaf Deloor",
+          1
+        ],
+        [
+          "Kearsley Brown",
+          1
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Gustaaf Deloor",
+          1
+        ],
+        [
+          "Vicente Carretero",
+          1
+        ],
+        [
+          "Kearsley Brown",
+          1
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_course_teach_5d3f07d443b76433",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "befaa8195976e3ce6ba49795a3d66ec288f416b6d4745ac6cc509270dd0ff96e",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "question": "List the most common hometown of teachers.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Hometown FROM teacher GROUP BY Hometown ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT Hometown FROM teacher GROUP BY Hometown ORDER BY COUNT(*) DESC LIMIT 1",
+      "adapted_sql": "SELECT Hometown FROM teacher GROUP BY Hometown ORDER BY COUNT(*) DESC LIMIT 1",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": false,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "c7b8625b0e0b0b40c5a9af5bca2825e316a0f2244d7bcf2142a353e834f6d616",
+      "duckdb_result_sha256": "5cd66cef8a429125d6f28b2b04b8585d27a5d2a2d5dbfe4ac7f8ad7ce544b7ad",
+      "sample_original_rows": [
+        [
+          "Turton Urban District"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Blackrod Urban District"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "GOLD_RESULT_PARITY_MISMATCH"
+    },
+    {
+      "case_id": "external_course_teach_2498449e2c383821",
+      "database_id": "course_teach",
+      "difficulty": "medium",
+      "family_id": "013f3a27ac26f9ce4d19483edc474f1d30da43484fdcc68311f0dc44ba86d958",
+      "features": [
+        "group_having"
+      ],
+      "question": "For each hometown, how many teachers are there?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Hometown ,  COUNT(*) FROM teacher GROUP BY Hometown",
+      "original_sql": "SELECT Hometown ,  COUNT(*) FROM teacher GROUP BY Hometown",
+      "adapted_sql": "SELECT Hometown, COUNT(*) FROM teacher GROUP BY Hometown",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 7,
+      "duckdb_row_count": 7,
+      "sqlite_result_sha256": "618dcef62ac3230a475eeb300a326220b2717783360d392a3b70ccf22b077636",
+      "duckdb_result_sha256": "618dcef62ac3230a475eeb300a326220b2717783360d392a3b70ccf22b077636",
+      "sample_original_rows": [
+        [
+          "Blackrod Urban District",
+          1
+        ],
+        [
+          "Bolton County Borough",
+          1
+        ],
+        [
+          "Farnworth Municipal Borough",
+          1
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Blackrod Urban District",
+          1
+        ],
+        [
+          "Bolton County Borough",
+          1
+        ],
+        [
+          "Farnworth Municipal Borough",
+          1
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_course_teach_a90c07d9d5fb849e",
+      "database_id": "course_teach",
+      "difficulty": "advanced",
+      "family_id": "a5ec082cfbb382566a37da73f0ad90a0a93471b436aa25429a63e603e5e61849",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the names of the teachers whose courses have not been arranged?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Name FROM teacher WHERE Teacher_id NOT IN (SELECT Teacher_id FROM course_arrange)",
+      "original_sql": "SELECT Name FROM teacher WHERE Teacher_id NOT IN (SELECT Teacher_id FROM course_arrange)",
+      "adapted_sql": "SELECT Name FROM teacher WHERE NOT Teacher_id IN (SELECT Teacher_id FROM course_arrange)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "4a6d908da6de12aa656f9e70772d7b14bb2a4636d3db50b5dcc3da579a165e4c",
+      "duckdb_result_sha256": "4a6d908da6de12aa656f9e70772d7b14bb2a4636d3db50b5dcc3da579a165e4c",
+      "sample_original_rows": [
+        [
+          "Joseph Huts"
+        ],
+        [
+          "John Deloor"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Joseph Huts"
+        ],
+        [
+          "John Deloor"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_course_teach_587613ebd0fcbbbe",
+      "database_id": "course_teach",
+      "difficulty": "advanced",
+      "family_id": "10781ab9324ca1115864204aaa5c9b3256556e7dc95343efc778d1dec2d0c22e",
+      "features": [
+        "join"
+      ],
+      "question": "Show the name of the teacher for the math course.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID  =  T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID  =  T3.Teacher_ID WHERE T2.Course  =  \"Math\"",
+      "original_sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID  =  T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID  =  T3.Teacher_ID WHERE T2.Course  =  \"Math\"",
+      "adapted_sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Math"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "561ae72d64953eae4c1e65a49fd4b66dd225476357c30e32c4df5a4190f27573",
+      "duckdb_result_sha256": "f34007c8401fa4247bc51a162786922f029fb98fd5bdd9d391c3227dbd5f0f3b",
+      "sample_original_rows": [
+        [
+          "Kearsley Brown"
+        ],
+        [
+          "Vicente Carretero"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Vicente Carretero"
+        ],
+        [
+          "Kearsley Brown"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_99e10daefae93b3e",
+      "database_id": "dog_kennels",
+      "difficulty": "basic",
+      "family_id": "8bce8fbdf8a1b38357e2eb336d7ae7293afe31bc5bbc3177300e80babdfbc12e",
+      "features": [],
+      "question": "List the emails of the professionals who live in the state of Hawaii or the state of Wisconsin.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT email_address FROM Professionals WHERE state  =  'Hawaii' OR state  =  'Wisconsin'",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "FUNCTION_NOT_ALLOWLISTED"
+    },
+    {
+      "case_id": "external_dog_kennels_3bed1d18ea095e48",
+      "database_id": "dog_kennels",
+      "difficulty": "basic",
+      "family_id": "08e7eee49fe96767ec2cc9569c9d6a4fc9fa6353dde8ff064d4973c7ce37ae84",
+      "features": [],
+      "question": "Return the first name, last name and email of the owners living in a state whose name contains the substring 'North'.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT first_name ,  last_name ,  email_address FROM Owners WHERE state LIKE '%North%'",
+      "original_sql": "SELECT first_name ,  last_name ,  email_address FROM Owners WHERE state LIKE '%North%'",
+      "adapted_sql": "SELECT first_name, last_name, email_address FROM Owners WHERE state LIKE '%North%'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "ddc73c53e426cd8c1a0d7f8153ff4869c5e80eb237c08f451982cc4b4cc688f7",
+      "duckdb_result_sha256": "ddc73c53e426cd8c1a0d7f8153ff4869c5e80eb237c08f451982cc4b4cc688f7",
+      "sample_original_rows": [
+        [
+          "Johann",
+          "Fisher",
+          "zboncak.madonna@example.net"
+        ],
+        [
+          "Cindy",
+          "Schmitt",
+          "wpfeffer@example.net"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Johann",
+          "Fisher",
+          "zboncak.madonna@example.net"
+        ],
+        [
+          "Cindy",
+          "Schmitt",
+          "wpfeffer@example.net"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_ca0d92216738585b",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "96b5c99c74ce3662012443abb3062088bbb8b68c09994f8070d578ff4e93db29",
+      "features": [
+        "join",
+        "group_having"
+      ],
+      "question": "What are the id, role, and first name of the professionals who have performed two or more treatments?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.professional_id ,  T1.role_code ,  T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id GROUP BY T1.professional_id HAVING count(*)  >=  2",
+      "original_sql": "SELECT T1.professional_id ,  T1.role_code ,  T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id  =  T2.professional_id GROUP BY T1.professional_id HAVING count(*)  >=  2",
+      "adapted_sql": "SELECT T1.professional_id, T1.role_code, T1.first_name FROM Professionals AS T1 JOIN Treatments AS T2 ON T1.professional_id = T2.professional_id GROUP BY T1.professional_id, T1.role_code, T1.first_name HAVING COUNT(*) >= 2",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T1.role_code"
+        },
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T1.first_name"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 6,
+      "duckdb_row_count": 6,
+      "sqlite_result_sha256": "308746783c5442b34cae853344a53592dc46df1a60c691c8d915d95b43d03f4c",
+      "duckdb_result_sha256": "308746783c5442b34cae853344a53592dc46df1a60c691c8d915d95b43d03f4c",
+      "sample_original_rows": [
+        [
+          4,
+          "Veterenarian",
+          "Vernice"
+        ],
+        [
+          6,
+          "Veterenarian",
+          "Ruben"
+        ],
+        [
+          8,
+          "Employee",
+          "Karley"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          4,
+          "Veterenarian",
+          "Vernice"
+        ],
+        [
+          6,
+          "Veterenarian",
+          "Ruben"
+        ],
+        [
+          8,
+          "Employee",
+          "Karley"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_e21e6915192151fc",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "811ae44bf45fde661d21b5e2594a9fcc0e72a15e38d230f6d8c60d2e71e41562",
+      "features": [
+        "join"
+      ],
+      "question": "List each owner's first name, last name, and the size of his for her dog.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.first_name ,  T1.last_name ,  T2.size_code FROM Owners AS T1 JOIN Dogs AS T2 ON T1.owner_id  =  T2.owner_id",
+      "original_sql": "SELECT T1.first_name ,  T1.last_name ,  T2.size_code FROM Owners AS T1 JOIN Dogs AS T2 ON T1.owner_id  =  T2.owner_id",
+      "adapted_sql": "SELECT T1.first_name, T1.last_name, T2.size_code FROM Owners AS T1 JOIN Dogs AS T2 ON T1.owner_id = T2.owner_id",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 15,
+      "duckdb_row_count": 15,
+      "sqlite_result_sha256": "605a49b00d7d6d0e8573480e43f3b75cea99aca388db562b6a9bd0cadf4cec64",
+      "duckdb_result_sha256": "9e83d1c1ace71b937e770c518ae09cc84db986a7e8c07aacc4d853b2a59d3a86",
+      "sample_original_rows": [
+        [
+          "Jaclyn",
+          "Stoltenberg",
+          "LGE"
+        ],
+        [
+          "Gay",
+          "Feil",
+          "LGE"
+        ],
+        [
+          "Nora",
+          "Haley",
+          "MED"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Nora",
+          "Haley",
+          "MED"
+        ],
+        [
+          "Melisa",
+          "DuBuque",
+          "MED"
+        ],
+        [
+          "Jaclyn",
+          "Stoltenberg",
+          "MED"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "62b33a97ba0041cd81d52a5a45aada590de10bfc2208a5dc30a059f1394c351b",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "Return the owner id, first name and last name of the owner who has the most dogs.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.owner_id ,  T2.first_name ,  T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id  =  T2.owner_id GROUP BY T1.owner_id ORDER BY count(*) DESC LIMIT 1",
+      "original_sql": "SELECT T1.owner_id ,  T2.first_name ,  T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id  =  T2.owner_id GROUP BY T1.owner_id ORDER BY count(*) DESC LIMIT 1",
+      "adapted_sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T2.first_name"
+        },
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T2.last_name"
+        }
+      ],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "83f54390f1d6dcbad8b644e041bb394a2b66d2e47e1d6ccf425a4549fa65a3d7",
+      "duckdb_result_sha256": "83f54390f1d6dcbad8b644e041bb394a2b66d2e47e1d6ccf425a4549fa65a3d7",
+      "sample_original_rows": [
+        [
+          14,
+          "Rachelle",
+          "Funk"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          14,
+          "Rachelle",
+          "Funk"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_5f29631b7287aefb",
+      "database_id": "dog_kennels",
+      "difficulty": "medium",
+      "family_id": "c6a2a0b2190ef4e88cef2fdce9034fc282411c4b070ff310758bd676b057faf3",
+      "features": [],
+      "question": "How much does the most expensive charge type costs?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT max(charge_amount) FROM Charges",
+      "original_sql": "SELECT max(charge_amount) FROM Charges",
+      "adapted_sql": "SELECT MAX(charge_amount) FROM Charges",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "4a99059ad717f6cbfecfe18012f1e2afe0cf2a4f19e056f56233b724634faca2",
+      "duckdb_result_sha256": "4a99059ad717f6cbfecfe18012f1e2afe0cf2a4f19e056f56233b724634faca2",
+      "sample_original_rows": [
+        [
+          640
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "640.0000000000"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+      "database_id": "dog_kennels",
+      "difficulty": "advanced",
+      "family_id": "fa9961c6dfba93c8fbba0f19c8db3fbdecdf51cc9badc3998a03858fbcf5a144",
+      "features": [
+        "nested"
+      ],
+      "question": "Find the states where both owners and professionals live.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+      "original_sql": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+      "adapted_sql": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 3,
+      "duckdb_row_count": 3,
+      "sqlite_result_sha256": "93c15d01fe4495f705a1500f057812200924e236ff7c99cab1dcf075ea51edad",
+      "duckdb_result_sha256": "13574b6177a757cc43ae5495b4bd5248f29e265153cd2f1b6925164e07814c52",
+      "sample_original_rows": [
+        [
+          "Indiana"
+        ],
+        [
+          "Mississippi"
+        ],
+        [
+          "Wisconsin"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Wisconsin"
+        ],
+        [
+          "Indiana"
+        ],
+        [
+          "Mississippi"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_dog_kennels_b9c87e441963b8d0",
+      "database_id": "dog_kennels",
+      "difficulty": "advanced",
+      "family_id": "4acf0be6b505716bbacfe51c68fcb6fd9b85e9ec2ffae519d428918c91fdcbee",
+      "features": [
+        "nested"
+      ],
+      "question": "How many dogs have not gone through any treatment?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM Dogs WHERE dog_id NOT IN ( SELECT dog_id FROM Treatments )",
+      "original_sql": "SELECT count(*) FROM Dogs WHERE dog_id NOT IN ( SELECT dog_id FROM Treatments )",
+      "adapted_sql": "SELECT COUNT(*) FROM Dogs WHERE NOT dog_id IN (SELECT dog_id FROM Treatments)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "7447bf6052f1cff5aafe954c5a8902d5564088a98b8cfcee33c9648b131c7154",
+      "duckdb_result_sha256": "7447bf6052f1cff5aafe954c5a8902d5564088a98b8cfcee33c9648b131c7154",
+      "sample_original_rows": [
+        [
+          6
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          6
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_ba7a417281056dea",
+      "database_id": "flight_2",
+      "difficulty": "basic",
+      "family_id": "cf6efee01ccc6fc9f5f9e80c8b33ed87223402ccf4ce48fdb11028ddffff7f40",
+      "features": [],
+      "question": "Give the airport code and airport name corresonding to the city Anthony.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT AirportCode ,  AirportName FROM AIRPORTS WHERE city  =  \"Anthony\"",
+      "original_sql": "SELECT AirportCode ,  AirportName FROM AIRPORTS WHERE city  =  \"Anthony\"",
+      "adapted_sql": "SELECT AirportCode, AirportName FROM AIRPORTS WHERE city = 'Anthony'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Anthony"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 0,
+      "duckdb_row_count": 0,
+      "sqlite_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "duckdb_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sample_original_rows": [],
+      "sample_adapted_rows": [],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_1962776e116f9f03",
+      "database_id": "flight_2",
+      "difficulty": "basic",
+      "family_id": "b54d1f07b1a65f85eb78e06593f938a0c485718288fa8403e104654d114ab58a",
+      "features": [],
+      "question": "What is the abbreviation of Airline \"JetBlue Airways\"?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Abbreviation FROM AIRLINES WHERE Airline  =  \"JetBlue Airways\"",
+      "original_sql": "SELECT Abbreviation FROM AIRLINES WHERE Airline  =  \"JetBlue Airways\"",
+      "adapted_sql": "SELECT Abbreviation FROM AIRLINES WHERE Airline = 'JetBlue Airways'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "JetBlue Airways"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "528b3a26284c55b2d70b7f67eb2c9742c58ddf9557275ad971a25b3dba5686a5",
+      "duckdb_result_sha256": "528b3a26284c55b2d70b7f67eb2c9742c58ddf9557275ad971a25b3dba5686a5",
+      "sample_original_rows": [
+        [
+          "JetBlue"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "JetBlue"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_6b0856d8343233e0",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "1e97423832a642bbd9d39e10d4b5ba688a87a32a4915441141c48ef4cec2438c",
+      "features": [
+        "join"
+      ],
+      "question": "Return the number of flights arriving in Aberdeen.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport  =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+      "original_sql": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport  =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+      "adapted_sql": "SELECT COUNT(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City = 'Aberdeen'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Aberdeen"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da",
+      "duckdb_result_sha256": "a289148892b152fcf0f1476341d9d42ae16da67001731c6454b7239e0bf085da",
+      "sample_original_rows": [
+        [
+          0
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          0
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_59060b10db344a2c",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "82d36a6a99305d93aaf9906c32a2dc435a62500d595ffc3bb5b4699891d992ac",
+      "features": [
+        "join"
+      ],
+      "question": "Give the flight numbers of flights arriving in Aberdeen.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport   =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+      "original_sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport   =  T2.AirportCode WHERE T2.City  =  \"Aberdeen\"",
+      "adapted_sql": "SELECT T1.FlightNo FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode WHERE T2.City = 'Aberdeen'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Aberdeen"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 0,
+      "duckdb_row_count": 0,
+      "sqlite_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "duckdb_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "sample_original_rows": [],
+      "sample_adapted_rows": [],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_71ca2299e56319eb",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+      "features": [],
+      "question": "How many airlines are from USA?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM AIRLINES WHERE Country  =  \"USA\"",
+      "original_sql": "SELECT count(*) FROM AIRLINES WHERE Country  =  \"USA\"",
+      "adapted_sql": "SELECT COUNT(*) FROM AIRLINES WHERE Country = 'USA'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "USA"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "f4f21de40ca28a10908fa68fed17c5dbc02a39fc1fa082fc2511407d669d0719",
+      "duckdb_result_sha256": "f4f21de40ca28a10908fa68fed17c5dbc02a39fc1fa082fc2511407d669d0719",
+      "sample_original_rows": [
+        [
+          12
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          12
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_76fad759ed10c0b7",
+      "database_id": "flight_2",
+      "difficulty": "medium",
+      "family_id": "be01e04494c1fb5b3d75b49a016737889df9c6cab3bbf3e805c5f33cae72fa88",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "Find the abbreviation and country of the airline that has fewest number of flights?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.Abbreviation ,  T1.Country FROM AIRLINES AS T1 JOIN FLIGHTS AS T2 ON T1.uid  =  T2.Airline GROUP BY T1.Airline ORDER BY count(*) LIMIT 1",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "UNPROVEN_BARE_GROUP_COLUMN"
+    },
+    {
+      "case_id": "external_flight_2_dd762b95172800f4",
+      "database_id": "flight_2",
+      "difficulty": "advanced",
+      "family_id": "993e7b4524d239060fde31aa01cff202eb977c57bb07525c90d43bf86eb708f9",
+      "features": [
+        "nested"
+      ],
+      "question": "Which airports do not have departing or arriving flights?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT AirportName FROM Airports WHERE AirportCode NOT IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)",
+      "original_sql": "SELECT AirportName FROM Airports WHERE AirportCode NOT IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)",
+      "adapted_sql": "SELECT AirportName FROM Airports WHERE NOT AirportCode IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 100,
+      "duckdb_row_count": 100,
+      "sqlite_result_sha256": "59d68639dbde6e0093cb59a542f436029037f50373157ffa4db626649c2bcc93",
+      "duckdb_result_sha256": "59d68639dbde6e0093cb59a542f436029037f50373157ffa4db626649c2bcc93",
+      "sample_original_rows": [
+        [
+          "Phillips AAF "
+        ],
+        [
+          "Municipal "
+        ],
+        [
+          "Dyess AFB "
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Phillips AAF "
+        ],
+        [
+          "Municipal "
+        ],
+        [
+          "Dyess AFB "
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_flight_2_1bbdb29fd76588bf",
+      "database_id": "flight_2",
+      "difficulty": "advanced",
+      "family_id": "91823857d983e9e19f21d9acd38e3f107819ff103cb7c89fd65eb71e2e2e8b3e",
+      "features": [
+        "join"
+      ],
+      "question": "How many flights fly from Aberdeen to Ashley?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport  =  T2.AirportCode JOIN AIRPORTS AS T3 ON T1.SourceAirport  =  T3.AirportCode WHERE T2.City  =  \"Ashley\" AND T3.City  =  \"Aberdeen\"",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "FUNCTION_NOT_ALLOWLISTED"
+    },
+    {
+      "case_id": "external_orchestra_b16253b5de2ff882",
+      "database_id": "orchestra",
+      "difficulty": "basic",
+      "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+      "features": [],
+      "question": "What are the names of conductors whose nationalities are not \"USA\"?",
+      "selected_family_multiplicity": 2,
+      "split": "evaluation",
+      "source_query": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+      "original_sql": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+      "adapted_sql": "SELECT Name FROM conductor WHERE Nationality <> 'USA'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 6,
+      "duckdb_row_count": 6,
+      "sqlite_result_sha256": "2a9feeeba8ea89e313c93fe415f4a8ae479ed9f72a1fdd2619d914f0de6b7611",
+      "duckdb_result_sha256": "2a9feeeba8ea89e313c93fe415f4a8ae479ed9f72a1fdd2619d914f0de6b7611",
+      "sample_original_rows": [
+        [
+          "Igor Stravinsky"
+        ],
+        [
+          "Paul Jorgensen"
+        ],
+        [
+          "Charles Dutoit"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Igor Stravinsky"
+        ],
+        [
+          "Paul Jorgensen"
+        ],
+        [
+          "Charles Dutoit"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_orchestra_9e252dcacdf09bde",
+      "database_id": "orchestra",
+      "difficulty": "basic",
+      "family_id": "b5605b4e8ea9e358526f3ce4f2da68bb138be6564615c35e31bd9bc317c46cc7",
+      "features": [],
+      "question": "Return the names of conductors that do not have the nationality \"USA\".",
+      "selected_family_multiplicity": 2,
+      "split": "evaluation",
+      "source_query": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+      "original_sql": "SELECT Name FROM conductor WHERE Nationality != 'USA'",
+      "adapted_sql": "SELECT Name FROM conductor WHERE Nationality <> 'USA'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 6,
+      "duckdb_row_count": 6,
+      "sqlite_result_sha256": "2a9feeeba8ea89e313c93fe415f4a8ae479ed9f72a1fdd2619d914f0de6b7611",
+      "duckdb_result_sha256": "2a9feeeba8ea89e313c93fe415f4a8ae479ed9f72a1fdd2619d914f0de6b7611",
+      "sample_original_rows": [
+        [
+          "Igor Stravinsky"
+        ],
+        [
+          "Paul Jorgensen"
+        ],
+        [
+          "Charles Dutoit"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Igor Stravinsky"
+        ],
+        [
+          "Paul Jorgensen"
+        ],
+        [
+          "Charles Dutoit"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_orchestra_2fcc5834278757a9",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "ff1ecbad9278a01db5037fe3277bd5f81c269685afe9884c054a905801e36ad4",
+      "features": [
+        "join",
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the name of the conductor who has conducted the most orchestras?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID GROUP BY T2.Conductor_ID ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID GROUP BY T2.Conductor_ID ORDER BY COUNT(*) DESC LIMIT 1",
+      "adapted_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID GROUP BY T2.Conductor_ID, T1.Name ORDER BY COUNT(*) DESC LIMIT 1",
+      "transformations": [
+        {
+          "rule": "declared_key_dependent_group_column",
+          "column": "T1.Name"
+        }
+      ],
+      "comparator": "ordered_rows",
+      "parity": false,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "b101e4cfcd0021e407ec4217acae04399f9504137b8719782be58c3e6b171f0a",
+      "duckdb_result_sha256": "07d2576dd0f291c497ea860233ea9468280818cb2752b98bc244e8418bf03c32",
+      "sample_original_rows": [
+        [
+          "Michael Tilson Thomas"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Antal Doráti"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "GOLD_RESULT_PARITY_MISMATCH"
+    },
+    {
+      "case_id": "external_orchestra_7d626e678d642e36",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "b13b199fa7986621f6704d7b80cd5cc3332cb630ba59b1ccfc79a2c69aaa78bf",
+      "features": [
+        "join"
+      ],
+      "question": "Please show the name of the conductor that has conducted orchestras founded after 2008.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID WHERE Year_of_Founded  >  2008",
+      "original_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID WHERE Year_of_Founded  >  2008",
+      "adapted_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE Year_of_Founded > 2008",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "6a59a36897d86b252f494148666469b4a0364e871e6ff0d7fd26af9123ceee6f",
+      "duckdb_result_sha256": "6a59a36897d86b252f494148666469b4a0364e871e6ff0d7fd26af9123ceee6f",
+      "sample_original_rows": [
+        [
+          "Igor Stravinsky"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Igor Stravinsky"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_orchestra_09dfdff61fbbeb1a",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "f6755692f1d31534d7b28f9088378d99490752a1567a72ee6c17c50c74be80c4",
+      "features": [],
+      "question": "Count the number of orchestras that have CD or DVD as their record format.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT COUNT(*) FROM orchestra WHERE Major_Record_Format  =  \"CD\" OR Major_Record_Format  =  \"DVD\"",
+      "status": "GOLD_AUDIT_BLOCKED",
+      "error_code": "FUNCTION_NOT_ALLOWLISTED"
+    },
+    {
+      "case_id": "external_orchestra_5b4b58f26c903ada",
+      "database_id": "orchestra",
+      "difficulty": "medium",
+      "family_id": "cfece66edccf2391223851a94146a87692e37792bd856754442309113b43a44d",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "question": "What is the record company used by the greatest number of orchestras?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+      "adapted_sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "88bb0938fb32a0135b97ad64156a303dd2431b4dc8b74a7ab72a4bdac23ad557",
+      "duckdb_result_sha256": "88bb0938fb32a0135b97ad64156a303dd2431b4dc8b74a7ab72a4bdac23ad557",
+      "sample_original_rows": [
+        [
+          "Decca Records"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Decca Records"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_orchestra_725453fffae8b641",
+      "database_id": "orchestra",
+      "difficulty": "advanced",
+      "family_id": "e3351d4cf2e31c02590531c68d9148ad3ce7e3ec2e000cbfe804a19647d82597",
+      "features": [
+        "nested"
+      ],
+      "question": "List the names of orchestras that have no performance.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Orchestra FROM orchestra WHERE Orchestra_ID NOT IN (SELECT Orchestra_ID FROM performance)",
+      "original_sql": "SELECT Orchestra FROM orchestra WHERE Orchestra_ID NOT IN (SELECT Orchestra_ID FROM performance)",
+      "adapted_sql": "SELECT Orchestra FROM orchestra WHERE NOT Orchestra_ID IN (SELECT Orchestra_ID FROM performance)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "6a11baa2e6500589f536799b17ba5512a255764cacaa26c01baec4304da833dd",
+      "duckdb_result_sha256": "6a11baa2e6500589f536799b17ba5512a255764cacaa26c01baec4304da833dd",
+      "sample_original_rows": [
+        [
+          "San Francisco Symphony Orchestra"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "San Francisco Symphony Orchestra"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_orchestra_333cd27fe66308a4",
+      "database_id": "orchestra",
+      "difficulty": "advanced",
+      "family_id": "dab310f59f7fba671b0a02cb617660ac5a79921ed526d91778e49aaa64014a47",
+      "features": [
+        "nested"
+      ],
+      "question": "Show the record companies shared by orchestras founded before 2003 and after 2003.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded  <  2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded  >  2003",
+      "original_sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded  <  2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded  >  2003",
+      "adapted_sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "88bb0938fb32a0135b97ad64156a303dd2431b4dc8b74a7ab72a4bdac23ad557",
+      "duckdb_result_sha256": "88bb0938fb32a0135b97ad64156a303dd2431b4dc8b74a7ab72a4bdac23ad557",
+      "sample_original_rows": [
+        [
+          "Decca Records"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Decca Records"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_827c6d91a2ccdded",
+      "database_id": "poker_player",
+      "difficulty": "basic",
+      "family_id": "8c849e0ac6cc957d563c0ae1fbe5742151c60a9e0905a77bb57609f5ecfb1cad",
+      "features": [],
+      "question": "What are the names of people who are not from Russia?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Name FROM people WHERE Nationality != \"Russia\"",
+      "original_sql": "SELECT Name FROM people WHERE Nationality != \"Russia\"",
+      "adapted_sql": "SELECT Name FROM people WHERE Nationality <> 'Russia'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Russia"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "fce8a051a633913b8886ee7ca6243fcfc7d966387a8503cd92d99dbcbe77e8b2",
+      "duckdb_result_sha256": "fce8a051a633913b8886ee7ca6243fcfc7d966387a8503cd92d99dbcbe77e8b2",
+      "sample_original_rows": [
+        [
+          "Teodor Salparov"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Teodor Salparov"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_0c1c58daeade41a0",
+      "database_id": "poker_player",
+      "difficulty": "basic",
+      "family_id": "b31a103718305d7113cb0c0f73a2c8e092f8991373c83bc0f6711d35bfdfe1ef",
+      "features": [],
+      "question": "List the final tables made and the best finishes of poker players.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Final_Table_Made ,  Best_Finish FROM poker_player",
+      "original_sql": "SELECT Final_Table_Made ,  Best_Finish FROM poker_player",
+      "adapted_sql": "SELECT Final_Table_Made, Best_Finish FROM poker_player",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 5,
+      "duckdb_row_count": 5,
+      "sqlite_result_sha256": "4b80f6f75d106a6b1ae75ff856f007deef3172c71bb7a362238c56f0f8ffa84c",
+      "duckdb_result_sha256": "4b80f6f75d106a6b1ae75ff856f007deef3172c71bb7a362238c56f0f8ffa84c",
+      "sample_original_rows": [
+        [
+          42.0,
+          1.0
+        ],
+        [
+          10.0,
+          2.0
+        ],
+        [
+          21.0,
+          1.0
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          42.0,
+          1.0
+        ],
+        [
+          10.0,
+          2.0
+        ],
+        [
+          21.0,
+          1.0
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_71688949908bf92a",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "8dfe5dc0c0328e393493f1f2637ef7cf7a90a44f6e3dd3bb0131bd00742a7a83",
+      "features": [
+        "join",
+        "order_limit"
+      ],
+      "question": "What are the names of poker players, ordered ascending by the number of final tables they have made?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Final_Table_Made",
+      "original_sql": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Final_Table_Made",
+      "adapted_sql": "SELECT T1.Name FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Final_Table_Made NULLS FIRST",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 5,
+      "duckdb_row_count": 5,
+      "sqlite_result_sha256": "700b21f28ac746f094d3c9ccb11969727bfa1a47fead39e0072baf734ae79761",
+      "duckdb_result_sha256": "700b21f28ac746f094d3c9ccb11969727bfa1a47fead39e0072baf734ae79761",
+      "sample_original_rows": [
+        [
+          "Teodor Salparov"
+        ],
+        [
+          "Maksim Botin"
+        ],
+        [
+          "Yevgeni Sivozhelez"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Teodor Salparov"
+        ],
+        [
+          "Maksim Botin"
+        ],
+        [
+          "Yevgeni Sivozhelez"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_7c5178d1ef2b95d4",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "ba1c274d637d3eb2e87d98fafd643096f9a587b4af465d8bc96c9df99f3490d1",
+      "features": [
+        "join",
+        "order_limit"
+      ],
+      "question": "Return the birth date of the poker player with the lowest earnings.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Earnings ASC LIMIT 1",
+      "original_sql": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID  =  T2.People_ID ORDER BY T2.Earnings ASC LIMIT 1",
+      "adapted_sql": "SELECT T1.Birth_Date FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Earnings ASC NULLS FIRST LIMIT 1",
+      "transformations": [],
+      "comparator": "ordered_rows",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "31861193ed57be4f567f8dbb941636949efcdc28d4f155c216d4bf5fcaa9703a",
+      "duckdb_result_sha256": "31861193ed57be4f567f8dbb941636949efcdc28d4f155c216d4bf5fcaa9703a",
+      "sample_original_rows": [
+        [
+          "August 8, 1986"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "August 8, 1986"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_af17ae8ff067eded",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "e83965bdd1470e9995b5145391cb44a7571770c5e449f2de4e0d0bddf5c891ad",
+      "features": [
+        "distinct"
+      ],
+      "question": "How many distinct nationalities are there?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(DISTINCT Nationality) FROM people",
+      "original_sql": "SELECT count(DISTINCT Nationality) FROM people",
+      "adapted_sql": "SELECT COUNT(DISTINCT Nationality) FROM people",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "b8e08a0eb31856f37fe647bd7a070ba0e180f4593c5b468644b6d4fcd576eb0d",
+      "duckdb_result_sha256": "b8e08a0eb31856f37fe647bd7a070ba0e180f4593c5b468644b6d4fcd576eb0d",
+      "sample_original_rows": [
+        [
+          2
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          2
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_27c0d318d77ddd08",
+      "database_id": "poker_player",
+      "difficulty": "medium",
+      "family_id": "939c43b6189ac801aeb8116edf06b7db384d500cc22515149a1c19c23ee0805d",
+      "features": [],
+      "question": "Return the maximum final tables made across all poker players who have earnings below 200000.",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT max(Final_Table_Made) FROM poker_player WHERE Earnings  <  200000",
+      "original_sql": "SELECT max(Final_Table_Made) FROM poker_player WHERE Earnings  <  200000",
+      "adapted_sql": "SELECT MAX(Final_Table_Made) FROM poker_player WHERE Earnings < 200000",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "2e23609a1b215f4689f824cbde0db6bf7056aadf5304da03ce34c567cb6d03e6",
+      "duckdb_result_sha256": "2e23609a1b215f4689f824cbde0db6bf7056aadf5304da03ce34c567cb6d03e6",
+      "sample_original_rows": [
+        [
+          26.0
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          26.0
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_635f76c3b3aa43fc",
+      "database_id": "poker_player",
+      "difficulty": "advanced",
+      "family_id": "bf007869d39f42b206e2e9e0a00a916da0c50ec57fedaf17733b2b250186e9a9",
+      "features": [
+        "nested"
+      ],
+      "question": "List the names of people that are not poker players.",
+      "selected_family_multiplicity": 2,
+      "split": "evaluation",
+      "source_query": "SELECT Name FROM people WHERE People_ID NOT IN (SELECT People_ID FROM poker_player)",
+      "original_sql": "SELECT Name FROM people WHERE People_ID NOT IN (SELECT People_ID FROM poker_player)",
+      "adapted_sql": "SELECT Name FROM people WHERE NOT People_ID IN (SELECT People_ID FROM poker_player)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "83eaada7a282d9f729c379e1de8af49a0185d2024b345f96530771d76802a5a4",
+      "duckdb_result_sha256": "83eaada7a282d9f729c379e1de8af49a0185d2024b345f96530771d76802a5a4",
+      "sample_original_rows": [
+        [
+          "Roman Bragin"
+        ],
+        [
+          "Sergey Grankin"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Roman Bragin"
+        ],
+        [
+          "Sergey Grankin"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_poker_player_311ebb051349222c",
+      "database_id": "poker_player",
+      "difficulty": "advanced",
+      "family_id": "bf007869d39f42b206e2e9e0a00a916da0c50ec57fedaf17733b2b250186e9a9",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the names of people who do not play poker?",
+      "selected_family_multiplicity": 2,
+      "split": "evaluation",
+      "source_query": "SELECT Name FROM people WHERE People_ID NOT IN (SELECT People_ID FROM poker_player)",
+      "original_sql": "SELECT Name FROM people WHERE People_ID NOT IN (SELECT People_ID FROM poker_player)",
+      "adapted_sql": "SELECT Name FROM people WHERE NOT People_ID IN (SELECT People_ID FROM poker_player)",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "83eaada7a282d9f729c379e1de8af49a0185d2024b345f96530771d76802a5a4",
+      "duckdb_result_sha256": "83eaada7a282d9f729c379e1de8af49a0185d2024b345f96530771d76802a5a4",
+      "sample_original_rows": [
+        [
+          "Roman Bragin"
+        ],
+        [
+          "Sergey Grankin"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Roman Bragin"
+        ],
+        [
+          "Sergey Grankin"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_73697be8b93729ee",
+      "database_id": "tvshow",
+      "difficulty": "basic",
+      "family_id": "2ead0ebc575a4f2a462b1eaeb7adeb10a1882ab496b3596eec51ffae7e8a775a",
+      "features": [],
+      "question": "List all cartoon directed by \"Ben Jones\".",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Title FROM Cartoon WHERE Directed_by = \"Ben Jones\";",
+      "original_sql": "SELECT Title FROM Cartoon WHERE Directed_by = \"Ben Jones\";",
+      "adapted_sql": "SELECT Title FROM Cartoon WHERE Directed_by = 'Ben Jones'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Ben Jones"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 4,
+      "duckdb_row_count": 4,
+      "sqlite_result_sha256": "75cd2be7ae1ddcdae1256fc3ba243e39036fe5a116932f98d8530d9b4e74d6e7",
+      "duckdb_result_sha256": "75cd2be7ae1ddcdae1256fc3ba243e39036fe5a116932f98d8530d9b4e74d6e7",
+      "sample_original_rows": [
+        [
+          "The Rise of the Blue Beetle!"
+        ],
+        [
+          "Day of the Dark Knight!"
+        ],
+        [
+          "Dawn of the Dead Man!"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "The Rise of the Blue Beetle!"
+        ],
+        [
+          "Day of the Dark Knight!"
+        ],
+        [
+          "Dawn of the Dead Man!"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_5dd917867752c83a",
+      "database_id": "tvshow",
+      "difficulty": "basic",
+      "family_id": "2afde9ac98fa3123bde411df33a7f82ecdc333ece1e9bc97c9584145fa6556fe",
+      "features": [],
+      "question": "What is the pixel aspect ratio and country of origin for all TV channels that do not use English?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT Pixel_aspect_ratio_PAR ,  country FROM tv_channel WHERE LANGUAGE != 'English'",
+      "original_sql": "SELECT Pixel_aspect_ratio_PAR ,  country FROM tv_channel WHERE LANGUAGE != 'English'",
+      "adapted_sql": "SELECT Pixel_aspect_ratio_PAR, country FROM tv_channel WHERE LANGUAGE <> 'English'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 12,
+      "duckdb_row_count": 12,
+      "sqlite_result_sha256": "86ee95c13806f7339339354d82887e5ef84e9af0137cb75a20b0d8feabd316a8",
+      "duckdb_result_sha256": "86ee95c13806f7339339354d82887e5ef84e9af0137cb75a20b0d8feabd316a8",
+      "sample_original_rows": [
+        [
+          "4:3",
+          "Italy"
+        ],
+        [
+          "4:3",
+          "Italy"
+        ],
+        [
+          "4:3 / 16:9",
+          "Italy"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "4:3",
+          "Italy"
+        ],
+        [
+          "4:3",
+          "Italy"
+        ],
+        [
+          "4:3 / 16:9",
+          "Italy"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_cbea1679ac94abfa",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "88fb45d83e0fbdcfe81ba25b116da4145eeea144f705182d83d622b46c41eab8",
+      "features": [
+        "join"
+      ],
+      "question": "What is the series name of the TV Channel that shows the cartoon \"The Rise of the Blue Beetle\"?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = \"The Rise of the Blue Beetle!\";",
+      "original_sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = \"The Rise of the Blue Beetle!\";",
+      "adapted_sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = 'The Rise of the Blue Beetle!'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "The Rise of the Blue Beetle!"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "374f0768015eacd2de13ec90d4e9b5a132b5f74d8b651a9260a4aa9f6687268b",
+      "duckdb_result_sha256": "374f0768015eacd2de13ec90d4e9b5a132b5f74d8b651a9260a4aa9f6687268b",
+      "sample_original_rows": [
+        [
+          "Sky Radio"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Sky Radio"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_55ce63ef8ba641ea",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "d86d848b7ff05200629c21469a2e745d18f8789614f44b66fee3cebb0b8a0ea7",
+      "features": [
+        "join"
+      ],
+      "question": "What is the title of all the cartools that are on the TV Channel with the series name \"Sky Radio\"?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.Title FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+      "original_sql": "SELECT T2.Title FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+      "adapted_sql": "SELECT T2.Title FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Sky Radio"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "6b0b9ca0202e5b2560772bec1b481e9e99394f29dce0e951a05914369f2d3f2b",
+      "duckdb_result_sha256": "6b0b9ca0202e5b2560772bec1b481e9e99394f29dce0e951a05914369f2d3f2b",
+      "sample_original_rows": [
+        [
+          "The Rise of the Blue Beetle!"
+        ],
+        [
+          "Return of the Fearsome Fangs!"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "The Rise of the Blue Beetle!"
+        ],
+        [
+          "Return of the Fearsome Fangs!"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_1c60aeabf088515a",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "16065e40b6e416b4ffbce3318ffcddff6c94e133ee5e11ff9b7817ab5ee5c6e7",
+      "features": [
+        "join"
+      ],
+      "question": "List the Episode of all  TV series showed on TV Channel with series name \"Sky Radio\".",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+      "original_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+      "adapted_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "Sky Radio"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 2,
+      "duckdb_row_count": 2,
+      "sqlite_result_sha256": "d89f4e39ca18efa53cd0563e3b003271b81211707613947890227a00c8296609",
+      "duckdb_result_sha256": "d89f4e39ca18efa53cd0563e3b003271b81211707613947890227a00c8296609",
+      "sample_original_rows": [
+        [
+          "A Love of a Lifetime"
+        ],
+        [
+          "Keepers"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "A Love of a Lifetime"
+        ],
+        [
+          "Keepers"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_f476e6a3b7fb5098",
+      "database_id": "tvshow",
+      "difficulty": "medium",
+      "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+      "features": [],
+      "question": "How many TV Channels use the English language?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT count(*) FROM TV_Channel WHERE LANGUAGE = \"English\";",
+      "original_sql": "SELECT count(*) FROM TV_Channel WHERE LANGUAGE = \"English\";",
+      "adapted_sql": "SELECT COUNT(*) FROM TV_Channel WHERE LANGUAGE = 'English'",
+      "transformations": [
+        {
+          "rule": "sqlite_unresolved_double_quoted_string",
+          "literal": "English"
+        }
+      ],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5",
+      "duckdb_result_sha256": "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5",
+      "sample_original_rows": [
+        [
+          3
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          3
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_2ba6baeb8b8cc318",
+      "database_id": "tvshow",
+      "difficulty": "advanced",
+      "family_id": "d83d4d2556fe19ca61a3e529c5f0a368f004583b31fa45e5755ca1a0c72f17aa",
+      "features": [
+        "nested"
+      ],
+      "question": "What are the package options of all tv channels that are not playing any cartoons directed by Ben Jones?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT package_option FROM TV_Channel WHERE id NOT IN (SELECT channel FROM cartoon WHERE directed_by  =  'Ben Jones')",
+      "original_sql": "SELECT package_option FROM TV_Channel WHERE id NOT IN (SELECT channel FROM cartoon WHERE directed_by  =  'Ben Jones')",
+      "adapted_sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon WHERE directed_by = 'Ben Jones')",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 11,
+      "duckdb_row_count": 11,
+      "sqlite_result_sha256": "5a42fd278012886b9ca878905c8502b56a2249d838c80b58b84dcb3de2fa977f",
+      "duckdb_result_sha256": "5a42fd278012886b9ca878905c8502b56a2249d838c80b58b84dcb3de2fa977f",
+      "sample_original_rows": [
+        [
+          "Sky Famiglia"
+        ],
+        [
+          "Sky Famiglia"
+        ],
+        [
+          "Sky Famiglia"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "Sky Famiglia"
+        ],
+        [
+          "Sky Famiglia"
+        ],
+        [
+          "Sky Famiglia"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    },
+    {
+      "case_id": "external_tvshow_38dfbde79a7487e2",
+      "database_id": "tvshow",
+      "difficulty": "advanced",
+      "family_id": "b785d69969e63924bfa3c8033b22c698e3bfb292d20f7deb3ddb8073d263732a",
+      "features": [
+        "join",
+        "nested"
+      ],
+      "question": "Find the series name and country of the tv channel that is playing some cartoons directed by Ben Jones and Michael Chang?",
+      "selected_family_multiplicity": 1,
+      "split": "evaluation",
+      "source_query": "SELECT T1.series_name ,  T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by  =  'Michael Chang' INTERSECT SELECT T1.series_name ,  T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by  =  'Ben Jones'",
+      "original_sql": "SELECT T1.series_name ,  T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by  =  'Michael Chang' INTERSECT SELECT T1.series_name ,  T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by  =  'Ben Jones'",
+      "adapted_sql": "SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Michael Chang' INTERSECT SELECT T1.series_name, T1.country FROM TV_Channel AS T1 JOIN cartoon AS T2 ON T1.id = T2.Channel WHERE T2.directed_by = 'Ben Jones'",
+      "transformations": [],
+      "comparator": "unordered_multiset",
+      "parity": true,
+      "sqlite_row_count": 1,
+      "duckdb_row_count": 1,
+      "sqlite_result_sha256": "6a820eea3d2fd06cd3bef68726654e2add37866a6e7554bd0a73ae5b293822e9",
+      "duckdb_result_sha256": "6a820eea3d2fd06cd3bef68726654e2add37866a6e7554bd0a73ae5b293822e9",
+      "sample_original_rows": [
+        [
+          "MTV Dance",
+          "United Kingdom"
+        ]
+      ],
+      "sample_adapted_rows": [
+        [
+          "MTV Dance",
+          "United Kingdom"
+        ]
+      ],
+      "primary_keys_verified_nonnull_unique": true,
+      "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required",
+      "status": "BASE_PARITY_VERIFIED"
+    }
+  ]
+}
