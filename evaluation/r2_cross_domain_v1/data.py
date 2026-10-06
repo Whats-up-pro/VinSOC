@@ -324,6 +324,48 @@ def validate_registry_entries(entries: list[dict[str, Any]]) -> None:
             raise RegistryError(f"Registry entry lacks source identity: {entry['database_id']}")
 
 
+def describe_existing_snapshot(snapshot: Path, database_id: str, source_identity: dict) -> dict:
+    """Bind an already verified source receipt to existing read-only bytes.
+
+    This does not build data or certify the supplied source receipt. Callers must
+    run their source validator first. Its source_type/scope remain explicit; a
+    manifest digest must never be relabeled as a SQLite or source-member digest.
+    The generic logical identity is separate from any originating legacy hash.
+    """
+    if not database_id or not source_identity.get('source_type') or not source_identity.get('source_sha256_scope'):
+        raise RegistryError('EXPLICIT_SOURCE_IDENTITY_REQUIRED')
+    if len(source_identity.get('source_sha256', '')) != 64:
+        raise RegistryError('EXPLICIT_SOURCE_IDENTITY_REQUIRED')
+    snapshot = Path(snapshot)
+    binary = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    schema, relationships, rows, primary_keys = [], [], {}, {}
+    with duckdb.connect(str(snapshot), read_only=True, config={'enable_external_access':False, 'threads':1}) as connection:
+        tables = sorted(row[0] for row in connection.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='main' AND table_type='BASE TABLE'").fetchall())
+        if not tables:
+            raise RegistryError('EMPTY_SNAPSHOT')
+        for table in tables:
+            keys = connection.execute("SELECT constraint_column_names FROM duckdb_constraints() WHERE table_name=? AND constraint_type='PRIMARY KEY'", [table]).fetchall()
+            key = keys[0][0] if len(keys) == 1 else []
+            primary_keys[table] = key
+            columns = [{'ordinal':r[0], 'name':r[1], 'duckdb_type':r[2], 'not_null':r[3], 'default':r[4],
+                        'primary_key_position':key.index(r[1])+1 if r[1] in key else 0}
+                       for r in connection.execute(f'PRAGMA table_info({_quote(table)})').fetchall()]
+            schema.append({'name':table, 'columns':columns})
+            rows[table] = connection.execute(f'SELECT * FROM {_quote(table)}').fetchall()
+            fk = connection.execute("SELECT constraint_column_names, referenced_table, referenced_column_names FROM duckdb_constraints() WHERE table_name=? AND constraint_type='FOREIGN KEY'", [table]).fetchall()
+            for from_cols, target, to_cols in fk:
+                if len(from_cols) != 1:
+                    raise RegistryError('COMPOSITE_EXISTING_FOREIGN_KEY_UNSUPPORTED')
+                relationships.append({'from_table':table, 'from_column':from_cols[0], 'to_table':target, 'to_column':to_cols[0]})
+    if hashlib.sha256(snapshot.read_bytes()).hexdigest() != binary:
+        raise RegistryError('SNAPSHOT_CHANGED_DURING_INSPECTION')
+    return {**source_identity, 'database_id':database_id, 'schema':schema, 'relationships':relationships,
+            'primary_keys':primary_keys, 'row_counts':{table:len(value) for table,value in rows.items()},
+            'duckdb_binary_sha256':binary, 'logical_sha256':_logical_hash(database_id, schema, relationships, rows),
+            'logical_identity_policy':'cross_domain_typed_row_multiset_v1',
+            'duckdb_content_sha256':_snapshot_content_hash(database_id, schema, rows), 'snapshot_read_only_verified':True}
+
+
 @dataclass(frozen=True)
 class DatabaseContext:
     """Verified database identity and public multi-table catalog for runtime tools."""

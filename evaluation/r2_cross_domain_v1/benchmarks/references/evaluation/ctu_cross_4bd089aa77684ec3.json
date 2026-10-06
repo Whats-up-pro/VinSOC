@@ -1,0 +1,121 @@
+{
+  "case_id": "ctu_cross_4bd089aa77684ec3",
+  "database_id": "ctu_dev",
+  "question": "List labels with at least 100 flows in CTU scenario 7 with their counts, ordered by label.",
+  "gold_sql": "SELECT label,COUNT(*) FROM network_flows WHERE source_dataset='ctu13_s7' GROUP BY label HAVING COUNT(*)>=100 ORDER BY label",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "order_limit"
+  ],
+  "family_id": "930c6987892a53d05fea691677e9762fe9c566d26bba0ddfe6dadee789c3a5f7",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "derived_expression",
+          "expression": "COUNT(*)",
+          "operator": ">=",
+          "value": 100,
+          "value_type": "numeric"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "gte",
+          "stage": "having",
+          "expression": "COUNT(*) >= 100",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 100,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": []
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        },
+        {
+          "stage": "having",
+          "expression": "COUNT(*) >= 100"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 14,
+  "sample_gold_rows": [
+    [
+      "flow=Background",
+      2997
+    ],
+    [
+      "flow=Background-Attempt-cmpgw-CVUT",
+      955
+    ],
+    [
+      "flow=Background-Established-cmpgw-CVUT",
+      10468
+    ]
+  ],
+  "observed_result_sha256": "4e27c3f0323a2d27e49c63b922c98d5e20142b05582224422937b89902425cba",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_4bd089aa77684ec3.audit.json",
+  "semantic_audit_sha256": "5dba5ea9ca30170a21713217bfc35d14138a87fd3a090f117cb14ac8131ca925",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

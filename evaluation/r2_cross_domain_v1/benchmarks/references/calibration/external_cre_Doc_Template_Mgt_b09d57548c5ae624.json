@@ -1,0 +1,79 @@
+{
+  "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+  "database_id": "cre_Doc_Template_Mgt",
+  "question": "What is the template type descriptions for template type code \"AD\".",
+  "gold_sql": "SELECT template_type_description FROM Ref_template_types WHERE template_type_code = 'AD'",
+  "comparator": "unordered_multiset",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "c0e367be7616f6e439744550f1bf3ef8c53d9aaa0e4ed48107d3624a4f5a3e29",
+  "accepted_links": [
+    {
+      "tables": [
+        "Ref_Template_Types"
+      ],
+      "columns": [
+        {
+          "table": "Ref_Template_Types",
+          "column": "Template_Type_Code"
+        },
+        {
+          "table": "Ref_Template_Types",
+          "column": "Template_Type_Description"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Ref_Template_Types",
+          "column": "Template_Type_Code",
+          "operator": "=",
+          "value": "AD"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "ref_template_types.template_type_code = 'AD'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "AD",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Ref_Template_Types",
+              "column": "Template_Type_Code"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "ref_template_types.template_type_code = 'AD'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT template_type_description FROM Ref_template_types WHERE template_type_code  =  \"AD\"",
+  "source_sqlite_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5",
+  "base_snapshot_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+  "base_snapshot_logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "calibration",
+  "domain": "document_management",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_cre_Doc_Template_Mgt_b09d57548c5ae624.audit.json",
+  "semantic_audit_sha256": "9f8183a8982230f893408f158e24fa4bd15a641e1fca05fe3d91a2b8ea2e9b58"
+}

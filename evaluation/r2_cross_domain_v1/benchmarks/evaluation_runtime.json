@@ -1,0 +1,482 @@
+[
+  {
+    "case_id": "ctu_cross_09368110b7091cb8",
+    "database_id": "ctu_dev",
+    "question": "Count distinct source/destination IP pairs for UDP in CTU scenario 5, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics."
+  },
+  {
+    "case_id": "ctu_cross_0b9805ee5f7a7aca",
+    "database_id": "ctu_dev",
+    "question": "Count the latest flow per source IP in CTU scenario 7, selecting by event time descending then source row ID descending within each source IP."
+  },
+  {
+    "case_id": "ctu_cross_111e791fb862cf30",
+    "database_id": "ctu_dev",
+    "question": "Return the three most frequent UDP destination IPs in CTU scenario 7 with their flow counts; break count ties by destination IP ascending."
+  },
+  {
+    "case_id": "ctu_cross_116e46aecde5564d",
+    "database_id": "ctu_dev",
+    "question": "List source IP, source port and destination IP of IGMP flows in CTU scenario 7 with a missing source port."
+  },
+  {
+    "case_id": "ctu_cross_179231c51f8af53e",
+    "database_id": "ctu_dev",
+    "question": "For each source dataset and protocol, return total outbound bytes and average inbound bytes, ordered by source dataset then protocol."
+  },
+  {
+    "case_id": "ctu_cross_1dc9e35510939cd9",
+    "database_id": "ctu_dev",
+    "question": "List destination IP and destination port of RTCP flows in CTU scenario 7 with zero outbound bytes."
+  },
+  {
+    "case_id": "ctu_cross_2e05412218fcc02f",
+    "database_id": "ctu_dev",
+    "question": "List source IP, destination IP and protocol of CTU scenario 7 flows with over 1000000 outbound bytes and zero inbound bytes."
+  },
+  {
+    "case_id": "ctu_cross_3f659571f998adb0",
+    "database_id": "ctu_dev",
+    "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending."
+  },
+  {
+    "case_id": "ctu_cross_3f83eeb648a43168",
+    "database_id": "ctu_dev",
+    "question": "For each protocol in CTU scenario 5, return the flow count and minimum/maximum outbound bytes, ordered by protocol."
+  },
+  {
+    "case_id": "ctu_cross_493dba43b24b2e81",
+    "database_id": "ctu_dev",
+    "question": "List distinct protocol/action pairs in CTU scenario 7."
+  },
+  {
+    "case_id": "ctu_cross_4b4f065c0737c540",
+    "database_id": "ctu_dev",
+    "question": "How many distinct destination ports occur in TCP flows in CTU scenario 7?"
+  },
+  {
+    "case_id": "ctu_cross_4bd089aa77684ec3",
+    "database_id": "ctu_dev",
+    "question": "List labels with at least 100 flows in CTU scenario 7 with their counts, ordered by label."
+  },
+  {
+    "case_id": "ctu_cross_4dfbfa87ef9eacfa",
+    "database_id": "ctu_dev",
+    "question": "List distinct destination IPs in CTU scenario 7 whose label begins with flow=From-Normal."
+  },
+  {
+    "case_id": "ctu_cross_5ba944b403f6456d",
+    "database_id": "ctu_dev",
+    "question": "List source IP and outbound bytes of ICMP flows in CTU scenario 5 whose outbound bytes exceed 1000."
+  },
+  {
+    "case_id": "ctu_cross_6113c639deae1326",
+    "database_id": "ctu_dev",
+    "question": "List source row ID and label of PIM flows in CTU scenario 5."
+  },
+  {
+    "case_id": "ctu_cross_6122c96211b2bfa8",
+    "database_id": "ctu_dev",
+    "question": "Return dataset/protocol flow counts exceeding that dataset's average protocol-group count; order by dataset then protocol."
+  },
+  {
+    "case_id": "ctu_cross_66b8e92a76c3359b",
+    "database_id": "ctu_dev",
+    "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates."
+  },
+  {
+    "case_id": "ctu_cross_67db5d7878967de2",
+    "database_id": "ctu_dev",
+    "question": "How many distinct source ports occur in UDP flows in CTU scenario 5?"
+  },
+  {
+    "case_id": "ctu_cross_708b66575657429a",
+    "database_id": "ctu_dev",
+    "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries."
+  },
+  {
+    "case_id": "ctu_cross_71164969e0e0277e",
+    "database_id": "ctu_dev",
+    "question": "List source IPs observed in both CTU scenario 5 and scenario 7, without duplicates."
+  },
+  {
+    "case_id": "ctu_cross_71f16246d2fd9590",
+    "database_id": "ctu_dev",
+    "question": "For each source dataset, return the fraction of all flows whose label begins with flow=From-Botnet; include all labels in the denominator and order datasets ascending."
+  },
+  {
+    "case_id": "ctu_cross_779935acae78c536",
+    "database_id": "ctu_dev",
+    "question": "For each source dataset, return its number of distinct source IPs, ordered by source dataset."
+  },
+  {
+    "case_id": "ctu_cross_8b3e2e65524280d5",
+    "database_id": "ctu_dev",
+    "question": "Return the seven most frequent TCP destination ports at most 1024 in CTU scenario 5 with counts; break count ties by port ascending."
+  },
+  {
+    "case_id": "ctu_cross_a427f9a05d18b548",
+    "database_id": "ctu_dev",
+    "question": "How many distinct labels occur in CTU scenario 5?"
+  },
+  {
+    "case_id": "ctu_cross_bce6d3679ade4cd6",
+    "database_id": "ctu_dev",
+    "question": "List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending."
+  },
+  {
+    "case_id": "ctu_cross_cd58f61cdff78fbc",
+    "database_id": "ctu_dev",
+    "question": "List source and destination IPs of RSVP flows in CTU scenario 5."
+  },
+  {
+    "case_id": "ctu_cross_cf0c8dd93c8be782",
+    "database_id": "ctu_dev",
+    "question": "Count CTU scenario 5 flows whose outbound bytes exceed the average outbound bytes of scenario 5."
+  },
+  {
+    "case_id": "ctu_cross_d914283c880a2dfd",
+    "database_id": "ctu_dev",
+    "question": "Return the two source IPs with highest total outbound bytes in CTU scenario 5 and their totals; break total ties by source IP ascending."
+  },
+  {
+    "case_id": "ctu_cross_da1bacf7b6a0d616",
+    "database_id": "ctu_dev",
+    "question": "For each calendar date in CTU scenario 5, count flows with a label beginning flow=From-Botnet; order dates ascending."
+  },
+  {
+    "case_id": "ctu_cross_db23b6f2a42fd103",
+    "database_id": "ctu_dev",
+    "question": "List event time and action of RTP flows in CTU scenario 5 at or after 2011-08-15 17:00:00."
+  },
+  {
+    "case_id": "ctu_cross_e09358b4dca10e1f",
+    "database_id": "ctu_dev",
+    "question": "List event time, source IP and destination IP of ARP flows in CTU scenario 7 with a missing destination port."
+  },
+  {
+    "case_id": "ctu_cross_ef8808ed9e47cef2",
+    "database_id": "ctu_dev",
+    "question": "List distinct source IP/label pairs in CTU scenario 5 whose label begins with flow=From-Botnet."
+  },
+  {
+    "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+    "database_id": "car_1",
+    "question": "Find the model of the car whose weight is below the average weight."
+  },
+  {
+    "case_id": "external_car_1_47ffa4acc7ba90eb",
+    "database_id": "car_1",
+    "question": "What is the maximum horsepower and the make of the car models with 3 cylinders?"
+  },
+  {
+    "case_id": "external_car_1_55cf1874c71b6fee",
+    "database_id": "car_1",
+    "question": "How many countries are listed?"
+  },
+  {
+    "case_id": "external_car_1_72878d40e5fc2141",
+    "database_id": "car_1",
+    "question": "What are all the makers and models?"
+  },
+  {
+    "case_id": "external_car_1_95e1de6f7f4b01d9",
+    "database_id": "car_1",
+    "question": "What are the names of the countries with no car makers?"
+  },
+  {
+    "case_id": "external_car_1_a3e424fdba9f79c4",
+    "database_id": "car_1",
+    "question": "What is the number of car models that are produced by each maker and what is the id and full name of each maker?"
+  },
+  {
+    "case_id": "external_car_1_c3c5143d74d3437c",
+    "database_id": "car_1",
+    "question": "how many cars were produced in 1980?"
+  },
+  {
+    "case_id": "external_car_1_fdc8ee399ddc765f",
+    "database_id": "car_1",
+    "question": "What are the makers and models?"
+  },
+  {
+    "case_id": "external_concert_singer_1313c062638e8562",
+    "database_id": "concert_singer",
+    "question": "What are the names of the singers and number of concerts for each person?"
+  },
+  {
+    "case_id": "external_concert_singer_2061015cfe2f236a",
+    "database_id": "concert_singer",
+    "question": "How many concerts are there in year 2014 or 2015?"
+  },
+  {
+    "case_id": "external_concert_singer_29bfe250be87c3ae",
+    "database_id": "concert_singer",
+    "question": "List all song names by singers above the average age."
+  },
+  {
+    "case_id": "external_concert_singer_30a94311c8a53879",
+    "database_id": "concert_singer",
+    "question": "For each stadium, how many concerts play there?"
+  },
+  {
+    "case_id": "external_concert_singer_4d9fb537dd762b49",
+    "database_id": "concert_singer",
+    "question": "what is the name and nation of the singer who have a song having 'Hey' in its name?"
+  },
+  {
+    "case_id": "external_concert_singer_6264302aa07ba2e8",
+    "database_id": "concert_singer",
+    "question": "Find the number of concerts happened in the stadium with the highest capacity ."
+  },
+  {
+    "case_id": "external_concert_singer_9754e7b07d3a2f56",
+    "database_id": "concert_singer",
+    "question": "What are the locations and names of all stations with capacity between 5000 and 10000?"
+  },
+  {
+    "case_id": "external_concert_singer_db703ee8469f32e5",
+    "database_id": "concert_singer",
+    "question": "How many singers do we have?"
+  },
+  {
+    "case_id": "external_course_teach_2498449e2c383821",
+    "database_id": "course_teach",
+    "question": "For each hometown, how many teachers are there?"
+  },
+  {
+    "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+    "database_id": "course_teach",
+    "question": "What are the names of the teachers ordered by ascending age?"
+  },
+  {
+    "case_id": "external_course_teach_587613ebd0fcbbbe",
+    "database_id": "course_teach",
+    "question": "Show the name of the teacher for the math course."
+  },
+  {
+    "case_id": "external_course_teach_58a6ed9ee32a1545",
+    "database_id": "course_teach",
+    "question": "List the name of teachers whose hometown is not `` Little Lever Urban District '' ."
+  },
+  {
+    "case_id": "external_course_teach_6836a76f20642d62",
+    "database_id": "course_teach",
+    "question": "What are the names of the teachers and how many courses do they teach?"
+  },
+  {
+    "case_id": "external_course_teach_a15b937a6c3852e4",
+    "database_id": "course_teach",
+    "question": "What are the age and hometown of teachers?"
+  },
+  {
+    "case_id": "external_course_teach_a90c07d9d5fb849e",
+    "database_id": "course_teach",
+    "question": "What are the names of the teachers whose courses have not been arranged?"
+  },
+  {
+    "case_id": "external_course_teach_d5ccd60dd0513e62",
+    "database_id": "course_teach",
+    "question": "Show names of teachers that teach at least two courses."
+  },
+  {
+    "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+    "database_id": "dog_kennels",
+    "question": "Find the states where both owners and professionals live."
+  },
+  {
+    "case_id": "external_dog_kennels_3bed1d18ea095e48",
+    "database_id": "dog_kennels",
+    "question": "Return the first name, last name and email of the owners living in a state whose name contains the substring 'North'."
+  },
+  {
+    "case_id": "external_dog_kennels_5f29631b7287aefb",
+    "database_id": "dog_kennels",
+    "question": "How much does the most expensive charge type costs?"
+  },
+  {
+    "case_id": "external_dog_kennels_99e10daefae93b3e",
+    "database_id": "dog_kennels",
+    "question": "List the emails of the professionals who live in the state of Hawaii or the state of Wisconsin."
+  },
+  {
+    "case_id": "external_dog_kennels_b9c87e441963b8d0",
+    "database_id": "dog_kennels",
+    "question": "How many dogs have not gone through any treatment?"
+  },
+  {
+    "case_id": "external_dog_kennels_ca0d92216738585b",
+    "database_id": "dog_kennels",
+    "question": "What are the id, role, and first name of the professionals who have performed two or more treatments?"
+  },
+  {
+    "case_id": "external_dog_kennels_e21e6915192151fc",
+    "database_id": "dog_kennels",
+    "question": "List each owner's first name, last name, and the size of his for her dog."
+  },
+  {
+    "case_id": "external_dog_kennels_f04053f680e52ed3",
+    "database_id": "dog_kennels",
+    "question": "Find the arriving date and the departing date of the dogs that received a treatment."
+  },
+  {
+    "case_id": "external_flight_2_1962776e116f9f03",
+    "database_id": "flight_2",
+    "question": "What is the abbreviation of Airline \"JetBlue Airways\"?"
+  },
+  {
+    "case_id": "external_flight_2_1bbdb29fd76588bf",
+    "database_id": "flight_2",
+    "question": "How many flights fly from Aberdeen to Ashley?"
+  },
+  {
+    "case_id": "external_flight_2_59060b10db344a2c",
+    "database_id": "flight_2",
+    "question": "Give the flight numbers of flights arriving in Aberdeen."
+  },
+  {
+    "case_id": "external_flight_2_6b0856d8343233e0",
+    "database_id": "flight_2",
+    "question": "Return the number of flights arriving in Aberdeen."
+  },
+  {
+    "case_id": "external_flight_2_71ca2299e56319eb",
+    "database_id": "flight_2",
+    "question": "How many airlines are from USA?"
+  },
+  {
+    "case_id": "external_flight_2_ba7a417281056dea",
+    "database_id": "flight_2",
+    "question": "Give the airport code and airport name corresonding to the city Anthony."
+  },
+  {
+    "case_id": "external_flight_2_cc1d249d05dee220",
+    "database_id": "flight_2",
+    "question": "Return the number of flights."
+  },
+  {
+    "case_id": "external_flight_2_dd762b95172800f4",
+    "database_id": "flight_2",
+    "question": "Which airports do not have departing or arriving flights?"
+  },
+  {
+    "case_id": "external_orchestra_09dfdff61fbbeb1a",
+    "database_id": "orchestra",
+    "question": "Count the number of orchestras that have CD or DVD as their record format."
+  },
+  {
+    "case_id": "external_orchestra_333cd27fe66308a4",
+    "database_id": "orchestra",
+    "question": "Show the record companies shared by orchestras founded before 2003 and after 2003."
+  },
+  {
+    "case_id": "external_orchestra_725453fffae8b641",
+    "database_id": "orchestra",
+    "question": "List the names of orchestras that have no performance."
+  },
+  {
+    "case_id": "external_orchestra_7d626e678d642e36",
+    "database_id": "orchestra",
+    "question": "Please show the name of the conductor that has conducted orchestras founded after 2008."
+  },
+  {
+    "case_id": "external_orchestra_8775f636030ff775",
+    "database_id": "orchestra",
+    "question": "Please show the different record companies and the corresponding number of orchestras."
+  },
+  {
+    "case_id": "external_orchestra_9e252dcacdf09bde",
+    "database_id": "orchestra",
+    "question": "Return the names of conductors that do not have the nationality \"USA\"."
+  },
+  {
+    "case_id": "external_orchestra_b16253b5de2ff882",
+    "database_id": "orchestra",
+    "question": "What are the names of conductors whose nationalities are not \"USA\"?"
+  },
+  {
+    "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+    "database_id": "orchestra",
+    "question": "What are the names of conductors as well as the corresonding orchestras that they have conducted?"
+  },
+  {
+    "case_id": "external_poker_player_0bce930263776a39",
+    "database_id": "poker_player",
+    "question": "Give average earnings of poker players who are taller than 200."
+  },
+  {
+    "case_id": "external_poker_player_0c1c58daeade41a0",
+    "database_id": "poker_player",
+    "question": "List the final tables made and the best finishes of poker players."
+  },
+  {
+    "case_id": "external_poker_player_27c0d318d77ddd08",
+    "database_id": "poker_player",
+    "question": "Return the maximum final tables made across all poker players who have earnings below 200000."
+  },
+  {
+    "case_id": "external_poker_player_311ebb051349222c",
+    "database_id": "poker_player",
+    "question": "What are the names of people who do not play poker?"
+  },
+  {
+    "case_id": "external_poker_player_5aa2a36d84bc97bd",
+    "database_id": "poker_player",
+    "question": "Return the names of all the poker players."
+  },
+  {
+    "case_id": "external_poker_player_635f76c3b3aa43fc",
+    "database_id": "poker_player",
+    "question": "List the names of people that are not poker players."
+  },
+  {
+    "case_id": "external_poker_player_827c6d91a2ccdded",
+    "database_id": "poker_player",
+    "question": "What are the names of people who are not from Russia?"
+  },
+  {
+    "case_id": "external_poker_player_af17ae8ff067eded",
+    "database_id": "poker_player",
+    "question": "How many distinct nationalities are there?"
+  },
+  {
+    "case_id": "external_tvshow_1c60aeabf088515a",
+    "database_id": "tvshow",
+    "question": "List the Episode of all  TV series showed on TV Channel with series name \"Sky Radio\"."
+  },
+  {
+    "case_id": "external_tvshow_2ba6baeb8b8cc318",
+    "database_id": "tvshow",
+    "question": "What are the package options of all tv channels that are not playing any cartoons directed by Ben Jones?"
+  },
+  {
+    "case_id": "external_tvshow_38dfbde79a7487e2",
+    "database_id": "tvshow",
+    "question": "Find the series name and country of the tv channel that is playing some cartoons directed by Ben Jones and Michael Chang?"
+  },
+  {
+    "case_id": "external_tvshow_55ce63ef8ba641ea",
+    "database_id": "tvshow",
+    "question": "What is the title of all the cartools that are on the TV Channel with the series name \"Sky Radio\"?"
+  },
+  {
+    "case_id": "external_tvshow_5dd917867752c83a",
+    "database_id": "tvshow",
+    "question": "What is the pixel aspect ratio and country of origin for all TV channels that do not use English?"
+  },
+  {
+    "case_id": "external_tvshow_73697be8b93729ee",
+    "database_id": "tvshow",
+    "question": "List all cartoon directed by \"Ben Jones\"."
+  },
+  {
+    "case_id": "external_tvshow_cbea1679ac94abfa",
+    "database_id": "tvshow",
+    "question": "What is the series name of the TV Channel that shows the cartoon \"The Rise of the Blue Beetle\"?"
+  },
+  {
+    "case_id": "external_tvshow_f476e6a3b7fb5098",
+    "database_id": "tvshow",
+    "question": "How many TV Channels use the English language?"
+  }
+]

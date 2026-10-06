@@ -1,0 +1,73 @@
+{
+  "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+  "database_id": "cre_Doc_Template_Mgt",
+  "question": "What are the template ids of any templates used in more than a single document?",
+  "gold_sql": "SELECT template_id FROM Documents GROUP BY template_id HAVING COUNT(*) > 1",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [
+    "group_having"
+  ],
+  "family_id": "08adb6cf4f454356a7133470f4a576322ab264f8959d916469f1eef0f1fa1a04",
+  "accepted_links": [
+    {
+      "tables": [
+        "Documents"
+      ],
+      "columns": [
+        {
+          "table": "Documents",
+          "column": "Template_ID"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "kind": "derived_expression",
+          "expression": "COUNT(*)",
+          "operator": ">",
+          "value": 1,
+          "value_type": "numeric"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "having",
+          "expression": "COUNT(*) > 1",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": []
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "having",
+          "expression": "COUNT(*) > 1"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT template_id FROM Documents GROUP BY template_id HAVING count(*)  >  1",
+  "source_sqlite_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5",
+  "base_snapshot_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+  "base_snapshot_logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "calibration",
+  "domain": "document_management",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_cre_Doc_Template_Mgt_90f685508b260d35.audit.json",
+  "semantic_audit_sha256": "87fbd205d096aa4624b3430219070eb7aa44737604844c5f1456d2ee885b3cf8"
+}

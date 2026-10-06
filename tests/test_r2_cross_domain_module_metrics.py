@@ -79,3 +79,13 @@ def test_witness_hash_and_trajectory_do_not_prove_a_fabricated_value(tmp_path):
     metric = score_modules(reference([alternative(["name"])]), record, context)["value_grounding"]
     assert metric["witness_precision"] == {"correct": 1, "total": 2, "precision": .5}
     assert metric["unsupported_literal_rate"] == {"unsupported": 1, "total": 2, "rate": .5}
+
+
+def test_domain_witness_is_support_not_extra_equality_predicate():
+    from evaluation.r2_cross_domain_v1.module_metrics import score_modules
+    ref = alternative(['name'])
+    ref['constraints'] = [{'kind':'domain_predicate','table':'items','column':'name','operator':'prefix','value':'A_'}]
+    submitted = link(['name'], [{'table':'items','column':'name','value':'A_x','evidence_id':'w'}])
+    submitted['constraints'] = [{**ref['constraints'][0],'evidence_id':'w'}]
+    metric = score_modules(reference([ref]), {'linked_schema':submitted})['value_grounding']['predicates']
+    assert metric['correct'] == metric['predicted'] == metric['required'] == 1

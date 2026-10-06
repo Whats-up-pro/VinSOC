@@ -1,0 +1,96 @@
+{
+  "case_id": "external_poker_player_d8287831e92f83f5",
+  "database_id": "poker_player",
+  "split": "evaluation",
+  "status": "SEMANTIC_COVERAGE_OR_PARITY_BLOCKED",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+      "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09"
+    ],
+    "gold_result_digests": [
+      "d6ef6a14ae299031eab197e2ae220ba7defc01846469d44910de9238b5316bd3",
+      "8c6dff99d9b5a3870249effc49e6029f0b08fe8f07a5338d01f3789b84561129"
+    ],
+    "mutant_results": [],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT AVG(Earnings) FROM poker_player WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 0,
+    "semantic_mutants_killed": 0,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          5.0
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          5.0
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          5.21875
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          5.21875
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "poker_player"
+      ],
+      "columns": [
+        {
+          "table": "poker_player",
+          "column": "Earnings"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "2facaedd4b73080054962393f5a71c7e5ff9282f372c7f61ac816e8bc3b61d7d",
+      "constraints_verified": true,
+      "logical_sha256": "3ebc30f1de6b69e610a69e674efd38e423090ad6986b1f5d79353e5e8108972a"
+    },
+    {
+      "instance_id": "fixture_192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "192bde9542dab7dfe2ad2eb42cc687a1582f53e5de7131e40175121d32b1af09",
+      "constraints_verified": true,
+      "logical_sha256": "5cb80889403ba4377ee7c78ae47c5d28169d23a98a31af82e75dbbcd8bd8557d"
+    }
+  ]
+}

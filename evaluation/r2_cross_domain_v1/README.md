@@ -114,3 +114,41 @@ two adversarial instances per case, the oracle subset and benchmark lock remain
 pending. The external materialization did not record its producer source hash;
 the checkpoint receipt records tested source hashes without assigning retrospective
 producer provenance.
+
+## Verified benchmark (Task 3)
+
+The append-only qualification/audit versions retain all negative findings. The
+final semantic audit `offline_task3/semantic_candidates_v7/receipt.json` verifies
+120/120 calibration/evaluation candidates with two constraint-checked synthetic
+instances and executed mutants/equivalent controls. This is **not model accuracy**.
+`benchmarks/semantic_coverage.json` lists killed families per case; generated
+nonexecutable/undistinguished mutants remain visible in the underlying audit and
+are not counted as kills. Two finite fixtures cannot prove correctness on every DB.
+
+`benchmark.lock.json` locks 24 calibration and 96 evaluation questions, including
+64 external evaluation questions across eight databases/seven domains and 32
+in-domain CTU questions. Evaluation difficulty is 24 basic / 48 medium / 24 advanced.
+There are 93 evaluation families (61 external); correlated families remain disclosed.
+The twelve oracle IDs are a subset of the 96, not twelve extra primary observations.
+Eight historical CTU anchors are replayed separately; their saved Phase2 predictions
+remain 7/8, including case006 TOOL_LIMIT. Nothing is inferred from new model output.
+
+`runtime_registry.json` preserves the original twelve-database registry and adds a
+read-only adapter for the verified CTU bytes. Its generic logical hash uses a new
+typed-row/schema policy and is explicitly separate from the historical CTU logical
+hash `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`.
+No CTU data was rebuilt or old lock rewritten.
+
+```powershell
+python -m scripts.validate_r2_cross_domain --registry evaluation/r2_cross_domain_v1/runtime_registry.json --benchmarks evaluation/r2_cross_domain_v1/benchmarks --lock evaluation/r2_cross_domain_v1/benchmark.lock.json
+python -m pytest -q (Get-ChildItem tests -Filter 'test_r2_cross_domain_*.py' | ForEach-Object FullName)
+```
+
+The validator checks source archive/members, snapshot/catalog hashes, reference
+and runtime identity, oracle membership, semantic audit bytes and all 120 base
+gold queries. Runtime files contain only case ID/database ID/question. Module
+annotations describe typed mappings and parsed structure, not a unique acceptable
+SQL AST. End-to-end scoring uses actual query results and preserves duplicates,
+ordering, NULL and locked numeric tolerance. Benchmark locking grants **no paid
+or frozen authorization**. Live release/preflight is Task 4; expansion funding
+and model availability remain separate gates.

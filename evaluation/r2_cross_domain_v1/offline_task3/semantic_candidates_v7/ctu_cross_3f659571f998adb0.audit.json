@@ -1,0 +1,227 @@
+{
+  "case_id": "ctu_cross_3f659571f998adb0",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "fixture_91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df"
+    ],
+    "gold_result_digests": [
+      "03730baaa2c8ea7a7c69180a8fe27386f05766aba961139d83f39d3937f99132",
+      "03730baaa2c8ea7a7c69180a8fe27386f05766aba961139d83f39d3937f99132"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT protocol, COUNT(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT protocol, SUM(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT protocol, SUM(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset <> 'ctu13_s7' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT protocol, SUM(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol ORDER BY protocol DESC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT protocol, SUM(CASE WHEN bytes_out IS NULL OR bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol ORDER BY protocol",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT protocol, SUM(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE GROUP BY protocol ORDER BY protocol",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 6,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "null_test",
+          "operator": "is_null"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_in",
+          "kind": "null_test",
+          "operator": "is_null"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "is",
+          "stage": "expression",
+          "expression": "network_flows.bytes_out IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        },
+        {
+          "operator": "is",
+          "stage": "expression",
+          "expression": "network_flows.bytes_in IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        },
+        {
+          "stage": "if",
+          "expression": "network_flows.bytes_out IS NULL AND network_flows.bytes_in IS NULL"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "constraints_verified": true,
+      "logical_sha256": "db9c4ae042e379bf7032ced214d3fde9549153fda64fef0ed4175ce8372e7510"
+    },
+    {
+      "instance_id": "fixture_91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df",
+      "constraints_verified": true,
+      "logical_sha256": "5b60036f8b6b84ead9e63354313ea14e53729490397a660959c1ff4c76de5c34"
+    }
+  ]
+}

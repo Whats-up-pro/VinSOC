@@ -1,0 +1,396 @@
+{
+  "case_id": "ctu_cross_708b66575657429a",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_18381b749b28fd6d33a9bf5bd06bd96231c5ac2a4135338c9444b3cbf17fb230",
+      "fixture_62e915761667f750401e8584127f96770325dd58faf34f9de85541ce530b87b1"
+    ],
+    "gold_result_digests": [
+      "76de2129119b044dd7d84bfc6051197e93051de88b5ec11385da84db7114c1a7",
+      "76de2129119b044dd7d84bfc6051197e93051de88b5ec11385da84db7114c1a7"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(NULL) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "set_operation",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) UNION SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "set_operation",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) EXCEPT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' OR event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' OR event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' OR protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time >= CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' OR protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time >= CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol <> 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol <> 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)) AS shared",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s5' AND protocol = 'TCP' AND event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP) AND TRUE INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND protocol = 'TCP' AND event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP) AND TRUE) AS shared WHERE TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 15,
+    "semantic_mutants_killed": 4,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "TCP"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "TCP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "event_time",
+          "kind": "time_threshold",
+          "operator": ">",
+          "value": "2011-08-15 17:00:00"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time",
+          "kind": "time_threshold",
+          "operator": ">",
+          "value": "2011-08-16 14:00:00"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2011-08-15 17:00:00",
+              "value_type": "timestamp",
+              "cast_type": "TIMESTAMP"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2011-08-16 14:00:00",
+              "value_type": "timestamp",
+              "cast_type": "TIMESTAMP"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'TCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "TCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'TCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "TCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'TCP' AND network_flows.event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)"
+        },
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'TCP' AND network_flows.event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_18381b749b28fd6d33a9bf5bd06bd96231c5ac2a4135338c9444b3cbf17fb230",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "18381b749b28fd6d33a9bf5bd06bd96231c5ac2a4135338c9444b3cbf17fb230",
+      "constraints_verified": true,
+      "logical_sha256": "b8816b7307a23c457f064b561a288822ff96cc208751bd584008d82919d91007"
+    },
+    {
+      "instance_id": "fixture_62e915761667f750401e8584127f96770325dd58faf34f9de85541ce530b87b1",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "62e915761667f750401e8584127f96770325dd58faf34f9de85541ce530b87b1",
+      "constraints_verified": true,
+      "logical_sha256": "d49b34dcc5009883b46ff1691178dbd3e0ecca3daaaeb78e79b5c3f46f126f2c"
+    }
+  ]
+}

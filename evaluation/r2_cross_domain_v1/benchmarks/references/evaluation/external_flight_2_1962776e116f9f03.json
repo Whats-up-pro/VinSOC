@@ -1,0 +1,79 @@
+{
+  "case_id": "external_flight_2_1962776e116f9f03",
+  "database_id": "flight_2",
+  "question": "What is the abbreviation of Airline \"JetBlue Airways\"?",
+  "gold_sql": "SELECT Abbreviation FROM AIRLINES WHERE Airline = 'JetBlue Airways'",
+  "comparator": "unordered_multiset",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "b54d1f07b1a65f85eb78e06593f938a0c485718288fa8403e104654d114ab58a",
+  "accepted_links": [
+    {
+      "tables": [
+        "airlines"
+      ],
+      "columns": [
+        {
+          "table": "airlines",
+          "column": "Abbreviation"
+        },
+        {
+          "table": "airlines",
+          "column": "Airline"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "airlines",
+          "column": "Airline",
+          "operator": "=",
+          "value": "JetBlue Airways"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "airlines.airline = 'JetBlue Airways'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "JetBlue Airways",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airlines",
+              "column": "Airline"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "airlines.airline = 'JetBlue Airways'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT Abbreviation FROM AIRLINES WHERE Airline  =  \"JetBlue Airways\"",
+  "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+  "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+  "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "aviation",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_flight_2_1962776e116f9f03.audit.json",
+  "semantic_audit_sha256": "d85896684374fda903b83977066debc2263e2d7fa7d53b41d1678d8480a8f686"
+}

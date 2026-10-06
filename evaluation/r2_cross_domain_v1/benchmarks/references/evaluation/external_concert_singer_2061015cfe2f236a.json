@@ -1,0 +1,100 @@
+{
+  "case_id": "external_concert_singer_2061015cfe2f236a",
+  "database_id": "concert_singer",
+  "question": "How many concerts are there in year 2014 or 2015?",
+  "gold_sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' OR YEAR = '2015'",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [],
+  "family_id": "3a63a2e60e385bdafdb4b2bbbdbd2cf93cdc23a8c4c382f300d8fdc7f84512f7",
+  "accepted_links": [
+    {
+      "tables": [
+        "concert"
+      ],
+      "columns": [
+        {
+          "table": "concert",
+          "column": "Year"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "concert",
+          "column": "Year",
+          "operator": "=",
+          "value": "2014"
+        },
+        {
+          "table": "concert",
+          "column": "Year",
+          "operator": "=",
+          "value": "2015"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "concert.year = '2014'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2014",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "concert.year = '2015'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2015",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "concert.year = '2014' OR concert.year = '2015'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT count(*) FROM concert WHERE YEAR  =  2014 OR YEAR  =  2015",
+  "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+  "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+  "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "music",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_concert_singer_2061015cfe2f236a.audit.json",
+  "semantic_audit_sha256": "a9e22686fd577d70a43ddba4d72aa2b60aa18b475fda13eb203614caae9999c9"
+}

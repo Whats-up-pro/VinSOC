@@ -1,0 +1,229 @@
+{
+  "case_id": "ctu_cross_708b66575657429a",
+  "database_id": "ctu_dev",
+  "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+  "gold_sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='TCP' AND event_time>TIMESTAMP '2011-08-15 17:00:00' INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='TCP' AND event_time>TIMESTAMP '2011-08-16 14:00:00') AS shared",
+  "difficulty": "advanced",
+  "features": [
+    "nested",
+    "distinct",
+    "time"
+  ],
+  "family_id": "9ba1dd452c55c5a149fb6bd493ae36b7e9064122cbe6eb69199b72300bad4961",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "unordered_multiset",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "TCP"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "TCP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "event_time",
+          "kind": "time_threshold",
+          "operator": ">",
+          "value": "2011-08-15 17:00:00"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time",
+          "kind": "time_threshold",
+          "operator": ">",
+          "value": "2011-08-16 14:00:00"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2011-08-15 17:00:00",
+              "value_type": "timestamp",
+              "cast_type": "TIMESTAMP"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2011-08-16 14:00:00",
+              "value_type": "timestamp",
+              "cast_type": "TIMESTAMP"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'TCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "TCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'TCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "TCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'TCP' AND network_flows.event_time > CAST('2011-08-15 17:00:00' AS TIMESTAMP)"
+        },
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'TCP' AND network_flows.event_time > CAST('2011-08-16 14:00:00' AS TIMESTAMP)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 1,
+  "sample_gold_rows": [
+    [
+      459
+    ]
+  ],
+  "observed_result_sha256": "8e33c503083e45ef634eb3812f9029dd16bc18d52335b15e5104a4fd3166fc60",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_708b66575657429a.audit.json",
+  "semantic_audit_sha256": "1c90c320d33180f39c2a2ff95a1c98333789ea7beb7f101bf805a62893f8673e",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

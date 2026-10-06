@@ -1,0 +1,112 @@
+{
+  "case_id": "external_orchestra_333cd27fe66308a4",
+  "database_id": "orchestra",
+  "question": "Show the record companies shared by orchestras founded before 2003 and after 2003.",
+  "gold_sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded < 2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded > 2003",
+  "comparator": "unordered_multiset",
+  "difficulty": "advanced",
+  "features": [
+    "nested"
+  ],
+  "family_id": "dab310f59f7fba671b0a02cb617660ac5a79921ed526d91778e49aaa64014a47",
+  "accepted_links": [
+    {
+      "tables": [
+        "orchestra"
+      ],
+      "columns": [
+        {
+          "table": "orchestra",
+          "column": "Record_Company"
+        },
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded",
+          "kind": "numeric_threshold",
+          "operator": "<",
+          "value": 2003
+        },
+        {
+          "table": "orchestra",
+          "column": "Year_of_Founded",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 2003
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lt",
+          "stage": "where",
+          "expression": "orchestra.year_of_founded < 2003",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 2003,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "orchestra.year_of_founded > 2003",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 2003,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "orchestra",
+              "column": "Year_of_Founded"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "orchestra.year_of_founded < 2003"
+        },
+        {
+          "stage": "where",
+          "expression": "orchestra.year_of_founded > 2003"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT Record_Company FROM orchestra WHERE Year_of_Founded  <  2003 INTERSECT SELECT Record_Company FROM orchestra WHERE Year_of_Founded  >  2003",
+  "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+  "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+  "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "music",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_orchestra_333cd27fe66308a4.audit.json",
+  "semantic_audit_sha256": "f5d6389624f7c15de5f9d88a31568bfdf89425ccb32e3499b5ef80d1ea4df3bd"
+}

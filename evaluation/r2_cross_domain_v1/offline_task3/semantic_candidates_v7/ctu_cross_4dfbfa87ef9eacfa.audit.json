@@ -1,0 +1,185 @@
+{
+  "case_id": "ctu_cross_4dfbfa87ef9eacfa",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_7eec36f3e1e533f9a5bf292bb0f4347d8d198255b73ce7825f81648f675c4a92",
+      "fixture_0c14370f348ad5e58320d9eb7b0ec7409791b81149e8291cfcf760a031fd85a0"
+    ],
+    "gold_result_digests": [
+      "35fda1cd92d686f8ab4b831af9f4a104ff98b1ef7b58637aac47b267aba5d744",
+      "65576e907551867887b34d374cc8bd7eb707ed4fffc27c481502c5e0340148e5"
+    ],
+    "mutant_results": [
+      {
+        "family": "distinct",
+        "sql": "SELECT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND STARTS_WITH(label, 'flow=From-Normal')",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT DISTINCT dst_ip FROM network_flows",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' OR STARTS_WITH(label, 'flow=From-Normal')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset <> 'ctu13_s7' AND STARTS_WITH(label, 'flow=From-Normal')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "prefix_contains",
+        "sql": "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND CONTAINS(label, 'flow=From-Normal')",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset = 'ctu13_s7' AND STARTS_WITH(label, 'flow=From-Normal') AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "label",
+          "kind": "domain_predicate",
+          "operator": "prefix",
+          "value": "flow=From-Normal"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "startswith",
+          "stage": "where",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Normal')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Normal",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND STARTS_WITH(network_flows.label, 'flow=From-Normal')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_7eec36f3e1e533f9a5bf292bb0f4347d8d198255b73ce7825f81648f675c4a92",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "7eec36f3e1e533f9a5bf292bb0f4347d8d198255b73ce7825f81648f675c4a92",
+      "constraints_verified": true,
+      "logical_sha256": "7642fdd532ede839be3e427265ec575ffbd6e6c9477c82fdd4ada97805792e55"
+    },
+    {
+      "instance_id": "fixture_0c14370f348ad5e58320d9eb7b0ec7409791b81149e8291cfcf760a031fd85a0",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "0c14370f348ad5e58320d9eb7b0ec7409791b81149e8291cfcf760a031fd85a0",
+      "constraints_verified": true,
+      "logical_sha256": "3353c7a7b190a902cb8654e2c66c991f013cf0456bf725813ba485826eb14b1b"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+  "database_id": "ctu_dev",
+  "question": "Count flows with a missing source port and label beginning flow=From-Normal for each source dataset, ordered by dataset.",
+  "gold_sql": "SELECT source_dataset,COUNT(*) FROM network_flows WHERE src_port IS NULL AND starts_with(label,'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "null",
+    "prefix",
+    "order_limit"
+  ],
+  "family_id": "ad0adac816d3a9ebda1db10bad4cf04d14dadc2e4c1687bda8efee481c7ace5d",
+  "split": "calibration",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_port"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "src_port",
+          "kind": "null_test",
+          "operator": "is_null"
+        },
+        {
+          "table": "network_flows",
+          "column": "label",
+          "kind": "domain_predicate",
+          "operator": "prefix",
+          "value": "flow=From-Normal"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "is",
+          "stage": "where",
+          "expression": "network_flows.src_port IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "src_port"
+            }
+          ]
+        },
+        {
+          "operator": "startswith",
+          "stage": "where",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Normal')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Normal",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.src_port IS NULL AND STARTS_WITH(network_flows.label, 'flow=From-Normal')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 2,
+  "sample_gold_rows": [
+    [
+      "ctu13_s5",
+      3
+    ],
+    [
+      "ctu13_s7",
+      1
+    ]
+  ],
+  "observed_result_sha256": "175e3b1c1e36413dbb51a1a1c3dd7b9e2703a070a52c0bf5ee7d2b83471714a1",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_97cc9c9d5d2fdd3b.audit.json",
+  "semantic_audit_sha256": "90ff36f03c9fad549ed2bff0b24274a46eea20de75813efe39b00c8a873bffd3",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

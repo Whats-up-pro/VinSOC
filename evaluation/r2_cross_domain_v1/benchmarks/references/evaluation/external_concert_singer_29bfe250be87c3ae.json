@@ -1,0 +1,69 @@
+{
+  "case_id": "external_concert_singer_29bfe250be87c3ae",
+  "database_id": "concert_singer",
+  "question": "List all song names by singers above the average age.",
+  "gold_sql": "SELECT song_name FROM singer WHERE age > (SELECT AVG(age) FROM singer)",
+  "comparator": "unordered_multiset",
+  "difficulty": "advanced",
+  "features": [
+    "nested"
+  ],
+  "family_id": "9b4b7b551d687a3f2e1221e4ac1eba55b62ddd9307f4cbfa77f1c01b99b052d6",
+  "accepted_links": [
+    {
+      "tables": [
+        "singer"
+      ],
+      "columns": [
+        {
+          "table": "singer",
+          "column": "Age"
+        },
+        {
+          "table": "singer",
+          "column": "Song_Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "singer.age > (SELECT AVG(singer.age) AS _col_0 FROM singer AS singer)",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "singer",
+              "column": "Age"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "singer.age > (SELECT AVG(singer.age) AS _col_0 FROM singer AS singer)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT song_name FROM singer WHERE age  >  (SELECT avg(age) FROM singer)",
+  "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+  "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+  "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "music",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_concert_singer_29bfe250be87c3ae.audit.json",
+  "semantic_audit_sha256": "282e7ab1257a71738c2f0d44ab4150cc186839d6b4489d9932a5476b923081c3"
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "candidate_semantic_validation_not_benchmark_or_model_score",
+  "created_at_utc": "2026-10-06T07:49:06.274269+00:00",
+  "source_code_sha256_before_execution": {
+    "scripts/audit_r2_cross_domain_semantics.py": "6253db1850209e2495b0b529323e0aec60d296944bd53554e2fc2da5bc2d53dc",
+    "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+    "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+    "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+    "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb"
+  },
+  "registry_sha256": "f592dfe86ebf12f957e716f135be0471b0e5170fd1eef7fe2d11c65e246545df",
+  "ctu_audit_sha256": "cf286fe196c21145702e978630f5fbee0c00fef59b784c21db760af668a63afe",
+  "inventory_scope": "complete_candidates",
+  "case_count": 120,
+  "passed": 120,
+  "blocked": [],
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "benchmark_locked": false
+}

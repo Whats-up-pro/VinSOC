@@ -122,6 +122,15 @@ def annotate_reference(sql, context):
             condition(root)
             structures.append({"stage": node.key, "expression": root.sql(dialect="duckdb")})
     operators = {exp.EQ: "=", exp.NEQ: "!=", exp.GT: ">", exp.GTE: ">=", exp.LT: "<", exp.LTE: "<="}
+
+    def typed_item(location, constant, operator):
+        item = {key: location[key] for key in ('table', 'column')}
+        if constant['value_type'] == 'string' and location['type'] == 'VARCHAR' and operator in ('=', '!='):
+            stored.append({**item, 'operator': operator, 'value': constant['value']})
+        else:
+            kind = 'numeric_threshold' if constant['value_type'] == 'numeric' else 'time_threshold' if constant['value_type'] == 'timestamp' or location['type'].startswith(('TIMESTAMP', 'DATE')) else 'lexical_threshold'
+            constraints.append({**item, 'kind': kind, 'operator': operator, 'value': constant['value']})
+
     for node in tree.walk():
         if isinstance(node, exp.Predicate) or id(node) in atomic_conditions:
             dependencies = sorted({(item["table"], item["column"]) for column in node.find_all(exp.Column)
@@ -137,6 +146,34 @@ def annotate_reference(sql, context):
             if isinstance(literal, exp.Literal) and literal.this.isdigit():
                 constraints.append({"kind": "limit", "value": int(literal.this)})
             continue
+        location = resolved.get(id(node.this)) if isinstance(node.this, exp.Column) else None
+        negated = isinstance(node.parent, exp.Not)
+        if isinstance(node, exp.In) and location:
+            for literal in node.expressions:
+                if (constant := _constant(literal)) is not None:
+                    typed_item(location, constant, '!=' if negated else '=')
+        if isinstance(node, exp.Between) and location:
+            for bound, op in (('low', '<' if negated else '>='), ('high', '>' if negated else '<=')):
+                if (constant := _constant(node.args[bound])) is not None:
+                    typed_item(location, constant, op)
+        if isinstance(node, exp.Is) and location and isinstance(node.expression, exp.Null):
+            constraints.append({'table':location['table'],'column':location['column'],
+                'kind':'null_test','operator':'is_not_null' if negated else 'is_null'})
+        if isinstance(node, (exp.Like, exp.ILike, exp.StartsWith)):
+            dependencies = [resolved[id(c)] for c in node.this.find_all(exp.Column) if id(c) in resolved]
+            literals = _literal_leaves(node.expression)
+            if len(dependencies) == 1 and len(literals) == 1 and literals[0]['value_type'] == 'string':
+                target = dependencies[0]
+                pattern = {'table':target['table'],'column':target['column'],'kind':'domain_predicate',
+                    'operator':'prefix' if isinstance(node, exp.StartsWith) else 'ilike' if isinstance(node, exp.ILike) else 'like',
+                    'value':literals[0]['value']}
+                if isinstance(node.parent, exp.Escape):
+                    pattern['escape'] = node.parent.expression.this
+                if negated or isinstance(node.parent, exp.Escape) and isinstance(node.parent.parent, exp.Not):
+                    pattern['negated'] = True
+                if any(isinstance(part, exp.Anonymous) and part.name.upper() == 'TRANSLATE' for part in node.this.walk()):
+                    pattern['ascii_fold'] = True
+                constraints.append(pattern)
         operator = operators.get(type(node))
         if operator is None:
             continue

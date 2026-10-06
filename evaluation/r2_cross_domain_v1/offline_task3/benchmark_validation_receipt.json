@@ -1,0 +1,67 @@
+{
+  "scope": "offline_benchmark_validation_not_model_score",
+  "inventory": {
+    "counts": {
+      "calibration": 24,
+      "evaluation": 96
+    },
+    "difficulty": {
+      "medium": 48,
+      "advanced": 24,
+      "basic": 24
+    },
+    "external_features": {
+      "join": 22,
+      "nested": 14,
+      "order_limit": 2,
+      "group_having": 8,
+      "distinct": 2
+    },
+    "evaluation_features": {
+      "distinct": 13,
+      "null": 2,
+      "nested": 22,
+      "order_limit": 15,
+      "window": 1,
+      "group_having": 20,
+      "prefix": 3,
+      "time": 2,
+      "join": 22
+    },
+    "external_domains": [
+      "animal_services",
+      "automotive",
+      "aviation",
+      "competitive_games",
+      "education",
+      "music",
+      "television"
+    ],
+    "external_calibration_databases": [
+      "cre_Doc_Template_Mgt",
+      "student_transcripts_tracking",
+      "voter_1",
+      "world_1"
+    ],
+    "external_evaluation_databases": [
+      "car_1",
+      "concert_singer",
+      "course_teach",
+      "dog_kennels",
+      "flight_2",
+      "orchestra",
+      "poker_player",
+      "tvshow"
+    ],
+    "evaluation_family_count": 93,
+    "external_evaluation_family_count": 61,
+    "family_independence_assumed": false
+  },
+  "benchmark_lock_sha256": "10e124eab0bb918d69595811619990a57e626f64ee23997648cbf79f07029f7d",
+  "base_gold_replayed": 120,
+  "oracle_count": 12,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "release_paid_authorized": false,
+  "frozen_closed": true
+}

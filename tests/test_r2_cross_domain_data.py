@@ -251,3 +251,25 @@ def test_metadata_has_platform_independent_lf_bytes(tmp_path):
     target = tmp_path / "receipt.json"
     _write_json(target, {"source": "fixture"})
     assert b"\r\n" not in target.read_bytes()
+
+
+def test_register_verified_existing_snapshot_does_not_rebuild_or_relabel_source(tmp_path):
+    import hashlib
+    import json
+    import duckdb
+    from evaluation.r2_cross_domain_v1.data import describe_existing_snapshot, DatabaseContext
+    path = tmp_path / 'existing.duckdb'
+    with duckdb.connect(str(path)) as connection:
+        connection.execute('CREATE TABLE other_domain (a INTEGER PRIMARY KEY, b VARCHAR); INSERT INTO other_domain VALUES (1,NULL),(2,\'x\')')
+    before = path.read_bytes()
+    entry = describe_existing_snapshot(path, 'other', {'source_type':'verified_member_manifest',
+        'source_sha256':'a'*64, 'source_sha256_scope':'manifest_bytes', 'source_members':[{'sha256':'b'*64}]})
+    assert entry['source_type'] == 'verified_member_manifest'
+    assert entry['source_sha256_scope'] == 'manifest_bytes'
+    assert entry['row_counts'] == {'other_domain':2}
+    assert entry['primary_keys'] == {'other_domain':['a']}
+    registry=tmp_path/'registry.json'
+    registry.write_text(json.dumps({'databases':[{**entry,'snapshot_path':'existing.duckdb'}]}))
+    context=DatabaseContext.from_manifest(registry, 'other')
+    assert context.identity['duckdb_binary_sha256'] == hashlib.sha256(before).hexdigest()
+    assert path.read_bytes() == before

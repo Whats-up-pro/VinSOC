@@ -1,0 +1,104 @@
+{
+  "case_id": "ctu_cross_e36ee009626c71c2",
+  "database_id": "ctu_dev",
+  "question": "Return total outbound plus inbound bytes by protocol in CTU scenario 5, treating missing inbound bytes as zero; order by protocol.",
+  "gold_sql": "SELECT protocol,SUM(bytes_out+COALESCE(bytes_in,0)) FROM network_flows WHERE source_dataset='ctu13_s5' GROUP BY protocol ORDER BY protocol",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "null",
+    "order_limit"
+  ],
+  "family_id": "bf523b3d2a9241785f3244235f268542f8a5cc2ce1c4f8fa2db0c9541b34ec7a",
+  "split": "calibration",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 10,
+  "sample_gold_rows": [
+    [
+      "ARP",
+      56400
+    ],
+    [
+      "ICMP",
+      1580334
+    ],
+    [
+      "IGMP",
+      9000
+    ]
+  ],
+  "observed_result_sha256": "39621ae978a205575d5378b17e77beef1875525fce8d8231cdffb9d2f0862651",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_e36ee009626c71c2.audit.json",
+  "semantic_audit_sha256": "7e7e96dafb90d8d0977cd3f401ba2a4d3463523a942f5d6d12689cca72adecc6",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

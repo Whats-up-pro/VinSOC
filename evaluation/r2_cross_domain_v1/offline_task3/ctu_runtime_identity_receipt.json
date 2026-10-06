@@ -1,0 +1,13 @@
+{
+  "scope": "read-only reuse of verified S5/S7 bytes; no rebuild or changed historical locks",
+  "origin_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "generic_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+  "binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "counts": {
+    "dataset_provenance": 2,
+    "network_flows": 243906
+  },
+  "tested_adapter_sha256": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+  "external_model_calls": 0,
+  "inference_cost_usd": 0
+}

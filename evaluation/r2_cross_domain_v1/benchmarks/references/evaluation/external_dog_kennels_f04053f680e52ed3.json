@@ -1,0 +1,90 @@
+{
+  "case_id": "external_dog_kennels_f04053f680e52ed3",
+  "database_id": "dog_kennels",
+  "question": "Find the arriving date and the departing date of the dogs that received a treatment.",
+  "gold_sql": "SELECT DISTINCT T1.date_arrived, T1.date_departed FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id = T2.dog_id",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [
+    "join",
+    "distinct"
+  ],
+  "family_id": "44b932d79f8897cc4a36b71faf3edb6c614dcaa5d126e31ffb53eac172f7bac8",
+  "accepted_links": [
+    {
+      "tables": [
+        "Dogs",
+        "Treatments"
+      ],
+      "columns": [
+        {
+          "table": "Dogs",
+          "column": "date_arrived"
+        },
+        {
+          "table": "Dogs",
+          "column": "date_departed"
+        },
+        {
+          "table": "Dogs",
+          "column": "dog_id"
+        },
+        {
+          "table": "Treatments",
+          "column": "dog_id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "dog_id",
+          "from_table": "Treatments",
+          "to_column": "dog_id",
+          "to_table": "Dogs"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.dog_id = t2.dog_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Dogs",
+              "column": "dog_id"
+            },
+            {
+              "table": "Treatments",
+              "column": "dog_id"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.dog_id = t2.dog_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT DISTINCT T1.date_arrived ,  T1.date_departed FROM Dogs AS T1 JOIN Treatments AS T2 ON T1.dog_id  =  T2.dog_id",
+  "source_sqlite_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+  "base_snapshot_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+  "base_snapshot_logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "animal_services",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_dog_kennels_f04053f680e52ed3.audit.json",
+  "semantic_audit_sha256": "0377e2dc7b8db05013ddd3e870f0e009f41af0b10136407f797b6abb1e3587d4"
+}

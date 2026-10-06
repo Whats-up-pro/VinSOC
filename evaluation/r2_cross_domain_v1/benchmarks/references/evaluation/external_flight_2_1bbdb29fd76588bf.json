@@ -1,0 +1,172 @@
+{
+  "case_id": "external_flight_2_1bbdb29fd76588bf",
+  "database_id": "flight_2",
+  "question": "How many flights fly from Aberdeen to Ashley?",
+  "gold_sql": "SELECT COUNT(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport = T2.AirportCode JOIN AIRPORTS AS T3 ON T1.SourceAirport = T3.AirportCode WHERE T2.City = 'Ashley' AND T3.City = 'Aberdeen'",
+  "comparator": "unordered_multiset",
+  "difficulty": "advanced",
+  "features": [
+    "join"
+  ],
+  "family_id": "91823857d983e9e19f21d9acd38e3f107819ff103cb7c89fd65eb71e2e2e8b3e",
+  "accepted_links": [
+    {
+      "tables": [
+        "airports",
+        "flights"
+      ],
+      "columns": [
+        {
+          "table": "airports",
+          "column": "AirportCode"
+        },
+        {
+          "table": "airports",
+          "column": "City"
+        },
+        {
+          "table": "flights",
+          "column": "DestAirport"
+        },
+        {
+          "table": "flights",
+          "column": "SourceAirport"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "DestAirport",
+          "from_table": "flights",
+          "to_column": "AirportCode",
+          "to_table": "airports"
+        },
+        {
+          "from_column": "SourceAirport",
+          "from_table": "flights",
+          "to_column": "AirportCode",
+          "to_table": "airports"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "airports",
+          "column": "City",
+          "operator": "=",
+          "value": "Ashley"
+        },
+        {
+          "table": "airports",
+          "column": "City",
+          "operator": "=",
+          "value": "Aberdeen"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.destairport = t2.airportcode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "AirportCode"
+            },
+            {
+              "table": "flights",
+              "column": "DestAirport"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.sourceairport = t3.airportcode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "AirportCode"
+            },
+            {
+              "table": "flights",
+              "column": "SourceAirport"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.city = 'Ashley'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Ashley",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "City"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t3.city = 'Aberdeen'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Aberdeen",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "City"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.destairport = t2.airportcode"
+        },
+        {
+          "stage": "join",
+          "expression": "t1.sourceairport = t3.airportcode"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.city = 'Ashley' AND t3.city = 'Aberdeen'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT count(*) FROM FLIGHTS AS T1 JOIN AIRPORTS AS T2 ON T1.DestAirport  =  T2.AirportCode JOIN AIRPORTS AS T3 ON T1.SourceAirport  =  T3.AirportCode WHERE T2.City  =  \"Ashley\" AND T3.City  =  \"Aberdeen\"",
+  "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+  "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+  "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "aviation",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_flight_2_1bbdb29fd76588bf.audit.json",
+  "semantic_audit_sha256": "d5339d6b7515bf7ab44bef7a22ae3af4a1b6e471f4f8f3f03e8e018b0c3cff63"
+}

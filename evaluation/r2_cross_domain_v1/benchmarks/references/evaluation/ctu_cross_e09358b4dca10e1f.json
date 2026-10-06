@@ -1,0 +1,162 @@
+{
+  "case_id": "ctu_cross_e09358b4dca10e1f",
+  "database_id": "ctu_dev",
+  "question": "List event time, source IP and destination IP of ARP flows in CTU scenario 7 with a missing destination port.",
+  "gold_sql": "SELECT event_time,src_ip,dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='ARP' AND dst_port IS NULL",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "0cc1e1d84ae511b94f6cadb45ee607d40324fea63eeb46e7e63331b9d4019534",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "unordered_multiset",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_port"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "ARP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "dst_port",
+          "kind": "null_test",
+          "operator": "is_null"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "is",
+          "stage": "where",
+          "expression": "network_flows.dst_port IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'ARP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ARP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'ARP' AND network_flows.dst_port IS NULL"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 64,
+  "sample_gold_rows": [
+    [
+      "2011-08-16T13:51:25.003668",
+      "147.32.87.78",
+      "147.32.87.78"
+    ],
+    [
+      "2011-08-16T13:51:29.275174",
+      "147.32.87.44",
+      "147.32.87.1"
+    ],
+    [
+      "2011-08-16T13:51:29.878029",
+      "147.32.87.52",
+      "147.32.87.1"
+    ]
+  ],
+  "observed_result_sha256": "6fef6d189c1ef8a2ccf094f8825c65473168a67203b5b87ca4b0e01d71683d01",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_e09358b4dca10e1f.audit.json",
+  "semantic_audit_sha256": "ae1b06789c3fa9b582dacf81ff7af9cb51379af041260db9cf0692ae1d2a9106",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

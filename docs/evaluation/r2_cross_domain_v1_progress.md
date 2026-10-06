@@ -164,7 +164,9 @@ Semantic checkpoint verification:
   used to remove questions. All selection is before inference.
 - [x] Final focused command: `python -m pytest -q tests/test_r2_cross_domain_*.py`:
   119 passed. Full `python -m pytest -q`: 949 passed, 1654 existing warnings.
-- [ ] Semantic checkpoint commit/push and exact-SHA CI.
+- [x] Semantic checkpoint `bd9dd8d0eb289d45721b5280831f09e67d7dd20c`
+  commit/push; Python 3.11/3.12 CI successful:
+  https://github.com/Whats-up-pro/VinSOC/actions/runs/37430956373.
 
 The final benchmark, runtime CTU registry, oracle subset and release remain pending.
 Module metrics currently verify schema items and typed mappings, not every possible
@@ -183,3 +185,45 @@ data/semantic exclusion; do not add a tie breaker to the source gold to rescue i
 Ruling: a synthetic generator is not a coverage certificate. NOT_DISTINGUISHED
 mutants and failed parity remain explicit failures; they cannot be counted as
 semantic kills or silently omitted from the data gate.
+
+### Task 3 final benchmark gate
+
+- [x] Source-only qualification of all 34 eligible medium questions in the final
+  blocked database: 22 PASS / 12 source ORDER failures, before inference.
+  Receipt retained; errors in synthetic generation were never used as exclusions.
+- [x] Seeded final candidate v6 materialization: 80/80 base gold parity.
+- [x] Final semantic v7: 120/120 PASS, two verified fixtures per case, executable
+  killed mutants and equivalent controls; per-family coverage retained.
+- [x] Typed mapping regressions RED/GREEN: IN/BETWEEN/NULL/pattern annotations,
+  inequality operator retained, pattern witness not counted as extra equality,
+  lexical/null/LIKE constraints with wildcard/escape and provenance checks.
+- [x] Existing-snapshot registry adapter RED/GREEN, read-only CTU source validation.
+  Historical binary `0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9`
+  and logical `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`
+  are preserved. Generic logical identity is separately named
+  `0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0`.
+- [x] Benchmark/runtime/oracle/hash validator tests RED/GREEN.
+- [x] 24 calibration / 96 evaluation locked; 8 external evaluation DB / 7 domains;
+  24/48/24 difficulty, 22 external JOIN and 14 nested cases, 93 evaluation families.
+  Oracle 12 is a pre-inference subset; eight anchors replay separately at 7/8.
+- [x] `python -m scripts.validate_r2_cross_domain --registry evaluation/r2_cross_domain_v1/runtime_registry.json --benchmarks evaluation/r2_cross_domain_v1/benchmarks --lock evaluation/r2_cross_domain_v1/benchmark.lock.json --output evaluation/r2_cross_domain_v1/offline_task3/benchmark_validation_receipt.json`
+  exit 0; 120 base gold replays and all source/snapshot identities verified.
+- [x] PowerShell targeted path expansion: 130 tests PASS. Literal wildcard
+  invocation was rejected by pytest (exit 1) and is not counted as pass.
+  Earlier checkpoint command labels with a wildcard are shorthand, not portable
+  literal PowerShell invocations; the logged 119-test result remains unchanged.
+- [ ] Full tests, compile/diff/preservation, commit/push, exact-SHA CI.
+
+Ruling: add typed lexical/null/pattern forms and preserve != in the new generic
+contract because offline fixtures revealed unsupported types and metric false
+penalties. This occurs before model inference; no case-specific rules, old prompts,
+production schemas or historical lock bytes change. Cost if wrong: mapping
+diagnostics may still underrepresent equivalent SQL; execution scoring stays separate.
+
+Ruling: module predicate F1 measures typed literal/operator mappings, not Boolean
+equivalence. Parsed Boolean structure and finite semantic executions remain separate
+diagnostics; never use the item score as headline EX. Cost if wrong: an analyst
+could overinterpret module attribution; the recorded policy states this limit.
+
+Task 4 will follow this gate. Paid Tasks 5/6 and all frozen runs remain unauthorized.
+External model calls **0**, new inference cost **$0**.

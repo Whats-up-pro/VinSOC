@@ -1,0 +1,177 @@
+{
+  "case_id": "external_poker_player_827c6d91a2ccdded",
+  "database_id": "poker_player",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_744b714ff57f50c02eb0f4c9c6269425bae7f4f28f5751ff34e04f0fffe8433b",
+      "fixture_b9ea0f19f66879c4f72815cffddc710f5a7aab87346a68f28e7ab409e675aaea"
+    ],
+    "gold_result_digests": [
+      "ae866da4ace40c442c7393340e64b8a9817f3ea7fc2a38ac90b2ad7cc0f043c6",
+      "812cd8a29c36d512c3f8ee5a5b6b7743a7de970d9a599681db36172a485d872d"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Name FROM people",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Name FROM people WHERE Nationality = 'Russia'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Name FROM people WHERE Nationality <> 'Russia' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "people"
+      ],
+      "columns": [
+        {
+          "table": "people",
+          "column": "Name"
+        },
+        {
+          "table": "people",
+          "column": "Nationality"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "people",
+          "column": "Nationality",
+          "operator": "!=",
+          "value": "Russia"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "neq",
+          "stage": "where",
+          "expression": "people.nationality <> 'Russia'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Russia",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "people",
+              "column": "Nationality"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "people.nationality <> 'Russia'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_744b714ff57f50c02eb0f4c9c6269425bae7f4f28f5751ff34e04f0fffe8433b",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "744b714ff57f50c02eb0f4c9c6269425bae7f4f28f5751ff34e04f0fffe8433b",
+      "constraints_verified": true,
+      "logical_sha256": "25c4b4bc058a9a5c319a55f706c165737bff130cef7402f27e930be593d7298d"
+    },
+    {
+      "instance_id": "fixture_b9ea0f19f66879c4f72815cffddc710f5a7aab87346a68f28e7ab409e675aaea",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "b9ea0f19f66879c4f72815cffddc710f5a7aab87346a68f28e7ab409e675aaea",
+      "constraints_verified": true,
+      "logical_sha256": "8793f4e7f6a5f5879e284347ba5e2c0231acb62a34f2cb8c9b3a823e1df95159"
+    }
+  ]
+}

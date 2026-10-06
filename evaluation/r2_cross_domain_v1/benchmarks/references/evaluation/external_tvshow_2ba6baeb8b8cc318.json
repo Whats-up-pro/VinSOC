@@ -1,0 +1,116 @@
+{
+  "case_id": "external_tvshow_2ba6baeb8b8cc318",
+  "database_id": "tvshow",
+  "question": "What are the package options of all tv channels that are not playing any cartoons directed by Ben Jones?",
+  "gold_sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon WHERE directed_by = 'Ben Jones')",
+  "comparator": "unordered_multiset",
+  "difficulty": "advanced",
+  "features": [
+    "nested"
+  ],
+  "family_id": "d83d4d2556fe19ca61a3e529c5f0a368f004583b31fa45e5755ca1a0c72f17aa",
+  "accepted_links": [
+    {
+      "tables": [
+        "Cartoon",
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "Cartoon",
+          "column": "Channel"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Directed_by"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Package_Option"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "id"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by",
+          "operator": "=",
+          "value": "Ben Jones"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "in",
+          "stage": "where",
+          "expression": "tv_channel.id IN (SELECT cartoon.channel AS channel FROM cartoon AS cartoon WHERE cartoon.directed_by = 'Ben Jones')",
+          "negated": true,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Channel"
+            },
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            },
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Ben Jones",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "NOT tv_channel.id IN (SELECT cartoon.channel AS channel FROM cartoon AS cartoon WHERE cartoon.directed_by = 'Ben Jones')"
+        },
+        {
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT package_option FROM TV_Channel WHERE id NOT IN (SELECT channel FROM cartoon WHERE directed_by  =  'Ben Jones')",
+  "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+  "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+  "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "television",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_tvshow_2ba6baeb8b8cc318.audit.json",
+  "semantic_audit_sha256": "4e0cb238e0a22880787e4adb1827cd2ee972aa9a87dd7687a15aa82412283425"
+}

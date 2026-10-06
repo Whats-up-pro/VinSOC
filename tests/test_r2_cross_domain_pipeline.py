@@ -382,3 +382,34 @@ def test_low_cardinality_domain_values_have_controller_owned_witnesses(context):
     assert {witness["value"] for witness in witnesses} == {"Ada", "Lin"}
     linked = validate_link("Find Ada", _link(witnesses[0]["evidence_id"]), tools.trajectory, context)
     assert linked["grounded_values"][0]["value"] == witnesses[0]["value"]
+
+
+def test_inequality_operator_is_preserved_and_invalid_operator_rejected(context):
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from evaluation.r2_cross_domain_v1.grounding import validate_link, GroundingError
+    tools = DatabaseTools(context)
+    result = tools.value_search({'table':'customers','column':'name','query':'Ada'})
+    submitted = _link(result['matches'][0]['evidence_id'])
+    submitted['grounded_values'][0]['operator'] = '!='
+    assert validate_link('Exclude Ada', submitted, tools.trajectory, context)['grounded_values'][0]['operator'] == '!='
+    submitted['grounded_values'][0]['operator'] = 'DROP'
+    with pytest.raises(GroundingError):
+        validate_link('Exclude Ada', submitted, tools.trajectory, context)
+
+
+def test_lexical_null_and_like_constraints_are_typed_not_catalog_fabrication(context):
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from evaluation.r2_cross_domain_v1.grounding import validate_link, GroundingError
+    tools = DatabaseTools(context)
+    result = tools.value_search({'table':'customers','column':'name','query':'Ada'})
+    submitted = _link(result['matches'][0]['evidence_id'])
+    submitted['constraints'] = [
+        {'kind':'lexical_threshold','table':'customers','column':'name','operator':'>','value':'B'},
+        {'kind':'null_test','table':'customers','column':'name','operator':'is_not_null'},
+        {'kind':'domain_predicate','table':'customers','column':'name','operator':'like','value':'A_a','evidence_id':result['matches'][0]['evidence_id']},
+    ]
+    assert validate_link('Names after B matching A_a', submitted, tools.trajectory, context)['constraints'] == submitted['constraints']
+    submitted['constraints'][2]['value'] = 'A\\_a'
+    submitted['constraints'][2]['escape'] = '\\'
+    with pytest.raises(GroundingError, match='DOMAIN'):
+        validate_link('Literal underscore', submitted, tools.trajectory, context)

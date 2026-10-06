@@ -1,0 +1,92 @@
+{
+  "case_id": "external_concert_singer_4d9fb537dd762b49",
+  "database_id": "concert_singer",
+  "question": "what is the name and nation of the singer who have a song having 'Hey' in its name?",
+  "gold_sql": "SELECT name, country FROM singer WHERE TRANSLATE(song_name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%Hey%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')",
+  "comparator": "unordered_multiset",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "85d9ec1e47a575c2a1c316043b89a5f7cbe80727e2407367eecc9d993b01343b",
+  "accepted_links": [
+    {
+      "tables": [
+        "singer"
+      ],
+      "columns": [
+        {
+          "table": "singer",
+          "column": "Country"
+        },
+        {
+          "table": "singer",
+          "column": "Name"
+        },
+        {
+          "table": "singer",
+          "column": "Song_Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "like",
+          "stage": "where",
+          "expression": "TRANSLATE(singer.song_name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%Hey%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              "value_type": "string"
+            },
+            {
+              "value": "abcdefghijklmnopqrstuvwxyz",
+              "value_type": "string"
+            },
+            {
+              "value": "%Hey%",
+              "value_type": "string"
+            },
+            {
+              "value": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              "value_type": "string"
+            },
+            {
+              "value": "abcdefghijklmnopqrstuvwxyz",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "singer",
+              "column": "Song_Name"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "TRANSLATE(singer.song_name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') LIKE TRANSLATE('%Hey%', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT name ,  country FROM singer WHERE song_name LIKE '%Hey%'",
+  "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+  "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+  "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "music",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_concert_singer_4d9fb537dd762b49.audit.json",
+  "semantic_audit_sha256": "e0a5412307dc6eafa0570c5f13939c2f2785823a2b329a5dad0bd45100ef947f"
+}

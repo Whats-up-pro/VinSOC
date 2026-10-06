@@ -1,0 +1,159 @@
+{
+  "case_id": "external_tvshow_f476e6a3b7fb5098",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_d5a2e872161a2626ab8036d6ad01ae62538d2a1741abcbb9d9bcc66d7e4ec5fb",
+      "fixture_67d18b115f87c4a405d76ab031918c745bf6a1693aa3c24a5776eb5a1641e323"
+    ],
+    "gold_result_digests": [
+      "0874e2070c8cb9320e4e9d3e3140ad8ad50b4fca18f64dc23f9be967c54ebff3",
+      "d6ef6a14ae299031eab197e2ae220ba7defc01846469d44910de9238b5316bd3"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(NULL) FROM TV_Channel WHERE LANGUAGE = 'English'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM TV_Channel",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM TV_Channel WHERE LANGUAGE <> 'English'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM TV_Channel WHERE LANGUAGE = 'English' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          4
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          4
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          5
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          5
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "TV_Channel",
+          "column": "Language"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "TV_Channel",
+          "column": "Language",
+          "operator": "=",
+          "value": "English"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "tv_channel.language = 'English'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "English",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "Language"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "tv_channel.language = 'English'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_d5a2e872161a2626ab8036d6ad01ae62538d2a1741abcbb9d9bcc66d7e4ec5fb",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "d5a2e872161a2626ab8036d6ad01ae62538d2a1741abcbb9d9bcc66d7e4ec5fb",
+      "constraints_verified": true,
+      "logical_sha256": "3a54a6ff8f7e32dbe7d220fbe6f4b0308f7c4e63cff0a2cb380721de7ddef4a2"
+    },
+    {
+      "instance_id": "fixture_67d18b115f87c4a405d76ab031918c745bf6a1693aa3c24a5776eb5a1641e323",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "67d18b115f87c4a405d76ab031918c745bf6a1693aa3c24a5776eb5a1641e323",
+      "constraints_verified": true,
+      "logical_sha256": "c1402bd8fb1f23971dccef9ac721d1e89d16484016f60e37c99bc36b669736df"
+    }
+  ]
+}

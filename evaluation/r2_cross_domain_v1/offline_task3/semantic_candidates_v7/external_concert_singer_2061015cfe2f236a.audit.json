@@ -1,0 +1,204 @@
+{
+  "case_id": "external_concert_singer_2061015cfe2f236a",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c82012bed2ee7e8635c9a73bbb19780d9f62fd3f005ffa99b1bc9a24a4c4726f",
+      "fixture_5bd05c89f422115c946119661f76069bfacaaa829c407bfc90d7c01d4bc2f219"
+    ],
+    "gold_result_digests": [
+      "684526b25ad7e566814d51c883d640d86f97d2f4700d80915938b231f32966aa",
+      "2e8b7656596f277b95ce8d75e2624b813ff4107d91cfcb3d2826b26e153a07fd"
+    ],
+    "mutant_results": [
+      {
+        "family": "null_count",
+        "sql": "SELECT COUNT(NULL) FROM concert WHERE YEAR = '2014' OR YEAR = '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT COUNT(*) FROM concert",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boolean",
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' AND YEAR = '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR <> '2014' OR YEAR = '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' OR YEAR <> '2015'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT COUNT(*) FROM concert WHERE YEAR = '2014' OR YEAR = '2015' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          7
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          7
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          9
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          9
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "concert"
+      ],
+      "columns": [
+        {
+          "table": "concert",
+          "column": "Year"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "concert",
+          "column": "Year",
+          "operator": "=",
+          "value": "2014"
+        },
+        {
+          "table": "concert",
+          "column": "Year",
+          "operator": "=",
+          "value": "2015"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "concert.year = '2014'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2014",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "concert.year = '2015'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "2015",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "concert",
+              "column": "Year"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "concert.year = '2014' OR concert.year = '2015'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c82012bed2ee7e8635c9a73bbb19780d9f62fd3f005ffa99b1bc9a24a4c4726f",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c82012bed2ee7e8635c9a73bbb19780d9f62fd3f005ffa99b1bc9a24a4c4726f",
+      "constraints_verified": true,
+      "logical_sha256": "d92d16c5ee8359d15ced1498bbc10ec5d288380aa04579cb097179ff1722636e"
+    },
+    {
+      "instance_id": "fixture_5bd05c89f422115c946119661f76069bfacaaa829c407bfc90d7c01d4bc2f219",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "5bd05c89f422115c946119661f76069bfacaaa829c407bfc90d7c01d4bc2f219",
+      "constraints_verified": true,
+      "logical_sha256": "bab13134bc238bad4c2c1ea36e662663b6be67906d1ce10b804bcfd3d147ff4b"
+    }
+  ]
+}

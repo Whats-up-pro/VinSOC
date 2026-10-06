@@ -1,0 +1,4003 @@
+{
+  "conversion_rules": {
+    "nulls_and_duplicate_rows": "preserved by parameterized insertion",
+    "sqlite_integer": "BIGINT",
+    "sqlite_numeric_decimal": "DECIMAL(38, 10)",
+    "sqlite_real": "DOUBLE",
+    "sqlite_text_and_dates": "VARCHAR; date/time text is not coerced during this registry task"
+  },
+  "database_count": 12,
+  "databases": [
+    {
+      "database_id": "student_transcripts_tracking",
+      "duckdb_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+      "duckdb_content_sha256": "68399b6b9e655981e8c0de6f0ed3b7c96559ee2f4590ae4050ec5e1b58e144cc",
+      "logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+      "primary_keys": {
+        "Addresses": [
+          "address_id"
+        ],
+        "Courses": [
+          "course_id"
+        ],
+        "Degree_Programs": [
+          "degree_program_id"
+        ],
+        "Departments": [
+          "department_id"
+        ],
+        "Sections": [
+          "section_id"
+        ],
+        "Semesters": [
+          "semester_id"
+        ],
+        "Student_Enrolment": [
+          "student_enrolment_id"
+        ],
+        "Student_Enrolment_Courses": [
+          "student_course_id"
+        ],
+        "Students": [
+          "student_id"
+        ],
+        "Transcript_Contents": [],
+        "Transcripts": [
+          "transcript_id"
+        ]
+      },
+      "question_count_dev": 78,
+      "relationships": [
+        {
+          "from_column": "course_id",
+          "from_table": "Sections",
+          "to_column": "course_id",
+          "to_table": "Courses"
+        },
+        {
+          "from_column": "course_id",
+          "from_table": "Student_Enrolment_Courses",
+          "to_column": "course_id",
+          "to_table": "Courses"
+        },
+        {
+          "from_column": "current_address_id",
+          "from_table": "Students",
+          "to_column": "address_id",
+          "to_table": "Addresses"
+        },
+        {
+          "from_column": "degree_program_id",
+          "from_table": "Student_Enrolment",
+          "to_column": "degree_program_id",
+          "to_table": "Degree_Programs"
+        },
+        {
+          "from_column": "department_id",
+          "from_table": "Degree_Programs",
+          "to_column": "department_id",
+          "to_table": "Departments"
+        },
+        {
+          "from_column": "permanent_address_id",
+          "from_table": "Students",
+          "to_column": "address_id",
+          "to_table": "Addresses"
+        },
+        {
+          "from_column": "semester_id",
+          "from_table": "Student_Enrolment",
+          "to_column": "semester_id",
+          "to_table": "Semesters"
+        },
+        {
+          "from_column": "student_course_id",
+          "from_table": "Transcript_Contents",
+          "to_column": "student_course_id",
+          "to_table": "Student_Enrolment_Courses"
+        },
+        {
+          "from_column": "student_enrolment_id",
+          "from_table": "Student_Enrolment_Courses",
+          "to_column": "student_enrolment_id",
+          "to_table": "Student_Enrolment"
+        },
+        {
+          "from_column": "student_id",
+          "from_table": "Student_Enrolment",
+          "to_column": "student_id",
+          "to_table": "Students"
+        },
+        {
+          "from_column": "transcript_id",
+          "from_table": "Transcript_Contents",
+          "to_column": "transcript_id",
+          "to_table": "Transcripts"
+        }
+      ],
+      "row_counts": {
+        "Addresses": 15,
+        "Courses": 15,
+        "Degree_Programs": 15,
+        "Departments": 15,
+        "Sections": 15,
+        "Semesters": 15,
+        "Student_Enrolment": 15,
+        "Student_Enrolment_Courses": 15,
+        "Students": 15,
+        "Transcript_Contents": 15,
+        "Transcripts": 15
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "address_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "line_1",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "line_2",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "line_3",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "city",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "zip_postcode",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "state_province_county",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "country",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_address_details",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Addresses"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "course_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "course_name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "course_description",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Courses"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "degree_program_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "department_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "degree_summary_name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "degree_summary_description",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Degree_Programs"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "department_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "department_name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "department_description",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Departments"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "section_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "course_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "section_name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "section_description",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Sections"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "semester_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "semester_name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "semester_description",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Semesters"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "student_enrolment_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "degree_program_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "semester_id",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "student_id",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Student_Enrolment"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "student_course_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "course_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "student_enrolment_id",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            }
+          ],
+          "name": "Student_Enrolment_Courses"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "student_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "current_address_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "permanent_address_id",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "first_name",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(80)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "middle_name",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(40)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "last_name",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(40)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "cell_mobile_number",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(40)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "email_address",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(40)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "ssn",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(40)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_first_registered",
+              "not_null": false,
+              "ordinal": 9,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_left",
+              "not_null": false,
+              "ordinal": 10,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_student_details",
+              "not_null": false,
+              "ordinal": 11,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Students"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "student_course_id",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "transcript_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            }
+          ],
+          "name": "Transcript_Contents"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "transcript_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "transcript_date",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "other_details",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Transcripts"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/student_transcripts_tracking/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56",
+      "source_sqlite_member": "spider_data/database/student_transcripts_tracking/student_transcripts_tracking.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "calibration",
+      "tables": [
+        "Addresses",
+        "Courses",
+        "Degree_Programs",
+        "Departments",
+        "Sections",
+        "Semesters",
+        "Student_Enrolment",
+        "Student_Enrolment_Courses",
+        "Students",
+        "Transcript_Contents",
+        "Transcripts"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "cre_Doc_Template_Mgt",
+      "duckdb_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+      "duckdb_content_sha256": "b12857847eefb2d8775ad4ac50e4b6efb778e998a895dd24a6c51bb10bcc9fa3",
+      "logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+      "primary_keys": {
+        "Documents": [
+          "Document_ID"
+        ],
+        "Paragraphs": [
+          "Paragraph_ID"
+        ],
+        "Ref_Template_Types": [
+          "Template_Type_Code"
+        ],
+        "Templates": [
+          "Template_ID"
+        ]
+      },
+      "question_count_dev": 84,
+      "relationships": [
+        {
+          "from_column": "Document_ID",
+          "from_table": "Paragraphs",
+          "to_column": "Document_ID",
+          "to_table": "Documents"
+        },
+        {
+          "from_column": "Template_ID",
+          "from_table": "Documents",
+          "to_column": "Template_ID",
+          "to_table": "Templates"
+        },
+        {
+          "from_column": "Template_Type_Code",
+          "from_table": "Templates",
+          "to_column": "Template_Type_Code",
+          "to_table": "Ref_Template_Types"
+        }
+      ],
+      "row_counts": {
+        "Documents": 15,
+        "Paragraphs": 15,
+        "Ref_Template_Types": 5,
+        "Templates": 20
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Document_ID",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Template_ID",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Document_Name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Document_Description",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Other_Details",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Documents"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Paragraph_ID",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Document_ID",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Paragraph_Text",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Other_Details",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Paragraphs"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Template_Type_Code",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "CHAR(15)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Template_Type_Description",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Ref_Template_Types"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Template_ID",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Version_Number",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Template_Type_Code",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "CHAR(15)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Date_Effective_From",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Date_Effective_To",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Template_Details",
+              "not_null": true,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(255)"
+            }
+          ],
+          "name": "Templates"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/cre_Doc_Template_Mgt/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5",
+      "source_sqlite_member": "spider_data/database/cre_Doc_Template_Mgt/cre_Doc_Template_Mgt.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "calibration",
+      "tables": [
+        "Documents",
+        "Paragraphs",
+        "Ref_Template_Types",
+        "Templates"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "world_1",
+      "duckdb_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+      "duckdb_content_sha256": "978cc1ab0972842720accf368b19ac856d50813b7e0e779fccc660a12715a4af",
+      "logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+      "primary_keys": {
+        "city": [
+          "ID"
+        ],
+        "country": [
+          "Code"
+        ],
+        "countrylanguage": [
+          "CountryCode",
+          "Language"
+        ]
+      },
+      "question_count_dev": 120,
+      "relationships": [
+        {
+          "from_column": "CountryCode",
+          "from_table": "city",
+          "to_column": "Code",
+          "to_table": "country"
+        },
+        {
+          "from_column": "CountryCode",
+          "from_table": "countrylanguage",
+          "to_column": "Code",
+          "to_table": "country"
+        }
+      ],
+      "row_counts": {
+        "city": 4079,
+        "country": 239,
+        "countrylanguage": 984
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "ID",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "char(35)"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "CountryCode",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "char(3)"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "District",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "char(20)"
+            },
+            {
+              "default": "'0'",
+              "duckdb_type": "BIGINT",
+              "name": "Population",
+              "not_null": true,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            }
+          ],
+          "name": "city"
+        },
+        {
+          "columns": [
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "Code",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "char(3)"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "char(52)"
+            },
+            {
+              "default": "'Asia'",
+              "duckdb_type": "VARCHAR",
+              "name": "Continent",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "Region",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "char(26)"
+            },
+            {
+              "default": "'0.00'",
+              "duckdb_type": "DOUBLE",
+              "name": "SurfaceArea",
+              "not_null": true,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "float(10,2)"
+            },
+            {
+              "default": "NULL",
+              "duckdb_type": "BIGINT",
+              "name": "IndepYear",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": "'0'",
+              "duckdb_type": "BIGINT",
+              "name": "Population",
+              "not_null": true,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": "NULL",
+              "duckdb_type": "DOUBLE",
+              "name": "LifeExpectancy",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "float(3,1)"
+            },
+            {
+              "default": "NULL",
+              "duckdb_type": "DOUBLE",
+              "name": "GNP",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "float(10,2)"
+            },
+            {
+              "default": "NULL",
+              "duckdb_type": "DOUBLE",
+              "name": "GNPOld",
+              "not_null": false,
+              "ordinal": 9,
+              "primary_key_position": 0,
+              "sqlite_type": "float(10,2)"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "LocalName",
+              "not_null": true,
+              "ordinal": 10,
+              "primary_key_position": 0,
+              "sqlite_type": "char(45)"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "GovernmentForm",
+              "not_null": true,
+              "ordinal": 11,
+              "primary_key_position": 0,
+              "sqlite_type": "char(45)"
+            },
+            {
+              "default": "NULL",
+              "duckdb_type": "VARCHAR",
+              "name": "HeadOfState",
+              "not_null": false,
+              "ordinal": 12,
+              "primary_key_position": 0,
+              "sqlite_type": "char(60)"
+            },
+            {
+              "default": "NULL",
+              "duckdb_type": "BIGINT",
+              "name": "Capital",
+              "not_null": false,
+              "ordinal": 13,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "Code2",
+              "not_null": true,
+              "ordinal": 14,
+              "primary_key_position": 0,
+              "sqlite_type": "char(2)"
+            }
+          ],
+          "name": "country"
+        },
+        {
+          "columns": [
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "CountryCode",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "char(3)"
+            },
+            {
+              "default": "''",
+              "duckdb_type": "VARCHAR",
+              "name": "Language",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 2,
+              "sqlite_type": "char(30)"
+            },
+            {
+              "default": "'F'",
+              "duckdb_type": "VARCHAR",
+              "name": "IsOfficial",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": "'0.0'",
+              "duckdb_type": "DOUBLE",
+              "name": "Percentage",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "float(4,1)"
+            }
+          ],
+          "name": "countrylanguage"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/world_1/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+      "source_sqlite_member": "spider_data/database/world_1/world_1.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "calibration",
+      "tables": [
+        "city",
+        "country",
+        "countrylanguage"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "voter_1",
+      "duckdb_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+      "duckdb_content_sha256": "2f2877ef49d3092c83d3566a2ed57048784543b4c7926f7fccb70dd7935dfa1a",
+      "logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+      "primary_keys": {
+        "AREA_CODE_STATE": [
+          "area_code"
+        ],
+        "CONTESTANTS": [
+          "contestant_number"
+        ],
+        "VOTES": [
+          "vote_id"
+        ]
+      },
+      "question_count_dev": 15,
+      "relationships": [
+        {
+          "from_column": "contestant_number",
+          "from_table": "VOTES",
+          "to_column": "contestant_number",
+          "to_table": "CONTESTANTS"
+        },
+        {
+          "from_column": "state",
+          "from_table": "VOTES",
+          "to_column": "state",
+          "to_table": "AREA_CODE_STATE"
+        }
+      ],
+      "row_counts": {
+        "AREA_CODE_STATE": 305,
+        "CONTESTANTS": 11,
+        "VOTES": 4
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "area_code",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "state",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "varchar(2)"
+            }
+          ],
+          "name": "AREA_CODE_STATE"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "contestant_number",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "contestant_name",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "varchar(50)"
+            }
+          ],
+          "name": "CONTESTANTS"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "vote_id",
+              "not_null": true,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "phone_number",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "state",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "varchar(2)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "contestant_number",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": "CURRENT_TIMESTAMP",
+              "duckdb_type": "VARCHAR",
+              "name": "created",
+              "not_null": true,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "timestamp"
+            }
+          ],
+          "name": "VOTES"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/voter_1/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+      "source_sqlite_member": "spider_data/database/voter_1/voter_1.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "calibration",
+      "tables": [
+        "AREA_CODE_STATE",
+        "CONTESTANTS",
+        "VOTES"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "dog_kennels",
+      "duckdb_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+      "duckdb_content_sha256": "071f4bcd650aaadd9169153ab5dab1322818973480f4b98f93fc26dce5983d41",
+      "logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+      "primary_keys": {
+        "Breeds": [
+          "breed_code"
+        ],
+        "Charges": [
+          "charge_id"
+        ],
+        "Dogs": [
+          "dog_id"
+        ],
+        "Owners": [
+          "owner_id"
+        ],
+        "Professionals": [
+          "professional_id"
+        ],
+        "Sizes": [
+          "size_code"
+        ],
+        "Treatment_Types": [
+          "treatment_type_code"
+        ],
+        "Treatments": [
+          "treatment_id"
+        ]
+      },
+      "question_count_dev": 82,
+      "relationships": [
+        {
+          "from_column": "breed_code",
+          "from_table": "Dogs",
+          "to_column": "breed_code",
+          "to_table": "Breeds"
+        },
+        {
+          "from_column": "dog_id",
+          "from_table": "Treatments",
+          "to_column": "dog_id",
+          "to_table": "Dogs"
+        },
+        {
+          "from_column": "owner_id",
+          "from_table": "Dogs",
+          "to_column": "owner_id",
+          "to_table": "Owners"
+        },
+        {
+          "from_column": "owner_id",
+          "from_table": "Dogs",
+          "to_column": "owner_id",
+          "to_table": "Owners"
+        },
+        {
+          "from_column": "professional_id",
+          "from_table": "Treatments",
+          "to_column": "professional_id",
+          "to_table": "Professionals"
+        },
+        {
+          "from_column": "size_code",
+          "from_table": "Dogs",
+          "to_column": "size_code",
+          "to_table": "Sizes"
+        },
+        {
+          "from_column": "treatment_type_code",
+          "from_table": "Treatments",
+          "to_column": "treatment_type_code",
+          "to_table": "Treatment_Types"
+        }
+      ],
+      "row_counts": {
+        "Breeds": 3,
+        "Charges": 3,
+        "Dogs": 15,
+        "Owners": 15,
+        "Professionals": 15,
+        "Sizes": 3,
+        "Treatment_Types": 3,
+        "Treatments": 15
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "breed_code",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "breed_name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(80)"
+            }
+          ],
+          "name": "Breeds"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "charge_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "charge_type",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DECIMAL(38, 10)",
+              "name": "charge_amount",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "DECIMAL(19,4)"
+            }
+          ],
+          "name": "Charges"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "dog_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "owner_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "abandoned_yn",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(1)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "breed_code",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "size_code",
+              "not_null": true,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "name",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "age",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_of_birth",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "gender",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(1)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "weight",
+              "not_null": false,
+              "ordinal": 9,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_arrived",
+              "not_null": false,
+              "ordinal": 10,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_adopted",
+              "not_null": false,
+              "ordinal": 11,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_departed",
+              "not_null": false,
+              "ordinal": 12,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            }
+          ],
+          "name": "Dogs"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "owner_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "first_name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "last_name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "street",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "city",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "state",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "zip_code",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "email_address",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "home_phone",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "cell_number",
+              "not_null": false,
+              "ordinal": 9,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            }
+          ],
+          "name": "Owners"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "professional_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "role_code",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "first_name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "street",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "city",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "state",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "zip_code",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "last_name",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "email_address",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(50)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "home_phone",
+              "not_null": false,
+              "ordinal": 9,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "cell_number",
+              "not_null": false,
+              "ordinal": 10,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(20)"
+            }
+          ],
+          "name": "Professionals"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "size_code",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "size_description",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(80)"
+            }
+          ],
+          "name": "Sizes"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "treatment_type_code",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "treatment_type_description",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(80)"
+            }
+          ],
+          "name": "Treatment_Types"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "treatment_id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "dog_id",
+              "not_null": true,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "professional_id",
+              "not_null": true,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "treatment_type_code",
+              "not_null": true,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "VARCHAR(10)"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "date_of_treatment",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "DATETIME"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DECIMAL(38, 10)",
+              "name": "cost_of_treatment",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "DECIMAL(19,4)"
+            }
+          ],
+          "name": "Treatments"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/dog_kennels/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+      "source_sqlite_member": "spider_data/database/dog_kennels/dog_kennels.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "Breeds",
+        "Charges",
+        "Dogs",
+        "Owners",
+        "Professionals",
+        "Sizes",
+        "Treatment_Types",
+        "Treatments"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "orchestra",
+      "duckdb_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+      "duckdb_content_sha256": "ae3c7e62f77d7e158853ba3edb94fd7a3891d83961a1deb2943c8c05bb7667ee",
+      "logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+      "primary_keys": {
+        "conductor": [
+          "Conductor_ID"
+        ],
+        "orchestra": [
+          "Orchestra_ID"
+        ],
+        "performance": [
+          "Performance_ID"
+        ],
+        "show": []
+      },
+      "question_count_dev": 40,
+      "relationships": [
+        {
+          "from_column": "Conductor_ID",
+          "from_table": "orchestra",
+          "to_column": "Conductor_ID",
+          "to_table": "conductor"
+        },
+        {
+          "from_column": "Orchestra_ID",
+          "from_table": "performance",
+          "to_column": "Orchestra_ID",
+          "to_table": "orchestra"
+        },
+        {
+          "from_column": "Performance_ID",
+          "from_table": "show",
+          "to_column": "Performance_ID",
+          "to_table": "performance"
+        }
+      ],
+      "row_counts": {
+        "conductor": 12,
+        "orchestra": 12,
+        "performance": 11,
+        "show": 5
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Conductor_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Age",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Nationality",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Year_of_Work",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            }
+          ],
+          "name": "conductor"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Orchestra_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Orchestra",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Conductor_ID",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Record_Company",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Year_of_Founded",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Major_Record_Format",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "orchestra"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Performance_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Orchestra_ID",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Type",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Date",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Official_ratings_(millions)",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Weekly_rank",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Share",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "performance"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Show_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Performance_ID",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "If_first_show",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "bool"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Result",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Attendance",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            }
+          ],
+          "name": "show"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/orchestra/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+      "source_sqlite_member": "spider_data/database/orchestra/orchestra.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "conductor",
+        "orchestra",
+        "performance",
+        "show"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "concert_singer",
+      "duckdb_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+      "duckdb_content_sha256": "1ee9716a0f9e30936053e36ca695b3aaa176c8e182e1f016650f6b0dd5732b7c",
+      "logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+      "primary_keys": {
+        "concert": [
+          "concert_ID"
+        ],
+        "singer": [
+          "Singer_ID"
+        ],
+        "singer_in_concert": [
+          "concert_ID",
+          "Singer_ID"
+        ],
+        "stadium": [
+          "Stadium_ID"
+        ]
+      },
+      "question_count_dev": 45,
+      "relationships": [
+        {
+          "from_column": "Singer_ID",
+          "from_table": "singer_in_concert",
+          "to_column": "Singer_ID",
+          "to_table": "singer"
+        },
+        {
+          "from_column": "Stadium_ID",
+          "from_table": "concert",
+          "to_column": "Stadium_ID",
+          "to_table": "stadium"
+        },
+        {
+          "from_column": "concert_ID",
+          "from_table": "singer_in_concert",
+          "to_column": "concert_ID",
+          "to_table": "concert"
+        }
+      ],
+      "row_counts": {
+        "concert": 6,
+        "singer": 6,
+        "singer_in_concert": 10,
+        "stadium": 9
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "concert_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "concert_Name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Theme",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Stadium_ID",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Year",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "concert"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Singer_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Country",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Song_Name",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Song_release_year",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Age",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Is_male",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "bool"
+            }
+          ],
+          "name": "singer"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "concert_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Singer_ID",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 2,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "singer_in_concert"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Stadium_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Location",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Capacity",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Highest",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Lowest",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Average",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            }
+          ],
+          "name": "stadium"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/concert_singer/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+      "source_sqlite_member": "spider_data/database/concert_singer/concert_singer.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "concert",
+        "singer",
+        "singer_in_concert",
+        "stadium"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "car_1",
+      "duckdb_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+      "duckdb_content_sha256": "af28cfa12464806a3380ca84393c2ac77cfb906aee2421415a748aeb4f966e28",
+      "logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+      "primary_keys": {
+        "car_makers": [
+          "Id"
+        ],
+        "car_names": [
+          "MakeId"
+        ],
+        "cars_data": [
+          "Id"
+        ],
+        "continents": [
+          "ContId"
+        ],
+        "countries": [
+          "CountryId"
+        ],
+        "model_list": [
+          "ModelId"
+        ]
+      },
+      "question_count_dev": 92,
+      "relationships": [
+        {
+          "from_column": "Continent",
+          "from_table": "countries",
+          "to_column": "ContId",
+          "to_table": "continents"
+        },
+        {
+          "from_column": "Country",
+          "from_table": "car_makers",
+          "to_column": "CountryId",
+          "to_table": "countries"
+        },
+        {
+          "from_column": "Id",
+          "from_table": "cars_data",
+          "to_column": "MakeId",
+          "to_table": "car_names"
+        },
+        {
+          "from_column": "Maker",
+          "from_table": "model_list",
+          "to_column": "Id",
+          "to_table": "car_makers"
+        },
+        {
+          "from_column": "Model",
+          "from_table": "car_names",
+          "to_column": "Model",
+          "to_table": "model_list"
+        }
+      ],
+      "row_counts": {
+        "car_makers": 22,
+        "car_names": 406,
+        "cars_data": 406,
+        "continents": 5,
+        "countries": 15,
+        "model_list": 36
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Maker",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "FullName",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Country",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "car_makers"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "MakeId",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Model",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Make",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "car_names"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "MPG",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Cylinders",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Edispl",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Horsepower",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Weight",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Accelerate",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Year",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            }
+          ],
+          "name": "cars_data"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "ContId",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Continent",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "continents"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "CountryId",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "CountryName",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Continent",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            }
+          ],
+          "name": "countries"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "ModelId",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Maker",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Model",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "model_list"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/car_1/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709",
+      "source_sqlite_member": "spider_data/database/car_1/car_1.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "car_makers",
+        "car_names",
+        "cars_data",
+        "continents",
+        "countries",
+        "model_list"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "flight_2",
+      "duckdb_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+      "duckdb_content_sha256": "93fe406380fec38e1ba66dfd8d37fa43f1735a658f6cc9a276e4cfc8e62bc2ca",
+      "logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+      "primary_keys": {
+        "airlines": [
+          "uid"
+        ],
+        "airports": [
+          "AirportCode"
+        ],
+        "flights": [
+          "Airline",
+          "FlightNo"
+        ]
+      },
+      "question_count_dev": 80,
+      "relationships": [
+        {
+          "from_column": "DestAirport",
+          "from_table": "flights",
+          "to_column": "AirportCode",
+          "to_table": "airports"
+        },
+        {
+          "from_column": "SourceAirport",
+          "from_table": "flights",
+          "to_column": "AirportCode",
+          "to_table": "airports"
+        }
+      ],
+      "row_counts": {
+        "airlines": 12,
+        "airports": 100,
+        "flights": 1200
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "uid",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Airline",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Abbreviation",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Country",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "airlines"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "City",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "AirportCode",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 1,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "AirportName",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Country",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "CountryAbbrev",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "airports"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Airline",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "FlightNo",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 2,
+              "sqlite_type": "INTEGER"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "SourceAirport",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "DestAirport",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "flights"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/flight_2/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+      "source_sqlite_member": "spider_data/database/flight_2/flight_2.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "airlines",
+        "airports",
+        "flights"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "course_teach",
+      "duckdb_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+      "duckdb_content_sha256": "d97951917bcafc0661d63e6d858e59af0b266827d63932d4b79eec94e84d04a1",
+      "logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+      "primary_keys": {
+        "course": [
+          "Course_ID"
+        ],
+        "course_arrange": [
+          "Course_ID",
+          "Teacher_ID",
+          "Grade"
+        ],
+        "teacher": [
+          "Teacher_ID"
+        ]
+      },
+      "question_count_dev": 30,
+      "relationships": [
+        {
+          "from_column": "Course_ID",
+          "from_table": "course_arrange",
+          "to_column": "Course_ID",
+          "to_table": "course"
+        },
+        {
+          "from_column": "Teacher_ID",
+          "from_table": "course_arrange",
+          "to_column": "Teacher_ID",
+          "to_table": "teacher"
+        }
+      ],
+      "row_counts": {
+        "course": 10,
+        "course_arrange": 6,
+        "teacher": 7
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Course_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Staring_Date",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Course",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "course"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Course_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Teacher_ID",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 2,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Grade",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 3,
+              "sqlite_type": "INT"
+            }
+          ],
+          "name": "course_arrange"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Teacher_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Age",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Hometown",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "teacher"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/course_teach/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+      "source_sqlite_member": "spider_data/database/course_teach/course_teach.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "course",
+        "course_arrange",
+        "teacher"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "poker_player",
+      "duckdb_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+      "duckdb_content_sha256": "ce0f4501a5b9133d04a644e3f11291e0f52de331332222bbaa777067a0aa93bb",
+      "logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+      "primary_keys": {
+        "people": [
+          "People_ID"
+        ],
+        "poker_player": [
+          "Poker_Player_ID"
+        ]
+      },
+      "question_count_dev": 40,
+      "relationships": [
+        {
+          "from_column": "People_ID",
+          "from_table": "poker_player",
+          "to_column": "People_ID",
+          "to_table": "people"
+        }
+      ],
+      "row_counts": {
+        "people": 7,
+        "poker_player": 5
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "People_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Nationality",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Name",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Birth_Date",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Height",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            }
+          ],
+          "name": "people"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "Poker_Player_ID",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "BIGINT",
+              "name": "People_ID",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "INT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Final_Table_Made",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Best_Finish",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Money_Rank",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Earnings",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            }
+          ],
+          "name": "poker_player"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/poker_player/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+      "source_sqlite_member": "spider_data/database/poker_player/poker_player.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "people",
+        "poker_player"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "database_id": "tvshow",
+      "duckdb_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+      "duckdb_content_sha256": "5f0dea4bc478c0f663ea4dcb4c42275dc791034214f91f4d5cc08594907f3b2b",
+      "logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+      "primary_keys": {
+        "Cartoon": [
+          "id"
+        ],
+        "TV_Channel": [
+          "id"
+        ],
+        "TV_series": [
+          "id"
+        ]
+      },
+      "question_count_dev": 62,
+      "relationships": [
+        {
+          "from_column": "Channel",
+          "from_table": "Cartoon",
+          "to_column": "id",
+          "to_table": "TV_Channel"
+        },
+        {
+          "from_column": "Channel",
+          "from_table": "TV_series",
+          "to_column": "id",
+          "to_table": "TV_Channel"
+        }
+      ],
+      "row_counts": {
+        "Cartoon": 12,
+        "TV_Channel": 15,
+        "TV_series": 12
+      },
+      "schema": [
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Title",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Directed_by",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Written_by",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Original_air_date",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Production_code",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Channel",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "Cartoon"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "series_name",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Country",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Language",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Content",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Pixel_aspect_ratio_PAR",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Hight_definition_TV",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Pay_per_view_PPV",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Package_Option",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "TV_Channel"
+        },
+        {
+          "columns": [
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "id",
+              "not_null": false,
+              "ordinal": 0,
+              "primary_key_position": 1,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Episode",
+              "not_null": false,
+              "ordinal": 1,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Air_Date",
+              "not_null": false,
+              "ordinal": 2,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Rating",
+              "not_null": false,
+              "ordinal": 3,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Share",
+              "not_null": false,
+              "ordinal": 4,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "18_49_Rating_Share",
+              "not_null": false,
+              "ordinal": 5,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Viewers_m",
+              "not_null": false,
+              "ordinal": 6,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            },
+            {
+              "default": null,
+              "duckdb_type": "DOUBLE",
+              "name": "Weekly_Rank",
+              "not_null": false,
+              "ordinal": 7,
+              "primary_key_position": 0,
+              "sqlite_type": "REAL"
+            },
+            {
+              "default": null,
+              "duckdb_type": "VARCHAR",
+              "name": "Channel",
+              "not_null": false,
+              "ordinal": 8,
+              "primary_key_position": 0,
+              "sqlite_type": "TEXT"
+            }
+          ],
+          "name": "TV_series"
+        }
+      ],
+      "snapshot_path": "../../data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/tvshow/build_1.duckdb",
+      "source_dialect": "sqlite",
+      "source_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+      "source_sqlite_member": "spider_data/database/tvshow/tvshow.sqlite",
+      "source_version": "Spider 1.0",
+      "split": "evaluation_locked_candidate",
+      "tables": [
+        "Cartoon",
+        "TV_Channel",
+        "TV_series"
+      ],
+      "target_dialect": "duckdb"
+    },
+    {
+      "source_type": "verified_ctu_csv_manifest",
+      "source_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+      "source_sha256_scope": "manifest_bytes",
+      "source_manifest_path": "../ctu_network_public/dataset_manifest.json",
+      "source_members": {
+        "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+        "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+      },
+      "origin_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "origin_logical_policy": "ctu_network_public_dev_v1",
+      "origin_source_validation": {
+        "version": "ctu_network_public_dev_v1",
+        "source_file_sha256": {
+          "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+          "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+        },
+        "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+        "builder_scorer_sha256": {
+          "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+          "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+          "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+          "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+        },
+        "case_ids": [
+          "ctu_sql_001",
+          "ctu_sql_002",
+          "ctu_sql_003",
+          "ctu_sql_004",
+          "ctu_sql_005",
+          "ctu_sql_006",
+          "ctu_sql_007",
+          "ctu_sql_008"
+        ],
+        "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+        "tables": [
+          "dataset_provenance",
+          "network_flows"
+        ],
+        "schema": {
+          "dataset_provenance": [
+            [
+              "dataset_id",
+              "VARCHAR"
+            ],
+            [
+              "source_name",
+              "VARCHAR"
+            ],
+            [
+              "source_url",
+              "VARCHAR"
+            ],
+            [
+              "retrieved_at",
+              "TIMESTAMP"
+            ],
+            [
+              "file_sha256",
+              "VARCHAR"
+            ],
+            [
+              "license_note",
+              "VARCHAR"
+            ],
+            [
+              "schema_version",
+              "VARCHAR"
+            ]
+          ],
+          "network_flows": [
+            [
+              "source_dataset",
+              "VARCHAR"
+            ],
+            [
+              "source_row_id",
+              "VARCHAR"
+            ],
+            [
+              "event_time",
+              "TIMESTAMP"
+            ],
+            [
+              "src_ip",
+              "VARCHAR"
+            ],
+            [
+              "src_port",
+              "INTEGER"
+            ],
+            [
+              "dst_ip",
+              "VARCHAR"
+            ],
+            [
+              "dst_port",
+              "INTEGER"
+            ],
+            [
+              "protocol",
+              "VARCHAR"
+            ],
+            [
+              "action",
+              "VARCHAR"
+            ],
+            [
+              "bytes_out",
+              "BIGINT"
+            ],
+            [
+              "bytes_in",
+              "BIGINT"
+            ],
+            [
+              "label",
+              "VARCHAR"
+            ]
+          ]
+        },
+        "source_row_counts": {
+          "ctu13_s5": 129831,
+          "ctu13_s7": 114075
+        },
+        "row_counts": {
+          "network_flows": 243906
+        },
+        "distinct_source_row_id": 243906,
+        "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+        "gold_results": {
+          "ctu_sql_001": {
+            "row_count": 1,
+            "result_sha256": "efb2df7901882d7bba9600b8e6eeb14f25637401ee3f981cb59753087afc00de"
+          },
+          "ctu_sql_002": {
+            "row_count": 1,
+            "result_sha256": "92ae11c21d7bfdb0e7b5ab47148b9fc6b9a2198ec553638a7f1a3ee435291c8a"
+          },
+          "ctu_sql_003": {
+            "row_count": 1,
+            "result_sha256": "6b381b5beedb8c08a6c0b370fc440fefd948c5079b2700eadd0bf29033f2e49f"
+          },
+          "ctu_sql_004": {
+            "row_count": 1,
+            "result_sha256": "e78b6b2ef0c79a52a59ac18225babf1fdc8ccac1258146aff6d5fd1f0be1254a"
+          },
+          "ctu_sql_005": {
+            "row_count": 1,
+            "result_sha256": "8b4d3ce5d2cbe284ce96074955464ae75a20581f5fba50f29a3b02aa5c69915e"
+          },
+          "ctu_sql_006": {
+            "row_count": 5,
+            "result_sha256": "2726918c87076ba67c86c4c6730d7a5b5b7167916ee222e573779dceea38033d"
+          },
+          "ctu_sql_007": {
+            "row_count": 2,
+            "result_sha256": "6c1339a9f4f08ae3c5806ab5885412e389f2ca88206f0a3151b1e03acf9eac4c"
+          },
+          "ctu_sql_008": {
+            "row_count": 2,
+            "result_sha256": "b1e66afdc9fb99556a8b2f8ce1549d3cdcbdccd81f2d6a508536701ae05a4ffe"
+          }
+        },
+        "semantic_counterexamples": {
+          "distinct": {
+            "case_id": "ctu_sql_003",
+            "different_from_gold": true
+          },
+          "time_boundary": {
+            "case_id": "ctu_sql_004",
+            "different_from_gold": true
+          },
+          "boolean": {
+            "case_id": "ctu_sql_005",
+            "different_from_gold": true
+          },
+          "ordering": {
+            "case_id": "ctu_sql_006",
+            "different_from_gold": true
+          }
+        }
+      },
+      "domain": "network_telemetry",
+      "split": "calibration_and_evaluation_in_domain",
+      "database_id": "ctu_dev",
+      "schema": [
+        {
+          "name": "dataset_provenance",
+          "columns": [
+            {
+              "ordinal": 0,
+              "name": "dataset_id",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 1
+            },
+            {
+              "ordinal": 1,
+              "name": "source_name",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 2,
+              "name": "source_url",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 3,
+              "name": "retrieved_at",
+              "duckdb_type": "TIMESTAMP",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 4,
+              "name": "file_sha256",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 5,
+              "name": "license_note",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 6,
+              "name": "schema_version",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 0
+            }
+          ]
+        },
+        {
+          "name": "network_flows",
+          "columns": [
+            {
+              "ordinal": 0,
+              "name": "source_dataset",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 1
+            },
+            {
+              "ordinal": 1,
+              "name": "source_row_id",
+              "duckdb_type": "VARCHAR",
+              "not_null": true,
+              "default": null,
+              "primary_key_position": 2
+            },
+            {
+              "ordinal": 2,
+              "name": "event_time",
+              "duckdb_type": "TIMESTAMP",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 3,
+              "name": "src_ip",
+              "duckdb_type": "VARCHAR",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 4,
+              "name": "src_port",
+              "duckdb_type": "INTEGER",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 5,
+              "name": "dst_ip",
+              "duckdb_type": "VARCHAR",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 6,
+              "name": "dst_port",
+              "duckdb_type": "INTEGER",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 7,
+              "name": "protocol",
+              "duckdb_type": "VARCHAR",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 8,
+              "name": "action",
+              "duckdb_type": "VARCHAR",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 9,
+              "name": "bytes_out",
+              "duckdb_type": "BIGINT",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 10,
+              "name": "bytes_in",
+              "duckdb_type": "BIGINT",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            },
+            {
+              "ordinal": 11,
+              "name": "label",
+              "duckdb_type": "VARCHAR",
+              "not_null": false,
+              "default": null,
+              "primary_key_position": 0
+            }
+          ]
+        }
+      ],
+      "relationships": [],
+      "primary_keys": {
+        "dataset_provenance": [
+          "dataset_id"
+        ],
+        "network_flows": [
+          "source_dataset",
+          "source_row_id"
+        ]
+      },
+      "row_counts": {
+        "dataset_provenance": 2,
+        "network_flows": 243906
+      },
+      "duckdb_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+      "logical_identity_policy": "cross_domain_typed_row_multiset_v1",
+      "duckdb_content_sha256": "25d657aa6d6f30b4c707b59283b6b9ad86a15a9575c73bda7c6f068c268788b8",
+      "snapshot_read_only_verified": true,
+      "snapshot_path": "../../data/ctu_network_public/snapshots/ctu_dev.duckdb"
+    }
+  ],
+  "domain_annotation_status": "PENDING_CASE_AND_BENCHMARK_LOCK_TASK",
+  "selection_seed": 20261005,
+  "status": "REGISTRY_ONLY_NOT_BENCHMARK_LOCKED",
+  "origin_registry_sha256": "f592dfe86ebf12f957e716f135be0471b0e5170fd1eef7fe2d11c65e246545df"
+}

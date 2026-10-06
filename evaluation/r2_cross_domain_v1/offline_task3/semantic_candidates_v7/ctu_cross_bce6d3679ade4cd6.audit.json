@@ -1,0 +1,229 @@
+{
+  "case_id": "ctu_cross_bce6d3679ade4cd6",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "fixture_91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df"
+    ],
+    "gold_result_digests": [
+      "f5563088e4540321f65cc5f76353dc5b0350fd4a0808d61b1ca039ae28657400",
+      "f1fc34cf50704f286c2d35993bec25fd3497d44f09e19df417e972504bc553c3"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT protocol FROM network_flows GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "group_having",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset <> 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) >= (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7') ORDER BY protocol DESC",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows) ORDER BY protocol",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset <> 'ctu13_s7') ORDER BY protocol",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT protocol FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE GROUP BY protocol HAVING AVG(bytes_out) > (SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s7' AND TRUE) ORDER BY protocol",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "having",
+          "expression": "AVG(network_flows.bytes_out) > (SELECT AVG(network_flows.bytes_out) AS _col_0 FROM network_flows AS network_flows WHERE network_flows.source_dataset = 'ctu13_s7')",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        },
+        {
+          "stage": "having",
+          "expression": "AVG(network_flows.bytes_out) > (SELECT AVG(network_flows.bytes_out) AS _col_0 FROM network_flows AS network_flows WHERE network_flows.source_dataset = 'ctu13_s7')"
+        },
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c153498554531747c80b31c1f72fdf33639e1c254b8fc919af86930a04712207",
+      "constraints_verified": true,
+      "logical_sha256": "db9c4ae042e379bf7032ced214d3fde9549153fda64fef0ed4175ce8372e7510"
+    },
+    {
+      "instance_id": "fixture_91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "91c17cd6f25b662f1f3b7544cf857e5dedd6f5c63eb9bf87f1ae072a07a006df",
+      "constraints_verified": true,
+      "logical_sha256": "5b60036f8b6b84ead9e63354313ea14e53729490397a660959c1ff4c76de5c34"
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "case_id": "external_poker_player_718c0dc6e1c8ea1b",
+  "database_id": "poker_player",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_c92ed9bd62e83c0871510b7d39896a2881001ecec8d0dd96328cc2ef54c11bcd",
+      "fixture_089dc497b8a5851bebeb1bf8473dab0a155d72acdfa56a24e0f6f21d9aa05dc8"
+    ],
+    "gold_result_digests": [
+      "945d0942f72602a2246d4ecfd86a4099fc6701837d5c63fa6e5e696553976b06",
+      "945d0942f72602a2246d4ecfd86a4099fc6701837d5c63fa6e5e696553976b06"
+    ],
+    "mutant_results": [
+      {
+        "family": "aggregate",
+        "sql": "SELECT MIN(Final_Table_Made) FROM poker_player WHERE Earnings < 200000",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT MAX(Final_Table_Made) FROM poker_player",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT MAX(Final_Table_Made) FROM poker_player WHERE Earnings <= 200000",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT MAX(Final_Table_Made) FROM poker_player WHERE Earnings < 200000 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 1,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          17.0
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          17.0
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          17.0
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          17.0
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "poker_player"
+      ],
+      "columns": [
+        {
+          "table": "poker_player",
+          "column": "Earnings"
+        },
+        {
+          "table": "poker_player",
+          "column": "Final_Table_Made"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "poker_player",
+          "column": "Earnings",
+          "kind": "numeric_threshold",
+          "operator": "<",
+          "value": 200000
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lt",
+          "stage": "where",
+          "expression": "poker_player.earnings < 200000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 200000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "poker_player",
+              "column": "Earnings"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "poker_player.earnings < 200000"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_c92ed9bd62e83c0871510b7d39896a2881001ecec8d0dd96328cc2ef54c11bcd",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "c92ed9bd62e83c0871510b7d39896a2881001ecec8d0dd96328cc2ef54c11bcd",
+      "constraints_verified": true,
+      "logical_sha256": "3f50aa2115c7c6f2ee55fc0df56011ba3fee615a664152cb46141bc11b8f7bf5"
+    },
+    {
+      "instance_id": "fixture_089dc497b8a5851bebeb1bf8473dab0a155d72acdfa56a24e0f6f21d9aa05dc8",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "089dc497b8a5851bebeb1bf8473dab0a155d72acdfa56a24e0f6f21d9aa05dc8",
+      "constraints_verified": true,
+      "logical_sha256": "57b0183954769c802ec4cfaa960080d7094945e83874bdea5c8856cf28669939"
+    }
+  ]
+}

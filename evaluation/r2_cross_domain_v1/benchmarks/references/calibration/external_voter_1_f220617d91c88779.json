@@ -1,0 +1,38 @@
+{
+  "case_id": "external_voter_1_f220617d91c88779",
+  "database_id": "voter_1",
+  "question": "How many states are there?",
+  "gold_sql": "SELECT COUNT(*) FROM area_code_state",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [],
+  "family_id": "b5f07927cad363408a84c5784e757ef45fc9ac113d94a1fe290ded2e3e258108",
+  "accepted_links": [
+    {
+      "tables": [
+        "AREA_CODE_STATE"
+      ],
+      "columns": [],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT count(*) FROM area_code_state",
+  "source_sqlite_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+  "base_snapshot_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+  "base_snapshot_logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "calibration",
+  "domain": "politics",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_voter_1_f220617d91c88779.audit.json",
+  "semantic_audit_sha256": "e973d7957d3636fc74cf67989be6ef1c521641df08ac93fd80eb232a41362fed"
+}

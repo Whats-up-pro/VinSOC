@@ -1,0 +1,90 @@
+{
+  "case_id": "ctu_cross_dda372911befb17e",
+  "database_id": "ctu_dev",
+  "question": "Count distinct source/destination IP pairs in CTU scenario 7, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.",
+  "gold_sql": "SELECT COUNT(DISTINCT (src_ip,dst_ip)) FROM network_flows WHERE source_dataset='ctu13_s7'",
+  "difficulty": "medium",
+  "features": [
+    "distinct",
+    "null"
+  ],
+  "family_id": "b34aa173c4819aff5245edc7bf8bbb9d2d0c46f3794ee8503659ead176dd29d5",
+  "split": "calibration",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "unordered_multiset",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 1,
+  "sample_gold_rows": [
+    [
+      42885
+    ]
+  ],
+  "observed_result_sha256": "22d0ac389ea508f9cb419ce171a758d8b5a2dc5bf8d1b354bdc99605b6cc69b3",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_dda372911befb17e.audit.json",
+  "semantic_audit_sha256": "89af0688195e754f59c07b6decde9591328333f147f13526448cd1c1e9df6ba8",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

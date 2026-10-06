@@ -1,0 +1,73 @@
+{
+  "reference": {
+    "case_id": "external_poker_player_213b95d35f620503",
+    "database_id": "poker_player",
+    "question": "Give the nationality that is most common across all people.",
+    "gold_sql": "SELECT Nationality FROM people GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "group_having",
+      "order_limit"
+    ],
+    "family_id": "40253843a57435e6e18d8907dcc18b9e6cefb133ab97405a33026fd35c303ed5",
+    "accepted_links": [
+      {
+        "tables": [
+          "people"
+        ],
+        "columns": [
+          {
+            "table": "people",
+            "column": "Nationality"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "limit",
+            "value": 1
+          }
+        ],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Nationality FROM people GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1",
+    "source_sqlite_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+    "base_snapshot_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+    "base_snapshot_logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Nationality FROM people GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1",
+    "adapted_sql": "SELECT Nationality FROM people GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1",
+    "transformations": [],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "d0a3a84713f113f9b4d807611c9582b55b51c3ef75dc8171bd5f6fe4ca6c2294",
+    "duckdb_result_sha256": "d0a3a84713f113f9b4d807611c9582b55b51c3ef75dc8171bd5f6fe4ca6c2294",
+    "sample_original_rows": [
+      [
+        "Russia"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Russia"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

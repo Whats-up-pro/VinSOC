@@ -1,0 +1,129 @@
+{
+  "case_id": "ctu_cross_111e791fb862cf30",
+  "database_id": "ctu_dev",
+  "question": "Return the three most frequent UDP destination IPs in CTU scenario 7 with their flow counts; break count ties by destination IP ascending.",
+  "gold_sql": "SELECT dst_ip,COUNT(*) AS n FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='UDP' GROUP BY dst_ip ORDER BY n DESC,dst_ip ASC LIMIT 3",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "order_limit"
+  ],
+  "family_id": "502a7b9fdecc1ffae78c190c7cb617de6be618cce8fdbd8cb949931630fd88ae",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "UDP"
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 3
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'UDP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "UDP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7' AND network_flows.protocol = 'UDP'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 3,
+  "sample_gold_rows": [
+    [
+      "147.32.80.9",
+      46910
+    ],
+    [
+      "147.32.84.229",
+      21423
+    ],
+    [
+      "192.168.95.255",
+      196
+    ]
+  ],
+  "observed_result_sha256": "d7f092349519726722d709716fc3c558ccf34a592ad16c9261d3e66c5a1254c5",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_111e791fb862cf30.audit.json",
+  "semantic_audit_sha256": "14eab17dd2f5e57cceeed5c43271232472ec2ce40ed1336776fb576f5fccf736",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

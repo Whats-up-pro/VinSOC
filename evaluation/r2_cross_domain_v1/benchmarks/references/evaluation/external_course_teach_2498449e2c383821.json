@@ -1,0 +1,45 @@
+{
+  "case_id": "external_course_teach_2498449e2c383821",
+  "database_id": "course_teach",
+  "question": "For each hometown, how many teachers are there?",
+  "gold_sql": "SELECT Hometown, COUNT(*) FROM teacher GROUP BY Hometown",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [
+    "group_having"
+  ],
+  "family_id": "013f3a27ac26f9ce4d19483edc474f1d30da43484fdcc68311f0dc44ba86d958",
+  "accepted_links": [
+    {
+      "tables": [
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "teacher",
+          "column": "Hometown"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT Hometown ,  COUNT(*) FROM teacher GROUP BY Hometown",
+  "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+  "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+  "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "education",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_course_teach_2498449e2c383821.audit.json",
+  "semantic_audit_sha256": "c1731752df1be4f35c323dd4e54e8ef725417fd942f9f5e349c1a3f60917f3a9"
+}

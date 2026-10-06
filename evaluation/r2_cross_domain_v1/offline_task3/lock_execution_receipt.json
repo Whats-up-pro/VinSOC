@@ -1,0 +1,89 @@
+{
+  "task": 3,
+  "scope": "final offline benchmark verification; not model accuracy or paid authorization",
+  "base_sha": "bd9dd8d0eb289d45721b5280831f09e67d7dd20c",
+  "verified_at_utc": "2026-10-06T08:00:46.597485+00:00",
+  "commands": [
+    {
+      "command": "python -m pytest -q (Get-ChildItem -Path tests -Filter 'test_r2_cross_domain_*.py' | ForEach-Object FullName)",
+      "exit_code": 0,
+      "result": "130 passed in 20.78s"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "result": "960 passed, 1654 warnings in 108.15s (0:01:48)"
+    },
+    {
+      "command": "py_compile.compile(path, doraise=True)",
+      "exit_code": 0,
+      "files": [
+        "evaluation/r2_cross_domain_v1/annotations.py",
+        "evaluation/r2_cross_domain_v1/data.py",
+        "evaluation/r2_cross_domain_v1/grounding.py",
+        "evaluation/r2_cross_domain_v1/module_metrics.py",
+        "evaluation/r2_cross_domain_v1/prompts.py",
+        "scripts/audit_r2_cross_domain_semantics.py",
+        "tests/test_r2_cross_domain_annotations.py",
+        "tests/test_r2_cross_domain_data.py",
+        "tests/test_r2_cross_domain_module_metrics.py",
+        "tests/test_r2_cross_domain_pipeline.py",
+        "evaluation/r2_cross_domain_v1/benchmark_lock.py",
+        "scripts/validate_r2_cross_domain.py",
+        "tests/test_r2_cross_domain_benchmark_lock.py",
+        "tests/test_r2_cross_domain_semantic_inventory.py"
+      ]
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m scripts.validate_r2_cross_domain --registry evaluation/r2_cross_domain_v1/runtime_registry.json --benchmarks evaluation/r2_cross_domain_v1/benchmarks --lock evaluation/r2_cross_domain_v1/benchmark.lock.json --output evaluation/r2_cross_domain_v1/offline_task3/benchmark_validation_receipt.json",
+      "exit_code": 0,
+      "result": "120 base gold replays; all source/snapshot/runtime/oracle identities PASS"
+    },
+    {
+      "command": "python -m scripts.audit_r2_cross_domain_semantics --candidates evaluation/r2_cross_domain_v1/offline_task3/external_case_candidates_v6 --output evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7 --builds .vinsoc/cross-domain-semantic-builds/v7",
+      "exit_code": 0,
+      "result": "120/120 semantic candidate PASS"
+    }
+  ],
+  "negative_invocations": [
+    {
+      "command": "python -m pytest -q tests/test_r2_cross_domain_*.py",
+      "exit_code": 1,
+      "reason": "PowerShell literal wildcard not expanded; not pass"
+    },
+    {
+      "command": "python .vinsoc/qualify_remaining_order_candidates.py",
+      "exit_code": 1,
+      "reason": "scratch invocation import path; corrected runpy invocation used"
+    }
+  ],
+  "protected_historical_file_count": 245,
+  "prior_artifact_json_count_verified": 2377,
+  "protected_inventory_sha256": "55510afb3ac3a9d5b8149c129bf4747cb0efc99bf5fda65fa03deeba0ec19a14",
+  "historical_bytes_unchanged": true,
+  "benchmark_lock_sha256": "10e124eab0bb918d69595811619990a57e626f64ee23997648cbf79f07029f7d",
+  "tested_source_sha256": {
+    "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+    "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+    "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+    "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+    "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+    "scripts/audit_r2_cross_domain_semantics.py": "6253db1850209e2495b0b529323e0aec60d296944bd53554e2fc2da5bc2d53dc",
+    "tests/test_r2_cross_domain_annotations.py": "246ae1a21b0e735e01c4f41d3baea9bde620e6916e2078dd869db63352c58e18",
+    "tests/test_r2_cross_domain_data.py": "1ca4d83e1c4b3d7f78b22eb6fd919f02d7b6156e6ed947ac07bcbfe97fa4ac8e",
+    "tests/test_r2_cross_domain_module_metrics.py": "b6fccc2f2085587cf7e0d6da27ca35f2d9961dd1bc44ebd346ae7773b005919d",
+    "tests/test_r2_cross_domain_pipeline.py": "1c456f0274ad0f4bb238ab031fa4862a249ce94456f047ff37c642336156d525",
+    "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+    "scripts/validate_r2_cross_domain.py": "644ef5a8c6215d72f43d9590dcd41cb2079b58303de462fdad60371f135870a6",
+    "tests/test_r2_cross_domain_benchmark_lock.py": "2732d242a3c62667d2fcbc62009ab10f97ac9d13268e0272ba98455a6793fef2",
+    "tests/test_r2_cross_domain_semantic_inventory.py": "fa2002e7632a476a83e43cec846744dff88fb241fad2064a11bd0cda8f996975"
+  },
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "frozen_closed": true,
+  "paid_release_authorized": false
+}

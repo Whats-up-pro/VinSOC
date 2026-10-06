@@ -1,0 +1,163 @@
+{
+  "case_id": "external_voter_1_4426d844af6ad576",
+  "database_id": "voter_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_b30ffc07d661e614f55a86413beef166f5386f28c14f05eccaa23fa12ddfded2",
+      "fixture_c02b2063ec9292ebdd463c687031c710274f8934fe2a908d2d7a479122be1051"
+    ],
+    "gold_result_digests": [
+      "865825ea0909ed38297f7f551fc6ca6d9da81699ad31f0c00ad52ef923d06203",
+      "865825ea0909ed38297f7f551fc6ca6d9da81699ad31f0c00ad52ef923d06203"
+    ],
+    "mutant_results": [
+      {
+        "family": "aggregate",
+        "sql": "SELECT MIN(created) FROM votes WHERE state = 'CA'",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT MAX(created) FROM votes",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT MAX(created) FROM votes WHERE state <> 'CA'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT MAX(created) FROM votes WHERE state = 'CA' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          null
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          null
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          null
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          null
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "VOTES"
+      ],
+      "columns": [
+        {
+          "table": "VOTES",
+          "column": "created"
+        },
+        {
+          "table": "VOTES",
+          "column": "state"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "VOTES",
+          "column": "state",
+          "operator": "=",
+          "value": "CA"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "votes.state = 'CA'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "CA",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "VOTES",
+              "column": "state"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "votes.state = 'CA'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_b30ffc07d661e614f55a86413beef166f5386f28c14f05eccaa23fa12ddfded2",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "b30ffc07d661e614f55a86413beef166f5386f28c14f05eccaa23fa12ddfded2",
+      "constraints_verified": true,
+      "logical_sha256": "c14652167f4d7c6ca551959012835a78e9862efa141e5c072745d7283eb5d6de"
+    },
+    {
+      "instance_id": "fixture_c02b2063ec9292ebdd463c687031c710274f8934fe2a908d2d7a479122be1051",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "c02b2063ec9292ebdd463c687031c710274f8934fe2a908d2d7a479122be1051",
+      "constraints_verified": true,
+      "logical_sha256": "b8724f607319518b9a17487e98ed7a83d911f8aaf5cf9b82f0b22bb21e3efff8"
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "case_id": "external_concert_singer_9754e7b07d3a2f56",
+  "database_id": "concert_singer",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_20349321a480d96e18a5bb3280ab5298b941b3b9343727190d084ef1e2219ebc",
+      "fixture_177206bd59233475f8e0618e2777aae125178167eb5bc58883ffd7e97e386844"
+    ],
+    "gold_result_digests": [
+      "210c19d3e1ff521cfb481cedaf54ba6fb910681520bb54e0d6e371a6dc3e8c1a",
+      "10e548b1dad70e7a6f0a17000acf8f26748eb168c53adaa0dd7f1b0cadefc5b9"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT LOCATION FROM stadium WHERE capacity BETWEEN 5000 AND 10000",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT LOCATION, name FROM stadium",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT LOCATION, name FROM stadium WHERE capacity BETWEEN 5000 AND 10000 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C",
+          "fixture_A"
+        ],
+        [
+          "fixture_A",
+          "fixture_B"
+        ],
+        [
+          "fixture_B",
+          "fixture_C"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "stadium"
+      ],
+      "columns": [
+        {
+          "table": "stadium",
+          "column": "Capacity"
+        },
+        {
+          "table": "stadium",
+          "column": "Location"
+        },
+        {
+          "table": "stadium",
+          "column": "Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "stadium",
+          "column": "Capacity",
+          "kind": "numeric_threshold",
+          "operator": ">=",
+          "value": 5000
+        },
+        {
+          "table": "stadium",
+          "column": "Capacity",
+          "kind": "numeric_threshold",
+          "operator": "<=",
+          "value": 10000
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "between",
+          "stage": "where",
+          "expression": "stadium.capacity BETWEEN 5000 AND 10000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 5000,
+              "value_type": "numeric"
+            },
+            {
+              "value": 10000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "stadium",
+              "column": "Capacity"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "stadium.capacity BETWEEN 5000 AND 10000"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_20349321a480d96e18a5bb3280ab5298b941b3b9343727190d084ef1e2219ebc",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "20349321a480d96e18a5bb3280ab5298b941b3b9343727190d084ef1e2219ebc",
+      "constraints_verified": true,
+      "logical_sha256": "07cdae4b86370d2f4758d74d03ca8f86eea73f58dbca7e31f3ba558f9a239345"
+    },
+    {
+      "instance_id": "fixture_177206bd59233475f8e0618e2777aae125178167eb5bc58883ffd7e97e386844",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "177206bd59233475f8e0618e2777aae125178167eb5bc58883ffd7e97e386844",
+      "constraints_verified": true,
+      "logical_sha256": "71d34aa6ebb66f7b8c22675dba1e5337aeea5a04a496287534df71b10293a45a"
+    }
+  ]
+}

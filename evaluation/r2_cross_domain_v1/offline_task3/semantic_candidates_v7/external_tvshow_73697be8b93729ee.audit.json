@@ -1,0 +1,177 @@
+{
+  "case_id": "external_tvshow_73697be8b93729ee",
+  "database_id": "tvshow",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_f233b47a0b418a79d70e94a3f6e913e59305a30d5ba2423c587ff4ab230e1c1b",
+      "fixture_3122792a66c7c0399d38d72ac84a62aef8121cd1502f4dbe8cfce4cc7fb12fdc"
+    ],
+    "gold_result_digests": [
+      "669def7b5ceff2fac51bc742803abbc6d40c0e459ae59a9e6153a12440a842f7",
+      "d7b7c47df5937186472685ce2cda29569e1ed0bc204a032656e60743478b89f6"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Title FROM Cartoon",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Title FROM Cartoon WHERE Directed_by <> 'Ben Jones'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Title FROM Cartoon WHERE Directed_by = 'Ben Jones' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 2,
+    "semantic_mutants_killed": 2,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "Cartoon"
+      ],
+      "columns": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by"
+        },
+        {
+          "table": "Cartoon",
+          "column": "Title"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "Cartoon",
+          "column": "Directed_by",
+          "operator": "=",
+          "value": "Ben Jones"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Ben Jones",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "Cartoon",
+              "column": "Directed_by"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "cartoon.directed_by = 'Ben Jones'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_f233b47a0b418a79d70e94a3f6e913e59305a30d5ba2423c587ff4ab230e1c1b",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "f233b47a0b418a79d70e94a3f6e913e59305a30d5ba2423c587ff4ab230e1c1b",
+      "constraints_verified": true,
+      "logical_sha256": "60eae56fcb10706fb7952d476b7f3aa60fa961299471b1d16314b3fa87d5c29b"
+    },
+    {
+      "instance_id": "fixture_3122792a66c7c0399d38d72ac84a62aef8121cd1502f4dbe8cfce4cc7fb12fdc",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "3122792a66c7c0399d38d72ac84a62aef8121cd1502f4dbe8cfce4cc7fb12fdc",
+      "constraints_verified": true,
+      "logical_sha256": "b903a09e5cd79c077d8ef4e3ca5d2bcdb1a50a6edc7afa792d10a8793a4f8f93"
+    }
+  ]
+}

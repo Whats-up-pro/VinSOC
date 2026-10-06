@@ -58,29 +58,38 @@ def sqlite_fixture_parity(reference, spec, instance, destination):
             "sample_sqlite_rows": sqlite_rows[:3], "sample_duckdb_rows": duck_rows[:3]}
 
 
-def audit(registry, candidates, ctu_audit, output, builds):
+def read_references(candidates, ctu, *, external_only=False):
+    references = [json.loads(path.read_text(encoding="utf-8"))["reference"] for path in sorted(candidates.glob("*/*.json"))]
+    if not external_only:
+        if ctu is None or ctu.get("gold_execution_success_count") != 40:
+            raise ValueError("CTU_GOLD_AUDIT_INCOMPLETE")
+        references.extend(ctu["case_results"])
+    if (not references or len({item["case_id"] for item in references}) != len(references)
+        or not external_only and len(references) != 120):
+        raise ValueError("CANDIDATE_INVENTORY_INCOMPLETE")
+    return references
+
+
+def audit(registry, candidates, ctu_audit, output, builds, *, external_only=False):
     if output.exists() or builds.exists():
         raise ValueError("OUTPUT_OR_BUILD_ALREADY_EXISTS")
     registry_bytes = registry.read_bytes()
-    ctu = json.loads(ctu_audit.read_text(encoding="utf-8"))
-    if ctu["gold_execution_success_count"] != 40:
-        raise ValueError("CTU_GOLD_AUDIT_INCOMPLETE")
+    ctu = None if external_only else json.loads(ctu_audit.read_text(encoding="utf-8"))
     context_cache = {}
-    references = [json.loads(path.read_text(encoding="utf-8"))["reference"] for path in sorted(candidates.glob("*/*.json"))]
-    references.extend(ctu["case_results"])
-    if len(references) != 120 or len({item["case_id"] for item in references}) != 120:
-        raise ValueError("CANDIDATE_INVENTORY_INCOMPLETE")
+    references = read_references(candidates, ctu, external_only=external_only)
     # The legacy CTU audit already validated source+binary/logical identities;
     # this stage rechecks the binary before using its publicly observed schema.
-    ctu_snapshot = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
-    if hashlib.sha256(ctu_snapshot.read_bytes()).hexdigest() != ctu["snapshot_binary_sha256"]:
-        raise ValueError("CTU_BINARY_IDENTITY_MISMATCH")
-    import duckdb
-    with duckdb.connect(str(ctu_snapshot), read_only=True) as connection:
-        columns = connection.execute("PRAGMA table_info(network_flows)").fetchall()
-        keys = connection.execute("SELECT constraint_column_names FROM duckdb_constraints() WHERE table_name='network_flows' AND constraint_type='PRIMARY KEY'").fetchone()[0]
-    ctu_schema = [{"name": "network_flows", "columns": [{"name": row[1], "duckdb_type": row[2], "not_null": row[3], "primary_key_position": keys.index(row[1])+1 if row[1] in keys else 0} for row in columns]}]
-    context_cache["ctu_dev"] = DatabaseContext("ctu_dev", ctu_snapshot, {"schema": ctu_schema, "relationships": [], "logical_sha256": ctu["snapshot_logical_sha256"]})
+    if ctu is not None:
+        ctu_snapshot = Path("data/ctu_network_public/snapshots/ctu_dev.duckdb")
+        if hashlib.sha256(ctu_snapshot.read_bytes()).hexdigest() != ctu["snapshot_binary_sha256"]:
+            raise ValueError("CTU_BINARY_IDENTITY_MISMATCH")
+        import duckdb
+        with duckdb.connect(str(ctu_snapshot), read_only=True) as connection:
+            columns = connection.execute("PRAGMA table_info(network_flows)").fetchall()
+            keys = connection.execute("SELECT constraint_column_names FROM duckdb_constraints() WHERE table_name='network_flows' AND constraint_type='PRIMARY KEY'").fetchone()[0]
+        ctu_schema = [{"name": "network_flows", "columns": [{"name": row[1], "duckdb_type": row[2], "not_null": row[3], "primary_key_position": keys.index(row[1])+1 if row[1] in keys else 0} for row in columns]}]
+        context_cache["ctu_dev"] = DatabaseContext("ctu_dev", ctu_snapshot, {"schema": ctu_schema, "relationships": [], "logical_sha256": ctu["snapshot_logical_sha256"]})
+    ctu_hash = None if ctu is None else hashlib.sha256(ctu_audit.read_bytes()).hexdigest()
     producer_hashes = {path: hashlib.sha256(Path(path).read_bytes()).hexdigest() for path in (
         "scripts/audit_r2_cross_domain_semantics.py", "evaluation/r2_cross_domain_v1/annotations.py",
         "evaluation/r2_cross_domain_v1/fixture_generation.py", "evaluation/r2_cross_domain_v1/semantic_instances.py",
@@ -89,7 +98,7 @@ def audit(registry, candidates, ctu_audit, output, builds):
     builds.mkdir(parents=True)
     write_record(output / "started_receipt.json", {"started_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_code_sha256_before_execution": producer_hashes, "registry_sha256": hashlib.sha256(registry_bytes).hexdigest(),
-        "ctu_audit_sha256": hashlib.sha256(ctu_audit.read_bytes()).hexdigest(), "case_ids": [item["case_id"] for item in references],
+        "ctu_audit_sha256": ctu_hash, "case_ids": [item["case_id"] for item in references],
         "external_model_calls": 0, "benchmark_locked": False})
     results = []
     for reference in references:
@@ -119,7 +128,7 @@ def audit(registry, candidates, ctu_audit, output, builds):
         write_record(output / (reference["case_id"] + ".audit.json"), record)
     receipt = {"scope": "candidate_semantic_validation_not_benchmark_or_model_score", "created_at_utc": datetime.now(timezone.utc).isoformat(),
                "source_code_sha256_before_execution": producer_hashes, "registry_sha256": hashlib.sha256(registry_bytes).hexdigest(),
-               "ctu_audit_sha256": hashlib.sha256(ctu_audit.read_bytes()).hexdigest(), "case_count": len(results),
+               "ctu_audit_sha256": ctu_hash, "inventory_scope": "source_qualification_subset" if external_only else "complete_candidates", "case_count": len(results),
                "passed": sum(item["status"] == "PASS" for item in results), "blocked": [item for item in results if item["status"] != "PASS"],
                "external_model_calls": 0, "new_inference_cost_usd": 0, "benchmark_locked": False}
     write_record(output / "receipt.json", receipt)
@@ -134,8 +143,9 @@ def main():
     parser.add_argument("--ctu-audit", type=Path, default=Path("evaluation/r2_cross_domain_v1/offline_task3/ctu_new_case_audit_v2.json"))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--builds", type=Path, required=True)
+    parser.add_argument("--external-only", action="store_true", help="Offline source qualification subset; never an accepted complete benchmark")
     args = parser.parse_args()
-    return audit(args.registry, args.candidates, args.ctu_audit, args.output, args.builds)
+    return audit(args.registry, args.candidates, args.ctu_audit, args.output, args.builds, external_only=args.external_only)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,119 @@
+{
+  "case_id": "external_tvshow_1c60aeabf088515a",
+  "database_id": "tvshow",
+  "question": "List the Episode of all  TV series showed on TV Channel with series name \"Sky Radio\".",
+  "gold_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio'",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [
+    "join"
+  ],
+  "family_id": "16065e40b6e416b4ffbce3318ffcddff6c94e133ee5e11ff9b7817ab5ee5c6e7",
+  "accepted_links": [
+    {
+      "tables": [
+        "TV_Channel",
+        "TV_series"
+      ],
+      "columns": [
+        {
+          "table": "TV_Channel",
+          "column": "id"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "series_name"
+        },
+        {
+          "table": "TV_series",
+          "column": "Channel"
+        },
+        {
+          "table": "TV_series",
+          "column": "Episode"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Channel",
+          "from_table": "TV_series",
+          "to_column": "id",
+          "to_table": "TV_Channel"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "TV_Channel",
+          "column": "series_name",
+          "operator": "=",
+          "value": "Sky Radio"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.id = t2.channel",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "id"
+            },
+            {
+              "table": "TV_series",
+              "column": "Channel"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t1.series_name = 'Sky Radio'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Sky Radio",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "series_name"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.id = t2.channel"
+        },
+        {
+          "stage": "where",
+          "expression": "t1.series_name = 'Sky Radio'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+  "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+  "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+  "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "television",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_tvshow_1c60aeabf088515a.audit.json",
+  "semantic_audit_sha256": "11d8adc51dc28a7c34b135447ff71e158a5594501c6a6a62872dd18f032dbbec"
+}

@@ -1,0 +1,62 @@
+{
+  "case_id": "ctu_cross_0d22a790584f0155",
+  "database_id": "ctu_dev",
+  "question": "Return minimum and maximum event time for each source dataset, ordered by dataset.",
+  "gold_sql": "SELECT source_dataset,MIN(event_time),MAX(event_time) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "time",
+    "order_limit"
+  ],
+  "family_id": "a26df409d8a8ebfab046eb4e40ae703fd448f62fced877df84973582e3e5c9d3",
+  "split": "calibration",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 2,
+  "sample_gold_rows": [
+    [
+      "ctu13_s5",
+      "2011-08-15T16:43:20.931208",
+      "2011-08-15T17:13:26.758894"
+    ],
+    [
+      "ctu13_s7",
+      "2011-08-16T13:51:24.049047",
+      "2011-08-16T14:12:41.499668"
+    ]
+  ],
+  "observed_result_sha256": "abde4002ca6ca4c007f2b9b4a2992dc4b752930a80bbc8df70ff2c843ff18682",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_0d22a790584f0155.audit.json",
+  "semantic_audit_sha256": "432880ef53f7811ab486e1db3a67d0fdb183b67b95e657a79967e13426b9d5b8",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

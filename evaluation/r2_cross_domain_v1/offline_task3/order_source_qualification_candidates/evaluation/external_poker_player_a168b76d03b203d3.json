@@ -1,0 +1,79 @@
+{
+  "reference": {
+    "case_id": "external_poker_player_a168b76d03b203d3",
+    "database_id": "poker_player",
+    "question": "What are the earnings of poker players, ordered descending by value?",
+    "gold_sql": "SELECT Earnings FROM poker_player ORDER BY Earnings DESC",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "order_limit"
+    ],
+    "family_id": "f0bee17ef3ea8f9d87c385db014b4a0edbcf90057ec99169e64d510a8746493f",
+    "accepted_links": [
+      {
+        "tables": [
+          "poker_player"
+        ],
+        "columns": [
+          {
+            "table": "poker_player",
+            "column": "Earnings"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Earnings FROM poker_player ORDER BY Earnings DESC",
+    "source_sqlite_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+    "base_snapshot_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+    "base_snapshot_logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Earnings FROM poker_player ORDER BY Earnings DESC",
+    "adapted_sql": "SELECT Earnings FROM poker_player ORDER BY Earnings DESC",
+    "transformations": [],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 5,
+    "duckdb_row_count": 5,
+    "sqlite_result_sha256": "d9b9d1acec8bb35e73c8d86b1e757399bcdd4e823d1852970720c597c688ca80",
+    "duckdb_result_sha256": "d9b9d1acec8bb35e73c8d86b1e757399bcdd4e823d1852970720c597c688ca80",
+    "sample_original_rows": [
+      [
+        596462.0
+      ],
+      [
+        476090.0
+      ],
+      [
+        189233.0
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        596462.0
+      ],
+      [
+        476090.0
+      ],
+      [
+        189233.0
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

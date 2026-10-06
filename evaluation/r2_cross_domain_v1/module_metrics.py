@@ -13,9 +13,10 @@ from .data import _quote
 from .tools import witness_id
 
 
-POLICY = {"version": "module_metrics_v1", "empty_set": "NA_rates_exact_set_success",
+POLICY = {"version": "module_metrics_v2", "empty_set": "NA_rates_exact_set_success",
           "alternative": "max_joint_item_f1_stable_first", "coverage": "stage_present_over_all_cases",
-          "numeric_constraints_are_stored_values": False}
+          "numeric_constraints_are_stored_values": False,
+          "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"}
 
 
 def _key(value):
@@ -24,8 +25,9 @@ def _key(value):
 
 def _items(link, reference=False):
     values = link.get("stored_values" if reference else "grounded_values", [])
+    supporting = {item.get('evidence_id') for item in link.get('constraints', []) if item.get('kind') == 'domain_predicate'}
     stored = [{"table": value.get("table"), "column": value.get("column"), "operator": value.get("operator", "="),
-               "value": value.get("value")} for value in values]
+               "value": value.get("value")} for value in values if reference or value.get('evidence_id') not in supporting]
     constraints = [{key: value for key, value in constraint.items() if key not in ("evidence_id", "value_type")}
                    for constraint in link.get("constraints", [])]
     return {"tables": {_key(value) for value in link.get("tables", [])},

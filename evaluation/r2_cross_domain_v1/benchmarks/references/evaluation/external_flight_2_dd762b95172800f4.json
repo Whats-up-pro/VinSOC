@@ -1,0 +1,86 @@
+{
+  "case_id": "external_flight_2_dd762b95172800f4",
+  "database_id": "flight_2",
+  "question": "Which airports do not have departing or arriving flights?",
+  "gold_sql": "SELECT AirportName FROM Airports WHERE NOT AirportCode IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)",
+  "comparator": "unordered_multiset",
+  "difficulty": "advanced",
+  "features": [
+    "nested"
+  ],
+  "family_id": "993e7b4524d239060fde31aa01cff202eb977c57bb07525c90d43bf86eb708f9",
+  "accepted_links": [
+    {
+      "tables": [
+        "airports",
+        "flights"
+      ],
+      "columns": [
+        {
+          "table": "airports",
+          "column": "AirportCode"
+        },
+        {
+          "table": "airports",
+          "column": "AirportName"
+        },
+        {
+          "table": "flights",
+          "column": "DestAirport"
+        },
+        {
+          "table": "flights",
+          "column": "SourceAirport"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "in",
+          "stage": "where",
+          "expression": "airports.airportcode IN (SELECT flights.sourceairport AS sourceairport FROM flights AS flights UNION SELECT flights.destairport AS destairport FROM flights AS flights)",
+          "negated": true,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "AirportCode"
+            },
+            {
+              "table": "flights",
+              "column": "DestAirport"
+            },
+            {
+              "table": "flights",
+              "column": "SourceAirport"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "NOT airports.airportcode IN (SELECT flights.sourceairport AS sourceairport FROM flights AS flights UNION SELECT flights.destairport AS destairport FROM flights AS flights)"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT AirportName FROM Airports WHERE AirportCode NOT IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)",
+  "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+  "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+  "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "aviation",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_flight_2_dd762b95172800f4.audit.json",
+  "semantic_audit_sha256": "c9cc1606297ead9cda10a0cdd5ed77df2f57785e9bbe964edf16a54f9866badd"
+}

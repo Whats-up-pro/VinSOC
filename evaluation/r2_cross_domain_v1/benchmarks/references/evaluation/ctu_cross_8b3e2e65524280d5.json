@@ -1,0 +1,155 @@
+{
+  "case_id": "ctu_cross_8b3e2e65524280d5",
+  "database_id": "ctu_dev",
+  "question": "Return the seven most frequent TCP destination ports at most 1024 in CTU scenario 5 with counts; break count ties by port ascending.",
+  "gold_sql": "SELECT dst_port,COUNT(*) AS n FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='TCP' AND dst_port<=1024 GROUP BY dst_port ORDER BY n DESC,dst_port ASC LIMIT 7",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "order_limit"
+  ],
+  "family_id": "3a3e1ee9be51baf68c3c5f4f13b2f51fe76434a87fac2c73b295b2734b8740f9",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "dst_port"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "TCP"
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "limit",
+          "value": 7
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_port",
+          "kind": "numeric_threshold",
+          "operator": "<=",
+          "value": 1024
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "lte",
+          "stage": "where",
+          "expression": "network_flows.dst_port <= 1024",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1024,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'TCP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "TCP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'TCP' AND network_flows.dst_port <= 1024"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 7,
+  "sample_gold_rows": [
+    [
+      80,
+      21171
+    ],
+    [
+      443,
+      3745
+    ],
+    [
+      993,
+      179
+    ]
+  ],
+  "observed_result_sha256": "29cb51d9e77a9ea17a4d6a9135c6d6fcdcc1a145794d63b3769ca78d4055aadd",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_8b3e2e65524280d5.audit.json",
+  "semantic_audit_sha256": "da041e72b78b0b652fac88077a8f607f6a309f5a85ac172f26b9614abcff6232",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

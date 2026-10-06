@@ -1,0 +1,86 @@
+{
+  "case_id": "external_concert_singer_1313c062638e8562",
+  "database_id": "concert_singer",
+  "question": "What are the names of the singers and number of concerts for each person?",
+  "gold_sql": "SELECT T2.name, COUNT(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id = T2.singer_id GROUP BY T2.singer_id, T2.name",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [
+    "join",
+    "group_having"
+  ],
+  "family_id": "c22a240288d6a8e28d877315ca5413275e179435c8f66110388c15a71a3add08",
+  "accepted_links": [
+    {
+      "tables": [
+        "singer",
+        "singer_in_concert"
+      ],
+      "columns": [
+        {
+          "table": "singer",
+          "column": "Name"
+        },
+        {
+          "table": "singer",
+          "column": "Singer_ID"
+        },
+        {
+          "table": "singer_in_concert",
+          "column": "Singer_ID"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "Singer_ID",
+          "from_table": "singer_in_concert",
+          "to_column": "Singer_ID",
+          "to_table": "singer"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.singer_id = t2.singer_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "singer",
+              "column": "Singer_ID"
+            },
+            {
+              "table": "singer_in_concert",
+              "column": "Singer_ID"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.singer_id = t2.singer_id"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT T2.name ,  count(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id  =  T2.singer_id GROUP BY T2.singer_id",
+  "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+  "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+  "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "music",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_concert_singer_1313c062638e8562.audit.json",
+  "semantic_audit_sha256": "7339ed36a2bf77a77cc87eb4069ec1455010facc83bb7214ba207769a88b95c2"
+}

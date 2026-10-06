@@ -1,0 +1,87 @@
+{
+  "reference": {
+    "case_id": "external_car_1_fdc8ee399ddc765f",
+    "database_id": "car_1",
+    "question": "What are the makers and models?",
+    "gold_sql": "SELECT Maker, Model FROM MODEL_LIST",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "2140f6af99f61b71ae4ed502f498719ee9cddd12d4855c64e54d6f2bd329b7dc",
+    "accepted_links": [
+      {
+        "tables": [
+          "model_list"
+        ],
+        "columns": [
+          {
+            "table": "model_list",
+            "column": "Maker"
+          },
+          {
+            "table": "model_list",
+            "column": "Model"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Maker ,  Model FROM MODEL_LIST;",
+    "source_sqlite_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709",
+    "base_snapshot_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+    "base_snapshot_logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Maker ,  Model FROM MODEL_LIST;",
+    "adapted_sql": "SELECT Maker, Model FROM MODEL_LIST",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 36,
+    "duckdb_row_count": 36,
+    "sqlite_result_sha256": "27845dbb704576313194c9d54276a6ac2cf8e3a9995403b376015243e57fd0f5",
+    "duckdb_result_sha256": "27845dbb704576313194c9d54276a6ac2cf8e3a9995403b376015243e57fd0f5",
+    "sample_original_rows": [
+      [
+        1,
+        "amc"
+      ],
+      [
+        2,
+        "audi"
+      ],
+      [
+        3,
+        "bmw"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        1,
+        "amc"
+      ],
+      [
+        2,
+        "audi"
+      ],
+      [
+        3,
+        "bmw"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

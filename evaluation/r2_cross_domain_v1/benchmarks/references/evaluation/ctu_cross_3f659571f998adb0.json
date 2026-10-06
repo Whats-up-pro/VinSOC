@@ -1,0 +1,159 @@
+{
+  "case_id": "ctu_cross_3f659571f998adb0",
+  "database_id": "ctu_dev",
+  "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.",
+  "gold_sql": "SELECT protocol,SUM(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset='ctu13_s7' GROUP BY protocol ORDER BY protocol",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "order_limit",
+    "null"
+  ],
+  "family_id": "e6c4753fb03f85685b1ab0811730cfbee16eb2cce172798d8c578b21c0ebdae0",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s7"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "null_test",
+          "operator": "is_null"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_in",
+          "kind": "null_test",
+          "operator": "is_null"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s7",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "is",
+          "stage": "expression",
+          "expression": "network_flows.bytes_out IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        },
+        {
+          "operator": "is",
+          "stage": "expression",
+          "expression": "network_flows.bytes_in IS NULL",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": null,
+              "value_type": "null"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s7'"
+        },
+        {
+          "stage": "if",
+          "expression": "network_flows.bytes_out IS NULL AND network_flows.bytes_in IS NULL"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 10,
+  "sample_gold_rows": [
+    [
+      "ARP",
+      0
+    ],
+    [
+      "ICMP",
+      0
+    ],
+    [
+      "IGMP",
+      0
+    ]
+  ],
+  "observed_result_sha256": "1ac8d4202842a76de6c4719794644c902028e0b0bcf1b05453aff8d0a2f10c14",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_3f659571f998adb0.audit.json",
+  "semantic_audit_sha256": "92b7aa845651709f4d76210c218a4ec7bf3a378dcbc2f9146550518025f0758e",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

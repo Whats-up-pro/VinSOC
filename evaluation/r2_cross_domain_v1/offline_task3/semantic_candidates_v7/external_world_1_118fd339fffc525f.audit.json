@@ -1,0 +1,233 @@
+{
+  "case_id": "external_world_1_118fd339fffc525f",
+  "database_id": "world_1",
+  "split": "calibration",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_edc9dd6fd079f517829092612115479fe96baf5f471eb76677a442c8a254d356",
+      "fixture_3fcd429d64337d849953bf1f324f3a5232d92ca4442050f337728aa1a19f2949"
+    ],
+    "gold_result_digests": [
+      "353159a50961141167d481591936581d7d6b82852b6b9f1aa4be4199161544ad",
+      "a17a3d2de000e2cd7dc489265198c3f8816fce46cbd50ef9ed583b240ebabb5c"
+    ],
+    "mutant_results": [
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Name FROM country",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Name FROM country WHERE SurfaceArea >= (SELECT MIN(SurfaceArea) FROM country WHERE Continent = 'Europe')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MAX(SurfaceArea) FROM country WHERE Continent = 'Europe')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MIN(SurfaceArea) FROM country)",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MIN(SurfaceArea) FROM country WHERE Continent <> 'Europe')",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          true
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MIN(SurfaceArea) FROM country WHERE Continent = 'Europe' AND TRUE) AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 5,
+    "semantic_mutants_killed": 5,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_C"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_A"
+        ],
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_C"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "fixture_B"
+        ],
+        [
+          "fixture_C"
+        ],
+        [
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "country"
+      ],
+      "columns": [
+        {
+          "table": "country",
+          "column": "Continent"
+        },
+        {
+          "table": "country",
+          "column": "Name"
+        },
+        {
+          "table": "country",
+          "column": "SurfaceArea"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "country",
+          "column": "Continent",
+          "operator": "=",
+          "value": "Europe"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "country.surfacearea > (SELECT MIN(country.surfacearea) AS _col_0 FROM country AS country WHERE country.continent = 'Europe')",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Continent"
+            },
+            {
+              "table": "country",
+              "column": "SurfaceArea"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "country.continent = 'Europe'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Europe",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Continent"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "country.surfacearea > (SELECT MIN(country.surfacearea) AS _col_0 FROM country AS country WHERE country.continent = 'Europe')"
+        },
+        {
+          "stage": "where",
+          "expression": "country.continent = 'Europe'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_edc9dd6fd079f517829092612115479fe96baf5f471eb76677a442c8a254d356",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "edc9dd6fd079f517829092612115479fe96baf5f471eb76677a442c8a254d356",
+      "constraints_verified": true,
+      "logical_sha256": "2a085d06985b374153797702e6a8ead5bbe7e0c98ddcd12e879bca9f6994aa53"
+    },
+    {
+      "instance_id": "fixture_3fcd429d64337d849953bf1f324f3a5232d92ca4442050f337728aa1a19f2949",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "3fcd429d64337d849953bf1f324f3a5232d92ca4442050f337728aa1a19f2949",
+      "constraints_verified": true,
+      "logical_sha256": "114f70fd632af42b640f96d65d63782a581eb967af632667727690ce67178bca"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "case_id": "external_flight_2_ba7a417281056dea",
+  "database_id": "flight_2",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_4af50cece8bc8931f2a9b144d81453321971402ba9a1b09234c5b9b0ad102d10",
+      "fixture_bd5aea86eb5bd60a237bbf0027edbe622f3db78d0b9126e0dd36f23fa9e15b59"
+    ],
+    "gold_result_digests": [
+      "ca5e4b864fbb1ee2330b6c775ee9f566bf0532ad2b7800bef023136d7aa9ea3f",
+      "207367c9223011c8a08551709a5ea32f085a55d83c040fd656f711334b1d2a7d"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT AirportCode FROM AIRPORTS WHERE city = 'Anthony'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT AirportCode, AirportName FROM AIRPORTS",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT AirportCode, AirportName FROM AIRPORTS WHERE city <> 'Anthony'",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT AirportCode, AirportName FROM AIRPORTS WHERE city = 'Anthony' AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 3,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "5",
+          "fixture_C"
+        ],
+        [
+          "13",
+          "fixture_B"
+        ],
+        [
+          "21",
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "5",
+          "fixture_C"
+        ],
+        [
+          "13",
+          "fixture_B"
+        ],
+        [
+          "21",
+          "fixture_A"
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          "2",
+          "fixture_C"
+        ],
+        [
+          "10",
+          "fixture_B"
+        ],
+        [
+          "18",
+          "fixture_A"
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          "2",
+          "fixture_C"
+        ],
+        [
+          "10",
+          "fixture_B"
+        ],
+        [
+          "18",
+          "fixture_A"
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "airports"
+      ],
+      "columns": [
+        {
+          "table": "airports",
+          "column": "AirportCode"
+        },
+        {
+          "table": "airports",
+          "column": "AirportName"
+        },
+        {
+          "table": "airports",
+          "column": "City"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "airports",
+          "column": "City",
+          "operator": "=",
+          "value": "Anthony"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "airports.city = 'Anthony'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Anthony",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "City"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "airports.city = 'Anthony'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_4af50cece8bc8931f2a9b144d81453321971402ba9a1b09234c5b9b0ad102d10",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "4af50cece8bc8931f2a9b144d81453321971402ba9a1b09234c5b9b0ad102d10",
+      "constraints_verified": true,
+      "logical_sha256": "3398a1deb2c979163a96cf03e5827e0259e729f9996012d1d5d9550f80440319"
+    },
+    {
+      "instance_id": "fixture_bd5aea86eb5bd60a237bbf0027edbe622f3db78d0b9126e0dd36f23fa9e15b59",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "bd5aea86eb5bd60a237bbf0027edbe622f3db78d0b9126e0dd36f23fa9e15b59",
+      "constraints_verified": true,
+      "logical_sha256": "706ae78498620781533389e813b0c39a604f90f830827045f47fab019d7393de"
+    }
+  ]
+}

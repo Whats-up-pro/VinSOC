@@ -1,0 +1,178 @@
+{
+  "case_id": "ctu_cross_3f83eeb648a43168",
+  "database_id": "ctu_dev",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_4494ace688fafce4cfd585d4abc3e677bb62b8792db206451fc2d70dec38ec43",
+      "fixture_c3c347ea6b7243248313b60a132eb237034423ab9ec9c1ed5c738d35012580fb"
+    ],
+    "gold_result_digests": [
+      "0ed01a9ec406d50b34387e57bde50387106a7e913d98d864c9ad08f42779aaba",
+      "b0c43c3c3fab8b5461ace76ac90c388137e329ca14fb5b19d3c220e0fc7008d7"
+    ],
+    "mutant_results": [
+      {
+        "family": "projection",
+        "sql": "SELECT protocol, COUNT(*), MIN(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s5' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "null_count",
+        "sql": "SELECT protocol, COUNT(NULL), MIN(bytes_out), MAX(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s5' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT protocol, COUNT(*), MAX(bytes_out), MAX(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s5' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "aggregate",
+        "sql": "SELECT protocol, COUNT(*), MIN(bytes_out), MIN(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s5' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          true,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT protocol, COUNT(*), MIN(bytes_out), MAX(bytes_out) FROM network_flows GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT protocol, COUNT(*), MIN(bytes_out), MAX(bytes_out) FROM network_flows WHERE source_dataset <> 'ctu13_s5' GROUP BY protocol ORDER BY protocol",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "ordering",
+        "sql": "SELECT protocol, COUNT(*), MIN(bytes_out), MAX(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s5' GROUP BY protocol ORDER BY protocol DESC",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT protocol, COUNT(*), MIN(bytes_out), MAX(bytes_out) FROM network_flows WHERE source_dataset = 'ctu13_s5' AND TRUE GROUP BY protocol ORDER BY protocol",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 7,
+    "semantic_mutants_killed": 7,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [],
+  "updated_annotations": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_4494ace688fafce4cfd585d4abc3e677bb62b8792db206451fc2d70dec38ec43",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "4494ace688fafce4cfd585d4abc3e677bb62b8792db206451fc2d70dec38ec43",
+      "constraints_verified": true,
+      "logical_sha256": "93066d0b145b2aa82683def46867d4b63a8c5f4e8207d26cefe735f8caddccef"
+    },
+    {
+      "instance_id": "fixture_c3c347ea6b7243248313b60a132eb237034423ab9ec9c1ed5c738d35012580fb",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "c3c347ea6b7243248313b60a132eb237034423ab9ec9c1ed5c738d35012580fb",
+      "constraints_verified": true,
+      "logical_sha256": "feaa9adfbde859fe6e92bec81ae2796b53eaa9dddff0339a00ee7847b88e1581"
+    }
+  ]
+}

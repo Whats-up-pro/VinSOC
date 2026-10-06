@@ -1,0 +1,152 @@
+{
+  "case_id": "ctu_cross_5ba944b403f6456d",
+  "database_id": "ctu_dev",
+  "question": "List source IP and outbound bytes of ICMP flows in CTU scenario 5 whose outbound bytes exceed 1000.",
+  "gold_sql": "SELECT src_ip,bytes_out FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='ICMP' AND bytes_out>1000",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "e5015938bd0c30352642dfd2b20a9ed0ba6902bd9a643ee20ff1d0070d765926",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "unordered_multiset",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "=",
+          "value": "ICMP"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "bytes_out",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 1000
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "network_flows.bytes_out > 1000",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 1000,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.protocol = 'ICMP'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ICMP",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND network_flows.protocol = 'ICMP' AND network_flows.bytes_out > 1000"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 159,
+  "sample_gold_rows": [
+    [
+      "147.32.84.174",
+      56640
+    ],
+    [
+      "147.32.84.138",
+      829292
+    ],
+    [
+      "147.32.87.1",
+      1610
+    ]
+  ],
+  "observed_result_sha256": "fe6db9b6289cadd6dc09edc1cc5ec4ccaa912462288891284d6845d7dae8c863",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_5ba944b403f6456d.audit.json",
+  "semantic_audit_sha256": "5e016e288a1aee14fb8891992b30c2f79f8a0003be0cb6ff4032f579305f6e0f",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

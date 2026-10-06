@@ -1,0 +1,225 @@
+{
+  "case_id": "external_world_1_c16f04754e67aa3c",
+  "database_id": "world_1",
+  "question": "What are the countries where either English or Dutch is the official language ?",
+  "gold_sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+  "comparator": "unordered_multiset",
+  "difficulty": "advanced",
+  "features": [
+    "join",
+    "nested"
+  ],
+  "family_id": "4bc9d61116a8580d9149e11731bd4f2a057efac985bf13cab9a3547103d4da02",
+  "accepted_links": [
+    {
+      "tables": [
+        "country",
+        "countrylanguage"
+      ],
+      "columns": [
+        {
+          "table": "country",
+          "column": "Code"
+        },
+        {
+          "table": "country",
+          "column": "Name"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "CountryCode"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "IsOfficial"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "Language"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "CountryCode",
+          "from_table": "countrylanguage",
+          "to_column": "Code",
+          "to_table": "country"
+        }
+      ],
+      "stored_values": [
+        {
+          "table": "countrylanguage",
+          "column": "Language",
+          "operator": "=",
+          "value": "english"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "IsOfficial",
+          "operator": "=",
+          "value": "t"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "Language",
+          "operator": "=",
+          "value": "dutch"
+        },
+        {
+          "table": "countrylanguage",
+          "column": "IsOfficial",
+          "operator": "=",
+          "value": "t"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Code"
+            },
+            {
+              "table": "countrylanguage",
+              "column": "CountryCode"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "country",
+              "column": "Code"
+            },
+            {
+              "table": "countrylanguage",
+              "column": "CountryCode"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.language = 'english'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "english",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "Language"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.isofficial = 't'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "t",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "IsOfficial"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.language = 'dutch'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "dutch",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "Language"
+            }
+          ]
+        },
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "t2.isofficial = 't'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "t",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "countrylanguage",
+              "column": "IsOfficial"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.language = 'english' AND t2.isofficial = 't'"
+        },
+        {
+          "stage": "join",
+          "expression": "t1.code = t2.countrycode"
+        },
+        {
+          "stage": "where",
+          "expression": "t2.language = 'dutch' AND t2.isofficial = 't'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"english\" and isofficial  =  \"t\" union select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"dutch\" and isofficial  =  \"t\"",
+  "source_sqlite_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+  "base_snapshot_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+  "base_snapshot_logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "calibration",
+  "domain": "geography",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_world_1_c16f04754e67aa3c.audit.json",
+  "semantic_audit_sha256": "451361f6e0e66e3b450c61108cd8148c448c360e8b39772c879e13e9ddda12f8"
+}

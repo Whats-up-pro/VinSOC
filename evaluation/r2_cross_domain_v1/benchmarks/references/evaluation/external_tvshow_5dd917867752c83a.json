@@ -1,0 +1,83 @@
+{
+  "case_id": "external_tvshow_5dd917867752c83a",
+  "database_id": "tvshow",
+  "question": "What is the pixel aspect ratio and country of origin for all TV channels that do not use English?",
+  "gold_sql": "SELECT Pixel_aspect_ratio_PAR, country FROM tv_channel WHERE LANGUAGE <> 'English'",
+  "comparator": "unordered_multiset",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "2afde9ac98fa3123bde411df33a7f82ecdc333ece1e9bc97c9584145fa6556fe",
+  "accepted_links": [
+    {
+      "tables": [
+        "TV_Channel"
+      ],
+      "columns": [
+        {
+          "table": "TV_Channel",
+          "column": "Country"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Language"
+        },
+        {
+          "table": "TV_Channel",
+          "column": "Pixel_aspect_ratio_PAR"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "TV_Channel",
+          "column": "Language",
+          "operator": "!=",
+          "value": "English"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "neq",
+          "stage": "where",
+          "expression": "tv_channel.language <> 'English'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "English",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "TV_Channel",
+              "column": "Language"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "tv_channel.language <> 'English'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT Pixel_aspect_ratio_PAR ,  country FROM tv_channel WHERE LANGUAGE != 'English'",
+  "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+  "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+  "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "television",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_tvshow_5dd917867752c83a.audit.json",
+  "semantic_audit_sha256": "863e43071595d823ab68b83115fcaba9056b5d9de0db0a0e6bd5f19a47db4efc"
+}

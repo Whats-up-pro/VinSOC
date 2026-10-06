@@ -75,3 +75,12 @@ def test_boolean_function_predicate_and_boolean_structure_are_annotated(context)
     alternative = annotate_reference("SELECT name FROM people WHERE starts_with(name,'A') OR (id=2 AND name IS NULL)", context)[0]
     assert "startswith" in {item["operator"] for item in alternative["predicates"]}
     assert alternative["boolean_structure"][0]["expression"].startswith("STARTS_WITH")
+
+
+def test_mapping_annotations_include_pattern_membership_null_and_bounds(context):
+    from evaluation.r2_cross_domain_v1.annotations import annotate_reference
+    alt = annotate_reference("SELECT name FROM people WHERE starts_with(name,'A_') AND name IN ('Bo','Cy') AND id BETWEEN 2 AND 9 AND name IS NOT NULL", context)[0]
+    assert {v['value'] for v in alt['stored_values']} == {'Bo', 'Cy'}
+    assert any(v['kind'] == 'domain_predicate' and v['operator'] == 'prefix' and v['value'] == 'A_' for v in alt['constraints'])
+    assert any(v['kind'] == 'null_test' and v['operator'] == 'is_not_null' for v in alt['constraints'])
+    assert {(v['operator'], v['value']) for v in alt['constraints'] if v['kind'] == 'numeric_threshold'} == {('>=', 2), ('<=', 9)}

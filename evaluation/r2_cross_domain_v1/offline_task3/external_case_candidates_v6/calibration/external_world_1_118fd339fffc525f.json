@@ -1,0 +1,150 @@
+{
+  "reference": {
+    "case_id": "external_world_1_118fd339fffc525f",
+    "database_id": "world_1",
+    "question": "Which countries have greater area than that of any country in Europe?",
+    "gold_sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MIN(SurfaceArea) FROM country WHERE Continent = 'Europe')",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "nested"
+    ],
+    "family_id": "00ee100d8d9c235f6ca8d3a5ecd35f099b5cd7877c84b9c33ac016c0b7310ee4",
+    "accepted_links": [
+      {
+        "tables": [
+          "country"
+        ],
+        "columns": [
+          {
+            "table": "country",
+            "column": "Continent"
+          },
+          {
+            "table": "country",
+            "column": "Name"
+          },
+          {
+            "table": "country",
+            "column": "SurfaceArea"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "country",
+            "column": "Continent",
+            "operator": "=",
+            "value": "Europe"
+          }
+        ],
+        "constraints": [],
+        "predicates": [
+          {
+            "operator": "gt",
+            "stage": "where",
+            "expression": "country.surfacearea > (SELECT MIN(country.surfacearea) AS _col_0 FROM country AS country WHERE country.continent = 'Europe')",
+            "negated": false,
+            "escape": null,
+            "literals": [],
+            "column_dependencies": [
+              {
+                "table": "country",
+                "column": "Continent"
+              },
+              {
+                "table": "country",
+                "column": "SurfaceArea"
+              }
+            ]
+          },
+          {
+            "operator": "eq",
+            "stage": "where",
+            "expression": "country.continent = 'Europe'",
+            "negated": false,
+            "escape": null,
+            "literals": [
+              {
+                "value": "Europe",
+                "value_type": "string"
+              }
+            ],
+            "column_dependencies": [
+              {
+                "table": "country",
+                "column": "Continent"
+              }
+            ]
+          }
+        ],
+        "boolean_structure": [
+          {
+            "stage": "where",
+            "expression": "country.surfacearea > (SELECT MIN(country.surfacearea) AS _col_0 FROM country AS country WHERE country.continent = 'Europe')"
+          },
+          {
+            "stage": "where",
+            "expression": "country.continent = 'Europe'"
+          }
+        ],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT Name FROM country WHERE SurfaceArea  >  (SELECT min(SurfaceArea) FROM country WHERE Continent  =  \"Europe\")",
+    "source_sqlite_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+    "base_snapshot_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+    "base_snapshot_logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Name FROM country WHERE SurfaceArea  >  (SELECT min(SurfaceArea) FROM country WHERE Continent  =  \"Europe\")",
+    "adapted_sql": "SELECT Name FROM country WHERE SurfaceArea > (SELECT MIN(SurfaceArea) FROM country WHERE Continent = 'Europe')",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Europe"
+      },
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Europe"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 238,
+    "duckdb_row_count": 238,
+    "sqlite_result_sha256": "436c7bd178917df5973e86d5c13b7e8dd170c9d7c4f620746b90418363cc9f8f",
+    "duckdb_result_sha256": "436c7bd178917df5973e86d5c13b7e8dd170c9d7c4f620746b90418363cc9f8f",
+    "sample_original_rows": [
+      [
+        "Aruba"
+      ],
+      [
+        "Afghanistan"
+      ],
+      [
+        "Angola"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Aruba"
+      ],
+      [
+        "Afghanistan"
+      ],
+      [
+        "Angola"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

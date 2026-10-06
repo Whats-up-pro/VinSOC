@@ -1,0 +1,43 @@
+{
+  "case_id": "external_voter_1_958013b9b7385ffa",
+  "database_id": "voter_1",
+  "question": "What are the maximum and minimum values of area codes?",
+  "gold_sql": "SELECT MAX(area_code), MIN(area_code) FROM area_code_state",
+  "comparator": "unordered_multiset",
+  "difficulty": "medium",
+  "features": [],
+  "family_id": "e9f3d0fc68e4dd9e6a6448459242451304222973df1148d5c0b486a29c891935",
+  "accepted_links": [
+    {
+      "tables": [
+        "AREA_CODE_STATE"
+      ],
+      "columns": [
+        {
+          "table": "AREA_CODE_STATE",
+          "column": "area_code"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT max(area_code) ,  min(area_code) FROM area_code_state",
+  "source_sqlite_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+  "base_snapshot_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+  "base_snapshot_logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "calibration",
+  "domain": "politics",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_voter_1_958013b9b7385ffa.audit.json",
+  "semantic_audit_sha256": "9543d6c1a6fdf7e5662f59461551c2d9c9158e582584a3266d1820f622f94ba4"
+}

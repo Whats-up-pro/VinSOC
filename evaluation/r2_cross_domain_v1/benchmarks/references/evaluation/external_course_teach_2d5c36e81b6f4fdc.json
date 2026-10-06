@@ -1,0 +1,49 @@
+{
+  "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+  "database_id": "course_teach",
+  "question": "What are the names of the teachers ordered by ascending age?",
+  "gold_sql": "SELECT Name FROM teacher ORDER BY Age ASC NULLS FIRST",
+  "comparator": "ordered_rows",
+  "difficulty": "medium",
+  "features": [
+    "order_limit"
+  ],
+  "family_id": "8fd5e2b0ab0fa3f4665b81a664eba0c7ad8db69081a09ae19065818d96223485",
+  "accepted_links": [
+    {
+      "tables": [
+        "teacher"
+      ],
+      "columns": [
+        {
+          "table": "teacher",
+          "column": "Age"
+        },
+        {
+          "table": "teacher",
+          "column": "Name"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT Name FROM teacher ORDER BY Age ASC",
+  "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+  "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+  "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "education",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_course_teach_2d5c36e81b6f4fdc.audit.json",
+  "semantic_audit_sha256": "b7923c1954f358a28a829e84b2af0c3bcae2062119582b92e31e8f9090349731"
+}

@@ -1,5 +1,6 @@
 """Validate links against controller-owned typed witnesses and the public catalog."""
 import math
+import re
 from datetime import datetime, time
 
 from sqlglot import exp, parse_one
@@ -11,6 +12,28 @@ from .tools import witness_id
 
 class GroundingError(ValueError):
     pass
+
+
+def _pattern_matches(actual, pattern, operator, escape=None, ascii_fold=False):
+    if escape is not None and (not isinstance(escape, str) or len(escape) != 1):
+        raise GroundingError('INVALID_PATTERN_ESCAPE')
+    if type(ascii_fold) is not bool:
+        raise GroundingError('INVALID_PATTERN_CASE_POLICY')
+    if ascii_fold:
+        translation = str.maketrans('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')
+        actual, pattern = actual.translate(translation), pattern.translate(translation)
+    pieces, index = [], 0
+    while index < len(pattern):
+        char = pattern[index]
+        if escape is not None and char == escape:
+            index += 1
+            if index == len(pattern):
+                raise GroundingError('INVALID_PATTERN_ESCAPE')
+            pieces.append(re.escape(pattern[index]))
+        else:
+            pieces.append('.*' if char == '%' else '.' if char == '_' else re.escape(char))
+        index += 1
+    return re.fullmatch(''.join(pieces), actual, flags=re.DOTALL | (re.IGNORECASE if operator == 'ilike' else 0)) is not None
 
 
 def validate_link(question, submitted_link, trajectory, context: DatabaseContext):
@@ -57,7 +80,10 @@ def validate_link(question, submitted_link, trajectory, context: DatabaseContext
             raise GroundingError("MISSING_OR_UNRELATED_WITNESS")
         if any(key in value and value[key] != witness.get(key) for key in ("value", "table", "column", "type", "database_id")):
             raise GroundingError("FORGED_GROUNDED_VALUE")
-        grounded.append(witness.copy())
+        operator = value.get('operator', '=')
+        if operator not in ('=', '!='):
+            raise GroundingError('INVALID_GROUNDED_OPERATOR')
+        grounded.append({**witness, 'operator': operator})
     for constraint in submitted_link["constraints"]:
         if not isinstance(constraint, dict):
             raise GroundingError("INVALID_TYPED_CONSTRAINT")
@@ -94,13 +120,24 @@ def validate_link(question, submitted_link, trajectory, context: DatabaseContext
                 raise GroundingError("UNSAFE_DERIVED_EXPRESSION") from error
             continue
         table, column = constraint.get("table"), constraint.get("column")
+        if kind == 'null_test':
+            if (table, column) not in chosen or constraint.get('operator') not in ('is_null', 'is_not_null') or 'value' in constraint:
+                raise GroundingError('INVALID_NULL_TEST')
+            continue
         if kind == "domain_predicate":
             witness = witnesses.get(constraint.get("evidence_id"))
             if witness is None or (table, column) not in chosen or (table, column) != (witness["table"], witness["column"]) or witness["type"] != "VARCHAR" or not isinstance(value, str):
                 raise GroundingError("MISSING_OR_UNRELATED_WITNESS")
             operator = constraint.get("operator")
             actual = witness["value"]
-            if not (operator == "exact" and actual == value or operator == "prefix" and actual.startswith(value) or operator == "contains" and value in actual):
+            matched = (operator == "exact" and actual == value or operator == "prefix" and actual.startswith(value) or operator == "contains" and value in actual)
+            if operator in ('like', 'ilike'):
+                matched = _pattern_matches(actual, value, operator, constraint.get('escape'), constraint.get('ascii_fold', False))
+            if 'negated' in constraint and type(constraint['negated']) is not bool:
+                raise GroundingError('INVALID_DOMAIN_NEGATION')
+            # For NOT LIKE, a positive pattern witness establishes the pattern
+            # domain, not the existence of every excluded/complement value.
+            if not matched:
                 raise GroundingError("UNWITNESSED_DOMAIN_PREDICATE")
             continue
         if (table, column) not in chosen or constraint.get("operator") not in ("=", "!=", ">", ">=", "<", "<="):
@@ -109,6 +146,9 @@ def validate_link(question, submitted_link, trajectory, context: DatabaseContext
         if kind == "numeric_threshold":
             if not type_name.startswith(("BIGINT", "INTEGER", "DOUBLE", "DECIMAL")) or isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
                 raise GroundingError("WRONG_CONSTRAINT_TYPE")
+        elif kind == 'lexical_threshold':
+            if type_name != 'VARCHAR' or not isinstance(value, str):
+                raise GroundingError('WRONG_CONSTRAINT_TYPE')
         elif kind == "time_threshold":
             source_type = schema[table][column].get("sqlite_type", "").upper()
             if not isinstance(value, str) or not (type_name.startswith(("TIMESTAMP", "DATE")) or source_type in ("DATE", "TIME", "DATETIME", "TIMESTAMP")):

@@ -1,0 +1,73 @@
+{
+  "created_at_utc": "2026-10-06T07:53:43.601663+00:00",
+  "inventory": {
+    "counts": {
+      "calibration": 24,
+      "evaluation": 96
+    },
+    "difficulty": {
+      "advanced": 24,
+      "medium": 48,
+      "basic": 24
+    },
+    "external_features": {
+      "join": 22,
+      "nested": 14,
+      "order_limit": 2,
+      "group_having": 8,
+      "distinct": 2
+    },
+    "evaluation_features": {
+      "join": 22,
+      "nested": 22,
+      "order_limit": 15,
+      "group_having": 20,
+      "distinct": 13,
+      "null": 2,
+      "prefix": 3,
+      "time": 2,
+      "window": 1
+    },
+    "external_domains": [
+      "animal_services",
+      "automotive",
+      "aviation",
+      "competitive_games",
+      "education",
+      "music",
+      "television"
+    ],
+    "external_calibration_databases": [
+      "cre_Doc_Template_Mgt",
+      "student_transcripts_tracking",
+      "voter_1",
+      "world_1"
+    ],
+    "external_evaluation_databases": [
+      "car_1",
+      "concert_singer",
+      "course_teach",
+      "dog_kennels",
+      "flight_2",
+      "orchestra",
+      "poker_player",
+      "tvshow"
+    ],
+    "evaluation_family_count": 93,
+    "external_evaluation_family_count": 61,
+    "family_independence_assumed": false
+  },
+  "anchors_separate": 8,
+  "total_inventory_including_anchors": 128,
+  "source_license": "CC BY-SA 4.0",
+  "attribution": "Spider 1.0; Yu et al. 2018; Yale-LILY/taoyds",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "limits": [
+    "Adapted subset, not official Spider score",
+    "Public source may have been seen in pretraining",
+    "CTU remains same developed S5/S7 schema; not independent holdout",
+    "Question families are correlated; eight external clusters are small",
+    "Typed item annotations are diagnostic; identical AST is not a requirement for end-to-end EX"
+  ]
+}

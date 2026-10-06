@@ -1,0 +1,77 @@
+{
+  "case_id": "ctu_cross_179231c51f8af53e",
+  "database_id": "ctu_dev",
+  "question": "For each source dataset and protocol, return total outbound bytes and average inbound bytes, ordered by source dataset then protocol.",
+  "gold_sql": "SELECT source_dataset,protocol,SUM(bytes_out),AVG(bytes_in) FROM network_flows GROUP BY source_dataset,protocol ORDER BY source_dataset,protocol",
+  "difficulty": "medium",
+  "features": [
+    "group_having",
+    "order_limit"
+  ],
+  "family_id": "2f10195dd60bb1b423b7753cf23c116c95dadadffbd5b2976ec3c1ed093140ca",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "bytes_in"
+        },
+        {
+          "table": "network_flows",
+          "column": "bytes_out"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [],
+      "predicates": [],
+      "boolean_structure": [],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 20,
+  "sample_gold_rows": [
+    [
+      "ctu13_s5",
+      "ARP",
+      38640,
+      250.14084507042253
+    ],
+    [
+      "ctu13_s5",
+      "ICMP",
+      1467652,
+      54.64694471387003
+    ],
+    [
+      "ctu13_s5",
+      "IGMP",
+      9000,
+      0.0
+    ]
+  ],
+  "observed_result_sha256": "a62dc38ff16de2255babf0ca1a332bdcd49686bb795734919e17566cbbd09e2e",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_179231c51f8af53e.audit.json",
+  "semantic_audit_sha256": "1492095ffda9e35d21218aecd366b55d845402e4596976d9b60211eff928d071",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

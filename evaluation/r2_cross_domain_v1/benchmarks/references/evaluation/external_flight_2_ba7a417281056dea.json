@@ -1,0 +1,83 @@
+{
+  "case_id": "external_flight_2_ba7a417281056dea",
+  "database_id": "flight_2",
+  "question": "Give the airport code and airport name corresonding to the city Anthony.",
+  "gold_sql": "SELECT AirportCode, AirportName FROM AIRPORTS WHERE city = 'Anthony'",
+  "comparator": "unordered_multiset",
+  "difficulty": "basic",
+  "features": [],
+  "family_id": "cf6efee01ccc6fc9f5f9e80c8b33ed87223402ccf4ce48fdb11028ddffff7f40",
+  "accepted_links": [
+    {
+      "tables": [
+        "airports"
+      ],
+      "columns": [
+        {
+          "table": "airports",
+          "column": "AirportCode"
+        },
+        {
+          "table": "airports",
+          "column": "AirportName"
+        },
+        {
+          "table": "airports",
+          "column": "City"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "airports",
+          "column": "City",
+          "operator": "=",
+          "value": "Anthony"
+        }
+      ],
+      "constraints": [],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "airports.city = 'Anthony'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "Anthony",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "airports",
+              "column": "City"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "airports.city = 'Anthony'"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "source_gold_sql": "SELECT AirportCode ,  AirportName FROM AIRPORTS WHERE city  =  \"Anthony\"",
+  "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+  "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+  "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+  "benchmark_locked": true,
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS",
+  "source_license": "CC BY-SA 4.0",
+  "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+  "split": "evaluation",
+  "domain": "aviation",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/external_flight_2_ba7a417281056dea.audit.json",
+  "semantic_audit_sha256": "a3ac2cce68a3b215c694e89257f956595d5ef527b4e6bf578539532a134c2b5b"
+}

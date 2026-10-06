@@ -1,0 +1,212 @@
+{
+  "case_id": "external_poker_player_0bce930263776a39",
+  "database_id": "poker_player",
+  "split": "evaluation",
+  "status": "PASS",
+  "semantic": {
+    "scope": "fixture_only_semantic_validation",
+    "external_model_calls": 0,
+    "instance_ids": [
+      "fixture_384113a5b413acafead020e71e749cd9d93f2b7a985c0cf2bf41490354ac56df",
+      "fixture_83f9485cf06fb02a64513aab068622a3b928321022c3224f0f246e34fc9125d4"
+    ],
+    "gold_result_digests": [
+      "9427e7f11e782fb0f4afc77d36699e3fef3adef5c01f14d5b0e4685594e468b1",
+      "b8e08a0eb31856f37fe647bd7a070ba0e180f4593c5b468644b6d4fcd576eb0d"
+    ],
+    "mutant_results": [
+      {
+        "family": "join_kind",
+        "sql": "SELECT AVG(T2.Earnings) FROM people AS T1 LEFT JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID WHERE T1.Height > 200",
+        "status": "NOT_DISTINGUISHED",
+        "instance_matches": [
+          true,
+          true
+        ],
+        "errors": []
+      },
+      {
+        "family": "missing_filter",
+        "sql": "SELECT AVG(T2.Earnings) FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT AVG(T2.Earnings) FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID <> T2.People_ID WHERE T1.Height > 200",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      },
+      {
+        "family": "boundary",
+        "sql": "SELECT AVG(T2.Earnings) FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID WHERE T1.Height >= 200",
+        "status": "KILLED",
+        "instance_matches": [
+          false,
+          false
+        ],
+        "errors": []
+      }
+    ],
+    "equivalent_controls": [
+      {
+        "sql": "SELECT AVG(T2.Earnings) FROM people AS T1 JOIN poker_player AS T2 ON T1.People_ID = T2.People_ID WHERE T1.Height > 200 AND TRUE",
+        "accepted": true
+      }
+    ],
+    "semantic_mutants_executable": 4,
+    "semantic_mutants_killed": 3,
+    "equivalent_controls_accepted": 1
+  },
+  "fixture_sqlite_duckdb_parity": [
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          9.5
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          9.5
+        ]
+      ]
+    },
+    {
+      "parity": true,
+      "ordering_validation": "PASS",
+      "sample_sqlite_rows": [
+        [
+          2.0
+        ]
+      ],
+      "sample_duckdb_rows": [
+        [
+          2.0
+        ]
+      ]
+    }
+  ],
+  "updated_annotations": [
+    {
+      "tables": [
+        "people",
+        "poker_player"
+      ],
+      "columns": [
+        {
+          "table": "people",
+          "column": "Height"
+        },
+        {
+          "table": "people",
+          "column": "People_ID"
+        },
+        {
+          "table": "poker_player",
+          "column": "Earnings"
+        },
+        {
+          "table": "poker_player",
+          "column": "People_ID"
+        }
+      ],
+      "relationships": [
+        {
+          "from_column": "People_ID",
+          "from_table": "poker_player",
+          "to_column": "People_ID",
+          "to_table": "people"
+        }
+      ],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "people",
+          "column": "Height",
+          "kind": "numeric_threshold",
+          "operator": ">",
+          "value": 200
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "join",
+          "expression": "t1.people_id = t2.people_id",
+          "negated": false,
+          "escape": null,
+          "literals": [],
+          "column_dependencies": [
+            {
+              "table": "people",
+              "column": "People_ID"
+            },
+            {
+              "table": "poker_player",
+              "column": "People_ID"
+            }
+          ]
+        },
+        {
+          "operator": "gt",
+          "stage": "where",
+          "expression": "t1.height > 200",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": 200,
+              "value_type": "numeric"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "people",
+              "column": "Height"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "join",
+          "expression": "t1.people_id = t2.people_id"
+        },
+        {
+          "stage": "where",
+          "expression": "t1.height > 200"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "fixture_identities": [
+    {
+      "instance_id": "fixture_384113a5b413acafead020e71e749cd9d93f2b7a985c0cf2bf41490354ac56df",
+      "fixture_only": true,
+      "seed": 20261005,
+      "spec_sha256": "384113a5b413acafead020e71e749cd9d93f2b7a985c0cf2bf41490354ac56df",
+      "constraints_verified": true,
+      "logical_sha256": "bc3ccb6bc33b1780a2922d74f1e82763025acb59cc7c5bf03c8aa9489792f1f7"
+    },
+    {
+      "instance_id": "fixture_83f9485cf06fb02a64513aab068622a3b928321022c3224f0f246e34fc9125d4",
+      "fixture_only": true,
+      "seed": 20261006,
+      "spec_sha256": "83f9485cf06fb02a64513aab068622a3b928321022c3224f0f246e34fc9125d4",
+      "constraints_verified": true,
+      "logical_sha256": "268dd5a27bbbd67b75002d77dc154051b490a263f8325039015e3610df1faa06"
+    }
+  ]
+}

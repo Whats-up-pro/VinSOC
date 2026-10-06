@@ -1,0 +1,65 @@
+{
+  "reference": {
+    "case_id": "external_poker_player_53bc98dacc7034f7",
+    "database_id": "poker_player",
+    "question": "Return the average earnings across all poker players.",
+    "gold_sql": "SELECT AVG(Earnings) FROM poker_player",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "7c07d2d3a04bd5efddad5ab01e92d418f75bc0e4cde35383f6edc0b47ab9e1ba",
+    "accepted_links": [
+      {
+        "tables": [
+          "poker_player"
+        ],
+        "columns": [
+          {
+            "table": "poker_player",
+            "column": "Earnings"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT avg(Earnings) FROM poker_player",
+    "source_sqlite_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+    "base_snapshot_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+    "base_snapshot_logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT avg(Earnings) FROM poker_player",
+    "adapted_sql": "SELECT AVG(Earnings) FROM poker_player",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "7db456399c1a53df7b60a009e7e6d51fcb4a75b1c9fb0fd90ab1b8fabedb52e5",
+    "duckdb_result_sha256": "7db456399c1a53df7b60a009e7e6d51fcb4a75b1c9fb0fd90ab1b8fabedb52e5",
+    "sample_original_rows": [
+      [
+        301891.2
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        301891.2
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

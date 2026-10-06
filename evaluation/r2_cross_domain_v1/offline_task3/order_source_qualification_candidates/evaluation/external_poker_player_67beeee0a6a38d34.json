@@ -1,0 +1,67 @@
+{
+  "reference": {
+    "case_id": "external_poker_player_67beeee0a6a38d34",
+    "database_id": "poker_player",
+    "question": "Count the number of different nationalities.",
+    "gold_sql": "SELECT COUNT(DISTINCT Nationality) FROM people",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "distinct"
+    ],
+    "family_id": "e83965bdd1470e9995b5145391cb44a7571770c5e449f2de4e0d0bddf5c891ad",
+    "accepted_links": [
+      {
+        "tables": [
+          "people"
+        ],
+        "columns": [
+          {
+            "table": "people",
+            "column": "Nationality"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "predicates": [],
+        "boolean_structure": [],
+        "annotations_complete": true,
+        "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+      }
+    ],
+    "source_gold_sql": "SELECT count(DISTINCT Nationality) FROM people",
+    "source_sqlite_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+    "base_snapshot_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+    "base_snapshot_logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "EXHAUSTIVE_PARSED_STRUCTURE_PENDING_SEMANTIC_REVIEW",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT count(DISTINCT Nationality) FROM people",
+    "adapted_sql": "SELECT COUNT(DISTINCT Nationality) FROM people",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "b8e08a0eb31856f37fe647bd7a070ba0e180f4593c5b468644b6d4fcd576eb0d",
+    "duckdb_result_sha256": "b8e08a0eb31856f37fe647bd7a070ba0e180f4593c5b468644b6d4fcd576eb0d",
+    "sample_original_rows": [
+      [
+        2
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        2
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

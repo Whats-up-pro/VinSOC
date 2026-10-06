@@ -1,0 +1,126 @@
+{
+  "case_id": "ctu_cross_ef8808ed9e47cef2",
+  "database_id": "ctu_dev",
+  "question": "List distinct source IP/label pairs in CTU scenario 5 whose label begins with flow=From-Botnet.",
+  "gold_sql": "SELECT DISTINCT src_ip,label FROM network_flows WHERE source_dataset='ctu13_s5' AND starts_with(label,'flow=From-Botnet')",
+  "difficulty": "medium",
+  "features": [
+    "distinct",
+    "prefix"
+  ],
+  "family_id": "aea9a3f97b43dd7673303318a5ceda233e567bc7827a54e31f46801c4dff7f6b",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "unordered_multiset",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "src_ip"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "=",
+          "value": "ctu13_s5"
+        }
+      ],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "label",
+          "kind": "domain_predicate",
+          "operator": "prefix",
+          "value": "flow=From-Botnet"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "eq",
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5'",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "ctu13_s5",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ]
+        },
+        {
+          "operator": "startswith",
+          "stage": "where",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Botnet')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Botnet",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "where",
+          "expression": "network_flows.source_dataset = 'ctu13_s5' AND STARTS_WITH(network_flows.label, 'flow=From-Botnet')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 33,
+  "sample_gold_rows": [
+    [
+      "147.32.84.165",
+      "flow=From-Botnet-V46-UDP-DNS"
+    ],
+    [
+      "147.32.84.165",
+      "flow=From-Botnet-V46-TCP-HTTP-Google-Net-Established-6"
+    ],
+    [
+      "147.32.84.165",
+      "flow=From-Botnet-V46-TCP-WEB-Established"
+    ]
+  ],
+  "observed_result_sha256": "69b5cb52e9e318fa2420eb943b31fb1653211609a9c051d99cae3d2cda7f7ccf",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_ef8808ed9e47cef2.audit.json",
+  "semantic_audit_sha256": "5ecd87096cab6e8b4b5f286fcc2e0b8d31b305e285123361b1d25cc6d6809c48",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

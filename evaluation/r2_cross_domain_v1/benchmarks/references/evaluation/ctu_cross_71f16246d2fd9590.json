@@ -1,0 +1,94 @@
+{
+  "case_id": "ctu_cross_71f16246d2fd9590",
+  "database_id": "ctu_dev",
+  "question": "For each source dataset, return the fraction of all flows whose label begins with flow=From-Botnet; include all labels in the denominator and order datasets ascending.",
+  "gold_sql": "WITH totals AS (SELECT source_dataset,COUNT(*) AS n,SUM(CASE WHEN starts_with(label,'flow=From-Botnet') THEN 1 ELSE 0 END) AS bot FROM network_flows GROUP BY source_dataset) SELECT source_dataset,bot*1.0/NULLIF(n,0) FROM totals ORDER BY source_dataset",
+  "difficulty": "advanced",
+  "features": [
+    "nested",
+    "group_having",
+    "prefix",
+    "order_limit"
+  ],
+  "family_id": "7f37dcfc9eba64aa9a19eb74a667228136cc9db6e013111889691418cb937d7b",
+  "split": "evaluation",
+  "domain": "network_telemetry",
+  "benchmark_locked": true,
+  "comparator": "ordered_rows",
+  "gold_execution_success": true,
+  "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "semantic_validation_status": "TWO_CONSTRAINT_VERIFIED_INSTANCES_WITH_EXECUTION_CONTROLS",
+  "accepted_links": [
+    {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "label"
+        },
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        }
+      ],
+      "relationships": [],
+      "stored_values": [],
+      "constraints": [
+        {
+          "table": "network_flows",
+          "column": "label",
+          "kind": "domain_predicate",
+          "operator": "prefix",
+          "value": "flow=From-Botnet"
+        }
+      ],
+      "predicates": [
+        {
+          "operator": "startswith",
+          "stage": "expression",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Botnet')",
+          "negated": false,
+          "escape": null,
+          "literals": [
+            {
+              "value": "flow=From-Botnet",
+              "value_type": "string"
+            }
+          ],
+          "column_dependencies": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            }
+          ]
+        }
+      ],
+      "boolean_structure": [
+        {
+          "stage": "if",
+          "expression": "STARTS_WITH(network_flows.label, 'flow=From-Botnet')"
+        }
+      ],
+      "annotations_complete": true,
+      "annotation_scope": "Qualified physical schema dependencies and exhaustive parsed predicate structures; alternative SQL semantics require execution controls, not identical ASTs"
+    }
+  ],
+  "gold_row_count": 2,
+  "sample_gold_rows": [
+    [
+      "ctu13_s5",
+      0.006939790959015951
+    ],
+    [
+      "ctu13_s7",
+      0.0005522682445759368
+    ]
+  ],
+  "observed_result_sha256": "8ad390c5995b6479cd9deb042ed5b8225bf86c80697221ad9085bd4d8f3b35e2",
+  "semantic_audit_path": "evaluation/r2_cross_domain_v1/offline_task3/semantic_candidates_v7/ctu_cross_71f16246d2fd9590.audit.json",
+  "semantic_audit_sha256": "82ee1906f676c3315a388de5c1d38c09a82b807f5e5567d064a85be710dbef88",
+  "annotation_validation_status": "PARSED_TYPED_MAPPING_AND_EXECUTED_SEMANTIC_CONTROLS"
+}

@@ -1,0 +1,92 @@
+{
+  "scope": "offline_replay_of_saved_historical_predictions_not_new_model_run",
+  "case_results": [
+    {
+      "case_id": "ctu_sql_001",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_001.json",
+      "source_sha256": "fa9716c2c3e4b6003ac318b2fd1a3eaae0bbf8911cb064afa903bb9a521a6a01",
+      "saved_prediction": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s5'\n  AND label ILIKE '%From-Botnet%';",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "ctu_sql_002",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_002.json",
+      "source_sha256": "32efc3a4626745de328534a0352f1c7b91ed6ea33f8521d4da830bc3b5db4369",
+      "saved_prediction": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s7'\n  AND label ILIKE '%Normal%';",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "ctu_sql_003",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_003.json",
+      "source_sha256": "a3549ef91c560c41c9107c455d0c9e1427ac400c6da9e08b5a3f05c63badbd9c",
+      "saved_prediction": "SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips\nFROM network_flows\nWHERE source_dataset = 'ctu13_s5';",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "ctu_sql_004",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_004.json",
+      "source_sha256": "7c81c91c72d2ab9e4e977847cd2892806d9517b49249d557ea6a94b426055456",
+      "saved_prediction": "SELECT COUNT(*) AS flow_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s5'\n  AND event_time >= TIMESTAMP '2011-08-15 16:43:20.931208'\n  AND event_time < TIMESTAMP '2011-08-15 16:43:20.931209';",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "ctu_sql_005",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_005.json",
+      "source_sha256": "52a96a8dccbd12ff753ac64eba57c05e9b39f4585578400b18dc2583c0235ce4",
+      "saved_prediction": "SELECT COUNT(*) AS udp_positive_outbound_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s7'\n  AND protocol = 'UDP'\n  AND bytes_out > 0;",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "ctu_sql_006",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_006.json",
+      "source_sha256": "fd48a9cd974e28ec28b92380a0abd6b2a772ca64d7563c476b6e9f08c1749e9d",
+      "saved_prediction": null,
+      "historical_pipeline_error": "TOOL_LIMIT",
+      "execution_accurate": false,
+      "execution_success": false,
+      "syntax_valid": false
+    },
+    {
+      "case_id": "ctu_sql_007",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_007.json",
+      "source_sha256": "e02e75d0c57d9f227f7c209c48588d7211ca79c1d4926a266d5539669b802602",
+      "saved_prediction": "SELECT\n  protocol,\n  COUNT(*) AS flow_count\nFROM network_flows\nWHERE\n  source_dataset = 'ctu13_s7'\n  AND label ILIKE '%Botnet%'\nGROUP BY protocol;",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    },
+    {
+      "case_id": "ctu_sql_008",
+      "source_case_path": "evaluation/ctu_network_public/dev/ctu_sql_008.json",
+      "source_sha256": "ff602ad2e3241df2f6f6c38aa9ba761b33e208c915613829ad2a8baca62aadad",
+      "saved_prediction": "SELECT source_dataset, COUNT(*) AS flow_count\nFROM network_flows\nGROUP BY source_dataset\nORDER BY source_dataset;",
+      "historical_pipeline_error": "OK",
+      "execution_accurate": true,
+      "execution_success": true,
+      "syntax_valid": true
+    }
+  ],
+  "historical_report_path": "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json",
+  "historical_report_sha256": "cb14da306ba0cd4bc92f0d239b037da976ef2867cde61e57395fa5f570dc039a",
+  "execution_accurate": 7,
+  "case_count": 8,
+  "external_model_calls": 0,
+  "inference_cost_usd": 0,
+  "included_in_new_primary_denominator": false
+}

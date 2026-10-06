@@ -1,0 +1,19 @@
+{
+  "seed": 20261005,
+  "case_ids": [
+    "external_car_1_c3c5143d74d3437c",
+    "external_concert_singer_4d9fb537dd762b49",
+    "external_course_teach_587613ebd0fcbbbe",
+    "ctu_cross_116e46aecde5564d",
+    "ctu_cross_09368110b7091cb8",
+    "ctu_cross_71164969e0e0277e",
+    "ctu_cross_a427f9a05d18b548",
+    "external_dog_kennels_14fcc7dd73ceab81",
+    "external_flight_2_1962776e116f9f03",
+    "external_orchestra_fba9b3fa38f6cf1c",
+    "external_poker_player_827c6d91a2ccdded",
+    "external_tvshow_55ce63ef8ba641ea"
+  ],
+  "scope": "12 diagnostic interventions within the 96 IDs; no additional primary observations",
+  "paid_authorized": false
+}
