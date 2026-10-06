@@ -1,0 +1,57 @@
+{
+  "reference": {
+    "case_id": "external_car_1_55cf1874c71b6fee",
+    "database_id": "car_1",
+    "question": "How many countries are listed?",
+    "gold_sql": "SELECT COUNT(*) FROM COUNTRIES",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+    "accepted_links": [
+      {
+        "tables": [
+          "countries"
+        ],
+        "columns": [],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT count(*) FROM COUNTRIES;",
+    "source_sqlite_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709",
+    "base_snapshot_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+    "base_snapshot_logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT count(*) FROM COUNTRIES;",
+    "adapted_sql": "SELECT COUNT(*) FROM COUNTRIES",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+    "duckdb_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+    "sample_original_rows": [
+      [
+        15
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        15
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

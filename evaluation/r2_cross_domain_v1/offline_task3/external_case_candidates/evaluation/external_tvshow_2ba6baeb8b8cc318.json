@@ -1,0 +1,96 @@
+{
+  "reference": {
+    "case_id": "external_tvshow_2ba6baeb8b8cc318",
+    "database_id": "tvshow",
+    "question": "What are the package options of all tv channels that are not playing any cartoons directed by Ben Jones?",
+    "gold_sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon WHERE directed_by = 'Ben Jones')",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "nested"
+    ],
+    "family_id": "d83d4d2556fe19ca61a3e529c5f0a368f004583b31fa45e5755ca1a0c72f17aa",
+    "accepted_links": [
+      {
+        "tables": [
+          "Cartoon",
+          "TV_Channel"
+        ],
+        "columns": [
+          {
+            "table": "Cartoon",
+            "column": "Channel"
+          },
+          {
+            "table": "Cartoon",
+            "column": "Directed_by"
+          },
+          {
+            "table": "TV_Channel",
+            "column": "Package_Option"
+          },
+          {
+            "table": "TV_Channel",
+            "column": "id"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "Cartoon",
+            "column": "Directed_by",
+            "operator": "=",
+            "value": "Ben Jones"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT package_option FROM TV_Channel WHERE id NOT IN (SELECT channel FROM cartoon WHERE directed_by  =  'Ben Jones')",
+    "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+    "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+    "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT package_option FROM TV_Channel WHERE id NOT IN (SELECT channel FROM cartoon WHERE directed_by  =  'Ben Jones')",
+    "adapted_sql": "SELECT package_option FROM TV_Channel WHERE NOT id IN (SELECT channel FROM cartoon WHERE directed_by = 'Ben Jones')",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 11,
+    "duckdb_row_count": 11,
+    "sqlite_result_sha256": "5a42fd278012886b9ca878905c8502b56a2249d838c80b58b84dcb3de2fa977f",
+    "duckdb_result_sha256": "5a42fd278012886b9ca878905c8502b56a2249d838c80b58b84dcb3de2fa977f",
+    "sample_original_rows": [
+      [
+        "Sky Famiglia"
+      ],
+      [
+        "Sky Famiglia"
+      ],
+      [
+        "Sky Famiglia"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Sky Famiglia"
+      ],
+      [
+        "Sky Famiglia"
+      ],
+      [
+        "Sky Famiglia"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "reference": {
+    "case_id": "external_world_1_c87de933bb535d25",
+    "database_id": "world_1",
+    "question": "Find the average life expectancy and total population for each continent where the average life expectancy is shorter than 72?",
+    "gold_sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "group_having"
+    ],
+    "family_id": "b714d935d932387dbab1c2b33b212b1ce4eaa50002cc233c8e3bcec2efbd66e0",
+    "accepted_links": [
+      {
+        "tables": [
+          "country"
+        ],
+        "columns": [
+          {
+            "table": "country",
+            "column": "Continent"
+          },
+          {
+            "table": "country",
+            "column": "LifeExpectancy"
+          },
+          {
+            "table": "country",
+            "column": "Population"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT sum(Population) ,  avg(LifeExpectancy) ,  Continent FROM country GROUP BY Continent HAVING avg(LifeExpectancy)  <  72",
+    "source_sqlite_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+    "base_snapshot_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+    "base_snapshot_logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT sum(Population) ,  avg(LifeExpectancy) ,  Continent FROM country GROUP BY Continent HAVING avg(LifeExpectancy)  <  72",
+    "adapted_sql": "SELECT SUM(Population), AVG(LifeExpectancy), Continent FROM country GROUP BY Continent HAVING AVG(LifeExpectancy) < 72",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 4,
+    "duckdb_row_count": 4,
+    "sqlite_result_sha256": "3a5e3e075b01eef70efa0593e2150a395b3f3f5d0e4c909cd0d2eedd33a4478f",
+    "duckdb_result_sha256": "879d1879817ca3b3bf6218ff2e9daaffb8749df45aee813ec4a8a78330e1d0e3",
+    "sample_original_rows": [
+      [
+        784475000,
+        52.5719298245614,
+        "Africa"
+      ],
+      [
+        3705025700,
+        67.44117647058823,
+        "Asia"
+      ],
+      [
+        30401150,
+        69.715,
+        "Oceania"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        3705025700,
+        67.44117647058825,
+        "Asia"
+      ],
+      [
+        784475000,
+        52.571929824561394,
+        "Africa"
+      ],
+      [
+        345780000,
+        70.94615384615386,
+        "South America"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

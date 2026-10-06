@@ -1,0 +1,92 @@
+{
+  "reference": {
+    "case_id": "external_car_1_d2631c6c19d42cc9",
+    "database_id": "car_1",
+    "question": "What is the name of the country with the most car makers?",
+    "gold_sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 1",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having",
+      "order_limit"
+    ],
+    "family_id": "d53221067d19523674f965d946143e0de89ffb435b56d3544593e33247613bf2",
+    "accepted_links": [
+      {
+        "tables": [
+          "car_makers",
+          "countries"
+        ],
+        "columns": [
+          {
+            "table": "car_makers",
+            "column": "Country"
+          },
+          {
+            "table": "countries",
+            "column": "CountryId"
+          },
+          {
+            "table": "countries",
+            "column": "CountryName"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Country",
+            "from_table": "car_makers",
+            "to_column": "CountryId",
+            "to_table": "countries"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "limit",
+            "value": 1
+          }
+        ],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country  =  T2.CountryId GROUP BY T1.Country ORDER BY Count(*) DESC LIMIT 1;",
+    "source_sqlite_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709",
+    "base_snapshot_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+    "base_snapshot_logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country  =  T2.CountryId GROUP BY T1.Country ORDER BY Count(*) DESC LIMIT 1;",
+    "adapted_sql": "SELECT T2.CountryName FROM CAR_MAKERS AS T1 JOIN COUNTRIES AS T2 ON T1.Country = T2.CountryId GROUP BY T1.Country, T2.CountryName ORDER BY COUNT(*) DESC LIMIT 1",
+    "transformations": [
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T2.CountryName"
+      }
+    ],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "f0008d2b74ccb68f729ad644b8b605bf6fde3dd40b448a1ac8564745ff320efc",
+    "duckdb_result_sha256": "f0008d2b74ccb68f729ad644b8b605bf6fde3dd40b448a1ac8564745ff320efc",
+    "sample_original_rows": [
+      [
+        "japan"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "japan"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

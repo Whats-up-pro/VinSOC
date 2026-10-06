@@ -1,0 +1,102 @@
+{
+  "reference": {
+    "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+    "database_id": "orchestra",
+    "question": "What are the names of conductors as well as the corresonding orchestras that they have conducted?",
+    "gold_sql": "SELECT T1.Name, T2.Orchestra FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join"
+    ],
+    "family_id": "a494313e6e5adbfc8a9e0375d93e1a0d45d746ebe424a2f6b6f33dcf48a23854",
+    "accepted_links": [
+      {
+        "tables": [
+          "conductor",
+          "orchestra"
+        ],
+        "columns": [
+          {
+            "table": "conductor",
+            "column": "Conductor_ID"
+          },
+          {
+            "table": "conductor",
+            "column": "Name"
+          },
+          {
+            "table": "orchestra",
+            "column": "Conductor_ID"
+          },
+          {
+            "table": "orchestra",
+            "column": "Orchestra"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Conductor_ID",
+            "from_table": "orchestra",
+            "to_column": "Conductor_ID",
+            "to_table": "conductor"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.Name ,  T2.Orchestra FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID",
+    "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+    "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.Name ,  T2.Orchestra FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID",
+    "adapted_sql": "SELECT T1.Name, T2.Orchestra FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 12,
+    "duckdb_row_count": 12,
+    "sqlite_result_sha256": "9bf95c3a7e80a7621b8b1dcca12676462a02ed88789f07b84366c021f232577c",
+    "duckdb_result_sha256": "9bf95c3a7e80a7621b8b1dcca12676462a02ed88789f07b84366c021f232577c",
+    "sample_original_rows": [
+      [
+        "Antal Doráti",
+        "London Symphony Orchestra"
+      ],
+      [
+        "Igor Stravinsky",
+        "Columbia Symphony Orchestra"
+      ],
+      [
+        "Colin Davis",
+        "Royal Concertgebouw Orchestra"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Antal Doráti",
+        "London Symphony Orchestra"
+      ],
+      [
+        "Igor Stravinsky",
+        "Columbia Symphony Orchestra"
+      ],
+      [
+        "Colin Davis",
+        "Royal Concertgebouw Orchestra"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

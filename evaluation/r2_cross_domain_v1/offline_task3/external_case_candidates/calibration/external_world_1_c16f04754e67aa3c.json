@@ -1,0 +1,123 @@
+{
+  "reference": {
+    "case_id": "external_world_1_c16f04754e67aa3c",
+    "database_id": "world_1",
+    "question": "What are the countries where either English or Dutch is the official language ?",
+    "gold_sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "join",
+      "nested"
+    ],
+    "family_id": "4bc9d61116a8580d9149e11731bd4f2a057efac985bf13cab9a3547103d4da02",
+    "accepted_links": [
+      {
+        "tables": [
+          "country",
+          "countrylanguage"
+        ],
+        "columns": [
+          {
+            "table": "country",
+            "column": "Code"
+          },
+          {
+            "table": "country",
+            "column": "Name"
+          },
+          {
+            "table": "countrylanguage",
+            "column": "CountryCode"
+          },
+          {
+            "table": "countrylanguage",
+            "column": "IsOfficial"
+          },
+          {
+            "table": "countrylanguage",
+            "column": "Language"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "CountryCode",
+            "from_table": "countrylanguage",
+            "to_column": "Code",
+            "to_table": "country"
+          }
+        ],
+        "stored_values": [
+          {
+            "table": "countrylanguage",
+            "column": "Language",
+            "operator": "=",
+            "value": "english"
+          },
+          {
+            "table": "countrylanguage",
+            "column": "IsOfficial",
+            "operator": "=",
+            "value": "t"
+          },
+          {
+            "table": "countrylanguage",
+            "column": "Language",
+            "operator": "=",
+            "value": "dutch"
+          },
+          {
+            "table": "countrylanguage",
+            "column": "IsOfficial",
+            "operator": "=",
+            "value": "t"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"english\" and isofficial  =  \"t\" union select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"dutch\" and isofficial  =  \"t\"",
+    "source_sqlite_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+    "base_snapshot_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+    "base_snapshot_logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"english\" and isofficial  =  \"t\" union select t1.name from country as t1 join countrylanguage as t2 on t1.code  =  t2.countrycode where t2.language  =  \"dutch\" and isofficial  =  \"t\"",
+    "adapted_sql": "SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'english' AND isofficial = 't' UNION SELECT t1.name FROM country AS t1 JOIN countrylanguage AS t2 ON t1.code = t2.countrycode WHERE t2.language = 'dutch' AND isofficial = 't'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "english"
+      },
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "t"
+      },
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "dutch"
+      },
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "t"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 0,
+    "duckdb_row_count": 0,
+    "sqlite_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "duckdb_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "sample_original_rows": [],
+    "sample_adapted_rows": [],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

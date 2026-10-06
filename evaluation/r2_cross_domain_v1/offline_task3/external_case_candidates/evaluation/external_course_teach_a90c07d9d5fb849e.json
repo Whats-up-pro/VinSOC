@@ -1,0 +1,79 @@
+{
+  "reference": {
+    "case_id": "external_course_teach_a90c07d9d5fb849e",
+    "database_id": "course_teach",
+    "question": "What are the names of the teachers whose courses have not been arranged?",
+    "gold_sql": "SELECT Name FROM teacher WHERE NOT Teacher_id IN (SELECT Teacher_id FROM course_arrange)",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "nested"
+    ],
+    "family_id": "a5ec082cfbb382566a37da73f0ad90a0a93471b436aa25429a63e603e5e61849",
+    "accepted_links": [
+      {
+        "tables": [
+          "course_arrange",
+          "teacher"
+        ],
+        "columns": [
+          {
+            "table": "course_arrange",
+            "column": "Teacher_ID"
+          },
+          {
+            "table": "teacher",
+            "column": "Name"
+          },
+          {
+            "table": "teacher",
+            "column": "Teacher_ID"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT Name FROM teacher WHERE Teacher_id NOT IN (SELECT Teacher_id FROM course_arrange)",
+    "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+    "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+    "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Name FROM teacher WHERE Teacher_id NOT IN (SELECT Teacher_id FROM course_arrange)",
+    "adapted_sql": "SELECT Name FROM teacher WHERE NOT Teacher_id IN (SELECT Teacher_id FROM course_arrange)",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 2,
+    "duckdb_row_count": 2,
+    "sqlite_result_sha256": "4a6d908da6de12aa656f9e70772d7b14bb2a4636d3db50b5dcc3da579a165e4c",
+    "duckdb_result_sha256": "4a6d908da6de12aa656f9e70772d7b14bb2a4636d3db50b5dcc3da579a165e4c",
+    "sample_original_rows": [
+      [
+        "Joseph Huts"
+      ],
+      [
+        "John Deloor"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Joseph Huts"
+      ],
+      [
+        "John Deloor"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

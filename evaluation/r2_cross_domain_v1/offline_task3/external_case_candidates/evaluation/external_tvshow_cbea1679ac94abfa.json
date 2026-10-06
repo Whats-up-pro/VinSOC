@@ -1,0 +1,96 @@
+{
+  "reference": {
+    "case_id": "external_tvshow_cbea1679ac94abfa",
+    "database_id": "tvshow",
+    "question": "What is the series name of the TV Channel that shows the cartoon \"The Rise of the Blue Beetle\"?",
+    "gold_sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = 'The Rise of the Blue Beetle!'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join"
+    ],
+    "family_id": "88fb45d83e0fbdcfe81ba25b116da4145eeea144f705182d83d622b46c41eab8",
+    "accepted_links": [
+      {
+        "tables": [
+          "Cartoon",
+          "TV_Channel"
+        ],
+        "columns": [
+          {
+            "table": "Cartoon",
+            "column": "Channel"
+          },
+          {
+            "table": "Cartoon",
+            "column": "Title"
+          },
+          {
+            "table": "TV_Channel",
+            "column": "id"
+          },
+          {
+            "table": "TV_Channel",
+            "column": "series_name"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Channel",
+            "from_table": "Cartoon",
+            "to_column": "id",
+            "to_table": "TV_Channel"
+          }
+        ],
+        "stored_values": [
+          {
+            "table": "Cartoon",
+            "column": "Title",
+            "operator": "=",
+            "value": "The Rise of the Blue Beetle!"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = \"The Rise of the Blue Beetle!\";",
+    "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+    "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+    "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = \"The Rise of the Blue Beetle!\";",
+    "adapted_sql": "SELECT T1.series_name FROM TV_Channel AS T1 JOIN Cartoon AS T2 ON T1.id = T2.Channel WHERE T2.Title = 'The Rise of the Blue Beetle!'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "The Rise of the Blue Beetle!"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "374f0768015eacd2de13ec90d4e9b5a132b5f74d8b651a9260a4aa9f6687268b",
+    "duckdb_result_sha256": "374f0768015eacd2de13ec90d4e9b5a132b5f74d8b651a9260a4aa9f6687268b",
+    "sample_original_rows": [
+      [
+        "Sky Radio"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Sky Radio"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

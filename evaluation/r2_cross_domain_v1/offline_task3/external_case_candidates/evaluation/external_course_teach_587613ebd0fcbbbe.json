@@ -1,0 +1,117 @@
+{
+  "reference": {
+    "case_id": "external_course_teach_587613ebd0fcbbbe",
+    "database_id": "course_teach",
+    "question": "Show the name of the teacher for the math course.",
+    "gold_sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math'",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "join"
+    ],
+    "family_id": "10781ab9324ca1115864204aaa5c9b3256556e7dc95343efc778d1dec2d0c22e",
+    "accepted_links": [
+      {
+        "tables": [
+          "course",
+          "course_arrange",
+          "teacher"
+        ],
+        "columns": [
+          {
+            "table": "course",
+            "column": "Course"
+          },
+          {
+            "table": "course",
+            "column": "Course_ID"
+          },
+          {
+            "table": "course_arrange",
+            "column": "Course_ID"
+          },
+          {
+            "table": "course_arrange",
+            "column": "Teacher_ID"
+          },
+          {
+            "table": "teacher",
+            "column": "Name"
+          },
+          {
+            "table": "teacher",
+            "column": "Teacher_ID"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Course_ID",
+            "from_table": "course_arrange",
+            "to_column": "Course_ID",
+            "to_table": "course"
+          },
+          {
+            "from_column": "Teacher_ID",
+            "from_table": "course_arrange",
+            "to_column": "Teacher_ID",
+            "to_table": "teacher"
+          }
+        ],
+        "stored_values": [
+          {
+            "table": "course",
+            "column": "Course",
+            "operator": "=",
+            "value": "Math"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID  =  T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID  =  T3.Teacher_ID WHERE T2.Course  =  \"Math\"",
+    "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+    "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+    "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID  =  T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID  =  T3.Teacher_ID WHERE T2.Course  =  \"Math\"",
+    "adapted_sql": "SELECT T3.Name FROM course_arrange AS T1 JOIN course AS T2 ON T1.Course_ID = T2.Course_ID JOIN teacher AS T3 ON T1.Teacher_ID = T3.Teacher_ID WHERE T2.Course = 'Math'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Math"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 2,
+    "duckdb_row_count": 2,
+    "sqlite_result_sha256": "561ae72d64953eae4c1e65a49fd4b66dd225476357c30e32c4df5a4190f27573",
+    "duckdb_result_sha256": "f34007c8401fa4247bc51a162786922f029fb98fd5bdd9d391c3227dbd5f0f3b",
+    "sample_original_rows": [
+      [
+        "Kearsley Brown"
+      ],
+      [
+        "Vicente Carretero"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Vicente Carretero"
+      ],
+      [
+        "Kearsley Brown"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

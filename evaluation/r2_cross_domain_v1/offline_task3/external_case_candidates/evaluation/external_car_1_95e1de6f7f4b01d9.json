@@ -1,0 +1,92 @@
+{
+  "reference": {
+    "case_id": "external_car_1_95e1de6f7f4b01d9",
+    "database_id": "car_1",
+    "question": "What are the names of the countries with no car makers?",
+    "gold_sql": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId = T2.Country",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "nested"
+    ],
+    "family_id": "ec82ce5aa901e85bd0453b372f72282c63fecd3f6789b294d4d10cfac92a7334",
+    "accepted_links": [
+      {
+        "tables": [
+          "car_makers",
+          "countries"
+        ],
+        "columns": [
+          {
+            "table": "car_makers",
+            "column": "Country"
+          },
+          {
+            "table": "countries",
+            "column": "CountryId"
+          },
+          {
+            "table": "countries",
+            "column": "CountryName"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Country",
+            "from_table": "car_makers",
+            "to_column": "CountryId",
+            "to_table": "countries"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId  =  T2.Country;",
+    "source_sqlite_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709",
+    "base_snapshot_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+    "base_snapshot_logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId  =  T2.Country;",
+    "adapted_sql": "SELECT CountryName FROM countries EXCEPT SELECT T1.CountryName FROM countries AS T1 JOIN CAR_MAKERS AS T2 ON T1.countryId = T2.Country",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 7,
+    "duckdb_row_count": 7,
+    "sqlite_result_sha256": "c5917da564cf47cf80cfd517dae52d7a04e2b27d2309bfae0e8f373826df29b0",
+    "duckdb_result_sha256": "1dea02967d90e7db85965bfb6eb5a967ba0fa66d91f494af4cdc25c221695b38",
+    "sample_original_rows": [
+      [
+        "australia"
+      ],
+      [
+        "brazil"
+      ],
+      [
+        "egypt"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "russia"
+      ],
+      [
+        "nigeria"
+      ],
+      [
+        "australia"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

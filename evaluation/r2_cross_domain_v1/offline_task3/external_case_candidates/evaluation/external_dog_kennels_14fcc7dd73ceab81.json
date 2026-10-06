@@ -1,0 +1,81 @@
+{
+  "reference": {
+    "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+    "database_id": "dog_kennels",
+    "question": "Find the states where both owners and professionals live.",
+    "gold_sql": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+    "comparator": "unordered_multiset",
+    "difficulty": "advanced",
+    "features": [
+      "nested"
+    ],
+    "family_id": "fa9961c6dfba93c8fbba0f19c8db3fbdecdf51cc9badc3998a03858fbcf5a144",
+    "accepted_links": [
+      {
+        "tables": [
+          "Owners",
+          "Professionals"
+        ],
+        "columns": [
+          {
+            "table": "Owners",
+            "column": "state"
+          },
+          {
+            "table": "Professionals",
+            "column": "state"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+    "source_sqlite_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+    "base_snapshot_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+    "base_snapshot_logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+    "adapted_sql": "SELECT state FROM Owners INTERSECT SELECT state FROM Professionals",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 3,
+    "duckdb_row_count": 3,
+    "sqlite_result_sha256": "93c15d01fe4495f705a1500f057812200924e236ff7c99cab1dcf075ea51edad",
+    "duckdb_result_sha256": "13574b6177a757cc43ae5495b4bd5248f29e265153cd2f1b6925164e07814c52",
+    "sample_original_rows": [
+      [
+        "Indiana"
+      ],
+      [
+        "Mississippi"
+      ],
+      [
+        "Wisconsin"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Wisconsin"
+      ],
+      [
+        "Indiana"
+      ],
+      [
+        "Mississippi"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

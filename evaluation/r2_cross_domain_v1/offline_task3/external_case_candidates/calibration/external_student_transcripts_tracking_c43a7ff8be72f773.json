@@ -1,0 +1,132 @@
+{
+  "reference": {
+    "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+    "database_id": "student_transcripts_tracking",
+    "question": "Who are enrolled in 2 degree programs in one semester? List the first name, middle name and last name and the id.",
+    "gold_sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having"
+    ],
+    "family_id": "dc66fc86d9395bd5eb045e44f65bde7aad7949a358776168f72d785fcb75c2a2",
+    "accepted_links": [
+      {
+        "tables": [
+          "Student_Enrolment",
+          "Students"
+        ],
+        "columns": [
+          {
+            "table": "Student_Enrolment",
+            "column": "student_id"
+          },
+          {
+            "table": "Students",
+            "column": "first_name"
+          },
+          {
+            "table": "Students",
+            "column": "last_name"
+          },
+          {
+            "table": "Students",
+            "column": "middle_name"
+          },
+          {
+            "table": "Students",
+            "column": "student_id"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "student_id",
+            "from_table": "Student_Enrolment",
+            "to_column": "student_id",
+            "to_table": "Students"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.first_name ,  T1.middle_name ,  T1.last_name ,  T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id HAVING count(*)  =  2",
+    "source_sqlite_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56",
+    "base_snapshot_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+    "base_snapshot_logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.first_name ,  T1.middle_name ,  T1.last_name ,  T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id  =  T2.student_id GROUP BY T1.student_id HAVING count(*)  =  2",
+    "adapted_sql": "SELECT T1.first_name, T1.middle_name, T1.last_name, T1.student_id FROM Students AS T1 JOIN Student_Enrolment AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id, T1.first_name, T1.middle_name, T1.last_name HAVING COUNT(*) = 2",
+    "transformations": [
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.first_name"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.middle_name"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.last_name"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 3,
+    "duckdb_row_count": 3,
+    "sqlite_result_sha256": "9b7d51b19f3722025b38f9c971bb46425f4460e7a0511df7bfd86a06a513f156",
+    "duckdb_result_sha256": "9b7d51b19f3722025b38f9c971bb46425f4460e7a0511df7bfd86a06a513f156",
+    "sample_original_rows": [
+      [
+        "Jarvis",
+        "Aaliyah",
+        "Carroll",
+        4
+      ],
+      [
+        "Reva",
+        "Golda",
+        "Osinski",
+        9
+      ],
+      [
+        "Jordy",
+        "Osborne",
+        "Rempel",
+        14
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Jarvis",
+        "Aaliyah",
+        "Carroll",
+        4
+      ],
+      [
+        "Reva",
+        "Golda",
+        "Osinski",
+        9
+      ],
+      [
+        "Jordy",
+        "Osborne",
+        "Rempel",
+        14
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

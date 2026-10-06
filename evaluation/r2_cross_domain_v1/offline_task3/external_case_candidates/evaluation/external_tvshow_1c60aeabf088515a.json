@@ -1,0 +1,102 @@
+{
+  "reference": {
+    "case_id": "external_tvshow_1c60aeabf088515a",
+    "database_id": "tvshow",
+    "question": "List the Episode of all  TV series showed on TV Channel with series name \"Sky Radio\".",
+    "gold_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join"
+    ],
+    "family_id": "16065e40b6e416b4ffbce3318ffcddff6c94e133ee5e11ff9b7817ab5ee5c6e7",
+    "accepted_links": [
+      {
+        "tables": [
+          "TV_Channel",
+          "TV_series"
+        ],
+        "columns": [
+          {
+            "table": "TV_Channel",
+            "column": "id"
+          },
+          {
+            "table": "TV_Channel",
+            "column": "series_name"
+          },
+          {
+            "table": "TV_series",
+            "column": "Channel"
+          },
+          {
+            "table": "TV_series",
+            "column": "Episode"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Channel",
+            "from_table": "TV_series",
+            "to_column": "id",
+            "to_table": "TV_Channel"
+          }
+        ],
+        "stored_values": [
+          {
+            "table": "TV_Channel",
+            "column": "series_name",
+            "operator": "=",
+            "value": "Sky Radio"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+    "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+    "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+    "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = \"Sky Radio\";",
+    "adapted_sql": "SELECT T2.Episode FROM TV_Channel AS T1 JOIN TV_series AS T2 ON T1.id = T2.Channel WHERE T1.series_name = 'Sky Radio'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Sky Radio"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 2,
+    "duckdb_row_count": 2,
+    "sqlite_result_sha256": "d89f4e39ca18efa53cd0563e3b003271b81211707613947890227a00c8296609",
+    "duckdb_result_sha256": "d89f4e39ca18efa53cd0563e3b003271b81211707613947890227a00c8296609",
+    "sample_original_rows": [
+      [
+        "A Love of a Lifetime"
+      ],
+      [
+        "Keepers"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "A Love of a Lifetime"
+      ],
+      [
+        "Keepers"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

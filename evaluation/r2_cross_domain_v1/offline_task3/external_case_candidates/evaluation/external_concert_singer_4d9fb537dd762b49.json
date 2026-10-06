@@ -1,0 +1,72 @@
+{
+  "reference": {
+    "case_id": "external_concert_singer_4d9fb537dd762b49",
+    "database_id": "concert_singer",
+    "question": "what is the name and nation of the singer who have a song having 'Hey' in its name?",
+    "gold_sql": "SELECT name, country FROM singer WHERE song_name LIKE '%Hey%'",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "85d9ec1e47a575c2a1c316043b89a5f7cbe80727e2407367eecc9d993b01343b",
+    "accepted_links": [
+      {
+        "tables": [
+          "singer"
+        ],
+        "columns": [
+          {
+            "table": "singer",
+            "column": "Country"
+          },
+          {
+            "table": "singer",
+            "column": "Name"
+          },
+          {
+            "table": "singer",
+            "column": "Song_Name"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT name ,  country FROM singer WHERE song_name LIKE '%Hey%'",
+    "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+    "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+    "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT name ,  country FROM singer WHERE song_name LIKE '%Hey%'",
+    "adapted_sql": "SELECT name, country FROM singer WHERE song_name LIKE '%Hey%'",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "ea2044d675f77ca355009021dfc26c15db779888a1537ac37c9259f634fc4075",
+    "duckdb_result_sha256": "ea2044d675f77ca355009021dfc26c15db779888a1537ac37c9259f634fc4075",
+    "sample_original_rows": [
+      [
+        "Justin Brown",
+        "France"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Justin Brown",
+        "France"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

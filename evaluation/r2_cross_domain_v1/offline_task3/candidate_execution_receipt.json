@@ -1,0 +1,73 @@
+{
+  "task": 3,
+  "checkpoint": "candidate inventory/base gold; semantic and annotation gates pending",
+  "base_sha": "193a04fe455e4f1ca7e4047097055f251a067b3c",
+  "verified_at_utc": "2026-10-06T04:58:30.109125+00:00",
+  "commands": [
+    {
+      "command": "python -m pytest -q tests/test_r2_cross_domain_data.py tests/test_r2_cross_domain_selection.py tests/test_r2_cross_domain_pipeline.py tests/test_r2_cross_domain_gold.py tests/test_r2_cross_domain_annotations.py tests/test_r2_cross_domain_case_preparation.py tests/test_r2_cross_domain_ctu_cases.py",
+      "exit_code": 0,
+      "result": "82 passed"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "result": "912 passed, 1654 warnings in 123.93s (0:02:03)"
+    },
+    {
+      "command": "py_compile.compile(path, doraise=True) for eight changed Python files",
+      "exit_code": 0,
+      "files": [
+        "evaluation/r2_cross_domain_v1/annotations.py",
+        "evaluation/r2_cross_domain_v1/case_preparation.py",
+        "evaluation/r2_cross_domain_v1/ctu_cases.py",
+        "scripts/prepare_r2_cross_domain_cases.py",
+        "scripts/audit_r2_cross_domain_ctu_cases.py",
+        "tests/test_r2_cross_domain_annotations.py",
+        "tests/test_r2_cross_domain_case_preparation.py",
+        "tests/test_r2_cross_domain_ctu_cases.py"
+      ]
+    },
+    {
+      "command": "python -m scripts.prepare_r2_cross_domain_cases --qualification evaluation/r2_cross_domain_v1/offline_task3/registered_gold_qualification_strict.json --output evaluation/r2_cross_domain_v1/offline_task3/external_case_candidates",
+      "exit_code": 0,
+      "result": "80 external candidates; all original/adapted base parity replayed"
+    },
+    {
+      "command": "python -m scripts.audit_r2_cross_domain_ctu_cases --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output evaluation/r2_cross_domain_v1/offline_task3/ctu_new_case_audit.json",
+      "exit_code": 2,
+      "result": "39/40 new gold executions; unbounded pair listing exceeds row cap"
+    },
+    {
+      "command": "python -m scripts.audit_r2_cross_domain_ctu_cases --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output evaluation/r2_cross_domain_v1/offline_task3/ctu_new_case_audit_v2.json",
+      "exit_code": 0,
+      "result": "40/40 revised pre-lock gold executions"
+    }
+  ],
+  "tested_source_sha256": {
+    "evaluation/r2_cross_domain_v1/annotations.py": "a3ba78c6325a4e644a0b613b3eeec0472b0691389d30563ae991507a97bcbf15",
+    "evaluation/r2_cross_domain_v1/case_preparation.py": "e19ffdd9815b0e17fcf2c3f895407958962a13c12dde3d5433beafc54820ed02",
+    "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+    "scripts/prepare_r2_cross_domain_cases.py": "387e14b091921c1961316acb5aaac0bc10f605ab3e533b1a0a241ee01d12d86e",
+    "scripts/audit_r2_cross_domain_ctu_cases.py": "800ef55f32a1a763b7816033fe4d4b2f7fa1b9487e1b89a7bd1bbbd359628291",
+    "tests/test_r2_cross_domain_annotations.py": "009692fbcfb5c3cd188b266d9e8488bed57a5d1c825df51d4c7eb7cea650e53a",
+    "tests/test_r2_cross_domain_case_preparation.py": "72b7fe5172a25dc38bfed592ae8c371f2722e0fc8e4fe84942cc5731b55dd4ad",
+    "tests/test_r2_cross_domain_ctu_cases.py": "b8ed3945670d887f6aec0563ef984f653fc59850d7561184ee954a73fef87384"
+  },
+  "source_provenance_note": "These hashes identify final tested source, not retrospectively assigned producer identities. CTU audits record their source hashes before execution. The external materialization receipt records verified input identities but did not capture a producer code hash; that limitation remains explicit.",
+  "calibration_candidate_count": 24,
+  "evaluation_candidate_count": 96,
+  "protected_historical_file_count": 245,
+  "prior_artifact_json_count_verified": 28,
+  "historical_bytes_unchanged": true,
+  "protected_inventory_identity": "55510afb3ac3a9d5b8149c129bf4747cb0efc99bf5fda65fa03deeba0ec19a14",
+  "ctu_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "ctu_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "benchmark_locked": false,
+  "annotations_complete": false,
+  "semantic_instances_complete": false,
+  "release_eligible": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "frozen_closed": true
+}

@@ -1,0 +1,2933 @@
+{
+  "scope": "New CTU gold execution and direct annotations only; not model accuracy",
+  "audited_at_utc": "2026-10-06T04:50:17.138305+00:00",
+  "source_code_sha256_before_execution": {
+    "scripts/audit_r2_cross_domain_ctu_cases.py": "800ef55f32a1a763b7816033fe4d4b2f7fa1b9487e1b89a7bd1bbbd359628291",
+    "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+    "evaluation/r2_cross_domain_v1/annotations.py": "a3ba78c6325a4e644a0b613b3eeec0472b0691389d30563ae991507a97bcbf15",
+    "evaluation/r2_cross_domain_v1/safety.py": "a55234b18c7b786a48ea1debe8b1c9a7e4cd9788895a21a5f73a7791ecabfb0f",
+    "evaluation/r2_cross_domain_v1/tools.py": "f5e8963affe6891ee2b963546a26701c26ec480840e9a79c6b956e8c3367b863"
+  },
+  "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "identity_algorithm": "ctu_network_public_dev_v1",
+  "legacy_source_validation": {
+    "version": "ctu_network_public_dev_v1",
+    "source_file_sha256": {
+      "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+      "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+    },
+    "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+    "builder_scorer_sha256": {
+      "evaluation/text_to_sql.py": "bd3d9da9e78bbcab560cefabae93a8c5592757a53375bdd31b7ee613d0c66fdf",
+      "evaluation/ctu_network_public/contract.py": "467ab5050fb53518cb719e59a304a70b7f122e111aa7a2246df9e41be7e15ab4",
+      "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b"
+    },
+    "case_ids": [
+      "ctu_sql_001",
+      "ctu_sql_002",
+      "ctu_sql_003",
+      "ctu_sql_004",
+      "ctu_sql_005",
+      "ctu_sql_006",
+      "ctu_sql_007",
+      "ctu_sql_008"
+    ],
+    "split_sha256": "96362f80e9e6bf01f18f1023c75066c553ddd9c105d2545f98af808d24f736fb",
+    "tables": [
+      "dataset_provenance",
+      "network_flows"
+    ],
+    "schema": {
+      "dataset_provenance": [
+        [
+          "dataset_id",
+          "VARCHAR"
+        ],
+        [
+          "source_name",
+          "VARCHAR"
+        ],
+        [
+          "source_url",
+          "VARCHAR"
+        ],
+        [
+          "retrieved_at",
+          "TIMESTAMP"
+        ],
+        [
+          "file_sha256",
+          "VARCHAR"
+        ],
+        [
+          "license_note",
+          "VARCHAR"
+        ],
+        [
+          "schema_version",
+          "VARCHAR"
+        ]
+      ],
+      "network_flows": [
+        [
+          "source_dataset",
+          "VARCHAR"
+        ],
+        [
+          "source_row_id",
+          "VARCHAR"
+        ],
+        [
+          "event_time",
+          "TIMESTAMP"
+        ],
+        [
+          "src_ip",
+          "VARCHAR"
+        ],
+        [
+          "src_port",
+          "INTEGER"
+        ],
+        [
+          "dst_ip",
+          "VARCHAR"
+        ],
+        [
+          "dst_port",
+          "INTEGER"
+        ],
+        [
+          "protocol",
+          "VARCHAR"
+        ],
+        [
+          "action",
+          "VARCHAR"
+        ],
+        [
+          "bytes_out",
+          "BIGINT"
+        ],
+        [
+          "bytes_in",
+          "BIGINT"
+        ],
+        [
+          "label",
+          "VARCHAR"
+        ]
+      ]
+    },
+    "source_row_counts": {
+      "ctu13_s5": 129831,
+      "ctu13_s7": 114075
+    },
+    "row_counts": {
+      "network_flows": 243906
+    },
+    "distinct_source_row_id": 243906,
+    "logical_snapshot_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "gold_results": {
+      "ctu_sql_001": {
+        "row_count": 1,
+        "result_sha256": "efb2df7901882d7bba9600b8e6eeb14f25637401ee3f981cb59753087afc00de"
+      },
+      "ctu_sql_002": {
+        "row_count": 1,
+        "result_sha256": "92ae11c21d7bfdb0e7b5ab47148b9fc6b9a2198ec553638a7f1a3ee435291c8a"
+      },
+      "ctu_sql_003": {
+        "row_count": 1,
+        "result_sha256": "6b381b5beedb8c08a6c0b370fc440fefd948c5079b2700eadd0bf29033f2e49f"
+      },
+      "ctu_sql_004": {
+        "row_count": 1,
+        "result_sha256": "e78b6b2ef0c79a52a59ac18225babf1fdc8ccac1258146aff6d5fd1f0be1254a"
+      },
+      "ctu_sql_005": {
+        "row_count": 1,
+        "result_sha256": "8b4d3ce5d2cbe284ce96074955464ae75a20581f5fba50f29a3b02aa5c69915e"
+      },
+      "ctu_sql_006": {
+        "row_count": 5,
+        "result_sha256": "2726918c87076ba67c86c4c6730d7a5b5b7167916ee222e573779dceea38033d"
+      },
+      "ctu_sql_007": {
+        "row_count": 2,
+        "result_sha256": "6c1339a9f4f08ae3c5806ab5885412e389f2ca88206f0a3151b1e03acf9eac4c"
+      },
+      "ctu_sql_008": {
+        "row_count": 2,
+        "result_sha256": "b1e66afdc9fb99556a8b2f8ce1549d3cdcbdccd81f2d6a508536701ae05a4ffe"
+      }
+    },
+    "semantic_counterexamples": {
+      "distinct": {
+        "case_id": "ctu_sql_003",
+        "different_from_gold": true
+      },
+      "time_boundary": {
+        "case_id": "ctu_sql_004",
+        "different_from_gold": true
+      },
+      "boolean": {
+        "case_id": "ctu_sql_005",
+        "different_from_gold": true
+      },
+      "ordering": {
+        "case_id": "ctu_sql_006",
+        "different_from_gold": true
+      }
+    }
+  },
+  "case_count": 40,
+  "gold_execution_success_count": 40,
+  "benchmark_locked": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "case_results": [
+    {
+      "case_id": "ctu_cross_cd58f61cdff78fbc",
+      "database_id": "ctu_dev",
+      "question": "List source and destination IPs of RSVP flows in CTU scenario 5.",
+      "gold_sql": "SELECT src_ip,dst_ip FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='RSVP'",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "7857f4597dfa329c15ce73752e55dc827ee1a18eecd8b2f64c086b6cf4216864",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "RSVP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          "200.37.227.82",
+          "147.32.84.229"
+        ]
+      ],
+      "observed_result_sha256": "fb5c42cc15cb85ac822d4b92a6d6badda910d6f44d716a07d50f12bb41bc149f"
+    },
+    {
+      "case_id": "ctu_cross_e09358b4dca10e1f",
+      "database_id": "ctu_dev",
+      "question": "List event time, source IP and destination IP of ARP flows in CTU scenario 7 with a missing destination port.",
+      "gold_sql": "SELECT event_time,src_ip,dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='ARP' AND dst_port IS NULL",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "0cc1e1d84ae511b94f6cadb45ee607d40324fea63eeb46e7e63331b9d4019534",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            },
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "ARP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 64,
+      "sample_gold_rows": [
+        [
+          "2011-08-16T13:51:25.003668",
+          "147.32.87.78",
+          "147.32.87.78"
+        ],
+        [
+          "2011-08-16T13:51:29.275174",
+          "147.32.87.44",
+          "147.32.87.1"
+        ],
+        [
+          "2011-08-16T13:51:29.878029",
+          "147.32.87.52",
+          "147.32.87.1"
+        ]
+      ],
+      "observed_result_sha256": "6fef6d189c1ef8a2ccf094f8825c65473168a67203b5b87ca4b0e01d71683d01"
+    },
+    {
+      "case_id": "ctu_cross_6113c639deae1326",
+      "database_id": "ctu_dev",
+      "question": "List source row ID and label of PIM flows in CTU scenario 5.",
+      "gold_sql": "SELECT source_row_id,label FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='PIM'",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "3453c42e792934856220238c22d430bcbd37132de6ca33f0ecc552c03020a125",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_row_id"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "PIM"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          "line:2142",
+          "flow=Background"
+        ]
+      ],
+      "observed_result_sha256": "d96737edde44e4b40e6831f2dc73025286209b99d30077103908ad5b404e72ae"
+    },
+    {
+      "case_id": "ctu_cross_5ba944b403f6456d",
+      "database_id": "ctu_dev",
+      "question": "List source IP and outbound bytes of ICMP flows in CTU scenario 5 whose outbound bytes exceed 1000.",
+      "gold_sql": "SELECT src_ip,bytes_out FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='ICMP' AND bytes_out>1000",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "e5015938bd0c30352642dfd2b20a9ed0ba6902bd9a643ee20ff1d0070d765926",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "ICMP"
+            }
+          ],
+          "constraints": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out",
+              "kind": "numeric_threshold",
+              "operator": ">",
+              "value": 1000
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 159,
+      "sample_gold_rows": [
+        [
+          "147.32.84.174",
+          56640
+        ],
+        [
+          "147.32.84.138",
+          829292
+        ],
+        [
+          "147.32.87.1",
+          1610
+        ]
+      ],
+      "observed_result_sha256": "fe6db9b6289cadd6dc09edc1cc5ec4ccaa912462288891284d6845d7dae8c863"
+    },
+    {
+      "case_id": "ctu_cross_1dc9e35510939cd9",
+      "database_id": "ctu_dev",
+      "question": "List destination IP and destination port of RTCP flows in CTU scenario 7 with zero outbound bytes.",
+      "gold_sql": "SELECT dst_ip,dst_port FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='RTCP' AND bytes_out=0",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "ce81555a5c36afadcd694de1937384e55aa9b9685738ae8e836bb20725525f6b",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "RTCP"
+            }
+          ],
+          "constraints": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out",
+              "kind": "numeric_threshold",
+              "operator": "=",
+              "value": 0
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 0,
+      "sample_gold_rows": [],
+      "observed_result_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "case_id": "ctu_cross_db23b6f2a42fd103",
+      "database_id": "ctu_dev",
+      "question": "List event time and action of RTP flows in CTU scenario 5 at or after 2011-08-15 17:00:00.",
+      "gold_sql": "SELECT event_time,action FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='RTP' AND event_time>=TIMESTAMP '2011-08-15 17:00:00'",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "1f5c5d9b35d4f46224851a13cc64fdd35150db743f3c052b8a5c7b9d68e2d49e",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "action"
+            },
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "RTP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 9,
+      "sample_gold_rows": [
+        [
+          "2011-08-15T17:00:11.114692",
+          "CON"
+        ],
+        [
+          "2011-08-15T17:00:14.567716",
+          "CON"
+        ],
+        [
+          "2011-08-15T17:00:27.814734",
+          "CON"
+        ]
+      ],
+      "observed_result_sha256": "cf8e6f1e3822424e67c3c86095f3702a884195b040eed879184f600988cf351b"
+    },
+    {
+      "case_id": "ctu_cross_116e46aecde5564d",
+      "database_id": "ctu_dev",
+      "question": "List source IP, source port and destination IP of IGMP flows in CTU scenario 7 with a missing source port.",
+      "gold_sql": "SELECT src_ip,src_port,dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='IGMP' AND src_port IS NULL",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "9c6afc6f19039fddfb24f3257094cd0f357426d04f31f9a5fb17cacb4f6c083b",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_port"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "IGMP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 103,
+      "sample_gold_rows": [
+        [
+          "147.32.87.1",
+          null,
+          "224.0.0.1"
+        ],
+        [
+          "147.32.87.38",
+          null,
+          "239.255.255.250"
+        ],
+        [
+          "147.32.87.4",
+          null,
+          "239.255.255.253"
+        ]
+      ],
+      "observed_result_sha256": "ecfe45a4e026aa2f8a733453bcfeaee4c68bb3fd5aa9c17677686351352eb94e"
+    },
+    {
+      "case_id": "ctu_cross_2e05412218fcc02f",
+      "database_id": "ctu_dev",
+      "question": "List source IP, destination IP and protocol of CTU scenario 7 flows with over 1000000 outbound bytes and zero inbound bytes.",
+      "gold_sql": "SELECT src_ip,dst_ip,protocol FROM network_flows WHERE source_dataset='ctu13_s7' AND bytes_out>1000000 AND bytes_in=0",
+      "difficulty": "basic",
+      "features": [],
+      "family_id": "7c8efe5eb02faa29d820a18938fa3c106b8ee5eb3b1b8bcf2e1c5907e4af870c",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            },
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in",
+              "kind": "numeric_threshold",
+              "operator": "=",
+              "value": 0
+            },
+            {
+              "table": "network_flows",
+              "column": "bytes_out",
+              "kind": "numeric_threshold",
+              "operator": ">",
+              "value": 1000000
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          "147.32.80.13",
+          "147.32.84.138",
+          "UDP"
+        ]
+      ],
+      "observed_result_sha256": "dd8b57d0d47b51cbf3e8eada58136be482a9f05017203ed71db1b6e8c6ffeab5"
+    },
+    {
+      "case_id": "ctu_cross_09368110b7091cb8",
+      "database_id": "ctu_dev",
+      "question": "Count distinct source/destination IP pairs for UDP in CTU scenario 5, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.",
+      "gold_sql": "SELECT COUNT(DISTINCT (src_ip,dst_ip)) FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='UDP'",
+      "difficulty": "medium",
+      "features": [
+        "distinct",
+        "null"
+      ],
+      "family_id": "e50d27a5c0ad02067390dfa11d6bb8ab3c35b60ddd14cae10fcd74addeb0a019",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "UDP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          38695
+        ]
+      ],
+      "observed_result_sha256": "a2327fef36973182edd2cfe31c32a350dbb73b989ded198a415ac279bd79574c"
+    },
+    {
+      "case_id": "ctu_cross_4b4f065c0737c540",
+      "database_id": "ctu_dev",
+      "question": "How many distinct destination ports occur in TCP flows in CTU scenario 7?",
+      "gold_sql": "SELECT COUNT(DISTINCT dst_port) FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='TCP'",
+      "difficulty": "medium",
+      "features": [
+        "distinct"
+      ],
+      "family_id": "ae0c20f0915f5d8075d1ef55f5a300b9decd8b988fc17cbdbdb61e90f9a5dabe",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "TCP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          1209
+        ]
+      ],
+      "observed_result_sha256": "dd32e93e13ccefc5cad861acaf6492fb3e9aaeb69f41a8f46465a285ef82d555"
+    },
+    {
+      "case_id": "ctu_cross_67db5d7878967de2",
+      "database_id": "ctu_dev",
+      "question": "How many distinct source ports occur in UDP flows in CTU scenario 5?",
+      "gold_sql": "SELECT COUNT(DISTINCT src_port) FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='UDP'",
+      "difficulty": "medium",
+      "features": [
+        "distinct"
+      ],
+      "family_id": "44e055eceeafadbe6558cf5c78126f01dddfba05d770059a1832688f936221ec",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_port"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "UDP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          38842
+        ]
+      ],
+      "observed_result_sha256": "e758d9200dba121b4fbea08d594a9595a0d67a88f983a9c8238eabd0302eac8c"
+    },
+    {
+      "case_id": "ctu_cross_493dba43b24b2e81",
+      "database_id": "ctu_dev",
+      "question": "List distinct protocol/action pairs in CTU scenario 7.",
+      "gold_sql": "SELECT DISTINCT protocol,action FROM network_flows WHERE source_dataset='ctu13_s7'",
+      "difficulty": "medium",
+      "features": [
+        "distinct"
+      ],
+      "family_id": "bbb4c1da36b83dc059df529fbdeedd7852648cb48ba83a58d6f7cc446a2fa0fa",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "action"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 148,
+      "sample_gold_rows": [
+        [
+          "UDP",
+          "CON"
+        ],
+        [
+          "TCP",
+          "PA_PA"
+        ],
+        [
+          "TCP",
+          "A_PA"
+        ]
+      ],
+      "observed_result_sha256": "204f86d6707f86344c5ef4e5a059a4daa6fe9f631956ce2fadeefaab714f97a8"
+    },
+    {
+      "case_id": "ctu_cross_ef8808ed9e47cef2",
+      "database_id": "ctu_dev",
+      "question": "List distinct source IP/label pairs in CTU scenario 5 whose label begins with flow=From-Botnet.",
+      "gold_sql": "SELECT DISTINCT src_ip,label FROM network_flows WHERE source_dataset='ctu13_s5' AND starts_with(label,'flow=From-Botnet')",
+      "difficulty": "medium",
+      "features": [
+        "distinct",
+        "prefix"
+      ],
+      "family_id": "aea9a3f97b43dd7673303318a5ceda233e567bc7827a54e31f46801c4dff7f6b",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 33,
+      "sample_gold_rows": [
+        [
+          "147.32.84.165",
+          "flow=From-Botnet-V46-UDP-DNS"
+        ],
+        [
+          "147.32.84.165",
+          "flow=From-Botnet-V46-TCP-HTTP-Google-Net-Established-6"
+        ],
+        [
+          "147.32.84.165",
+          "flow=From-Botnet-V46-TCP-WEB-Established"
+        ]
+      ],
+      "observed_result_sha256": "69b5cb52e9e318fa2420eb943b31fb1653211609a9c051d99cae3d2cda7f7ccf"
+    },
+    {
+      "case_id": "ctu_cross_4dfbfa87ef9eacfa",
+      "database_id": "ctu_dev",
+      "question": "List distinct destination IPs in CTU scenario 7 whose label begins with flow=From-Normal.",
+      "gold_sql": "SELECT DISTINCT dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND starts_with(label,'flow=From-Normal')",
+      "difficulty": "medium",
+      "features": [
+        "distinct",
+        "prefix"
+      ],
+      "family_id": "4e58f8053963c1f7a5b52d13c4b3c46cae78e4d2efc5b8350b5bcae9b08cf01a",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 83,
+      "sample_gold_rows": [
+        [
+          "195.24.233.55"
+        ],
+        [
+          "147.32.80.9"
+        ],
+        [
+          "209.85.148.99"
+        ]
+      ],
+      "observed_result_sha256": "cb85a55c23cab0658cc2922d78dddfa5c01db8cc814eea7c326b034fce9c50a2"
+    },
+    {
+      "case_id": "ctu_cross_779935acae78c536",
+      "database_id": "ctu_dev",
+      "question": "For each source dataset, return its number of distinct source IPs, ordered by source dataset.",
+      "gold_sql": "SELECT source_dataset,COUNT(DISTINCT src_ip) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+      "difficulty": "medium",
+      "features": [
+        "distinct",
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "29bfae6d5680d5ba77e00c71e8a3491cba54df0d64843a1c29a21ef7910927c7",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          28300
+        ],
+        [
+          "ctu13_s7",
+          23055
+        ]
+      ],
+      "observed_result_sha256": "f9819e9e47ab58b9f0395eb42a686a3e2e93e7c1c6fa27485ea5d2612ab44bc4"
+    },
+    {
+      "case_id": "ctu_cross_a427f9a05d18b548",
+      "database_id": "ctu_dev",
+      "question": "How many distinct labels occur in CTU scenario 5?",
+      "gold_sql": "SELECT COUNT(DISTINCT label) FROM network_flows WHERE source_dataset='ctu13_s5'",
+      "difficulty": "medium",
+      "features": [
+        "distinct"
+      ],
+      "family_id": "0ecfc1aad74494d72028d69ae7e3a0d40a7fb2423915f6dd8673b7592d96772a",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          77
+        ]
+      ],
+      "observed_result_sha256": "fc5f132994c09bdae91216745edbeee44c07f1f1687170c4aa3b4a26f03cfd12"
+    },
+    {
+      "case_id": "ctu_cross_3f83eeb648a43168",
+      "database_id": "ctu_dev",
+      "question": "For each protocol in CTU scenario 5, return the flow count and minimum/maximum outbound bytes, ordered by protocol.",
+      "gold_sql": "SELECT protocol,COUNT(*),MIN(bytes_out),MAX(bytes_out) FROM network_flows WHERE source_dataset='ctu13_s5' GROUP BY protocol ORDER BY protocol",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "2bf918d72d5dbd5a7d6d0ed9ece20b9cc403f77c0edfe2179cca0b413fd25d69",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 10,
+      "sample_gold_rows": [
+        [
+          "ARP",
+          71,
+          0,
+          19740
+        ],
+        [
+          "ICMP",
+          2062,
+          0,
+          829292
+        ],
+        [
+          "IGMP",
+          150,
+          60,
+          60
+        ]
+      ],
+      "observed_result_sha256": "d19aaef475d94c07a62885ac2409387b282535997be9a5a89c4331835991555c"
+    },
+    {
+      "case_id": "ctu_cross_179231c51f8af53e",
+      "database_id": "ctu_dev",
+      "question": "For each source dataset and protocol, return total outbound bytes and average inbound bytes, ordered by source dataset then protocol.",
+      "gold_sql": "SELECT source_dataset,protocol,SUM(bytes_out),AVG(bytes_in) FROM network_flows GROUP BY source_dataset,protocol ORDER BY source_dataset,protocol",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "2f10195dd60bb1b423b7753cf23c116c95dadadffbd5b2976ec3c1ed093140ca",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            },
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 20,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          "ARP",
+          38640,
+          250.14084507042253
+        ],
+        [
+          "ctu13_s5",
+          "ICMP",
+          1467652,
+          54.64694471387003
+        ],
+        [
+          "ctu13_s5",
+          "IGMP",
+          9000,
+          0.0
+        ]
+      ],
+      "observed_result_sha256": "a62dc38ff16de2255babf0ca1a332bdcd49686bb795734919e17566cbbd09e2e"
+    },
+    {
+      "case_id": "ctu_cross_111e791fb862cf30",
+      "database_id": "ctu_dev",
+      "question": "Return the three most frequent UDP destination IPs in CTU scenario 7 with their flow counts; break count ties by destination IP ascending.",
+      "gold_sql": "SELECT dst_ip,COUNT(*) AS n FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='UDP' GROUP BY dst_ip ORDER BY n DESC,dst_ip ASC LIMIT 3",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "502a7b9fdecc1ffae78c190c7cb617de6be618cce8fdbd8cb949931630fd88ae",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "UDP"
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 3
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 3,
+      "sample_gold_rows": [
+        [
+          "147.32.80.9",
+          46910
+        ],
+        [
+          "147.32.84.229",
+          21423
+        ],
+        [
+          "192.168.95.255",
+          196
+        ]
+      ],
+      "observed_result_sha256": "d7f092349519726722d709716fc3c558ccf34a592ad16c9261d3e66c5a1254c5"
+    },
+    {
+      "case_id": "ctu_cross_8b3e2e65524280d5",
+      "database_id": "ctu_dev",
+      "question": "Return the seven most frequent TCP destination ports at most 1024 in CTU scenario 5 with counts; break count ties by port ascending.",
+      "gold_sql": "SELECT dst_port,COUNT(*) AS n FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='TCP' AND dst_port<=1024 GROUP BY dst_port ORDER BY n DESC,dst_port ASC LIMIT 7",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "3a3e1ee9be51baf68c3c5f4f13b2f51fe76434a87fac2c73b295b2734b8740f9",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "TCP"
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 7
+            },
+            {
+              "table": "network_flows",
+              "column": "dst_port",
+              "kind": "numeric_threshold",
+              "operator": "<=",
+              "value": 1024
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 7,
+      "sample_gold_rows": [
+        [
+          80,
+          21171
+        ],
+        [
+          443,
+          3745
+        ],
+        [
+          993,
+          179
+        ]
+      ],
+      "observed_result_sha256": "29cb51d9e77a9ea17a4d6a9135c6d6fcdcc1a145794d63b3769ca78d4055aadd"
+    },
+    {
+      "case_id": "ctu_cross_da1bacf7b6a0d616",
+      "database_id": "ctu_dev",
+      "question": "For each calendar date in CTU scenario 5, count flows with a label beginning flow=From-Botnet; order dates ascending.",
+      "gold_sql": "SELECT CAST(event_time AS DATE) AS day,COUNT(*) FROM network_flows WHERE source_dataset='ctu13_s5' AND starts_with(label,'flow=From-Botnet') GROUP BY CAST(event_time AS DATE) ORDER BY day",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit",
+        "time"
+      ],
+      "family_id": "7ad41cdff199bbdcbedffb71eff281a5c291a9c2ca01b7cfc27b6e6cc3ee6456",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          "2011-08-15",
+          901
+        ]
+      ],
+      "observed_result_sha256": "113ddb8433d9e3a28480a92dfd0d844851c7178cce3085586eda7a702fba53d5"
+    },
+    {
+      "case_id": "ctu_cross_4bd089aa77684ec3",
+      "database_id": "ctu_dev",
+      "question": "List labels with at least 100 flows in CTU scenario 7 with their counts, ordered by label.",
+      "gold_sql": "SELECT label,COUNT(*) FROM network_flows WHERE source_dataset='ctu13_s7' GROUP BY label HAVING COUNT(*)>=100 ORDER BY label",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "930c6987892a53d05fea691677e9762fe9c566d26bba0ddfe6dadee789c3a5f7",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 14,
+      "sample_gold_rows": [
+        [
+          "flow=Background",
+          2997
+        ],
+        [
+          "flow=Background-Attempt-cmpgw-CVUT",
+          955
+        ],
+        [
+          "flow=Background-Established-cmpgw-CVUT",
+          10468
+        ]
+      ],
+      "observed_result_sha256": "4e27c3f0323a2d27e49c63b922c98d5e20142b05582224422937b89902425cba"
+    },
+    {
+      "case_id": "ctu_cross_d914283c880a2dfd",
+      "database_id": "ctu_dev",
+      "question": "Return the two source IPs with highest total outbound bytes in CTU scenario 5 and their totals; break total ties by source IP ascending.",
+      "gold_sql": "SELECT src_ip,SUM(bytes_out) AS total FROM network_flows WHERE source_dataset='ctu13_s5' GROUP BY src_ip ORDER BY total DESC,src_ip ASC LIMIT 2",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "237ce10e1644c8ebae6430c4b3e83b8e5900ffbc3bae5bb2217fb093ec960574",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 2
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "74.125.108.212",
+          136546777
+        ],
+        [
+          "78.140.182.108",
+          85080318
+        ]
+      ],
+      "observed_result_sha256": "68062305849cecd1296222086bdbee5be9c87d727414c5bafbdd3f53ff8a88be"
+    },
+    {
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "database_id": "ctu_dev",
+      "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.",
+      "gold_sql": "SELECT protocol,SUM(CASE WHEN bytes_out IS NULL AND bytes_in IS NULL THEN 1 ELSE 0 END) FROM network_flows WHERE source_dataset='ctu13_s7' GROUP BY protocol ORDER BY protocol",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit",
+        "null"
+      ],
+      "family_id": "e6c4753fb03f85685b1ab0811730cfbee16eb2cce172798d8c578b21c0ebdae0",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            },
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 10,
+      "sample_gold_rows": [
+        [
+          "ARP",
+          0
+        ],
+        [
+          "ICMP",
+          0
+        ],
+        [
+          "IGMP",
+          0
+        ]
+      ],
+      "observed_result_sha256": "1ac8d4202842a76de6c4719794644c902028e0b0bcf1b05453aff8d0a2f10c14"
+    },
+    {
+      "case_id": "ctu_cross_cf0c8dd93c8be782",
+      "database_id": "ctu_dev",
+      "question": "Count CTU scenario 5 flows whose outbound bytes exceed the average outbound bytes of scenario 5.",
+      "gold_sql": "SELECT COUNT(*) FROM network_flows WHERE source_dataset='ctu13_s5' AND bytes_out>(SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset='ctu13_s5')",
+      "difficulty": "advanced",
+      "features": [
+        "nested"
+      ],
+      "family_id": "5c1baa1eb2ea095a74db5b0b2e4b16225fb482bc46d1e5da468d0be1acc28222",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          3314
+        ]
+      ],
+      "observed_result_sha256": "6667306f1cde7ef6a545826699a5e904a7b623e1db27953b4af5d6139303d6e1"
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "database_id": "ctu_dev",
+      "question": "List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.",
+      "gold_sql": "SELECT protocol FROM network_flows WHERE source_dataset='ctu13_s7' GROUP BY protocol HAVING AVG(bytes_out)>(SELECT AVG(bytes_out) FROM network_flows WHERE source_dataset='ctu13_s7') ORDER BY protocol",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "f23e1577f7ee9996a5069bf943adb00a8bb76d16e1ac00435d6326e864fb6356",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          "TCP"
+        ]
+      ],
+      "observed_result_sha256": "a0220ed78b844f5fc5a9c987151c1d85b7105fb281be704a04c1d05aa5cda80b"
+    },
+    {
+      "case_id": "ctu_cross_71164969e0e0277e",
+      "database_id": "ctu_dev",
+      "question": "List source IPs observed in both CTU scenario 5 and scenario 7, without duplicates.",
+      "gold_sql": "SELECT src_ip FROM network_flows WHERE source_dataset='ctu13_s5' INTERSECT SELECT src_ip FROM network_flows WHERE source_dataset='ctu13_s7'",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "distinct"
+      ],
+      "family_id": "765df9d14a348c8334643c69159bb9900f63aac1d889dd918ebcca08bc4f59e8",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1983,
+      "sample_gold_rows": [
+        [
+          "147.32.84.59"
+        ],
+        [
+          "147.32.87.252"
+        ],
+        [
+          "147.32.86.155"
+        ]
+      ],
+      "observed_result_sha256": "5787fd40807b7aa32695d3456e9ad8f25d112e2003cefc9d48c377e93bf35118"
+    },
+    {
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "database_id": "ctu_dev",
+      "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.",
+      "gold_sql": "SELECT dst_ip FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='UDP' EXCEPT SELECT dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='UDP'",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "distinct"
+      ],
+      "family_id": "db998ce5c63dce79d49249ea60ad64e9967eecd55e9933416d9066e7ed6edadb",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "UDP"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "UDP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 9780,
+      "sample_gold_rows": [
+        [
+          "66.56.30.27"
+        ],
+        [
+          "187.126.122.175"
+        ],
+        [
+          "81.234.199.128"
+        ]
+      ],
+      "observed_result_sha256": "c0fcd9c831a4b2ab7d2e88b6561f9025355feadea3686bd28b7485237fe3ceba"
+    },
+    {
+      "case_id": "ctu_cross_0b9805ee5f7a7aca",
+      "database_id": "ctu_dev",
+      "question": "Count the latest flow per source IP in CTU scenario 7, selecting by event time descending then source row ID descending within each source IP.",
+      "gold_sql": "WITH ranked AS (SELECT ROW_NUMBER() OVER(PARTITION BY src_ip ORDER BY event_time DESC,source_row_id DESC) AS rn FROM network_flows WHERE source_dataset='ctu13_s7') SELECT COUNT(*) FROM ranked WHERE rn=1",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "order_limit",
+        "window"
+      ],
+      "family_id": "bde6541d39b2e7466b46eaf22a865ddd39a5ac959abe1129e7f81f8637b96850",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_row_id"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          23055
+        ]
+      ],
+      "observed_result_sha256": "3c44f62e41cfdc5869b8a196191cee2178e5a8ba5a7acd08e836d0fdbbedbbc1"
+    },
+    {
+      "case_id": "ctu_cross_71f16246d2fd9590",
+      "database_id": "ctu_dev",
+      "question": "For each source dataset, return the fraction of all flows whose label begins with flow=From-Botnet; include all labels in the denominator and order datasets ascending.",
+      "gold_sql": "WITH totals AS (SELECT source_dataset,COUNT(*) AS n,SUM(CASE WHEN starts_with(label,'flow=From-Botnet') THEN 1 ELSE 0 END) AS bot FROM network_flows GROUP BY source_dataset) SELECT source_dataset,bot*1.0/NULLIF(n,0) FROM totals ORDER BY source_dataset",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "group_having",
+        "prefix",
+        "order_limit"
+      ],
+      "family_id": "7f37dcfc9eba64aa9a19eb74a667228136cc9db6e013111889691418cb937d7b",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          0.006939790959015951
+        ],
+        [
+          "ctu13_s7",
+          0.0005522682445759368
+        ]
+      ],
+      "observed_result_sha256": "8ad390c5995b6479cd9deb042ed5b8225bf86c80697221ad9085bd4d8f3b35e2"
+    },
+    {
+      "case_id": "ctu_cross_708b66575657429a",
+      "database_id": "ctu_dev",
+      "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+      "gold_sql": "SELECT COUNT(*) FROM (SELECT dst_ip FROM network_flows WHERE source_dataset='ctu13_s5' AND protocol='TCP' AND event_time>TIMESTAMP '2011-08-15 17:00:00' INTERSECT SELECT dst_ip FROM network_flows WHERE source_dataset='ctu13_s7' AND protocol='TCP' AND event_time>TIMESTAMP '2011-08-16 14:00:00') AS shared",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "distinct",
+        "time"
+      ],
+      "family_id": "9ba1dd452c55c5a149fb6bd493ae36b7e9064122cbe6eb69199b72300bad4961",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "TCP"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol",
+              "operator": "=",
+              "value": "TCP"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          459
+        ]
+      ],
+      "observed_result_sha256": "8e33c503083e45ef634eb3812f9029dd16bc18d52335b15e5104a4fd3166fc60"
+    },
+    {
+      "case_id": "ctu_cross_6122c96211b2bfa8",
+      "database_id": "ctu_dev",
+      "question": "Return dataset/protocol flow counts exceeding that dataset's average protocol-group count; order by dataset then protocol.",
+      "gold_sql": "WITH groups AS (SELECT source_dataset,protocol,COUNT(*) AS n FROM network_flows GROUP BY source_dataset,protocol) SELECT g.source_dataset,g.protocol,g.n FROM groups g WHERE g.n>(SELECT AVG(other.n) FROM groups other WHERE other.source_dataset=g.source_dataset) ORDER BY g.source_dataset,g.protocol",
+      "difficulty": "advanced",
+      "features": [
+        "nested",
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "47b088e168f76e2c18d399d693e97fd05166d2253d1def313c883dbc31a52bb4",
+      "split": "evaluation",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 4,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          "TCP",
+          31899
+        ],
+        [
+          "ctu13_s5",
+          "UDP",
+          95540
+        ],
+        [
+          "ctu13_s7",
+          "TCP",
+          22889
+        ]
+      ],
+      "observed_result_sha256": "89630e40dab5fb14b562b3dc4e59649dd7c63c76753cbd513f69956730a6a45f"
+    },
+    {
+      "case_id": "ctu_cross_0d22a790584f0155",
+      "database_id": "ctu_dev",
+      "question": "Return minimum and maximum event time for each source dataset, ordered by dataset.",
+      "gold_sql": "SELECT source_dataset,MIN(event_time),MAX(event_time) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "time",
+        "order_limit"
+      ],
+      "family_id": "a26df409d8a8ebfab046eb4e40ae703fd448f62fced877df84973582e3e5c9d3",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          "2011-08-15T16:43:20.931208",
+          "2011-08-15T17:13:26.758894"
+        ],
+        [
+          "ctu13_s7",
+          "2011-08-16T13:51:24.049047",
+          "2011-08-16T14:12:41.499668"
+        ]
+      ],
+      "observed_result_sha256": "abde4002ca6ca4c007f2b9b4a2992dc4b752930a80bbc8df70ff2c843ff18682"
+    },
+    {
+      "case_id": "ctu_cross_e36ee009626c71c2",
+      "database_id": "ctu_dev",
+      "question": "Return total outbound plus inbound bytes by protocol in CTU scenario 5, treating missing inbound bytes as zero; order by protocol.",
+      "gold_sql": "SELECT protocol,SUM(bytes_out+COALESCE(bytes_in,0)) FROM network_flows WHERE source_dataset='ctu13_s5' GROUP BY protocol ORDER BY protocol",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "null",
+        "order_limit"
+      ],
+      "family_id": "bf523b3d2a9241785f3244235f268542f8a5cc2ce1c4f8fa2db0c9541b34ec7a",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_in"
+            },
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 10,
+      "sample_gold_rows": [
+        [
+          "ARP",
+          56400
+        ],
+        [
+          "ICMP",
+          1580334
+        ],
+        [
+          "IGMP",
+          9000
+        ]
+      ],
+      "observed_result_sha256": "39621ae978a205575d5378b17e77beef1875525fce8d8231cdffb9d2f0862651"
+    },
+    {
+      "case_id": "ctu_cross_feab49e4a48ff3aa",
+      "database_id": "ctu_dev",
+      "question": "Count flows with missing destination port by protocol in CTU scenario 7, ordered by protocol.",
+      "gold_sql": "SELECT protocol,COUNT(*) FROM network_flows WHERE source_dataset='ctu13_s7' AND dst_port IS NULL GROUP BY protocol ORDER BY protocol",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "null",
+        "order_limit"
+      ],
+      "family_id": "11c50095d5eebc39d5448e037c1a0bf2a272691065bc31fd08ef3334cc4743a4",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_port"
+            },
+            {
+              "table": "network_flows",
+              "column": "protocol"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 7,
+      "sample_gold_rows": [
+        [
+          "ARP",
+          64
+        ],
+        [
+          "ICMP",
+          297
+        ],
+        [
+          "IGMP",
+          103
+        ]
+      ],
+      "observed_result_sha256": "9955c33819e305a94c2ad9a205c1cc2a98b82e50b31a7f3db86655583df103e5"
+    },
+    {
+      "case_id": "ctu_cross_5c5ade01fccce004",
+      "database_id": "ctu_dev",
+      "question": "Return the event time span in seconds for each source dataset, ordered by dataset.",
+      "gold_sql": "SELECT source_dataset,DATE_DIFF('second',MIN(event_time),MAX(event_time)) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "time",
+        "order_limit"
+      ],
+      "family_id": "fd594025397a4713d80e4fde7be7b1ba86dcf51b2dfb0e348d374bfb7318bae9",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "event_time"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          1806
+        ],
+        [
+          "ctu13_s7",
+          1277
+        ]
+      ],
+      "observed_result_sha256": "2eda7dd5d0c8923dd51919b039c41dd250b55d0b5da69ab86091d2fea45c6a70"
+    },
+    {
+      "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+      "database_id": "ctu_dev",
+      "question": "Count flows with a missing source port and label beginning flow=From-Normal for each source dataset, ordered by dataset.",
+      "gold_sql": "SELECT source_dataset,COUNT(*) FROM network_flows WHERE src_port IS NULL AND starts_with(label,'flow=From-Normal') GROUP BY source_dataset ORDER BY source_dataset",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "null",
+        "prefix",
+        "order_limit"
+      ],
+      "family_id": "ad0adac816d3a9ebda1db10bad4cf04d14dadc2e4c1687bda8efee481c7ace5d",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_port"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          3
+        ],
+        [
+          "ctu13_s7",
+          1
+        ]
+      ],
+      "observed_result_sha256": "175e3b1c1e36413dbb51a1a1c3dd7b9e2703a070a52c0bf5ee7d2b83471714a1"
+    },
+    {
+      "case_id": "ctu_cross_12d2dfbda309cf7a",
+      "database_id": "ctu_dev",
+      "question": "Return the four most frequent labels in CTU scenario 5 with counts; break count ties by label ascending.",
+      "gold_sql": "SELECT label,COUNT(*) AS n FROM network_flows WHERE source_dataset='ctu13_s5' GROUP BY label ORDER BY n DESC,label ASC LIMIT 4",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "order_limit"
+      ],
+      "family_id": "c5daa6ef18eac5f28f3a08a06ff416d45d02254c9f9ed8f5ce4d6792b5abf575",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "label"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s5"
+            }
+          ],
+          "constraints": [
+            {
+              "kind": "limit",
+              "value": 4
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 4,
+      "sample_gold_rows": [
+        [
+          "flow=To-Background-UDP-CVUT-DNS-Server",
+          50817
+        ],
+        [
+          "flow=Background-UDP-Established",
+          37203
+        ],
+        [
+          "flow=Background-TCP-Established",
+          15156
+        ]
+      ],
+      "observed_result_sha256": "aff5d99471c40df5966b98f2366b14615002eca6ea468e761d76de7824f2ff03"
+    },
+    {
+      "case_id": "ctu_cross_94d3c478d5858048",
+      "database_id": "ctu_dev",
+      "question": "For each source dataset, return the fraction of flows with zero outbound bytes; include NULL byte values in the flow denominator and order by dataset.",
+      "gold_sql": "SELECT source_dataset,SUM(CASE WHEN bytes_out=0 THEN 1 ELSE 0 END)*1.0/COUNT(*) FROM network_flows GROUP BY source_dataset ORDER BY source_dataset",
+      "difficulty": "medium",
+      "features": [
+        "group_having",
+        "null",
+        "order_limit"
+      ],
+      "family_id": "60ef9710b6be3cdf4e3ba04dc8601ca470ce9ff7d302beb36718a168359190b2",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "ordered_rows",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [],
+          "constraints": [
+            {
+              "table": "network_flows",
+              "column": "bytes_out",
+              "kind": "numeric_threshold",
+              "operator": "=",
+              "value": 0
+            }
+          ],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 2,
+      "sample_gold_rows": [
+        [
+          "ctu13_s5",
+          0.006146451925965293
+        ],
+        [
+          "ctu13_s7",
+          0.005391190006574622
+        ]
+      ],
+      "observed_result_sha256": "25905d114b68b400559b70bad5185f46a3519df9d1a4d6561ff3b3799e2c2d04"
+    },
+    {
+      "case_id": "ctu_cross_dda372911befb17e",
+      "database_id": "ctu_dev",
+      "question": "Count distinct source/destination IP pairs in CTU scenario 7, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.",
+      "gold_sql": "SELECT COUNT(DISTINCT (src_ip,dst_ip)) FROM network_flows WHERE source_dataset='ctu13_s7'",
+      "difficulty": "medium",
+      "features": [
+        "distinct",
+        "null"
+      ],
+      "family_id": "b34aa173c4819aff5245edc7bf8bbb9d2d0c46f3794ee8503659ead176dd29d5",
+      "split": "calibration",
+      "domain": "network_telemetry",
+      "benchmark_locked": false,
+      "comparator": "unordered_multiset",
+      "gold_execution_success": true,
+      "base_snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "base_snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "semantic_validation_status": "PENDING",
+      "accepted_links": [
+        {
+          "tables": [
+            "network_flows"
+          ],
+          "columns": [
+            {
+              "table": "network_flows",
+              "column": "dst_ip"
+            },
+            {
+              "table": "network_flows",
+              "column": "source_dataset"
+            },
+            {
+              "table": "network_flows",
+              "column": "src_ip"
+            }
+          ],
+          "relationships": [],
+          "stored_values": [
+            {
+              "table": "network_flows",
+              "column": "source_dataset",
+              "operator": "=",
+              "value": "ctu13_s7"
+            }
+          ],
+          "constraints": [],
+          "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+        }
+      ],
+      "gold_row_count": 1,
+      "sample_gold_rows": [
+        [
+          42885
+        ]
+      ],
+      "observed_result_sha256": "22d0ac389ea508f9cb419ce171a758d8b5a2dc5bf8d1b354bdc99605b6cc69b3"
+    }
+  ]
+}

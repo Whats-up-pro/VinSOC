@@ -1,0 +1,92 @@
+{
+  "reference": {
+    "case_id": "external_world_1_329e92f0874dea47",
+    "database_id": "world_1",
+    "question": "Give the average life expectancy for countries in Africa which are republics?",
+    "gold_sql": "SELECT AVG(LifeExpectancy) FROM country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "555d07132ae3000c138f24e63918ffffa50657cc87cc59a3c4f129c8a2b22e44",
+    "accepted_links": [
+      {
+        "tables": [
+          "country"
+        ],
+        "columns": [
+          {
+            "table": "country",
+            "column": "Continent"
+          },
+          {
+            "table": "country",
+            "column": "GovernmentForm"
+          },
+          {
+            "table": "country",
+            "column": "LifeExpectancy"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "country",
+            "column": "Continent",
+            "operator": "=",
+            "value": "Africa"
+          },
+          {
+            "table": "country",
+            "column": "GovernmentForm",
+            "operator": "=",
+            "value": "Republic"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
+    "source_sqlite_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+    "base_snapshot_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+    "base_snapshot_logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
+    "adapted_sql": "SELECT AVG(LifeExpectancy) FROM country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Africa"
+      },
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Republic"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "76034b4870e2a63d5b321bddfdc62251a3a081f852f71ea41058617507c8e2d6",
+    "duckdb_result_sha256": "76034b4870e2a63d5b321bddfdc62251a3a081f852f71ea41058617507c8e2d6",
+    "sample_original_rows": [
+      [
+        50.84347826086957
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        50.84347826086956
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

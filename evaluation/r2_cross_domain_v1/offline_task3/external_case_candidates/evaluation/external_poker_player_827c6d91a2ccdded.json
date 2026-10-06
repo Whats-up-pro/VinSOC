@@ -1,0 +1,78 @@
+{
+  "reference": {
+    "case_id": "external_poker_player_827c6d91a2ccdded",
+    "database_id": "poker_player",
+    "question": "What are the names of people who are not from Russia?",
+    "gold_sql": "SELECT Name FROM people WHERE Nationality <> 'Russia'",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "8c849e0ac6cc957d563c0ae1fbe5742151c60a9e0905a77bb57609f5ecfb1cad",
+    "accepted_links": [
+      {
+        "tables": [
+          "people"
+        ],
+        "columns": [
+          {
+            "table": "people",
+            "column": "Name"
+          },
+          {
+            "table": "people",
+            "column": "Nationality"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "people",
+            "column": "Nationality",
+            "operator": "!=",
+            "value": "Russia"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT Name FROM people WHERE Nationality != \"Russia\"",
+    "source_sqlite_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+    "base_snapshot_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+    "base_snapshot_logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Name FROM people WHERE Nationality != \"Russia\"",
+    "adapted_sql": "SELECT Name FROM people WHERE Nationality <> 'Russia'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Russia"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "fce8a051a633913b8886ee7ca6243fcfc7d966387a8503cd92d99dbcbe77e8b2",
+    "duckdb_result_sha256": "fce8a051a633913b8886ee7ca6243fcfc7d966387a8503cd92d99dbcbe77e8b2",
+    "sample_original_rows": [
+      [
+        "Teodor Salparov"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Teodor Salparov"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

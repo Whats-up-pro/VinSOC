@@ -98,3 +98,19 @@ IN conversions are rejected. Source questions rejected before inference must sta
 in the published exclusion inventory. Neither archived candidate bytes nor source
 gold are edited to fix a mismatch. Base parity is separate from the pending
 per-case adversarial semantic checks and the pending 96-case benchmark lock.
+
+The candidate materializer is implemented:
+
+```powershell
+python -m scripts.prepare_r2_cross_domain_cases --qualification evaluation/r2_cross_domain_v1/offline_task3/registered_gold_qualification_strict.json --output evaluation/r2_cross_domain_v1/offline_task3/NEW_CANDIDATES
+python -m scripts.audit_r2_cross_domain_ctu_cases --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output evaluation/r2_cross_domain_v1/offline_task3/NEW_CTU_AUDIT.json
+```
+
+The saved candidate receipts contain 80 verified external gold queries and 40
+new CTU queries (24 calibration / 96 evaluation in total). The CTU initial
+39/40 negative audit is preserved beside the revised 40/40 audit. These are
+offline gold executions, not model scores. Complete predicate annotations,
+two adversarial instances per case, the oracle subset and benchmark lock remain
+pending. The external materialization did not record its producer source hash;
+the checkpoint receipt records tested source hashes without assigning retrospective
+producer provenance.

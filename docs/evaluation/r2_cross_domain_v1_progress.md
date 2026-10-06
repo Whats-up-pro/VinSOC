@@ -84,7 +84,8 @@ not a CTU mapping or a call-cap increase.
 - [x] Checkpoint tests: 76 targeted and 906 full tests pass (1654 existing warnings);
   compile, diff and preservation checks pass. 245 older protected files and 24
   earlier cross-domain artifact JSON files retain their exact bytes.
-- [ ] Checkpoint commit/push and exact-SHA CI Python 3.11/3.12.
+- [x] Checkpoint commit/push `193a04fe455e4f1ca7e4047097055f251a067b3c`; exact-SHA
+  CI Python 3.11/3.12 successful: https://github.com/Whats-up-pro/VinSOC/actions/runs/37410505249.
 - [ ] Materialize 24 calibration + 96 evaluation cases, annotations and oracle subset.
 - [ ] Two adversarial instances per case, executable mutants and equivalent controls.
 - [ ] Benchmark validation and lock. No benchmark lock has been created.
@@ -101,6 +102,29 @@ Mixed numeric/text IN conversion remains unsupported: blind TRY_CAST can introdu
 NULL and change NOT IN semantics. Incomplete ORDER ties are rejected even when
 both engines accidentally choose the same rows. No gold SQL is rewritten to resolve
 ties or rescue parity. Base-instance parity does not prove universal semantic correctness.
+
+Case preparation continuation:
+- [x] Three annotation tests and two materialization tests observed RED then GREEN.
+- [x] Materialize 16 external calibration and 64 external evaluation candidates;
+  replay original/adapted gold parity on all eighty, with zero errors. Runtime
+  JSON contains only ID/database/question. Direct annotations remain incomplete
+  for derived/pattern predicates; this is not a benchmark lock.
+- [x] New CTU inventory test observed RED then GREEN: 8 calibration plus 32
+  evaluation questions with 8/16/8 difficulty allocation.
+- [x] Initial CTU gold audit: 39/40 execute; one listing exceeds the fixed 10,000
+  evaluator-row cap. Negative receipt and original question/SQL are preserved.
+- [x] Revised CTU gold audit: 40/40 execute; combined inventory is 24 calibration
+  and 96 evaluation candidates. Original rejected candidate receipt is unchanged.
+- [x] Checkpoint verification: 82 targeted / 912 full tests pass; compile and
+  preservation checks pass (245 protected files and 28 earlier artifact JSONs).
+- [ ] Candidate checkpoint commit/push and exact-SHA CI.
+- [ ] Full semantic instances and complete annotations.
+
+Ruling: reject the unbounded UDP IP-pair listing candidate before any inference
+because its gold exceeds the evaluator row cap. Replace it with a new count-of-
+distinct-pairs question/ID and retain the rejected candidate in the pre-lock
+exclusion evidence. No historical question/gold or locked benchmark is changed;
+the evaluator/tool caps stay fixed. Both conditions will use the same final IDs.
 
 Task 3 benchmark/semantic lock and Task 4 statistics/telemetry/release remain
 pending. Paid Tasks 5/6 need expansion-specific

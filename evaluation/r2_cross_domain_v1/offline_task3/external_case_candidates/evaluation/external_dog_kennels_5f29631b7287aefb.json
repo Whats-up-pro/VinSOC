@@ -1,0 +1,62 @@
+{
+  "reference": {
+    "case_id": "external_dog_kennels_5f29631b7287aefb",
+    "database_id": "dog_kennels",
+    "question": "How much does the most expensive charge type costs?",
+    "gold_sql": "SELECT MAX(charge_amount) FROM Charges",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "c6a2a0b2190ef4e88cef2fdce9034fc282411c4b070ff310758bd676b057faf3",
+    "accepted_links": [
+      {
+        "tables": [
+          "Charges"
+        ],
+        "columns": [
+          {
+            "table": "Charges",
+            "column": "charge_amount"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT max(charge_amount) FROM Charges",
+    "source_sqlite_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+    "base_snapshot_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+    "base_snapshot_logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT max(charge_amount) FROM Charges",
+    "adapted_sql": "SELECT MAX(charge_amount) FROM Charges",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "4a99059ad717f6cbfecfe18012f1e2afe0cf2a4f19e056f56233b724634faca2",
+    "duckdb_result_sha256": "4a99059ad717f6cbfecfe18012f1e2afe0cf2a4f19e056f56233b724634faca2",
+    "sample_original_rows": [
+      [
+        640
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "640.0000000000"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

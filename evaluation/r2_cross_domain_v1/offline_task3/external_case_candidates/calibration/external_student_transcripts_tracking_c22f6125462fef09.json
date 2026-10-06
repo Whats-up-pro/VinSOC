@@ -1,0 +1,104 @@
+{
+  "reference": {
+    "case_id": "external_student_transcripts_tracking_c22f6125462fef09",
+    "database_id": "student_transcripts_tracking",
+    "question": "Which address holds the most number of students currently? List the address id and all lines.",
+    "gold_sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having",
+      "order_limit"
+    ],
+    "family_id": "e3a966fd32bcda1b922bc8c7a24703f9592cf829210fc65f5fe381840dc652c7",
+    "accepted_links": [
+      {
+        "tables": [
+          "Addresses",
+          "Students"
+        ],
+        "columns": [
+          {
+            "table": "Addresses",
+            "column": "address_id"
+          },
+          {
+            "table": "Addresses",
+            "column": "line_1"
+          },
+          {
+            "table": "Addresses",
+            "column": "line_2"
+          },
+          {
+            "table": "Students",
+            "column": "current_address_id"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "current_address_id",
+            "from_table": "Students",
+            "to_column": "address_id",
+            "to_table": "Addresses"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "limit",
+            "value": 1
+          }
+        ],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.address_id ,  T1.line_1 ,  T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id  =  T2.current_address_id GROUP BY T1.address_id ORDER BY count(*) DESC LIMIT 1",
+    "source_sqlite_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56",
+    "base_snapshot_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+    "base_snapshot_logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.address_id ,  T1.line_1 ,  T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id  =  T2.current_address_id GROUP BY T1.address_id ORDER BY count(*) DESC LIMIT 1",
+    "adapted_sql": "SELECT T1.address_id, T1.line_1, T1.line_2 FROM Addresses AS T1 JOIN Students AS T2 ON T1.address_id = T2.current_address_id GROUP BY T1.address_id, T1.line_1, T1.line_2 ORDER BY COUNT(*) DESC LIMIT 1",
+    "transformations": [
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.line_1"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T1.line_2"
+      }
+    ],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "55ff72ce29c0ba55e71d32dc03ae61608c155db3228a3a46733a6b4568c71af7",
+    "duckdb_result_sha256": "55ff72ce29c0ba55e71d32dc03ae61608c155db3228a3a46733a6b4568c71af7",
+    "sample_original_rows": [
+      [
+        9,
+        "0643 Muller Vista",
+        "Suite 383"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        9,
+        "0643 Muller Vista",
+        "Suite 383"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

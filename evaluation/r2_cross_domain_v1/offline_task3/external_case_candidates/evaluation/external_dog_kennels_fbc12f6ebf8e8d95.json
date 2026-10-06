@@ -1,0 +1,104 @@
+{
+  "reference": {
+    "case_id": "external_dog_kennels_fbc12f6ebf8e8d95",
+    "database_id": "dog_kennels",
+    "question": "Return the owner id, first name and last name of the owner who has the most dogs.",
+    "gold_sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having",
+      "order_limit"
+    ],
+    "family_id": "62b33a97ba0041cd81d52a5a45aada590de10bfc2208a5dc30a059f1394c351b",
+    "accepted_links": [
+      {
+        "tables": [
+          "Dogs",
+          "Owners"
+        ],
+        "columns": [
+          {
+            "table": "Dogs",
+            "column": "owner_id"
+          },
+          {
+            "table": "Owners",
+            "column": "first_name"
+          },
+          {
+            "table": "Owners",
+            "column": "last_name"
+          },
+          {
+            "table": "Owners",
+            "column": "owner_id"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "owner_id",
+            "from_table": "Dogs",
+            "to_column": "owner_id",
+            "to_table": "Owners"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "limit",
+            "value": 1
+          }
+        ],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.owner_id ,  T2.first_name ,  T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id  =  T2.owner_id GROUP BY T1.owner_id ORDER BY count(*) DESC LIMIT 1",
+    "source_sqlite_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+    "base_snapshot_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+    "base_snapshot_logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.owner_id ,  T2.first_name ,  T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id  =  T2.owner_id GROUP BY T1.owner_id ORDER BY count(*) DESC LIMIT 1",
+    "adapted_sql": "SELECT T1.owner_id, T2.first_name, T2.last_name FROM Dogs AS T1 JOIN Owners AS T2 ON T1.owner_id = T2.owner_id GROUP BY T1.owner_id, T2.first_name, T2.last_name ORDER BY COUNT(*) DESC LIMIT 1",
+    "transformations": [
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T2.first_name"
+      },
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T2.last_name"
+      }
+    ],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "83f54390f1d6dcbad8b644e041bb394a2b66d2e47e1d6ccf425a4549fa65a3d7",
+    "duckdb_result_sha256": "83f54390f1d6dcbad8b644e041bb394a2b66d2e47e1d6ccf425a4549fa65a3d7",
+    "sample_original_rows": [
+      [
+        14,
+        "Rachelle",
+        "Funk"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        14,
+        "Rachelle",
+        "Funk"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

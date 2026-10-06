@@ -1,0 +1,74 @@
+{
+  "reference": {
+    "case_id": "external_flight_2_71ca2299e56319eb",
+    "database_id": "flight_2",
+    "question": "How many airlines are from USA?",
+    "gold_sql": "SELECT COUNT(*) FROM AIRLINES WHERE Country = 'USA'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+    "accepted_links": [
+      {
+        "tables": [
+          "airlines"
+        ],
+        "columns": [
+          {
+            "table": "airlines",
+            "column": "Country"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "airlines",
+            "column": "Country",
+            "operator": "=",
+            "value": "USA"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT count(*) FROM AIRLINES WHERE Country  =  \"USA\"",
+    "source_sqlite_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+    "base_snapshot_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+    "base_snapshot_logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT count(*) FROM AIRLINES WHERE Country  =  \"USA\"",
+    "adapted_sql": "SELECT COUNT(*) FROM AIRLINES WHERE Country = 'USA'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "USA"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "f4f21de40ca28a10908fa68fed17c5dbc02a39fc1fa082fc2511407d669d0719",
+    "duckdb_result_sha256": "f4f21de40ca28a10908fa68fed17c5dbc02a39fc1fa082fc2511407d669d0719",
+    "sample_original_rows": [
+      [
+        12
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        12
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

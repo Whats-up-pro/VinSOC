@@ -1,0 +1,57 @@
+{
+  "reference": {
+    "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+    "database_id": "student_transcripts_tracking",
+    "question": "How many courses in total are listed?",
+    "gold_sql": "SELECT COUNT(*) FROM Courses",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "19b3fbc7b872030970ee818c9b947a6e939b165dc90370cf180c66605dac0809",
+    "accepted_links": [
+      {
+        "tables": [
+          "Courses"
+        ],
+        "columns": [],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT count(*) FROM Courses",
+    "source_sqlite_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56",
+    "base_snapshot_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+    "base_snapshot_logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT count(*) FROM Courses",
+    "adapted_sql": "SELECT COUNT(*) FROM Courses",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+    "duckdb_result_sha256": "dbfc2d4003852366bc16373bb41469ee820f91459a9a6a856e498fe7650b1298",
+    "sample_original_rows": [
+      [
+        15
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        15
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

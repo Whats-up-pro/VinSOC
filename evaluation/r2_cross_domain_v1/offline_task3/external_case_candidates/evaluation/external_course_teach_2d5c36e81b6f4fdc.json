@@ -1,0 +1,80 @@
+{
+  "reference": {
+    "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+    "database_id": "course_teach",
+    "question": "What are the names of the teachers ordered by ascending age?",
+    "gold_sql": "SELECT Name FROM teacher ORDER BY Age ASC NULLS FIRST",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "order_limit"
+    ],
+    "family_id": "8fd5e2b0ab0fa3f4665b81a664eba0c7ad8db69081a09ae19065818d96223485",
+    "accepted_links": [
+      {
+        "tables": [
+          "teacher"
+        ],
+        "columns": [
+          {
+            "table": "teacher",
+            "column": "Age"
+          },
+          {
+            "table": "teacher",
+            "column": "Name"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT Name FROM teacher ORDER BY Age ASC",
+    "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+    "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+    "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Name FROM teacher ORDER BY Age ASC",
+    "adapted_sql": "SELECT Name FROM teacher ORDER BY Age ASC NULLS FIRST",
+    "transformations": [],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 7,
+    "duckdb_row_count": 7,
+    "sqlite_result_sha256": "c037cd8c4d6f8b6ac97deada497aa8013c49d75ba6df056e9e5f87ed01122ea6",
+    "duckdb_result_sha256": "c037cd8c4d6f8b6ac97deada497aa8013c49d75ba6df056e9e5f87ed01122ea6",
+    "sample_original_rows": [
+      [
+        "Vicente Carretero"
+      ],
+      [
+        "Gustaaf Deloor"
+      ],
+      [
+        "Joseph Huts"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Vicente Carretero"
+      ],
+      [
+        "Gustaaf Deloor"
+      ],
+      [
+        "Joseph Huts"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

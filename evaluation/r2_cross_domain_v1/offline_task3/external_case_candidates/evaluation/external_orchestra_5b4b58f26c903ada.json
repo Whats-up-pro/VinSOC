@@ -1,0 +1,70 @@
+{
+  "reference": {
+    "case_id": "external_orchestra_5b4b58f26c903ada",
+    "database_id": "orchestra",
+    "question": "What is the record company used by the greatest number of orchestras?",
+    "gold_sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+    "comparator": "ordered_rows",
+    "difficulty": "medium",
+    "features": [
+      "group_having",
+      "order_limit"
+    ],
+    "family_id": "cfece66edccf2391223851a94146a87692e37792bd856754442309113b43a44d",
+    "accepted_links": [
+      {
+        "tables": [
+          "orchestra"
+        ],
+        "columns": [
+          {
+            "table": "orchestra",
+            "column": "Record_Company"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [
+          {
+            "kind": "limit",
+            "value": 1
+          }
+        ],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+    "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+    "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+    "adapted_sql": "SELECT Record_Company FROM orchestra GROUP BY Record_Company ORDER BY COUNT(*) DESC LIMIT 1",
+    "transformations": [],
+    "comparator": "ordered_rows",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "88bb0938fb32a0135b97ad64156a303dd2431b4dc8b74a7ab72a4bdac23ad557",
+    "duckdb_result_sha256": "88bb0938fb32a0135b97ad64156a303dd2431b4dc8b74a7ab72a4bdac23ad557",
+    "sample_original_rows": [
+      [
+        "Decca Records"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Decca Records"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

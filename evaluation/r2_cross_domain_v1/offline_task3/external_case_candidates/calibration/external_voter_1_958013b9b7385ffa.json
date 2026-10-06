@@ -1,0 +1,64 @@
+{
+  "reference": {
+    "case_id": "external_voter_1_958013b9b7385ffa",
+    "database_id": "voter_1",
+    "question": "What are the maximum and minimum values of area codes?",
+    "gold_sql": "SELECT MAX(area_code), MIN(area_code) FROM area_code_state",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "e9f3d0fc68e4dd9e6a6448459242451304222973df1148d5c0b486a29c891935",
+    "accepted_links": [
+      {
+        "tables": [
+          "AREA_CODE_STATE"
+        ],
+        "columns": [
+          {
+            "table": "AREA_CODE_STATE",
+            "column": "area_code"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT max(area_code) ,  min(area_code) FROM area_code_state",
+    "source_sqlite_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+    "base_snapshot_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+    "base_snapshot_logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "calibration"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT max(area_code) ,  min(area_code) FROM area_code_state",
+    "adapted_sql": "SELECT MAX(area_code), MIN(area_code) FROM area_code_state",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "39b82ce5bed6fa8d5964a0bf11e879616db597703e5680987aba7beea25e6f6d",
+    "duckdb_result_sha256": "39b82ce5bed6fa8d5964a0bf11e879616db597703e5680987aba7beea25e6f6d",
+    "sample_original_rows": [
+      [
+        989,
+        201
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        989,
+        201
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

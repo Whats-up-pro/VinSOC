@@ -1,0 +1,104 @@
+{
+  "reference": {
+    "case_id": "external_concert_singer_1313c062638e8562",
+    "database_id": "concert_singer",
+    "question": "What are the names of the singers and number of concerts for each person?",
+    "gold_sql": "SELECT T2.name, COUNT(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id = T2.singer_id GROUP BY T2.singer_id, T2.name",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join",
+      "group_having"
+    ],
+    "family_id": "c22a240288d6a8e28d877315ca5413275e179435c8f66110388c15a71a3add08",
+    "accepted_links": [
+      {
+        "tables": [
+          "singer",
+          "singer_in_concert"
+        ],
+        "columns": [
+          {
+            "table": "singer",
+            "column": "Name"
+          },
+          {
+            "table": "singer",
+            "column": "Singer_ID"
+          },
+          {
+            "table": "singer_in_concert",
+            "column": "Singer_ID"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Singer_ID",
+            "from_table": "singer_in_concert",
+            "to_column": "Singer_ID",
+            "to_table": "singer"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T2.name ,  count(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id  =  T2.singer_id GROUP BY T2.singer_id",
+    "source_sqlite_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+    "base_snapshot_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+    "base_snapshot_logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T2.name ,  count(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id  =  T2.singer_id GROUP BY T2.singer_id",
+    "adapted_sql": "SELECT T2.name, COUNT(*) FROM singer_in_concert AS T1 JOIN singer AS T2 ON T1.singer_id = T2.singer_id GROUP BY T2.singer_id, T2.name",
+    "transformations": [
+      {
+        "rule": "declared_key_dependent_group_column",
+        "column": "T2.name"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 5,
+    "duckdb_row_count": 5,
+    "sqlite_result_sha256": "9c1e668e4d6fafc1ed128313f85a42e4a698fd95ee1565c629d094c0aa40d3b7",
+    "duckdb_result_sha256": "422b08ac4ea8834251c1ca36ae86561c6e94362a4bfde2f8a0d701d7e7856b60",
+    "sample_original_rows": [
+      [
+        "Timbaland",
+        2
+      ],
+      [
+        "Justin Brown",
+        3
+      ],
+      [
+        "Rose White",
+        1
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Timbaland",
+        2
+      ],
+      [
+        "Justin Brown",
+        3
+      ],
+      [
+        "John Nizinik",
+        2
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

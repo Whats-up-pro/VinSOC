@@ -1,0 +1,90 @@
+{
+  "reference": {
+    "case_id": "external_tvshow_73697be8b93729ee",
+    "database_id": "tvshow",
+    "question": "List all cartoon directed by \"Ben Jones\".",
+    "gold_sql": "SELECT Title FROM Cartoon WHERE Directed_by = 'Ben Jones'",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "2ead0ebc575a4f2a462b1eaeb7adeb10a1882ab496b3596eec51ffae7e8a775a",
+    "accepted_links": [
+      {
+        "tables": [
+          "Cartoon"
+        ],
+        "columns": [
+          {
+            "table": "Cartoon",
+            "column": "Directed_by"
+          },
+          {
+            "table": "Cartoon",
+            "column": "Title"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "Cartoon",
+            "column": "Directed_by",
+            "operator": "=",
+            "value": "Ben Jones"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT Title FROM Cartoon WHERE Directed_by = \"Ben Jones\";",
+    "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+    "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+    "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Title FROM Cartoon WHERE Directed_by = \"Ben Jones\";",
+    "adapted_sql": "SELECT Title FROM Cartoon WHERE Directed_by = 'Ben Jones'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "Ben Jones"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 4,
+    "duckdb_row_count": 4,
+    "sqlite_result_sha256": "75cd2be7ae1ddcdae1256fc3ba243e39036fe5a116932f98d8530d9b4e74d6e7",
+    "duckdb_result_sha256": "75cd2be7ae1ddcdae1256fc3ba243e39036fe5a116932f98d8530d9b4e74d6e7",
+    "sample_original_rows": [
+      [
+        "The Rise of the Blue Beetle!"
+      ],
+      [
+        "Day of the Dark Knight!"
+      ],
+      [
+        "Dawn of the Dead Man!"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "The Rise of the Blue Beetle!"
+      ],
+      [
+        "Day of the Dark Knight!"
+      ],
+      [
+        "Dawn of the Dead Man!"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

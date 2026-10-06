@@ -1,0 +1,74 @@
+{
+  "reference": {
+    "case_id": "external_tvshow_f476e6a3b7fb5098",
+    "database_id": "tvshow",
+    "question": "How many TV Channels use the English language?",
+    "gold_sql": "SELECT COUNT(*) FROM TV_Channel WHERE LANGUAGE = 'English'",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [],
+    "family_id": "d63ce36057dc71180093cc2a4c5172155c67cbeb7b34a41a9bd2fe99ec604872",
+    "accepted_links": [
+      {
+        "tables": [
+          "TV_Channel"
+        ],
+        "columns": [
+          {
+            "table": "TV_Channel",
+            "column": "Language"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [
+          {
+            "table": "TV_Channel",
+            "column": "Language",
+            "operator": "=",
+            "value": "English"
+          }
+        ],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT count(*) FROM TV_Channel WHERE LANGUAGE = \"English\";",
+    "source_sqlite_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+    "base_snapshot_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+    "base_snapshot_logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT count(*) FROM TV_Channel WHERE LANGUAGE = \"English\";",
+    "adapted_sql": "SELECT COUNT(*) FROM TV_Channel WHERE LANGUAGE = 'English'",
+    "transformations": [
+      {
+        "rule": "sqlite_unresolved_double_quoted_string",
+        "literal": "English"
+      }
+    ],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5",
+    "duckdb_result_sha256": "dbc20d434c9a464e9f3b3f8ee92fb1607294a50eb4b9f704226f8033c9d8d4f5",
+    "sample_original_rows": [
+      [
+        3
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        3
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

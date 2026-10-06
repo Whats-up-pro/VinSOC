@@ -1,0 +1,92 @@
+{
+  "reference": {
+    "case_id": "external_orchestra_7d626e678d642e36",
+    "database_id": "orchestra",
+    "question": "Please show the name of the conductor that has conducted orchestras founded after 2008.",
+    "gold_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE Year_of_Founded > 2008",
+    "comparator": "unordered_multiset",
+    "difficulty": "medium",
+    "features": [
+      "join"
+    ],
+    "family_id": "b13b199fa7986621f6704d7b80cd5cc3332cb630ba59b1ccfc79a2c69aaa78bf",
+    "accepted_links": [
+      {
+        "tables": [
+          "conductor",
+          "orchestra"
+        ],
+        "columns": [
+          {
+            "table": "conductor",
+            "column": "Conductor_ID"
+          },
+          {
+            "table": "conductor",
+            "column": "Name"
+          },
+          {
+            "table": "orchestra",
+            "column": "Conductor_ID"
+          },
+          {
+            "table": "orchestra",
+            "column": "Year_of_Founded"
+          }
+        ],
+        "relationships": [
+          {
+            "from_column": "Conductor_ID",
+            "from_table": "orchestra",
+            "to_column": "Conductor_ID",
+            "to_table": "conductor"
+          }
+        ],
+        "stored_values": [],
+        "constraints": [
+          {
+            "table": "orchestra",
+            "column": "Year_of_Founded",
+            "kind": "numeric_threshold",
+            "operator": ">",
+            "value": 2008
+          }
+        ],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID WHERE Year_of_Founded  >  2008",
+    "source_sqlite_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+    "base_snapshot_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+    "base_snapshot_logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID  =  T2.Conductor_ID WHERE Year_of_Founded  >  2008",
+    "adapted_sql": "SELECT T1.Name FROM conductor AS T1 JOIN orchestra AS T2 ON T1.Conductor_ID = T2.Conductor_ID WHERE Year_of_Founded > 2008",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 1,
+    "duckdb_row_count": 1,
+    "sqlite_result_sha256": "6a59a36897d86b252f494148666469b4a0364e871e6ff0d7fd26af9123ceee6f",
+    "duckdb_result_sha256": "6a59a36897d86b252f494148666469b4a0364e871e6ff0d7fd26af9123ceee6f",
+    "sample_original_rows": [
+      [
+        "Igor Stravinsky"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "Igor Stravinsky"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}

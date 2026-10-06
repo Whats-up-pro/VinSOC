@@ -1,0 +1,84 @@
+{
+  "reference": {
+    "case_id": "external_course_teach_a15b937a6c3852e4",
+    "database_id": "course_teach",
+    "question": "What are the age and hometown of teachers?",
+    "gold_sql": "SELECT Age, Hometown FROM teacher",
+    "comparator": "unordered_multiset",
+    "difficulty": "basic",
+    "features": [],
+    "family_id": "794a019de1715c5ff4315146bd20879c7e938bf2eb3b9ffe99c3a05ae3aa2a58",
+    "accepted_links": [
+      {
+        "tables": [
+          "teacher"
+        ],
+        "columns": [
+          {
+            "table": "teacher",
+            "column": "Age"
+          },
+          {
+            "table": "teacher",
+            "column": "Hometown"
+          }
+        ],
+        "relationships": [],
+        "stored_values": [],
+        "constraints": [],
+        "annotation_scope": "Stored schema columns and direct binary predicates; nested/derived/pattern annotations require further validation"
+      }
+    ],
+    "source_gold_sql": "SELECT Age ,  Hometown FROM teacher",
+    "source_sqlite_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+    "base_snapshot_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+    "base_snapshot_logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+    "benchmark_locked": false,
+    "semantic_validation_status": "PENDING",
+    "annotation_validation_status": "DIRECT_SCHEMA_PREDICATES_ONLY_PENDING_FULL_VALIDATION",
+    "source_license": "CC BY-SA 4.0",
+    "source_attribution": "Spider 1.0, Yu et al. 2018, Yale-LILY/taoyds",
+    "split": "evaluation"
+  },
+  "base_gold_parity": {
+    "original_sql": "SELECT Age ,  Hometown FROM teacher",
+    "adapted_sql": "SELECT Age, Hometown FROM teacher",
+    "transformations": [],
+    "comparator": "unordered_multiset",
+    "parity": true,
+    "sqlite_row_count": 7,
+    "duckdb_row_count": 7,
+    "sqlite_result_sha256": "838f3d42b8bcf62347538a3aa1b5a648e514c4960e34990087d97e390874c13d",
+    "duckdb_result_sha256": "838f3d42b8bcf62347538a3aa1b5a648e514c4960e34990087d97e390874c13d",
+    "sample_original_rows": [
+      [
+        "32",
+        "Blackrod Urban District"
+      ],
+      [
+        "29",
+        "Bolton County Borough"
+      ],
+      [
+        "26",
+        "Farnworth Municipal Borough"
+      ]
+    ],
+    "sample_adapted_rows": [
+      [
+        "32",
+        "Blackrod Urban District"
+      ],
+      [
+        "29",
+        "Bolton County Borough"
+      ],
+      [
+        "26",
+        "Farnworth Municipal Borough"
+      ]
+    ],
+    "primary_keys_verified_nonnull_unique": true,
+    "semantic_scope": "Observed base-instance result parity only; adversarial semantic instances remain required"
+  }
+}
