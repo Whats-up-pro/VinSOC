@@ -20,6 +20,7 @@ from time import perf_counter
 from typing import Any
 
 from agent.orchestrator import InvestigationOrchestrator
+from agent.investigation_policy import ValidatedAssessment
 from agent.tools import get_tool_schemas
 from evaluation.ctu_network_public.contract import LOCK, validate
 from evaluation.finalization.live_window import (
