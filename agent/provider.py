@@ -228,6 +228,7 @@ class OpenAIProvider(LLMProvider):
         model: str = "gpt-4o",
         api_key: Optional[str] = None,
         *,
+        client: Any | None = None,
         base_url: Optional[str] = None,
         provider_name: str = "openai",
         pricing: Optional[ModelPricing] = None,
@@ -254,21 +255,24 @@ class OpenAIProvider(LLMProvider):
         self.call_records: List[ProviderCallRecord] = []
         self.client: Any
 
-        # Import openai here to allow graceful fallback
-        try:
-            from openai import OpenAI
+        if client is not None:
+            self.client = client
+        else:
+            # Import openai here to allow graceful fallback
+            try:
+                from openai import OpenAI
 
-            client_kwargs: Dict[str, Any] = {
-                "api_key": api_key,
-                "timeout": timeout_seconds,
-                "max_retries": max_retries,
-            }
-            if base_url:
-                client_kwargs["base_url"] = base_url
-            self.client = OpenAI(**client_kwargs)
-        except ImportError:
-            self.client = None
-            print("Warning: OpenAI SDK not installed. Install with: pip install openai")
+                client_kwargs: Dict[str, Any] = {
+                    "api_key": api_key,
+                    "timeout": timeout_seconds,
+                    "max_retries": max_retries,
+                }
+                if base_url:
+                    client_kwargs["base_url"] = base_url
+                self.client = OpenAI(**client_kwargs)
+            except ImportError:
+                self.client = None
+                print("Warning: OpenAI SDK not installed. Install with: pip install openai")
 
     def generate(
         self,

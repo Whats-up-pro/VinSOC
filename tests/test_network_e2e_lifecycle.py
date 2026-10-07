@@ -15,6 +15,8 @@ from types import SimpleNamespace
 import duckdb
 import pytest
 
+from agent.provider import LLMResponse
+
 
 def _create_snapshot(path: Path) -> Path:
     """Create a minimal test snapshot."""
@@ -109,7 +111,158 @@ class FakeClient:
             model="gpt-4.1-mini-2025-04-14",
             usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50, cached_tokens=0),
             choices=[SimpleNamespace(message=message, finish_reason="stop")],
+            model_dump=lambda: {"id": f"fake_response_{self.call_count}"},
         )
+
+
+def test_openai_provider_uses_injected_client_without_constructing_sdk(monkeypatch):
+    """A preflighted guarded client is the only transport used by the provider."""
+    from agent.provider import OpenAIProvider
+
+    fake = FakeClient()
+
+    def forbidden_constructor(*_args, **_kwargs):
+        raise AssertionError("OpenAI SDK client must not be created when client is injected")
+
+    monkeypatch.setattr("openai.OpenAI", forbidden_constructor)
+    provider = OpenAIProvider(
+        model="gpt-4.1-mini-2025-04-14",
+        client=fake,
+        max_retries=0,
+        request_overrides={
+            "max_completion_tokens": 1000,
+            "tool_choice": "auto",
+            "parallel_tool_calls": False,
+        },
+    )
+
+    provider.generate(
+        messages=[{"role": "user", "content": "test"}],
+        tools=[{"type": "function", "function": {"name": "network_investigation"}}],
+        system_prompt="network only",
+        temperature=0,
+    )
+
+    assert len(fake.requests) == 1
+    assert fake.requests[0]["tool_choice"] == "auto"
+    assert fake.requests[0]["max_completion_tokens"] == 1000
+
+
+class TwoTurnNetworkProvider:
+    """Synthetic provider that requires one native tool continuation."""
+
+    def __init__(self):
+        self.calls = []
+
+    def reset_tracking(self):
+        self.calls = []
+
+    def get_name(self):
+        return "synthetic two-turn network"
+
+    def get_run_metadata(self):
+        return {"total_calls": len(self.calls), "calls": []}
+
+    def generate(self, messages, tools=None, system_prompt=None, temperature=0.0):
+        self.calls.append({
+            "messages": json.loads(json.dumps(messages)),
+            "tools": json.loads(json.dumps(tools or [])),
+            "system_prompt": system_prompt,
+            "temperature": temperature,
+        })
+        if len(self.calls) == 1:
+            return LLMResponse(
+                content="",
+                tool_calls=[{
+                    "id": "call_network_1",
+                    "name": "network_investigation",
+                    "arguments": {
+                        "indicator": "192.0.2.10",
+                        "indicator_type": "ipv4",
+                        "time_range": {
+                            "start": "2011-08-15T00:00:00",
+                            "end": "2011-08-15T23:59:59",
+                        },
+                    },
+                }],
+                raw={},
+            )
+
+        tool_message = next(message for message in messages if message["role"] == "tool")
+        payload = json.loads(tool_message["content"].split("\n", 1)[1])
+        evidence = payload["evidence"]
+        count_item = next(item for item in evidence if "connection_count" in item["data"])
+        endpoint_item = next(
+            item for item in evidence
+            if any(key in item["data"] for key in ("src_ip", "dst_ip", "dst_port", "protocol"))
+        )
+        endpoint_field = next(
+            key for key in ("src_ip", "dst_ip", "dst_port", "protocol")
+            if key in endpoint_item["data"]
+        )
+        assessment = {
+            "assessment": "Observed one bounded network flow.",
+            "evidence_ids": [count_item["evidence_id"], endpoint_item["evidence_id"]],
+            "observations": [
+                {
+                    "evidence_id": count_item["evidence_id"],
+                    "field": "connection_count",
+                    "value": count_item["data"]["connection_count"],
+                },
+                {
+                    "evidence_id": endpoint_item["evidence_id"],
+                    "field": endpoint_field,
+                    "value": endpoint_item["data"][endpoint_field],
+                },
+            ],
+            "hypotheses": [],
+            "risk_level": "UNKNOWN",
+            "confidence": "LOW",
+            "limitations": ["CTI and endpoint telemetry were not queried."],
+        }
+        return LLMResponse(content=json.dumps(assessment), tool_calls=[], raw={})
+
+
+def test_network_policy_runs_complete_public_two_turn_lifecycle(tmp_path):
+    """Public investigate owns model→tool→same-conversation final assessment."""
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    from agent.orchestrator import InvestigationOrchestrator
+
+    snapshot = _create_snapshot(tmp_path / "test.db")
+    provider = TwoTurnNetworkProvider()
+    policy = NetworkInvestigationPolicy(
+        indicator="192.0.2.10",
+        time_range={
+            "start": "2011-08-15T00:00:00",
+            "end": "2011-08-15T23:59:59",
+        },
+    )
+    orchestrator = InvestigationOrchestrator(
+        provider=provider,
+        max_steps=2,
+        max_review_cycles=0,
+        duckdb_snapshot_path=str(snapshot),
+        investigation_policy=policy,
+    )
+
+    case = orchestrator.investigate(
+        indicator="192.0.2.10",
+        indicator_type="ipv4",
+        context="Investigate the bounded historical network interval.",
+    )
+
+    assert len(provider.calls) == 2
+    assert [tool["function"]["name"] for tool in provider.calls[0]["tools"]] == [
+        "network_investigation"
+    ]
+    second_messages = provider.calls[1]["messages"]
+    assistant = next(message for message in second_messages if message["role"] == "assistant")
+    tool = next(message for message in second_messages if message["role"] == "tool")
+    assert assistant["tool_calls"][0]["id"] == "call_network_1"
+    assert tool["tool_call_id"] == "call_network_1"
+    assert case.final_assessment == "Observed one bounded network flow."
+    assert case.metadata["network_policy"]["termination"] == "FINAL_ASSESSMENT"
+    assert case.metadata["network_policy"]["validation"]["valid"] is True
 
 
 def test_public_investigate_is_entrypoint(monkeypatch, tmp_path):
@@ -203,6 +356,7 @@ def test_model_generated_arguments_scope(monkeypatch, tmp_path):
         "name": "network_investigation",
         "arguments": {
             "indicator": "192.0.2.10",
+            "indicator_type": "ipv4",
             "time_range": {
                 "start": "2011-08-15T00:00:00",
                 "end": "2011-08-15T23:59:59",
@@ -232,6 +386,7 @@ def test_model_generated_arguments_out_of_scope_rejected(monkeypatch, tmp_path):
         "name": "network_investigation",
         "arguments": {
             "indicator": "192.0.2.99",  # Different IP
+            "indicator_type": "ipv4",
             "time_range": {
                 "start": "2011-08-15T00:00:00",
                 "end": "2011-08-15T23:59:59",

@@ -9,33 +9,12 @@ This policy:
 from __future__ import annotations
 
 import ipaddress
-from dataclasses import dataclass, field
+import json
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from agent.evidence import EvidenceStore
-
-
-@dataclass
-class ValidatedAssessment:
-    """Structured final assessment from the model."""
-    assessment: str
-    evidence_ids: list[str]
-    observations: list[dict[str, Any]]  # Structured facts
-    hypotheses: list[dict[str, Any]]
-    risk_level: str  # LOW, MEDIUM, HIGH, CRITICAL, UNKNOWN
-    confidence: str  # LOW, MEDIUM, HIGH
-    limitations: list[str]
-    raw_json: dict[str, Any] = field(default_factory=dict)
-
-
-@dataclass
-class NetworkFact:
-    """A structured fact extracted from evidence."""
-    evidence_id: str
-    field: str
-    value: Any
-    parent_ids: list[str] = field(default_factory=list)
+from agent.investigation_policy import ValidatedAssessment
 
 
 class NetworkInvestigationPolicy:
@@ -51,6 +30,18 @@ class NetworkInvestigationPolicy:
 
     VERSION = "network_e2e_policy_v1"
     ALLOWED_TOOLS = {"network_investigation"}
+    ARGUMENT_KEYS = {"indicator", "indicator_type", "time_range"}
+    OBSERVATION_FIELDS = {
+        "connection_count",
+        "src_ip",
+        "dst_ip",
+        "dst_port",
+        "protocol",
+        "first_seen",
+        "last_seen",
+        "bytes_src_to_dst",
+        "bytes_dst_to_src",
+    }
 
     # System prompt for network-only investigation
     SYSTEM_PROMPT = """You are a network-only SOC investigation assistant.
@@ -89,8 +80,8 @@ Output format (return JSON):
     {"evidence_id": "ev_xxx", "field": "field_name", "value": 123},
     ...
   ],
-  "hypotheses": [
-    {"id": "h1", "description": "...", "confidence": "MEDIUM"},
+      "hypotheses": [
+    {"description": "...", "supporting_evidence": ["ev_xxx"], "confidence": "MEDIUM"},
     ...
   ],
   "risk_level": "MEDIUM",
@@ -98,6 +89,14 @@ Output format (return JSON):
   "limitations": ["CTI unavailable", "Endpoint unavailable", ...]
 }
 """
+
+    def __init__(
+        self,
+        indicator: str | None = None,
+        time_range: dict[str, str] | None = None,
+    ) -> None:
+        self.indicator = indicator
+        self.time_range = dict(time_range) if time_range else None
 
     def tool_schemas(self) -> list[dict[str, Any]]:
         """Return only network investigation tool schema."""
@@ -124,49 +123,69 @@ Output format (return JSON):
             ValueError: If validation fails
         """
         if call.get("name") not in self.ALLOWED_TOOLS:
-            raise ValueError(f"Tool {call.get('name')} not allowed in network-only policy")
+            raise ValueError("Tool not allowed in network-only policy")
 
         if call.get("name") != "network_investigation":
             raise ValueError("Only network_investigation is allowed")
 
         raw_args = call.get("arguments", {})
         if isinstance(raw_args, str):
-            import json
             args = json.loads(raw_args)
         else:
             args = raw_args
 
+        if not isinstance(args, dict):
+            raise ValueError("Tool arguments must be an object")
+        unexpected = set(args) - self.ARGUMENT_KEYS
+        if unexpected:
+            raise ValueError("Unexpected tool argument")
+        missing = self.ARGUMENT_KEYS - set(args)
+        if missing:
+            raise ValueError("Missing required tool argument")
+
         # Validate required fields
-        if "indicator" not in args:
-            raise ValueError("Missing required field: indicator")
-        if "time_range" not in args:
-            raise ValueError("Missing required field: time_range")
+        if args.get("indicator_type") != "ipv4":
+            raise ValueError("indicator_type must be ipv4")
 
         # Validate indicator
         indicator = args["indicator"]
         try:
             ipaddress.IPv4Address(indicator)
         except (TypeError, ValueError):
-            raise ValueError(f"Invalid IPv4 indicator: {indicator}")
+            raise ValueError("Invalid IPv4 indicator") from None
+
+        time_range = args.get("time_range")
+        if not isinstance(time_range, dict) or set(time_range) != {"start", "end"}:
+            raise ValueError("Invalid time range")
+        try:
+            start = datetime.fromisoformat(time_range["start"])
+            end = datetime.fromisoformat(time_range["end"])
+        except (TypeError, ValueError):
+            raise ValueError("Invalid time range") from None
+        if start >= end:
+            raise ValueError("Invalid time range")
 
         # Validate scope if provided
-        if scope:
-            scope_indicator = scope.get("indicator")
+        effective_scope = scope or (
+            {"indicator": self.indicator, "time_range": self.time_range}
+            if self.indicator and self.time_range
+            else None
+        )
+        if effective_scope:
+            scope_indicator = effective_scope.get("indicator")
             if scope_indicator and indicator != scope_indicator:
-                raise ValueError(f"Indicator {indicator} outside scope {scope_indicator}")
+                raise ValueError("Indicator outside scope")
 
-            scope_start = scope.get("time_range", {}).get("start")
-            scope_end = scope.get("time_range", {}).get("end")
+            scope_start = effective_scope.get("time_range", {}).get("start")
+            scope_end = effective_scope.get("time_range", {}).get("end")
             if scope_start and scope_end:
                 try:
-                    start = datetime.fromisoformat(args["time_range"]["start"])
-                    end = datetime.fromisoformat(args["time_range"]["end"])
                     allowed_start = datetime.fromisoformat(scope_start)
                     allowed_end = datetime.fromisoformat(scope_end)
                     if not (allowed_start <= start < end <= allowed_end):
                         raise ValueError("Time range outside allowed bounds")
-                except (KeyError, TypeError, ValueError) as e:
-                    raise ValueError(f"Invalid time range: {e}")
+                except (KeyError, TypeError, ValueError):
+                    raise ValueError("Invalid time range or out-of-scope interval") from None
 
         return args
 
@@ -183,64 +202,26 @@ Output format (return JSON):
         Returns:
             Formatted result text for model
         """
-        if not result or not hasattr(result, "success"):
-            return f"Error: Tool failed"
-
-        data = result.data if hasattr(result, "data") else result
-
-        # Extract evidence items
-        evidence_items = data.get("evidence_items", []) if isinstance(data, dict) else []
-
-        local_key_to_id = {}
-
-        # First pass: create OBSERVED evidence
-        for item in evidence_items:
-            if item.get("evidence_class") != "OBSERVED":
-                continue
-
-            ev = store.add_evidence(
-                source_tool="network_investigation",
-                evidence_type=item.get("type", "network_flow"),
-                data=item.get("data", {}),
-                linked_from=None,
-                evidence_class="OBSERVED",
-                source_name=item.get("source_name"),
-                observed_at=item.get("observed_at"),
-                confidence=item.get("confidence"),
-                provenance=item.get("provenance", {}),
-                references=item.get("references", []),
-            )
-            local_key_to_id[item.get("local_key", item.get("evidence_id"))] = ev.evidence_id
-
-        # Second pass: create DERIVED evidence
-        for item in evidence_items:
-            if item.get("evidence_class") != "DERIVED":
-                continue
-
-            related_keys = item.get("related_local_keys", [])
-            related_ids = [
-                local_key_to_id[key]
-                for key in related_keys
-                if key in local_key_to_id
-            ]
-
-            ev = store.add_evidence(
-                source_tool="network_investigation",
-                evidence_type=item.get("type", "derived_network"),
-                data=item.get("data", {}),
-                linked_from=None,
-                evidence_class="DERIVED",
-                source_name=item.get("source_name"),
-                confidence=item.get("confidence"),
-                provenance=item.get("provenance", {}),
-                references=item.get("references", []),
-                related_evidence_ids=related_ids,
-            )
-            local_key_to_id[item.get("local_key", item.get("evidence_id"))] = ev.evidence_id
-
-        # Format result for model
-        import json
-        return json.dumps(data, indent=2, default=str)
+        if not result or not getattr(result, "success", False):
+            return json.dumps({"tool": "network_investigation", "status": "failed"})
+        data = result.data if isinstance(result.data, dict) else {}
+        payload = {
+            "tool": "network_investigation",
+            "status": "succeeded",
+            "query": {
+                "indicator": data.get("indicator"),
+                "indicator_type": data.get("indicator_type"),
+                "time_range": data.get("query_time_range"),
+            },
+            "coverage": {
+                "total_connections": data.get("total_connections"),
+                "total_alerts": data.get("total_alerts"),
+                "limitations": data.get("limitations", []),
+                "provenance": data.get("provenance", {}),
+            },
+            "evidence": [item.to_dict() for item in store.get_all_evidence()],
+        }
+        return json.dumps(payload, separators=(",", ":"), default=str)
 
     def parse_final_response(self, content: str, store: EvidenceStore) -> ValidatedAssessment:
         """
@@ -256,82 +237,54 @@ Output format (return JSON):
         Raises:
             ValueError: If validation fails
         """
-        import json
-
-        # Parse JSON
         try:
             data = json.loads(content)
         except (TypeError, json.JSONDecodeError):
-            raise ValueError("Assessment is not valid JSON")
-
-        if not isinstance(data, dict):
-            raise ValueError("Assessment must be a JSON object")
-
-        # Validate required fields
-        for field in ("assessment", "evidence_ids", "limitations"):
-            if field not in data:
-                raise ValueError(f"Missing required field: {field}")
-
-        # Validate field types
-        if not isinstance(data["assessment"], str):
-            raise ValueError("assessment must be a string")
-        if not isinstance(data["evidence_ids"], list):
-            raise ValueError("evidence_ids must be a list")
-        if not isinstance(data["limitations"], list):
-            raise ValueError("limitations must be a list")
-
-        # Get valid evidence IDs from store
-        valid_ids = {ev.evidence_id for ev in store.get_all_evidence()}
-
-        # Validate evidence IDs
-        for eid in data["evidence_ids"]:
-            if not isinstance(eid, str):
-                raise ValueError(f"Evidence ID must be string: {eid}")
-            if eid not in valid_ids:
-                raise ValueError(f"Unknown evidence ID: {eid}")
-
-        # Build observations from evidence
-        observations = []
-        for ev in store.get_all_evidence():
-            obs = {"evidence_id": ev.evidence_id}
-            if hasattr(ev, "data") and ev.data:
-                for key in ("connection_count", "src_ip", "dst_ip", "dst_port",
-                           "protocol", "first_seen", "last_seen"):
-                    if key in ev.data:
-                        obs["field"] = key
-                        obs["value"] = ev.data[key]
-                        break
-            if hasattr(ev, "provenance") and ev.provenance:
-                obs["provenance"] = ev.provenance
-            observations.append(obs)
-
-        # Extract hypotheses
-        hypotheses = data.get("hypotheses", [])
-        if not isinstance(hypotheses, list):
-            raise ValueError("hypotheses must be a list")
-
-        # Extract risk level
-        risk_level = data.get("risk_level", "UNKNOWN")
-        valid_risks = {"LOW", "MEDIUM", "HIGH", "CRITICAL", "UNKNOWN"}
-        if risk_level not in valid_risks:
-            raise ValueError(f"Invalid risk_level: {risk_level}")
-
-        # Extract confidence
-        confidence = data.get("confidence", "LOW")
-        valid_confidences = {"LOW", "MEDIUM", "HIGH"}
-        if confidence not in valid_confidences:
-            raise ValueError(f"Invalid confidence: {confidence}")
-
-        return ValidatedAssessment(
-            assessment=data["assessment"],
-            evidence_ids=data["evidence_ids"],
-            observations=observations,
-            hypotheses=hypotheses,
-            risk_level=risk_level,
-            confidence=confidence,
-            limitations=data["limitations"],
-            raw_json=data,
+            raise ValueError("Assessment is not valid JSON") from None
+        required = {
+            "assessment", "evidence_ids", "observations", "hypotheses",
+            "risk_level", "confidence", "limitations",
+        }
+        if not isinstance(data, dict) or set(data) != required:
+            raise ValueError("Assessment fields do not match the network contract")
+        valid_ids = {item.evidence_id for item in store.get_all_evidence()}
+        base_payload = dict(data)
+        base_payload["hypotheses"] = []
+        assessment = ValidatedAssessment.from_json(
+            json.dumps(base_payload), valid_evidence_ids=valid_ids
         )
+        assessment.hypotheses = data["hypotheses"]
+        assessment.raw_json = data
+        evidence_by_id = {item.evidence_id: item for item in store.get_all_evidence()}
+        seen_observations: set[tuple[str, str]] = set()
+        missing_value = object()
+        for observation in assessment.observations:
+            if not isinstance(observation, dict) or set(observation) != {"evidence_id", "field", "value"}:
+                raise ValueError("Observation fields do not match the network contract")
+            evidence_id = observation["evidence_id"]
+            field = observation["field"]
+            if evidence_id not in evidence_by_id:
+                raise ValueError("Observation references unknown evidence")
+            if field not in self.OBSERVATION_FIELDS:
+                raise ValueError("Observation field is not allowed")
+            key = (evidence_id, field)
+            if key in seen_observations:
+                raise ValueError("Duplicate observation")
+            seen_observations.add(key)
+            expected = evidence_by_id[evidence_id].data.get(field, missing_value)
+            actual = observation["value"]
+            if expected is missing_value or type(actual) is not type(expected) or actual != expected:
+                raise ValueError("Observation value does not match evidence")
+        for hypothesis in assessment.hypotheses:
+            if not isinstance(hypothesis, dict) or set(hypothesis) != {
+                "description", "supporting_evidence", "confidence"
+            }:
+                raise ValueError("Hypothesis fields do not match the network contract")
+            if hypothesis["confidence"] not in {"LOW", "MEDIUM", "HIGH"}:
+                raise ValueError("Invalid hypothesis confidence")
+            if any(item not in valid_ids for item in hypothesis["supporting_evidence"]):
+                raise ValueError("Hypothesis references unknown evidence")
+        return assessment
 
     def validate_case(self, case: dict[str, Any]) -> dict[str, Any]:
         """
@@ -358,6 +311,8 @@ Output format (return JSON):
                 related = ev.get("related_evidence_ids", [])
                 if not related:
                     issues.append(f"DERIVED evidence {ev['evidence_id']} missing parent IDs")
+                elif any(parent not in actual_ev_ids for parent in related):
+                    issues.append(f"DERIVED evidence {ev['evidence_id']} has unknown parent IDs")
 
         # Check at least one count observation
         has_count = any(

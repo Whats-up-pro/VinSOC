@@ -21,6 +21,7 @@ from typing import Any
 
 from agent.orchestrator import InvestigationOrchestrator
 from agent.investigation_policy import ValidatedAssessment
+from agent.provider import ModelPricing, OpenAIProvider
 from agent.tools import get_tool_schemas
 from evaluation.ctu_network_public.contract import LOCK, validate
 from evaluation.finalization.live_window import (
@@ -29,7 +30,7 @@ from evaluation.finalization.live_window import (
 )
 from evaluation.finalization.network_contract import (
     qualify_snapshot, select_scenario as network_select_scenario,
-    verify_evidence_pairs, build_lock, validate_lock, LOCK_PATH
+    verify_evidence_pairs, verify_network_evidence, build_lock, validate_lock, LOCK_PATH
 )
 from scripts.check_env import load_env, resolve_openai_key
 from scripts.demo_ctu_network_public import _verify_evidence_pairs, _write_report, select_scenario
@@ -597,9 +598,105 @@ def _create_openai_client(key: str) -> Any:
     return OpenAI(api_key=key, timeout=60, max_retries=0)
 
 
-# =============================================================================
-# E2E Mode Functions
-# =============================================================================
+# Guarded E2E lifecycle and offline review
+
+
+def _e2e_api_call(_request: dict[str, Any]) -> Any:
+    """Removed bypass retained only as a fail-closed compatibility sentinel."""
+    raise RuntimeError("Direct E2E transport bypass is disabled")
+
+
+def finalize_offline_review(
+    receipt_path: Path,
+    output_path: Path,
+    *,
+    gate: Any,
+) -> dict[str, Any]:
+    """Collect real analyst decisions without mutating the technical receipt."""
+    import hashlib
+    from types import SimpleNamespace
+    from agent.hitl import (
+        REVIEW_APPROVE,
+        REVIEW_ESCALATE,
+        REVIEW_REJECT,
+        REVIEW_REQUEST_MORE_EVIDENCE,
+    )
+
+    receipt_path, output_path = Path(receipt_path), Path(output_path)
+    if receipt_path.resolve() == output_path.resolve():
+        raise ValueError("Review output must not overwrite technical receipt")
+    raw = receipt_path.read_bytes()
+    receipt = json.loads(raw.decode("utf-8"))
+    if (
+        receipt.get("schema_version") != 1
+        or receipt.get("status") != "technical_complete_awaiting_human"
+        or receipt.get("review_status") != "awaiting_human"
+        or not receipt.get("scenarios")
+        or not all(item.get("validation", {}).get("technical_valid") for item in receipt["scenarios"])
+    ):
+        raise ValueError("Technical receipt is not eligible for offline review")
+
+    decisions = []
+    for scenario in receipt["scenarios"]:
+        case = SimpleNamespace(
+            risk_level=scenario.get("risk_level") or "UNKNOWN",
+            confidence=scenario.get("confidence") or "LOW",
+            final_assessment=scenario.get("assessment") or "",
+        )
+        decision = gate.review_final(case)
+        record = decision.to_dict()
+        if record["decision"] == REVIEW_REQUEST_MORE_EVIDENCE:
+            record["decision"] = REVIEW_ESCALATE
+            record["feedback_disposition"] = "No additional paid request allowed in closed live window"
+        record["scenario"] = scenario.get("name")
+        decisions.append(record)
+
+    values = [item["decision"] for item in decisions]
+    if all(value == REVIEW_APPROVE for value in values):
+        status = "approved"
+    elif REVIEW_REJECT in values:
+        status = "rejected"
+    else:
+        status = "escalated"
+    review = {
+        "schema_version": 1,
+        "run_id": receipt.get("run_id"),
+        "status": status,
+        "reviewed_utc": datetime.now(timezone.utc).isoformat(),
+        "input_receipt_sha256": hashlib.sha256(raw).hexdigest(),
+        "input_implementation_sha": receipt.get("implementation_sha"),
+        "decisions": decisions,
+        "api_calls": 0,
+    }
+    _write_report(output_path, review)
+    return review
+
+
+def _git_identity() -> dict[str, Any]:
+    import subprocess
+
+    def read(*args: str) -> str:
+        return subprocess.check_output(
+            ["git", *args], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+
+    return {
+        "head_sha": read("rev-parse", "HEAD"),
+        "origin_master_sha": read("rev-parse", "origin/master"),
+        "clean": read("status", "--porcelain") == "",
+    }
+
+
+def _safe_preflight_failure(report: dict[str, Any], code: str) -> dict[str, Any]:
+    report["status"] = "preflight_failed"
+    report["failed_stage"] = "preflight"
+    report["failure_category"] = code
+    report.setdefault("preflight_checks", {})["preflight_pass"] = False
+    return report
+
+
+def _preflight_output(output: Path) -> Path:
+    return output.parent / f"{output.stem}_preflight.json"
 
 
 def run_e2e_preflight(
@@ -609,133 +706,266 @@ def run_e2e_preflight(
     budget_usd: float = E2E_BUDGET_USD,
     ledger_path: Path | None = None,
     gates_path: Path | None = None,
+    env_file: Path = Path(".env"),
 ) -> dict[str, Any]:
-    """
-    Preflight check for E2E mode.
-
-    This function:
-    - Validates snapshot qualification
-    - Checks Git/CI state
-    - Validates budget envelope
-    - Does NOT create OpenAI client or send requests
-    """
-    import subprocess
-
-    output = Path(output)
-    snapshot = Path(snapshot)
-
+    """Validate every live gate without constructing an OpenAI client."""
+    snapshot, output, env_file = Path(snapshot), Path(output), Path(env_file)
     report: dict[str, Any] = {
+        "schema_version": 1,
         "mode": "e2e_preflight",
-        "status": "preflight",
-        "snapshot_path": str(snapshot),
-        "budget_usd": budget_usd,
-        "preflight_checks": {},
+        "status": "preflight_failed",
+        "scope": "network_only_public_lifecycle_demo",
         "attempted_calls": 0,
         "responses_received": 0,
+        "valid_usage_records": 0,
         "client_created": False,
+        "budget_usd": budget_usd,
+        "key_source": "unchecked",
+        "preflight_checks": {"snapshot_qualified": False},
     }
 
-    # Check 1: Snapshot qualification
-    try:
-        qualify = qualify_snapshot(snapshot)
-        report["preflight_checks"]["snapshot_qualified"] = qualify["qualified"]
-        report["preflight_checks"]["snapshot_facts"] = {
-            "logical_sha256": qualify["checks"].get("logical_sha256"),
-            "source_counts": qualify["checks"].get("source_counts"),
-            "distinct_pairs": qualify["checks"].get("distinct_source_pairs"),
-        }
-    except Exception as e:
-        report["preflight_checks"]["snapshot_qualified"] = False
-        report["preflight_checks"]["snapshot_error"] = str(e)
-        report["status"] = "preflight_failed"
+    def finish(code: str | None = None) -> dict[str, Any]:
+        if code:
+            _safe_preflight_failure(report, code)
+        _write_report(_preflight_output(output), report)
         return report
 
-    # Check 2: Git state
+    if ledger_path is None or gates_path is None:
+        return finish("missing_ledger_or_gates")
+    ledger_path, gates_path = Path(ledger_path), Path(gates_path)
+    if (
+        not ledger_path.is_absolute()
+        or ledger_path.name != "ledger.json"
+        or ledger_path.parent.name != WINDOW_ID
+    ):
+        return finish("invalid_ledger_path")
+    if not gates_path.is_file():
+        return finish("missing_gates")
     try:
-        git_sha = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            text=True, stderr=subprocess.DEVNULL
-        ).strip()
-        report["preflight_checks"]["git_sha"] = git_sha
+        gates = json.loads(gates_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return finish("invalid_gates_json")
+    if not isinstance(gates, dict):
+        return finish("invalid_gates_json")
 
-        git_branch = subprocess.check_output(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            text=True, stderr=subprocess.DEVNULL
-        ).strip()
-        report["preflight_checks"]["git_branch"] = git_branch
+    local_env = load_env(env_file)
+    resolution = resolve_openai_key(os.environ, local_env)
+    report["key_source"] = resolution.source
+    if resolution.source == "conflicting_key_sources":
+        return finish("conflicting_key_sources")
+    if resolution.key is None:
+        return finish("missing_openai_key")
+    if os.environ.get("OPENAI_BASE_URL") or local_env.get("OPENAI_BASE_URL"):
+        return finish("custom_base_url_blocked")
 
-        # Check origin/master
-        try:
-            origin_sha = subprocess.check_output(
-                ["git", "rev-parse", "origin/master"],
-                text=True, stderr=subprocess.DEVNULL
-            ).strip()
-            report["preflight_checks"]["origin_master_sha"] = origin_sha
-        except subprocess.CalledProcessError:
-            report["preflight_checks"]["origin_master_sha"] = None
-    except Exception as e:
-        report["preflight_checks"]["git_error"] = str(e)
-
-    # Check 3: Contract lock
     try:
-        lock_exists = LOCK_PATH.exists()
-        report["preflight_checks"]["lock_exists"] = lock_exists
-        if lock_exists:
-            lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
-            report["preflight_checks"]["lock_version"] = lock.get("version")
-            report["preflight_checks"]["lock_contract_identity"] = lock.get("contract_identity")
-    except Exception as e:
-        report["preflight_checks"]["lock_error"] = str(e)
+        git = _git_identity()
+    except Exception:
+        return finish("git_identity_unavailable")
+    report["git"] = git
+    if git.get("head_sha") != git.get("origin_master_sha") or git.get("clean") is False:
+        return finish("git_not_exact_clean_remote_head")
+    if gates.get("implementation_sha") != git.get("head_sha"):
+        return finish("gates_sha_mismatch")
 
-    # Check 4: Budget envelope
-    per_request_reserve = compute_request_reserve(
-        INPUT_TOKEN_RESERVE + E2E_FRAME_RESERVE,
-        OUTPUT_TOKEN_RESERVE
-    )
-    total_reserve = per_request_reserve * E2E_MAX_REQUESTS
-
-    report["preflight_checks"]["budget"] = {
-        "task_budget_usd": budget_usd,
-        "per_request_reserve_usd": per_request_reserve,
-        "max_requests": E2E_MAX_REQUESTS,
-        "total_reserve_usd": total_reserve,
-        "within_budget": total_reserve <= budget_usd,
+    try:
+        qualification = qualify_snapshot(snapshot)
+    except Exception:
+        return finish("snapshot_qualification_failed")
+    if qualification.get("qualified") is not True:
+        return finish("snapshot_qualification_failed")
+    report["preflight_checks"]["snapshot_qualified"] = True
+    report["snapshot"] = {
+        "logical_sha256": qualification["checks"].get("logical_sha256"),
+        "binary_sha256": qualification["checks"].get("binary_sha256"),
+        "source_counts": qualification["checks"].get("source_counts"),
+        "distinct_source_pairs": qualification["checks"].get("distinct_source_pairs"),
     }
 
-    # Check 5: Ledger state (if provided)
-    if ledger_path:
-        try:
-            ledger_path = Path(ledger_path)
-            if ledger_path.exists():
-                ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
-                report["preflight_checks"]["ledger"] = {
-                    "exists": True,
-                    "consumed": ledger.get("consumed", False),
-                    "known_cost_usd": ledger.get("known_cost_usd", 0.0),
-                    "attempts": len(ledger.get("attempts", [])),
-                }
-            else:
-                report["preflight_checks"]["ledger"] = {"exists": False}
-        except Exception as e:
-            report["preflight_checks"]["ledger"] = {"exists": True, "error": str(e)}
+    if not LOCK_PATH.is_file():
+        return finish("missing_network_contract_lock")
+    try:
+        lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+        lock_validation = validate_lock(snapshot, lock)
+    except Exception:
+        return finish("network_contract_lock_invalid")
+    if lock_validation.get("valid") is not True:
+        return finish("network_contract_lock_invalid")
+    report["contract"] = {
+        "version": lock.get("version"),
+        "contract_identity": lock.get("contract_identity"),
+        "snapshot_logical_sha256": lock.get("snapshot_logical_sha256"),
+        "request_envelope_sha256": lock.get("request_envelope_sha256"),
+        "policy_sha256": lock.get("policy_sha256"),
+        "prompt_sha256": lock.get("prompt_sha256"),
+    }
 
-    # Determine preflight pass/fail
-    preflight_pass = (
-        report["preflight_checks"].get("snapshot_qualified", False)
-        and report["preflight_checks"]["budget"]["within_budget"]
+    try:
+        scenarios = [network_select_scenario(snapshot, name) for name in SCENARIO_NAMES]
+    except Exception:
+        return finish("scenario_selection_failed")
+    report["scenarios"] = [
+        {
+            "name": item["name"],
+            "indicator": item["indicator"],
+            "time_range": item["time_range"],
+            "source_dataset": item.get("source_dataset"),
+            "label": item.get("label"),
+            "seed_source_row_id": item.get("seed_source_row_id"),
+            "seed_event_time": item.get("seed_event_time"),
+        }
+        for item in scenarios
+    ]
+
+    try:
+        window = LiveWindow.open(ledger_path.parent, WINDOW_ID, gates)
+    except LiveWindowError as exc:
+        return finish(str(exc).lower())
+    ledger_status = window.get_status()
+    if ledger_status.get("consumed") or ledger_status.get("active_claim"):
+        return finish("live_window_already_claimed_or_consumed")
+    report["ledger"] = ledger_status
+
+    per_request = compute_request_reserve(INPUT_TOKEN_RESERVE, OUTPUT_TOKEN_RESERVE)
+    total_reserve = per_request * E2E_MAX_REQUESTS
+    prior = float(ledger_status.get("known_cost_usd", 0.0))
+    within_budget = (
+        type(budget_usd) in (int, float)
+        and budget_usd == gates.get("task_budget_usd")
+        and prior + total_reserve <= budget_usd
     )
+    report["preflight_checks"]["budget"] = {
+        "per_request_reserve_usd": per_request,
+        "planned_requests": E2E_MAX_REQUESTS,
+        "total_request_reserve_usd": total_reserve,
+        "known_prior_cost_usd": prior,
+        "within_budget": within_budget,
+    }
+    if not within_budget:
+        return finish("budget_preflight_failed")
 
-    report["preflight_checks"]["preflight_pass"] = preflight_pass
-    if preflight_pass:
-        report["status"] = "preflight_pass"
-    else:
-        report["status"] = "preflight_failed"
+    report["ci"] = gates.get("ci")
+    report["status"] = "preflight_pass"
+    report["preflight_checks"]["preflight_pass"] = True
+    return finish()
 
-    # Write preflight report (separate from main output)
-    preflight_output = output.parent / f"{output.stem}_preflight.json"
-    _write_report(preflight_output, report)
 
-    return report
+def _request_journal(window: LiveWindow) -> list[dict[str, Any]]:
+    stages = ("botnet_tool", "botnet_assessment", "normal_tool", "normal_assessment")
+    records = []
+    for index, call in enumerate(window.get_request_records()):
+        records.append({
+            "stage": stages[index] if index < len(stages) else "unexpected_request",
+            "provider": "openai",
+            "actual_model": call.get("actual_model"),
+            "request_id": None,
+            "request_id_unavailable_reason": "sdk_response_did_not_expose_request_id",
+            "response_id": call.get("response_id"),
+            "finish_reason": call.get("finish_reason"),
+            "usage": call.get("usage"),
+            "cost_usd": call.get("cost_usd"),
+            "latency_ms": call.get("latency_ms"),
+            "error": call.get("error"),
+        })
+    return records
+
+
+def _native_tool_calls(orchestrator: Any, case: dict[str, Any]) -> list[dict[str, Any]]:
+    calls = []
+    for message in getattr(orchestrator, "messages", []):
+        if message.get("role") != "assistant":
+            continue
+        for item in message.get("tool_calls", []):
+            function = item.get("function", {})
+            try:
+                arguments = json.loads(function.get("arguments", "{}"))
+            except (TypeError, json.JSONDecodeError):
+                arguments = None
+            calls.append({
+                "tool_call_id": item.get("id"),
+                "name": function.get("name"),
+                "arguments": arguments,
+            })
+    if calls:
+        return calls
+    return [
+        {
+            "tool_call_id": item.get("call_id"),
+            "name": item.get("tool"),
+            "arguments": item.get("arguments"),
+        }
+        for item in case.get("tool_trace", [])
+    ]
+
+
+def _scenario_receipt(
+    snapshot: Path,
+    scenario: dict[str, Any],
+    orchestrator: Any,
+    case_object: Any,
+    review_mode: str,
+) -> dict[str, Any]:
+    case = case_object.to_dict()
+    policy = case.get("metadata", {}).get("network_policy", {})
+    assessment = policy.get("assessment")
+    termination = policy.get("termination")
+    trace = case.get("tool_trace", [])
+    arguments = trace[0].get("arguments") if len(trace) == 1 else None
+    try:
+        independent = (
+            verify_network_evidence(snapshot, arguments, case.get("evidence", []))
+            if isinstance(arguments, dict)
+            else {"verified": False, "issues": ["missing_executed_arguments"]}
+        )
+    except Exception:
+        independent = {"verified": False, "issues": ["independent_verification_failed"]}
+    policy_validation = policy.get("validation") or {"valid": False, "issues": ["missing_policy_validation"]}
+    technical_valid = bool(
+        termination == "FINAL_ASSESSMENT"
+        and isinstance(assessment, dict)
+        and policy_validation.get("valid") is True
+        and independent.get("verified") is True
+        and case.get("metadata", {}).get("schema_valid", True) is True
+        and len(trace) == 1
+        and trace[0].get("tool") == "network_investigation"
+        and not trace[0].get("error")
+    )
+    review_status = case.get("metadata", {}).get("review_status")
+    if review_mode == "deferred":
+        review_status = "awaiting_human"
+    return {
+        "name": scenario["name"],
+        "ground_truth_label": scenario.get("label"),
+        "request": {
+            "indicator": scenario["indicator"],
+            "indicator_type": "ipv4",
+            "time_range": scenario["time_range"],
+        },
+        "native_tool_calls": _native_tool_calls(orchestrator, case),
+        "tool_trace": trace,
+        "evidence": case.get("evidence", []),
+        "coverage": [item.get("provenance", {}) for item in case.get("evidence", [])],
+        "assessment": assessment.get("assessment") if isinstance(assessment, dict) else None,
+        "hypotheses": assessment.get("hypotheses", []) if isinstance(assessment, dict) else [],
+        "risk_level": assessment.get("risk_level") if isinstance(assessment, dict) else None,
+        "confidence": assessment.get("confidence") if isinstance(assessment, dict) else None,
+        "evidence_ids": assessment.get("evidence_ids", []) if isinstance(assessment, dict) else [],
+        "observations": assessment.get("observations", []) if isinstance(assessment, dict) else [],
+        "limitations": assessment.get("limitations", []) if isinstance(assessment, dict) else case.get("limitations", []),
+        "validation": {
+            "policy": policy_validation,
+            "independent_snapshot": independent,
+            "schema_valid": case.get("metadata", {}).get("schema_valid"),
+            "prose_semantics_machine_verified": False,
+            "technical_valid": technical_valid,
+        },
+        "lifecycle": case.get("metadata", {}).get("lifecycle_trace", []),
+        "human_review": {
+            "status": review_status,
+            "decisions": case.get("metadata", {}).get("human_decisions", []),
+        },
+        "termination": termination,
+    }
 
 
 def run_e2e_live(
@@ -745,416 +975,171 @@ def run_e2e_live(
     budget_usd: float = E2E_BUDGET_USD,
     ledger_path: Path | None = None,
     gates_path: Path | None = None,
+    env_file: Path = Path(".env"),
     review_mode: str = "deferred",
+    client_factory: Any = _create_openai_client,
 ) -> dict[str, Any]:
-    """
-    Run the E2E live demo with both Botnet and Normal scenarios.
+    """Run Botnet and Normal once through the guarded public orchestrator."""
+    snapshot, output = Path(snapshot), Path(output)
+    preflight = run_e2e_preflight(
+        snapshot, output, budget_usd=budget_usd, ledger_path=ledger_path,
+        gates_path=gates_path, env_file=env_file,
+    )
+    if preflight.get("status") != "preflight_pass":
+        blocked = {
+            "schema_version": 1,
+            "run_id": f"e2e_{uuid.uuid4().hex[:12]}",
+            "status": "blocked",
+            "failed_stage": "preflight",
+            "failure_category": preflight.get("failure_category"),
+            "scope": "network_only_public_lifecycle_demo",
+            "attempted_calls": 0,
+            "responses_received": 0,
+            "valid_usage_records": 0,
+            "client_created": False,
+            "scenarios": [],
+            "requests": [],
+            "cost_summary": {"known_cost_usd": 0.0, "cost_unknown": False, "reserved_exposure_usd": 0.0},
+            "review_status": "not_started",
+        }
+        _write_report(output, blocked)
+        return blocked
 
-    This function:
-    - Opens the live window
-    - Makes exactly one invocation for both scenarios
-    - Uses the public orchestrator lifecycle
-    - Collects evidence and produces assessment
-    """
-    from agent.network_investigation_policy import NetworkInvestigationPolicy
-    from agent.investigation_policy import ValidatedAssessment
-
-    output = Path(output)
-    snapshot = Path(snapshot)
-    run_id = f"e2e_{uuid.uuid4().hex[:12]}"
-
-    # Validate snapshot
-    qualify = qualify_snapshot(snapshot)
-
-    # Build initial report
+    ledger_path = Path(ledger_path)  # preflight proved it is present and valid
+    gates_path = Path(gates_path)
+    gates = json.loads(gates_path.read_text(encoding="utf-8"))
+    window = LiveWindow.open(ledger_path.parent, WINDOW_ID, gates)
     report: dict[str, Any] = {
         "schema_version": 1,
-        "run_id": run_id,
-        "status": "preflight",
+        "run_id": f"e2e_{uuid.uuid4().hex[:12]}",
+        "status": "claimed",
         "scope": "network_only_public_lifecycle_demo",
         "transport": "openai_sdk_live",
-        "implementation_sha": None,  # Filled by gates
-        "ci": None,  # Filled by gates
-        "contract": {
-            "version": "network_e2e_v1",
-            "snapshot_logical_sha256": qualify["checks"]["logical_sha256"],
-        },
-        "scenario_config": {
-            "max_requests": E2E_MAX_REQUESTS,
-            "max_steps_per_scenario": 2,
-            "review_mode": review_mode,
-        },
+        "implementation_sha": gates["implementation_sha"],
+        "ci": gates["ci"],
+        "contract": preflight.get("contract"),
+        "snapshot": preflight.get("snapshot"),
         "request_config": {
-            "model": DEMO_MODEL,
-            "temperature": 0,
-            "max_completion_tokens": DEMO_CAP,
-            "max_retries": 0,
+            "model": DEMO_MODEL, "temperature": 0,
+            "max_completion_tokens": DEMO_CAP, "max_retries": 0,
+            "tool_choice": "auto", "input_token_reserve": INPUT_TOKEN_RESERVE,
+            "output_token_reserve": OUTPUT_TOKEN_RESERVE,
+            "max_request_bytes": MAX_REQUEST_BYTES,
         },
         "attempted_calls": 0,
         "responses_received": 0,
         "valid_usage_records": 0,
+        "client_created": False,
         "requests": [],
         "scenarios": [],
-        "cost_summary": {
-            "known_cost_usd": 0.0,
-            "cost_unknown": False,
-            "reserved_exposure_usd": 0.0,
-        },
+        "cost_summary": {"known_cost_usd": 0.0, "cost_unknown": False, "reserved_exposure_usd": 0.0},
         "review_status": "awaiting_human" if review_mode == "deferred" else "interactive",
     }
-
-    # Get Git SHA
-    import subprocess
     try:
-        git_sha = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            text=True, stderr=subprocess.DEVNULL
-        ).strip()
-        report["implementation_sha"] = git_sha
-    except subprocess.CalledProcessError:
-        pass
-
-    # Select scenarios
-    scenarios = []
-    for name in SCENARIO_NAMES:
-        try:
-            scenario = network_select_scenario(snapshot, name)
-            scenarios.append(scenario)
-        except ValueError as e:
-            report["status"] = "scenario_selection_failed"
-            report["error"] = f"Failed to select {name}: {e}"
-            _write_report(output, report)
-            return report
-
-    # Open live window
-    ledger = None
-    if ledger_path:
-        try:
-            ledger = LiveWindow(
-                root=Path(ledger_path).parent,
-                window_id=WINDOW_ID,
-                condition=NETWORK_DEMO_CONDITION,
-            )
-            # Claim attempt
-            claim = ledger.claim(
-                implementation_sha=report["implementation_sha"],
-                output=output,
-                budget_usd=budget_usd,
-            )
-            report["gates"] = claim
-        except LiveWindowError as e:
-            report["status"] = "window_claim_failed"
-            report["error"] = str(e)
-            _write_report(output, report)
-            return report
+        window.claim(gates["implementation_sha"], output, budget_usd)
+    except LiveWindowError as exc:
+        report.update(status="blocked", failed_stage="claim", failure_category=str(exc).lower())
+        _write_report(output, report)
+        return report
 
     _write_report(output, report)
-    report["status"] = "running"
-
-    # Run each scenario
-    for scenario in scenarios:
-        scenario_result = _run_e2e_scenario(
-            snapshot, scenario, report, ledger
+    try:
+        local_env = load_env(Path(env_file))
+        resolution = resolve_openai_key(os.environ, local_env)
+        if resolution.key is None:
+            raise LiveWindowError("KEY_RESOLUTION_CHANGED_AFTER_PREFLIGHT")
+        raw_client = client_factory(resolution.key)
+        report["client_created"] = True
+        guarded = window.guarded_client(
+            raw_client,
+            NETWORK_DEMO_CONDITION,
+            {
+                "model": DEMO_MODEL, "temperature": 0,
+                "max_completion_tokens": DEMO_CAP, "tool_choice": "auto",
+                "max_requests": E2E_MAX_REQUESTS,
+                "max_request_bytes": MAX_REQUEST_BYTES,
+                "input_token_reserve": INPUT_TOKEN_RESERVE,
+                "output_token_reserve": OUTPUT_TOKEN_RESERVE,
+                "frame_reserve_tokens": E2E_FRAME_RESERVE,
+            },
         )
-        report["scenarios"].append(scenario_result)
+        provider = OpenAIProvider(
+            model=DEMO_MODEL,
+            client=guarded,
+            max_retries=0,
+            pricing=ModelPricing(DEMO_INPUT_USD_M, DEMO_OUTPUT_USD_M, "private_gate", "runtime"),
+            request_overrides={"max_completion_tokens": DEMO_CAP, "tool_choice": "auto"},
+        )
+        if review_mode == "interactive":
+            from cli.main import ConsoleHumanReviewGate
+            human_gate = ConsoleHumanReviewGate()
+        else:
+            human_gate = None
 
-        if scenario_result.get("termination") in ("error", "tool_limit"):
-            break
+        for scenario in preflight["scenarios"]:
+            policy = __import__(
+                "agent.network_investigation_policy", fromlist=["NetworkInvestigationPolicy"]
+            ).NetworkInvestigationPolicy(scenario["indicator"], scenario["time_range"])
+            orchestrator = InvestigationOrchestrator(
+                provider=provider,
+                max_steps=2,
+                max_review_cycles=0,
+                duckdb_snapshot_path=str(snapshot),
+                human_review_gate=human_gate,
+                investigation_policy=policy,
+            )
+            context = (
+                "Investigate network telemetry for the supplied IPv4 within this historical interval: "
+                + json.dumps(scenario["time_range"], sort_keys=True)
+            )
+            case = orchestrator.investigate(
+                scenario["indicator"], indicator_type="ipv4", context=context
+            )
+            item = _scenario_receipt(snapshot, scenario, orchestrator, case, review_mode)
+            report["scenarios"].append(item)
+            _write_report(output, report)
+            if not item["validation"]["technical_valid"]:
+                break
+    except LiveWindowError as exc:
+        report.update(status="partial", failed_stage="transport_guard", failure_category=str(exc))
+    except Exception:
+        report.update(status="partial", failed_stage="public_lifecycle", failure_category="public_lifecycle_failed")
 
-        if report["attempted_calls"] >= E2E_MAX_REQUESTS:
-            scenario_result["termination"] = "request_limit_reached"
-            break
-
-    # Finalize report
-    if all(s.get("assessment") for s in report["scenarios"]):
-        report["status"] = "complete"
-    elif any(s.get("assessment") for s in report["scenarios"]):
-        report["status"] = "partial"
-    else:
-        report["status"] = "failed"
-
-    # Calculate cost
-    known_cost = sum(r.get("cost_usd", 0.0) for r in report["requests"])
-    report["cost_summary"]["known_cost_usd"] = known_cost
-    report["cost_summary"]["reserved_exposure_usd"] = compute_request_reserve() * (
-        E2E_MAX_REQUESTS - len(report["requests"])
+    status = window.get_status()
+    report["attempted_calls"] = status["attempted_requests"]
+    report["responses_received"] = status["responses_received"]
+    report["valid_usage_records"] = status["valid_usage_records"]
+    report["requests"] = _request_journal(window)
+    report["cost_summary"] = {
+        "known_cost_usd": status["known_cost_usd"],
+        "cost_unknown": status["cost_unknown"],
+        "reserved_exposure_usd": status.get("reserved_exposure_usd", 0.0),
+    }
+    technical_complete = (
+        len(report["scenarios"]) == len(SCENARIO_NAMES)
+        and all(item["validation"]["technical_valid"] for item in report["scenarios"])
+        and report["attempted_calls"] == report["responses_received"] == report["valid_usage_records"] == 4
     )
-
-    # Mark window terminal
-    if ledger:
-        ledger.record_terminal(report["status"])
-
+    if technical_complete:
+        decisions = [item["human_review"]["status"] for item in report["scenarios"]]
+        if review_mode == "deferred":
+            report["status"] = "technical_complete_awaiting_human"
+            report["review_status"] = "awaiting_human"
+        elif all(item == "approved" for item in decisions):
+            report["status"] = "approved"
+            report["review_status"] = "approved"
+        elif "rejected" in decisions:
+            report["status"] = "rejected"
+            report["review_status"] = "rejected"
+        else:
+            report["status"] = "escalated"
+            report["review_status"] = "escalated"
+    else:
+        report["status"] = "partial"
+        report["review_status"] = "not_started"
+    window.record_terminal(report["status"], report["cost_summary"]["known_cost_usd"])
     _write_report(output, report)
     return report
-
-
-def _run_e2e_scenario(
-    snapshot: Path,
-    scenario: dict[str, Any],
-    report: dict[str, Any],
-    ledger: LiveWindow | None,
-) -> dict[str, Any]:
-    """Run one scenario (Botnet or Normal) through the public lifecycle."""
-    from agent.network_investigation_policy import NetworkInvestigationPolicy
-
-    result: dict[str, Any] = {
-        "name": scenario["name"],
-        "ground_truth_label": scenario.get("label"),
-        "native_tool_calls": [],
-        "evidence": [],
-        "observations": [],
-        "assessment": None,
-        "validation": {},
-        "lifecycle": {},
-        "human_review": {"status": "not_started"},
-        "termination": None,
-        "cost_usd": 0.0,
-    }
-
-    # Create orchestrator with network policy
-    orchestrator = InvestigationOrchestrator(
-        max_steps=1,  # Only one tool call per scenario
-        max_review_cycles=0,  # No additional cycles in E2E
-        duckdb_snapshot_path=str(snapshot),
-    )
-
-    # Create network policy
-    policy = NetworkInvestigationPolicy()
-
-    # Prepare request for model to generate tool arguments
-    tool_schemas = policy.tool_schemas()
-
-    # Build request
-    request = {
-        "model": DEMO_MODEL,
-        "temperature": 0,
-        "max_completion_tokens": DEMO_CAP,
-        "tools": tool_schemas,
-        "tool_choice": {"type": "function", "function": {"name": "network_investigation"}},
-        "messages": [
-            {"role": "system", "content": policy.system_prompt()},
-            {
-                "role": "user",
-                "content": json.dumps({
-                    "indicator": scenario["indicator"],
-                    "time_range": scenario["time_range"],
-                    "task": "Call network_investigation for this IPv4 and bounded historical interval.",
-                }, sort_keys=True),
-            },
-        ],
-    }
-
-    # Reserve cost
-    reserve = compute_request_reserve(INPUT_TOKEN_RESERVE + E2E_FRAME_RESERVE, OUTPUT_TOKEN_RESERVE)
-    if ledger:
-        ledger.reserve(reserve)
-
-    # Send request
-    started = perf_counter()
-    try:
-        response = _e2e_api_call(request)
-    except Exception as exc:
-        result["termination"] = "error"
-        result["error"] = str(exc)
-        return result
-
-    latency_ms = (perf_counter() - started) * 1000
-
-    # Record response
-    usage = getattr(response, "usage", None)
-    actual_model = getattr(response, "model", None)
-    input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
-    output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
-    cached_tokens = getattr(usage, "cached_tokens", 0) if usage else 0
-
-    cost_usd = _demo_cost_usd(input_tokens, output_tokens, cached_tokens)
-    result["cost_usd"] = cost_usd
-    report["attempted_calls"] += 1
-    report["responses_received"] += 1
-
-    req_record = {
-        "stage": f"{scenario['name']}_tool_request",
-        "actual_model": actual_model,
-        "request_id": getattr(response, "id", None),
-        "usage": {
-            "input_tokens": input_tokens,
-            "output_tokens": output_tokens,
-            "cached_tokens": cached_tokens,
-        } if usage else None,
-        "cost_usd": cost_usd,
-        "latency_ms": latency_ms,
-    }
-    report["requests"].append(req_record)
-
-    if ledger:
-        ledger.record_response(
-            stage=f"{scenario['name']}_tool",
-            actual_model=actual_model,
-            response_id=getattr(response, "id", None),
-            usage=req_record["usage"],
-            cost_usd=cost_usd,
-            latency_ms=latency_ms,
-        )
-
-    # Parse tool call
-    tool_calls = getattr(response.choices[0].message, "tool_calls", None) or []
-    if not tool_calls or len(tool_calls) != 1:
-        result["termination"] = "no_tool_call"
-        result["error"] = "Model did not request exactly one network tool"
-        return result
-
-    # Validate and execute tool call
-    call = tool_calls[0]
-    if call.function.name != "network_investigation":
-        result["termination"] = "wrong_tool"
-        result["error"] = f"Model requested {call.function.name} instead of network_investigation"
-        return result
-
-    try:
-        args = policy.validate_tool_call(
-            {"name": call.function.name, "arguments": call.function.arguments},
-            scope=scenario,
-        )
-    except ValueError as e:
-        result["termination"] = "invalid_arguments"
-        result["error"] = str(e)
-        return result
-
-    result["native_tool_calls"].append({
-        "name": call.function.name,
-        "arguments": args,
-        "tool_call_id": call.id,
-    })
-
-    # Execute tool
-    try:
-        orchestrator.case_id = f"e2e_{scenario['name']}"
-        orchestrator.evidence_store.clear()
-        orchestrator.messages = []
-        orchestrator.investigation_active = True
-
-        orchestrator._execute_tool_call({
-            "id": call.id,
-            "name": call.function.name,
-            "arguments": args,
-        })
-
-        result["lifecycle"]["investigate"] = "completed"
-
-        # Collect evidence
-        evidence_items = orchestrator.evidence_store.get_all_evidence()
-        result["evidence"] = [ev.to_dict() for ev in evidence_items]
-        result["observations"] = [
-            {
-                "evidence_id": ev.evidence_id,
-                "type": ev.type,
-                "data": {k: ev.data.get(k) for k in ["connection_count", "src_ip", "dst_ip", "dst_port", "protocol"] if k in ev.data},
-            }
-            for ev in evidence_items
-            if hasattr(ev, "data")
-        ]
-
-        result["lifecycle"]["verify"] = "completed"
-
-    except Exception as e:
-        result["termination"] = "tool_execution_error"
-        result["error"] = str(e)
-        return result
-
-    # Make assessment request
-    assessment_request = {
-        "model": DEMO_MODEL,
-        "temperature": 0,
-        "max_completion_tokens": DEMO_CAP,
-        "response_format": {"type": "json_object"},
-        "messages": [
-            {
-                "role": "system",
-                "content": "You are a network-only SOC assistant. Return JSON with assessment, evidence_ids, observations, risk_level, confidence, limitations.",
-            },
-            {
-                "role": "user",
-                "content": json.dumps({
-                    "indicator": scenario["indicator"],
-                    "evidence": result["observations"],
-                    "task": "Assess the network evidence. Cite evidence IDs. Return JSON.",
-                }, sort_keys=True),
-            },
-        ],
-    }
-
-    # Reserve and send assessment request
-    if ledger:
-        ledger.reserve(reserve)
-
-    started = perf_counter()
-    try:
-        response = _e2e_api_call(assessment_request)
-    except Exception as exc:
-        result["termination"] = "assessment_error"
-        result["error"] = str(exc)
-        return result
-
-    latency_ms = (perf_counter() - started) * 1000
-
-    usage = getattr(response, "usage", None)
-    input_tokens = getattr(usage, "prompt_tokens", 0) if usage else 0
-    output_tokens = getattr(usage, "completion_tokens", 0) if usage else 0
-    cost_usd = _demo_cost_usd(input_tokens, output_tokens)
-    result["cost_usd"] += cost_usd
-    report["attempted_calls"] += 1
-    report["responses_received"] += 1
-
-    req_record = {
-        "stage": f"{scenario['name']}_assessment",
-        "actual_model": getattr(response, "model", None),
-        "request_id": getattr(response, "id", None),
-        "usage": {
-            "input_tokens": input_tokens,
-            "output_tokens": output_tokens,
-        } if usage else None,
-        "cost_usd": cost_usd,
-        "latency_ms": latency_ms,
-    }
-    report["requests"].append(req_record)
-
-    if ledger:
-        ledger.record_response(
-            stage=f"{scenario['name']}_assessment",
-            actual_model=req_record["actual_model"],
-            response_id=req_record["request_id"],
-            usage=req_record["usage"],
-            cost_usd=cost_usd,
-            latency_ms=latency_ms,
-        )
-
-    # Parse assessment
-    content = getattr(response.choices[0].message, "content", None) or ""
-    try:
-        assessment = ValidatedAssessment.from_json(content)
-        result["assessment"] = assessment.to_dict()
-        result["lifecycle"]["review"] = "awaiting_human"
-    except ValueError as e:
-        result["assessment"] = {"error": str(e)}
-        result["termination"] = "assessment_parse_error"
-
-    result["termination"] = result.get("termination") or "complete"
-    return result
-
-
-def _e2e_api_call(request: dict[str, Any]) -> Any:
-    """Make an API call with error handling."""
-    from openai import OpenAI
-
-    # Load env
-    local_env = load_env(Path(".env"))
-    resolution = resolve_openai_key(os.environ, local_env)
-
-    if resolution.key is None:
-        raise ValueError("OPENAI_API_KEY not found")
-
-    client = OpenAI(api_key=resolution.key, timeout=60, max_retries=0)
-    return client.chat.completions.create(**request)
 
 
 def main() -> int:
@@ -1163,7 +1148,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
 
     # Core arguments
-    parser.add_argument("--snapshot", type=Path, required=True, help="Path to CTU snapshot")
+    parser.add_argument("--snapshot", type=Path, help="Path to CTU snapshot")
     parser.add_argument("--output", type=Path, required=True, help="Path for output JSON")
 
     # E2E mode
@@ -1191,6 +1176,15 @@ def main() -> int:
     if args.review_receipt:
         return _handle_offline_review(args.review_receipt, args.output)
 
+    if args.snapshot is None:
+        parser.error("--snapshot is required unless --review-receipt is used")
+    if args.preflight_only and not args.e2e:
+        parser.error("--preflight-only requires --e2e")
+    if args.e2e and args.diagnostic_first_request:
+        parser.error("--e2e and --diagnostic-first-request are mutually exclusive")
+    if args.e2e and args.scenario != "all":
+        parser.error("network E2E live window requires --scenario all")
+
     # Handle E2E preflight
     if args.e2e and args.preflight_only:
         result = run_e2e_preflight(
@@ -1199,6 +1193,7 @@ def main() -> int:
             budget_usd=args.budget_usd,
             ledger_path=args.ledger,
             gates_path=args.gates,
+            env_file=args.env_file,
         )
         print(json.dumps({
             "mode": "e2e_preflight",
@@ -1218,6 +1213,7 @@ def main() -> int:
             budget_usd=args.budget_usd,
             ledger_path=args.ledger,
             gates_path=args.gates,
+            env_file=args.env_file,
             review_mode=args.review_mode,
         )
         print(json.dumps({
@@ -1228,7 +1224,9 @@ def main() -> int:
             "known_cost_usd": result["cost_summary"]["known_cost_usd"],
             "cost_unknown": result["cost_summary"]["cost_unknown"],
         }, indent=2, sort_keys=True))
-        return 0 if result["status"] == "complete" else 1
+        return 0 if result["status"] in {
+            "technical_complete_awaiting_human", "approved", "rejected", "escalated"
+        } else 1
 
     # Legacy mode
     local_env = load_env(args.env_file)
@@ -1268,49 +1266,17 @@ def main() -> int:
 
 
 def _handle_offline_review(receipt_path: Path, output_path: Path) -> int:
-    """Handle offline human review of a technical receipt."""
-    import subprocess
+    """Run the console analyst gate against an immutable technical receipt."""
+    from cli.main import ConsoleHumanReviewGate
 
-    receipt_path = Path(receipt_path)
-    output_path = Path(output_path)
-
-    if not receipt_path.exists():
-        print(f"Receipt not found: {receipt_path}")
+    try:
+        review = finalize_offline_review(
+            receipt_path, output_path, gate=ConsoleHumanReviewGate()
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        print("Offline review stopped: receipt is missing, invalid, or ineligible")
         return 1
-
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-
-    review_receipt = {
-        "schema_version": 1,
-        "run_id": receipt.get("run_id"),
-        "review_timestamp": datetime.now(timezone.utc).isoformat(),
-        "reviewer": "human",
-        "status": "pending",
-        "decisions": [],
-    }
-
-    # Get implementation SHA from receipt
-    impl_sha = receipt.get("implementation_sha")
-    if impl_sha:
-        try:
-            current_sha = subprocess.check_output(
-                ["git", "rev-parse", "HEAD"],
-                text=True, stderr=subprocess.DEVNULL
-            ).strip()
-            review_receipt["implementation_match"] = (impl_sha == current_sha)
-        except subprocess.CalledProcessError:
-            review_receipt["implementation_match"] = None
-
-    # Write review receipt
-    _write_report(output_path, review_receipt)
-
-    print(json.dumps({
-        "mode": "offline_review",
-        "status": "review_started",
-        "receipt": str(receipt_path),
-        "output": str(output_path),
-    }, indent=2, sort_keys=True))
-
+    print(json.dumps({"mode": "offline_review", "status": review["status"]}, sort_keys=True))
     return 0
 
 

@@ -190,6 +190,7 @@ class InvestigationOrchestrator:
         duckdb_snapshot_path: Optional[str] = None,
         human_review_gate: Optional[HumanReviewGate] = None,
         max_review_cycles: int = 1,
+        investigation_policy: Any | None = None,
     ):
         """
         Initialize the orchestrator.
@@ -209,6 +210,9 @@ class InvestigationOrchestrator:
         self.max_input_chars = max_input_chars
         self.human_review_gate = human_review_gate
         self.max_review_cycles = max(0, max_review_cycles)
+        self.investigation_policy = investigation_policy
+        self.validated_assessment = None
+        self.policy_termination: str | None = None
         self.human_decisions: List[Dict[str, Any]] = []
 
         # Initialize skills
@@ -276,6 +280,8 @@ class InvestigationOrchestrator:
         self.lifecycle_trace = []
         self.security_flags = []
         self.human_decisions = []
+        self.validated_assessment = None
+        self.policy_termination = None
         self.provider.reset_tracking()
 
         indicator, context = self._sanitize_investigation_input(indicator, context)
@@ -344,10 +350,14 @@ class InvestigationOrchestrator:
         # Automatic verification happens before analyst judgment. The analyst
         # reviews the evidence-grounded case, not raw model output.
         self._record_phase("verify", "started", "Validating traceability and schema")
-        self._record_phase("verify", "completed", "Case verification completed")
-
         case = self._generate_case(indicator, indicator_type, context, duration, triage)
         case.metadata["orchestration_mode"] = "evidence_driven"
+        policy_validation = case.metadata.get("network_policy", {}).get("validation")
+        if policy_validation is not None and not policy_validation.get("valid", False):
+            self._record_phase("verify", "failed", "Network policy validation failed")
+        else:
+            self._record_phase("verify", "completed", "Case verification completed")
+        case.metadata["lifecycle_trace"] = [event.to_dict() for event in self.lifecycle_trace]
 
         if self.human_review_gate is not None:
             case = self._run_final_human_review(
@@ -665,6 +675,8 @@ class InvestigationOrchestrator:
 
     def _run_investigation_loop(self, initial_prompt: str):
         """Run or resume the investigation loop."""
+        if self.investigation_policy is not None:
+            return self._run_policy_investigation_loop(initial_prompt)
         if initial_prompt:
             self.messages.append({"role": "user", "content": initial_prompt})
 
@@ -707,6 +719,63 @@ class InvestigationOrchestrator:
             # Check if investigation should end
             if self._should_end_investigation():
                 break
+
+    def _run_policy_investigation_loop(self, initial_prompt: str) -> None:
+        """Run one policy-owned native tool turn followed by one final turn."""
+        if initial_prompt:
+            self.messages.append({"role": "user", "content": initial_prompt})
+        tool_executed = bool(self.evidence_store.get_all_tool_calls())
+        for _step in range(self.max_steps):
+            response = self.provider.generate(
+                messages=self.messages,
+                tools=self.investigation_policy.tool_schemas(),
+                system_prompt=self.investigation_policy.system_prompt(),
+            )
+            assistant_message: Dict[str, Any] = {
+                "role": "assistant",
+                "content": response.content or "",
+            }
+            if response.tool_calls:
+                assistant_message["tool_calls"] = [
+                    {
+                        "id": call.get("id"),
+                        "type": "function",
+                        "function": {
+                            "name": call["name"],
+                            "arguments": self._format_result_for_llm(call["arguments"]),
+                        },
+                    }
+                    for call in response.tool_calls
+                ]
+            self.messages.append(assistant_message)
+
+            if response.tool_calls:
+                if tool_executed or len(response.tool_calls) != 1:
+                    self.policy_termination = "TOOL_LIMIT"
+                    return
+                call = response.tool_calls[0]
+                try:
+                    arguments = self.investigation_policy.validate_tool_call(call)
+                except ValueError:
+                    self.policy_termination = "INVALID_ARGUMENTS"
+                    return
+                self._execute_tool_call({**call, "arguments": arguments})
+                tool_executed = True
+                continue
+
+            if not tool_executed:
+                self.policy_termination = "REQUIRED_TOOL_NOT_EXECUTED"
+                return
+            try:
+                self.validated_assessment = self.investigation_policy.parse_final_response(
+                    response.content or "", self.evidence_store
+                )
+            except ValueError:
+                self.policy_termination = "ASSESSMENT_VALIDATION_FAILED"
+                return
+            self.policy_termination = "FINAL_ASSESSMENT"
+            return
+        self.policy_termination = "NO_FINAL_ASSESSMENT" if tool_executed else "MODEL_TURN_LIMIT"
 
     def _execute_tool_call(self, tool_call: Dict[str, Any]):
         """Execute a tool call and add result to conversation."""
@@ -805,7 +874,12 @@ class InvestigationOrchestrator:
                 call.evidence_ids.append(evidence.evidence_id)
 
             # Format result for LLM
-            result_text = f"Tool: {tool_name}\n\nResult:\n{self._format_result_for_llm(result.data)}"
+            if self.investigation_policy is not None:
+                result_text = self.investigation_policy.tool_response(
+                    tool_call, result, self.evidence_store
+                )
+            else:
+                result_text = f"Tool: {tool_name}\n\nResult:\n{self._format_result_for_llm(result.data)}"
         else:
             error_msg = result.error if result else error
             self.evidence_store.add_tool_call(
@@ -819,9 +893,12 @@ class InvestigationOrchestrator:
             result_text = f"Tool: {tool_name}\n\nError: {error_msg}"
 
         # Add result to messages
+        content = f"UNTRUSTED_TOOL_DATA\n{result_text}"
+        if self.investigation_policy is None:
+            content = content[:4000]
         self.messages.append({
             "role": "tool",
-            "content": f"UNTRUSTED_TOOL_DATA\n{result_text[:4000]}",
+            "content": content,
             "tool_call_id": tool_call_id,
         })
 
@@ -897,6 +974,18 @@ class InvestigationOrchestrator:
 
         # Generate hypothesis
         hypotheses, risk, confidence = self._analyze_evidence(evidence)
+        if self.validated_assessment is not None:
+            hypotheses = [
+                InvestigationHypothesis(
+                    id=f"model_h{index}",
+                    description=item["description"],
+                    supporting_evidence=list(item["supporting_evidence"]),
+                    confidence=item["confidence"],
+                )
+                for index, item in enumerate(self.validated_assessment.hypotheses, start=1)
+            ]
+            risk = self.validated_assessment.risk_level
+            confidence = self.validated_assessment.confidence
 
         if triage.verdict == "BENIGN" and not evidence:
             risk = "LOW"
@@ -910,6 +999,8 @@ class InvestigationOrchestrator:
 
         # Collect limitations
         limitations = self._identify_limitations(evidence, tool_calls)
+        if self.validated_assessment is not None:
+            limitations = list(self.validated_assessment.limitations)
         verification_notes, traceability_violations = self._verify_case_quality(evidence, tool_calls, hypotheses)
         limitations.extend(verification_notes)
 
@@ -920,6 +1011,8 @@ class InvestigationOrchestrator:
             for ev in evidence
             if ev.evidence_id in hypothesis.supporting_evidence
         ]
+        if self.validated_assessment is not None:
+            supporting_ids = list(self.validated_assessment.evidence_ids)
 
         # Add security flag if violations found
         if traceability_violations:
@@ -939,7 +1032,11 @@ class InvestigationOrchestrator:
             risk_level=risk,
             confidence=confidence,
             limitations=limitations,
-            final_assessment=final_text[:2000] if final_text else "Investigation completed without final assessment.",
+            final_assessment=(
+                self.validated_assessment.assessment
+                if self.validated_assessment is not None
+                else (final_text[:2000] if final_text else "Investigation completed without final assessment.")
+            ),
             supporting_evidence=supporting_ids,
             metadata={
                 "investigation_duration_seconds": duration,
@@ -959,6 +1056,29 @@ class InvestigationOrchestrator:
                 "traceability_violations": [v.to_dict() for v in traceability_violations],
             }
         )
+
+        if self.investigation_policy is not None:
+            policy_case = {
+                "assessment_evidence_ids": (
+                    list(self.validated_assessment.evidence_ids)
+                    if self.validated_assessment is not None else []
+                ),
+                "observations": (
+                    list(self.validated_assessment.observations)
+                    if self.validated_assessment is not None else []
+                ),
+                "evidence": case.evidence,
+            }
+            policy_validation = self.investigation_policy.validate_case(policy_case)
+            case.metadata["network_policy"] = {
+                "termination": self.policy_termination,
+                "assessment": (
+                    self.validated_assessment.to_dict()
+                    if self.validated_assessment is not None else None
+                ),
+                "validation": policy_validation,
+                "prose_semantics_machine_verified": False,
+            }
 
         is_valid_case, case_error = validate_investigation_case(case.to_dict())
         if not is_valid_case:

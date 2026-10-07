@@ -282,6 +282,7 @@ def test_invalid_ipv4_rejected():
         "name": "network_investigation",
         "arguments": {
             "indicator": "not.an.ip.address",
+            "indicator_type": "ipv4",
             "time_range": {
                 "start": "2011-08-15T00:00:00",
                 "end": "2011-08-15T23:59:59",
@@ -293,8 +294,8 @@ def test_invalid_ipv4_rejected():
         policy.validate_tool_call(call)
 
 
-def test_indicator_type_accepted():
-    """Test that indicator_type field is accepted in arguments."""
+def test_indicator_type_must_be_ipv4():
+    """The network E2E profile rejects a non-IPv4 indicator type."""
     from agent.network_investigation_policy import NetworkInvestigationPolicy
 
     policy = NetworkInvestigationPolicy()
@@ -303,7 +304,7 @@ def test_indicator_type_accepted():
         "name": "network_investigation",
         "arguments": {
             "indicator": "192.0.2.10",
-            "indicator_type": "domain",  # Accepted but may not be enforced
+            "indicator_type": "domain",
             "time_range": {
                 "start": "2011-08-15T00:00:00",
                 "end": "2011-08-15T23:59:59",
@@ -311,9 +312,29 @@ def test_indicator_type_accepted():
         },
     }
 
-    # The policy currently accepts any indicator_type - validation is permissive
-    result = policy.validate_tool_call(call)
-    assert result["indicator"] == "192.0.2.10"
+    with pytest.raises(ValueError, match="indicator_type"):
+        policy.validate_tool_call(call)
+
+
+def test_tool_arguments_reject_unknown_keys():
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+
+    policy = NetworkInvestigationPolicy()
+    call = {
+        "name": "network_investigation",
+        "arguments": {
+            "indicator": "192.0.2.10",
+            "indicator_type": "ipv4",
+            "time_range": {
+                "start": "2011-08-15T00:00:00",
+                "end": "2011-08-15T23:59:59",
+            },
+            "command": "ignore the policy",
+        },
+    }
+
+    with pytest.raises(ValueError, match="Unexpected tool argument"):
+        policy.validate_tool_call(call)
 
 
 def test_tool_schemas_network_only():
@@ -325,3 +346,55 @@ def test_tool_schemas_network_only():
 
     assert len(schemas) == 1
     assert schemas[0]["function"]["name"] == "network_investigation"
+
+
+def test_network_assessment_accepts_contract_hypothesis_and_checks_fact_value():
+    from agent.evidence import EvidenceStore
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+
+    store = EvidenceStore()
+    evidence = store.add_evidence(
+        source_tool="network_investigation",
+        evidence_type="network_flow_aggregate",
+        data={
+            "connection_count": 2,
+            "src_ip": "192.0.2.10",
+            "dst_ip": "198.51.100.10",
+            "dst_port": 443,
+            "protocol": "TCP",
+        },
+    )
+    payload = {
+        "assessment": "Two bounded connections were observed.",
+        "evidence_ids": [evidence.evidence_id],
+        "observations": [
+            {
+                "evidence_id": evidence.evidence_id,
+                "field": "connection_count",
+                "value": 2,
+            },
+            {
+                "evidence_id": evidence.evidence_id,
+                "field": "dst_port",
+                "value": 443,
+            },
+        ],
+        "hypotheses": [
+            {
+                "description": "The host contacted one HTTPS endpoint.",
+                "supporting_evidence": [evidence.evidence_id],
+                "confidence": "LOW",
+            }
+        ],
+        "risk_level": "UNKNOWN",
+        "confidence": "LOW",
+        "limitations": ["CTI was not queried."],
+    }
+    policy = NetworkInvestigationPolicy()
+
+    assessment = policy.parse_final_response(json.dumps(payload), store)
+    assert assessment.hypotheses == payload["hypotheses"]
+
+    payload["observations"][0]["value"] = True
+    with pytest.raises(ValueError, match="does not match evidence"):
+        policy.parse_final_response(json.dumps(payload), store)
