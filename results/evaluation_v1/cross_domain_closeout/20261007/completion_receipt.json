@@ -1,0 +1,120 @@
+{
+  "scope": "resume_and_offline_closeout_not_new_model_evaluation",
+  "initial_sha": "408d75f5e97653d8927497a84599588f1ed73ce8",
+  "implementation_sha": "6b724c257dd9e62e5871d36ae64c28f427b6024f",
+  "commits": [
+    {
+      "checkpoint": "network snapshot qualification and actual blocked receipt",
+      "sha": "7ca020c6e0caa52ce50bab5f9ad6a523edcb6a2a",
+      "ci_run_id": 37573119075
+    },
+    {
+      "checkpoint": "module reporting and cluster statistics",
+      "sha": "da8f9d35b799c37c1b817f0267ced5b64c25bf43",
+      "ci_run_id": 37573622822
+    },
+    {
+      "checkpoint": "guarded real transport and final review fixes",
+      "sha": "6b724c257dd9e62e5871d36ae64c28f427b6024f",
+      "ci_run_id": 37575048307
+    }
+  ],
+  "ci": {
+    "head_sha": "6b724c257dd9e62e5871d36ae64c28f427b6024f",
+    "run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37575048307",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "test (3.11)",
+        "conclusion": "success",
+        "id": 112641943385,
+        "full_suite_step": "success"
+      },
+      {
+        "name": "test (3.12)",
+        "conclusion": "success",
+        "id": 112641943691,
+        "full_suite_step": "success"
+      }
+    ]
+  },
+  "local_tests": {
+    "targeted": 39,
+    "full_passed": 1110,
+    "full_skipped": 1,
+    "warnings": 1888,
+    "python": "3.12",
+    "verified_local_snapshot_enabled": true,
+    "py_compile": "pass",
+    "git_diff_check": "pass"
+  },
+  "remote_tree_verified": "b85dc54716f6109528502bb89983750650b55c5a",
+  "fresh_clone_lock_validation": {
+    "valid": true,
+    "issues": []
+  },
+  "snapshot": {
+    "binary_sha256": "91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3",
+    "logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "flows": 243906,
+    "source_rows": {
+      "ctu13_s5": 129831,
+      "ctu13_s7": 114075
+    },
+    "two_independent_builds_same_logical": true,
+    "qualification": "actual public source bytes and actual read-only DuckDB",
+    "rehearsal_model_and_reviewer": "synthetic, not live"
+  },
+  "new_inference": {
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "cost_usd": 0,
+    "model_score": null,
+    "human_approval": false
+  },
+  "network_live_blockers": [
+    "runtime key source missing",
+    "private canonical ledger/gates not supplied"
+  ],
+  "cross_domain": {
+    "calibration": 24,
+    "evaluation": 96,
+    "evaluation_families": 93,
+    "external_evaluation_databases": 8,
+    "external_evaluation_domains": 7,
+    "data_revalidation": "blocked: external locked snapshots absent here",
+    "preflight_max_requests": 672,
+    "verified_full_cost_ceiling_usd": null,
+    "paid_authorization": false
+  },
+  "preservation": {
+    "historical_files": 3269,
+    "changed": 0,
+    "frozen_opened": false,
+    "raw_sources_committed": false,
+    "duckdb_binary_committed": false,
+    "env_modified": false
+  },
+  "review": {
+    "critical": 0,
+    "important": 2,
+    "minor": 1,
+    "resolution": "one final fix pass, all 5 new regression tests GREEN; no repeat review dispatch",
+    "additional_fixes": [
+      "bad request contract terminal before transmission",
+      "zero-request case cannot qualify live usage"
+    ],
+    "limits": [
+      "external snapshots not independently qualified in this runtime",
+      "no fresh account/pricing or verified token-bound evidence",
+      "no genuine model or human semantic decision in this runtime"
+    ]
+  },
+  "artifact_bundle": {
+    "filename": "VinSOC_Qualified_Network_Snapshot_20261007.zip",
+    "sha256": "c5c0cb5d6ed42f3acb303b041f1613d91d793dd518112b146d078d05f3768415",
+    "contains_exact_pinned_snapshot": true,
+    "location": "attached deliverable; binary excluded from Git"
+  }
+}
