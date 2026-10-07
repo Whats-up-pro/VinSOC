@@ -27,287 +27,157 @@ def escape_json_for_js(text: str) -> str:
     return json.dumps(str(text))[1:-1]  # Remove quotes from json.dumps
 
 
-def render_report(receipt_path: Path, output_path: Path) -> dict[str, Any]:
-    """
-    Render a technical receipt to HTML.
+def _json_panel(title: str, value: Any) -> str:
+    content = json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True)
+    return f"<details><summary>{escape_html(title)}</summary><pre>{escape_html(content)}</pre></details>"
 
-    Args:
-        receipt_path: Path to the technical receipt JSON
-        output_path: Path to write the HTML file
 
-    Returns:
-        Dict with render stats
-    """
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+def _money(value: Any) -> str:
+    import math
+    if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
+        return "unknown / unavailable"
+    return "$" + f"{value:.6f}"
 
-    # Extract key data
-    status = receipt.get("status", "unknown")
-    scope = receipt.get("scope", "unknown")
-    transport = receipt.get("transport", "unknown")
-    impl_sha = receipt.get("implementation_sha", "unknown")
 
-    # Cost data
-    known_cost = receipt.get("known_cost_usd", 0.0)
-    unknown_cost = receipt.get("cost_unknown", False)
-    budget = receipt.get("budget_usd", 0.0)
-    reserved = receipt.get("reserved_exposure_usd", 0.0)
+def render_report(receipt_path: Path, output_path: Path, *, review_path: Path | None = None) -> dict[str, Any]:
+    """Render complete saved evidence; no client, inference or database access."""
+    import hashlib
+    import copy
+    from evaluation.finalization.network_contract import valid_technical_receipt
 
-    # Requests
-    requests = receipt.get("requests", [])
-    scenarios = receipt.get("scenarios", [])
-
-    # Status display
-    if status == "complete":
-        status_class = "status-complete"
-        status_text = "COMPLETE"
-    elif status == "awaiting_human":
-        status_class = "status-pending"
-        status_text = "AWAITING_HUMAN"
-    else:
-        status_class = "status-partial"
-        status_text = "PARTIAL"
-
-    # Build HTML
-    html_parts = [
-        "<!DOCTYPE html>",
-        "<html lang='en'>",
-        "<head>",
-        "<meta charset='UTF-8'>",
-        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
-        f"<title>VinSOC Network E2E Demo - {escape_html(status_text)}</title>",
-        "<style>",
-        _get_css(),
-        "</style>",
-        "</head>",
-        "<body>",
-        "<div class='container'>",
-
-        # Header
-        "<header>",
-        "<h1>VinSOC Network E2E Demo Report</h1>",
-        f"<div class='status {status_class}'>{status_text}</div>",
-        "</header>",
-
-        # Summary
-        "<section class='summary'>",
-        "<h2>Summary</h2>",
-        "<table>",
-        "<tr><th>Scope</th><td>" + escape_html(scope) + "</td></tr>",
-        "<tr><th>Transport</th><td>" + escape_html(transport) + "</td></tr>",
-        "<tr><th>Implementation SHA</th><td><code>" + escape_html(impl_sha) + "</code></td></tr>",
-        "</table>",
-        "</section>",
-
-        # Cost
-        "<section class='cost'>",
-        "<h2>Cost Summary</h2>",
-        "<table>",
-        f"<tr><th>Known Cost</th><td>${known_cost:.6f}</td></tr>",
-        f"<tr><th>Cost Unknown</th><td>{'Yes' if unknown_cost else 'No'}</td></tr>",
-        f"<tr><th>Budget</th><td>${budget:.6f}</td></tr>",
-        f"<tr><th>Reserved Exposure</th><td>${reserved:.6f}</td></tr>",
-        "</table>",
-        "</section>",
-    ]
-
-    # Requests
-    if requests:
-        html_parts.extend([
-            "<section class='requests'>",
-            "<h2>API Requests</h2>",
-            "<table>",
-            "<thead><tr><th>#</th><th>Stage</th><th>Model</th><th>Input</th><th>Output</th><th>Cost</th><th>Latency</th></tr></thead>",
-            "<tbody>",
-        ])
-
-        for i, req in enumerate(requests, 1):
-            stage = escape_html(req.get("stage", "unknown"))
-            model = escape_html(req.get("actual_model", req.get("model", "unknown")))
-            usage = req.get("usage", {})
-            input_tok = usage.get("input_tokens", 0) if usage else 0
-            output_tok = usage.get("output_tokens", 0) if usage else 0
-            cost = req.get("cost_usd", 0.0)
-            latency = req.get("latency_ms", 0)
-
-            html_parts.extend([
-                "<tr>",
-                f"<td>{i}</td>",
-                f"<td>{stage}</td>",
-                f"<td>{model}</td>",
-                f"<td>{input_tok}</td>",
-                f"<td>{output_tok}</td>",
-                f"<td>${cost:.6f}</td>",
-                f"<td>{latency:.1f}ms</td>",
-                "</tr>",
-            ])
-
-        html_parts.extend([
-            "</tbody>",
-            "</table>",
-            "</section>",
-        ])
-
-    # Scenarios
-    if scenarios:
-        html_parts.extend([
-            "<section class='scenarios'>",
-            "<h2>Scenarios</h2>",
-        ])
-
-        for scenario in scenarios:
-            name = escape_html(scenario.get("name", "unknown"))
-            assessment = scenario.get("assessment", {})
-            evidence = scenario.get("evidence", [])
-
-            html_parts.extend([
-                "<div class='scenario'>",
-                f"<h3>Scenario: {name}</h3>",
-
-                # Assessment
-                "<div class='assessment'>",
-                "<h4>Assessment</h4>",
-            ])
-
-            # Handle None assessment
-            assessment = scenario.get("assessment")
-            if assessment is None:
-                html_parts.append("<p><em>No assessment available</em></p>")
-            else:
-                html_parts.append(f"<p>{escape_html(assessment.get('assessment', 'N/A'))}</p>")
-                html_parts.extend([
-                    "<table>",
-                    f"<tr><th>Risk Level</th><td>{escape_html(assessment.get('risk_level', 'N/A'))}</td></tr>",
-                    f"<tr><th>Confidence</th><td>{escape_html(assessment.get('confidence', 'N/A'))}</td></tr>",
-                    "</table>",
-                ])
-
-            html_parts.extend([
-                "</div>",
-
-                # Evidence
-                "<div class='evidence'>",
-                "<h4>Evidence</h4>",
-                f"<p>{len(evidence)} evidence items collected</p>",
-            ])
-
-            if evidence:
-                html_parts.extend([
-                    "<table>",
-                    "<thead><tr><th>ID</th><th>Type</th><th>Class</th><th>Source</th></tr></thead>",
-                    "<tbody>",
-                ])
-
-                for ev in evidence[:20]:  # Limit display
-                    ev_id = escape_html(ev.get("evidence_id", "unknown"))
-                    ev_type = escape_html(ev.get("type", "unknown"))
-                    ev_class = escape_html(ev.get("evidence_class", "unknown"))
-                    source = escape_html(ev.get("source_name", "unknown"))
-
-                    html_parts.extend([
-                        "<tr>",
-                        f"<td><code>{ev_id}</code></td>",
-                        f"<td>{ev_type}</td>",
-                        f"<td>{ev_class}</td>",
-                        f"<td>{source}</td>",
-                        "</tr>",
-                    ])
-
-                html_parts.extend([
-                    "</tbody>",
-                    "</table>",
-                ])
-
-            html_parts.extend([
-                "</div>",  # evidence
-
-                # Validation
-                "<div class='validation'>",
-                "<h4>Validation</h4>",
-                "<table>",
-            ])
-
-            validation = scenario.get("validation", {})
-            if validation:
-                html_parts.extend([
-                    f"<tr><th>Factual Check</th><td>{'PASS' if validation.get('factual_check_passed') else 'FAIL'}</td></tr>",
-                    f"<tr><th>Issues</th><td>{escape_html(', '.join(validation.get('issues', ['None'])))}</td></tr>",
-                ])
-            else:
-                html_parts.append("<tr><td colspan='2'>No validation performed</td></tr>")
-
-            html_parts.extend([
-                "</table>",
-                "</div>",  # validation
-
-                # Lifecycle
-                "<div class='lifecycle'>",
-                "<h4>Lifecycle</h4>",
-                "<table>",
-            ])
-
-            lifecycle = scenario.get("lifecycle", {})
-            for phase, state in lifecycle.items():
-                html_parts.append(f"<tr><th>{escape_html(phase)}</th><td>{escape_html(state)}</td></tr>")
-
-            html_parts.extend([
-                "</table>",
-                "</div>",  # lifecycle
-
-                # Human Review
-                "<div class='review'>",
-                "<h4>Human Review</h4>",
-                "<table>",
-            ])
-
-            review = scenario.get("human_review", {})
-            review_status = review.get("status", "not_started")
-            html_parts.append(f"<tr><th>Status</th><td>{escape_html(review_status)}</td></tr>")
-
-            if review.get("decision"):
-                html_parts.append(f"<tr><th>Decision</th><td>{escape_html(review.get('decision'))}</td></tr>")
-            if review.get("rationale"):
-                html_parts.append(f"<tr><th>Rationale</th><td>{escape_html(review.get('rationale'))}</td></tr>")
-
-            html_parts.extend([
-                "</table>",
-                "</div>",  # review
-
-                "</div>",  # scenario
-            ])
-
-        html_parts.append("</section>")
-
-    # Provenance
-    html_parts.extend([
-        "<section class='provenance'>",
-        "<h2>Provenance</h2>",
-        "<table>",
-        f"<tr><th>Schema Version</th><td>{escape_html(receipt.get('schema_version', 'N/A'))}</td></tr>",
-        f"<tr><th>Run ID</th><td><code>{escape_html(receipt.get('run_id', 'N/A'))}</code></td></tr>",
-        "<tr><th>Generated</th><td>" + escape_html(receipt.get("generated_at", "N/A")) + "</td></tr>",
-        "</table>",
-        "</section>",
-
-        # Footer
-        "</div>",  # container
-        "<footer>",
-        "<p>Generated by VinSOC Network E2E Demo Renderer</p>",
-        "<p>This report was generated from the technical receipt and does not require API access.</p>",
-        "</footer>",
-        "</body>",
-        "</html>",
-    ])
-
-    # Write HTML
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text("\n".join(html_parts), encoding="utf-8")
-
-    return {
-        "status": "success",
-        "output_path": str(output_path),
-        "scenarios": len(scenarios),
-        "requests": len(requests),
+    receipt_path, output_path = Path(receipt_path), Path(output_path)
+    if receipt_path.resolve() == output_path.resolve():
+        raise ValueError("Renderer must not overwrite technical receipt")
+    if review_path is not None and Path(review_path).resolve() == output_path.resolve():
+        raise ValueError("Renderer must not overwrite linked review receipt")
+    try:
+        raw = receipt_path.read_bytes()
+    except OSError:
+        raise ValueError("Receipt unavailable") from None
+    try:
+        receipt = json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise ValueError("Invalid technical receipt JSON") from None
+    if (
+        not isinstance(receipt, dict) or type(receipt.get("schema_version")) is not int
+        or receipt.get("schema_version") != 1
+        or not isinstance(receipt.get("scenarios", []), list)
+        or not isinstance(receipt.get("requests", []), list)
+        or not all(isinstance(x, dict) for x in receipt.get("scenarios", []))
+        or not all(isinstance(x, dict) for x in receipt.get("requests", []))
+    ):
+        raise ValueError("Invalid technical receipt schema")
+    source_receipt = copy.deepcopy(receipt)
+    linked_review = None
+    if review_path is not None:
+        try:
+            linked_review = json.loads(Path(review_path).read_bytes())
+            decisions = linked_review["decisions"]
+            if (not valid_technical_receipt(receipt)
+                or receipt.get("status") != "technical_complete_awaiting_human"
+                or receipt.get("review_status") != "awaiting_human"
+                or linked_review.get("input_receipt_sha256") != hashlib.sha256(raw).hexdigest()
+                or linked_review.get("input_implementation_sha") != receipt["implementation_sha"]
+                or linked_review.get("run_id") != receipt["run_id"]
+                or len(decisions) != 2 or {d["scenario"] for d in decisions} != {"botnet", "normal"}
+                or any(d.get("decision") not in {"APPROVE", "REJECT", "ESCALATE"}
+                       or not isinstance(d.get("analyst"), str) or not d["analyst"] for d in decisions)):
+                raise ValueError()
+            values = [d["decision"] for d in decisions]
+            expected_status = "approved" if all(value == "APPROVE" for value in values) else (
+                "rejected" if "REJECT" in values else "escalated")
+            if linked_review.get("status") != expected_status:
+                raise ValueError()
+            for scenario in receipt["scenarios"]:
+                decision = next(d for d in decisions if d["scenario"] == scenario["name"])
+                scenario["human_review"] = {"status": {"APPROVE": "approved", "REJECT": "rejected",
+                    "ESCALATE": "escalated"}[decision["decision"]], "decisions": [decision]}
+            receipt.update(status=expected_status, review_status=expected_status)
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, StopIteration):
+            raise ValueError("Invalid or mismatched linked review receipt") from None
+    scenarios, requests = receipt.get("scenarios", []), receipt.get("requests", [])
+    for scenario in scenarios:
+        if (not isinstance(scenario.get("evidence", []), list)
+            or not all(isinstance(ev, dict) and isinstance(ev.get("provenance", {}), dict)
+                       for ev in scenario.get("evidence", []))
+            or not isinstance(scenario.get("validation", {}), dict)
+            or not isinstance(scenario.get("human_review", {}), dict)):
+            raise ValueError("Invalid technical receipt schema")
+    status = receipt.get("status")
+    synthetic = receipt.get("synthetic") is True or receipt.get("transport") in {
+        "synthetic", "offline_rehearsal", "OFFLINE_REHEARSAL",
     }
+    if status in {"technical_complete_awaiting_human", "awaiting_human"}:
+        display, css = "AWAITING_HUMAN", "status-pending"
+    elif status == "approved" and valid_technical_receipt(receipt, require_approval=True):
+        display, css = "COMPLETE", "status-complete"
+    elif status == "complete":
+        display, css = "PARTIAL — legacy completion claim not revalidated", "status-partial"
+    else:
+        display, css = "PARTIAL", "status-partial"
+    costs = receipt.get("cost_summary")
+    costs = costs if isinstance(costs, dict) else receipt
+    evidence_count = sum(len(s.get("evidence", [])) for s in scenarios)
+    missing_sources = sum(
+        1 for s in scenarios for ev in s.get("evidence", [])
+        if isinstance(ev, dict) and ev.get("evidence_class") == "OBSERVED"
+        and not ev.get("provenance", {}).get("source_records")
+    )
+    parts = [
+        "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'>",
+        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
+        "<meta http-equiv='Content-Security-Policy' content=\"default-src 'none'; style-src 'unsafe-inline'\">",
+        "<title>Network E2E receipt</title><style>", _get_css(),
+        "pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;background:#f4f5f7}"
+        "details{margin:10px 0}summary{cursor:pointer;font-weight:600}.warning{color:#8a3000}",
+        "</style></head><body><main class='container'><h1>Network E2E technical receipt</h1>",
+        f"<div class='status {css}'>{escape_html(display)}</div>",
+        f"<p class='warning'>{'SYNTHETIC / OFFLINE REHEARSAL — not live evidence' if synthetic else 'SAVED RECEIPT — offline viewer, not a new model run'}</p>",
+        "<h2>Run and stage</h2><table>",
+    ]
+    for key in ("run_id", "status", "scope", "transport", "implementation_sha", "review_status",
+                "failed_stage", "failure_category", "attempted_calls", "responses_received", "valid_usage_records"):
+        parts.append(f"<tr><th>{escape_html(key)}</th><td>{escape_html(receipt.get(key))}</td></tr>")
+    parts.extend([
+        "</table><h2>Cost Summary</h2>",
+        f"<p>Known Cost: {_money(costs.get('known_cost_usd'))}</p>",
+        f"<p>Cost Unknown: {'Yes — Total cost is unknown; known cost is not total' if costs.get('cost_unknown') else 'No'}</p>",
+        f"<p>Budget: {_money(receipt.get('budget_usd'))}; Reserved Exposure: {_money(costs.get('reserved_exposure_usd'))}</p>",
+        "<h2>API Requests</h2>",
+    ])
+    for index, request in enumerate(requests):
+        parts.append(f"<article data-request-index='{index}'>")
+        parts.append(f"<h3>{escape_html(request.get('stage'))}</h3><p>Cost: {_money(request.get('cost_usd'))}</p>")
+        parts.extend([_json_panel("Complete request telemetry", request), "</article>"])
+    parts.append("<h2>Scenarios</h2>")
+    for index, scenario in enumerate(scenarios):
+        parts.append(f"<article class='scenario' data-scenario-index='{index}'><h3>{escape_html(scenario.get('name'))}</h3>")
+        assessment = scenario.get("assessment")
+        text = assessment.get("assessment") if isinstance(assessment, dict) else assessment
+        parts.append(f"<h4>Full model assessment</h4><p>{escape_html(text) or 'No assessment available'}</p>")
+        for field in ("request", "ground_truth_label", "native_tool_calls", "tool_trace", "hypotheses",
+                      "risk_level", "confidence", "evidence_ids", "observations", "limitations",
+                      "coverage", "validation", "lifecycle", "human_review", "termination"):
+            parts.append(_json_panel(field, scenario.get(field)))
+        for ev_index, ev in enumerate(scenario.get("evidence", [])):
+            parts.extend([f"<div data-evidence-index='{index}-{ev_index}'>",
+                          _json_panel("Complete evidence and provenance", ev), "</div>"])
+        parts.append("</article>")
+    parts.append("<h2>Provenance</h2>")
+    for field in ("ci", "contract", "snapshot", "request_config"):
+        parts.append(_json_panel(field, receipt.get(field)))
+    if missing_sources:
+        parts.append(f"<p class='warning'>Missing source references: {missing_sources} observed items</p>")
+    digest = hashlib.sha256(raw).hexdigest()
+    parts.extend([f"<p>Input receipt SHA-256: <code>{digest}</code></p>",
+                  _json_panel("Complete source receipt (all fields, unchanged)", source_receipt),
+                  _json_panel("Linked human review (hash-verified)", linked_review),
+                  "<footer>Offline viewer: no model calls, no database query, no benchmark score.</footer></main></body></html>"])
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text("\n".join(parts), encoding="utf-8")
+    return {"status": "success", "output_path": str(output_path), "display_status": display.split(" — ")[0],
+            "scenarios": len(scenarios), "requests": len(requests), "evidence_items": evidence_count,
+            "missing_source_items": missing_sources, "receipt_sha256": digest, "api_calls": 0}
 
 
 def _get_css() -> str:
@@ -462,15 +332,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--receipt", type=Path, required=True, help="Path to technical receipt JSON")
     parser.add_argument("--output", type=Path, required=True, help="Path to write HTML report")
+    parser.add_argument("--review-receipt", type=Path, help="Optional linked offline human review JSON")
     args = parser.parse_args()
 
     try:
-        result = render_report(args.receipt, args.output)
+        result = render_report(args.receipt, args.output, review_path=args.review_receipt)
         print(f"Rendered {result['scenarios']} scenarios, {result['requests']} requests")
         print(f"Output: {result['output_path']}")
         return 0
-    except Exception as e:
-        print(f"Error: {e}")
+    except Exception:
+        print("Renderer stopped: INVALID_OR_UNAVAILABLE_RECEIPT")
         return 1
 
 

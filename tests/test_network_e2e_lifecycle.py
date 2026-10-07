@@ -9,6 +9,7 @@ These tests verify:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -16,6 +17,101 @@ import duckdb
 import pytest
 
 from agent.provider import LLMResponse
+
+
+def _offline_snapshot_rehearsal(snapshot, tmp_path):
+    """Production tool/guard, explicitly synthetic SDK and reviewer transports."""
+    from agent.hitl import HumanDecision
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    from agent.orchestrator import InvestigationOrchestrator
+    from agent.provider import OpenAIProvider
+    from evaluation.finalization.live_window import LiveWindow
+    from evaluation.finalization.network_contract import request_envelope, select_scenario
+    window = LiveWindow(tmp_path / "synthetic-ledger")
+    window.claim("synthetic", tmp_path / "OFFLINE_REHEARSAL.json", 0.25)
+    cases, payload_bytes = [], []
+    for name in ("botnet", "normal"):
+        scenario = select_scenario(snapshot, name)
+        arguments = {"indicator": scenario["indicator"], "indicator_type": "ipv4",
+                     "time_range": scenario["time_range"]}
+        policy = NetworkInvestigationPolicy(indicator=arguments["indicator"],
+                                            time_range=arguments["time_range"], snapshot_path=snapshot)
+
+        class SyntheticModel(TwoTurnNetworkProvider):
+            def generate(self, *args, **kwargs):
+                response = super().generate(*args, **kwargs)
+                if response.tool_calls:
+                    response.tool_calls[0]["arguments"] = arguments
+                return response
+
+        synthetic_model = SyntheticModel()
+
+        class SyntheticSDK:
+            def create(self, **request):
+                payload_bytes.append(len(json.dumps(request, ensure_ascii=False).encode("utf-8")))
+                response = synthetic_model.generate(request["messages"], tools=request["tools"])
+                calls = [SimpleNamespace(id=call["id"], function=SimpleNamespace(
+                    name=call["name"], arguments=json.dumps(call["arguments"]))) for call in response.tool_calls]
+                return SimpleNamespace(
+                    id="synthetic-response", model=request["model"],
+                    model_dump=lambda: {"synthetic": True},
+                    usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50, total_tokens=150,
+                                          prompt_tokens_details=SimpleNamespace(cached_tokens=0)),
+                    choices=[SimpleNamespace(finish_reason="tool_calls" if calls else "stop",
+                        message=SimpleNamespace(tool_calls=calls, content=response.content))],
+                )
+
+        class SyntheticReviewer:
+            def review_final(self, case):
+                assert case.metadata["schema_valid"] is True
+                assert case.metadata["network_policy"]["validation"]["independent"]["verified"] is True
+                return HumanDecision(decision="APPROVE", rationale="SYNTHETIC OFFLINE REHEARSAL",
+                                     analyst="synthetic-reviewer")
+
+        raw = SimpleNamespace(chat=SimpleNamespace(completions=SyntheticSDK()))
+        contract = {**request_envelope(), "tools": policy.tool_schemas()}
+        provider = OpenAIProvider(model=contract["model"], max_retries=0,
+            client=window.guarded_client(raw, "NETWORK_DEMO", contract),
+            request_overrides={key: contract[key] for key in (
+                "max_completion_tokens", "tool_choice", "parallel_tool_calls", "response_format", "service_tier")})
+        case = InvestigationOrchestrator(provider=provider, max_steps=2, max_review_cycles=0,
+            duckdb_snapshot_path=str(snapshot), investigation_policy=policy,
+            human_review_gate=SyntheticReviewer()).investigate(
+                scenario["indicator"], context="Investigate this bounded historical network interval.")
+        assert len(synthetic_model.calls) == 2
+        initial = json.dumps(synthetic_model.calls[0])
+        assert scenario["label"] not in initial
+        assert "seed_source_row_id" not in initial
+        assert case.metadata["network_policy"]["validation"]["valid"] is True
+        assert case.metadata["review_status"] == "approved"
+        assert case.final_assessment
+        cases.append(case.to_dict())
+    status = window.get_status()
+    assert status["attempted_requests"] == status["responses_received"] == status["valid_usage_records"] == 4
+    assert max(payload_bytes) <= request_envelope()["max_request_bytes"]
+    receipt = {"transport": "OFFLINE_REHEARSAL", "synthetic": True, "cases": cases,
+               "payload_bytes": payload_bytes, "synthetic_ledger": status, "live_api_calls": 0}
+    (tmp_path / "OFFLINE_REHEARSAL.json").write_text(json.dumps(receipt, default=str), encoding="utf-8")
+    return receipt
+
+
+def test_offline_rehearsal_harness_uses_production_tool_without_api(tmp_path):
+    result = _offline_snapshot_rehearsal(_create_snapshot(tmp_path / "fixture.db"), tmp_path)
+    assert result["transport"] == "OFFLINE_REHEARSAL"
+    assert len(result["cases"]) == 2
+
+
+def test_local_verified_snapshot_two_scenario_rehearsal(tmp_path):
+    from evaluation.finalization.network_contract import qualify_demo
+    configured = os.environ.get("VINSOC_LOCAL_SNAPSHOT")
+    if not configured:
+        if os.environ.get("CI") == "true":
+            pytest.skip("CI lacks the ignored local snapshot; not local/live acceptance")
+        pytest.fail("LOCAL_SNAPSHOT_REQUIRED: set VINSOC_LOCAL_SNAPSHOT to the verified CTU S5/S7 DuckDB")
+    snapshot = Path(configured)
+    assert snapshot.is_file(), "LOCAL_SNAPSHOT_REQUIRED: configured CTU snapshot is unavailable"
+    assert qualify_demo(snapshot)["qualified"] is True
+    _offline_snapshot_rehearsal(snapshot, tmp_path)
 
 
 def _create_snapshot(path: Path) -> Path:
@@ -263,6 +359,80 @@ def test_network_policy_runs_complete_public_two_turn_lifecycle(tmp_path):
     assert case.final_assessment == "Observed one bounded network flow."
     assert case.metadata["network_policy"]["termination"] == "FINAL_ASSESSMENT"
     assert case.metadata["network_policy"]["validation"]["valid"] is True
+
+
+def test_network_profile_initial_prompt_has_no_mock_endpoint_pivots(tmp_path):
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    from agent.orchestrator import InvestigationOrchestrator
+    provider = TwoTurnNetworkProvider()
+    orchestrator = InvestigationOrchestrator(
+        provider=provider, max_steps=2, duckdb_snapshot_path=str(_create_snapshot(tmp_path / "test.db")),
+        investigation_policy=NetworkInvestigationPolicy(),
+    )
+    orchestrator.endpoint_skill.mock_data = {"SYNTHETIC_HOST_NOT_INPUT": {}}
+    orchestrator.investigate("192.0.2.10", context="Investigate the historical network interval.")
+    initial = provider.calls[0]["messages"][0]["content"]
+    assert "SYNTHETIC_HOST_NOT_INPUT" not in initial
+    assert "Endpoint pivots" not in initial
+
+
+def test_invalid_case_schema_marks_verify_failed_not_completed(monkeypatch, tmp_path):
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    from agent.orchestrator import InvestigationOrchestrator
+    monkeypatch.setattr("agent.orchestrator.validate_investigation_case", lambda _case: (False, "synthetic_invalid"))
+    case = InvestigationOrchestrator(
+        provider=TwoTurnNetworkProvider(), max_steps=2,
+        duckdb_snapshot_path=str(_create_snapshot(tmp_path / "test.db")),
+        investigation_policy=NetworkInvestigationPolicy(),
+    ).investigate("192.0.2.10")
+    verify = [event for event in case.metadata["lifecycle_trace"] if event["phase"] == "verify"]
+    assert verify[-1]["status"] == "failed"
+    assert case.metadata["review_status"] == "blocked_invalid_technical"
+
+
+def test_invalid_network_assessment_cannot_reach_human_approval(tmp_path):
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    from agent.orchestrator import InvestigationOrchestrator
+    class InvalidProvider(TwoTurnNetworkProvider):
+        def generate(self, *args, **kwargs):
+            response = super().generate(*args, **kwargs)
+            if not response.tool_calls:
+                payload = json.loads(response.content)
+                payload["observations"][0]["value"] = 999
+                response.content = json.dumps(payload)
+            return response
+    class ForbiddenReview:
+        def review_final(self, case):
+            raise AssertionError("Invalid technical case must not reach human review")
+    orchestrator = InvestigationOrchestrator(
+        provider=InvalidProvider(), max_steps=2, human_review_gate=ForbiddenReview(),
+        duckdb_snapshot_path=str(_create_snapshot(tmp_path / "test.db")),
+        investigation_policy=NetworkInvestigationPolicy(),
+    )
+    case = orchestrator.investigate("192.0.2.10")
+    assert case.metadata["review_status"] == "blocked_invalid_technical"
+    assert case.metadata["network_policy"]["validation"]["valid"] is False
+
+
+def test_independent_database_verification_precedes_human_review(monkeypatch, tmp_path):
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    from agent.orchestrator import InvestigationOrchestrator
+    from evaluation.finalization import network_contract
+    snapshot = _create_snapshot(tmp_path / "test.db")
+    monkeypatch.setattr(network_contract, "verify_network_evidence", lambda *_args: {
+        "verified": False, "issues": ["aggregate_fact_mismatch"],
+    })
+    class ForbiddenReview:
+        def review_final(self, case):
+            raise AssertionError("Independent fact failure must block review")
+    orchestrator = InvestigationOrchestrator(
+        provider=TwoTurnNetworkProvider(), max_steps=2, human_review_gate=ForbiddenReview(),
+        duckdb_snapshot_path=str(snapshot),
+        investigation_policy=NetworkInvestigationPolicy(snapshot_path=snapshot),
+    )
+    case = orchestrator.investigate("192.0.2.10")
+    assert case.metadata["review_status"] == "blocked_invalid_technical"
+    assert case.metadata["network_policy"]["validation"]["independent"]["verified"] is False
 
 
 def test_public_investigate_is_entrypoint(monkeypatch, tmp_path):

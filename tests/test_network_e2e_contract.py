@@ -67,6 +67,25 @@ def test_qualification_rejects_missing_provenance(monkeypatch, tmp_path):
         contract.qualify_snapshot(snapshot)
 
 
+def test_repository_truncation_is_visible_in_production_tool_evidence(tmp_path):
+    from skills.network_skill import NetworkSkill
+    from vinsoc_data.duckdb_store import DuckDBSnapshot
+    from vinsoc_data.domain_queries import DuckDBNetworkRepository
+    from vinsoc_data.network_source import DuckDBNetworkDataSource
+    snapshot = _snapshot(tmp_path / "bounded.duckdb")
+    with duckdb.connect(str(snapshot)) as conn:
+        conn.execute("INSERT INTO network_flows SELECT source_dataset,'3',event_time,src_ip,src_port,dst_ip,dst_port,protocol,action,bytes_out,bytes_in,label FROM network_flows WHERE source_row_id='1'")
+    source = DuckDBNetworkDataSource(DuckDBNetworkRepository(DuckDBSnapshot(snapshot, row_limit=1)))
+    result = NetworkSkill(data_sources=[source]).execute(
+        indicator="10.0.0.1", indicator_type="ipv4",
+        time_range={"start": "2011-08-15T09:59:00", "end": "2011-08-15T10:01:00"})
+    assert result.success
+    assert result.data["provenance"]["query_population_complete"] is False
+    assert result.data["provenance"]["retrieval_coverage"][0]["repository_result_truncated"] is True
+    assert result.data["evidence_items"][0]["provenance"]["query_population_complete"] is False
+    assert any("truncated" in text for text in result.data["limitations"])
+
+
 def test_evidence_verification_checks_pair_predicate_and_aggregate(tmp_path):
     from evaluation.finalization.network_contract import verify_network_evidence
 
@@ -162,3 +181,43 @@ def test_scenario_selector_uses_earliest_source_row_and_bounded_window(tmp_path)
     }
     assert normal["source_dataset"] == "ctu13_s7"
     assert normal["seed_source_row_id"] == "2"
+
+
+def test_lock_pins_full_scenarios_prompt_schema_request_and_sources(monkeypatch, tmp_path):
+    from evaluation.finalization import network_contract as contract
+    snapshot = _snapshot(tmp_path / "snapshot.duckdb")
+    _patch_expected(monkeypatch, contract, snapshot)
+    lock = contract.build_lock(snapshot)
+    assert lock["scenarios"]["botnet"]["seed_source_row_id"] == "1"
+    assert lock["scenarios"]["normal"]["time_range"]["start"] == "2011-08-16T09:59:00"
+    assert lock["source_file_sha256"] == {"ctu13_s5": "a", "ctu13_s7": "b"}
+    for field in ("policy_sha256", "prompt_sha256", "tool_schema_sha256", "request_envelope_sha256",
+                  "scenario_sha256", "schema_sha256", "manifest_sha256", "lock_sha256"):
+        assert len(lock[field]) == 64
+    assert lock["request_envelope"]["parallel_tool_calls"] is False
+    assert lock["request_envelope"]["response_format"] == {"type": "json_object"}
+    assert contract.validate_lock(snapshot, lock)["valid"] is True
+
+
+@pytest.mark.parametrize("field", ["policy_sha256", "prompt_sha256", "tool_schema_sha256", "scenario_sha256",
+                                 "manifest_sha256", "schema_sha256", "request_envelope_sha256"])
+def test_changed_content_identity_fails_lock_validation(monkeypatch, tmp_path, field):
+    from evaluation.finalization import network_contract as contract
+    snapshot = _snapshot(tmp_path / "snapshot.duckdb")
+    _patch_expected(monkeypatch, contract, snapshot)
+    lock = contract.build_lock(snapshot)
+    lock[field] = "0" * 64
+    result = contract.validate_lock(snapshot, lock)
+    assert result["valid"] is False
+    assert field in result["issues"]
+
+
+def test_lock_write_refuses_existing_historical_file(monkeypatch, tmp_path):
+    from evaluation.finalization import network_contract as contract
+    snapshot = _snapshot(tmp_path / "snapshot.duckdb")
+    _patch_expected(monkeypatch, contract, snapshot)
+    output = tmp_path / "lock.json"
+    output.write_text("existing-lock", encoding="utf-8")
+    with pytest.raises(FileExistsError):
+        contract.build_lock(snapshot, output)
+    assert output.read_text(encoding="utf-8") == "existing-lock"

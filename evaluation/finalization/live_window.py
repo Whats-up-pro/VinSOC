@@ -24,6 +24,11 @@ INPUT_TOKEN_RESERVE = 50_000
 OUTPUT_TOKEN_RESERVE = 1_000
 FRAME_RESERVE_TOKENS = 512
 
+
+def canonical_window_root() -> Path:
+    """One durable task window across checkout, output and CLI modes."""
+    return Path.home() / ".vinsoc" / "live-windows" / WINDOW_ID
+
 # USD per million tokens (as of 2026-10-06)
 DEMO_INPUT_USD_M = 0.40
 DEMO_CACHED_INPUT_USD_M = 0.10
@@ -121,7 +126,7 @@ def _validate_gates(gates: Any, window_id: str) -> dict[str, Any]:
     if gates.get("window_id") != window_id or window_id != WINDOW_ID:
         raise LiveWindowError("GATE_WINDOW_ID_MISMATCH")
     budget = gates.get("task_budget_usd")
-    if not _finite_nonnegative(budget) or budget <= 0:
+    if not _finite_nonnegative(budget) or not 0 < budget <= 0.25:
         raise LiveWindowError("GATE_BUDGET_INVALID")
     sha = gates.get("implementation_sha")
     ci = gates.get("ci")
@@ -203,12 +208,15 @@ class LiveWindow:
         self.ledger_path = self.root / "ledger.json"
         self._lock = threading.Lock()
         self._gates: dict[str, Any] | None = None
+        self._owns_claim = False
         self._load()
 
     @classmethod
     def open(cls, root: Path, window_id: str, gates: dict[str, Any]) -> "LiveWindow":
         """Open a window only after validating the private paid-run gates."""
         validated = _validate_gates(gates, window_id)
+        if Path(root).resolve() != canonical_window_root().resolve():
+            raise LiveWindowError("NONCANONICAL_LEDGER_ROOT")
         window = cls(root=Path(root), window_id=window_id)
         canonical = json.dumps(validated, sort_keys=True, separators=(",", ":"))
         gate_sha = hashlib.sha256(canonical.encode()).hexdigest()
@@ -221,7 +229,10 @@ class LiveWindow:
             reconciliation = validated["reconciliation"]
             window._data["known_cost_usd"] = float(reconciliation["known_prior_cost_usd"])
             window._data["reconciled_receipt_hashes"] = list(reconciliation["receipt_hashes"])
-        window._persist()
+        # Preflight/open is read-only. A second process must not overwrite the
+        # first owner's request journal from an earlier cached ledger state.
+        if (window.root / "claim.json").exists() and not window._data.get("consumed"):
+            window._data["active_claim"] = True
         return window
 
     def _load(self) -> None:
@@ -263,6 +274,8 @@ class LiveWindow:
         Raises LiveWindowError if already claimed or budget insufficient.
         """
         with self._lock:
+            if self.ledger_path.exists():
+                self._load()
             if self._gates is not None:
                 if implementation_sha != self._gates["implementation_sha"]:
                     raise LiveWindowError("GATE_IMPLEMENTATION_SHA_MISMATCH")
@@ -278,8 +291,18 @@ class LiveWindow:
             if self._data.get("active_claim"):
                 raise LiveWindowError("ATTEMPT_ALREADY_CLAIMED")
 
-            if type(budget_usd) not in (int, float) or not math.isfinite(budget_usd) or budget_usd <= 0:
+            if type(budget_usd) not in (int, float) or not math.isfinite(budget_usd) or not 0 < budget_usd <= 0.25:
                 raise LiveWindowError("INVALID_BUDGET")
+            if self._gates is not None:
+                gate_sha = hashlib.sha256(json.dumps(self._gates, sort_keys=True,
+                    separators=(",", ":")).encode()).hexdigest()
+                if self._data.get("gates_sha256") not in (None, gate_sha):
+                    raise LiveWindowError("GATE_IDENTITY_MISMATCH")
+                self._data["gates_sha256"] = gate_sha
+                if not self._data.get("attempts"):
+                    reconciliation = self._gates["reconciliation"]
+                    self._data["known_cost_usd"] = float(reconciliation["known_prior_cost_usd"])
+                    self._data["reconciled_receipt_hashes"] = list(reconciliation["receipt_hashes"])
 
             # Compute ceiling
             prior = self._data.get("known_cost_usd", 0.0)
@@ -290,6 +313,18 @@ class LiveWindow:
 
             if ceiling + per_call > budget_usd:
                 raise LiveWindowError("BUDGET_INSUFFICIENT")
+
+            self.root.mkdir(parents=True, exist_ok=True)
+            try:
+                # Durable and exclusive across processes. Never remove this
+                # claim, including after crash or a terminal/failed run.
+                with (self.root / "claim.json").open("x", encoding="utf-8") as handle:
+                    json.dump({"implementation_sha": implementation_sha,
+                               "condition": self.condition}, handle)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+            except FileExistsError:
+                raise LiveWindowError("ATTEMPT_ALREADY_CLAIMED") from None
 
             # Register attempt
             self._data["attempts"].append({
@@ -304,6 +339,7 @@ class LiveWindow:
             self._data["implementation_sha"] = implementation_sha
             self._data["active_claim"] = True
             self._persist()
+            self._owns_claim = True
 
             return {
                 "window_id": self.window_id,
@@ -438,6 +474,8 @@ class LiveWindow:
                 raise LiveWindowError("WINDOW_TERMINAL")
             if not self._data.get("active_claim"):
                 raise LiveWindowError("WINDOW_NOT_CLAIMED")
+            if not self._owns_claim:
+                raise LiveWindowError("CLAIM_OWNERSHIP_REQUIRED")
             if self._data.get("cost_unknown"):
                 raise LiveWindowError("COST_UNKNOWN_BLOCKS_RETRY")
             max_requests = int(request_summary["max_requests"])
@@ -501,8 +539,14 @@ class _GuardedCompletions:
             "max_completion_tokens": self._contract.get("max_completion_tokens"),
             "tool_choice": self._contract.get("tool_choice"),
         }
+        for field in ("parallel_tool_calls", "service_tier", "response_format", "tools"):
+            if field in self._contract:
+                expected[field] = self._contract[field]
         for field, value in expected.items():
-            if value is None or request.get(field) != value:
+            same_type = type(request.get(field)) is type(value)
+            if field == "temperature":
+                same_type = type(request.get(field)) in (int, float) and type(value) in (int, float)
+            if value is None or not same_type or request.get(field) != value:
                 raise LiveWindowError(f"REQUEST_CONTRACT_MISMATCH:{field}")
         try:
             encoded = json.dumps(request, separators=(",", ":"), default=str).encode("utf-8")

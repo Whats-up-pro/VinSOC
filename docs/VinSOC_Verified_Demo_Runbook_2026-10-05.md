@@ -345,9 +345,50 @@ CTU-only có network flows, không có CTI/endpoint tables. Giữ các limitatio
 
 ## 8. Phần live model-driven: chỉ mở sau các gate tiếp theo
 
-**Trạng thái tại ngày viết: chưa mở cho final demonstration.** Task3 contract/guard, paired dev và Task5 factual validator/shared ledger còn cần review/implementation. Entrypoint `scripts.demo_ctu_network_public_model_driven.py` hiện tạo client trước phần run preflight, chưa có CLI `--preflight-only`/shared ledger theo finalization plan; vì vậy tài liệu này không cung cấp lệnh paid để vượt qua release gate. `--diagnostic-first-request` là lượt paid riêng, không là preflight miễn phí.
+**Cập nhật implementation:** canonical `--e2e` đã đi qua public `InvestigationOrchestrator.investigate()`, dùng một guarded client, một native network call và một assessment request/scenario. `--preflight-only`, `--env-file`, deferred review và offline HTML đã có; preflight không tạo SDK client. Đây là trạng thái code, chưa phải bằng chứng live thành công. R1/R2 và các kết quả lịch sử ở những mục trước không được cập nhật bằng unit tests.
 
-Sau khi release đó được review, người trình diễn mới dùng lệnh CLI đã được kiểm ở implementation SHA ấy. Không tự thêm flags chưa có trong code hiện tại.
+**Release/live vẫn đóng nếu thiếu snapshot hoặc private gates.** Không có snapshot đủ điều kiện thì không tạo `NETWORK_E2E_v1.lock.json` từ số liệu lịch sử. Local acceptance bắt buộc dùng đúng CTU S5/S7, logical SHA `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`, 243906 flows và 243906 source pairs. CI skip bài test local không thay thế bước này. Không tải lại nguồn, tạo dữ liệu giả hoặc chạy API để thử gate.
+
+Các lệnh sau là quy trình trên laptop **sau khi xác minh file có thật**, không phải receipt cho một live run đã diễn ra:
+
+```powershell
+$Snapshot = (Resolve-Path "data/ctu_network_public/snapshots/ctu_dev.duckdb").Path
+$env:VINSOC_LOCAL_SNAPSHOT = $Snapshot
+python -m pytest tests/test_network_e2e_lifecycle.py -k local_verified_snapshot_two_scenario_rehearsal -q
+python -m evaluation.finalization.network_contract --snapshot "$Snapshot" --output "evaluation/finalization/NETWORK_E2E_v1.lock.json"
+```
+
+Rehearsal dùng production tool và snapshot thật nhưng model/reviewer synthetic, nhãn `OFFLINE_REHEARSAL`, không API. Lock mới chỉ được tạo một lần; không overwrite lock khi hash khác. Sau lock, commit/push và đợi full CI Python 3.11/3.12 đúng implementation SHA trước preflight.
+
+Private `gates.json` phải là bằng chứng thật, không commit: exact implementation/CI SHA và URLs/jobs; account/project cùng allocation hiện hành được owner/platform xác nhận; giá hiện hành; receipt hashes/known prior cost/unresolved unknown-cost. Account/pricing tối đa sáu giờ tuổi. Không tự điền `true` hoặc coi credit cũ là balance hiện tại. Một allocation unknown chưa reconcile phải block.
+
+```powershell
+$WindowRoot = Join-Path $env:USERPROFILE ".vinsoc/live-windows/network-finalization-20261006"
+$Ledger = Join-Path $WindowRoot "ledger.json"
+$Gates = Join-Path $WindowRoot "gates.json"
+$Out = "results/evaluation_v1/network_e2e_v1/20261006/technical_receipt.json"
+python -m scripts.check_env --check
+python -m scripts.demo_ctu_network_public_model_driven --e2e --preflight-only --scenario all --snapshot "$Snapshot" --output "$Out" --budget-usd 0.25 --ledger "$Ledger" --gates "$Gates" --review-mode deferred
+```
+
+Nếu dùng checkout riêng, thêm `--env-file` trỏ tới `.env` gốc; không copy/ghi đè `.env`. Key-source conflict/custom base URL/missing gate dừng trước client. Preflight PASS phải có attempted0, responses0, client_created=false; output nằm cạnh technical output với hậu tố `_preflight.json`. Chỉ sau tất cả gate PASS mới chạy **một invocation**:
+
+```powershell
+python -m scripts.demo_ctu_network_public_model_driven --e2e --scenario all --snapshot "$Snapshot" --output "$Out" --budget-usd 0.25 --ledger "$Ledger" --gates "$Gates" --review-mode deferred
+```
+
+Model pin `gpt-4.1-mini-2025-04-14`, temperature0, cap1000, retry0, network-only `tool_choice=auto`; tối đa bốn attempts cả window. Application reserve 50000 input +1000 output/request, conditional ceiling $0.0864 tại giá $0.40/$0.10/$1.60 mỗi triệu input/cached/output; không phải invoice/billing hard cap. Payload đầy đủ được kiểm lại trước assessment, quá giới hạn dừng thay vì cắt evidence. Đổi output/checkout/ledger không cấp lượt mới; legacy/diagnostic CLI bị chặn khi canonical window đã claimed/consumed. Không smoke hay retry bổ sung.
+
+Facts/source pairs và aggregate được kiểm độc lập trước human approval. Bounded retrieval và source-reference sampling giữ metadata, không được gọi là full population. Model assessment giữ nguyên; prose causal claims vẫn cần human review. Deferred receipt là `TECHNICAL_COMPLETE / AWAITING_HUMAN`, **không COMPLETE**.
+
+```powershell
+python -m scripts.render_network_e2e_report --receipt "$Out" --output ".vinsoc/demo/network-e2e.html"
+Start-Process ".vinsoc/demo/network-e2e.html"
+python -m scripts.demo_ctu_network_public_model_driven --review-receipt "$Out" --output "results/evaluation_v1/network_e2e_v1/20261006/human_review_receipt.json"
+python -m scripts.render_network_e2e_report --receipt "$Out" --review-receipt "results/evaluation_v1/network_e2e_v1/20261006/human_review_receipt.json" --output ".vinsoc/demo/network-e2e-reviewed.html"
+```
+
+Các lệnh render/review hoàn toàn offline; review chỉ cho technical receipt hợp lệ của đủ hai scenario, người thật chọn decision/rationale và xem toàn bộ assessment/evidence. Linked review không overwrite technical receipt; HTML reviewed phải khớp hash/run/SHA và hai quyết định với receipt gốc. Không ghi đè review output đã có. Partial/preflight-failed JSON vẫn render được, không nâng thành live success.
 
 Lời dẫn dự kiến cho live:
 

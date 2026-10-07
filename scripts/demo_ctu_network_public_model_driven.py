@@ -30,7 +30,8 @@ from evaluation.finalization.live_window import (
 )
 from evaluation.finalization.network_contract import (
     qualify_snapshot, select_scenario as network_select_scenario,
-    verify_evidence_pairs, verify_network_evidence, build_lock, validate_lock, LOCK_PATH
+    verify_evidence_pairs, verify_network_evidence, build_lock, validate_lock, LOCK_PATH, request_envelope,
+    valid_technical_receipt
 )
 from scripts.check_env import load_env, resolve_openai_key
 from scripts.demo_ctu_network_public import _verify_evidence_pairs, _write_report, select_scenario
@@ -625,14 +626,14 @@ def finalize_offline_review(
     receipt_path, output_path = Path(receipt_path), Path(output_path)
     if receipt_path.resolve() == output_path.resolve():
         raise ValueError("Review output must not overwrite technical receipt")
+    if output_path.exists():
+        raise ValueError("Refusing to overwrite existing review receipt")
     raw = receipt_path.read_bytes()
     receipt = json.loads(raw.decode("utf-8"))
     if (
-        receipt.get("schema_version") != 1
+        not valid_technical_receipt(receipt)
         or receipt.get("status") != "technical_complete_awaiting_human"
         or receipt.get("review_status") != "awaiting_human"
-        or not receipt.get("scenarios")
-        or not all(item.get("validation", {}).get("technical_valid") for item in receipt["scenarios"])
     ):
         raise ValueError("Technical receipt is not eligible for offline review")
 
@@ -642,6 +643,9 @@ def finalize_offline_review(
             risk_level=scenario.get("risk_level") or "UNKNOWN",
             confidence=scenario.get("confidence") or "LOW",
             final_assessment=scenario.get("assessment") or "",
+            evidence=scenario["evidence"], observations=scenario["observations"],
+            hypotheses=scenario.get("hypotheses", []), limitations=scenario.get("limitations", []),
+            metadata={"validation": scenario["validation"]},
         )
         decision = gate.review_final(case)
         record = decision.to_dict()
@@ -668,7 +672,9 @@ def finalize_offline_review(
         "decisions": decisions,
         "api_calls": 0,
     }
-    _write_report(output_path, review)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("x", encoding="utf-8") as handle:
+        json.dump(review, handle, indent=2, ensure_ascii=False)
     return review
 
 
@@ -798,6 +804,11 @@ def run_e2e_preflight(
         "request_envelope_sha256": lock.get("request_envelope_sha256"),
         "policy_sha256": lock.get("policy_sha256"),
         "prompt_sha256": lock.get("prompt_sha256"),
+        "tool_schema_sha256": lock.get("tool_schema_sha256"),
+        "scenario_sha256": lock.get("scenario_sha256"),
+        "schema_sha256": lock.get("schema_sha256"),
+        "manifest_sha256": lock.get("manifest_sha256"),
+        "lock_sha256": lock.get("lock_sha256"),
     }
 
     try:
@@ -925,14 +936,14 @@ def _scenario_receipt(
         and isinstance(assessment, dict)
         and policy_validation.get("valid") is True
         and independent.get("verified") is True
-        and case.get("metadata", {}).get("schema_valid", True) is True
+        and case.get("metadata", {}).get("schema_valid") is True
         and len(trace) == 1
         and trace[0].get("tool") == "network_investigation"
         and not trace[0].get("error")
     )
     review_status = case.get("metadata", {}).get("review_status")
     if review_mode == "deferred":
-        review_status = "awaiting_human"
+        review_status = "awaiting_human" if technical_valid else "blocked_invalid_technical"
     return {
         "name": scenario["name"],
         "ground_truth_label": scenario.get("label"),
@@ -968,6 +979,53 @@ def _scenario_receipt(
     }
 
 
+def _partial_public_scenario(scenario: dict, orchestrator: Any) -> dict:
+    """Preserve actual public store/lifecycle state when investigate raises."""
+    store = orchestrator.evidence_store
+    evidence = [item.to_dict() for item in store.get_all_evidence()]
+    trace = [item.to_dict() for item in store.get_all_tool_calls()]
+    return {
+        "name": scenario["name"], "ground_truth_label": scenario.get("label"),
+        "request": {"indicator": scenario["indicator"], "indicator_type": "ipv4",
+                    "time_range": scenario["time_range"]},
+        "native_tool_calls": _native_tool_calls(orchestrator, {"tool_trace": trace}),
+        "tool_trace": trace, "evidence": evidence,
+        "coverage": [ev.get("provenance", {}) for ev in evidence],
+        "assessment": None, "observations": [], "hypotheses": [], "evidence_ids": [],
+        "risk_level": None, "confidence": None,
+        "limitations": ["Model assessment unavailable; inspect partial tool evidence and request journal."],
+        "validation": {"technical_valid": False, "prose_semantics_machine_verified": False},
+        "lifecycle": [event.to_dict() for event in orchestrator.lifecycle_trace],
+        "human_review": {"status": "blocked_invalid_technical", "decisions": []},
+        "termination": "PUBLIC_LIFECYCLE_FAILED",
+    }
+
+
+def network_console_review_gate():
+    """Full network review packet; legacy CLI presentation remains unchanged."""
+    from cli.main import ConsoleHumanReviewGate, console
+    from types import SimpleNamespace
+    class NetworkConsoleReviewGate(ConsoleHumanReviewGate):
+        def review_final(self, case):
+            metadata = getattr(case, "metadata", {})
+            model_packet = metadata.get("network_policy", {}).get("assessment") or {}
+            packet = {
+                "assessment": case.final_assessment, "risk_level": case.risk_level,
+                "confidence": case.confidence, "evidence": getattr(case, "evidence", []),
+                "observations": getattr(case, "observations", model_packet.get("observations", [])),
+                "hypotheses": [item.to_dict() if hasattr(item, "to_dict") else item
+                               for item in getattr(case, "hypotheses", [])],
+                "limitations": getattr(case, "limitations", []), "validation": metadata,
+                "review_scope": "Full prose/causal claims require human judgment; machine checks do not certify prose.",
+            }
+            console.print(json.dumps(packet, ensure_ascii=False, indent=2, default=str), markup=False, highlight=False)
+            # The shared gate's preview is bounded, but the full packet above
+            # has already been displayed. Do not pass raw model markup to it.
+            return super().review_final(SimpleNamespace(risk_level=case.risk_level,
+                confidence=case.confidence, final_assessment="Full network packet displayed above without clipping."))
+    return NetworkConsoleReviewGate()
+
+
 def run_e2e_live(
     snapshot: Path,
     output: Path,
@@ -981,6 +1039,11 @@ def run_e2e_live(
 ) -> dict[str, Any]:
     """Run Botnet and Normal once through the guarded public orchestrator."""
     snapshot, output = Path(snapshot), Path(output)
+    if output.exists():
+        return {"schema_version": 1, "status": "blocked", "failed_stage": "output",
+                "failure_category": "technical_receipt_exists", "attempted_calls": 0,
+                "responses_received": 0, "scenarios": [], "client_created": False,
+                "cost_summary": {"known_cost_usd": 0.0, "cost_unknown": False}}
     preflight = run_e2e_preflight(
         snapshot, output, budget_usd=budget_usd, ledger_path=ledger_path,
         gates_path=gates_path, env_file=env_file,
@@ -1002,7 +1065,9 @@ def run_e2e_live(
             "cost_summary": {"known_cost_usd": 0.0, "cost_unknown": False, "reserved_exposure_usd": 0.0},
             "review_status": "not_started",
         }
-        _write_report(output, blocked)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        with output.open("x", encoding="utf-8") as handle:
+            json.dump(blocked, handle, indent=2)
         return blocked
 
     ledger_path = Path(ledger_path)  # preflight proved it is present and valid
@@ -1019,13 +1084,8 @@ def run_e2e_live(
         "ci": gates["ci"],
         "contract": preflight.get("contract"),
         "snapshot": preflight.get("snapshot"),
-        "request_config": {
-            "model": DEMO_MODEL, "temperature": 0,
-            "max_completion_tokens": DEMO_CAP, "max_retries": 0,
-            "tool_choice": "auto", "input_token_reserve": INPUT_TOKEN_RESERVE,
-            "output_token_reserve": OUTPUT_TOKEN_RESERVE,
-            "max_request_bytes": MAX_REQUEST_BYTES,
-        },
+        "request_config": request_envelope(),
+        "budget_usd": budget_usd,
         "attempted_calls": 0,
         "responses_received": 0,
         "valid_usage_records": 0,
@@ -1035,6 +1095,9 @@ def run_e2e_live(
         "cost_summary": {"known_cost_usd": 0.0, "cost_unknown": False, "reserved_exposure_usd": 0.0},
         "review_status": "awaiting_human" if review_mode == "deferred" else "interactive",
     }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("x", encoding="utf-8") as handle:
+        json.dump(report, handle, indent=2)
     try:
         window.claim(gates["implementation_sha"], output, budget_usd)
     except LiveWindowError as exc:
@@ -1050,36 +1113,28 @@ def run_e2e_live(
             raise LiveWindowError("KEY_RESOLUTION_CHANGED_AFTER_PREFLIGHT")
         raw_client = client_factory(resolution.key)
         report["client_created"] = True
-        guarded = window.guarded_client(
-            raw_client,
-            NETWORK_DEMO_CONDITION,
-            {
-                "model": DEMO_MODEL, "temperature": 0,
-                "max_completion_tokens": DEMO_CAP, "tool_choice": "auto",
-                "max_requests": E2E_MAX_REQUESTS,
-                "max_request_bytes": MAX_REQUEST_BYTES,
-                "input_token_reserve": INPUT_TOKEN_RESERVE,
-                "output_token_reserve": OUTPUT_TOKEN_RESERVE,
-                "frame_reserve_tokens": E2E_FRAME_RESERVE,
-            },
-        )
+        from agent.network_investigation_policy import NetworkInvestigationPolicy
+        transport_contract = request_envelope()
+        transport_contract["tools"] = NetworkInvestigationPolicy().tool_schemas()
+        guarded = window.guarded_client(raw_client, NETWORK_DEMO_CONDITION, transport_contract)
         provider = OpenAIProvider(
             model=DEMO_MODEL,
             client=guarded,
             max_retries=0,
             pricing=ModelPricing(DEMO_INPUT_USD_M, DEMO_OUTPUT_USD_M, "private_gate", "runtime"),
-            request_overrides={"max_completion_tokens": DEMO_CAP, "tool_choice": "auto"},
+            request_overrides={key: transport_contract[key] for key in (
+                "max_completion_tokens", "tool_choice", "parallel_tool_calls", "service_tier", "response_format"
+            )},
         )
         if review_mode == "interactive":
-            from cli.main import ConsoleHumanReviewGate
-            human_gate = ConsoleHumanReviewGate()
+            human_gate = network_console_review_gate()
         else:
             human_gate = None
 
         for scenario in preflight["scenarios"]:
             policy = __import__(
                 "agent.network_investigation_policy", fromlist=["NetworkInvestigationPolicy"]
-            ).NetworkInvestigationPolicy(scenario["indicator"], scenario["time_range"])
+            ).NetworkInvestigationPolicy(scenario["indicator"], scenario["time_range"], snapshot_path=snapshot)
             orchestrator = InvestigationOrchestrator(
                 provider=provider,
                 max_steps=2,
@@ -1092,9 +1147,12 @@ def run_e2e_live(
                 "Investigate network telemetry for the supplied IPv4 within this historical interval: "
                 + json.dumps(scenario["time_range"], sort_keys=True)
             )
-            case = orchestrator.investigate(
-                scenario["indicator"], indicator_type="ipv4", context=context
-            )
+            try:
+                case = orchestrator.investigate(
+                    scenario["indicator"], indicator_type="ipv4", context=context)
+            except Exception:
+                report["scenarios"].append(_partial_public_scenario(scenario, orchestrator))
+                raise
             item = _scenario_receipt(snapshot, scenario, orchestrator, case, review_mode)
             report["scenarios"].append(item)
             _write_report(output, report)
@@ -1229,6 +1287,18 @@ def main() -> int:
         } else 1
 
     # Legacy mode
+    from evaluation.finalization.live_window import canonical_window_root
+    legacy_ledger = canonical_window_root() / "ledger.json"
+    if legacy_ledger.exists():
+        try:
+            state = json.loads(legacy_ledger.read_text(encoding="utf-8"))
+            blocked = not isinstance(state, dict) or any(state.get(key) for key in (
+                "consumed", "active_claim", "attempted_requests", "terminal_status", "cost_unknown"))
+        except (OSError, ValueError):
+            blocked = True
+        if blocked:
+            print("Demo stopped: legacy_window_bypass_blocked")
+            return 1
     local_env = load_env(args.env_file)
     resolution = resolve_openai_key(os.environ, local_env)
     print(f"OPENAI_API_KEY source: {resolution.source}")
@@ -1271,7 +1341,7 @@ def _handle_offline_review(receipt_path: Path, output_path: Path) -> int:
 
     try:
         review = finalize_offline_review(
-            receipt_path, output_path, gate=ConsoleHumanReviewGate()
+            receipt_path, output_path, gate=network_console_review_gate()
         )
     except (OSError, ValueError, json.JSONDecodeError):
         print("Offline review stopped: receipt is missing, invalid, or ineligible")

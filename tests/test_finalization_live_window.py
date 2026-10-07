@@ -8,6 +8,52 @@ These tests verify:
 """
 from __future__ import annotations
 
+
+def test_valid_gates_cannot_open_a_second_ledger_root(tmp_path):
+    from evaluation.finalization.live_window import LiveWindow, LiveWindowError
+    with pytest.raises(LiveWindowError, match="NONCANONICAL_LEDGER_ROOT"):
+        LiveWindow.open(tmp_path / "other-clone" / "network-finalization-20261006",
+                        "network-finalization-20261006", _valid_gates())
+
+
+def test_two_preopened_windows_cannot_both_claim(tmp_path):
+    from evaluation.finalization.live_window import LiveWindow, LiveWindowError
+    first = LiveWindow(tmp_path / "window")
+    second = LiveWindow(tmp_path / "window")
+    first.claim("abc123", tmp_path / "first.json", 0.25)
+    before = first.ledger_path.read_bytes()
+    with pytest.raises(LiveWindowError, match="ATTEMPT_ALREADY"):
+        second.claim("abc123", tmp_path / "first.json", 0.25)
+    assert first.ledger_path.read_bytes() == before
+
+
+def test_open_is_read_only_and_secondary_transport_has_no_claim_ownership(tmp_path):
+    from evaluation.finalization.live_window import LiveWindow, LiveWindowError
+    root = tmp_path / "window"
+    gates = _valid_gates()
+    first = LiveWindow.open(root, "network-finalization-20261006", gates)
+    assert not first.ledger_path.exists()
+    first.claim("a" * 40, tmp_path / "first.json", 0.25)
+    before = first.ledger_path.read_bytes()
+    second = LiveWindow.open(root, "network-finalization-20261006", gates)
+    assert first.ledger_path.read_bytes() == before
+    create = MagicMock(return_value=_response())
+    guarded = second.guarded_client(SimpleNamespace(chat=SimpleNamespace(
+        completions=SimpleNamespace(create=create))), "NETWORK_DEMO", _valid_contract())
+    with pytest.raises(LiveWindowError, match="CLAIM_OWNERSHIP_REQUIRED"):
+        guarded.chat.completions.create(model="gpt-4.1-mini-2025-04-14", messages=[],
+            temperature=0, max_completion_tokens=1000, tool_choice="auto")
+    create.assert_not_called()
+
+
+def test_gate_cannot_authorize_more_than_fixed_task_ceiling(tmp_path):
+    from evaluation.finalization.live_window import LiveWindow, LiveWindowError
+    gates = _valid_gates()
+    gates["task_budget_usd"] = 0.5
+    with pytest.raises(LiveWindowError, match="GATE_BUDGET_INVALID"):
+        LiveWindow.open(tmp_path / "window", "network-finalization-20261006", gates)
+
+
 import json
 import traceback
 from datetime import datetime, timezone
@@ -16,6 +62,11 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock
 
 import pytest
+
+
+@pytest.fixture(autouse=True)
+def synthetic_canonical_root(monkeypatch, tmp_path):
+    monkeypatch.setattr("evaluation.finalization.live_window.canonical_window_root", lambda: tmp_path / "window")
 
 
 def test_live_window_claim_blocks_duplicate_before_client(tmp_path):
@@ -457,6 +508,33 @@ def test_terminal_consumes_window_and_blocks_same_output_reclaim(tmp_path):
     assert reopened.get_status()["consumed"] is True
     with pytest.raises(LiveWindowError, match="ATTEMPT_ALREADY_CONSUMED"):
         reopened.claim("abc123", output, 0.25)
+
+
+@pytest.mark.parametrize(("field", "wrong"), [
+    ("parallel_tool_calls", True), ("service_tier", "flex"),
+    ("response_format", {"type": "text"}), ("tools", []), ("temperature", False),
+])
+def test_full_network_request_contract_rejects_drift_before_attempt(tmp_path, field, wrong):
+    from evaluation.finalization.live_window import LiveWindow, LiveWindowError
+    from evaluation.finalization.network_contract import request_envelope
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+    window = LiveWindow(tmp_path / "window")
+    window.claim("abc123", tmp_path / "result.json", 0.25)
+    create = MagicMock(return_value=_response())
+    contract = request_envelope()
+    contract["tools"] = NetworkInvestigationPolicy().tool_schemas()
+    guarded = window.guarded_client(
+        SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))),
+        "NETWORK_DEMO", contract,
+    )
+    request = {key: contract[key] for key in ("model", "temperature", "max_completion_tokens",
+               "tool_choice", "parallel_tool_calls", "service_tier", "response_format", "tools")}
+    request["messages"] = [{"role": "user", "content": "neutral question"}]
+    request[field] = wrong
+    with pytest.raises(LiveWindowError, match="REQUEST_CONTRACT_MISMATCH"):
+        guarded.chat.completions.create(**request)
+    assert window.get_status()["attempted_requests"] == 0
+    create.assert_not_called()
 
 
 def test_guarded_provider_error_is_safe_and_suppresses_raw_exception(tmp_path):

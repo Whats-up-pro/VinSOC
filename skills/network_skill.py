@@ -99,13 +99,29 @@ class NetworkSkill(BaseSkill):
                 apply_time_filter=explicit_time_range is not None or not self.mock_data,
             )
         )
-        return self._build_result(
+        result = self._build_result(
             indicator=indicator,
             indicator_type=indicator_type,
             time_range=time_range,
             direction=direction,
             events=events,
         )
+        retrieval = [dict(source.query_coverage) for source in self.data_sources
+                     if isinstance(getattr(source, "query_coverage", None), dict)
+                     and source.query_coverage]
+        skill_limit_reached = len(events) >= self.max_events
+        truncated = skill_limit_reached or any(
+            coverage.get("repository_result_truncated") is True for coverage in retrieval)
+        complete = False if truncated else (True if retrieval and len(retrieval) == len(self.data_sources) else None)
+        result.data["provenance"].update(
+            retrieval_coverage=retrieval, skill_limit_reached=skill_limit_reached,
+            query_population_complete=complete, aggregate_scope="retrieved_matching_events")
+        for item in result.data.get("evidence_items", []):
+            item["provenance"].update(query_population_complete=complete,
+                                      aggregate_scope="retrieved_matching_events")
+        if any(coverage.get("repository_result_truncated") is True for coverage in retrieval):
+            result.data["limitations"].append("DuckDB repository result was truncated; aggregates cover retrieved events, not the full query population")
+        return result
 
     def _query_events(
         self,

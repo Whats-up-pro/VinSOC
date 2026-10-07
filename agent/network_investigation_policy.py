@@ -11,6 +11,7 @@ from __future__ import annotations
 import ipaddress
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from agent.evidence import EvidenceStore
@@ -94,9 +95,11 @@ Output format (return JSON):
         self,
         indicator: str | None = None,
         time_range: dict[str, str] | None = None,
+        snapshot_path: Path | None = None,
     ) -> None:
         self.indicator = indicator
         self.time_range = dict(time_range) if time_range else None
+        self.snapshot_path = Path(snapshot_path) if snapshot_path else None
 
     def tool_schemas(self) -> list[dict[str, Any]]:
         """Return only network investigation tool schema."""
@@ -330,7 +333,19 @@ Output format (return JSON):
         if not has_endpoint:
             issues.append("Missing endpoint/protocol observation")
 
+        independent = None
+        if self.snapshot_path is not None:
+            from evaluation.finalization.network_contract import verify_network_evidence
+            trace = case.get("tool_trace", [])
+            arguments = trace[0].get("arguments") if len(trace) == 1 else None
+            try:
+                independent = verify_network_evidence(self.snapshot_path, arguments or {}, case.get("evidence", []))
+            except Exception:
+                independent = {"verified": False, "issues": ["independent_verification_failed"]}
+            if independent.get("verified") is not True:
+                issues.append("Independent database verification failed")
         return {
             "valid": len(issues) == 0,
             "issues": issues,
+            "independent": independent,
         }

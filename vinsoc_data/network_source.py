@@ -20,12 +20,20 @@ class DuckDBNetworkDataSource(NetworkDataSource):
 
     def __init__(self, repository: DuckDBNetworkRepository):
         self.repository = repository
+        self.query_coverage: dict[str, Any] = {}
 
     def query(self, query: NetworkQuery) -> Iterable[NormalizedNetworkEvent]:
         db_result = self.repository.find_connections(
             indicator=query.indicator,
             time_range={"start": query.start, "end": query.end} if query.start else None,
         )
+        self.query_coverage = {
+            "source": self.name,
+            "repository_row_limit": self.repository.snapshot.row_limit,
+            "repository_result_truncated": db_result.truncated,
+            "retrieved_rows": len(db_result.rows),
+            "query_population_complete": not db_result.truncated,
+        }
 
         for row in db_result.rows:
             yield NormalizedNetworkEvent.create(

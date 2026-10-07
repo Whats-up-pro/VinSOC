@@ -320,93 +320,213 @@ def verify_evidence_pairs(snapshot: Path, evidence: list[dict[str, Any]]) -> dic
     return result
 
 
-def build_lock(snapshot: Path, output_path: Path | None = None) -> dict[str, Any]:
-    """
-    Build a contract lock for the network E2E demo.
+def _canonical_sha256(value: Any) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")).hexdigest()
 
-    Args:
-        snapshot: Path to DuckDB snapshot
-        output_path: Optional path to write lock file
 
-    Returns:
-        Lock dict
-    """
-    # Get snapshot facts
-    qualify = qualify_snapshot(snapshot)
-
-    # Get scenario hashes
-    scenarios = {}
-    for name in ["botnet", "normal"]:
-        try:
-            scenario = select_scenario(snapshot, name)
-            scenarios[name] = {
-                "indicator": scenario["indicator"],
-                "source_dataset": scenario["source_dataset"],
-            }
-        except ValueError:
-            scenarios[name] = {"error": "not found"}
-
-    # Build lock
-    lock = {
-        "version": VERSION,
-        "contract_identity": "network_e2e_v1",
-        "snapshot_binary_sha256": sha256_file(snapshot),
-        "snapshot_logical_sha256": qualify["checks"]["logical_sha256"],
-        "source_counts": qualify["checks"]["source_counts"],
-        "distinct_pairs": qualify["checks"]["distinct_source_pairs"],
-        "scenarios": scenarios,
-        "policy_version": "network_e2e_policy_v1",
-        "schema_hashes": {
-            "network_skill": portable_text_sha256(Path("skills/network_skill.py")),
-            "orchestrator": portable_text_sha256(Path("agent/orchestrator.py")),
-        },
+def request_envelope() -> dict[str, Any]:
+    """Application request limits, not a provider billing hard cap."""
+    return {
+        "model": "gpt-4.1-mini-2025-04-14", "temperature": 0,
+        "max_completion_tokens": 1000, "max_retries": 0,
+        "parallel_tool_calls": False, "tool_choice": "auto", "service_tier": "default",
+        "response_format": {"type": "json_object"},
+        "max_requests": 4, "max_steps_per_scenario": 2, "max_review_cycles": 0,
+        "input_token_reserve": 50000, "output_token_reserve": 1000,
+        "max_request_bytes": 45000, "frame_reserve_tokens": 512, "budget_usd": 0.25,
+        "input_bound_method": "utf8_serialized_payload_bytes_plus_512_framing_tokens",
+        "input_bound_assumption": "Each text BPE token consumes at least one UTF-8 byte; complete serialized payload includes tool/history metadata.",
     }
 
-    if output_path:
-        output_path = Path(output_path)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
-            json.dumps(lock, indent=2, sort_keys=True),
-            encoding="utf-8"
-        )
 
+def valid_technical_receipt(receipt: Any, *, require_approval: bool = False) -> bool:
+    """Structural/accounting/fact validation for saved review/viewer inputs.
+
+    This checks the saved packet, not cryptographic authenticity or prose truth.
+    It performs no database, SDK or model call.
+    """
+    import math
+    import re
+    def digest(value, length):
+        return isinstance(value, str) and re.fullmatch(f"[0-9a-f]{{{length}}}", value) is not None
+    def nonnegative(value):
+        return type(value) in (int, float) and math.isfinite(value) and value >= 0
+    try:
+        if (type(receipt) is not dict or type(receipt.get("schema_version")) is not int
+            or receipt["schema_version"] != 1 or not receipt.get("run_id")
+            or not digest(receipt.get("implementation_sha"), 40)
+            or receipt.get("scope") != "network_only_public_lifecycle_demo"
+            or not digest(receipt["snapshot"].get("binary_sha256"), 64)
+            or not digest(receipt["snapshot"].get("logical_sha256"), 64)
+            or not digest(receipt["contract"].get("lock_sha256"), 64)):
+            return False
+        if any(type(receipt.get(key)) is not int or receipt[key] != 4 for key in (
+            "attempted_calls", "responses_received", "valid_usage_records")):
+            return False
+        requests = receipt.get("requests")
+        if not isinstance(requests, list) or len(requests) != 4:
+            return False
+        for call in requests:
+            usage = call.get("usage")
+            if (call.get("actual_model") != request_envelope()["model"] or not isinstance(usage, dict)
+                or any(type(usage.get(field)) is not int or usage[field] < 0
+                       for field in ("input_tokens", "output_tokens", "cached_tokens"))
+                or usage["cached_tokens"] > usage["input_tokens"]
+                or usage["output_tokens"] > 1000 or not nonnegative(call.get("cost_usd"))):
+                return False
+        costs = receipt["cost_summary"]
+        if costs.get("cost_unknown") is not False or not nonnegative(costs.get("known_cost_usd")):
+            return False
+        if sum(call["cost_usd"] for call in requests) > costs["known_cost_usd"] + 1e-12:
+            return False
+        config = receipt["request_config"]
+        if any(type(config.get(field)) is not type(value) or config[field] != value for field, value in (
+            ("model", request_envelope()["model"]), ("max_completion_tokens", 1000), ("max_retries", 0))):
+            return False
+        scenarios = receipt.get("scenarios")
+        if not isinstance(scenarios, list) or len(scenarios) != 2 or {s["name"] for s in scenarios} != {"botnet", "normal"}:
+            return False
+        for scenario in scenarios:
+            validation = scenario["validation"]
+            if (validation.get("technical_valid") is not True or validation.get("schema_valid") is not True
+                or validation["policy"].get("valid") is not True
+                or validation["independent_snapshot"].get("verified") is not True
+                or scenario.get("termination") != "FINAL_ASSESSMENT"
+                or not isinstance(scenario.get("assessment"), str) or not scenario["assessment"].strip()
+                or len(scenario.get("tool_trace", [])) != 1
+                or scenario["tool_trace"][0].get("tool") != "network_investigation"
+                or scenario["tool_trace"][0].get("error")):
+                return False
+            evidence = {ev["evidence_id"]: ev for ev in scenario["evidence"]}
+            ids = scenario["evidence_ids"]
+            if not isinstance(ids, list) or not ids or any(eid not in evidence for eid in ids):
+                return False
+            fields = set()
+            for obs in scenario["observations"]:
+                value = evidence[obs["evidence_id"]]["data"][obs["field"]]
+                if type(obs["value"]) is not type(value) or obs["value"] != value:
+                    return False
+                fields.add(obs["field"])
+            if "connection_count" not in fields or not fields.intersection({"src_ip", "dst_ip", "dst_port", "protocol"}):
+                return False
+            for ev in evidence.values():
+                if ev.get("evidence_class") == "OBSERVED" and not ev["provenance"].get("source_records"):
+                    return False
+                if ev.get("evidence_class") == "DERIVED" and (
+                    not ev.get("related_evidence_ids") or any(parent not in evidence for parent in ev["related_evidence_ids"])):
+                    return False
+            if require_approval:
+                review = scenario["human_review"]
+                decisions = review.get("decisions")
+                if (review.get("status") != "approved" or not isinstance(decisions, list) or not decisions
+                    or decisions[-1].get("decision") != "APPROVE" or not decisions[-1].get("analyst")):
+                    return False
+        return True
+    except (KeyError, TypeError, AttributeError, ValueError):
+        return False
+
+
+def qualify_demo(snapshot: Path) -> dict[str, Any]:
+    """Public qualification interface for the pinned CTU S5/S7 demo."""
+    return qualify_snapshot(snapshot)
+
+
+def build_lock(snapshot: Path, output_path: Path | None = None) -> dict[str, Any]:
+    """Create a release identity only from a qualified, read-only snapshot."""
+    import duckdb
+    from agent.network_investigation_policy import NetworkInvestigationPolicy
+
+    if output_path is not None and Path(output_path).exists():
+        raise FileExistsError("Refusing to overwrite an existing network contract lock")
+    qualification = qualify_demo(snapshot)
+    root = Path(__file__).resolve().parents[2]
+    manifest_path = root / "evaluation/ctu_network_public/dataset_manifest.json"
+    with duckdb.connect(str(snapshot), read_only=True) as conn:
+        schema = {
+            name: [[row[0], row[1]] for row in conn.execute(f'DESCRIBE "{name}"').fetchall()]
+            for name in sorted(EXPECTED_TABLES)
+        }
+        sources = dict(conn.execute(
+            "SELECT dataset_id, file_sha256 FROM dataset_provenance ORDER BY dataset_id"
+        ).fetchall())
+    paths = (
+        "agent/investigation_policy.py", "agent/network_investigation_policy.py",
+        "agent/orchestrator.py", "agent/provider.py", "agent/tools.py",
+        "agent/evidence.py", "skills/network_skill.py",
+        "agent/triage.py", "agent/hitl.py", "agent/runbooks.py",
+        "skills/base.py", "skills/validators.py", "schemas/investigation_case.json",
+        "schemas/network_result.json", "schemas/triage_result.json",
+        "telemetry/network/base.py", "telemetry/network/models.py", "telemetry/network/query.py",
+        "analytics/network/__init__.py", "scripts/build_ctu_network_public_snapshot.py",
+        "vinsoc_data/network_source.py", "vinsoc_data/domain_queries.py",
+        "vinsoc_data/duckdb_store.py", "analytics/network/scanning.py",
+        "analytics/network/beaconing.py", "analytics/network/fanout.py", "analytics/network/transfer.py",
+        "evaluation/finalization/live_window.py", "evaluation/finalization/network_contract.py",
+        "scripts/demo_ctu_network_public_model_driven.py",
+    )
+    content_files = {path: portable_text_sha256(root / path) for path in paths}
+    policy = NetworkInvestigationPolicy()
+    scenarios = {name: select_scenario(snapshot, name) for name in ("botnet", "normal")}
+    envelope = request_envelope()
+    lock = {
+        "schema_version": 1, "version": VERSION, "contract_identity": VERSION,
+        "snapshot_binary_sha256": qualification["checks"]["binary_sha256"],
+        "snapshot_logical_sha256": qualification["checks"]["logical_sha256"],
+        "source_counts": qualification["checks"]["source_counts"],
+        "distinct_pairs": qualification["checks"]["distinct_source_pairs"],
+        "source_file_sha256": sources,
+        "manifest_sha256": portable_text_sha256(manifest_path),
+        "schema": schema, "schema_sha256": _canonical_sha256(schema),
+        "scenarios": scenarios, "scenario_sha256": _canonical_sha256(scenarios),
+        "policy_version": policy.VERSION,
+        "policy_sha256": content_files["agent/network_investigation_policy.py"],
+        "prompt_sha256": _canonical_sha256(policy.system_prompt()),
+        "tool_schema_sha256": _canonical_sha256(policy.tool_schemas()),
+        "request_envelope": envelope, "request_envelope_sha256": _canonical_sha256(envelope),
+        "content_files": content_files,
+    }
+    lock["lock_sha256"] = _canonical_sha256(lock)
+    if output_path is not None:
+        target = Path(output_path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("x", encoding="utf-8") as handle:
+            handle.write(json.dumps(lock, indent=2, sort_keys=True) + "\n")
     return lock
 
 
 def validate_lock(snapshot: Path, lock: dict[str, Any]) -> dict[str, Any]:
-    """
-    Validate a lock against a snapshot.
+    """Every pinned field must still match data, scenario and executing code."""
+    if not isinstance(lock, dict):
+        return {"valid": False, "issues": ["invalid_lock"]}
+    try:
+        current = build_lock(snapshot)
+    except Exception:
+        return {"valid": False, "issues": ["snapshot_or_content_unavailable"]}
+    issues = [field for field, value in current.items() if lock.get(field) != value]
+    issues.extend(sorted(set(lock) - set(current)))
+    return {"valid": not issues, "issues": issues}
 
-    Args:
-        snapshot: Path to DuckDB snapshot
-        lock: Lock dict
 
-    Returns:
-        Validation result
+def main() -> int:
+    """Offline lock generation; never downloads data or constructs a client."""
+    import argparse
 
-    Raises:
-        ValueError: If validation fails
-    """
-    result = {
-        "valid": True,
-        "issues": [],
-    }
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--snapshot", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    try:
+        if args.output:
+            lock = build_lock(args.snapshot, args.output)
+            print(json.dumps({"status": "locked", "lock_sha256": lock["lock_sha256"]}))
+        else:
+            result = qualify_demo(args.snapshot)
+            print(json.dumps(result, default=str, sort_keys=True))
+        return 0
+    except Exception:
+        print(json.dumps({"status": "blocked", "failure_category": "snapshot_or_contract_qualification_failed"}))
+        return 1
 
-    # Check contract identity
-    if lock.get("contract_identity") != "network_e2e_v1":
-        result["valid"] = False
-        result["issues"].append("Contract identity mismatch")
 
-    # Check binary SHA
-    actual_binary = sha256_file(snapshot)
-    if lock.get("snapshot_binary_sha256") != actual_binary:
-        result["valid"] = False
-        result["issues"].append("Binary SHA mismatch")
-
-    # Check logical SHA
-    _, actual_logical = logical_content_hash(snapshot)
-    if lock.get("snapshot_logical_sha256") != actual_logical:
-        result["valid"] = False
-        result["issues"].append("Logical SHA mismatch")
-
-    return result
+if __name__ == "__main__":
+    raise SystemExit(main())

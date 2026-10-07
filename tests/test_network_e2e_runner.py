@@ -14,6 +14,131 @@ import pytest
 SHA = "a" * 40
 
 
+def _reviewable_receipt():
+    """Explicitly synthetic, structurally complete saved technical receipt."""
+    from evaluation.finalization.network_contract import request_envelope
+    scenarios = []
+    for name in ("botnet", "normal"):
+        case = _FakeCase("10.0.0.1").payload
+        assessment = case["metadata"]["network_policy"]["assessment"]
+        scenarios.append({**assessment, "name": name, "evidence": case["evidence"],
+            "tool_trace": case["tool_trace"], "termination": "FINAL_ASSESSMENT",
+            "validation": {"technical_valid": True, "schema_valid": True,
+                "policy": {"valid": True}, "independent_snapshot": {"verified": True}},
+            "human_review": {"status": "awaiting_human", "decisions": []}})
+    return {"schema_version": 1, "synthetic": True, "run_id": "synthetic_review",
+        "scope": "network_only_public_lifecycle_demo", "transport": "synthetic",
+        "status": "technical_complete_awaiting_human", "review_status": "awaiting_human",
+        "implementation_sha": SHA, "snapshot": {"binary_sha256": "b" * 64, "logical_sha256": "c" * 64},
+        "contract": {"lock_sha256": "d" * 64}, "request_config": request_envelope(),
+        "attempted_calls": 4, "responses_received": 4, "valid_usage_records": 4,
+        "requests": [{"actual_model": request_envelope()["model"],
+            "usage": {"input_tokens": 100, "output_tokens": 50, "cached_tokens": 0}, "cost_usd": 0.00012}
+            for _ in range(4)], "cost_summary": {"cost_unknown": False, "known_cost_usd": 0.00048},
+        "scenarios": scenarios}
+
+
+def test_network_human_ui_displays_full_packet_without_legacy_clipping(monkeypatch):
+    from scripts import demo_ctu_network_public_model_driven as demo
+    from cli import main as cli
+    from agent.hitl import HumanDecision
+    printed = []
+    monkeypatch.setattr(cli.console, "print", lambda text, **_kwargs: printed.append(str(text)))
+    monkeypatch.setattr(cli.ConsoleHumanReviewGate, "review_final",
+        lambda _self, _case: HumanDecision("APPROVE", "synthetic", analyst="synthetic"))
+    case = SimpleNamespace(risk_level="UNKNOWN", confidence="LOW", final_assessment="x" * 5000 + "TAIL_CLAIM",
+        evidence=[{"source_record_id": "FULL_SOURCE_PAIR"}], observations=[{"field": "connection_count", "value": 7}],
+        hypotheses=[], limitations=["FULL_LIMITATION"], metadata={})
+    demo.network_console_review_gate().review_final(case)
+    rendered = "\n".join(printed)
+    assert all(item in rendered for item in ("TAIL_CLAIM", "FULL_SOURCE_PAIR", "connection_count", "FULL_LIMITATION"))
+
+
+def test_live_reinvocation_preserves_existing_technical_receipt(monkeypatch, tmp_path):
+    from scripts import demo_ctu_network_public_model_driven as demo
+    output = tmp_path / "technical.json"
+    output.write_text('{"immutable": "original evidence"}', encoding="utf-8")
+    before = output.read_bytes()
+    factory = MagicMock(side_effect=AssertionError("No client allowed"))
+    result = demo.run_e2e_live(tmp_path / "missing.db", output, client_factory=factory)
+    assert result["status"] == "blocked"
+    assert result["failure_category"] == "technical_receipt_exists"
+    assert output.read_bytes() == before
+    factory.assert_not_called()
+
+
+def test_partial_assessment_transport_failure_keeps_real_collected_state(monkeypatch, tmp_path):
+    from scripts import demo_ctu_network_public_model_driven as demo
+    gates_path, env_file, ledger = _configure_preflight(monkeypatch, demo, tmp_path)
+    completions = _FakeCompletions()
+    real_create = completions.create
+    def fail_second(**request):
+        if len(completions.requests) == 1:
+            raise RuntimeError("SENSITIVE_RAW_PROVIDER_MESSAGE")
+        return real_create(**request)
+    completions.create = fail_second
+    class FailedOrchestrator:
+        def __init__(self, *, provider, investigation_policy, **_kwargs):
+            self.provider, self.policy = provider, investigation_policy
+            self.messages, self.lifecycle_trace = [], []
+            self.evidence_store = SimpleNamespace(get_all_evidence=lambda: [], get_all_tool_calls=lambda: [])
+        def investigate(self, indicator, **_kwargs):
+            self.provider.generate(messages=[], tools=self.policy.tool_schemas(), temperature=0)
+            saved = _FakeCase(indicator).payload
+            self.evidence_store = SimpleNamespace(
+                get_all_evidence=lambda: [SimpleNamespace(to_dict=lambda: saved["evidence"][0])],
+                get_all_tool_calls=lambda: [SimpleNamespace(to_dict=lambda: saved["tool_trace"][0])])
+            self.provider.generate(messages=[], tools=self.policy.tool_schemas(), temperature=0)
+    monkeypatch.setattr(demo, "InvestigationOrchestrator", FailedOrchestrator)
+    output = tmp_path / "partial.json"
+    result = demo.run_e2e_live(tmp_path / "db", output, ledger_path=ledger,
+        gates_path=gates_path, env_file=env_file,
+        client_factory=lambda _key: SimpleNamespace(chat=SimpleNamespace(completions=completions)))
+    assert result["status"] == "partial"
+    assert result["attempted_calls"] == 2 and result["responses_received"] == 1
+    assert result["cost_summary"]["cost_unknown"] is True
+    assert len(result["scenarios"]) == 1
+    partial = result["scenarios"][0]
+    assert partial["assessment"] is None
+    assert partial["tool_trace"][0]["arguments"]["indicator"] == "10.0.0.1"
+    assert partial["evidence"][0]["evidence_id"] == "ev_1"
+    assert partial["human_review"]["status"] == "blocked_invalid_technical"
+    assert "SENSITIVE_RAW_PROVIDER_MESSAGE" not in output.read_text()
+
+
+def test_review_rejects_false_eligibility_and_preserves_existing_output(tmp_path):
+    from scripts import demo_ctu_network_public_model_driven as demo
+    technical, output = tmp_path / "technical.json", tmp_path / "review.json"
+    technical.write_text(json.dumps({"schema_version": 1, "status": "technical_complete_awaiting_human",
+        "review_status": "awaiting_human", "scenarios": [{"validation": {"technical_valid": "truthy"}}]}))
+    gate = MagicMock()
+    with pytest.raises(ValueError, match="not eligible"):
+        demo.finalize_offline_review(technical, output, gate=gate)
+    gate.review_final.assert_not_called()
+    output.write_text("immutable reviewed receipt")
+    before = output.read_bytes()
+    with pytest.raises(ValueError, match="existing review"):
+        demo.finalize_offline_review(technical, output, gate=gate)
+    assert output.read_bytes() == before
+
+
+@pytest.mark.parametrize("extra", [[], ["--diagnostic-first-request"]])
+def test_legacy_cli_cannot_bypass_claimed_canonical_window(monkeypatch, tmp_path, capsys, extra):
+    import sys
+    from scripts import demo_ctu_network_public_model_driven as demo
+    root = tmp_path / "network-finalization-20261006"
+    root.mkdir()
+    (root / "ledger.json").write_text(json.dumps({"consumed": True}), encoding="utf-8")
+    monkeypatch.setattr("evaluation.finalization.live_window.canonical_window_root", lambda: root)
+    monkeypatch.setattr(demo, "load_env", lambda _path: {"OPENAI_API_KEY": "synthetic-test-key"})
+    monkeypatch.setattr(demo, "_create_openai_client", lambda *_a: pytest.fail("must block before client"))
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(sys, "argv", ["demo", "--snapshot", str(tmp_path / "db"),
+                                     "--output", str(tmp_path / "out.json"), *extra])
+    assert demo.main() == 1
+    assert "legacy_window_bypass_blocked" in capsys.readouterr().out
+
+
 def _gates() -> dict:
     now = datetime.now(timezone.utc).isoformat()
     return {
@@ -61,6 +186,8 @@ def _qualify() -> dict:
 
 
 def _configure_preflight(monkeypatch, demo, tmp_path: Path):
+    monkeypatch.setattr("evaluation.finalization.live_window.canonical_window_root",
+                        lambda: tmp_path / "network-finalization-20261006")
     monkeypatch.setattr(demo, "qualify_snapshot", lambda _path: _qualify())
     monkeypatch.setattr(demo, "validate_lock", lambda *_args: {"valid": True, "issues": []})
     lock = tmp_path / "lock.json"
@@ -180,6 +307,7 @@ class _FakeCase:
             "limitations": ["CTI unavailable"], "final_assessment": "Grounded assessment",
             "supporting_evidence": ["ev_1"],
             "metadata": {
+                "schema_valid": True,
                 "network_policy": {
                     "termination": "FINAL_ASSESSMENT" if valid else "ASSESSMENT_VALIDATION_FAILED",
                     "assessment": assessment,
@@ -211,10 +339,9 @@ def test_live_uses_public_investigate_one_guarded_client_and_four_requests(monke
         def investigate(self, indicator, indicator_type="ipv4", context=None):
             investigate_calls.append((indicator, indicator_type, context))
             for _ in range(2):
-                self.provider.client.chat.completions.create(
-                    model=demo.DEMO_MODEL, messages=[{"role": "user", "content": "bounded"}],
+                self.provider.generate(
+                    messages=[{"role": "user", "content": "bounded"}],
                     tools=self.policy.tool_schemas(), temperature=0,
-                    max_completion_tokens=demo.DEMO_CAP, tool_choice="auto",
                 )
             return _FakeCase(indicator)
 
@@ -254,10 +381,7 @@ def test_invalid_assessment_cannot_be_reported_complete(monkeypatch, tmp_path):
 
         def investigate(self, indicator, **_kwargs):
             for _ in range(2):
-                self.provider.client.chat.completions.create(
-                    model=demo.DEMO_MODEL, messages=[], tools=self.policy.tool_schemas(),
-                    temperature=0, max_completion_tokens=demo.DEMO_CAP, tool_choice="auto",
-                )
+                self.provider.generate(messages=[], tools=self.policy.tool_schemas(), temperature=0)
             FakeOrchestrator.calls += 1
             return _FakeCase(indicator, valid=FakeOrchestrator.calls != 2)
 
@@ -281,23 +405,14 @@ def test_offline_review_links_receipt_without_api_or_overwrite(tmp_path):
     from scripts import demo_ctu_network_public_model_driven as demo
 
     technical = tmp_path / "technical.json"
-    original = {
-        "schema_version": 1,
-        "run_id": "run_1",
-        "status": "technical_complete_awaiting_human",
-        "review_status": "awaiting_human",
-        "implementation_sha": SHA,
-        "scenarios": [{
-            "name": "botnet", "risk_level": "UNKNOWN", "confidence": "LOW",
-            "assessment": "Evidence-grounded text", "validation": {"technical_valid": True},
-        }],
-    }
+    original = _reviewable_receipt()
     technical.write_text(json.dumps(original, sort_keys=True), encoding="utf-8")
     before = technical.read_bytes()
 
     class Gate:
         def review_final(self, case):
-            assert case.final_assessment == "Evidence-grounded text"
+            assert case.final_assessment == "Grounded assessment"
+            assert case.evidence and case.observations and case.limitations
             return HumanDecision(REVIEW_APPROVE, "reviewed", analyst="real-human")
 
     output = tmp_path / "review.json"
