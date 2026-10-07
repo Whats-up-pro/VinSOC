@@ -11,6 +11,11 @@ from collections import Counter
 from .module_metrics import aggregate_module_metrics
 
 VERSION = "cross_domain_report_v1"
+# Codes emitted by the pinned read-only SQL validator, distinct from tool limits
+# or execution failures. Unknown codes are not guessed to be safety rejections.
+SQL_SAFETY_CODES = frozenset({"INVALID_SQL_PAYLOAD", "SQL_PARSE_REJECTED", "SINGLE_READ_ONLY_QUERY_REQUIRED",
+    "WRITE_OR_SYSTEM_OPERATION_REJECTED", "FUNCTION_NOT_ALLOWLISTED",
+    "EXTERNAL_OR_QUALIFIED_DATABASE_REJECTED", "TABLE_NOT_REGISTERED"})
 
 
 def rate(correct, total):
@@ -116,6 +121,11 @@ def build_evaluation_report(case_records: list[dict], inventory: dict) -> dict:
                     row["missing_stages"][stage] = "NOT_APPLICABLE_E0" if condition == "E0" else "STAGE_NOT_RECORDED"
             for metric in ("syntax_valid", "execution_success", "execution_accurate", "semantic_test_accuracy", "safety_rejected"):
                 row[metric] = (record or {}).get(metric) is True
+            probes = [event for event in (record or {}).get("trajectory", []) if event.get("tool") == "sql_probe"]
+            rejected_probes = sum(event.get("error_code") in SQL_SAFETY_CODES for event in probes)
+            row["tool_safety"] = {"sql_attempts": len(probes), "rejected_attempts": rejected_probes}
+            row["final_sql_safety_rejected"] = row["safety_rejected"]
+            row["safety_rejected"] = row["safety_rejected"] or rejected_probes > 0
             grounding = modules.get("value_grounding") or {}
             witness = grounding.get("witness_precision")
             if witness is None:
@@ -144,6 +154,10 @@ def build_evaluation_report(case_records: list[dict], inventory: dict) -> dict:
                    "cost": {"known_usd": costs, "complete": complete, "total_usd": costs if complete else None},
                    "requests": {key: sum(item[key] for item in account) for key in ("attempted", "received", "valid_usage", "input_tokens", "output_tokens")},
                    "safety_false_rejection_rate": rate(rejected_benign, benign),
+                   "tool_safety": {"sql_attempts": sum(row["tool_safety"]["sql_attempts"] for row in normalized),
+                                   "rejected_attempts": sum(row["tool_safety"]["rejected_attempts"] for row in normalized),
+                                   "cases_rejected": sum(row["tool_safety"]["rejected_attempts"] > 0 for row in normalized)},
+                   "final_sql_safety_rejection_rate": rate(sum(row["final_sql_safety_rejected"] for row in normalized), n),
                    "witness_precision": {**witnesses, "rate": witnesses["correct"]/witnesses["total"] if witnesses["total"] else None},
                    "synthetic_records": sum(row.get("evidence_kind") == "synthetic_transport" for row in normalized)}
         for stage, kinds in (("schema_linker", ("tables", "columns", "relationships")),
@@ -156,7 +170,7 @@ def build_evaluation_report(case_records: list[dict], inventory: dict) -> dict:
         latencies = [r["wall_seconds"] for r in present_records if _nonnegative(r.get("wall_seconds"))]
         summary["sql_generation"] = {
             "final_sql_coverage": rate(sum(isinstance(r.get("final_sql"), str) and bool(r["final_sql"].strip()) for r in present_records), n),
-            "no_final_sql": sum(row["primary_error"] == "NO_FINAL_SQL" for row in normalized),
+            "no_final_sql": sum(not isinstance(r.get("final_sql"), str) or not r["final_sql"].strip() for r in present_records),
             "db_calls_known": sum(r.get("db_calls", 0) for r in present_records if type(r.get("db_calls")) is int and r["db_calls"] >= 0),
             "latency_seconds": {"available": len(latencies), "planned": n,
                                 "total": sum(latencies), "mean": sum(latencies)/len(latencies) if latencies else None},

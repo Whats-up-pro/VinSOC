@@ -1,0 +1,70 @@
+{
+  "benchmark_lock_sha256": "10e124eab0bb918d69595811619990a57e626f64ee23997648cbf79f07029f7d",
+  "data_replay": {
+    "command": "python -m scripts.validate_r2_cross_domain --registry evaluation/r2_cross_domain_v1/runtime_registry.json --benchmarks evaluation/r2_cross_domain_v1/benchmarks --lock evaluation/r2_cross_domain_v1/benchmark.lock.json",
+    "error_category": "SNAPSHOT_CHECKSUM_MISMATCH",
+    "reason": "The ignored external snapshots pinned by the registry are unavailable in this runtime. Historical replay receipts remain unchanged; no new successful replay claimed.",
+    "status": "blocked"
+  },
+  "frozen_opened": false,
+  "full_tests": {
+    "command": "VINSOC_LOCAL_SNAPSHOT=<qualified real snapshot> python -m pytest -q",
+    "duration_seconds": 55.42,
+    "passed": 1110,
+    "python": "3.12",
+    "required_snapshot_rehearsal_passed": true,
+    "skipped": 1,
+    "warnings": 1888
+  },
+  "historical_identity_files_changed": 0,
+  "historical_identity_files_checked": 3269,
+  "inventory": {
+    "calibration": 24,
+    "evaluation": 96,
+    "evaluation_families": 93,
+    "external_evaluation_databases": 8,
+    "external_evaluation_domains": 7
+  },
+  "new_external_model_score": null,
+  "new_inference_cost_usd": 0,
+  "paid_authorization_granted": false,
+  "preflight": {
+    "client_created": false,
+    "full_ceiling_usd": null,
+    "max_requests": 672,
+    "model_calls": 0,
+    "reasons": [
+      "FULL_LOCKED_INVENTORY_UNVERIFIED",
+      "CODE_OR_CI_IDENTITY_UNVERIFIED",
+      "ACCOUNT_UNAVAILABLE_OR_STALE",
+      "UNRECONCILED_COST_EXPOSURE",
+      "PRICING_UNAVAILABLE_OR_STALE",
+      "TOKEN_BOUND_UNVERIFIED",
+      "PAID_RELEASE_NOT_AUTHORIZED",
+      "BUDGET_NOT_SPECIFIED"
+    ],
+    "status": "blocked"
+  },
+  "pricing_currently_verified": false,
+  "review_fixes": [
+    "canonical benchmark input binding before SDK",
+    "unsafe SQL probe rejection accounting distinct from final SQL scoring",
+    "missing SQL coverage independent of primary error",
+    "terminal contract mismatch before API",
+    "zero-request telemetry cannot qualify"
+  ],
+  "runtime_source_sha256": {
+    "evaluation/r2_cross_domain_v1/live.py": "e947e029e470d80befc2ef2006d5a8f8a0d24fdc8fe320fda704951d7ec951db",
+    "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+    "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+    "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+    "scripts/run_r2_cross_domain.py": "b2638ea9f08c8aa75b5dd18e2f57d50eed0d25aed22c2df5ff1bcd6446d8e5a3"
+  },
+  "scope": "offline_cross_domain_closeout_not_model_evaluation",
+  "synthetic_tests_are_not_model_results": true,
+  "targeted_tests": {
+    "command": "python -m pytest -q tests/test_r2_cross_domain_live.py tests/test_r2_cross_domain_reporting.py tests/test_r2_cross_domain_statistics.py tests/test_r2_cross_domain_release.py",
+    "passed": 39,
+    "provider_boundary": "synthetic; zero paid calls"
+  }
+}

@@ -80,3 +80,29 @@ def test_missing_linker_is_na_with_coverage_and_false_reject_uses_benign_fixture
     assert out["safety_false_rejection_rate"] == {"correct": 1, "total": 1, "rate": 1.0}
     assert out["witness_precision"] == {"correct": 0, "total": 0, "rate": None, "unavailable_cases": 2}
     assert out["synthetic_records"] == 2
+
+
+def test_rejected_sql_probe_is_reported_even_when_final_sql_scoring_has_no_rejection(tmp_path):
+    from evaluation.r2_cross_domain_v1.reporting import build_evaluation_report
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from evaluation.r2_cross_domain_v1.semantic_instances import build_fixture
+    from evaluation.r2_cross_domain_v1.safety import SafetyError
+    spec = {"database_id": "fixture", "fixture_only": True, "seed": 1,
+        "schema": [{"name": "items", "columns": [{"name": "id", "duckdb_type": "BIGINT"}]}],
+        "relationships": [], "rows": {"items": [[1]]}}
+    tools = DatabaseTools(build_fixture(spec, tmp_path/"fixture.duckdb")["context"])
+    with pytest.raises(SafetyError): tools.call("sql_probe", {"sql": "DELETE FROM items"})
+    rejected = record(final_sql=None, error_category="SAFETY_REJECTION", execution_accurate=False,
+        syntax_valid=False, execution_success=False, safety_rejected=False, trajectory=tools.trajectory)
+    out = build_evaluation_report([rejected, record("b")], inventory())["conditions"]["E3"]
+    assert out["safety_rejection_rate"] == {"correct": 1, "total": 2, "rate": .5}
+    assert out["tool_safety"] == {"sql_attempts": 1, "rejected_attempts": 1, "cases_rejected": 1}
+    assert out["final_sql_safety_rejection_rate"]["correct"] == 0
+
+
+def test_provider_error_with_missing_sql_is_counted_without_changing_primary_reason():
+    from evaluation.r2_cross_domain_v1.reporting import build_evaluation_report
+    out = build_evaluation_report([record(final_sql=None, error_category="PROVIDER_ERROR",
+        execution_accurate=False), record("b")], inventory())["conditions"]["E3"]
+    assert out["cases"][0]["primary_error"] == "PROVIDER_ERROR"
+    assert out["sql_generation"]["no_final_sql"] == 1
