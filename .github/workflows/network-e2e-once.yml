@@ -1,0 +1,77 @@
+{
+  "name": "Guarded network E2E — manual once",
+  "on": {
+    "workflow_dispatch": {
+      "inputs": {
+        "mode": {
+          "description": "preflight creates no model client; live consumes the existing paid window",
+          "type": "choice",
+          "options": [
+            "preflight",
+            "live"
+          ],
+          "default": "preflight",
+          "required": true
+        }
+      }
+    }
+  },
+  "permissions": {
+    "contents": "write",
+    "actions": "read"
+  },
+  "concurrency": {
+    "group": "network-finalization-20261006",
+    "cancel-in-progress": false
+  },
+  "jobs": {
+    "e2e": {
+      "if": "github.ref == 'refs/heads/master'",
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 15,
+      "steps": [
+        {
+          "uses": "actions/checkout@v4",
+          "with": {
+            "ref": "master",
+            "fetch-depth": 0,
+            "persist-credentials": false
+          }
+        },
+        {
+          "uses": "actions/setup-python@v5",
+          "with": {
+            "python-version": "3.12"
+          }
+        },
+        {
+          "name": "Install repository dependencies",
+          "run": "python -m pip install -r requirements.txt"
+        },
+        {
+          "name": "Validate cloud inputs and optionally consume the guarded live window",
+          "env": {
+            "CLOUD_MODE": "${{ inputs.mode }}",
+            "GITHUB_TOKEN": "${{ github.token }}",
+            "OPENAI_API_KEY": "${{ secrets.OPENAI_API_KEY }}",
+            "NETWORK_E2E_GATES_JSON": "${{ secrets.NETWORK_E2E_GATES_JSON }}",
+            "NETWORK_E2E_WINDOW_STATE_JSON": "${{ secrets.NETWORK_E2E_WINDOW_STATE_JSON }}",
+            "NETWORK_E2E_SNAPSHOT_URL": "${{ secrets.NETWORK_E2E_SNAPSHOT_URL }}"
+          },
+          "run": "python -m scripts.run_network_e2e_cloud --mode \"$CLOUD_MODE\" --output-dir \"$RUNNER_TEMP/network-e2e-evidence\""
+        },
+        {
+          "name": "Preserve sanitized evidence even on blocked or partial runs",
+          "if": "always()",
+          "uses": "actions/upload-artifact@v4",
+          "with": {
+            "name": "guarded-network-e2e-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "${{ runner.temp }}/network-e2e-evidence/cloud_run.json\n${{ runner.temp }}/network-e2e-evidence/cloud-check_preflight.json\n${{ runner.temp }}/network-e2e-evidence/cloud_transport.json\n${{ runner.temp }}/network-e2e-evidence/technical-live.json\n${{ runner.temp }}/network-e2e-evidence/technical-live.html",
+            "if-no-files-found": "warn",
+            "retention-days": 90
+          }
+        }
+      ]
+    }
+  }
+}

@@ -26,3 +26,39 @@ jobs:
       - name: Run full repository test suite
         run: |
           python -m pytest -q
+
+  cloud-input-availability:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Report cloud input availability without API requests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          NETWORK_E2E_GATES_JSON: ${{ secrets.NETWORK_E2E_GATES_JSON }}
+          NETWORK_E2E_WINDOW_STATE_JSON: ${{ secrets.NETWORK_E2E_WINDOW_STATE_JSON }}
+          NETWORK_E2E_SNAPSHOT_URL: ${{ secrets.NETWORK_E2E_SNAPSHOT_URL }}
+        run: |
+          python - <<'PYTHON'
+          import json, os
+          from pathlib import Path
+          names=('OPENAI_API_KEY','NETWORK_E2E_GATES_JSON','NETWORK_E2E_WINDOW_STATE_JSON','NETWORK_E2E_SNAPSHOT_URL')
+          present={name:bool(os.environ.get(name)) for name in names}
+          result={'scope':'cloud_input_availability_only_no_model_call',
+                  'status':'inputs_available_not_yet_validated' if all(present.values()) else 'blocked_missing_cloud_inputs',
+                  'present':present,'attempted_calls':0,'responses_received':0,'client_created':False,'new_inference_cost_usd':0}
+          path=Path(os.environ['RUNNER_TEMP'])/'cloud-input-availability.json'
+          path.write_text(json.dumps(result,indent=2),encoding='utf-8')
+          print(json.dumps(result))
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cloud-input-availability-${{ github.sha }}
+          path: ${{ runner.temp }}/cloud-input-availability.json
+          if-no-files-found: error
+          retention-days: 90
