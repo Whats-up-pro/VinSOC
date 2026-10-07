@@ -1,0 +1,76 @@
+{
+  "full_baseline_tests": {
+    "passed": 1071,
+    "python": "3.12",
+    "skipped": 1
+  },
+  "historical_artifacts_unchanged": true,
+  "implementation_sha": "408d75f5e97653d8927497a84599588f1ed73ce8",
+  "lock_sha256": "0da244b1c6f6c6f67778a64498948d428b79115d9656e9cc678795b196c4ec15",
+  "lock_validation": {
+    "issues": [],
+    "valid": true
+  },
+  "qualification": {
+    "binary_sha256": "91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3",
+    "binary_sha_matches_lock": false,
+    "counts_match": true,
+    "distinct_match": true,
+    "distinct_source_pairs": 243906,
+    "logical_counts": {
+      "network_flows": 243906
+    },
+    "logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "logical_sha_matches_expected": true,
+    "provenance_count": 2,
+    "provenance_match": true,
+    "read_only_ok": true,
+    "source_counts": {
+      "ctu13_s5": 129831,
+      "ctu13_s7": 114075
+    },
+    "tables": [
+      "dataset_provenance",
+      "network_flows"
+    ],
+    "tables_match": true
+  },
+  "rehearsal": {
+    "live_api_calls": 0,
+    "outcome": "1 passed, 16 deselected",
+    "production_tool_and_database": true,
+    "required_test": "test_local_verified_snapshot_two_scenario_rehearsal",
+    "scenarios": 2,
+    "synthetic_model_and_reviewer": true
+  },
+  "scope": "offline_snapshot_and_lifecycle_qualification",
+  "source_downloads": 0,
+  "two_builds": [
+    {
+      "content_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "distinct_source_row_id": 243906,
+      "row_counts": {
+        "network_flows": 243906
+      },
+      "sha256": "91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3",
+      "source_hashes": {
+        "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+        "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+      },
+      "version": "ctu_network_public_dev_v1"
+    },
+    {
+      "content_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+      "distinct_source_row_id": 243906,
+      "row_counts": {
+        "network_flows": 243906
+      },
+      "sha256": "fefe496d90d1896530e83b0f6c24b2ca42c300c48b904fca73a436a25817b03f",
+      "source_hashes": {
+        "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+        "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+      },
+      "version": "ctu_network_public_dev_v1"
+    }
+  ]
+}

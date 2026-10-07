@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta http-equiv='Content-Security-Policy' content="default-src 'none'; style-src 'unsafe-inline'">
+<title>Network E2E receipt</title><style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    min-height: 100vh;
+}
+
+header {
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #1a73e8;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #333;
+    border-left: 4px solid #1a73e8;
+    padding-left: 10px;
+    margin: 20px 0 10px;
+}
+
+h3 {
+    color: #555;
+    margin: 15px 0 10px;
+}
+
+h4 {
+    color: #666;
+    margin: 10px 0 5px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-complete {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-partial {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-pending {
+    background: #cce5ff;
+    color: #004085;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background: #f8f9fa;
+    font-weight: 600;
+    width: 30%;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.scenario {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.assessment, .evidence, .validation, .lifecycle, .review {
+    margin: 15px 0;
+}
+
+.assessment {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+footer {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+    margin-top: 40px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    th {
+        width: 40%;
+    }
+}
+
+pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;background:#f4f5f7}details{margin:10px 0}summary{cursor:pointer;font-weight:600}.warning{color:#8a3000}
+</style></head><body><main class='container'><h1>Network E2E technical receipt</h1>
+<div class='status status-partial'>PARTIAL</div>
+<p class='warning'>SAVED RECEIPT — offline viewer, not a new model run</p>
+<h2>Run and stage</h2><table>
+<tr><th>run_id</th><td>resume-20261007-blocked</td></tr>
+<tr><th>status</th><td>preflight_failed</td></tr>
+<tr><th>scope</th><td>network_only_public_lifecycle_demo</td></tr>
+<tr><th>transport</th><td></td></tr>
+<tr><th>implementation_sha</th><td>408d75f5e97653d8927497a84599588f1ed73ce8</td></tr>
+<tr><th>review_status</th><td></td></tr>
+<tr><th>failed_stage</th><td>preflight</td></tr>
+<tr><th>failure_category</th><td>missing_ledger_or_gates</td></tr>
+<tr><th>attempted_calls</th><td>0</td></tr>
+<tr><th>responses_received</th><td>0</td></tr>
+<tr><th>valid_usage_records</th><td>0</td></tr>
+</table><h2>Cost Summary</h2>
+<p>Known Cost: $0.000000</p>
+<p>Cost Unknown: No</p>
+<p>Budget: $0.250000; Reserved Exposure: unknown / unavailable</p>
+<h2>API Requests</h2>
+<h2>Scenarios</h2>
+<h2>Provenance</h2>
+<details><summary>ci</summary><pre>null</pre></details>
+<details><summary>contract</summary><pre>{
+  &quot;lock_sha256&quot;: &quot;0da244b1c6f6c6f67778a64498948d428b79115d9656e9cc678795b196c4ec15&quot;
+}</pre></details>
+<details><summary>snapshot</summary><pre>{
+  &quot;binary_sha256&quot;: &quot;91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3&quot;,
+  &quot;logical_sha256&quot;: &quot;42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c&quot;
+}</pre></details>
+<details><summary>request_config</summary><pre>null</pre></details>
+<p>Input receipt SHA-256: <code>855348f59370c5952ae2f7d2b300eab79546242c97d5869c56b1dae5c278a74f</code></p>
+<details><summary>Complete source receipt (all fields, unchanged)</summary><pre>{
+  &quot;attempted_calls&quot;: 0,
+  &quot;budget_usd&quot;: 0.25,
+  &quot;client_created&quot;: false,
+  &quot;contract&quot;: {
+    &quot;lock_sha256&quot;: &quot;0da244b1c6f6c6f67778a64498948d428b79115d9656e9cc678795b196c4ec15&quot;
+  },
+  &quot;cost_summary&quot;: {
+    &quot;cost_unknown&quot;: false,
+    &quot;known_cost_usd&quot;: 0,
+    &quot;scope&quot;: &quot;this_zero_request_preflight_only&quot;
+  },
+  &quot;failed_stage&quot;: &quot;preflight&quot;,
+  &quot;failure_category&quot;: &quot;missing_ledger_or_gates&quot;,
+  &quot;implementation_sha&quot;: &quot;408d75f5e97653d8927497a84599588f1ed73ce8&quot;,
+  &quot;input_availability&quot;: {
+    &quot;openai_key_source&quot;: &quot;missing&quot;,
+    &quot;private_account_pricing_gates_supplied&quot;: false,
+    &quot;private_ledger_supplied&quot;: false
+  },
+  &quot;key_source&quot;: &quot;unchecked&quot;,
+  &quot;limitations&quot;: [
+    &quot;No API client or model request created.&quot;,
+    &quot;No human approval or live E2E success.&quot;,
+    &quot;Snapshot qualification is separate evidence; private operational gates are still absent.&quot;
+  ],
+  &quot;mode&quot;: &quot;e2e_preflight&quot;,
+  &quot;preflight_checks&quot;: {
+    &quot;preflight_pass&quot;: false,
+    &quot;snapshot_qualified&quot;: false
+  },
+  &quot;requests&quot;: [],
+  &quot;responses_received&quot;: 0,
+  &quot;run_id&quot;: &quot;resume-20261007-blocked&quot;,
+  &quot;scenarios&quot;: [],
+  &quot;schema_version&quot;: 1,
+  &quot;scope&quot;: &quot;network_only_public_lifecycle_demo&quot;,
+  &quot;snapshot&quot;: {
+    &quot;binary_sha256&quot;: &quot;91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3&quot;,
+    &quot;logical_sha256&quot;: &quot;42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c&quot;
+  },
+  &quot;status&quot;: &quot;preflight_failed&quot;,
+  &quot;valid_usage_records&quot;: 0
+}</pre></details>
+<details><summary>Linked human review (hash-verified)</summary><pre>null</pre></details>
+<footer>Offline viewer: no model calls, no database query, no benchmark score.</footer></main></body></html>

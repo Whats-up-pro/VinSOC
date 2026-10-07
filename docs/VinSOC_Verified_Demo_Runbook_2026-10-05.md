@@ -438,3 +438,29 @@ Lỗi `context=None` đã được tái hiện bằng fake provider và sửa tr
 - [ ] Nếu một bước fail: giữ artifact, trình bày lỗi và blocker, không đổi dữ liệu/model/gold/scorer để hoàn tất màn hình.
 
 Các checkbox trên dành cho người trình diễn. Việc tạo kịch bản không đánh dấu chúng đã hoàn thành.
+
+## 9. Snapshot qualification completed on 2026-10-07
+
+A fresh `master@408d75f` checkout built two network-only snapshots from the
+previously downloaded, checksum-verified CTU S5/S7 bytes. Both have 243,906
+flows and logical SHA `42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c`.
+The required local-snapshot rehearsal passed through the production orchestrator,
+network tool and DB, with **synthetic model and reviewer transports**. This is
+offline qualification, not a live result. Baseline local suite: 1071 passed,
+1 skipped on Python 3.12.
+
+The new `evaluation/finalization/NETWORK_E2E_v1.lock.json` pins the **first
+actual binary**: `91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3`.
+Its lock digest is `0da244b1c6f6c6f67778a64498948d428b79115d9656e9cc678795b196c4ec15`.
+A different binary with the same logical rows will fail validation; do not silently
+replace this lock or regard a previous laptop snapshot as the pinned binary.
+Use the supplied exact snapshot file and validate it before the Section 8 gates.
+
+Evidence: `results/evaluation_v1/network_e2e_v1/20261007/snapshot_qualification.json`.
+The actual zero-request preflight and HTML are `resume_blocked_preflight.json`
+and `resume_blocked_preflight.html` in that directory. They report
+`missing_ledger_or_gates`; a separate safe environment check reports key source
+`missing` in this runtime. No OpenAI client, inference or human approval occurred.
+The existing private canonical ledger and fresh account/pricing/reconciliation
+gates must come from the authorized operator environment. Do not initialize
+a replacement window or fabricate those inputs to make preflight pass.

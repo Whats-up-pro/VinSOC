@@ -1,0 +1,187 @@
+{
+  "content_files": {
+    "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+    "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+    "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+    "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+    "agent/orchestrator.py": "6c815cbd55fbb6704decc0beb08a6bf1dab7db32f803f49132cfb33cb92e9a94",
+    "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+    "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+    "analytics/network/__init__.py": "7f747e7cef03ff9057f45ce0786507d68a1f6d94e35f22a53eaa36000ecf94ae",
+    "analytics/network/beaconing.py": "07840338c2978b5da2abe153b1587f253ac093c5b66afa479cb79c958b5524cf",
+    "analytics/network/fanout.py": "8d3515ea6b379bac477cfe34fafe35d2c04614dfbd36d1140ee78f4614aa664d",
+    "analytics/network/scanning.py": "1e23b14f58bed1d833e7f73bb6523e7c2570bca33ad0f437ed84eb79b4c0dcdf",
+    "analytics/network/transfer.py": "58152fc6cc2fec9bafd456a70d5a46d323ce2a24ed4db80029babf786ccca42b",
+    "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+    "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+    "schemas/investigation_case.json": "f39136140395fece09ca2617a5097cc5796fc4a81e14adc58f348695eeb96f9b",
+    "schemas/network_result.json": "13ab25d804dbe8109216c173c437cb74f9578459c4a6b914a076f52d1bd618a4",
+    "schemas/triage_result.json": "e8d3e16a2daaf63be4e7a450c70fa55127d2aa6c203c8f605c4f9621b507eebf",
+    "scripts/build_ctu_network_public_snapshot.py": "a3b9b3575ad60f00924cd9bbd5a50a90e3baab42f2b7369e25653667a974aba7",
+    "scripts/demo_ctu_network_public_model_driven.py": "e8eac0a9ae9e773ca6a9220b8b160fa7c2626c190f6590d8d3570fd5e9b77a94",
+    "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+    "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+    "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+    "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+    "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+    "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+    "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+    "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d"
+  },
+  "contract_identity": "network_e2e_v1",
+  "distinct_pairs": 243906,
+  "lock_sha256": "0da244b1c6f6c6f67778a64498948d428b79115d9656e9cc678795b196c4ec15",
+  "manifest_sha256": "a1cdc77fc9ca697f336242254441d11c48ad3bb1cd656fd109001fb979205bdf",
+  "policy_sha256": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+  "policy_version": "network_e2e_policy_v1",
+  "prompt_sha256": "4c33d72539cc59fd503cfedac91dc2995cce754d97517127f9b2ef6ead2ff248",
+  "request_envelope": {
+    "budget_usd": 0.25,
+    "frame_reserve_tokens": 512,
+    "input_bound_assumption": "Each text BPE token consumes at least one UTF-8 byte; complete serialized payload includes tool/history metadata.",
+    "input_bound_method": "utf8_serialized_payload_bytes_plus_512_framing_tokens",
+    "input_token_reserve": 50000,
+    "max_completion_tokens": 1000,
+    "max_request_bytes": 45000,
+    "max_requests": 4,
+    "max_retries": 0,
+    "max_review_cycles": 0,
+    "max_steps_per_scenario": 2,
+    "model": "gpt-4.1-mini-2025-04-14",
+    "output_token_reserve": 1000,
+    "parallel_tool_calls": false,
+    "response_format": {
+      "type": "json_object"
+    },
+    "service_tier": "default",
+    "temperature": 0,
+    "tool_choice": "auto"
+  },
+  "request_envelope_sha256": "dfe9d811393c58cb97e66db81527bd8fd47d784e0e86a35fec7520682cd80c05",
+  "scenario_sha256": "41f574ab95a2fe1b5eeb68d8be98ee8c67c0988374b9375a8d9fd2ca2a5323d3",
+  "scenarios": {
+    "botnet": {
+      "indicator": "147.32.84.165",
+      "label": "Botnet",
+      "name": "botnet",
+      "seed_event_time": "2011-08-15T16:52:50.947767",
+      "seed_source_row_id": "line:45639",
+      "source_dataset": "ctu13_s5",
+      "time_range": {
+        "end": "2011-08-15T16:53:50.947767",
+        "start": "2011-08-15T16:51:50.947767"
+      }
+    },
+    "normal": {
+      "indicator": "147.32.84.170",
+      "label": "Normal",
+      "name": "normal",
+      "seed_event_time": "2011-08-16T13:51:24.057991",
+      "seed_source_row_id": "line:19",
+      "source_dataset": "ctu13_s7",
+      "time_range": {
+        "end": "2011-08-16T13:52:24.057991",
+        "start": "2011-08-16T13:50:24.057991"
+      }
+    }
+  },
+  "schema": {
+    "dataset_provenance": [
+      [
+        "dataset_id",
+        "VARCHAR"
+      ],
+      [
+        "source_name",
+        "VARCHAR"
+      ],
+      [
+        "source_url",
+        "VARCHAR"
+      ],
+      [
+        "retrieved_at",
+        "TIMESTAMP"
+      ],
+      [
+        "file_sha256",
+        "VARCHAR"
+      ],
+      [
+        "license_note",
+        "VARCHAR"
+      ],
+      [
+        "schema_version",
+        "VARCHAR"
+      ]
+    ],
+    "network_flows": [
+      [
+        "source_dataset",
+        "VARCHAR"
+      ],
+      [
+        "source_row_id",
+        "VARCHAR"
+      ],
+      [
+        "event_time",
+        "TIMESTAMP"
+      ],
+      [
+        "src_ip",
+        "VARCHAR"
+      ],
+      [
+        "src_port",
+        "INTEGER"
+      ],
+      [
+        "dst_ip",
+        "VARCHAR"
+      ],
+      [
+        "dst_port",
+        "INTEGER"
+      ],
+      [
+        "protocol",
+        "VARCHAR"
+      ],
+      [
+        "action",
+        "VARCHAR"
+      ],
+      [
+        "bytes_out",
+        "BIGINT"
+      ],
+      [
+        "bytes_in",
+        "BIGINT"
+      ],
+      [
+        "label",
+        "VARCHAR"
+      ]
+    ]
+  },
+  "schema_sha256": "f9f6e459ec4cb30b1a32a0f9516797a5c4a155d3ab75ef77f66647057178672b",
+  "schema_version": 1,
+  "snapshot_binary_sha256": "91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3",
+  "snapshot_logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "source_counts": {
+    "ctu13_s5": 129831,
+    "ctu13_s7": 114075
+  },
+  "source_file_sha256": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+  },
+  "tool_schema_sha256": "d33b4221689a4235caf791dbe03edbd61fe0149833dc90bfabfba21fe1835140",
+  "version": "network_e2e_v1"
+}

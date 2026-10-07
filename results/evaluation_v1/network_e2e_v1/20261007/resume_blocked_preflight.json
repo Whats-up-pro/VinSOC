@@ -1,0 +1,44 @@
+{
+  "attempted_calls": 0,
+  "budget_usd": 0.25,
+  "client_created": false,
+  "contract": {
+    "lock_sha256": "0da244b1c6f6c6f67778a64498948d428b79115d9656e9cc678795b196c4ec15"
+  },
+  "cost_summary": {
+    "cost_unknown": false,
+    "known_cost_usd": 0,
+    "scope": "this_zero_request_preflight_only"
+  },
+  "failed_stage": "preflight",
+  "failure_category": "missing_ledger_or_gates",
+  "implementation_sha": "408d75f5e97653d8927497a84599588f1ed73ce8",
+  "input_availability": {
+    "openai_key_source": "missing",
+    "private_account_pricing_gates_supplied": false,
+    "private_ledger_supplied": false
+  },
+  "key_source": "unchecked",
+  "limitations": [
+    "No API client or model request created.",
+    "No human approval or live E2E success.",
+    "Snapshot qualification is separate evidence; private operational gates are still absent."
+  ],
+  "mode": "e2e_preflight",
+  "preflight_checks": {
+    "preflight_pass": false,
+    "snapshot_qualified": false
+  },
+  "requests": [],
+  "responses_received": 0,
+  "run_id": "resume-20261007-blocked",
+  "scenarios": [],
+  "schema_version": 1,
+  "scope": "network_only_public_lifecycle_demo",
+  "snapshot": {
+    "binary_sha256": "91a13ab149453ca6db6246ada3d7a21708537a12865a01e6475df18dd9a9eac3",
+    "logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c"
+  },
+  "status": "preflight_failed",
+  "valid_usage_records": 0
+}
