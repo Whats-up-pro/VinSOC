@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta http-equiv='Content-Security-Policy' content="default-src 'none'; style-src 'unsafe-inline'">
+<title>Network E2E receipt</title><style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    min-height: 100vh;
+}
+
+header {
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #1a73e8;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #333;
+    border-left: 4px solid #1a73e8;
+    padding-left: 10px;
+    margin: 20px 0 10px;
+}
+
+h3 {
+    color: #555;
+    margin: 15px 0 10px;
+}
+
+h4 {
+    color: #666;
+    margin: 10px 0 5px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-complete {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-partial {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-pending {
+    background: #cce5ff;
+    color: #004085;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background: #f8f9fa;
+    font-weight: 600;
+    width: 30%;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.scenario {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.assessment, .evidence, .validation, .lifecycle, .review {
+    margin: 15px 0;
+}
+
+.assessment {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+footer {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+    margin-top: 40px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    th {
+        width: 40%;
+    }
+}
+
+pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;background:#f4f5f7}details{margin:10px 0}summary{cursor:pointer;font-weight:600}.warning{color:#8a3000}
+</style></head><body><main class='container'><h1>Network E2E technical receipt</h1>
+<div class='status status-partial'>PARTIAL</div>
+<p class='warning'>SAVED RECEIPT — offline viewer, not a new model run</p>
+<h2>Run and stage</h2><table>
+<tr><th>run_id</th><td>network_e2e_blocked_handoff_20261007</td></tr>
+<tr><th>status</th><td>blocked</td></tr>
+<tr><th>scope</th><td>network_only_public_lifecycle_demo</td></tr>
+<tr><th>transport</th><td>not_started</td></tr>
+<tr><th>implementation_sha</th><td>8736ab7801bf9fcf15da0003220097e0cbb14d58</td></tr>
+<tr><th>review_status</th><td>not_started</td></tr>
+<tr><th>failed_stage</th><td>release_acceptance</td></tr>
+<tr><th>failure_category</th><td>qualified_snapshot_and_private_gates_unavailable</td></tr>
+<tr><th>attempted_calls</th><td>0</td></tr>
+<tr><th>responses_received</th><td>0</td></tr>
+<tr><th>valid_usage_records</th><td>0</td></tr>
+</table><h2>Cost Summary</h2>
+<p>Known Cost: $0.000000</p>
+<p>Cost Unknown: No</p>
+<p>Budget: unknown / unavailable; Reserved Exposure: $0.000000</p>
+<h2>API Requests</h2>
+<h2>Scenarios</h2>
+<h2>Provenance</h2>
+<details><summary>ci</summary><pre>{
+  &quot;conclusion&quot;: &quot;success&quot;,
+  &quot;head_sha&quot;: &quot;8736ab7801bf9fcf15da0003220097e0cbb14d58&quot;,
+  &quot;jobs&quot;: [
+    {
+      &quot;conclusion&quot;: &quot;success&quot;,
+      &quot;job_url&quot;: &quot;https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136/job/112626226685&quot;,
+      &quot;name&quot;: &quot;test (3.11)&quot;
+    },
+    {
+      &quot;conclusion&quot;: &quot;success&quot;,
+      &quot;job_url&quot;: &quot;https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136/job/112626226494&quot;,
+      &quot;name&quot;: &quot;test (3.12)&quot;
+    }
+  ],
+  &quot;run_url&quot;: &quot;https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136&quot;
+}</pre></details>
+<details><summary>contract</summary><pre>{
+  &quot;lock_sha256&quot;: null,
+  &quot;release_lock_created&quot;: false
+}</pre></details>
+<details><summary>snapshot</summary><pre>{
+  &quot;actual_binary_sha256&quot;: null,
+  &quot;actual_distinct_pairs&quot;: null,
+  &quot;actual_logical_sha256&quot;: null,
+  &quot;actual_source_counts&quot;: null,
+  &quot;qualified&quot;: false
+}</pre></details>
+<details><summary>request_config</summary><pre>null</pre></details>
+<p>Input receipt SHA-256: <code>e10cccfd04c722c5ab1550ed19dc0f984a20fa52597f0b12700bc66ea9d57905</code></p>
+<details><summary>Complete source receipt (all fields, unchanged)</summary><pre>{
+  &quot;account_checks&quot;: {
+    &quot;current_credit_or_spend_headroom_verified&quot;: null,
+    &quot;current_pricing_verified&quot;: null,
+    &quot;prior_cost_reconciled&quot;: null,
+    &quot;project_verified&quot;: null,
+    &quot;reason&quot;: &quot;Required private gates unavailable; no confirmation fabricated.&quot;
+  },
+  &quot;actual_model&quot;: null,
+  &quot;actual_provider&quot;: null,
+  &quot;attempted_calls&quot;: 0,
+  &quot;checks&quot;: [
+    {
+      &quot;command&quot;: &quot;python -m pytest tests/test_network_e2e_lifecycle.py -k local_verified_snapshot_two_scenario_rehearsal -q&quot;,
+      &quot;exit_code&quot;: 1,
+      &quot;safe_category&quot;: &quot;LOCAL_SNAPSHOT_REQUIRED&quot;
+    },
+    {
+      &quot;command&quot;: &quot;python -m evaluation.finalization.network_contract --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb&quot;,
+      &quot;exit_code&quot;: 1,
+      &quot;safe_category&quot;: &quot;snapshot_or_contract_qualification_failed&quot;
+    },
+    {
+      &quot;attempted_calls&quot;: 0,
+      &quot;client_created&quot;: false,
+      &quot;command&quot;: &quot;python -m scripts.demo_ctu_network_public_model_driven --e2e --preflight-only --scenario all --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output .vinsoc/demo/network-e2e/technical_receipt.json --budget-usd 0.25 --review-mode deferred&quot;,
+      &quot;exit_code&quot;: 1,
+      &quot;responses_received&quot;: 0,
+      &quot;safe_category&quot;: &quot;missing_ledger_or_gates&quot;
+    },
+    {
+      &quot;command&quot;: &quot;python -m pytest -q -k &#x27;not local_verified_snapshot_two_scenario_rehearsal&#x27;&quot;,
+      &quot;deselected&quot;: 1,
+      &quot;exit_code&quot;: 0,
+      &quot;passed&quot;: 1070,
+      &quot;skipped&quot;: 1,
+      &quot;warnings&quot;: 1821
+    },
+    {
+      &quot;command&quot;: &quot;focused network policy/lifecycle/guard/contract/runner/renderer tests excluding only unavailable local snapshot&quot;,
+      &quot;deselected&quot;: 1,
+      &quot;exit_code&quot;: 0,
+      &quot;passed&quot;: 111
+    },
+    {
+      &quot;command&quot;: &quot;changed-file py_compile and git diff --check / staged checks&quot;,
+      &quot;exit_code&quot;: 0
+    },
+    {
+      &quot;command&quot;: &quot;offline HTML browser preview&quot;,
+      &quot;exit_code&quot;: 1,
+      &quot;safe_category&quot;: &quot;BROWSER_BINARY_UNAVAILABLE&quot;,
+      &quot;visual_inspection_completed&quot;: false
+    }
+  ],
+  &quot;ci&quot;: {
+    &quot;conclusion&quot;: &quot;success&quot;,
+    &quot;head_sha&quot;: &quot;8736ab7801bf9fcf15da0003220097e0cbb14d58&quot;,
+    &quot;jobs&quot;: [
+      {
+        &quot;conclusion&quot;: &quot;success&quot;,
+        &quot;job_url&quot;: &quot;https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136/job/112626226685&quot;,
+        &quot;name&quot;: &quot;test (3.11)&quot;
+      },
+      {
+        &quot;conclusion&quot;: &quot;success&quot;,
+        &quot;job_url&quot;: &quot;https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136/job/112626226494&quot;,
+        &quot;name&quot;: &quot;test (3.12)&quot;
+      }
+    ],
+    &quot;run_url&quot;: &quot;https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136&quot;
+  },
+  &quot;client_created&quot;: false,
+  &quot;contract&quot;: {
+    &quot;lock_sha256&quot;: null,
+    &quot;release_lock_created&quot;: false
+  },
+  &quot;cost_summary&quot;: {
+    &quot;allocation_cost_unknown&quot;: true,
+    &quot;allocation_reconciled&quot;: false,
+    &quot;allocation_remaining_usd&quot;: null,
+    &quot;cost_unknown&quot;: false,
+    &quot;known_cost_usd&quot;: 0.0,
+    &quot;reserved_exposure_usd&quot;: 0.0,
+    &quot;scope&quot;: &quot;new_requests_in_this_task_only&quot;
+  },
+  &quot;expected_snapshot_contract_not_observed&quot;: {
+    &quot;distinct_pairs&quot;: 243906,
+    &quot;logical_sha256&quot;: &quot;42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c&quot;,
+    &quot;source_counts&quot;: {
+      &quot;ctu13_s5&quot;: 129831,
+      &quot;ctu13_s7&quot;: 114075
+    },
+    &quot;tables&quot;: [
+      &quot;dataset_provenance&quot;,
+      &quot;network_flows&quot;
+    ]
+  },
+  &quot;failed_stage&quot;: &quot;release_acceptance&quot;,
+  &quot;failure_category&quot;: &quot;qualified_snapshot_and_private_gates_unavailable&quot;,
+  &quot;implementation_sha&quot;: &quot;8736ab7801bf9fcf15da0003220097e0cbb14d58&quot;,
+  &quot;implementation_tree_sha&quot;: &quot;e7607b89806abf403632755b1253175ba252f108&quot;,
+  &quot;initial_sha&quot;: &quot;58298ac5fa17f5a1d79f06b7274f446dde264422&quot;,
+  &quot;key_source&quot;: &quot;unchecked&quot;,
+  &quot;limitations&quot;: [
+    &quot;No live invocation occurred and no Botnet/Normal model result exists for this task.&quot;,
+    &quot;Fixture rehearsal uses synthetic model/reviewer transports; it is not a real-snapshot or live PASS.&quot;,
+    &quot;Local snapshot acceptance failed; CI skipping ignored local input does not satisfy it.&quot;,
+    &quot;No account balance or total allocation-cost conclusion follows from zero new requests.&quot;,
+    &quot;Human review has not occurred; this handoff is not COMPLETE or TECHNICAL_COMPLETE.&quot;,
+    &quot;Historical R1/R2 scores, artifacts, locks, frozen policies and cross-domain candidates are unchanged.&quot;,
+    &quot;No frozen/R1/R2 suite, demo live, ThreatFox/OTRF download or paid cross-domain call was run.&quot;
+  ],
+  &quot;requests&quot;: [],
+  &quot;responses_received&quot;: 0,
+  &quot;review_status&quot;: &quot;not_started&quot;,
+  &quot;run_id&quot;: &quot;network_e2e_blocked_handoff_20261007&quot;,
+  &quot;scenarios&quot;: [],
+  &quot;schema_version&quot;: 1,
+  &quot;scope&quot;: &quot;network_only_public_lifecycle_demo&quot;,
+  &quot;snapshot&quot;: {
+    &quot;actual_binary_sha256&quot;: null,
+    &quot;actual_distinct_pairs&quot;: null,
+    &quot;actual_logical_sha256&quot;: null,
+    &quot;actual_source_counts&quot;: null,
+    &quot;qualified&quot;: false
+  },
+  &quot;status&quot;: &quot;blocked&quot;,
+  &quot;transport&quot;: &quot;not_started&quot;,
+  &quot;usage&quot;: null,
+  &quot;valid_usage_records&quot;: 0
+}</pre></details>
+<details><summary>Linked human review (hash-verified)</summary><pre>null</pre></details>
+<footer>Offline viewer: no model calls, no database query, no benchmark score.</footer></main></body></html>

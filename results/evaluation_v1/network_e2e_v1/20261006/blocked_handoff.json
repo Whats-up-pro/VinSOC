@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "run_id": "network_e2e_blocked_handoff_20261007",
+  "status": "blocked",
+  "scope": "network_only_public_lifecycle_demo",
+  "transport": "not_started",
+  "initial_sha": "58298ac5fa17f5a1d79f06b7274f446dde264422",
+  "implementation_sha": "8736ab7801bf9fcf15da0003220097e0cbb14d58",
+  "implementation_tree_sha": "e7607b89806abf403632755b1253175ba252f108",
+  "failed_stage": "release_acceptance",
+  "failure_category": "qualified_snapshot_and_private_gates_unavailable",
+  "attempted_calls": 0,
+  "responses_received": 0,
+  "valid_usage_records": 0,
+  "client_created": false,
+  "key_source": "unchecked",
+  "actual_provider": null,
+  "actual_model": null,
+  "usage": null,
+  "requests": [],
+  "scenarios": [],
+  "review_status": "not_started",
+  "cost_summary": {
+    "known_cost_usd": 0.0,
+    "cost_unknown": false,
+    "scope": "new_requests_in_this_task_only",
+    "reserved_exposure_usd": 0.0,
+    "allocation_reconciled": false,
+    "allocation_remaining_usd": null,
+    "allocation_cost_unknown": true
+  },
+  "snapshot": {
+    "qualified": false,
+    "actual_binary_sha256": null,
+    "actual_logical_sha256": null,
+    "actual_source_counts": null,
+    "actual_distinct_pairs": null
+  },
+  "expected_snapshot_contract_not_observed": {
+    "logical_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+    "tables": ["dataset_provenance", "network_flows"],
+    "source_counts": {"ctu13_s5": 129831, "ctu13_s7": 114075},
+    "distinct_pairs": 243906
+  },
+  "contract": {"release_lock_created": false, "lock_sha256": null},
+  "ci": {
+    "head_sha": "8736ab7801bf9fcf15da0003220097e0cbb14d58",
+    "run_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136",
+    "conclusion": "success",
+    "jobs": [
+      {"name": "test (3.11)", "conclusion": "success", "job_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136/job/112626226685"},
+      {"name": "test (3.12)", "conclusion": "success", "job_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/37569993136/job/112626226494"}
+    ]
+  },
+  "checks": [
+    {"command": "python -m pytest tests/test_network_e2e_lifecycle.py -k local_verified_snapshot_two_scenario_rehearsal -q", "exit_code": 1, "safe_category": "LOCAL_SNAPSHOT_REQUIRED"},
+    {"command": "python -m evaluation.finalization.network_contract --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb", "exit_code": 1, "safe_category": "snapshot_or_contract_qualification_failed"},
+    {"command": "python -m scripts.demo_ctu_network_public_model_driven --e2e --preflight-only --scenario all --snapshot data/ctu_network_public/snapshots/ctu_dev.duckdb --output .vinsoc/demo/network-e2e/technical_receipt.json --budget-usd 0.25 --review-mode deferred", "exit_code": 1, "safe_category": "missing_ledger_or_gates", "attempted_calls": 0, "responses_received": 0, "client_created": false},
+    {"command": "python -m pytest -q -k 'not local_verified_snapshot_two_scenario_rehearsal'", "exit_code": 0, "passed": 1070, "skipped": 1, "deselected": 1, "warnings": 1821},
+    {"command": "focused network policy/lifecycle/guard/contract/runner/renderer tests excluding only unavailable local snapshot", "exit_code": 0, "passed": 111, "deselected": 1},
+    {"command": "changed-file py_compile and git diff --check / staged checks", "exit_code": 0},
+    {"command": "offline HTML browser preview", "exit_code": 1, "safe_category": "BROWSER_BINARY_UNAVAILABLE", "visual_inspection_completed": false}
+  ],
+  "account_checks": {
+    "project_verified": null,
+    "current_credit_or_spend_headroom_verified": null,
+    "current_pricing_verified": null,
+    "prior_cost_reconciled": null,
+    "reason": "Required private gates unavailable; no confirmation fabricated."
+  },
+  "limitations": [
+    "No live invocation occurred and no Botnet/Normal model result exists for this task.",
+    "Fixture rehearsal uses synthetic model/reviewer transports; it is not a real-snapshot or live PASS.",
+    "Local snapshot acceptance failed; CI skipping ignored local input does not satisfy it.",
+    "No account balance or total allocation-cost conclusion follows from zero new requests.",
+    "Human review has not occurred; this handoff is not COMPLETE or TECHNICAL_COMPLETE.",
+    "Historical R1/R2 scores, artifacts, locks, frozen policies and cross-domain candidates are unchanged.",
+    "No frozen/R1/R2 suite, demo live, ThreatFox/OTRF download or paid cross-domain call was run."
+  ]
+}
