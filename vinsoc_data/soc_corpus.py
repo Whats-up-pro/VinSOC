@@ -93,11 +93,12 @@ def extract_case(row: dict, *, split: str, file_sha256: str) -> dict:
             continue
         resource, field = PAYLOADS[tool]; payload = json.loads(message['content'])
         items = payload.get(field)
-        if isinstance(items, dict): items = [items]
+        object_payload = isinstance(items, dict)
+        if object_payload: items = [items]
         if not isinstance(items, list): continue
         available.add(resource)
         for item_index, item in enumerate(items):
-            pointer = f'/trace/{index}/content/{field}/{item_index}'
+            pointer = f'/trace/{index}/content/{field}' + ('' if object_payload else f'/{item_index}')
             provenance = {'dataset_revision': REVISION, 'file_sha256': file_sha256, 'split': split,
                 'scenario_id': scenario, 'original_tool_call_id': message['tool_call_id'],
                 'json_pointer': pointer, 'raw_record_sha256': digest(item), 'data_origin': 'synthetic'}
@@ -117,7 +118,7 @@ def extract_case(row: dict, *, split: str, file_sha256: str) -> dict:
                 quarantine.append({'scenario_id': scenario, 'reason': 'CONFLICTING_NATIVE_KEY', 'provenance': provenance})
             else:
                 observations.setdefault(key, record)
-    return {'scenario_id': scenario, 'input': input_data, 'observations': [v for k, v in observations.items() if k not in conflicts],
+    return {'scenario_id': scenario, 'input': input_data, 'input_provenance': {'dataset_revision': REVISION, 'file_sha256': file_sha256, 'split': split, 'scenario_id': scenario, 'json_pointer': '/alert', 'raw_record_sha256': digest(alert), 'data_origin': 'synthetic'}, 'observations': [v for k, v in observations.items() if k not in conflicts],
             'available': sorted(available), 'quarantine': quarantine}
 
 def _iocs(data):
@@ -149,7 +150,7 @@ def import_corpus(source_dir: Path, database: Path, *, manifest: dict) -> dict:
     counts = {}; quarantine = []; imported = 0; logical = hashlib.sha256()
     with duckdb.connect(str(database)) as out:
         out.execute('BEGIN TRANSACTION')
-        out.execute('CREATE TABLE case_inputs(scenario_id VARCHAR PRIMARY KEY, split VARCHAR, input_json VARCHAR)')
+        out.execute('CREATE TABLE case_inputs(scenario_id VARCHAR PRIMARY KEY, split VARCHAR, input_json VARCHAR, provenance_json VARCHAR)')
         out.execute('CREATE TABLE observations(scenario_id VARCHAR, resource VARCHAR, source_record_id VARCHAR PRIMARY KEY, record_json VARCHAR)')
         out.execute('CREATE TABLE source_availability(scenario_id VARCHAR, resource VARCHAR)')
         out.execute('CREATE TABLE ioc_index(kind VARCHAR, value VARCHAR, scenario_id VARCHAR)')
@@ -161,7 +162,7 @@ def import_corpus(source_dir: Path, database: Path, *, manifest: dict) -> dict:
             inputs = []; observations = []; availability = []; iocs = set()
             for values in rows:
                 case = extract_case(dict(zip(columns, values)), split=split, file_sha256=sha)
-                scenario = case['scenario_id']; inputs.append((scenario, split, canonical(case['input'])))
+                scenario = case['scenario_id']; inputs.append((scenario, split, canonical(case['input']), canonical(case['input_provenance'])))
                 quarantine.extend(case['quarantine']); logical.update(canonical(case).encode())
                 availability.extend((scenario, r) for r in case['available'])
                 for kind, value in _iocs(case['input']): iocs.add((kind, value, scenario))
@@ -174,7 +175,7 @@ def import_corpus(source_dir: Path, database: Path, *, manifest: dict) -> dict:
             _insert_rows(out, 'ioc_index', sorted(iocs))
             imported += len(observations)
         metadata = {'source_revision': REVISION, 'source_hashes': hashes, 'logical_sha256': logical.hexdigest(),
-                    'data_origin': 'synthetic', 'import_protocol': 'soc_corpus_v1'}
+                    'data_origin': 'synthetic', 'import_protocol': 'soc_corpus_v1', 'importer_sha256': file_digest(__file__)}
         out.execute('INSERT INTO corpus_metadata VALUES (?)', [canonical(metadata)])
         out.execute('COMMIT')
     return {'status': 'imported', **metadata, 'database_sha256': file_digest(database), 'cases': counts,
@@ -202,6 +203,11 @@ class SocCorpusRepository:
         rows = self._query('SELECT input_json FROM case_inputs WHERE scenario_id=?', [scenario_id])
         if not rows: raise ValueError('UNKNOWN_SOC_SCENARIO')
         return json.loads(rows[0][0])
+    def input_provenance_for(self, scenario_id):
+        rows=self._query('SELECT provenance_json FROM case_inputs WHERE scenario_id=?',[scenario_id])
+        if not rows:raise ValueError('UNKNOWN_SOC_SCENARIO')
+        return json.loads(rows[0][0])
+
     def records(self, scenario_id: str, resource: str) -> list[dict]:
         self.input_for(scenario_id)
         if resource not in FIELDS: raise ValueError('UNSUPPORTED_SOC_RESOURCE')

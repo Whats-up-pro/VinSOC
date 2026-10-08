@@ -5,10 +5,11 @@
     "test.parquet": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
     "validation.parquet": "94cd7987fe3064cd0933d8fabed75d517e955f8faa8723ac07c9b01446cdfcf7"
   },
-  "logical_sha256": "e0c6d04467e570be132b8c4286c295679a1a9917ce41bde06595329201470be3",
+  "logical_sha256": "967c4dd6b926a6ce1dfb15cdb24a0e29dbcb29dc58f64e44e53116b9291c3547",
   "data_origin": "synthetic",
   "import_protocol": "soc_corpus_v1",
-  "database_sha256": "f6dcfd0c18269aabb397aeabfbb6a956e9161599c6f4725cd5e85d5d5698b757",
+  "importer_sha256": "27239a0256531c5ef5cbb2a4ab8c99366c285bce149b43c92dd9656c02423f2d",
+  "database_sha256": "7c1cf902d10e586454f9dd123182e174502d4545405442016a477ef0bc623e2e",
   "cases": {
     "test": 5031,
     "validation": 4984
