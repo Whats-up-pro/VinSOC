@@ -1,0 +1,258 @@
+{
+  "SCT-087094": {
+    "label": "malicious",
+    "family": "ad_discovery"
+  },
+  "SCT-017066": {
+    "label": "malicious",
+    "family": "browser_cred_theft"
+  },
+  "SCT-096313": {
+    "label": "malicious",
+    "family": "c2_beacon"
+  },
+  "SCT-005963": {
+    "label": "malicious",
+    "family": "cloud_account_anomaly"
+  },
+  "SCT-074064": {
+    "label": "malicious",
+    "family": "cloud_exfil"
+  },
+  "SCT-033675": {
+    "label": "malicious",
+    "family": "dns_tunnel"
+  },
+  "SCT-068480": {
+    "label": "malicious",
+    "family": "edr_tamper"
+  },
+  "SCT-042934": {
+    "label": "malicious",
+    "family": "kerberoast"
+  },
+  "SCT-073209": {
+    "label": "malicious",
+    "family": "log_clear"
+  },
+  "SCT-069924": {
+    "label": "malicious",
+    "family": "lsass_dump"
+  },
+  "SCT-069185": {
+    "label": "malicious",
+    "family": "masquerade_binary"
+  },
+  "SCT-069817": {
+    "label": "malicious",
+    "family": "pass_the_hash"
+  },
+  "SCT-027114": {
+    "label": "malicious",
+    "family": "phish_macro_powershell"
+  },
+  "SCT-081773": {
+    "label": "malicious",
+    "family": "process_injection"
+  },
+  "SCT-046091": {
+    "label": "malicious",
+    "family": "ps_download_cradle"
+  },
+  "SCT-000441": {
+    "label": "malicious",
+    "family": "ransomware_staging"
+  },
+  "SCT-018860": {
+    "label": "malicious",
+    "family": "rdp_bruteforce"
+  },
+  "SCT-007682": {
+    "label": "malicious",
+    "family": "registry_persistence"
+  },
+  "SCT-005883": {
+    "label": "malicious",
+    "family": "scheduled_task_persistence"
+  },
+  "SCT-055180": {
+    "label": "malicious",
+    "family": "smb_lateral"
+  },
+  "SCT-082579": {
+    "label": "malicious",
+    "family": "webshell"
+  },
+  "SCT-014202": {
+    "label": "malicious",
+    "family": "wmi_remote"
+  },
+  "SCT-048015": {
+    "label": "malicious",
+    "family": "ad_discovery"
+  },
+  "SCT-063014": {
+    "label": "malicious",
+    "family": "browser_cred_theft"
+  },
+  "SCT-085165": {
+    "label": "malicious",
+    "family": "c2_beacon"
+  },
+  "SCT-046159": {
+    "label": "malicious",
+    "family": "cloud_account_anomaly"
+  },
+  "SCT-038260": {
+    "label": "malicious",
+    "family": "cloud_exfil"
+  },
+  "SCT-089337": {
+    "label": "malicious",
+    "family": "dns_tunnel"
+  },
+  "SCT-062013": {
+    "label": "malicious",
+    "family": "edr_tamper"
+  },
+  "SCT-045795": {
+    "label": "malicious",
+    "family": "kerberoast"
+  },
+  "SCT-078787": {
+    "label": "malicious",
+    "family": "log_clear"
+  },
+  "SCT-003851": {
+    "label": "malicious",
+    "family": "lsass_dump"
+  },
+  "SCT-004523": {
+    "label": "benign",
+    "family": "admin_ps_maintenance"
+  },
+  "SCT-006370": {
+    "label": "benign",
+    "family": "av_selftest"
+  },
+  "SCT-062225": {
+    "label": "benign",
+    "family": "backup_spike"
+  },
+  "SCT-059065": {
+    "label": "benign",
+    "family": "dev_build"
+  },
+  "SCT-054032": {
+    "label": "benign",
+    "family": "new_service_change_window"
+  },
+  "SCT-001315": {
+    "label": "benign",
+    "family": "onedrive_bulk_sync"
+  },
+  "SCT-016175": {
+    "label": "benign",
+    "family": "sccm_deployment"
+  },
+  "SCT-064380": {
+    "label": "benign",
+    "family": "vuln_scanner"
+  },
+  "SCT-001230": {
+    "label": "benign",
+    "family": "windows_update"
+  },
+  "SCT-007411": {
+    "label": "benign",
+    "family": "admin_ps_maintenance"
+  },
+  "SCT-014523": {
+    "label": "benign",
+    "family": "av_selftest"
+  },
+  "SCT-067310": {
+    "label": "benign",
+    "family": "backup_spike"
+  },
+  "SCT-093313": {
+    "label": "benign",
+    "family": "dev_build"
+  },
+  "SCT-061180": {
+    "label": "benign",
+    "family": "new_service_change_window"
+  },
+  "SCT-020268": {
+    "label": "benign",
+    "family": "onedrive_bulk_sync"
+  },
+  "SCT-003100": {
+    "label": "benign",
+    "family": "sccm_deployment"
+  },
+  "SCT-001971": {
+    "label": "benign",
+    "family": "vuln_scanner"
+  },
+  "SCT-003385": {
+    "label": "benign",
+    "family": "windows_update"
+  },
+  "SCT-016986": {
+    "label": "benign",
+    "family": "admin_ps_maintenance"
+  },
+  "SCT-015639": {
+    "label": "benign",
+    "family": "av_selftest"
+  },
+  "SCT-047396": {
+    "label": "benign",
+    "family": "backup_spike"
+  },
+  "SCT-024335": {
+    "label": "benign",
+    "family": "dev_build"
+  },
+  "SCT-057296": {
+    "label": "benign",
+    "family": "new_service_change_window"
+  },
+  "SCT-005242": {
+    "label": "benign",
+    "family": "onedrive_bulk_sync"
+  },
+  "SCT-069728": {
+    "label": "benign",
+    "family": "sccm_deployment"
+  },
+  "SCT-010827": {
+    "label": "benign",
+    "family": "vuln_scanner"
+  },
+  "SCT-001227": {
+    "label": "benign",
+    "family": "windows_update"
+  },
+  "SCT-019955": {
+    "label": "benign",
+    "family": "admin_ps_maintenance"
+  },
+  "SCT-001261": {
+    "label": "benign",
+    "family": "av_selftest"
+  },
+  "SCT-009073": {
+    "label": "benign",
+    "family": "backup_spike"
+  },
+  "SCT-027778": {
+    "label": "benign",
+    "family": "dev_build"
+  },
+  "SCT-011462": {
+    "label": "benign",
+    "family": "new_service_change_window"
+  }
+}

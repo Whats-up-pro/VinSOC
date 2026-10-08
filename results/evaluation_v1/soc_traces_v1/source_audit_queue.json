@@ -1,0 +1,112 @@
+{
+  "status": "pending_human_review",
+  "inventory_sha256": "58394eb5010eab7ad44892184a6ebf3357a5046c1c8dcc0548d3a84659fb029a",
+  "cases": [
+    {
+      "scenario_id": "SCT-087094",
+      "family": "ad_discovery",
+      "label": "malicious",
+      "payload_sha256": "bde1cbd37ca9ba0b6f9b9a2479e5d3048ff44319287fcdd25c48c24a752e5d38",
+      "near_duplicate_sha256": "a3147740deb85eb4539d1eab3155b046d41882c8914e65c07add6607b3b26c72",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-017066",
+      "family": "browser_cred_theft",
+      "label": "malicious",
+      "payload_sha256": "fae0c5ff0fe54b84370604651bba0983413386d12586d76e04d9a71e0713c64f",
+      "near_duplicate_sha256": "60dc59c45e5487ab84d69d0ed1aa31d7336b64765183eddd95a0e7011fafa449",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-096313",
+      "family": "c2_beacon",
+      "label": "malicious",
+      "payload_sha256": "59b5204cc78bbec8aed7e028db84056804b4caf5b8b6c2353665db208dde324a",
+      "near_duplicate_sha256": "d6f4d052219464bc6391bb8b4b17869b9dadd77dce9ccefbc1103af0e2cd8917",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-005963",
+      "family": "cloud_account_anomaly",
+      "label": "malicious",
+      "payload_sha256": "6309694962b035d30af030b2f41f7f7fcb4eefacb437332157fb88d2ad0c0da1",
+      "near_duplicate_sha256": "dd6de03e25a0fc214a0909e13b342bce72e05bda72a32050e64ded7d7d4c799b",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-074064",
+      "family": "cloud_exfil",
+      "label": "malicious",
+      "payload_sha256": "4895f232007a8cb40142e57f9d7340875a381d4013352d7178b33549cf56fbd4",
+      "near_duplicate_sha256": "8fcda8efd59c0fbf0e1ec2e7f17e4697827f16e224e2f8705a9c089b440ea16d",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-033675",
+      "family": "dns_tunnel",
+      "label": "malicious",
+      "payload_sha256": "d68960e916ba45373fc374733a2bb9e8d4fa9fed1d3880e256e34924b4125cc2",
+      "near_duplicate_sha256": "a8b3a949f8acc8fa8b896580a63ce7d883fc075c8f18fd04a9703015dc7a3250",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-004523",
+      "family": "admin_ps_maintenance",
+      "label": "benign",
+      "payload_sha256": "adf10763f051081d1c5f6fa256bd44593c3293fdd6f230b0496be3a60d53fc8c",
+      "near_duplicate_sha256": "30b47da88b1b1d5a01fb4dd2cead8d87cb33a5d5c05a9ba0f3b7a015e4d5d9bd",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-006370",
+      "family": "av_selftest",
+      "label": "benign",
+      "payload_sha256": "d6add21e2b5fe9023f406fd0c70386aa62299c98d0f8f5e9a38d419525afecc7",
+      "near_duplicate_sha256": "24e441ebfb397d561bffc55e7e796a1e3ac79362b877d830aed094476d264609",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-062225",
+      "family": "backup_spike",
+      "label": "benign",
+      "payload_sha256": "ae0039d520b8bf61c4aa85f7265b51fb065648f1ccecca1941c2278d15fec6da",
+      "near_duplicate_sha256": "9e16fecbf5d41983888a527d69790f41b02517a84f8fd2f954a30d39b4131c92",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-059065",
+      "family": "dev_build",
+      "label": "benign",
+      "payload_sha256": "813816a16e524890ec2d33c193d75235b817f67f2448208736b6161ec3176a97",
+      "near_duplicate_sha256": "31b4e995ba4dde7142b3854b88970c625ac2bbbdab94296d584505c5e8f46c67",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-054032",
+      "family": "new_service_change_window",
+      "label": "benign",
+      "payload_sha256": "0cdd086a09d6a830668e4517b126707a239f746c1a2f9147df19a3a477d57805",
+      "near_duplicate_sha256": "5ea08988405e486e89fa32de6f330a5d8f69aaf67ce6dd7a1c3ef144dd7475ca",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    },
+    {
+      "scenario_id": "SCT-001315",
+      "family": "onedrive_bulk_sync",
+      "label": "benign",
+      "payload_sha256": "a5a39d55e2af0a4558ff034f4eeb937a725afa1e2008093b1550511b4ada1c90",
+      "near_duplicate_sha256": "2791aee72ad6bd65a145ff80df179e889beace453c2b1f5839126aaf90b1bc68",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2"
+    }
+  ],
+  "required_fields": [
+    "analyst",
+    "reviewed_at",
+    "scenario_id",
+    "source_sha256",
+    "inventory_sha256",
+    "label_supportability",
+    "decision",
+    "rationale"
+  ]
+}
