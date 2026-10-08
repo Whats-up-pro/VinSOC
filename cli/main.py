@@ -523,9 +523,35 @@ def main():
     render_parser.add_argument('source', type=Path)
     render_parser.add_argument('--output', type=Path, required=True)
 
+    soc_parser=subparsers.add_parser('soc',help='Validate locked SOC alert/IOC input without a model call')
+    soc_parser.add_argument('--input',type=Path,required=True)
+    soc_parser.add_argument('--case-id',required=True)
+    soc_parser.add_argument('--condition',choices=['S0','S1'],required=True)
+    soc_parser.add_argument('--release',type=Path,required=True)
+    soc_render=subparsers.add_parser('soc-report',help='Render immutable SOC receipt offline')
+    soc_render.add_argument('--receipt',type=Path,required=True)
+    soc_render.add_argument('--output',type=Path,required=True)
+    soc_render.add_argument('--review',type=Path)
+
     args = parser.parse_args()
 
-    if args.command == 'query':
+    if args.command == 'soc-report':
+        from evaluation.soc_traces_v1.reporting import render_case
+        console.print_json(data=render_case(args.receipt,args.output,review_path=args.review))
+    elif args.command == 'soc':
+        from evaluation.soc_traces_v1.release import validate_release,read_bound_file
+        from vinsoc_data.soc_corpus import SocCorpusRepository
+        from skills.soc_corpus_skill import SocCorpusContext
+        release=json.loads(args.release.read_text());validate_release(release)
+        if args.case_id not in release['case_ids']:raise ValueError('SOC_CASE_OUTSIDE_SCOPE')
+        receipt=read_bound_file(release['identities']['corpus_receipt'])
+        repo=SocCorpusRepository(Path(release['identities']['corpus_path']),expected_sha256=receipt['database_sha256'])
+        try:
+            context=SocCorpusContext(repo,args.case_id,args.condition,receipt['source_revision'],receipt['database_sha256'])
+            intake=json.loads(args.input.read_text());InvestigationOrchestrator._soc_validate_intake(intake,context)
+        finally:repo.close()
+        console.print_json(data={'status':'input_scope_validated','new_model_calls':0,'case_id':args.case_id,'condition':args.condition,'execution':'Use the authorized suite runner; this command creates no separate paid case.'})
+    elif args.command == 'query':
         from scripts.run_vinsoc_query_acceptance import main as query_main
         forwarded = ['--scope', args.scope, '--condition', args.condition, '--output', str(args.output)]
         if args.preflight_only:

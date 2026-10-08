@@ -33,12 +33,13 @@ class SocProvider(LLMProvider):
         try:
             response=self.client.chat.completions.with_raw_response.create(**payload)
             body=response.http_response.content
+            transport={'request_id':response.http_response.headers.get('x-request-id'),'http_status':response.http_response.status_code,'latency_ms':(time.perf_counter()-started)*1000}
         except Exception:
             self.journal.fail(reservation,'transport_unknown_cost');raise SocTerminalError('SOC_TRANSPORT_UNKNOWN_COST') from None
-        raw,measured=self.journal.record_response_bytes(reservation,body)
+        raw,measured=self.journal.record_response_bytes(reservation,body,transport=transport)
         self.last_raw=raw
         self.turn+=1
-        metadata={'reservation_id':reservation,'actual_model':raw.get('model'),'request_id':raw.get('id'),'latency_ms':(time.perf_counter()-started)*1000,**measured}
+        metadata={'reservation_id':reservation,'actual_model':raw.get('model'),'request_id':transport['request_id'],'completion_id':raw.get('id'),'latency_ms':transport['latency_ms'],**measured}
         self.calls.append(metadata)
         checkpoint=getattr(self,'response_checkpoint',None)
         if checkpoint:
@@ -46,7 +47,7 @@ class SocProvider(LLMProvider):
             except Exception:
                 self.journal.fail(reservation,'public_checkpoint_failed');raise SocTerminalError('SOC_CHECKPOINT_FAILED') from None
         choices=raw.get('choices')
-        if raw.get('model')!=MODEL or not raw.get('id') or not isinstance(choices,list) or len(choices)!=1 or choices[0].get('finish_reason') not in ('stop','tool_calls'):
+        if transport['http_status']!=200 or not transport['request_id'] or raw.get('model')!=MODEL or not raw.get('id') or not isinstance(choices,list) or len(choices)!=1 or choices[0].get('finish_reason') not in ('stop','tool_calls'):
             self.journal.fail(reservation,'response_contract_invalid');raise SocTerminalError('SOC_RESPONSE_CONTRACT_INVALID')
         message=choices[0].get('message',{});calls=[]
         for call in message.get('tool_calls') or []:

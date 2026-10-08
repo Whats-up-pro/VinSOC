@@ -118,17 +118,18 @@ class SocRunJournal:
             atomic_json(self.path.parent/'requests'/f'{reservation:04d}.json',payload)
         return reservation
 
-    def record_response_bytes(self,reservation_id,body):
+    def record_response_bytes(self,reservation_id,body, *, transport=None):
         path=self.path.parent/'responses'/f'{reservation_id:04d}.json'
         atomic_bytes(path,body)
+        if transport is not None:atomic_json(path.with_suffix('.transport.json'),transport)
         try:raw=json.loads(body);measured=_response_usage(raw,self.checked['evidence']['pricing'])
         except (ValueError,TypeError):self.fail(reservation_id,'invalid_response_or_missing_usage');raise SocTerminalError('SOC_RESPONSE_UNKNOWN_COST') from None
         with self._state() as state:
             row=state['reservations'][reservation_id]
             if row['status']!='reserved':raise SocTerminalError('SOC_RESPONSE_DUPLICATE')
-            row.update(status='received',response_sha256=hashlib_sha(body),request_id=raw.get('id'),actual_model=raw.get('model'),**measured,cost_unknown=False)
+            row.update(status='received',response_sha256=hashlib_sha(body),request_id=(transport or {}).get('request_id'),completion_id=raw.get('id'),actual_model=raw.get('model'),**measured,cost_unknown=False)
             state['estimated_cost_usd']+=measured['estimated_cost_usd'];state['unknown_cost']=False
-            if measured['estimated_cost_usd']>row['reserved_usd'] or measured['usage']['completion_tokens']>2000:
+            if measured['estimated_cost_usd']>row['reserved_usd'] or measured['usage']['completion_tokens']>2000 or measured['usage']['prompt_tokens']>row['request_bytes']+self.checked['evidence']['request_bound']['framing_token_reserve']:
                 state['status']='terminal';raise SocTerminalError('SOC_VERIFIED_BOUND_EXCEEDED')
         return raw,measured
 

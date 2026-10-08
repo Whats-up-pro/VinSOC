@@ -62,7 +62,7 @@ def preflight(*,source_dir,corpus,inventory,reviews,private_dir):
         import duckdb,openai,httpx
         environment={'python':'.'.join(map(str,sys.version_info[:3])),'duckdb':duckdb.__version__,'openai':openai.__version__,'httpx':httpx.__version__}
         artifacts=Path(inventory).parent
-        identities={'implementation_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'runtime':runtime,'environment':environment,
+        identities={'implementation_sha':(read_bound_file(gates['ci']).get('implementation_sha') if 'ci' in gates else subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()),'runtime':runtime,'environment':environment,
             'source_revision':receipt['source_revision'],'source_dir':str(Path(source_dir).resolve()),'corpus_path':str(Path(corpus).resolve()),
             'corpus_receipt':bound(receipt_path),'inventory':bound(inventory),'gold':bound(artifacts/'gold.json'),'demo_selection':bound(artifacts/'demo_selection.json')}
         result['runtime_closure_sha256']=digest(runtime);result['implementation_sha']=identities['implementation_sha']
