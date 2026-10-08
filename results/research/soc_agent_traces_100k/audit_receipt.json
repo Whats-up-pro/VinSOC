@@ -1,0 +1,394 @@
+{
+  "scope": "offline_external_synthetic_dataset_quality_audit_not_vinsoc_acceptance",
+  "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+  "builder_revision": "d6d3c71465a1bbfa1c8101ee25a647a01e5adb59",
+  "engine": "duckdb 1.5.5",
+  "new_model_calls": 0,
+  "splits": {
+    "test": {
+      "counts": {
+        "records": 5031,
+        "success_true": 4167,
+        "visible_decisive_marker_records": 5029,
+        "events_outside_plus_minus_requested_minutes_records": 3573,
+        "success_false": 864,
+        "conclusion_template_vs_final_decision_mismatch": 864,
+        "cited_ids_not_observed_in_tool_messages": 80,
+        "unobserved_citation_success_false": 21,
+        "unobserved_citation_success_true": 59,
+        "invalid_json_records": 0,
+        "count_field_mismatch": 0,
+        "duplicate_native_id_within_case": 0,
+        "native_link_mismatch": 0,
+        "trace_parse_or_structure_failure": 0,
+        "final_report_parse_failure": 0,
+        "final_flat_field_mismatch": 0,
+        "success_vs_verdict_agreement_mismatch": 0
+      },
+      "archetypes": {
+        "registry_persistence": 345,
+        "rdp_bruteforce": 345,
+        "vuln_scanner": 52,
+        "c2_beacon": 155,
+        "dns_tunnel": 174,
+        "smb_lateral": 286,
+        "log_clear": 248,
+        "phish_macro_powershell": 340,
+        "browser_cred_theft": 343,
+        "wmi_remote": 297,
+        "cloud_account_anomaly": 112,
+        "masquerade_binary": 333,
+        "ad_discovery": 328,
+        "ps_download_cradle": 161,
+        "cloud_exfil": 344,
+        "kerberoast": 98,
+        "dev_build": 213,
+        "process_injection": 344,
+        "sccm_deployment": 20,
+        "edr_tamper": 52,
+        "webshell": 25,
+        "pass_the_hash": 108,
+        "backup_spike": 152,
+        "scheduled_task_persistence": 32,
+        "ransomware_staging": 11,
+        "lsass_dump": 23,
+        "admin_ps_maintenance": 26,
+        "new_service_change_window": 31,
+        "onedrive_bulk_sync": 12,
+        "av_selftest": 16,
+        "windows_update": 5
+      },
+      "decisions": {
+        "escalate": 3784,
+        "monitor": 864,
+        "close": 383
+      },
+      "tools": {
+        "get_surrounding_events": 5031,
+        "get_process_tree": 3506,
+        "lookup_attack": 5470,
+        "search_sigma": 4332,
+        "get_asset_context": 4919,
+        "calculate_risk": 5031,
+        "retrieve_playbook": 2559,
+        "get_related_alerts": 2505,
+        "search_cve": 25
+      },
+      "unique_scenario_ids": 5031,
+      "unique_cited_id_strings_across_cases": 12,
+      "archetype_tool_sequence_signature_count": 411,
+      "examples": {
+        "time_window_diagnostic": {
+          "scenario_id": "SCT-046478",
+          "out_of_window_event_ids": [
+            "EV-0002",
+            "EV-0003",
+            "EV-0004",
+            "EV-0005",
+            "EV-0006",
+            "EV-0001"
+          ]
+        },
+        "conclusion_mismatch": {
+          "scenario_id": "SCT-065533",
+          "success": false,
+          "prose_decision": [
+            "close"
+          ],
+          "json_decision": "monitor"
+        },
+        "unobserved_citation": {
+          "scenario_id": "SCT-023221",
+          "missing_ids": [
+            "EV-0009"
+          ]
+        }
+      }
+    },
+    "validation": {
+      "counts": {
+        "records": 4984,
+        "success_false": 838,
+        "visible_decisive_marker_records": 4984,
+        "conclusion_template_vs_final_decision_mismatch": 838,
+        "success_true": 4146,
+        "events_outside_plus_minus_requested_minutes_records": 3532,
+        "cited_ids_not_observed_in_tool_messages": 65,
+        "unobserved_citation_success_true": 40,
+        "unobserved_citation_success_false": 25,
+        "invalid_json_records": 0,
+        "count_field_mismatch": 0,
+        "duplicate_native_id_within_case": 0,
+        "native_link_mismatch": 0,
+        "trace_parse_or_structure_failure": 0,
+        "final_report_parse_failure": 0,
+        "final_flat_field_mismatch": 0,
+        "success_vs_verdict_agreement_mismatch": 0
+      },
+      "archetypes": {
+        "av_selftest": 14,
+        "phish_macro_powershell": 339,
+        "c2_beacon": 154,
+        "dev_build": 213,
+        "masquerade_binary": 331,
+        "registry_persistence": 344,
+        "rdp_bruteforce": 345,
+        "ad_discovery": 327,
+        "wmi_remote": 295,
+        "smb_lateral": 284,
+        "browser_cred_theft": 341,
+        "kerberoast": 97,
+        "log_clear": 247,
+        "process_injection": 342,
+        "dns_tunnel": 172,
+        "edr_tamper": 50,
+        "cloud_exfil": 343,
+        "new_service_change_window": 29,
+        "pass_the_hash": 106,
+        "backup_spike": 150,
+        "lsass_dump": 21,
+        "ps_download_cradle": 159,
+        "vuln_scanner": 50,
+        "cloud_account_anomaly": 111,
+        "webshell": 23,
+        "scheduled_task_persistence": 30,
+        "sccm_deployment": 18,
+        "admin_ps_maintenance": 24,
+        "ransomware_staging": 10,
+        "onedrive_bulk_sync": 10,
+        "windows_update": 4,
+        "helpdesk_reset_flood": 1
+      },
+      "decisions": {
+        "monitor": 839,
+        "escalate": 3782,
+        "close": 363
+      },
+      "tools": {
+        "get_surrounding_events": 4984,
+        "get_asset_context": 4872,
+        "calculate_risk": 4984,
+        "get_process_tree": 3468,
+        "lookup_attack": 5457,
+        "search_sigma": 4332,
+        "get_related_alerts": 2485,
+        "retrieve_playbook": 2538,
+        "search_cve": 23
+      },
+      "unique_scenario_ids": 4984,
+      "unique_cited_id_strings_across_cases": 12,
+      "archetype_tool_sequence_signature_count": 404,
+      "examples": {
+        "conclusion_mismatch": {
+          "scenario_id": "SCT-005390",
+          "success": false,
+          "prose_decision": [
+            "close"
+          ],
+          "json_decision": "monitor"
+        },
+        "time_window_diagnostic": {
+          "scenario_id": "SCT-069547",
+          "out_of_window_event_ids": [
+            "EV-0001",
+            "EV-0002"
+          ]
+        },
+        "unobserved_citation": {
+          "scenario_id": "SCT-089077",
+          "missing_ids": [
+            "EV-0009"
+          ]
+        }
+      }
+    },
+    "train_first100_viewer_sample": {
+      "counts": {
+        "records": 100,
+        "success_true": 86,
+        "visible_decisive_marker_records": 100,
+        "events_outside_plus_minus_requested_minutes_records": 70,
+        "success_false": 14,
+        "conclusion_template_vs_final_decision_mismatch": 14,
+        "cited_ids_not_observed_in_tool_messages": 1,
+        "unobserved_citation_success_true": 1,
+        "invalid_json_records": 0,
+        "count_field_mismatch": 0,
+        "duplicate_native_id_within_case": 0,
+        "native_link_mismatch": 0,
+        "trace_parse_or_structure_failure": 0,
+        "final_report_parse_failure": 0,
+        "final_flat_field_mismatch": 0,
+        "success_vs_verdict_agreement_mismatch": 0
+      },
+      "archetypes": {
+        "masquerade_binary": 11,
+        "process_injection": 7,
+        "backup_spike": 5,
+        "wmi_remote": 6,
+        "log_clear": 2,
+        "dns_tunnel": 4,
+        "rdp_bruteforce": 10,
+        "smb_lateral": 5,
+        "registry_persistence": 5,
+        "c2_beacon": 7,
+        "vuln_scanner": 4,
+        "dev_build": 4,
+        "new_service_change_window": 1,
+        "cloud_exfil": 6,
+        "phish_macro_powershell": 6,
+        "browser_cred_theft": 5,
+        "ad_discovery": 3,
+        "pass_the_hash": 2,
+        "windows_update": 1,
+        "ps_download_cradle": 2,
+        "scheduled_task_persistence": 1,
+        "edr_tamper": 2,
+        "kerberoast": 1
+      },
+      "decisions": {
+        "escalate": 74,
+        "monitor": 14,
+        "close": 12
+      },
+      "tools": {
+        "get_surrounding_events": 100,
+        "get_process_tree": 67,
+        "lookup_attack": 105,
+        "search_sigma": 82,
+        "get_asset_context": 100,
+        "calculate_risk": 100,
+        "get_related_alerts": 53,
+        "retrieve_playbook": 49
+      },
+      "unique_scenario_ids": 100,
+      "unique_cited_id_strings_across_cases": 12,
+      "archetype_tool_sequence_signature_count": 57,
+      "examples": {
+        "time_window_diagnostic": {
+          "scenario_id": "SCT-035175",
+          "out_of_window_event_ids": [
+            "EV-0003",
+            "EV-0002",
+            "EV-0001"
+          ]
+        },
+        "conclusion_mismatch": {
+          "scenario_id": "SCT-002425",
+          "success": false,
+          "prose_decision": [
+            "escalate"
+          ],
+          "json_decision": "monitor"
+        },
+        "unobserved_citation": {
+          "scenario_id": "SCT-055484",
+          "missing_ids": [
+            "EV-0009"
+          ]
+        }
+      }
+    }
+  },
+  "hashes": {
+    "test.parquet": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+    "validation.parquet": "94cd7987fe3064cd0933d8fabed75d517e955f8faa8723ac07c9b01446cdfcf7",
+    "README.md": "54e55fce91b4f85c7c0e583a83c52ccdeaad716dca4f9d50375c0f7d122e0873",
+    "stats.json": "5f9aca71f9566a941d0053395e64cb51e3123be3eed4ae557e54f6cbf05a2e9a",
+    "policy.py": "89252f5df55c5424e1dfe706f687df1811bc85d036735aeaadd9794341930caa",
+    "generator.py": "a7773c13fc5beb478baf517c9088a1ad9b76f5c47f4c3df5c82369a4089a8cce",
+    "tools_backend.py": "4bd833340a897c280b84b0ae890b70cd6ee9ac4d5b955989b02342d5c6bb6aa9",
+    "build_dataset.py": "c6fd85f90fb27282dcd4f42d16df1e2d295a036b9080c68b219700b744a8f31f",
+    "schema.py": "3c35c58c6419f885ffdd84764fce8795195424b1e3399244b51e573561f1e20d"
+  },
+  "limitations": [
+    "Only validation and test parquet fully examined; train sample is first100 from unpinned datasets-server viewer, not a complete training audit.",
+    "Time-window diagnostic uses +/- requested minutes; builder does not implement exact temporal filtering.",
+    "Citation diagnostic checks event/evidence IDs returned in tool messages, not truth of prose/semantic correctness.",
+    "Builder revision was inspected, not independently reproduced against dataset revision."
+  ],
+  "cross_split": {
+    "test_validation_scenario_id_overlap": 0,
+    "test_validation_archetype_overlap": 31,
+    "test_validation_archetype_tool_sequence_signature_overlap": 335,
+    "test_signatures_also_in_first100_train": 54
+  },
+  "source_urls": {
+    "dataset": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k",
+    "dataset_stats": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/blob/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/stats.json",
+    "builder_policy": "https://huggingface.co/spaces/alirezaaminzadeh/soc-agent-traces-builder/blob/d6d3c71465a1bbfa1c8101ee25a647a01e5adb59/soc_traces/policy.py",
+    "builder_backend": "https://huggingface.co/spaces/alirezaaminzadeh/soc-agent-traces-builder/blob/d6d3c71465a1bbfa1c8101ee25a647a01e5adb59/soc_traces/tools_backend.py",
+    "builder_generator": "https://huggingface.co/spaces/alirezaaminzadeh/soc-agent-traces-builder/blob/d6d3c71465a1bbfa1c8101ee25a647a01e5adb59/soc_traces/generator.py"
+  },
+  "vinsoc_source_sha": "ec96e09ba844bbbb587cd351baa27ad53a709d1f",
+  "published_stats": {
+    "total_traces": 100000,
+    "verdict_distribution": {
+      "malicious": 89652,
+      "benign": 10348
+    },
+    "decision_distribution": {
+      "monitor": 17203,
+      "close": 7319,
+      "escalate": 75478
+    },
+    "success_distribution": {
+      "False": 17200,
+      "True": 82800
+    },
+    "archetype_distribution": {
+      "process_injection": 6853,
+      "backup_spike": 3018,
+      "vuln_scanner": 1014,
+      "dev_build": 4260,
+      "registry_persistence": 6885,
+      "helpdesk_reset_flood": 6,
+      "windows_update": 81,
+      "webshell": 477,
+      "dns_tunnel": 3451,
+      "pass_the_hash": 2138,
+      "ransomware_staging": 205,
+      "admin_ps_maintenance": 495,
+      "smb_lateral": 5693,
+      "c2_beacon": 3089,
+      "onedrive_bulk_sync": 211,
+      "cloud_account_anomaly": 2226,
+      "scheduled_task_persistence": 614,
+      "ps_download_cradle": 3199,
+      "rdp_bruteforce": 6900,
+      "wmi_remote": 5913,
+      "edr_tamper": 1019,
+      "sccm_deployment": 379,
+      "ad_discovery": 6545,
+      "masquerade_binary": 6633,
+      "lsass_dump": 432,
+      "phish_macro_powershell": 6785,
+      "av_selftest": 293,
+      "log_clear": 4948,
+      "cloud_exfil": 6861,
+      "kerberoast": 1949,
+      "new_service_change_window": 591,
+      "browser_cred_theft": 6837
+    },
+    "tool_usage": {
+      "lookup_attack": 108882,
+      "get_surrounding_events": 100000,
+      "calculate_risk": 100000,
+      "get_asset_context": 97768,
+      "search_sigma": 86208,
+      "get_process_tree": 69737,
+      "retrieve_playbook": 50904,
+      "get_related_alerts": 49783,
+      "search_cve": 477
+    },
+    "avg_tool_calls": 6.64,
+    "avg_messages": 16.28,
+    "avg_confidence": 0.811,
+    "splits": {
+      "train": 89985,
+      "validation": 4984,
+      "test": 5031
+    }
+  },
+  "viewer_sample_sha256": "87eb9fc109aef981bc09676b2ab0e01252c36b9bc61267cc00c675f59fdcab19"
+}
