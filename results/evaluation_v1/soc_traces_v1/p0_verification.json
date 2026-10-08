@@ -1,0 +1,13 @@
+{
+  "milestone": "P0",
+  "source": "pinned actual test+validation parquet",
+  "tests": {
+    "red": "3 failed, 1 error: missing importer",
+    "green": "4 passed in 0.54s (verified imported corpus)",
+    "full_regression": "1154 passed, 2 skipped (cloud mode); final performance change recheck pending"
+  },
+  "calls": 0,
+  "live_status": "not_run",
+  "human_source_review": "pending",
+  "ci": "pending exact commit SHA"
+}

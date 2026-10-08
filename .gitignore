@@ -67,3 +67,6 @@ data/ctu_network_frozen/snapshots/*.tmp
 data/r2_cross_domain_v1/sources/
 data/r2_cross_domain_v1/snapshots/
 *.zip
+
+# Pinned synthetic SOC source and derived corpus
+data/soc_traces_v1/

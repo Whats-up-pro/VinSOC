@@ -64,7 +64,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 | sửa `.github/workflows/ci.yml` | Restore corpus pinned + required offline checks không key |
 | `docs/evaluation/2026-10-08-soc-traces-runbook.md` | Hướng dẫn nhập cảnh báo/IOC, chạy scope đã cấp, đọc artifacts |
 
-## P0 — Nhập corpus có provenance, không đáp án
+## Task 0: P0 — Nhập corpus có provenance, không đáp án
 
 **Files:** Tạo `vinsoc_data/soc_corpus.py`, `scripts/prepare_soc_traces.py`, `evaluation/soc_traces_v1/__init__.py`, `evaluation/soc_traces_v1/source_manifest.json`, `tests/test_soc_corpus.py`. Bàn giao D-SOC1.
 
@@ -77,7 +77,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Manifest pin test digest `9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a`, validation `94cd7987fe3064cd0933d8fabed75d517e955f8faa8723ac07c9b01446cdfcf7`; source URLs là `https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet` và cùng prefix + `validation-00000-of-00001.parquet`. Reuse raw cache khi digest match. CLI `prepare_soc_traces.py --source-dir <dir> --output-dir <dir>` xuất corpus, digest/logical hash, import/quarantine receipt và license attribution; không execute builder.
 - [ ] Chạy GREEN tests trên pinned parquet thực; kiểm 5.031/4.984 input records hoặc exclusions đầy đủ, query read-only, source pointers resolve, không oracle fields. Ghi `corpus_receipt.json`; commit/push/CI.
 
-## P1 — Chọn 64 cases, audit nguồn và khóa bốn demo
+## Task 1: P1 — Chọn 64 cases, audit nguồn và khóa bốn demo
 
 **Files:** Tạo `evaluation/soc_traces_v1/dataset.py`, `tests/test_soc_dataset.py`; dùng artifacts P0. Bàn giao D-SOC2; thiếu review không chặn P2–P7 offline.
 
@@ -90,7 +90,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Người thật nhập analyst/UTC/scenario/source hash/label supportability/decision/rationale cho ít nhất12. Ambiguous exclusions phải có phiếu thật; reselect cùng thuật toán trước model output, audit final inventory đủ quota. Agent chỉ validate/read reviews; không đánh dấu approved hộ người dùng.
 - [ ] GREEN deterministic tests và receipt đầy đủ; commit/push/CI. Selection chỉ frozen khi source reviews PASS; pending không PASS.
 
-## P2 — Hai tools truy vấn corpus và scope
+## Task 2: P2 — Hai tools truy vấn corpus và scope
 
 **Files:** Tạo `skills/soc_corpus_skill.py`, `tests/test_soc_corpus_tools.py`; mở rộng repository P0 cho typed filtering. Bàn giao phần tool D-SOC3.
 
@@ -102,7 +102,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Giảm rows theo thứ tự nếu payload vượt20000 bytes; giữ matched_count/truncated/coverage limitations. Không tạo EV IDs cho rows chưa delivered; không nâng missing/no_match thành benign. Test unit SQL injection text là literal và DB hash không đổi sau queries.
 - [ ] GREEN tests bằng pinned corpus thật, không database giả thay acceptance; commit/push/CI, tool-query receipt ghi bytes/counts/identities.
 
-## P3 — Schema báo cáo và policy model
+## Task 3: P3 — Schema báo cáo và policy model
 
 **Files:** Tạo `schemas/soc_investigation_report.json`, `schemas/soc_investigation_case.json`, `agent/soc_investigation_policy.py`, `tests/test_soc_report_policy.py`. Bàn giao schema D-SOC4 và policy D-SOC3.
 
@@ -114,7 +114,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Validation chỉ schema/reference/fact fields có phép so sánh rõ; giữ `prose_semantics_machine_verified=false`. Schema case cho input types alert/ioc và tool enums mới; schemas cũ giữ nguyên bytes. Evidence input linked_from=null; tool observations linked với call, provenance synthetic.
 - [ ] GREEN parser/negative tests và schema compatibility tests lịch sử; commit/push/CI. Chưa gọi report quality PASS bằng fixtures.
 
-## P4 — Release, journal và provider SOC có kiểm soát
+## Task 4: P4 — Release, journal và provider SOC có kiểm soát
 
 **Files:** Tạo `evaluation/soc_traces_v1/release.py`, `evaluation/soc_traces_v1/accounting.py`, `agent/soc_provider.py`, `tests/test_soc_release.py`, `tests/test_soc_accounting.py`. Bàn giao D-SOC5. Không đổi `vinsoc_text2sql/accounting.py`/QueryProvider.
 
@@ -127,7 +127,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Provider chỉ official SDK OpenAI2.8.1, official base_url, max_retries=0, một model/temp/cap; dùng LLMResponse shape hiện có, preserve raw bytes trước JSON arguments parse. Missing usage/model mismatch/finish_reason không stop/tool_calls → terminal, unknown exposure không0. S0 một request không tools; S1 request6 không tools; hết capacity không gọi thêm.
 - [ ] GREEN boundary/persistence tests, code review inline guard paths và compile; commit/push/CI. Positive official transport còn pending P9.
 
-## P5 — Public entrypoint cảnh báo/IOC và điều tra nhiều bước
+## Task 5: P5 — Public entrypoint cảnh báo/IOC và điều tra nhiều bước
 
 **Files:** Sửa `agent/orchestrator.py`; tạo `tests/test_soc_orchestrator.py`; dùng P0–P4. Bàn giao public runtime D-SOC3.
 
@@ -140,7 +140,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Dùng policy-specific schema thay schema legacy, projection hypotheses/risk/confidence chỉ từ validated model report; full report không cắt. Final valid → awaiting_human, ScriptedHumanReviewGate rejected. Human request-more-evidence không mở lượt API mới.
 - [ ] GREEN offline intake/visibility/state boundary tests; chạy `python -m pytest tests/test_soc_orchestrator.py tests/test_network_e2e_policy.py tests/test_network_query_policy.py tests/test_schema_contracts.py -q`; commit/push/CI. Ghi rõ live multi-turn chưa nghiệm thu.
 
-## P6 — Runner/preflight và checkpoint cả 128 records
+## Task 6: P6 — Runner/preflight và checkpoint cả 128 records
 
 **Files:** Tạo `evaluation/soc_traces_v1/runner.py`, `scripts/run_soc_traces.py`, `tests/test_soc_runner.py`. Bàn giao D-SOC5/D-SOC6 contract, chưa predictions.
 
@@ -153,7 +153,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Parse/input failure ghi case failed không retry; transport/unknowncost/budget/crash terminal toàn suite; output path mới không bypass consumed ledger. CLI nonzero khi blocked/failed/partial, không ghi completed dù process chạy xong.
 - [ ] GREEN negative/preflight/checkpoint tests và preservation receipt; commit/push/CI. D-SOC6 live còn pending P9.
 
-## P7 — Phép đo, báo cáo đầy đủ, CLI và review thật
+## Task 7: P7 — Phép đo, báo cáo đầy đủ, CLI và review thật
 
 **Files:** Tạo `evaluation/soc_traces_v1/reporting.py`, `scripts/render_soc_report.py`, `scripts/review_soc_case.py`, `docs/evaluation/2026-10-08-soc-traces-runbook.md`, `tests/test_soc_reporting.py`; sửa `cli/main.py` thêm subcommands SOC, giữ output legacy. Bàn giao D-SOC4/D-SOC7/D-SOC8 tooling.
 
@@ -166,7 +166,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Review CLI yêu cầu người thật nhập analyst/decision/rationale/UTC, ghi receipt hash; không auto-input, không script approve, base receipt bất biến. Ghi technical-invalid không thành approved completion. Runbook có cách nhận input alert/IOC, scope mapping, suite run, xem bốn demos và hạn chế synthetic/public/template/pretraining.
 - [ ] GREEN offline negative/aggregation tests; full positive rendering/scoring trên authentic outputs còn pending P9, không gắn fixtures như bằng chứng; commit/push/CI.
 
-## P8 — CI corpus, kiểm ngoại tuyến và freeze trước API
+## Task 8: P8 — CI corpus, kiểm ngoại tuyến và freeze trước API
 
 **Files:** Sửa `.github/workflows/ci.yml`; tạo `tests/test_soc_corpus_acceptance.py`; dùng prepare CLI P0, preflight P6. Bàn giao D-SOC1–D-SOC5 readiness.
 
@@ -179,7 +179,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [ ] Sau P0–P7 tests, source-human reviews và demo selection PASS, freeze importer/tool/schema/prompt/policy/provider/accounting/runner/report/CLI/scorer/source/selection/environment closure. Runtime source không tự bind SHA của receipt chứa chính digest để gây vòng; locks ở evaluator/private release, exact CI run bind implementation commit SHA.
 - [ ] Commit/push/CI đúng final implementation SHA; preflight trước SDK attempts=0. Pending account/pricing/budget phải hiện BLOCKED, không ghi ready-to-live chỉ vì CI green.
 
-## P9 — Release được cấp, chạy một lượt và bàn giao thật
+## Task 9: P9 — Release được cấp, chạy một lượt và bàn giao thật
 
 **Files/đầu ra:** Không sửa code sau freeze. Artifacts mới trong `results/evaluation_v1/soc_traces_v1/`; raw/private ngoài Git. Bàn giao D-SOC5–D-SOC8 thực.
 
@@ -211,6 +211,6 @@ Mục tiêu lịch: 08–09/10 P0–P2; 10–11/10 P3–P6; 12–13/10 P7–P8 v
 
 - [x] Thiết kế trong hội thoại và đặc tả được người dùng duyệt.
 - [x] Đối chiếu mã/CI/source audit; lập kế hoạch và tự rà coverage/interfaces/limits/preservation.
-- [ ] Người dùng rà kế hoạch này; phương thức đã chọn giữ nguyên: triển khai trực tiếp, một người trên master.
+- [x] Người dùng duyệt kế hoạch và giao toàn quyền triển khai ngày 08/10/2026; phương thức đã chọn giữ nguyên: triển khai trực tiếp, một người trên master.
 - [ ] P0 là bước bắt đầu sau khi plan được duyệt. P1 thiếu human review vẫn tiếp tục P2–P7 offline; paid dừng trước P9.
 - [ ] Không có task P0–P9 nào đã triển khai hoặc model call SOC trong lượt lập plan.
