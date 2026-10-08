@@ -1,6 +1,6 @@
 # VinSOC — Thực nghiệm SOC và báo cáo đầu–cuối
 
-**Ngày:** 08/10/2026. **Trạng thái:** Thiết kế trong hội thoại đã được người dùng chốt; văn bản này chờ người dùng rà trước khi lập kế hoạch triển khai. Chưa triển khai runtime hoặc cấp quyền gọi API.
+**Ngày:** 08/10/2026. **Trạng thái:** Người dùng đã duyệt văn bản này trong hội thoại ngày 08/10/2026; đã chuyển sang lập kế hoạch triển khai. Chưa triển khai runtime hoặc cấp quyền gọi API.
 
 **Mục tiêu:** Trước 16/10/2026, bổ sung thực nghiệm điều tra SOC trên corpus đã làm sạch, chạy qua chính `InvestigationOrchestrator`, từ cảnh báo/IOC đến báo cáo đầy đủ do model sinh. Phân biệt rõ dữ liệu tổng hợp, output model mới, kiểm tra tự động và quyết định người duyệt.
 
@@ -178,7 +178,7 @@ Mỗi mốc commit/push `master`, CI đúng SHA trên Python 3.11/3.12, receipt 
 - [x] Người dùng chốt thiết kế luồng đầu–cuối trong hội thoại, tạm hoãn Text-to-SQL toàn diện.
 - [x] Đối chiếu public HEAD, corpus audit và giới hạn orchestrator/schema hiện tại.
 - [x] Viết đặc tả; tự rà preservation, gold separation, synthetic provenance, model-only report, scope/cost và partial status.
-- [ ] Người dùng rà đặc tả này. Các giá trị 64 cases, hai condition, model/caps và hai tools ở đây là các quyết định cụ thể hóa để duyệt, chưa là quyền gọi API.
+- [x] Người dùng duyệt đặc tả này ngày 08/10/2026. Các giá trị 64 cases, hai condition, model/caps và hai tools đã được duyệt về thiết kế, chưa là quyền gọi API.
 - [ ] Sau khi văn bản được duyệt: dùng `superpowers:writing-plans` lập các task có files/interfaces/checks; dùng `superpowers:executing-plans` triển khai trực tiếp, giữ single writer trên master.
 
 Không thay hoặc ghi đè kế hoạch Text-to-SQL lịch sử trong lượt lưu đặc tả. Spec này là điểm ưu tiên mới; nếu tiếp tục Text-to-SQL sau đó phải đọc cursor/gates/ledger thật tại thời điểm resume.
