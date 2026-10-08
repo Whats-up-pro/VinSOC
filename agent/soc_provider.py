@@ -40,6 +40,11 @@ class SocProvider(LLMProvider):
         self.turn+=1
         metadata={'reservation_id':reservation,'actual_model':raw.get('model'),'request_id':raw.get('id'),'latency_ms':(time.perf_counter()-started)*1000,**measured}
         self.calls.append(metadata)
+        checkpoint=getattr(self,'response_checkpoint',None)
+        if checkpoint:
+            try:checkpoint(raw,metadata)
+            except Exception:
+                self.journal.fail(reservation,'public_checkpoint_failed');raise SocTerminalError('SOC_CHECKPOINT_FAILED') from None
         choices=raw.get('choices')
         if raw.get('model')!=MODEL or not raw.get('id') or not isinstance(choices,list) or len(choices)!=1 or choices[0].get('finish_reason') not in ('stop','tool_calls'):
             self.journal.fail(reservation,'response_contract_invalid');raise SocTerminalError('SOC_RESPONSE_CONTRACT_INVALID')

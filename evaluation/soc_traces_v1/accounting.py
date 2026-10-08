@@ -103,7 +103,10 @@ class SocRunJournal:
 
     def reserve(self, *, case_id,condition,turn,payload):
         self.ensure_case_capacity(case_id,condition);size=validate_request(payload,condition=condition,turn=turn)
-        validate_identities(self.release)
+        try:validate_identities(self.release)
+        except (ValueError,OSError,KeyError):
+            with self._state() as state:state['status']='terminal'
+            raise SocTerminalError('SOC_RELEASE_IDENTITY_CHANGED') from None
         with self._state() as state:
             count=sum(r['case_id']==case_id and r['condition']==condition for r in state['reservations'])
             if turn!=count:raise ValueError('SOC_TURN_SEQUENCE_INVALID')
@@ -135,6 +138,9 @@ class SocRunJournal:
         with self._state() as state:
             row=state['reservations'][reservation_id];row['failure']=category;row['status']='failed'
             state['status']='terminal';state['unknown_cost']=row['cost_unknown']
+
+    def mark_client_created(self):
+        with self._state() as state:state['client_created']=True
 
     def finish(self):
         with self._state() as state:
