@@ -1,0 +1,127 @@
+{
+  "version": "query_pipeline_release_v1",
+  "scope": "pipeline",
+  "condition": "E3",
+  "window_id": "text2sql-integration-20261008-pipeline",
+  "authorized": false,
+  "status": "blocked",
+  "reasons": [
+    "FULL_LOCKED_INVENTORY_UNVERIFIED",
+    "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+    "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+    "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ROUTING",
+    "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+    "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ASSESSMENT",
+    "PAID_RELEASE_NOT_AUTHORIZED"
+  ],
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "planned": 32,
+  "case_ids": [
+    "ctu_cross_09368110b7091cb8",
+    "ctu_cross_0b9805ee5f7a7aca",
+    "ctu_cross_111e791fb862cf30",
+    "ctu_cross_116e46aecde5564d",
+    "ctu_cross_179231c51f8af53e",
+    "ctu_cross_1dc9e35510939cd9",
+    "ctu_cross_2e05412218fcc02f",
+    "ctu_cross_3f659571f998adb0",
+    "ctu_cross_3f83eeb648a43168",
+    "ctu_cross_493dba43b24b2e81",
+    "ctu_cross_4b4f065c0737c540",
+    "ctu_cross_4bd089aa77684ec3",
+    "ctu_cross_4dfbfa87ef9eacfa",
+    "ctu_cross_5ba944b403f6456d",
+    "ctu_cross_6113c639deae1326",
+    "ctu_cross_6122c96211b2bfa8",
+    "ctu_cross_66b8e92a76c3359b",
+    "ctu_cross_67db5d7878967de2",
+    "ctu_cross_708b66575657429a",
+    "ctu_cross_71164969e0e0277e",
+    "ctu_cross_71f16246d2fd9590",
+    "ctu_cross_779935acae78c536",
+    "ctu_cross_8b3e2e65524280d5",
+    "ctu_cross_a427f9a05d18b548",
+    "ctu_cross_bce6d3679ade4cd6",
+    "ctu_cross_cd58f61cdff78fbc",
+    "ctu_cross_cf0c8dd93c8be782",
+    "ctu_cross_d914283c880a2dfd",
+    "ctu_cross_da1bacf7b6a0d616",
+    "ctu_cross_db23b6f2a42fd103",
+    "ctu_cross_e09358b4dca10e1f",
+    "ctu_cross_ef8808ed9e47cef2"
+  ],
+  "role_caps": {
+    "routing": 32,
+    "r2": 192,
+    "assessment": 32
+  },
+  "contracts": {
+    "r2": {
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "max_completion_tokens": 1000,
+      "service_tier": "default",
+      "max_retries": 0,
+      "max_request_bytes": 32768,
+      "frame_reserve_tokens": 512,
+      "max_messages": 20
+    },
+    "routing": {
+      "model": "gpt-4.1-mini-2025-04-14",
+      "temperature": 0,
+      "max_completion_tokens": 1000,
+      "service_tier": "default",
+      "max_retries": 0,
+      "max_request_bytes": 32768,
+      "frame_reserve_tokens": 512,
+      "max_messages": 20
+    },
+    "assessment": {
+      "model": "gpt-4.1-mini-2025-04-14",
+      "temperature": 0,
+      "max_completion_tokens": 1000,
+      "service_tier": "default",
+      "max_retries": 0,
+      "max_request_bytes": 65536,
+      "frame_reserve_tokens": 512,
+      "max_messages": 20
+    }
+  },
+  "reserves_usd": {},
+  "new_cost_ceiling_usd": null,
+  "release_sha256": "2da7a3608e1f904d613ddc99b86b8c2509ed2f153d4d85f2c3c7b87974fbac35",
+  "current_source_sha256": {
+    "cli/main.py": "161ecf58da6ed6058f6b80c84671b17901c95bafa581793e550a41a8676733d1",
+    "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+    "agent/orchestrator.py": "c75a36756d8f8e6018edbdc38d7dd8f33f5fd3e64aed2a70cfd937b6084ff4d7",
+    "agent/network_query_policy.py": "70e88f2ff7d48da68566e300abb75689a92509f8a314136b2833f3068fa90019",
+    "skills/network_query_skill.py": "ef9ce381d65d56701fa9126983caad0fc4e735021cd0314286ad2efa135b78c6",
+    "vinsoc_text2sql/service.py": "1af97b645cd4ce767e7f37f8cccf7a3a354f60b19e49cb2b7d50d9504c6fc1b4",
+    "vinsoc_text2sql/executor.py": "4971a7e738b5dd24d2489cbae5275ed80277a43222f3c0d5da533c96cc7b3c83",
+    "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+    "vinsoc_text2sql/accounting.py": "6bdabbd2dbf005d4a1df2b11e446ec4c1fa21beb639fca8579e2a4ea6b697682",
+    "vinsoc_text2sql/provider.py": "75d9d7287cce7ed0fc803bfac04b636ba20a135b2668a67ca8746f1a3a7cd29a",
+    "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+    "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+    "evaluation/finalization/query_pipeline_contract.py": "46fbc8c377a1b9bf365aef9b3eeb3ca0b581966479ab2c514b8f5703b66331ea",
+    "evaluation/finalization/query_runtime_validation.py": "4fbca36104e1c2c3271f5d7ec1d10a0ec58109b2fe84220b0e409c0de7dbe48d",
+    "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "evaluation/finalization/query_reporting.py": "47790e72800c87aec5296f36de3ce25ad7e926eb8eb30fd6e80a3e2fda3f53ad",
+    "scripts/run_vinsoc_query_acceptance.py": "345ef84e10785000bf816cea2b2fc0b0d5e64e934c193a0a72d3cf71a1daa21c",
+    "scripts/review_vinsoc_query_case.py": "bf914d8092ce8a5e81ef50dd5859d742a4b62200b9f477f51c5a8d87666a7ebb",
+    "scripts/render_query_pipeline_report.py": "5417c3e513f3f43c483b6bc63cc66481afbda2f0db9a061dd5eb186ee163d4df",
+    "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0"
+  },
+  "diagnostics": [
+    {
+      "gate": "code_ci",
+      "error_class": "ValueError"
+    },
+    {
+      "gate": "real_data_and_worker",
+      "error_class": "RegistryError"
+    }
+  ]
+}

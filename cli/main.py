@@ -509,9 +509,39 @@ def main():
     benchmark_parser = subparsers.add_parser("benchmark", help="Compare evidence-driven vs fixed pipeline")
     benchmark_parser.add_argument("--limit", type=int, default=None, help="Optional number of scenarios to run")
 
+    query_parser = subparsers.add_parser('query', help='Guarded real query batch or offline preflight')
+    query_parser.add_argument('--scope', choices=['calibration','evaluation','pipeline'], default='pipeline')
+    query_parser.add_argument('--condition', choices=['E0','E3'], default='E3')
+    query_parser.add_argument('--preflight-only', action='store_true')
+    query_parser.add_argument('--private-inputs', type=Path)
+    query_parser.add_argument('--release', type=Path)
+    query_parser.add_argument('--output', type=Path, required=True)
+    review_parser = subparsers.add_parser('query-review', help='Actual analyst review of a technical-valid saved case')
+    review_parser.add_argument('case', type=Path)
+    review_parser.add_argument('--output', type=Path, required=True)
+    render_parser = subparsers.add_parser('query-render', help='Render saved query receipts offline')
+    render_parser.add_argument('source', type=Path)
+    render_parser.add_argument('--output', type=Path, required=True)
+
     args = parser.parse_args()
 
-    if args.command == "investigate":
+    if args.command == 'query':
+        from scripts.run_vinsoc_query_acceptance import main as query_main
+        forwarded = ['--scope', args.scope, '--condition', args.condition, '--output', str(args.output)]
+        if args.preflight_only:
+            forwarded.append('--preflight-only')
+        for name in ('private_inputs','release'):
+            value = getattr(args,name)
+            if value:
+                forwarded += ['--'+name.replace('_','-'),str(value)]
+        return query_main(forwarded)
+    elif args.command == 'query-review':
+        from scripts.review_vinsoc_query_case import main as review_main
+        return review_main([str(args.case),'--output',str(args.output)])
+    elif args.command == 'query-render':
+        from scripts.render_query_pipeline_report import main as render_main
+        return render_main([str(args.source),'--output',str(args.output)])
+    elif args.command == "investigate":
         run_direct_investigation(
             indicator=args.indicator,
             indicator_type=args.type,
@@ -546,4 +576,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

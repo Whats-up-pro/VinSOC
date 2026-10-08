@@ -1,0 +1,30 @@
+{
+  "scope": "offline_code_guards_and_historical_regression_not_live_acceptance",
+  "full_suite": {
+    "passed": 1150,
+    "failed": 1,
+    "skipped": 1,
+    "failure": "LOCAL_SNAPSHOT_REQUIRED",
+    "command": "python -m pytest -q --disable-warnings",
+    "exit_code": 1
+  },
+  "new_guard_tests": {
+    "passed": 22,
+    "new_mock_clients": 0,
+    "new_synthetic_datasets": 0,
+    "real_positive_worker_or_provider_acceptance": false
+  },
+  "compile_pass": true,
+  "ruff_E9_F_I_pass": true,
+  "diff_check_pass": true,
+  "historical_saved_artifacts_unchanged": true,
+  "new_model_calls": 0,
+  "gates": {
+    "real_data_acceptance": "BLOCKED_EXACT_BINARIES_MISSING",
+    "worker": "BLOCKED",
+    "paid_release": "NOT_AUTHORIZED",
+    "pipeline_live": "NOT_RUN",
+    "human_review": "NOT_RUN",
+    "demo": "NOT_READY"
+  }
+}

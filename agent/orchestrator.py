@@ -191,6 +191,7 @@ class InvestigationOrchestrator:
         human_review_gate: Optional[HumanReviewGate] = None,
         max_review_cycles: int = 1,
         investigation_policy: Any | None = None,
+        query_skill: Any | None = None,
     ):
         """
         Initialize the orchestrator.
@@ -205,7 +206,10 @@ class InvestigationOrchestrator:
                 snapshot. When set, network and endpoint tools query it in
                 read-only mode after any test mock data is exhausted.
         """
+        if query_skill is not None and provider is None:
+            raise ValueError('GUARDED_QUERY_PROVIDER_REQUIRED')
         self.provider = provider or MockProvider()
+        self.query_skill = query_skill
         self.max_steps = max_steps
         self.max_input_chars = max_input_chars
         self.human_review_gate = human_review_gate
@@ -339,6 +343,10 @@ class InvestigationOrchestrator:
         # Build initial prompt
         initial_prompt = self._build_initial_prompt(indicator, indicator_type, context)
 
+        return self._complete_investigation(indicator, indicator_type, context, start_time, triage, initial_prompt)
+
+    def _complete_investigation(self, indicator, indicator_type, context, start_time, triage, initial_prompt):
+        """Shared investigation → verification → human review lifecycle."""
         # Run investigation loop (LLM-driven tool selection)
         self._record_phase("investigate", "started", "Running evidence-driven investigation loop")
         self._run_investigation_loop(initial_prompt)
@@ -352,7 +360,7 @@ class InvestigationOrchestrator:
         self._record_phase("verify", "started", "Validating traceability and schema")
         case = self._generate_case(indicator, indicator_type, context, duration, triage)
         case.metadata["orchestration_mode"] = "evidence_driven"
-        policy_validation = case.metadata.get("network_policy", {}).get("validation")
+        policy_validation = case.metadata.get(getattr(self.investigation_policy, "METADATA_KEY", "network_policy"), {}).get("validation")
         if self.investigation_policy is not None and (
             not policy_validation or policy_validation.get("valid") is not True
             or case.metadata.get("schema_valid") is not True
@@ -385,6 +393,51 @@ class InvestigationOrchestrator:
 
         self.investigation_active = False
         return case
+
+    def investigate_query(self, question: str, *, query_context) -> InvestigationCase:
+        """Public natural-language query entrypoint; no IOC substitution."""
+        from vinsoc_text2sql.provider import QueryProvider
+        from skills.network_query_skill import QueryContext
+        from agent.network_query_policy import NetworkQueryPolicy
+        from agent.hitl import ScriptedHumanReviewGate
+        if type(self.provider) is not QueryProvider:
+            raise ValueError('GUARDED_QUERY_PROVIDER_REQUIRED')
+        if type(query_context) is not QueryContext or not getattr(self, 'query_skill', None):
+            raise ValueError('QUERY_SKILL_REQUIRED')
+        if self.query_skill.query_context != query_context:
+            raise ValueError('QUERY_SCOPE_MISMATCH')
+        if isinstance(self.human_review_gate, ScriptedHumanReviewGate):
+            raise ValueError('REAL_HUMAN_REVIEW_REQUIRED')
+        policy = NetworkQueryPolicy(question, context=self.query_skill.context,
+                                    executor=self.query_skill.service.executor)  # Before paid work.
+        self.provider.journal.ensure_case_capacity(self.provider.condition)
+        self.case_id = f'query_{uuid.uuid4().hex[:8]}'
+        self.evidence_store.clear()
+        self.messages, self.lifecycle_trace, self.security_flags, self.human_decisions = [], [], [], []
+        self.validated_assessment, self.policy_termination = None, None
+        self.provider.reset_tracking()
+        self.investigation_policy = policy
+        self.max_steps, self.max_review_cycles = 2, 0
+        self.investigation_active = True
+        started = datetime.utcnow()
+        triage = TriageResult('NEEDS_INVESTIGATION', 'Authorized query scope; no IOC triage applied', 'LOW')
+        self._record_phase('triage', 'completed', 'Query and trusted snapshot/table scope validated')
+        try:
+            case = self._complete_investigation(question, 'query', None, started, triage,
+                                               policy.question)
+            case.metadata['orchestration_mode'] = 'query_evidence_driven'
+            case.metadata['query_scope'] = {'database_id': query_context.database_id,
+                'snapshot_logical_sha256': query_context.snapshot_logical_sha256,
+                'allowed_tables': list(query_context.allowed_tables), 'scope_id': query_context.scope_id}
+            case.metadata['query_generation'] = self.query_skill.last_generation
+            case.metadata['query_execution'] = self.query_skill.last_execution
+            if case.metadata['review_status'] == 'not_configured':
+                case.metadata['review_status'] = 'awaiting_human'
+                self._record_phase('review', 'awaiting_human', 'Deferred actual analyst review required')
+                case.metadata['lifecycle_trace'] = [e.to_dict() for e in self.lifecycle_trace]
+            return case
+        finally:
+            self.investigation_active = False
 
     def investigate_fixed_pipeline(
         self,
@@ -772,6 +825,11 @@ class InvestigationOrchestrator:
                     return
                 self._execute_tool_call({**call, "arguments": arguments})
                 tool_executed = True
+                if getattr(self.investigation_policy, 'METADATA_KEY', None) == 'query_policy':
+                    trace = self.evidence_store.get_all_tool_calls()
+                    if not trace or trace[-1].error:
+                        self.policy_termination = 'QUERY_TOOL_FAILURE'
+                        return
                 continue
 
             if not tool_executed:
@@ -805,6 +863,8 @@ class InvestigationOrchestrator:
                 result = self.cti_skill.execute(**arguments)
             elif tool_name == "network_investigation":
                 result = self.network_skill.execute(**arguments)
+            elif tool_name == "network_query":
+                result = self.query_skill.execute(**arguments)
             elif tool_name == "endpoint_investigation":
                 result = self.endpoint_skill.execute(**arguments)
             else:
@@ -984,7 +1044,10 @@ class InvestigationOrchestrator:
                 break
 
         # Generate hypothesis
-        hypotheses, risk, confidence = self._analyze_evidence(evidence)
+        if getattr(self.investigation_policy, 'METADATA_KEY', None) == 'query_policy':
+            hypotheses, risk, confidence = [], 'UNKNOWN', 'LOW'
+        else:
+            hypotheses, risk, confidence = self._analyze_evidence(evidence)
         if self.validated_assessment is not None:
             hypotheses = [
                 InvestigationHypothesis(
@@ -1068,6 +1131,8 @@ class InvestigationOrchestrator:
             }
         )
 
+        if getattr(self.investigation_policy, 'METADATA_KEY', None) == 'query_policy' and self.validated_assessment is None:
+            case.final_assessment = ''
         if self.investigation_policy is not None:
             policy_case = {
                 "assessment_evidence_ids": (
@@ -1082,7 +1147,7 @@ class InvestigationOrchestrator:
                 "tool_trace": case.tool_trace,
             }
             policy_validation = self.investigation_policy.validate_case(policy_case)
-            case.metadata["network_policy"] = {
+            case.metadata[getattr(self.investigation_policy, "METADATA_KEY", "network_policy")] = {
                 "termination": self.policy_termination,
                 "assessment": (
                     self.validated_assessment.to_dict()
@@ -1092,7 +1157,8 @@ class InvestigationOrchestrator:
                 "prose_semantics_machine_verified": False,
             }
 
-        is_valid_case, case_error = validate_investigation_case(case.to_dict())
+        validator = getattr(self.investigation_policy, 'validate_schema', validate_investigation_case)
+        is_valid_case, case_error = validator(case.to_dict())
         if not is_valid_case:
             case.limitations.append(f"Case schema validation failed: {case_error}")
             case.metadata["schema_valid"] = False
@@ -1293,11 +1359,14 @@ class InvestigationOrchestrator:
         return limitations, violations
 
     def _collect_skill_contracts(self) -> Dict[str, Dict[str, Any]]:
-        return {
+        contracts = {
             self.cti_skill.skill_name: self.cti_skill.get_contract().to_dict(),
             self.network_skill.skill_name: self.network_skill.get_contract().to_dict(),
             self.endpoint_skill.skill_name: self.endpoint_skill.get_contract().to_dict(),
         }
+        if self.query_skill is not None:
+            contracts[self.query_skill.skill_name] = self.query_skill.get_contract().to_dict()
+        return contracts
 
     def _identify_limitations(self, evidence: List, tool_calls: List) -> List[str]:
         """Identify investigation limitations."""

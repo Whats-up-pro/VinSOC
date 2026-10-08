@@ -29,7 +29,7 @@ soc-investigate = "cli.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["skills*", "agent*", "cli*", "evaluation*", "vinsoc_data*"]
+include = ["skills*", "agent*", "cli*", "evaluation*", "vinsoc_data*", "vinsoc_text2sql*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

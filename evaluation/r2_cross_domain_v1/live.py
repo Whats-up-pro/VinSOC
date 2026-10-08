@@ -90,6 +90,9 @@ class GuardedTransport:
     def __init__(self, sdk, journal, contract, pricing):
         self.sdk, self.journal, self.contract, self.pricing = sdk, journal, contract, pricing
 
+    def counters(self):
+        return {k: self.journal.data[k] for k in ("attempted", "received", "valid_usage", "terminal")}
+
     def request(self, payload):
         if self.journal.data["terminal"]:
             raise ValueError("TERMINAL_RELEASE")
@@ -167,87 +170,13 @@ class GuardedTransport:
 
 
 def run_live_case(runtime_case, condition, tools, transport, telemetry_sink):
-    """Only RuntimeCase enters generation; evaluator reference remains outside."""
+    """Benchmark DTO adapter; gold remains outside the shared runtime."""
     from .models import RuntimeCase
-    from .controller import ROLE_TURN_CAP
-    from .prompts import GENERATOR, LINKER
-    from .tool_schemas import TOOLS
-    from .grounding import GroundingError, validate_link
-    from .safety import SafetyError, validate_sql
-    from .tools import ToolError
-    if type(runtime_case) is not RuntimeCase or condition not in CONDITIONS or runtime_case.database_id != tools.context.database_id:
-        raise ValueError("INVALID_RUNTIME_CONTRACT")
-    if not isinstance(transport, GuardedTransport):
+    from vinsoc_text2sql.service import QueryRequest, _generate
+    if type(runtime_case) is not RuntimeCase or not isinstance(transport, GuardedTransport):
         raise ValueError("GUARDED_OPENAI_TRANSPORT_REQUIRED")
-    record = {"case_id": runtime_case.case_id, "database_id": runtime_case.database_id, "condition": condition,
-              "final_sql": None, "attempted_calls": 0, "response_count": 0, "responses": [], "trajectory": [],
-              "error_category": "UNFINISHED", "linked_schema": None, "evidence_kind": "openai_live"}
-    started = monotonic()
-    attempted_before = transport.journal.data["attempted"]
-    received_before = transport.journal.data["received"]
-    linked = None
-    try:
-        for role in (["linker", "generator"] if condition == "E3" else ["generator"]):
-            data = {"question": runtime_case.question, "database_id": runtime_case.database_id, "catalog": tools.context.schema_context()}
-            if linked is not None:
-                data["linked_schema"] = linked
-            messages = [{"role": "system", "content": LINKER if role == "linker" else GENERATOR},
-                        {"role": "user", "content": json.dumps(data, ensure_ascii=False)}]
-            completed = False
-            for _ in range(ROLE_TURN_CAP if condition == "E3" else 1):
-                request = {key: transport.contract[key] for key in ("model", "reasoning_effort", "max_completion_tokens", "service_tier")}
-                request["messages"] = deepcopy(messages)
-                if condition == "E3":
-                    request["tools"] = deepcopy(TOOLS)
-                response = transport.request(request)
-                event = {"role": role, "response": deepcopy(response)}
-                record["responses"].append(event)
-                telemetry_sink(deepcopy(record))  # before parsing/scoring
-                calls = response.get("tool_calls") or []
-                if calls:
-                    if condition == "E0" or len(calls) > 4:
-                        raise ValueError("UNEXPECTED_OR_EXCESS_TOOL_CALLS")
-                    messages.append({"role": "assistant", "content": response["content"], "tool_calls": calls})
-                    for call in calls:
-                        function = call["function"]
-                        arguments = json.loads(function["arguments"]) if isinstance(function["arguments"], str) else function["arguments"]
-                        result = tools.call(function["name"], arguments)
-                        messages.append({"role": "tool", "tool_call_id": call["id"], "content": json.dumps(result, ensure_ascii=False)})
-                    continue
-                answer = json.loads(response.get("content") or "")
-                if role == "linker":
-                    linked = validate_link(runtime_case.question, answer, tools.trajectory, tools.context)
-                    record["linked_schema"] = deepcopy(linked)
-                else:
-                    if not isinstance(answer, dict) or not isinstance(answer.get("sql"), str):
-                        raise ValueError("INVALID_FINAL_SQL")
-                    record["final_sql"] = answer["sql"]
-                    validate_sql(answer["sql"], tools.context)
-                completed = True
-                break
-            if not completed:
-                record["error_category"] = "TOOL_LIMIT"
-                return record
-        record["error_category"] = "OK"
-        return record
-    except GroundingError:
-        record["error_category"] = "INVALID_LINKED_SCHEMA"
-        return record
-    except SafetyError:
-        record["error_category"] = "SAFETY_REJECTION"
-        return record
-    except ToolError:
-        record["error_category"] = "TOOL_FAILURE"
-        return record
-    except Exception:
-        # Provider problems latch the journal; model parse errors retain cost
-        # and become a failed case, not an extra model retry.
-        record["error_category"] = "PROVIDER_ERROR" if transport.journal.data["terminal"] else "MODEL_PARSE_ERROR"
-        return record
-    finally:
-        record.update(attempted_calls=transport.journal.data["attempted"]-attempted_before,
-                      response_count=transport.journal.data["received"]-received_before,
-                      trajectory=deepcopy(tools.trajectory), db_calls=tools.db_calls, wall_seconds=monotonic()-started)
+    return _generate(QueryRequest(runtime_case.case_id, runtime_case.database_id, runtime_case.question),
+                     condition, tools, transport, telemetry_sink)
 
 
 def case_usage_valid(record):

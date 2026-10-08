@@ -1,0 +1,49 @@
+{
+  "version": "query_demo_selection_v1",
+  "seed": 20261008,
+  "method": "sha256(seed:group:case_id) ascending; first eligible unused ID",
+  "selected_before_new_model_calls": true,
+  "new_model_calls": 0,
+  "runtime_inventory_sha256": "0a92c9007923f8fb13a1a6a66cbb7aa33d66852f9c299b5119277cf8a827222d",
+  "cases": [
+    {
+      "group": "filter_time",
+      "case_id": "ctu_cross_708b66575657429a",
+      "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+      "features": [
+        "nested",
+        "distinct",
+        "time"
+      ]
+    },
+    {
+      "group": "distinct",
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.",
+      "features": [
+        "nested",
+        "distinct"
+      ]
+    },
+    {
+      "group": "group_having",
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.",
+      "features": [
+        "group_having",
+        "order_limit",
+        "null"
+      ]
+    },
+    {
+      "group": "boolean_or_order",
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "question": "List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.",
+      "features": [
+        "nested",
+        "group_having",
+        "order_limit"
+      ]
+    }
+  ]
+}

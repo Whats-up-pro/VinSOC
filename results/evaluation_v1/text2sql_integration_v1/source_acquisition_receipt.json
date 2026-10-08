@@ -1,0 +1,114 @@
+{
+  "status": "acquired_real_sources_not_acceptance",
+  "archive_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+  "databases": [
+    {
+      "database_id": "student_transcripts_tracking",
+      "source_sha256": "5a1f4928a1fd36f6edb31c4f054203b2e2fab6b18e5951c4f5633628f82a8e56",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/student_transcripts_tracking/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+      "actual_binary_sha256": "d735f4fb6a2ff23b302c1c28d974bb0d0c241db451678a2ac2406787547df1dc"
+    },
+    {
+      "database_id": "cre_Doc_Template_Mgt",
+      "source_sha256": "9c3fdd03d8795ecde60aae782ce50c4fb1d6c03de1401fcdd6dc177342a53df5",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/cre_Doc_Template_Mgt/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+      "actual_binary_sha256": "5da8dc361d435bbce4ae7d1e05455a7237dd838c908284c4fbbaa95ccaf10d50"
+    },
+    {
+      "database_id": "world_1",
+      "source_sha256": "17b986695f16786d58d66f85e49dba87bdfe72953207ab9b1b49da9d2301ef65",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/world_1/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+      "actual_binary_sha256": "7b72d27487baa0ae057090992226daa51ef21351c59d165bf1194799cc9700d7"
+    },
+    {
+      "database_id": "voter_1",
+      "source_sha256": "815bf1611b8a32f649d292a6138562f1761a0c10cb256e20f6561199cff31531",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/voter_1/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+      "actual_binary_sha256": "34517eba0760c6b35fff6d532ea02530ea6eff2060b5eb9444a553340b26ed92"
+    },
+    {
+      "database_id": "dog_kennels",
+      "source_sha256": "ea5fbc6cf6aaf500371c5c121c339d9802ba6f5fbecd948a5274c0b487a9f486",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/dog_kennels/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+      "actual_binary_sha256": "f253f91e51a8754afdae3a28a2b7d42069c0cd5714634833aa024b2a64c73157"
+    },
+    {
+      "database_id": "orchestra",
+      "source_sha256": "13b64af1cf6fcbd34953a44f951b2bf79bedc000b344549212dac1a9345e2f86",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/orchestra/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+      "actual_binary_sha256": "28e8c41d52abfa38823d489fa395386e595bf794ed132053bc998aea937bae0b"
+    },
+    {
+      "database_id": "concert_singer",
+      "source_sha256": "4fa1ba5ab4577e895271088b1dc44aa94be88e25a54293317a67584112ef059d",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/concert_singer/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+      "actual_binary_sha256": "96306b154c051c10c347e376d611efc72c344ec77f316a3b9955bfd464a7055f"
+    },
+    {
+      "database_id": "car_1",
+      "source_sha256": "9d851e396e02997a1de073ae982fe1e4b1769fdffce2fac6e325857a3a938709",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/car_1/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+      "actual_binary_sha256": "510f782117683a42c10adf97601e26fa5ca3560ff9a404971d727d214e4a7cea"
+    },
+    {
+      "database_id": "flight_2",
+      "source_sha256": "db777ba6488ae2b515cb138d71ff23c4533e5fd0355854648a1102faff3fb7af",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/flight_2/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+      "actual_binary_sha256": "b50edb54e2fbaf4a791bc48d48addf22a578726a2c885dd9c2363e7f165fd292"
+    },
+    {
+      "database_id": "course_teach",
+      "source_sha256": "da45fcdde64ac2b9330146506b7653ad4417489d8e496e509045e1b02245d793",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/course_teach/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+      "actual_binary_sha256": "347c3d789a3d76001d15c8ffd2bef90f9f06044e0bd9b011a1ce0c11195a2f30"
+    },
+    {
+      "database_id": "poker_player",
+      "source_sha256": "63fffd7b68524f07a742a74b74b95a4ba178e6419f3574b9ee78b8dda1df46ba",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/poker_player/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+      "actual_binary_sha256": "9ca9e452f1cc156ce90523d16b117399eea775fe80801086472d0938bd83be17"
+    },
+    {
+      "database_id": "tvshow",
+      "source_sha256": "1212c2e75cf1dcf3aeb4055331a85298b073d8a613ead77975b13bd3346b9fc4",
+      "acquired_snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/tvshow/build_1.duckdb",
+      "binary_matches_lock": false,
+      "logical_matches_lock": true,
+      "expected_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+      "actual_binary_sha256": "e8d4b73dac5a7613c2bb5000194f002a532618baf5c2d5869674dd10912e763e"
+    }
+  ]
+}

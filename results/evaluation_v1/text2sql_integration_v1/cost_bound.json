@@ -1,0 +1,58 @@
+{
+  "status": "planning_bound_not_paid_authorization",
+  "checked_utc": "2026-10-08T04:05:17.350488+00:00",
+  "source_url": "https://developers.openai.com/api/docs/pricing",
+  "standard_rates_per_million": {
+    "gpt-5-mini-2025-08-07": {
+      "input": 0.25,
+      "cached_input": 0.025,
+      "output": 2
+    },
+    "gpt-4.1-mini-2025-04-14": {
+      "input": 0.4,
+      "cached_input": 0.1,
+      "output": 1.6
+    }
+  },
+  "output_cap": 1000,
+  "input_bound_method": "full serialized UTF-8 request bytes +512 framing tokens; uncached pricing",
+  "bound_verified_for_transmission": false,
+  "per_request_ceiling_usd": {
+    "r2": 0.01032,
+    "routing": 0.014912,
+    "assessment": 0.0280192
+  },
+  "calibration": {
+    "r2_requests": 168,
+    "new_ceiling_usd": 1.73376
+  },
+  "evaluation": {
+    "r2_requests": 672,
+    "new_ceiling_usd": 6.93504
+  },
+  "pipeline_E3": {
+    "routing_requests": 32,
+    "r2_requests": 192,
+    "assessment_requests": 32,
+    "new_ceiling_usd": 3.3552384
+  },
+  "pipeline_E0": {
+    "routing_requests": 32,
+    "r2_requests": 32,
+    "assessment_requests": 32,
+    "new_ceiling_usd": 1.7040384
+  },
+  "prior_cost_usd": null,
+  "remaining_allocation_usd": null,
+  "paid_authorized": false,
+  "open_gates": [
+    "framing_token_bound_attestation",
+    "current_account_allocation",
+    "reconcile_prior_costs",
+    "explicit_new_budget_decision",
+    "real_snapshot_bundle",
+    "worker_and_CI_identity"
+  ],
+  "total_new_E3_ceiling_usd": 12.0240384,
+  "total_new_E0_ceiling_usd": 10.3728384
+}

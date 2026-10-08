@@ -1,0 +1,17 @@
+{
+  "scope": "shared_runtime_imports_only",
+  "evaluation_namespace_runtime_primitives": [
+    "evaluation.r2_cross_domain_v1",
+    "evaluation.r2_cross_domain_v1.controller",
+    "evaluation.r2_cross_domain_v1.data",
+    "evaluation.r2_cross_domain_v1.grounding",
+    "evaluation.r2_cross_domain_v1.models",
+    "evaluation.r2_cross_domain_v1.prompts",
+    "evaluation.r2_cross_domain_v1.release",
+    "evaluation.r2_cross_domain_v1.safety",
+    "evaluation.r2_cross_domain_v1.tool_schemas",
+    "evaluation.r2_cross_domain_v1.tools"
+  ],
+  "evaluator_gold_or_scorer_modules_loaded": [],
+  "gold_isolation_pass": true
+}

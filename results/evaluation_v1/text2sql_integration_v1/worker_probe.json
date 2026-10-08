@@ -1,0 +1,12 @@
+{
+  "scope": "saved_real_model_sql_worker_probe_not_acceptance",
+  "saved_live_artifact": "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json",
+  "saved_live_sha256": "cb14da306ba0cd4bc92f0d239b037da976ef2867cde61e57395fa5f570dc039a",
+  "case_id": "ctu_sql_001",
+  "sql_sha256": "e6f8f0dfd72e80a5464a21b0546d9b92c67869da2e09b85869cd926cff76ce42",
+  "new_model_calls": 0,
+  "same_locked_binary": false,
+  "status": "blocked",
+  "failure_category": "WORKER_ISOLATION_OR_STARTUP_FAILED",
+  "unsafe_in_process_fallback": false
+}

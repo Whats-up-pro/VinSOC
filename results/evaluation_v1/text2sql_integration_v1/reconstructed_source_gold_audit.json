@@ -1,0 +1,490 @@
+{
+  "scope": "real_source_reconstruction_gold_audit_not_locked_benchmark_acceptance",
+  "status": "PASS_CONTENT_ONLY",
+  "locked_binary_gate": "BLOCKED",
+  "reopen_note": "Original build directory flight_2 has stale WAL; byte-identical standalone copies reopen read-only and verify full content. Original bytes were preserved.",
+  "model_calls": 0,
+  "replayed": 120,
+  "results": [
+    {
+      "case_id": "ctu_cross_0d22a790584f0155",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_12d2dfbda309cf7a",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_5c5ade01fccce004",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_94d3c478d5858048",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_dda372911befb17e",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_e36ee009626c71c2",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_feab49e4a48ff3aa",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_voter_1_22bc102c818388de",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_world_1_329e92f0874dea47",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_09368110b7091cb8",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_0b9805ee5f7a7aca",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_111e791fb862cf30",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_116e46aecde5564d",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_179231c51f8af53e",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_1dc9e35510939cd9",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_2e05412218fcc02f",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_3f83eeb648a43168",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_493dba43b24b2e81",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_4b4f065c0737c540",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_4bd089aa77684ec3",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_4dfbfa87ef9eacfa",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_5ba944b403f6456d",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_6113c639deae1326",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_6122c96211b2bfa8",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_67db5d7878967de2",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_708b66575657429a",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_71164969e0e0277e",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_71f16246d2fd9590",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_779935acae78c536",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_8b3e2e65524280d5",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_a427f9a05d18b548",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_cd58f61cdff78fbc",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_cf0c8dd93c8be782",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_d914283c880a2dfd",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_da1bacf7b6a0d616",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_db23b6f2a42fd103",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_e09358b4dca10e1f",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "ctu_cross_ef8808ed9e47cef2",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_47ffa4acc7ba90eb",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_55cf1874c71b6fee",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_72878d40e5fc2141",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_a3e424fdba9f79c4",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_c3c5143d74d3437c",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_car_1_fdc8ee399ddc765f",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_1313c062638e8562",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_2061015cfe2f236a",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_29bfe250be87c3ae",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_30a94311c8a53879",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_4d9fb537dd762b49",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_6264302aa07ba2e8",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_9754e7b07d3a2f56",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_concert_singer_db703ee8469f32e5",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_2498449e2c383821",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_587613ebd0fcbbbe",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_58a6ed9ee32a1545",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_6836a76f20642d62",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_a15b937a6c3852e4",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_a90c07d9d5fb849e",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_course_teach_d5ccd60dd0513e62",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_3bed1d18ea095e48",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_5f29631b7287aefb",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_99e10daefae93b3e",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_b9c87e441963b8d0",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_ca0d92216738585b",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_e21e6915192151fc",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_dog_kennels_f04053f680e52ed3",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_1962776e116f9f03",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_1bbdb29fd76588bf",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_59060b10db344a2c",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_6b0856d8343233e0",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_71ca2299e56319eb",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_ba7a417281056dea",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_cc1d249d05dee220",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_flight_2_dd762b95172800f4",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_09dfdff61fbbeb1a",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_333cd27fe66308a4",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_725453fffae8b641",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_7d626e678d642e36",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_8775f636030ff775",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_9e252dcacdf09bde",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_b16253b5de2ff882",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_0bce930263776a39",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_0c1c58daeade41a0",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_27c0d318d77ddd08",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_311ebb051349222c",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_5aa2a36d84bc97bd",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_635f76c3b3aa43fc",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_827c6d91a2ccdded",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_poker_player_af17ae8ff067eded",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_1c60aeabf088515a",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_2ba6baeb8b8cc318",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_38dfbde79a7487e2",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_55ce63ef8ba641ea",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_5dd917867752c83a",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_73697be8b93729ee",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_cbea1679ac94abfa",
+      "base_gold_accurate": true
+    },
+    {
+      "case_id": "external_tvshow_f476e6a3b7fb5098",
+      "base_gold_accurate": true
+    }
+  ]
+}

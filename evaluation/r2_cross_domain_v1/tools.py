@@ -33,8 +33,9 @@ def witness_id(witness):
 
 
 class DatabaseTools:
-    def __init__(self, context: DatabaseContext, *, max_db_calls=12, timeout_seconds=2, row_cap=20, payload_bytes=8192):
+    def __init__(self, context: DatabaseContext, *, executor=None, max_db_calls=12, timeout_seconds=2, row_cap=20, payload_bytes=8192):
         self.context = context
+        self.executor = executor
         self.max_db_calls = max_db_calls
         self.timeout_seconds = timeout_seconds
         self.row_cap = row_cap
@@ -59,6 +60,14 @@ class DatabaseTools:
         if self.db_calls >= self.max_db_calls:
             raise ToolError("DB_TOOL_LIMIT")
         self.db_calls += 1
+        if self.executor is not None:
+            from vinsoc_text2sql.executor import ExecutorError
+            try:
+                receipt = self.executor.query(self.context, query, parameters,
+                    row_cap=self.row_cap, timeout_seconds=self.timeout_seconds)
+            except ExecutorError as error:
+                raise ToolError(str(error)) from None
+            return [column['name'] for column in receipt['columns']], receipt['rows'], receipt['truncated']
         connection = duckdb.connect(str(self.context.snapshot_path), read_only=True, config={
             "enable_external_access": False, "autoload_known_extensions": False,
             "autoinstall_known_extensions": False, "threads": 1, "memory_limit": "64MB",

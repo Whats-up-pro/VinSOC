@@ -1,0 +1,17 @@
+{
+  "status": "real_source_reconstruction_not_locked_binary",
+  "snapshot_path": "data/r2_cross_domain_v1/snapshots/reacquired-20261008/ctu_dev/build_1.duckdb",
+  "matches_e2e_binary": false,
+  "matches_cross_domain_binary": false,
+  "version": "ctu_network_public_dev_v1",
+  "sha256": "6d5be5d5c9db06f10c8f984b432004966dbe78a0e0773ddb8c6514ba5d206914",
+  "content_sha256": "42c8e0a62441295cc5d95329a65dc22409c37de5b26a1e37dd56fbf0164a758c",
+  "row_counts": {
+    "network_flows": 243906
+  },
+  "distinct_source_row_id": 243906,
+  "source_hashes": {
+    "ctu13_s5": "ef5c9ed6895d4ca5aec723449dae30054ccd1f6b091713a52ffcb681ff78a02c",
+    "ctu13_s7": "df0b5338190b967bd340a0d6c1bb3c34d1bbfb4b7ffa764c2dd26f77f1a26680"
+  }
+}
