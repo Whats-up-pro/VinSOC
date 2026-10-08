@@ -8,8 +8,8 @@
   "logical_sha256": "967c4dd6b926a6ce1dfb15cdb24a0e29dbcb29dc58f64e44e53116b9291c3547",
   "data_origin": "synthetic",
   "import_protocol": "soc_corpus_v1",
-  "importer_sha256": "27239a0256531c5ef5cbb2a4ab8c99366c285bce149b43c92dd9656c02423f2d",
-  "database_sha256": "7c1cf902d10e586454f9dd123182e174502d4545405442016a477ef0bc623e2e",
+  "importer_sha256": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+  "database_sha256": "b2d9ee5fbe15b5ed50ae131bf54cd743dde4af144be546958c6381705c8794bf",
   "cases": {
     "test": 5031,
     "validation": 4984

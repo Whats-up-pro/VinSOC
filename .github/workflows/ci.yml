@@ -11,6 +11,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      VINSOC_SOC_REQUIRED: "1"
+      VINSOC_SOC_SOURCE_DIR: data/soc_traces_v1/source
+      VINSOC_SOC_CORPUS_PATH: data/soc_traces_v1/corpus/corpus.duckdb
     strategy:
       fail-fast: false
       matrix:
@@ -25,9 +29,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install duckdb==1.5.5
+      - name: Restore pinned SOC corpus
+        run: |
+          python scripts/prepare_soc_traces.py --fetch --source-dir "$VINSOC_SOC_SOURCE_DIR" --output-dir data/soc_traces_v1/corpus
       - name: Run full repository test suite
         run: |
           python -m pytest -q
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: soc-offline-corpus-${{ github.sha }}-${{ matrix.python-version }}
+          path: data/soc_traces_v1/corpus/corpus_receipt.json
+          if-no-files-found: error
 
   cloud-input-availability:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'

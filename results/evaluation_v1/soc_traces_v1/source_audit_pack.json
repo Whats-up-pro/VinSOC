@@ -1,0 +1,2891 @@
+{
+  "status": "pending_human_review",
+  "purpose": "Evaluator source audit only; no model output or human approval",
+  "data_origin": "synthetic",
+  "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+  "source_hashes": {
+    "test.parquet": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+    "validation.parquet": "94cd7987fe3064cd0933d8fabed75d517e955f8faa8723ac07c9b01446cdfcf7"
+  },
+  "inventory_sha256": "58394eb5010eab7ad44892184a6ebf3357a5046c1c8dcc0548d3a84659fb029a",
+  "database_sha256": "b2d9ee5fbe15b5ed50ae131bf54cd743dde4af144be546958c6381705c8794bf",
+  "required_fields": [
+    "analyst",
+    "reviewed_at",
+    "scenario_id",
+    "source_sha256",
+    "inventory_sha256",
+    "label_supportability",
+    "decision",
+    "rationale"
+  ],
+  "cases": [
+    {
+      "scenario_id": "SCT-087094",
+      "family": "ad_discovery",
+      "label": "malicious",
+      "payload_sha256": "bde1cbd37ca9ba0b6f9b9a2479e5d3048ff44319287fcdd25c48c24a752e5d38",
+      "near_duplicate_sha256": "a3147740deb85eb4539d1eab3155b046d41882c8914e65c07add6607b3b26c72",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-087094",
+        "description": "Rapid sequence of domain enumeration commands (net /domain, PowerView) by noah.evans on WKS-034.",
+        "host": "WKS-034",
+        "severity": "medium",
+        "source": "SentinelOne",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Active Directory discovery burst",
+        "user": "noah.evans"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "a228877a55dc9db6905f18575ae8167c09622b6d3704f91d6ab1588abd6f2058",
+        "scenario_id": "SCT-087094",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0001",
+                "host": "WKS-034",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:22:18.997569+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:22:18.997569+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "e7a7cbadde593b83b78ae869cd4ccf460aa06f8ad391b6816ee57a963d2e0958",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0001",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0002",
+                "host": "WKS-034",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T08:45:31.684341+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:45:31.684341+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/7",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "6b4a7276dac95dd170afc4f237e2fafca2fc1bbeba8df0e1b70341f6ade029da",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0002",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0003",
+                "host": "WKS-034",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T07:41:31.397963+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T07:41:31.397963+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "13b7fbe4d64a7bbe58dd2d76d233964e5e0cc8817bc70b19d68ec7ab3d1f7ce4",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0003",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0004",
+                "host": "WKS-034",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T08:39:07.379056+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:39:07.379056+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "fb612f3cb52a341c3340ea80733600c2970725831cbe52ee377ee22e8a4ae913",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0004",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0005",
+                "host": "WKS-034",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T08:02:10.959388+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:02:10.959388+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "94f207dd087a31fff4f6719ef04ec616cf4542fab9ab6c34329a8b0e3e64bcdb",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0005",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0006",
+                "host": "WKS-034",
+                "message": "Routine process start: background task",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T10:28:53.587027+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T10:28:53.587027+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/8",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "29f281fc1e16f23296b15ea9cd6b3373658d7d1c06a8767e3f3a47d1dd428b72",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0006",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "cmdline": "net user /domain",
+                "event_id": "EV-0007",
+                "host": "WKS-034",
+                "message": "net.exe domain enumeration",
+                "process": "net.exe",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:42:00+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:42:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "b6d2750cbbf9024384843d85c41f8b4c715afedba12241f18c7fda47457b7bd4",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0007",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "cmdline": "net group \"Domain Admins\" /domain",
+                "event_id": "EV-0008",
+                "host": "WKS-034",
+                "message": "Domain Admins group enumeration",
+                "process": "net.exe",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:43:00+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:43:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/5",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "7da46d51d20f187375862314499e44193b9f46cbb0750cb92451a93c72e510e3",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0008",
+              "user": "noah.evans"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "cmdline": "powershell.exe -c Get-DomainController",
+                "event_id": "EV-0009",
+                "host": "WKS-034",
+                "message": "PowerView cmdlet execution",
+                "process": "powershell.exe",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:45:00+00:00",
+                "user": "noah.evans"
+              },
+              "host": "WKS-034",
+              "observed_at": "2026-07-27T08:45:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/6",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "39ff37f4da3d6db2d480db074e8d031368c59df767862e2eaf273b1733cc7f0e",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:events:EV-0009",
+              "user": "noah.evans"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-034",
+                "internet_exposed": false,
+                "ip": "10.38.19.47",
+                "last_patch_days": 13,
+                "os": "Windows 11 23H2",
+                "owner": "adm.r.ito",
+                "role": "workstation",
+                "vlan": "server-core"
+              },
+              "host": "WKS-034",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/9/content/asset",
+                "original_tool_call_id": "call_3",
+                "raw_record_sha256": "e5e3f2fcad852d2258e0f0e93517c2d36025954b36823a2fa553bc11937ceca4",
+                "scenario_id": "SCT-087094",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:asset:WKS-034",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": true,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-017066",
+      "family": "browser_cred_theft",
+      "label": "malicious",
+      "payload_sha256": "fae0c5ff0fe54b84370604651bba0983413386d12586d76e04d9a71e0713c64f",
+      "near_duplicate_sha256": "60dc59c45e5487ab84d69d0ed1aa31d7336b64765183eddd95a0e7011fafa449",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-017066",
+        "description": "5a206mau.exe read the Chrome Login Data store and DPAPI keys on WKS-028.",
+        "host": "WKS-028",
+        "severity": "high",
+        "source": "SentinelOne",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Browser credential store accessed by unsigned process",
+        "user": "david.nguyen"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "5125161846fbfcc34a787e4ccdb20cfb759b5ca790415c82951d60bebfb4b03a",
+        "scenario_id": "SCT-017066",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0001",
+                "host": "WKS-028",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T10:13:59.201585+00:00",
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": "2026-07-27T10:13:59.201585+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/5",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "3b9f44e1541f9c4420b27849ec65611365a90f66b0f4e710cbeadc00cfcfc6e1",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:events:EV-0001",
+              "user": "david.nguyen"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0002",
+                "host": "WKS-028",
+                "message": "Routine process start: background task",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:08:39.492430+00:00",
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": "2026-07-27T08:08:39.492430+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "243453828e0e60ae62cabd5a60dbf44d12f8839165814d154aa65147067c7fef",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:events:EV-0002",
+              "user": "david.nguyen"
+            },
+            {
+              "data": {
+                "channel": "4624",
+                "event_id": "EV-0003",
+                "host": "WKS-028",
+                "message": "Successful logon: interactive session opened",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T07:48:21.614975+00:00",
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": "2026-07-27T07:48:21.614975+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "60a758898219a832a280365b7db4dd1866dc2cf17046efed02c88a40293532a0",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:events:EV-0003",
+              "user": "david.nguyen"
+            },
+            {
+              "data": {
+                "channel": "11",
+                "event_id": "EV-0004",
+                "file_path": "C:\\Users\\david.nguyen\\AppData\\Local\\5a206mau.exe",
+                "host": "WKS-028",
+                "message": "Unsigned binary dropped",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:50:00+00:00",
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": "2026-07-27T08:50:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "4ea1ac511a05f7c5d1a03d2e4ace2a4a15ac7bc3029901e5087a19b73bd8ca6a",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:events:EV-0004",
+              "user": "david.nguyen"
+            },
+            {
+              "data": {
+                "channel": "file_access",
+                "event_id": "EV-0005",
+                "file_path": "C:\\Users\\david.nguyen\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Login Data",
+                "host": "WKS-028",
+                "message": "Non-browser process read Chrome Login Data",
+                "process": "5a206mau.exe",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:51:00+00:00",
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": "2026-07-27T08:51:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "608a9f0973e35d52ef50c79858235991da94cc20b015d90f1ed12f86228fa57b",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:events:EV-0005",
+              "user": "david.nguyen"
+            },
+            {
+              "data": {
+                "channel": "dpapi",
+                "event_id": "EV-0006",
+                "host": "WKS-028",
+                "message": "DPAPI master key accessed by unsigned process",
+                "process": "5a206mau.exe",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:52:00+00:00",
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": "2026-07-27T08:52:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "8f7d6f2758d1c2e7fe61398302333057a630952da2a7f7defbda9c31370cf2d8",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:events:EV-0006",
+              "user": "david.nguyen"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-028",
+                "internet_exposed": false,
+                "ip": "10.7.1.125",
+                "last_patch_days": 16,
+                "os": "Windows 11 23H2",
+                "owner": "adm.s.lopez",
+                "role": "workstation",
+                "vlan": "dmz"
+              },
+              "host": "WKS-028",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/11/content/asset",
+                "original_tool_call_id": "call_4",
+                "raw_record_sha256": "139a1d30d8f4a9b8084a1c47a59c2a7a70c28b13c2cc1095386d4c763dacff81",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:asset:WKS-028",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "cmdline": "C:\\Users\\david.nguyen\\AppData\\Local\\5a206mau.exe",
+                "hash_sha256": "f5fab20a365c8b1bd2d1a56bb58873e17f45e78a908706798fcd931944560b99",
+                "image": "5a206mau.exe",
+                "parent_image": "explorer.exe",
+                "path": "C:\\Windows\\System32\\5a206mau.exe",
+                "pid": 8345,
+                "signed": false,
+                "user": "david.nguyen"
+              },
+              "host": "WKS-028",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/0",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "9736241ac4b4a4c8d68606eb0b75058063a1068d84ceb24b153b62bf8064bed0",
+                "scenario_id": "SCT-017066",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-017066:process_tree:8345",
+              "user": "david.nguyen"
+            }
+          ]
+        },
+        "related_alerts": {
+          "available": false,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-096313",
+      "family": "c2_beacon",
+      "label": "malicious",
+      "payload_sha256": "59b5204cc78bbec8aed7e028db84056804b4caf5b8b6c2353665db208dde324a",
+      "near_duplicate_sha256": "d6f4d052219464bc6391bb8b4b17869b9dadd77dce9ccefbc1103af0e2cd8917",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-096313",
+        "description": "Regular 30-second-interval HTTPS connections from WKS-016 to telemetry-fastlane.net with near-constant byte counts — consistent with C2 beaconing.",
+        "host": "WKS-016",
+        "severity": "high",
+        "source": "Zeek NDR",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Periodic beaconing to rare domain telemetry-fastlane.net",
+        "user": "karen.johnson"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "a4b48e2e6d8c849a141854c6b357561c5dd49c5050a8850a62f6747d6bf2cc21",
+        "scenario_id": "SCT-096313",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "4634",
+                "event_id": "EV-0001",
+                "host": "WKS-016",
+                "message": "Logoff: session closed",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T07:36:28.984612+00:00",
+                "user": "karen.johnson"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T07:36:28.984612+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "c89948859b59f7be05804e536e766707c4674d48cec3d568411ffd4c30db0476",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0001",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0002",
+                "host": "WKS-016",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T09:13:38.084283+00:00",
+                "user": "karen.johnson"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T09:13:38.084283+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/8",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "e1c5f5989b89cdaee6ac1055cb5b8151d03c8f9a9c4eec818614a814f55c859e",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0002",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0003",
+                "host": "WKS-016",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T07:42:38.112778+00:00",
+                "user": "karen.johnson"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T07:42:38.112778+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "5e0458d13403295bed9e9b6befe59c0585a1c6a1e414b27c401edc3dc631fa4a",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0003",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0004",
+                "host": "WKS-016",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:19:18.365590+00:00",
+                "user": "karen.johnson"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T08:19:18.365590+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "d3740602bb8989c2a0e73086c31338eb287c33f88a83558589754aeea9d3083a",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0004",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "bytes_in": 198,
+                "bytes_out": 385,
+                "channel": "https",
+                "dst_domain": "telemetry-fastlane.net",
+                "event_id": "EV-0005",
+                "host": "WKS-016",
+                "message": "HTTPS connection to telemetry-fastlane.net (193.142.146.58)",
+                "process": "updatehelper.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T08:00:00+00:00",
+                "user": "karen.johnson",
+                "user_agent": "curl/8.4.0"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T08:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "f607f0302e219ec33cb3c55aa0f424c61c125b744d35c0e1e756585072eb6cd4",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0005",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "bytes_in": 191,
+                "bytes_out": 400,
+                "channel": "https",
+                "dst_domain": "telemetry-fastlane.net",
+                "event_id": "EV-0006",
+                "host": "WKS-016",
+                "message": "HTTPS connection to telemetry-fastlane.net (45.155.204.126)",
+                "process": "updatehelper.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T08:15:00+00:00",
+                "user": "karen.johnson",
+                "user_agent": "WinHTTP/5.1"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T08:15:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "b4140ded2460d27703ab5603e8b4e3489c9910d31f1c5ebd1aff8717d404f509",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0006",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "bytes_in": 204,
+                "bytes_out": 400,
+                "channel": "https",
+                "dst_domain": "telemetry-fastlane.net",
+                "event_id": "EV-0007",
+                "host": "WKS-016",
+                "message": "HTTPS connection to telemetry-fastlane.net (185.220.101.131)",
+                "process": "svchost.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T08:30:00+00:00",
+                "user": "karen.johnson",
+                "user_agent": "python-requests/2.31.0"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T08:30:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/5",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "b98a38277533727d801e9a287651f96eea3724cc7ef61c3edafde0ec6072089d",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0007",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "bytes_in": 210,
+                "bytes_out": 390,
+                "channel": "https",
+                "dst_domain": "telemetry-fastlane.net",
+                "event_id": "EV-0008",
+                "host": "WKS-016",
+                "message": "HTTPS connection to telemetry-fastlane.net (193.142.146.130)",
+                "process": "svchost.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T08:45:00+00:00",
+                "user": "karen.johnson",
+                "user_agent": "curl/8.4.0"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T08:45:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/6",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "ad89e852d0bc4c1cece8337814d109a81f13a0ea6e324a5e81184f7e1ba4cd40",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0008",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "bytes_in": 194,
+                "bytes_out": 414,
+                "channel": "https",
+                "dst_domain": "telemetry-fastlane.net",
+                "event_id": "EV-0009",
+                "host": "WKS-016",
+                "message": "HTTPS connection to telemetry-fastlane.net (185.220.101.219)",
+                "process": "updatehelper.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T09:00:00+00:00",
+                "user": "karen.johnson",
+                "user_agent": "python-requests/2.31.0"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T09:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/7",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "59cded339d5c96d30af8ab365f615b0e7066449e42853a857563b9faf1b92a8a",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0009",
+              "user": "karen.johnson"
+            },
+            {
+              "data": {
+                "bytes_in": 196,
+                "bytes_out": 385,
+                "channel": "https",
+                "dst_domain": "telemetry-fastlane.net",
+                "event_id": "EV-0010",
+                "host": "WKS-016",
+                "message": "HTTPS connection to telemetry-fastlane.net (193.142.146.158)",
+                "process": "updatehelper.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T09:15:00+00:00",
+                "user": "karen.johnson",
+                "user_agent": "WinHTTP/5.1"
+              },
+              "host": "WKS-016",
+              "observed_at": "2026-07-27T09:15:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/9",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "79852fcb34c8c505c964c53c30e25f54a8a9a0a3b9a94ed0775acc18c1028a3f",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:events:EV-0010",
+              "user": "karen.johnson"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-016",
+                "internet_exposed": false,
+                "ip": "10.32.38.212",
+                "last_patch_days": 39,
+                "os": "Windows 11 23H2",
+                "owner": "adm.j.carter",
+                "role": "workstation",
+                "vlan": "server-core"
+              },
+              "host": "WKS-016",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/9/content/asset",
+                "original_tool_call_id": "call_3",
+                "raw_record_sha256": "27eeb1e84f8ed4c3811874d5d74ba102b6f56a1e590d9a30753f324e26b8a792",
+                "scenario_id": "SCT-096313",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-096313:asset:WKS-016",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": true,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-005963",
+      "family": "cloud_account_anomaly",
+      "label": "malicious",
+      "payload_sha256": "6309694962b035d30af030b2f41f7f7fcb4eefacb437332157fb88d2ad0c0da1",
+      "near_duplicate_sha256": "dd6de03e25a0fc214a0909e13b342bce72e05bda72a32050e64ded7d7d4c799b",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-005963",
+        "description": "Cloud account carol.kumar signed in from two distant locations within 85 minutes; an external forwarding rule was created afterwards.",
+        "host": "cloud-identity",
+        "severity": "critical",
+        "source": "Microsoft Sentinel",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Impossible-travel sign-in and inbox forwarding rule",
+        "user": "carol.kumar"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "e100a59969a67e9e604cc66236af3eb1b72cb5d7d3251ad8246013f01c48f482",
+        "scenario_id": "SCT-005963",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "app": "Office 365",
+                "channel": "entra",
+                "event_id": "EV-0001",
+                "host": "cloud-identity",
+                "ip": "91.240.118.112",
+                "location": "Frankfurt, DE",
+                "message": "Successful sign-in from Frankfurt, DE",
+                "source": "cloud-signin",
+                "timestamp": "2026-07-27T06:00:00+00:00",
+                "user": "carol.kumar"
+              },
+              "host": "cloud-identity",
+              "observed_at": "2026-07-27T06:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "e225a692d83860650a1515bcf665b3fc21d88e05f3d025660fa6c6c846955db2",
+                "scenario_id": "SCT-005963",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-005963:events:EV-0001",
+              "user": "carol.kumar"
+            },
+            {
+              "data": {
+                "app": "Office 365",
+                "channel": "entra",
+                "event_id": "EV-0002",
+                "host": "cloud-identity",
+                "ip": "91.240.118.25",
+                "location": "Singapore, SG",
+                "message": "Successful sign-in from Singapore, SG (impossible travel)",
+                "source": "cloud-signin",
+                "timestamp": "2026-07-27T07:25:00+00:00",
+                "user": "carol.kumar"
+              },
+              "host": "cloud-identity",
+              "observed_at": "2026-07-27T07:25:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "ed8c05367742645fdaec1b3ca1eebf46febca9f5626d1b112f0eebca4d65ab14",
+                "scenario_id": "SCT-005963",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-005963:events:EV-0002",
+              "user": "carol.kumar"
+            },
+            {
+              "data": {
+                "channel": "exchange",
+                "event_id": "EV-0003",
+                "forward_to": "alerts@mail-verify-hub.net",
+                "host": "cloud-identity",
+                "message": "Inbox rule created forwarding to external address",
+                "rule_name": "sync",
+                "source": "office365",
+                "timestamp": "2026-07-27T08:00:00+00:00",
+                "user": "carol.kumar"
+              },
+              "host": "cloud-identity",
+              "observed_at": "2026-07-27T08:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "78426619cd072efb95d62af8354e017737e422c6435d2618f8de8d9e15c76916",
+                "scenario_id": "SCT-005963",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-005963:events:EV-0003",
+              "user": "carol.kumar"
+            }
+          ]
+        },
+        "asset": {
+          "available": false,
+          "records": []
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": true,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-074064",
+      "family": "cloud_exfil",
+      "label": "malicious",
+      "payload_sha256": "4895f232007a8cb40142e57f9d7340875a381d4013352d7178b33549cf56fbd4",
+      "near_duplicate_sha256": "8fcda8efd59c0fbf0e1ec2e7f17e4697827f16e224e2f8705a9c089b440ea16d",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-074064",
+        "description": "6.9 GB uploaded from WKS-032 to anonfiles.io shortly after creation of an encrypted archive.",
+        "host": "WKS-032",
+        "severity": "high",
+        "source": "Zscaler",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Large outbound transfer to anonfiles.io",
+        "user": "david.miller"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "e6dafbb9230f24b55ed78ec10d615039da8323acb03476c66cf8dda1bc945ec7",
+        "scenario_id": "SCT-074064",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0001",
+                "host": "WKS-032",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T07:42:01.904516+00:00",
+                "user": "david.miller"
+              },
+              "host": "WKS-032",
+              "observed_at": "2026-07-27T07:42:01.904516+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "4721036bcdfd858c9ab435873369f2c11a86b75aeb2a923d0bb166606e4a9c26",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:events:EV-0001",
+              "user": "david.miller"
+            },
+            {
+              "data": {
+                "channel": "3",
+                "event_id": "EV-0002",
+                "host": "WKS-032",
+                "message": "Outbound connection to sanctioned service",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T09:33:53.759862+00:00",
+                "user": "david.miller"
+              },
+              "host": "WKS-032",
+              "observed_at": "2026-07-27T09:33:53.759862+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "1d3849d8cfe179a164416f52e41b94d733d9ba4fbadb741431f808431fd25860",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:events:EV-0002",
+              "user": "david.miller"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0003",
+                "host": "WKS-032",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T07:55:46.006559+00:00",
+                "user": "david.miller"
+              },
+              "host": "WKS-032",
+              "observed_at": "2026-07-27T07:55:46.006559+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "78acabed6c9bc04050dcc10cbd624baabf0115f397b6eea9e7a09a41988bc104",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:events:EV-0003",
+              "user": "david.miller"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "cmdline": "7z.exe a -p backup_dtpgky.7z C:\\Data\\*",
+                "event_id": "EV-0004",
+                "host": "WKS-032",
+                "message": "7z.exe created a large encrypted archive",
+                "process": "7z.exe",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T07:50:00+00:00",
+                "user": "david.miller"
+              },
+              "host": "WKS-032",
+              "observed_at": "2026-07-27T07:50:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "03f735a3cb39329ac9b35f98999779c2db71fea4316f54b0b9063a7e0b002d2a",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:events:EV-0004",
+              "user": "david.miller"
+            },
+            {
+              "data": {
+                "bytes_out": 6900000000,
+                "channel": "https",
+                "dst_domain": "anonfiles.io",
+                "duration_min": 22,
+                "event_id": "EV-0005",
+                "host": "WKS-032",
+                "message": "Sustained upload to anonfiles.io",
+                "source": "proxy",
+                "timestamp": "2026-07-27T08:05:00+00:00",
+                "user": "david.miller"
+              },
+              "host": "WKS-032",
+              "observed_at": "2026-07-27T08:05:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "949f7e4000a9438d34a19cfdc173d90eac9dcec8037860cd07d39d8f99b1d907",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:events:EV-0005",
+              "user": "david.miller"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-032",
+                "internet_exposed": false,
+                "ip": "10.36.25.183",
+                "last_patch_days": 16,
+                "os": "Windows 11 23H2",
+                "owner": "adm.s.lopez",
+                "role": "workstation",
+                "vlan": "mgmt"
+              },
+              "host": "WKS-032",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/9/content/asset",
+                "original_tool_call_id": "call_3",
+                "raw_record_sha256": "7f4145860c2064aefd72dd3455e5cc8923ac0606ea2ac614d3331dcf8624cff1",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:asset:WKS-032",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "cmdline": "7z.exe a -p backup.7z C:\\Data\\*",
+                "hash_sha256": "5ef2bb5388efb1ce3474a0a451b9b37c5c1b5a72e4c2b17de846cc9f72e3aa3c",
+                "image": "7z.exe",
+                "parent_image": "explorer.exe",
+                "path": "C:\\Windows\\System32\\7z.exe",
+                "pid": 8080,
+                "signed": true,
+                "user": "david.miller"
+              },
+              "host": "WKS-032",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/0",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "ac4a208be3f0f2fc9f6923f467a8fe22c0802b2d7caae60bfa5dbb8e29c51553",
+                "scenario_id": "SCT-074064",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-074064:process_tree:8080",
+              "user": "david.miller"
+            }
+          ]
+        },
+        "related_alerts": {
+          "available": true,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-033675",
+      "family": "dns_tunnel",
+      "label": "malicious",
+      "payload_sha256": "d68960e916ba45373fc374733a2bb9e8d4fa9fed1d3880e256e34924b4125cc2",
+      "near_duplicate_sha256": "a8b3a949f8acc8fa8b896580a63ce7d883fc075c8f18fd04a9703015dc7a3250",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-033675",
+        "description": "High rate of long, high-entropy TXT queries from SRV-WEB-001 to a single rare domain mail-verify-hub.net.",
+        "host": "SRV-WEB-001",
+        "severity": "high",
+        "source": "Zeek NDR",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Possible DNS tunneling to mail-verify-hub.net",
+        "user": "noah.anderson"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "f0fb110e5358c43f25aa2e414b292d94d913525f0cdbe1e1ec1d6c3b2aa3b5bd",
+        "scenario_id": "SCT-033675",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0001",
+                "host": "SRV-WEB-001",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:48:38.886645+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:48:38.886645+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/5",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "d31efea0b4d849b3833ea78700c9cec0763e9f37e4be43097084174d714fde3e",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0001",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0002",
+                "host": "SRV-WEB-001",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T08:24:34.974801+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:24:34.974801+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "8ba42bc67d579100c32977db39f1b04042c398a069c4cf46615f3a12c85e5513",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0002",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0003",
+                "host": "SRV-WEB-001",
+                "message": "Routine process start: background task",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T09:32:07.696292+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T09:32:07.696292+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/7",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "3fbaacfc0799900abeb08c428f2fd2e4ce2506ca3e3956b4a139fc7a62eb0561",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0003",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "query",
+                "dst_domain": "mail-verify-hub.net",
+                "event_id": "EV-0004",
+                "host": "SRV-WEB-001",
+                "label_length": 48,
+                "message": "TXT query 7r4r4dishbvb7dljd9mmfc9ro1ct0d6eyhzf62j7iqnfv5dg.mail-verify-hub.net",
+                "query_type": "TXT",
+                "source": "dns",
+                "timestamp": "2026-07-27T08:20:00+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:20:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "f4b1fad8bd1b8d2b15c9d7c317af1111a0f918141d9fdf6f31b9d3674978651b",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0004",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "query",
+                "dst_domain": "mail-verify-hub.net",
+                "event_id": "EV-0005",
+                "host": "SRV-WEB-001",
+                "label_length": 48,
+                "message": "TXT query qbyga82l7wcvcyocszkuojj0pl6d7a2aums1hzxtzws72inn.mail-verify-hub.net",
+                "query_type": "TXT",
+                "source": "dns",
+                "timestamp": "2026-07-27T08:28:00+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:28:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "ab09d9231394624c50b641bc742f4402bef7906cb91aba2b6d0868aa5c57d564",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0005",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "query",
+                "dst_domain": "mail-verify-hub.net",
+                "event_id": "EV-0006",
+                "host": "SRV-WEB-001",
+                "label_length": 48,
+                "message": "TXT query 02wg913ok2bgkw9rcmcck5jtoqesin8cj2p8jf1xt64cnne4.mail-verify-hub.net",
+                "query_type": "TXT",
+                "source": "dns",
+                "timestamp": "2026-07-27T08:36:00+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:36:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "380724e4bccb8f3e8157f7476bc580c188265b772c4af829f9c47c544d2af117",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0006",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "query",
+                "dst_domain": "mail-verify-hub.net",
+                "event_id": "EV-0007",
+                "host": "SRV-WEB-001",
+                "label_length": 48,
+                "message": "TXT query ired3pogcfwc87k1a138g0n3xrewjajvmsgb6akplho1nhwo.mail-verify-hub.net",
+                "query_type": "TXT",
+                "source": "dns",
+                "timestamp": "2026-07-27T08:44:00+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:44:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "b37cfc6c3c0532019eb23461519560b664f445799e839e68b328a42932b600c7",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0007",
+              "user": "noah.anderson"
+            },
+            {
+              "data": {
+                "channel": "query",
+                "dst_domain": "mail-verify-hub.net",
+                "event_id": "EV-0008",
+                "host": "SRV-WEB-001",
+                "label_length": 48,
+                "message": "TXT query ryex3kzzbzfh9m1sha76iv01ozmw96ry54srdq2y3arrtboi.mail-verify-hub.net",
+                "query_type": "TXT",
+                "source": "dns",
+                "timestamp": "2026-07-27T08:52:00+00:00",
+                "user": "noah.anderson"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": "2026-07-27T08:52:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/6",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "732c6e1fa633c36873a61084ade0457e792191322f54ea025591d6fee862ffe2",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:events:EV-0008",
+              "user": "noah.anderson"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "high",
+                "edr_installed": true,
+                "hostname": "SRV-WEB-001",
+                "internet_exposed": true,
+                "ip": "10.25.3.118",
+                "last_patch_days": 57,
+                "os": "Windows Server 2022",
+                "owner": "adm.j.carter",
+                "role": "web_server",
+                "vlan": "server-core"
+              },
+              "host": "SRV-WEB-001",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/11/content/asset",
+                "original_tool_call_id": "call_4",
+                "raw_record_sha256": "6e2dc4dafa5077ceb2c7b69dc929cf0ac34deb45df0d3e0ba92a2310a4f89c3e",
+                "scenario_id": "SCT-033675",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-033675:asset:SRV-WEB-001",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": false,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-004523",
+      "family": "admin_ps_maintenance",
+      "label": "benign",
+      "payload_sha256": "adf10763f051081d1c5f6fa256bd44593c3293fdd6f230b0496be3a60d53fc8c",
+      "near_duplicate_sha256": "30b47da88b1b1d5a01fb4dd2cead8d87cb33a5d5c05a9ba0f3b7a015e4d5d9bd",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-004523",
+        "description": "powershell.exe ran C:\\Scripts\\Export-ADUsers.ps1 on SRV-APP-006 during the documented change window (Sun 02:00-05:00 UTC).",
+        "host": "SRV-APP-006",
+        "severity": "low",
+        "source": "Splunk ES",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "PowerShell execution by administrator",
+        "user": "adm.a.novak"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "9b3221e3dee7fbf3eab5c53e5db7fc2efa162e810ac0439bff5da074de701b70",
+        "scenario_id": "SCT-004523",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0001",
+                "host": "SRV-APP-006",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T10:17:39.136928+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T10:17:39.136928+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/6",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "606b3c7b60bf8044698c007a44f2203de45476d3e1d9833a7a9cf802a9457828",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0001",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0002",
+                "host": "SRV-APP-006",
+                "message": "Routine process start: background task",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:21:33.618784+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T08:21:33.618784+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "317b63af55eb0c4d207f29093267a19c28330eaf197e99c8096ed48d403c428d",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0002",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0003",
+                "host": "SRV-APP-006",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:41:34.249909+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T08:41:34.249909+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "00ba7f3064e46f6d28b8a93f2a20cc440da00fe931f3abf16afc2732d05f81e9",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0003",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "4634",
+                "event_id": "EV-0004",
+                "host": "SRV-APP-006",
+                "message": "Logoff: session closed",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T07:53:19.800058+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T07:53:19.800058+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "98ff7f8e1e5da969366f486b7841c999eb4707926bbd4589be1a72cc4783adef",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0004",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0005",
+                "host": "SRV-APP-006",
+                "message": "Service entered running state",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T08:49:03.243726+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T08:49:03.243726+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/5",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "eb540382c850b54ea6ce1b0ca6975e7f2f6a6be31c6d73345af5a5248edd1b37",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0005",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "cmdline": "powershell.exe -File C:\\Scripts\\Export-ADUsers.ps1",
+                "event_id": "EV-0006",
+                "host": "SRV-APP-006",
+                "message": "Signed PowerShell script executed by adm.a.novak",
+                "process": "powershell.exe",
+                "signed": true,
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:40:00+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T08:40:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "15ff4773367251649cd4d588884d8f5dc369bff0db1e9c7cdf984501e7e54eba",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0006",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "4688",
+                "event_id": "EV-0007",
+                "host": "SRV-APP-006",
+                "message": "Process created under admin context",
+                "process": "powershell.exe",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T08:41:00+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T08:41:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "4940353846486042bf524376312170e279b332eb590b0e94679e5b976ee7dad7",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:events:EV-0007",
+              "user": "adm.a.novak"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "high",
+                "edr_installed": true,
+                "hostname": "SRV-APP-006",
+                "internet_exposed": false,
+                "ip": "10.39.11.153",
+                "last_patch_days": 13,
+                "os": "Windows Server 2022",
+                "owner": "adm.s.lopez",
+                "role": "application_server",
+                "vlan": "mgmt"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/7/content/asset",
+                "original_tool_call_id": "call_2",
+                "raw_record_sha256": "2af90fbf3c89aa66abff990149e33d792fd25e5777d099c78dc893eb2cc1515c",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:asset:SRV-APP-006",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "cmdline": "powershell.exe -File C:\\Scripts\\Export-ADUsers.ps1",
+                "hash_sha256": "14d4f33224e6fd1d4a05b98d5f835d97d067d1db94ffedcba222610ec540cd14",
+                "image": "powershell.exe",
+                "parent_image": "explorer.exe",
+                "path": "C:\\Windows\\System32\\powershell.exe",
+                "pid": 2289,
+                "signed": true,
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/0",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "d1d125562313e3a31ed588dce49f01c35725063967cc6df22930285ff21f461a",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:process_tree:2289",
+              "user": "adm.a.novak"
+            }
+          ]
+        },
+        "related_alerts": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "alert_id": "A-2400",
+                "host": "SRV-APP-006",
+                "severity": "info",
+                "status": "closed",
+                "timestamp": "2026-07-27T04:00:00+00:00",
+                "title": "Change ticket CHG-4821: server maintenance",
+                "user": "adm.a.novak"
+              },
+              "host": "SRV-APP-006",
+              "observed_at": "2026-07-27T04:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/9/content/alerts/0",
+                "original_tool_call_id": "call_3",
+                "raw_record_sha256": "f0a7103cc6388f398e46e49c999e3755550d3b852e99b520c54acd9a53ca062f",
+                "scenario_id": "SCT-004523",
+                "split": "test"
+              },
+              "resource": "related_alerts",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-004523:related_alerts:A-2400",
+              "user": "adm.a.novak"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-006370",
+      "family": "av_selftest",
+      "label": "benign",
+      "payload_sha256": "d6add21e2b5fe9023f406fd0c70386aa62299c98d0f8f5e9a38d419525afecc7",
+      "near_duplicate_sha256": "24e441ebfb397d561bffc55e7e796a1e3ac79362b877d830aed094476d264609",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-006370",
+        "description": "Detection for EICAR test string on WKS-010 by adm.r.ito.",
+        "host": "WKS-010",
+        "severity": "medium",
+        "source": "CrowdStrike EDR",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Malware detection: EICAR test file",
+        "user": "adm.r.ito"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "b5487e33574e974910b57f4b814707931693bba94ff7d253ca9aed8fb0ec5a8c",
+        "scenario_id": "SCT-006370",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "11",
+                "event_id": "EV-0001",
+                "file_path": "C:\\Users\\adm.r.ito\\Desktop\\eicar.com",
+                "host": "WKS-010",
+                "message": "EICAR test file written",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:45:00+00:00",
+                "user": "adm.r.ito"
+              },
+              "host": "WKS-010",
+              "observed_at": "2026-07-27T08:45:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "620de468b4d0cfc6a36828c2d2edf2e2a2c5ca908f5bfbfce06a4b557eb6a29e",
+                "scenario_id": "SCT-006370",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-006370:events:EV-0001",
+              "user": "adm.r.ito"
+            },
+            {
+              "data": {
+                "channel": "detection",
+                "event_id": "EV-0002",
+                "file_path": "C:\\Users\\adm.r.ito\\Desktop\\eicar.com",
+                "host": "WKS-010",
+                "message": "EICAR-Test-File detected and quarantined",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:46:00+00:00",
+                "user": "adm.r.ito"
+              },
+              "host": "WKS-010",
+              "observed_at": "2026-07-27T08:46:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "fedf649194eeb15e55c3d24e8b79092e7567c3608df1befc31b0a3fd3603e3a3",
+                "scenario_id": "SCT-006370",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-006370:events:EV-0002",
+              "user": "adm.r.ito"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-010",
+                "internet_exposed": false,
+                "ip": "10.27.13.187",
+                "last_patch_days": 59,
+                "os": "Windows 11 23H2",
+                "owner": "adm.s.lopez",
+                "role": "workstation",
+                "vlan": "dmz"
+              },
+              "host": "WKS-010",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/asset",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "7c487b74a6888f403da82033c92e09548165160964a308ed1828ae0ce1fefbe2",
+                "scenario_id": "SCT-006370",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-006370:asset:WKS-010",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": true,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-062225",
+      "family": "backup_spike",
+      "label": "benign",
+      "payload_sha256": "ae0039d520b8bf61c4aa85f7265b51fb065648f1ccecca1941c2278d15fec6da",
+      "near_duplicate_sha256": "9e16fecbf5d41983888a527d69790f41b02517a84f8fd2f954a30d39b4131c92",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-062225",
+        "description": "98.0 GB uploaded from SRV-DB-001 to backup.contoso-vault.net.",
+        "host": "SRV-DB-001",
+        "severity": "medium",
+        "source": "Zscaler",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Large outbound transfer from server",
+        "user": "svc_backup"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "0b84272b9d68b3d058bf20254b9644ace759e3baa66965a34f4f40be38b802a2",
+        "scenario_id": "SCT-062225",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "bytes_out": 98000000000,
+                "channel": "https",
+                "dst_domain": "backup.contoso-vault.net",
+                "event_id": "EV-0001",
+                "host": "SRV-DB-001",
+                "message": "Sustained upload to backup.contoso-vault.net (98.0 GB)",
+                "source": "proxy",
+                "timestamp": "2026-07-27T07:00:00+00:00",
+                "user": "svc_backup"
+              },
+              "host": "SRV-DB-001",
+              "observed_at": "2026-07-27T07:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "4d2dfef5383fcf8681b3df56c16cd57bdaeccb1f35c1d59f4e9a9577ef144531",
+                "scenario_id": "SCT-062225",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-062225:events:EV-0001",
+              "user": "svc_backup"
+            },
+            {
+              "data": {
+                "channel": "7036",
+                "event_id": "EV-0002",
+                "host": "SRV-DB-001",
+                "message": "Veeam Backup service entered running state",
+                "service_name": "VeeamBackupSvc",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T06:55:00+00:00",
+                "user": "svc_backup"
+              },
+              "host": "SRV-DB-001",
+              "observed_at": "2026-07-27T06:55:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "95bbb5e68b897d88e903e3a08cb7bcabfb911e65f5e1f8a9c04a1361173bf888",
+                "scenario_id": "SCT-062225",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-062225:events:EV-0002",
+              "user": "svc_backup"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "critical",
+                "edr_installed": true,
+                "hostname": "SRV-DB-001",
+                "internet_exposed": false,
+                "ip": "10.38.23.203",
+                "last_patch_days": 43,
+                "os": "Windows Server 2019",
+                "owner": "adm.j.carter",
+                "role": "database_server",
+                "vlan": "server-core"
+              },
+              "host": "SRV-DB-001",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/asset",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "09965ca6a814ba0c7283a25365a685b5ba2e7fec3468fc346a5f8c4515c881ae",
+                "scenario_id": "SCT-062225",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-062225:asset:SRV-DB-001",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": true,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-059065",
+      "family": "dev_build",
+      "label": "benign",
+      "payload_sha256": "813816a16e524890ec2d33c193d75235b817f67f2448208736b6161ec3176a97",
+      "near_duplicate_sha256": "31b4e995ba4dde7142b3854b88970c625ac2bbbdab94296d584505c5e8f46c67",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-059065",
+        "description": "MSBuild.exe spawned cmd.exe on WKS-059.",
+        "host": "WKS-059",
+        "severity": "low",
+        "source": "SentinelOne",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Development tool spawning command shell",
+        "user": "grace.miller"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "c101758e16587fabe2947a4b34c1b6788b82bfd64847550d39521a56a6a42298",
+        "scenario_id": "SCT-059065",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0001",
+                "host": "WKS-059",
+                "message": "Routine process start: background task",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T09:29:25.710504+00:00",
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": "2026-07-27T09:29:25.710504+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/4",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "a7647f3115f4ba85374f9d19b86f9c1de0c0b5fd9522995e7c4ff143347f09cd",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:events:EV-0001",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0002",
+                "host": "WKS-059",
+                "message": "Routine process start: background task",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T09:24:42.844417+00:00",
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": "2026-07-27T09:24:42.844417+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "30d7a4e1dd84944eefd19e9e4319d248c670be798f13f0fe03a05a38da6cfd87",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:events:EV-0002",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "channel": "4624",
+                "event_id": "EV-0003",
+                "host": "WKS-059",
+                "message": "Successful logon: interactive session opened",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T10:14:52.175232+00:00",
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": "2026-07-27T10:14:52.175232+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/5",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "f66a3fa7a285438c12296de69de92111961143753026733734f34eb3fb560a82",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:events:EV-0003",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "channel": "4634",
+                "event_id": "EV-0004",
+                "host": "WKS-059",
+                "message": "Logoff: session closed",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T08:33:14.550651+00:00",
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": "2026-07-27T08:33:14.550651+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "1892a332645d4b1d309257ba79a7aa7fc716b296980c340ee5bea27370f24459",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:events:EV-0004",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "event_id": "EV-0005",
+                "host": "WKS-059",
+                "message": "devenv.exe spawned MSBuild.exe",
+                "parent_process": "devenv.exe",
+                "process": "MSBuild.exe",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:38:00+00:00",
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": "2026-07-27T08:38:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "d8cc1078b5370bca261dce93e6804965c34a54c0ba529e1b5829e780854ab26a",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:events:EV-0005",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "channel": "1",
+                "cmdline": "cmd.exe /c copy /y bin\\Release \\\\buildsrv\\drops",
+                "event_id": "EV-0006",
+                "host": "WKS-059",
+                "message": "MSBuild spawned cmd.exe post-build step",
+                "parent_process": "MSBuild.exe",
+                "process": "cmd.exe",
+                "source": "sysmon",
+                "timestamp": "2026-07-27T08:40:00+00:00",
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": "2026-07-27T08:40:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "ad7e92cf5f1f500861af687df17baa590457c53c140aeeced4b1bcf6a16bb368",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:events:EV-0006",
+              "user": "grace.miller"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-059",
+                "internet_exposed": false,
+                "ip": "10.9.1.101",
+                "last_patch_days": 33,
+                "os": "Windows 11 23H2",
+                "owner": "adm.r.ito",
+                "role": "workstation",
+                "vlan": "corp-users"
+              },
+              "host": "WKS-059",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/7/content/asset",
+                "original_tool_call_id": "call_2",
+                "raw_record_sha256": "f7ddd8b9b76435083a3e479b74f6d565c21b7839c7141d795c5a145b2188fb29",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:asset:WKS-059",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "cmdline": "devenv.exe Project.sln",
+                "hash_sha256": "ba27f06657f038df03add7703f32ce656d9b8d17bd3de9b3057484fba7764e90",
+                "image": "devenv.exe",
+                "parent_image": null,
+                "path": "C:\\Windows\\System32\\devenv.exe",
+                "pid": 5195,
+                "signed": true,
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/0",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "a665778e9f27fdd4bd91e86b70af66668bc0e986e44ac116bff402342ff3287a",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:process_tree:5195",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "cmdline": "MSBuild.exe Project.csproj /p:Configuration=Release",
+                "hash_sha256": "04b0739ae5e4cb2ad883ff83d7f77c217d621a76f67084afa7f5702a4d1148a2",
+                "image": "MSBuild.exe",
+                "parent_image": "devenv.exe",
+                "path": "C:\\Windows\\System32\\MSBuild.exe",
+                "pid": 7899,
+                "signed": true,
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/1",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "313504d91d0555f92189eaa69e356d6253b57118ded29f31aca9a92b833cc443",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:process_tree:7899",
+              "user": "grace.miller"
+            },
+            {
+              "data": {
+                "cmdline": "cmd.exe /c copy /y bin\\Release \\\\buildsrv\\drops",
+                "hash_sha256": "454a075a28e7bcdb3256796e6ec4cfafddbfb7c5737b262079513639cf9ee4db",
+                "image": "cmd.exe",
+                "parent_image": "MSBuild.exe",
+                "path": "C:\\Windows\\System32\\cmd.exe",
+                "pid": 8993,
+                "signed": true,
+                "user": "grace.miller"
+              },
+              "host": "WKS-059",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/2",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "6828e715e729fa9a1cc86b61110045e9000b96d6e14b3285be8b8d298e47997d",
+                "scenario_id": "SCT-059065",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-059065:process_tree:8993",
+              "user": "grace.miller"
+            }
+          ]
+        },
+        "related_alerts": {
+          "available": false,
+          "records": []
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-054032",
+      "family": "new_service_change_window",
+      "label": "benign",
+      "payload_sha256": "0cdd086a09d6a830668e4517b126707a239f746c1a2f9147df19a3a477d57805",
+      "near_duplicate_sha256": "5ea08988405e486e89fa32de6f330a5d8f69aaf67ce6dd7a1c3ef144dd7475ca",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-054032",
+        "description": "Service 'backup-agent' installed on LNX-WEB-002.",
+        "host": "LNX-WEB-002",
+        "severity": "medium",
+        "source": "Splunk ES",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "New service installed on server",
+        "user": "adm.a.novak"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "7965524b778281fc9fb9be9060d39ad81f11a20d8c221d2ef120e72de3abebdd",
+        "scenario_id": "SCT-054032",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "channel": "4624",
+                "event_id": "EV-0001",
+                "host": "LNX-WEB-002",
+                "message": "Successful logon: interactive session opened",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T09:17:12.663418+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "LNX-WEB-002",
+              "observed_at": "2026-07-27T09:17:12.663418+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/3",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "d94f134260e29edde8120c76a806b2675629ef1b56c41b01a0257be3dfbcc42a",
+                "scenario_id": "SCT-054032",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-054032:events:EV-0001",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "av_scan",
+                "event_id": "EV-0002",
+                "host": "LNX-WEB-002",
+                "message": "Scheduled antivirus scan completed, no detections",
+                "source": "edr",
+                "timestamp": "2026-07-27T08:43:37.313780+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "LNX-WEB-002",
+              "observed_at": "2026-07-27T08:43:37.313780+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/2",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "acb13b27bba53035c51bcb6eb7afe14b19f22cd324db40643b2f7acc2f66da86",
+                "scenario_id": "SCT-054032",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-054032:events:EV-0002",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "channel": "4634",
+                "event_id": "EV-0003",
+                "host": "LNX-WEB-002",
+                "message": "Logoff: session closed",
+                "source": "windows-security",
+                "timestamp": "2026-07-27T07:32:16.122686+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "LNX-WEB-002",
+              "observed_at": "2026-07-27T07:32:16.122686+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "2a30c2c54ceac2e79325de41f2b3c448bb2eb519ca16943f49a442de14e60424",
+                "scenario_id": "SCT-054032",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-054032:events:EV-0003",
+              "user": "adm.a.novak"
+            },
+            {
+              "data": {
+                "binary_path": "C:\\Program Files\\Vendor\\backup-agent.exe",
+                "channel": "7045",
+                "event_id": "EV-0004",
+                "host": "LNX-WEB-002",
+                "message": "Service 'backup-agent' installed",
+                "service_name": "backup-agent",
+                "source": "windows-system",
+                "timestamp": "2026-07-27T08:20:00+00:00",
+                "user": "adm.a.novak"
+              },
+              "host": "LNX-WEB-002",
+              "observed_at": "2026-07-27T08:20:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/1",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "b76c57abbb2e65a90c86246f55321d6871270412fddb1b8dd4ac2512a2106e6e",
+                "scenario_id": "SCT-054032",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-054032:events:EV-0004",
+              "user": "adm.a.novak"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "high",
+                "edr_installed": true,
+                "hostname": "LNX-WEB-002",
+                "internet_exposed": false,
+                "ip": "10.31.9.14",
+                "last_patch_days": 69,
+                "os": "Ubuntu 22.04 LTS",
+                "owner": "adm.j.carter",
+                "role": "web_server",
+                "vlan": "corp-users"
+              },
+              "host": "LNX-WEB-002",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/7/content/asset",
+                "original_tool_call_id": "call_2",
+                "raw_record_sha256": "0d555c180c3225e506c0857b4150f7f294550253926411b63c364e08cd7b20a6",
+                "scenario_id": "SCT-054032",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-054032:asset:LNX-WEB-002",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": false,
+          "records": []
+        },
+        "related_alerts": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "alert_id": "A-9044",
+                "host": "LNX-WEB-002",
+                "severity": "info",
+                "status": "closed",
+                "timestamp": "2026-07-27T06:00:00+00:00",
+                "title": "Change ticket CHG-4574: agent rollout",
+                "user": "adm.a.novak"
+              },
+              "host": "LNX-WEB-002",
+              "observed_at": "2026-07-27T06:00:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/alerts/0",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "5399998f2195f5ab46958fb984d8584295021ee95ab36cbd1e4adcfbab35cdc3",
+                "scenario_id": "SCT-054032",
+                "split": "test"
+              },
+              "resource": "related_alerts",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-054032:related_alerts:A-9044",
+              "user": "adm.a.novak"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "scenario_id": "SCT-001315",
+      "family": "onedrive_bulk_sync",
+      "label": "benign",
+      "payload_sha256": "a5a39d55e2af0a4558ff034f4eeb937a725afa1e2008093b1550511b4ada1c90",
+      "near_duplicate_sha256": "2791aee72ad6bd65a145ff80df179e889beace453c2b1f5839126aaf90b1bc68",
+      "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+      "source_url": "https://huggingface.co/datasets/alirezaaminzadeh/soc-agent-traces-100k/resolve/fe94a95dadbd188c2bf137a9785b82cb5f7865c2/data/test-00000-of-00001.parquet",
+      "input": {
+        "alert_id": "A-001315",
+        "description": "8.2 GB uploaded from WKS-053 to onedrive.live.com.",
+        "host": "WKS-053",
+        "severity": "medium",
+        "source": "Zscaler",
+        "timestamp": "2026-07-27T09:00:00+00:00",
+        "title": "Large upload to cloud storage",
+        "user": "henry.tanaka"
+      },
+      "input_provenance": {
+        "data_origin": "synthetic",
+        "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+        "json_pointer": "/alert",
+        "raw_record_sha256": "5a26a6a9710c64c7cc203530af8b552837bc8d720d6fd0a4b64028a04f5881c1",
+        "scenario_id": "SCT-001315",
+        "split": "test"
+      },
+      "resources": {
+        "events": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "bytes_out": 8199999999,
+                "channel": "https",
+                "dst_domain": "onedrive.live.com",
+                "event_id": "EV-0001",
+                "host": "WKS-053",
+                "message": "Sustained upload to onedrive.live.com (8.2 GB)",
+                "process": "OneDrive.exe",
+                "source": "proxy",
+                "timestamp": "2026-07-27T07:30:00+00:00",
+                "user": "henry.tanaka"
+              },
+              "host": "WKS-053",
+              "observed_at": "2026-07-27T07:30:00+00:00",
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/3/content/events/0",
+                "original_tool_call_id": "call_0",
+                "raw_record_sha256": "0e9ac97f1f9f23687cf598aed37cfb71fe18451f07b2676e6512374ba3400ffa",
+                "scenario_id": "SCT-001315",
+                "split": "test"
+              },
+              "resource": "events",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-001315:events:EV-0001",
+              "user": "henry.tanaka"
+            }
+          ]
+        },
+        "asset": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "criticality": "medium",
+                "edr_installed": true,
+                "hostname": "WKS-053",
+                "internet_exposed": false,
+                "ip": "10.27.8.164",
+                "last_patch_days": 25,
+                "os": "Windows 11 23H2",
+                "owner": "adm.s.lopez",
+                "role": "workstation",
+                "vlan": "mgmt"
+              },
+              "host": "WKS-053",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/7/content/asset",
+                "original_tool_call_id": "call_2",
+                "raw_record_sha256": "46d90c028078a17528b9a87f666cfaa28685ed476255a91ebc8aba968b871650",
+                "scenario_id": "SCT-001315",
+                "split": "test"
+              },
+              "resource": "asset",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-001315:asset:WKS-053",
+              "user": null
+            }
+          ]
+        },
+        "process_tree": {
+          "available": true,
+          "records": [
+            {
+              "data": {
+                "cmdline": "OneDrive.exe /background",
+                "hash_sha256": "5b8b86e61539032542d1efc2f49f29f2db0f44afc25280ccaf807d5608d33cd1",
+                "image": "OneDrive.exe",
+                "parent_image": "explorer.exe",
+                "path": "C:\\Windows\\System32\\OneDrive.exe",
+                "pid": 3444,
+                "signed": true,
+                "user": "henry.tanaka"
+              },
+              "host": "WKS-053",
+              "observed_at": null,
+              "provenance": {
+                "data_origin": "synthetic",
+                "dataset_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+                "file_sha256": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+                "json_pointer": "/trace/5/content/tree/0",
+                "original_tool_call_id": "call_1",
+                "raw_record_sha256": "2c2e3a813595c0bb3357e6482199ee79a2ffe9dcdb2dc7a5b570082c5a29fc70",
+                "scenario_id": "SCT-001315",
+                "split": "test"
+              },
+              "resource": "process_tree",
+              "source_record_id": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-001315:process_tree:3444",
+              "user": "henry.tanaka"
+            }
+          ]
+        },
+        "related_alerts": {
+          "available": false,
+          "records": []
+        }
+      }
+    }
+  ]
+}

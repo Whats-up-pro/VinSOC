@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "base_sha": "9a1fd8110f690247eb049d027385b6372503902b",
+  "method": "SHA-256 byte comparison of every base-tracked evaluation artifact, evaluator, historical schema and Text-to-SQL module",
+  "protected_files": 3485,
+  "changed": [],
+  "manifest_sha256": "966ec019c40f9b6fa1e1775e9d8cf91fb76caec33180abd275ea55b7c4dc4998",
+  "historical_model_runs_repeated": false,
+  "local_ctu_snapshot_gate": "not_verified",
+  "new_model_calls": 0
+}

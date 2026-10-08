@@ -262,36 +262,73 @@ class InvestigationOrchestrator:
 
     @staticmethod
     def _soc_validate_intake(intake, soc_context):
-        if not isinstance(intake, dict):raise ValueError('SOC_INTAKE_OBJECT_REQUIRED')
-        r=soc_context.repository
-        if intake.get('kind')=='alert':
-            if set(intake)!={'kind','alert'} or intake['alert']!=r.input_for(soc_context.scenario_id):raise ValueError('SOC_ALERT_SCOPE_MISMATCH')
-        elif intake.get('kind')=='ioc':
-            if set(intake)!={'kind','value','indicator_type'} or not isinstance(intake['value'],str):raise ValueError('SOC_IOC_INTAKE_INVALID')
-            mapped=r.resolve_ioc(intake['value'],intake['indicator_type'])
-            if not mapped:raise ValueError('SOC_IOC_NO_MAPPING')
-            if len(mapped)!=1:raise ValueError('SOC_IOC_AMBIGUOUS')
-            if mapped[0]!=soc_context.scenario_id:raise ValueError('SOC_IOC_SCOPE_MISMATCH')
-        else:raise ValueError('SOC_INTAKE_KIND_UNSUPPORTED')
+        if not isinstance(intake, dict):
+            raise ValueError("SOC_INTAKE_OBJECT_REQUIRED")
+        r = soc_context.repository
+        if intake.get("kind") == "alert":
+            if set(intake) != {"kind", "alert"} or intake["alert"] != r.input_for(
+                soc_context.scenario_id
+            ):
+                raise ValueError("SOC_ALERT_SCOPE_MISMATCH")
+        elif intake.get("kind") == "ioc":
+            if set(intake) != {"kind", "value", "indicator_type"} or not isinstance(
+                intake["value"], str
+            ):
+                raise ValueError("SOC_IOC_INTAKE_INVALID")
+            mapped = r.resolve_ioc(intake["value"], intake["indicator_type"])
+            if not mapped:
+                raise ValueError("SOC_IOC_NO_MAPPING")
+            if len(mapped) != 1:
+                raise ValueError("SOC_IOC_AMBIGUOUS")
+            if mapped[0] != soc_context.scenario_id:
+                raise ValueError("SOC_IOC_SCOPE_MISMATCH")
+        else:
+            raise ValueError("SOC_INTAKE_KIND_UNSUPPORTED")
         return intake
 
     def _soc_register_rows(self, rows, *, tool, native_call_id, soc_context):
-        if not native_call_id or tool not in ('soc_search_events','soc_get_context'):raise ValueError('SOC_NATIVE_TOOL_ID_REQUIRED')
-        resources={r.get('resource') for r in rows}
-        if (tool=='soc_search_events' and resources-{'events'}) or (tool=='soc_get_context' and resources-{'asset','process_tree','related_alerts'}):raise ValueError('SOC_RESOURCE_SCOPE_MISMATCH')
-        stored={r['source_record_id']:r for resource in resources for r in soc_context.repository.records(soc_context.scenario_id,resource)}
+        if not native_call_id or tool not in ("soc_search_events", "soc_get_context"):
+            raise ValueError("SOC_NATIVE_TOOL_ID_REQUIRED")
+        resources = {r.get("resource") for r in rows}
+        if (tool == "soc_search_events" and resources - {"events"}) or (
+            tool == "soc_get_context"
+            and resources - {"asset", "process_tree", "related_alerts"}
+        ):
+            raise ValueError("SOC_RESOURCE_SCOPE_MISMATCH")
+        stored = {
+            r["source_record_id"]: r
+            for resource in resources
+            for r in soc_context.repository.records(soc_context.scenario_id, resource)
+        }
         for row in rows:
-            if row.get('provenance',{}).get('scenario_id')!=soc_context.scenario_id or stored.get(row.get('source_record_id'))!=row:raise ValueError('SOC_DELIVERED_SOURCE_MISMATCH')
-        ids=[]
+            if (
+                row.get("provenance", {}).get("scenario_id") != soc_context.scenario_id
+                or stored.get(row.get("source_record_id")) != row
+            ):
+                raise ValueError("SOC_DELIVERED_SOURCE_MISMATCH")
+        ids = []
         for row in rows:
-            source_id=row['source_record_id'];ids.append(source_id)
-            if self.evidence_store.get_evidence(source_id):continue
-            ev=self.evidence_store.add_evidence(tool,row['resource'],row['data'],linked_from=native_call_id,
-                source_name='soc-agent-traces-100k',observed_at=row['observed_at'],
-                provenance={**row['provenance'],'source_record_id':source_id,'delivered_tool_call_id':native_call_id})
-            ev.evidence_id=source_id
+            source_id = row["source_record_id"]
+            ids.append(source_id)
+            if self.evidence_store.get_evidence(source_id):
+                continue
+            ev = self.evidence_store.add_evidence(
+                tool,
+                row["resource"],
+                row["data"],
+                linked_from=native_call_id,
+                source_name="soc-agent-traces-100k",
+                observed_at=row["observed_at"],
+                provenance={
+                    **row["provenance"],
+                    "source_record_id": source_id,
+                    "delivered_tool_call_id": native_call_id,
+                },
+            )
+            ev.evidence_id = source_id
             from datetime import timezone
-            ev.collected_at=datetime.now(timezone.utc).isoformat()
+
+            ev.collected_at = datetime.now(timezone.utc).isoformat()
         return ids
 
     def investigate_alert(self, alert, *, soc_context):
@@ -305,80 +342,240 @@ class InvestigationOrchestrator:
         from agent.hitl import ScriptedHumanReviewGate
         from evaluation.soc_traces_v1.accounting import SocTerminalError
         from vinsoc_data.soc_corpus import canonical
-        intake=self._soc_validate_intake(alert,soc_context)
-        if type(self.provider) is not SocProvider:raise ValueError('OFFICIAL_SOC_PROVIDER_REQUIRED')
-        if self.provider.context!=soc_context:raise ValueError('SOC_PROVIDER_CONTEXT_MISMATCH')
-        if self._soc_legacy_hooks or isinstance(self.human_review_gate,ScriptedHumanReviewGate):raise ValueError('SOC_MOCK_OR_SCRIPTED_REVIEW_REJECTED')
-        self.provider.ensure_case_capacity(soc_context.scenario_id,soc_context.condition)
+
+        intake = self._soc_validate_intake(alert, soc_context)
+        if type(self.provider) is not SocProvider:
+            raise ValueError("OFFICIAL_SOC_PROVIDER_REQUIRED")
+        if self.provider.context != soc_context:
+            raise ValueError("SOC_PROVIDER_CONTEXT_MISMATCH")
+        if self._soc_legacy_hooks or isinstance(
+            self.human_review_gate, ScriptedHumanReviewGate
+        ):
+            raise ValueError("SOC_MOCK_OR_SCRIPTED_REVIEW_REJECTED")
+        self.provider.ensure_case_capacity(
+            soc_context.scenario_id, soc_context.condition
+        )
         self.provider.reset_tracking()
-        policy=SocInvestigationPolicy(soc_context);skill=SocCorpusSkill(soc_context)
-        self.evidence_store.clear();self.lifecycle_trace=[];self.validated_assessment=None
-        self.case_id='soc_'+soc_context.scenario_id.lower().replace('-','_')+'_'+soc_context.condition.lower()
-        created=datetime.now(timezone.utc).isoformat();started=perf_counter();errors=[];outputs=[];delivered=[];seen_calls=set();terminal=False
-        self._record_phase('triage','completed','SOC intake and trusted scope validated')
-        data={'intake':intake,'alert':soc_context.repository.input_for(soc_context.scenario_id)}
-        provenance=soc_context.repository.input_provenance_for(soc_context.scenario_id)
-        ev=self.evidence_store.add_evidence('soc_input','input',data,linked_from=None,source_name='soc-agent-traces-100k',
-            observed_at=data['alert'].get('timestamp'),provenance=provenance)
-        ev.evidence_id=soc_context.source_revision+':'+soc_context.scenario_id+':input';ev.collected_at=created
-        self.messages=[{'role':'user','content':canonical({'input_evidence':ev.to_dict()})}]
-        self._record_phase('investigation','started','Model selects read-only corpus tools')
+        policy = SocInvestigationPolicy(soc_context)
+        skill = SocCorpusSkill(soc_context)
+        self.evidence_store.clear()
+        self.lifecycle_trace = []
+        self.validated_assessment = None
+        self.case_id = (
+            "soc_"
+            + soc_context.scenario_id.lower().replace("-", "_")
+            + "_"
+            + soc_context.condition.lower()
+        )
+        created = datetime.now(timezone.utc).isoformat()
+        started = perf_counter()
+        errors = []
+        outputs = []
+        delivered = []
+        seen_calls = set()
+        terminal = False
+        self._record_phase(
+            "triage", "completed", "SOC intake and trusted scope validated"
+        )
+        data = {
+            "intake": intake,
+            "alert": soc_context.repository.input_for(soc_context.scenario_id),
+        }
+        provenance = soc_context.repository.input_provenance_for(
+            soc_context.scenario_id
+        )
+        ev = self.evidence_store.add_evidence(
+            "soc_input",
+            "input",
+            data,
+            linked_from=None,
+            source_name="soc-agent-traces-100k",
+            observed_at=data["alert"].get("timestamp"),
+            provenance=provenance,
+        )
+        ev.evidence_id = (
+            soc_context.source_revision + ":" + soc_context.scenario_id + ":input"
+        )
+        ev.collected_at = created
+        self.messages = [
+            {"role": "user", "content": canonical({"input_evidence": ev.to_dict()})}
+        ]
+        self._record_phase(
+            "investigation", "started", "Model selects read-only corpus tools"
+        )
         try:
-            for turn in range(1 if soc_context.condition=='S0' else 6):
-                tools=policy.tool_schemas() if soc_context.condition=='S1' and turn<5 else None
-                response=self.provider.generate(self.messages,tools=tools,system_prompt=policy.system_prompt())
-                outputs.append({'id':response.raw['id'],'model':response.raw['model'],'message':response.raw['choices'][0]['message'],'usage':response.raw['usage']})
+            for turn in range(1 if soc_context.condition == "S0" else 6):
+                tools = (
+                    policy.tool_schemas()
+                    if soc_context.condition == "S1" and turn < 5
+                    else None
+                )
+                response = self.provider.generate(
+                    self.messages, tools=tools, system_prompt=policy.system_prompt()
+                )
+                outputs.append(
+                    {
+                        "id": response.raw["id"],
+                        "model": response.raw["model"],
+                        "message": response.raw["choices"][0]["message"],
+                        "usage": response.raw["usage"],
+                    }
+                )
                 if not response.tool_calls:
-                    self.validated_assessment=policy.parse_final_response(response.content,self.evidence_store)
+                    self.validated_assessment = policy.parse_final_response(
+                        response.content, self.evidence_store
+                    )
                     break
-                if tools is None or len(response.tool_calls)!=1:raise ValueError('SOC_ONE_TOOL_PER_TURN_REQUIRED')
-                call=response.tool_calls[0];args=policy.validate_tool_call(call)
-                if call['id'] in seen_calls:raise ValueError('SOC_NATIVE_TOOL_ID_REUSED')
-                seen_calls.add(call['id'])
-                self.messages.append({'role':'assistant','content':response.content or None,'tool_calls':[{'id':call['id'],'type':'function','function':{'name':call['name'],'arguments':canonical(args)}}]})
-                tool_started=perf_counter();error=None
+                if tools is None or len(response.tool_calls) != 1:
+                    raise ValueError("SOC_ONE_TOOL_PER_TURN_REQUIRED")
+                call = response.tool_calls[0]
+                args = policy.validate_tool_call(call)
+                if call["id"] in seen_calls:
+                    raise ValueError("SOC_NATIVE_TOOL_ID_REUSED")
+                seen_calls.add(call["id"])
+                self.messages.append(
+                    {
+                        "role": "assistant",
+                        "content": response.content or None,
+                        "tool_calls": [
+                            {
+                                "id": call["id"],
+                                "type": "function",
+                                "function": {
+                                    "name": call["name"],
+                                    "arguments": canonical(args),
+                                },
+                            }
+                        ],
+                    }
+                )
+                tool_started = perf_counter()
+                error = None
                 try:
-                    operation=skill.search_events if call['name']=='soc_search_events' else skill.get_context
-                    result=operation(**args)
+                    operation = (
+                        skill.search_events
+                        if call["name"] == "soc_search_events"
+                        else skill.get_context
+                    )
+                    result = operation(**args)
                 except ValueError as exc:
-                    error=str(exc);result={'rows':[],'matched_count':0,'returned_count':0,'truncated':False,'availability':'error','limitations':[error]}
-                body=canonical(result)
-                if len(body.encode())>20000:raise ValueError('SOC_DELIVERED_TOOL_BYTES_EXCEEDED')
-                ids=self._soc_register_rows(result['rows'],tool=call['name'],native_call_id=call['id'],soc_context=soc_context)
-                trace=self.evidence_store.add_tool_call(call['name'],args,result['availability'],ids,error=error,duration_ms=(perf_counter()-tool_started)*1000)
-                trace.call_id=call['id'];trace.timestamp=datetime.now(timezone.utc).isoformat()
-                delivered.append({'native_call_id':call['id'],'tool':call['name'],'result':result,'utf8_bytes':len(body.encode())})
-                self.messages.append({'role':'tool','tool_call_id':call['id'],'content':body})
-            if self.validated_assessment is None:raise ValueError('SOC_FINAL_RESPONSE_MISSING')
+                    error = str(exc)
+                    result = {
+                        "rows": [],
+                        "matched_count": 0,
+                        "returned_count": 0,
+                        "truncated": False,
+                        "availability": "error",
+                        "limitations": [error],
+                    }
+                body = canonical(result)
+                if len(body.encode()) > 20000:
+                    raise ValueError("SOC_DELIVERED_TOOL_BYTES_EXCEEDED")
+                ids = self._soc_register_rows(
+                    result["rows"],
+                    tool=call["name"],
+                    native_call_id=call["id"],
+                    soc_context=soc_context,
+                )
+                trace = self.evidence_store.add_tool_call(
+                    call["name"],
+                    args,
+                    result["availability"],
+                    ids,
+                    error=error,
+                    duration_ms=(perf_counter() - tool_started) * 1000,
+                )
+                trace.call_id = call["id"]
+                trace.timestamp = datetime.now(timezone.utc).isoformat()
+                delivered.append(
+                    {
+                        "native_call_id": call["id"],
+                        "tool": call["name"],
+                        "result": result,
+                        "utf8_bytes": len(body.encode()),
+                    }
+                )
+                self.messages.append(
+                    {"role": "tool", "tool_call_id": call["id"], "content": body}
+                )
+            if self.validated_assessment is None:
+                raise ValueError("SOC_FINAL_RESPONSE_MISSING")
         except SocTerminalError as exc:
-            errors.append({'stage':'provider','error':str(exc)});terminal=True
+            errors.append({"stage": "provider", "error": str(exc)})
+            terminal = True
         except ValueError as exc:
-            errors.append({'stage':'contract','error':str(exc)})
+            errors.append({"stage": "contract", "error": str(exc)})
         except Exception:
-            errors.append({'stage':'runtime','error':'SOC_UNEXPECTED_RUNTIME_FAILURE'});terminal=True
-        last=getattr(self.provider,'last_raw',None)
-        if last and not any(o['id']==last.get('id') for o in outputs):
-            outputs.append({'id':last.get('id'),'model':last.get('model'),'message':(last.get('choices') or [{}])[0].get('message'),'usage':last.get('usage')})
-        assessment=self.validated_assessment;report=assessment.raw_json if assessment else None
-        state=self.provider.journal.snapshot()
-        status='completed' if assessment and not errors else 'failed'
-        self._record_phase('investigation',status,'Final contract checked; prose semantics require human review')
-        self._record_phase('review','awaiting_human','No automatic analyst decision')
-        hypotheses=[{'id':'h'+str(i+1),**h} for i,h in enumerate(report['hypotheses'])] if report else []
-        case=InvestigationCase(case_id=self.case_id,created_at=created,initial_indicator=intake,
-            tool_trace=[t.to_dict() for t in self.evidence_store.get_all_tool_calls()],evidence=[e.to_dict() for e in self.evidence_store.get_all_evidence()],
-            hypotheses=hypotheses,risk_level=assessment.risk_level if assessment else 'UNKNOWN',confidence=assessment.confidence if assessment else 'LOW',
-            limitations=assessment.limitations if assessment else [],final_assessment=assessment.assessment if assessment else '',
+            errors.append(
+                {"stage": "runtime", "error": "SOC_UNEXPECTED_RUNTIME_FAILURE"}
+            )
+            terminal = True
+        last = getattr(self.provider, "last_raw", None)
+        if last and not any(o["id"] == last.get("id") for o in outputs):
+            outputs.append(
+                {
+                    "id": last.get("id"),
+                    "model": last.get("model"),
+                    "message": (last.get("choices") or [{}])[0].get("message"),
+                    "usage": last.get("usage"),
+                }
+            )
+        assessment = self.validated_assessment
+        report = assessment.raw_json if assessment else None
+        state = self.provider.journal.snapshot()
+        status = "completed" if assessment and not errors else "failed"
+        self._record_phase(
+            "investigation",
+            status,
+            "Final contract checked; prose semantics require human review",
+        )
+        self._record_phase("review", "awaiting_human", "No automatic analyst decision")
+        hypotheses = (
+            [{"id": "h" + str(i + 1), **h} for i, h in enumerate(report["hypotheses"])]
+            if report
+            else []
+        )
+        case = InvestigationCase(
+            case_id=self.case_id,
+            created_at=created,
+            initial_indicator=intake,
+            tool_trace=[t.to_dict() for t in self.evidence_store.get_all_tool_calls()],
+            evidence=[e.to_dict() for e in self.evidence_store.get_all_evidence()],
+            hypotheses=hypotheses,
+            risk_level=assessment.risk_level if assessment else "UNKNOWN",
+            confidence=assessment.confidence if assessment else "LOW",
+            limitations=assessment.limitations if assessment else [],
+            final_assessment=assessment.assessment if assessment else "",
             supporting_evidence=assessment.evidence_ids if assessment else [],
-            contradicting_evidence=sorted({e for h in hypotheses for e in h['contradicting_evidence']}),
-            metadata={'soc_policy':policy.VERSION,'soc_report':report,'technical_status':status,'review_status':'awaiting_human',
-                'prose_semantics_machine_verified':False,'scenario_id':soc_context.scenario_id,'condition':soc_context.condition,
-                'source_revision':soc_context.source_revision,'corpus_sha256':soc_context.corpus_sha256,'data_origin':'synthetic',
-                'model':self.provider.model,'provider':self.provider.get_run_metadata(),'model_outputs':outputs,'delivered_tools':delivered,
-                'investigation_duration_seconds':perf_counter()-started,'errors':errors,'terminal':terminal,'cost_unknown':state['unknown_cost'],
-                'lifecycle_trace':[e.to_dict() for e in self.lifecycle_trace]})
-        valid,message=policy.validate_schema(case.to_dict())
-        if not valid:case.metadata['technical_status']='failed';case.metadata['errors'].append({'stage':'case_schema','error':message})
+            contradicting_evidence=sorted(
+                {e for h in hypotheses for e in h["contradicting_evidence"]}
+            ),
+            metadata={
+                "soc_policy": policy.VERSION,
+                "soc_report": report,
+                "technical_status": status,
+                "review_status": "awaiting_human",
+                "prose_semantics_machine_verified": False,
+                "scenario_id": soc_context.scenario_id,
+                "condition": soc_context.condition,
+                "source_revision": soc_context.source_revision,
+                "corpus_sha256": soc_context.corpus_sha256,
+                "data_origin": "synthetic",
+                "model": self.provider.model,
+                "provider": self.provider.get_run_metadata(),
+                "model_outputs": outputs,
+                "delivered_tools": delivered,
+                "investigation_duration_seconds": perf_counter() - started,
+                "errors": errors,
+                "terminal": terminal,
+                "cost_unknown": state["unknown_cost"],
+                "lifecycle_trace": [e.to_dict() for e in self.lifecycle_trace],
+            },
+        )
+        valid, message = policy.validate_schema(case.to_dict())
+        if not valid:
+            case.metadata["technical_status"] = "failed"
+            case.metadata["errors"].append({"stage": "case_schema", "error": message})
         return case
 
     def investigate(
