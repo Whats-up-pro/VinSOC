@@ -233,3 +233,11 @@ Mục tiêu lịch: 08–09/10 P0–P2; 10–11/10 P3–P6; 12–13/10 P7–P8 v
 | P8 required corpus/final safeguards | `7e4aa943d62dc7ed91d40778f5dec603c5053b65` | 37791179365 / success |
 
 Thứ tự tiếp theo: người thật audit12 nguồn → operator đối soát account/pricing/budget/request-bound/CI ngày chạy → preflight tất cả gate PASS → một lượt S0/S1 qua public orchestrator → render/chấm từ outputs thật → người thật rà bốn demo. Text-to-SQL và network window cũ vẫn hoãn/blocked theo kế hoạch riêng; không mở lại hoặc sửa locks để dùng quyền cũ.
+
+
+## Bổ sung đường chạy cloud — theo yêu cầu E2E ngày08/10
+
+- [x] Xác minh `OPENAI_API_KEY` có trong Actions; không có trong môi trường làm việc hoặc `.env`.
+- [x] Nối native runner vào Actions, remote claim độc quyền cùng window, public artifacts và journal mã hóa; không sửa review/budget gates để tự pass.
+- [ ] CI đúng SHA mới và đọc kết quả workflow live thực. Implementation7e4aa94 là mốc trước bổ sung, không dùng receipt CI đó cho runtime mới.
+- [ ] Đủ private bundle thật rồi model E2E; nếu thiếu, ghi kết quả job blocked chính xác, không gọi là demo thành công.

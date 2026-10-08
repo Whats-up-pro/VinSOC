@@ -105,3 +105,24 @@ Các decisions: approved/rejected/escalated/more_evidence_requested. Review bind
 Luôn64 mẫu số/condition và64 cặp. Failed/missing/abstain không correct; abstain và missing là FN trong recall. Báo coverage, confusion, class/family metrics, paired win/loss/tie/incomplete, input/tool citations riêng, tokens/latency/cost known/unknown và reviewed/approved. S0 tool metrics NA. Khi chưa chạy, accuracy/delta chưa có số; không biến not_run thành benchmark0%.
 
 Agreement chỉ với nhãn synthetic public; không kết luận khả năng SOC tổng quát, family holdout hoặc causal proof. Families/templates overlap và pretraining exposure có thể xảy ra. Chưa có outputs/reviews thật thì D-SOC6–8 chưa nghiệm thu; bàn giao readiness/blockers, không dựng demo thay thế.
+
+
+## 7. Chạy thật tại GitHub Actions
+
+Workflow `.github/workflows/soc-traces-e2e-once.yml` dùng `OPENAI_API_KEY` đang có tại repository; không chuyển khóa về máy làm việc. Native runner vẫn gọi public orchestrator và SDK chính thức. Không dùng báo cáo ghi sẵn hoặc chuyển human reviews thành approved.
+
+Private secret `SOC_E2E_GATES_JSON` là một JSON object gồm đúng sáu fields `source_reviews`, `account`, `pricing`, `budget`, `request_bound`, `ci` như mục3, cùng `host_state` và `documents`. Các fields chứa nội dung thật của các file, không dùng placeholder để pass. `host_state` cần window `soc-traces-20261008-v1`, `prior_hosts_sealed=true`, `claimed=false`, `attempted_calls=0`, `cost_unknown=false`, sau khi operator kiểm trạng thái thật. Bộ chạy kiểm lại mọi receipt và CI; không suy unused chỉ vì runner mới.
+
+`documents` ánh xạ tên file đơn giản sang nội dung chứng cứ đã kiểm. Pricing/bound paths chỉ ghi tên file có trong map; runner viết vào private directory rồi kiểm SHA. Thêm `archive_certificate.pem` chứa certificate X.509 với public key của operator để mã hóa raw journal bằng OpenSSL CMS. Giữ private key riêng; không đưa private key vào secret bundle, logs hoặc Git. Không có dependency Python mới.
+
+Chọn workflow **SOC real E2E — guarded once**, mode `preflight` hoặc `live`. Push thay chính workflow/cloud script cũng gọi mode live; nếu chưa đủ private inputs thì blocked trước SDK/claim. Khi gates đầy đủ, remote ref `vinsoc-window-soc-traces-20261008-v1` được tạo một lần trước client/requests; runner khác không được thay ref hoặc mở lại cùng scope. Concurrency group giữ hai jobs không tranh cùng window.
+
+Artifacts giữ90 ngày: `cloud_run.json`, preflight, sanitized128 case statuses/outputs, suite report, JSON/HTML/Markdown và `private_journal.cms` mã hóa. Không upload gate files/ledger/SDK raw plaintext. Job bị mất sau claim coi scope đã dùng; không retry. Host mất trước upload có thể mất raw local journal; phải ghi unknown/partial theo remote claim, không suy không tính tiền từ artifact thiếu.
+
+Operator giải mã archive bằng private key tương ứng (làm tại nơi riêng):
+
+```bash
+openssl cms -decrypt -binary -inform DER -in private_journal.cms -recip archive_certificate.pem -inkey operator_private_key.pem -out private_journal.tar.gz
+```
+
+Kiểm SHA archive từ `cloud_run.json` trước giải mã. CI đọc corpus thật không thay cho source-human reviews hoặc ngân sách USD riêng.

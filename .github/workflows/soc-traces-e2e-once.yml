@@ -1,0 +1,51 @@
+name: SOC real E2E — guarded once
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [preflight, live]
+        default: live
+        required: true
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/soc-traces-e2e-once.yml
+      - scripts/run_soc_traces_cloud.py
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: soc-traces-20261008-v1
+  cancel-in-progress: false
+jobs:
+  soc-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned runtime
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install duckdb==1.5.5
+      - name: Run native alert-to-report pipeline with the existing credential
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          SOC_E2E_GATES_JSON: ${{ secrets.SOC_E2E_GATES_JSON }}
+          CLOUD_MODE: ${{ inputs.mode || 'live' }}
+        run: python scripts/run_soc_traces_cloud.py --mode "$CLOUD_MODE" --output-dir "$RUNNER_TEMP/soc-e2e"
+      - name: Preserve sanitized reports and encrypted private journal
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: soc-e2e-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/soc-e2e
+          if-no-files-found: error
+          retention-days: 90

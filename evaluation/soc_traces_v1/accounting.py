@@ -139,12 +139,20 @@ class SocRunJournal:
         self._claimed = True
 
     @classmethod
-    def claim(cls, release, *, ledger_path):
+    def claim(cls, release, *, ledger_path, remote_store=None):
         expected = private_directory() / "ledger.json"
         path = Path(ledger_path)
         if path.is_symlink() or path.resolve() != expected.resolve():
             raise ValueError("SOC_CANONICAL_LEDGER_REQUIRED")
         checked = validate_release(release)
+        if path.exists():
+            raise SocTerminalError("SOC_SCOPE_ALREADY_CONSUMED")
+        if remote_store is not None:
+            from evaluation.soc_traces_v1.cloud import SocCloudStore
+
+            if type(remote_store) is not SocCloudStore:
+                raise ValueError("SOC_NATIVE_CLOUD_STORE_REQUIRED")
+            remote_store.claim(release)
         state = {
             "window": release["window"],
             "release_sha256": release["release_sha256"],

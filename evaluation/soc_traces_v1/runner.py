@@ -223,7 +223,7 @@ def _verify_account(evidence):
     return key
 
 
-def run_live(*, release_path, output_dir, private_dir):
+def run_live(*, release_path, output_dir, private_dir, remote_store=None):
     canonical = private_directory()
     if (
         Path(private_dir).resolve() != canonical.resolve()
@@ -240,7 +240,9 @@ def run_live(*, release_path, output_dir, private_dir):
     )
     scan_visible(repository)
     records = planned_records(inventory, repository)
-    journal = SocRunJournal.claim(release, ledger_path=canonical / "ledger.json")
+    journal = SocRunJournal.claim(
+        release, ledger_path=canonical / "ledger.json", remote_store=remote_store
+    )
     client = None
     terminal = False
     fatal = None

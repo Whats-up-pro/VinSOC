@@ -33,6 +33,8 @@ def runtime_paths():
             "scripts/run_soc_traces.py",
             "scripts/render_soc_report.py",
             "scripts/review_soc_case.py",
+            "scripts/run_soc_traces_cloud.py",
+            ".github/workflows/soc-traces-e2e-once.yml",
         )
     )
     return sorted(paths)
