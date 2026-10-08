@@ -178,7 +178,7 @@ Artifacts công khai mới: `results/evaluation_v1/soc_traces_v1/`; dữ liệu 
 - [x] CI matrix3.11/3.12 install requirements rồi pin DuckDB1.5.5; fetch/import public pinned corpus trước full suite, download/hash failure fail job. Không reuse artifact không digest. Source cache nếu có phải identity key revision+digests; output artifact receipts theo exact implementation SHA, không keys/labels truyền vào runtime.
 - [x] Chạy GREEN required corpus tests/full suite/compile/diff/preservation. Restore script sản sinh DB theo import protocol mới và ghi binary/logical hashes; đây là corpus mới, không thay13 exact DB lịch sử. SDK positive path vẫn pending P9.
 - [ ] Sau P0–P7 tests, source-human reviews và demo selection PASS, freeze importer/tool/schema/prompt/policy/provider/accounting/runner/report/CLI/scorer/source/selection/environment closure. Runtime source không tự bind SHA của receipt chứa chính digest để gây vòng; locks ở evaluator/private release, exact CI run bind implementation commit SHA.
-- [ ] Commit/push/CI đúng final implementation SHA; preflight trước SDK attempts=0. Pending account/pricing/budget phải hiện BLOCKED, không ghi ready-to-live chỉ vì CI green.
+- [x] Commit/push/CI đúng final implementation SHA; preflight trước SDK attempts=0. Pending account/pricing/budget phải hiện BLOCKED, không ghi ready-to-live chỉ vì CI green.
 
 
 ## Task 9: P9 — Release được cấp, chạy một lượt và bàn giao thật
@@ -216,7 +216,8 @@ Mục tiêu lịch: 08–09/10 P0–P2; 10–11/10 P3–P6; 12–13/10 P7–P8 v
 - [x] Người dùng duyệt kế hoạch và giao toàn quyền triển khai ngày 08/10/2026; phương thức đã chọn giữ nguyên: triển khai trực tiếp, một người trên master.
 - [x] P0–P7 đã triển khai và CI đúng từng commit trên Python 3.11/3.12; xem bảng dưới. Các checkbox kỹ thuật không đồng nghĩa nghiệm thu live.
 - [ ] P1 human audit nguồn: 0/12; inventory chưa frozen. Gói 12 hồ sơ đã có ở `results/evaluation_v1/soc_traces_v1/source_audit_pack.json`.
-- [ ] P8: CI required corpus đã soạn; đang chốt full suite/CI final implementation. Freeze chưa được cấp.
+- [x] P8 kiểm ngoại tuyến: implementation `7e4aa943d62dc7ed91d40778f5dec603c5053b65`, CI37791179365 success, required restore +1.198 passed/2 historical skipped mỗi Python3.11/3.12.
+- [ ] P8 freeze: chưa đủ source-human reviews/account/pricing/budget/request-bound/CI operator ngày chạy; preflight blocked, không gọi SDK.
 - [ ] P9: chưa chạy; SDK client chưa tạo, inference calls/responses/cost mới = 0. Chưa có 128 outputs, bốn báo cáo model hoặc human review demo thật.
 
 | Mốc kỹ thuật | Implementation commit | CI run / kết luận |
@@ -229,5 +230,6 @@ Mục tiêu lịch: 08–09/10 P0–P2; 10–11/10 P3–P6; 12–13/10 P7–P8 v
 | P5 public orchestrator | `ec9f082019e57a643e222e606be003ce83b9cb6f` | 37761075092 / success |
 | P6 runner | `8efb3b5d38a408a15680c763823c9761104af314` | 37761867081 / success |
 | P7 báo cáo/CLI | `e946b72eb93f3a89199ce55a75cfbe626c5f632f` | 37763702999 / success |
+| P8 required corpus/final safeguards | `7e4aa943d62dc7ed91d40778f5dec603c5053b65` | 37791179365 / success |
 
-Thứ tự tiếp theo: hoàn tất CI P8 → người thật audit12 nguồn → operator đối soát account/pricing/budget/request-bound/CI ngày chạy → preflight tất cả gate PASS → một lượt S0/S1 qua public orchestrator → render/chấm từ outputs thật → người thật rà bốn demo. Text-to-SQL và network window cũ vẫn hoãn/blocked theo kế hoạch riêng; không mở lại hoặc sửa locks để dùng quyền cũ.
+Thứ tự tiếp theo: người thật audit12 nguồn → operator đối soát account/pricing/budget/request-bound/CI ngày chạy → preflight tất cả gate PASS → một lượt S0/S1 qua public orchestrator → render/chấm từ outputs thật → người thật rà bốn demo. Text-to-SQL và network window cũ vẫn hoãn/blocked theo kế hoạch riêng; không mở lại hoặc sửa locks để dùng quyền cũ.

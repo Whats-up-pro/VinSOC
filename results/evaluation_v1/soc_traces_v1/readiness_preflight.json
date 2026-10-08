@@ -1,0 +1,45 @@
+{
+  "status": "blocked",
+  "attempted_calls": 0,
+  "responses_received": 0,
+  "client_created": false,
+  "new_inference_cost_usd": 0,
+  "blockers": [
+    "SOC_GATE_SOURCE_HUMAN_REVIEW_PENDING",
+    "SOC_GATE_MISSING:source_reviews",
+    "SOC_GATE_MISSING:account",
+    "SOC_GATE_MISSING:pricing",
+    "SOC_GATE_MISSING:budget",
+    "SOC_GATE_MISSING:request_bound",
+    "SOC_GATE_MISSING:ci"
+  ],
+  "leakage_scan": {
+    "status": "pass",
+    "method": "recursive allowlisted input/observation field scan",
+    "os_sandbox_claim": false
+  },
+  "inventory_sha256": "58394eb5010eab7ad44892184a6ebf3357a5046c1c8dcc0548d3a84659fb029a",
+  "planned_records": 128,
+  "source_review_gate": {
+    "status": "pending_human_review",
+    "reviewed": 0,
+    "required": 12,
+    "missing": [
+      "SCT-001315",
+      "SCT-004523",
+      "SCT-005963",
+      "SCT-006370",
+      "SCT-017066",
+      "SCT-033675",
+      "SCT-054032",
+      "SCT-059065",
+      "SCT-062225",
+      "SCT-074064",
+      "SCT-087094",
+      "SCT-096313"
+    ],
+    "errors": []
+  },
+  "runtime_closure_sha256": "ae56bdeed3124232b20006f64317a86cf8735a5345ae78b81a11f1827e582cae",
+  "implementation_sha": "7e4aa943d62dc7ed91d40778f5dec603c5053b65"
+}

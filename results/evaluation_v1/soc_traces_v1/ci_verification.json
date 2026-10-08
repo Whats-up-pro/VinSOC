@@ -1,0 +1,70 @@
+{
+  "implementation_sha": "7e4aa943d62dc7ed91d40778f5dec603c5053b65",
+  "run_id": 37791179365,
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 113358664023,
+      "name": "test (3.12)",
+      "conclusion": "success",
+      "counts": [
+        "1198 passed, 2 skipped, 1822 warnings in 54.62s"
+      ],
+      "restore": "success",
+      "test": "success",
+      "corpus_receipt": {
+        "status": "imported",
+        "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "source_hashes": {
+          "test.parquet": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+          "validation.parquet": "94cd7987fe3064cd0933d8fabed75d517e955f8faa8723ac07c9b01446cdfcf7"
+        },
+        "logical_sha256": "967c4dd6b926a6ce1dfb15cdb24a0e29dbcb29dc58f64e44e53116b9291c3547",
+        "data_origin": "synthetic",
+        "import_protocol": "soc_corpus_v1",
+        "importer_sha256": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+        "database_sha256": "ef1046f75725d85a3b927bfd8faa47016c72baa1806514f15c55fb4a0a5729fb",
+        "cases": {
+          "test": 5031,
+          "validation": 4984
+        },
+        "imported_records": 87028,
+        "quarantined_records": 0,
+        "new_model_calls": 0,
+        "attribution": "alirezaaminzadeh/soc-agent-traces-100k; Apache-2.0"
+      }
+    },
+    {
+      "id": 113358664195,
+      "name": "test (3.11)",
+      "conclusion": "success",
+      "counts": [
+        "1198 passed, 2 skipped in 75.12s (0:01:15)"
+      ],
+      "restore": "success",
+      "test": "success",
+      "corpus_receipt": {
+        "status": "imported",
+        "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+        "source_hashes": {
+          "test.parquet": "9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a",
+          "validation.parquet": "94cd7987fe3064cd0933d8fabed75d517e955f8faa8723ac07c9b01446cdfcf7"
+        },
+        "logical_sha256": "967c4dd6b926a6ce1dfb15cdb24a0e29dbcb29dc58f64e44e53116b9291c3547",
+        "data_origin": "synthetic",
+        "import_protocol": "soc_corpus_v1",
+        "importer_sha256": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+        "database_sha256": "e4a226b7d86a661083479bc76981a221d131d60dc4aecd0be1917a505d17ee3a",
+        "cases": {
+          "test": 5031,
+          "validation": 4984
+        },
+        "imported_records": 87028,
+        "quarantined_records": 0,
+        "new_model_calls": 0,
+        "attribution": "alirezaaminzadeh/soc-agent-traces-100k; Apache-2.0"
+      }
+    }
+  ],
+  "status": "verified_public_ci_not_operator_authorization"
+}
