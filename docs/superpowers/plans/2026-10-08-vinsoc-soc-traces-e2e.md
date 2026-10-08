@@ -239,5 +239,5 @@ Thứ tự tiếp theo: người thật audit12 nguồn → operator đối soá
 
 - [x] Xác minh `OPENAI_API_KEY` có trong Actions; không có trong môi trường làm việc hoặc `.env`.
 - [x] Nối native runner vào Actions, remote claim độc quyền cùng window, public artifacts và journal mã hóa; không sửa review/budget gates để tự pass.
-- [ ] CI đúng SHA mới và đọc kết quả workflow live thực. Implementation7e4aa94 là mốc trước bổ sung, không dùng receipt CI đó cho runtime mới.
+- [x] CI đúng implementation `5c817de869f84441880502fc20fcf78823ebe899`: run37796774577 success; restore corpus và 1.207 passed/2 historical skipped mỗi Python3.11/3.12. Workflow live37796774602 đã chạy, blocked vì thiếu `SOC_E2E_GATES_JSON`, calls/responses0, SDKfalse, window chưa claim. Implementation7e4aa94 là mốc trước bổ sung.
 - [ ] Đủ private bundle thật rồi model E2E; nếu thiếu, ghi kết quả job blocked chính xác, không gọi là demo thành công.

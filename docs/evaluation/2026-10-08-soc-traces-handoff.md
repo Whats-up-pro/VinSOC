@@ -42,3 +42,12 @@ Demo IDs đã chọn: `SCT-087094`, `SCT-017066`, `SCT-004523`, `SCT-096313`. **
 - Hai lỗi rà được đã sửa bằng RED→GREEN: phục hồi chấp nhận receipt importer cũ; tỷ lệ citation hồ sơ dùng nhầm completion count. Không dựng positive SDK responses để nghiệm thu.
 
 Giữ nguyên bản thiết kế, bảng gate và trạng thái lỗi. Nếu chưa đủ điều kiện trước 16/10/2026, bàn giao các mục chưa chạy/chưa duyệt như trên; không dựng báo cáo thay thế để gọi là hoàn tất.
+
+
+## Cập nhật đường chạy E2E trên Actions
+
+Implementation cloud mới: `5c817de869f84441880502fc20fcf78823ebe899`; [CI đúng SHA](https://github.com/Whats-up-pro/VinSOC/actions/runs/37796774577) **completed/success**, cả Python 3.11/3.12 restore corpus thành công và **1.207 passed, 2 historical skipped**. `ci_verification.json` đã cập nhật đúng SHA, job IDs và receipt DB thực; kết quả 7e4aa94 ở trên là mốc lịch sử. Kiểm local 9 cloud tests đã qua, trong đó nguồn/parquet/DuckDB thật và mã hóa/giải mã thật; 13 regression tests journal/provider/runner đã qua.
+
+Đã kích hoạt [job live37796774602](https://github.com/Whats-up-pro/VinSOC/actions/runs/37796774602). Job cài runtime thành công, dùng nơi có `OPENAI_API_KEY` và `GITHUB_TOKEN`, nhưng native cloud runner trả `SOC_CLOUD_PRIVATE_INPUTS_MISSING`: chỉ thiếu `SOC_E2E_GATES_JSON`. Kết quả thật trong `cloud_execution_receipt.json`: blocked, attempted/responses0, SDK clientfalse, window_claimedfalse, cost mới0. Đây là job được gọi, không phải một lượt model E2E thành công.
+
+Bundle private gom nguồn-review/tài khoản/giá/ngân sách/cận request/CI và chứng cứ; hướng dẫn ở mục7 runbook. Không thể tạo12 phiếu người thật hoặc tự khai USD approval để làm bundle pass. Nếu người dùng muốn chạy trước human source audit, cần thay đổi rõ điều kiện pre-freeze đã duyệt; reviews phải giữ pending, không đổi thành approved. Trần chi phí SOC chưa được nêu bằng USD trong hội thoại hiện tại.

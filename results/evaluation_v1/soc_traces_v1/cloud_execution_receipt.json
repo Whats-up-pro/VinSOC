@@ -1,0 +1,19 @@
+{
+  "implementation_sha": "5c817de869f84441880502fc20fcf78823ebe899",
+  "workflow_run_id": 37796774602,
+  "job_id": 113378187897,
+  "scope": "soc-traces-20261008-v1",
+  "mode": "live",
+  "status": "blocked",
+  "attempted_calls": 0,
+  "responses_received": 0,
+  "client_created": false,
+  "window_claimed": false,
+  "cost_unknown": false,
+  "new_inference_cost_usd": 0,
+  "human_approval": false,
+  "missing_inputs": [
+    "SOC_E2E_GATES_JSON"
+  ],
+  "failure_category": "SOC_CLOUD_PRIVATE_INPUTS_MISSING"
+}
