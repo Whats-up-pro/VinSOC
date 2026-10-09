@@ -3,15 +3,19 @@
 from __future__ import annotations
 
 import json
+import re
+import unicodedata
+from argparse import ArgumentParser
 from collections import Counter, defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
 from hashlib import sha256
+from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
 from agent.tools import get_tool_schemas
-from evaluation.tool_calling.models import CaseDifficulty
+from evaluation.tool_calling.models import CaseDifficulty, ToolCallCase
 from evaluation.tool_calling.provenance import canonical_sha256
 
 _CANDIDATE_FIELDS = {
@@ -126,6 +130,37 @@ class DistributionAudit:
     errors: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class CandidateAudit:
+    """Fail-closed quality receipt produced before human gold review."""
+
+    passed: bool
+    case_count: int
+    exact_duplicates: tuple[tuple[str, str], ...]
+    pivot_duplicates: tuple[tuple[str, str], ...]
+    near_duplicates: tuple[tuple[str, str, float], ...]
+    leakage_case_ids: tuple[str, ...]
+    schema_errors: tuple[str, ...]
+    waiver_errors: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "format": "r1_generalization_candidate_audit_v1",
+            "passed": self.passed,
+            "case_count": self.case_count,
+            "exact_duplicates": [list(item) for item in self.exact_duplicates],
+            "pivot_duplicates": [list(item) for item in self.pivot_duplicates],
+            "near_duplicates": [
+                {"case_ids": [left, right], "jaccard": score}
+                for left, right, score in self.near_duplicates
+            ],
+            "leakage_case_ids": list(self.leakage_case_ids),
+            "schema_errors": list(self.schema_errors),
+            "waiver_errors": list(self.waiver_errors),
+            "provider_created": False,
+        }
+
+
 def _stratum_tools(stratum: str) -> tuple[str, tuple[str, ...]]:
     if stratum == "no_tool":
         return "no_tool", ()
@@ -214,6 +249,182 @@ def audit_candidate_distribution(cases: Sequence[CandidateCase]) -> Distribution
     )
 
 
+def normalized_request(text: str) -> str:
+    """Normalize request text for deterministic duplicate comparison."""
+
+    normalized = unicodedata.normalize("NFKC", text).casefold()
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _token_bigrams(text: str) -> set[tuple[str, str]]:
+    tokens = re.findall(r"[\w.-]+", normalized_request(text), flags=re.UNICODE)
+    if len(tokens) == 1:
+        return {(tokens[0], "")}
+    return set(pairwise(tokens))
+
+
+def token_bigram_jaccard(left: str, right: str) -> float:
+    """Return Jaccard similarity over normalized token bigrams."""
+
+    left_bigrams = _token_bigrams(left)
+    right_bigrams = _token_bigrams(right)
+    union = left_bigrams | right_bigrams
+    if not union:
+        return 1.0
+    return len(left_bigrams & right_bigrams) / len(union)
+
+
+_IPV4_RE = re.compile(r"(?<![\w.])(?:\d{1,3}\.){3}\d{1,3}(?!\w|\.\d)")
+_DOMAIN_RE = re.compile(
+    r"(?<![\w.-])(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+(?:test|com|net|org)(?![\w-]|\.[a-z0-9])",
+    re.IGNORECASE,
+)
+_HASH_RE = re.compile(r"(?<![a-f0-9])(?:[a-f0-9]{64}|[a-f0-9]{40}|[a-f0-9]{32})(?![a-f0-9])", re.IGNORECASE)
+_HOST_RE = re.compile(r"(?<![A-Z0-9-])[A-Z]{2,}(?:-[A-Z0-9]+)+(?![A-Z0-9-])")
+_GOLD_MARKERS = (
+    "expected_calls",
+    "forbidden_tools",
+    "ordering_constraints",
+    "acceptable_trajectories",
+    "critical_arguments",
+    "hidden answer",
+    "gold answer",
+)
+
+
+def _valid_ipv4_values(text: str) -> tuple[str, ...]:
+    values: list[str] = []
+    for value in _IPV4_RE.findall(text):
+        octets = value.split(".")
+        if all(int(octet) <= 255 for octet in octets):
+            values.append(value)
+    return tuple(sorted(set(values)))
+
+
+def _critical_pivots(text: str) -> tuple[str, ...]:
+    values = {
+        *(f"ipv4:{value}" for value in _valid_ipv4_values(text)),
+        *(f"domain:{value.casefold()}" for value in _DOMAIN_RE.findall(text)),
+        *(f"hash:{value.casefold()}" for value in _HASH_RE.findall(text)),
+        *(f"host:{value.casefold()}" for value in _HOST_RE.findall(text)),
+    }
+    return tuple(sorted(values))
+
+
+def _schema_errors_for_case(
+    case: CandidateCase, schema_names: set[str]
+) -> list[str]:
+    try:
+        _, tools = _stratum_tools(case.authoring_stratum)
+    except ValueError as exc:
+        return [f"{case.case_id}: {exc}"]
+    unknown = sorted(set(tools).difference(schema_names))
+    if unknown:
+        return [f"{case.case_id}: unknown production tool(s): {', '.join(unknown)}"]
+
+    errors: list[str] = []
+    if "network_investigation" in tools and not _valid_ipv4_values(case.request):
+        errors.append(f"{case.case_id}: network_investigation requires an IPv4 pivot")
+    if "endpoint_investigation" in tools and not _HOST_RE.search(case.request):
+        errors.append(f"{case.case_id}: endpoint_investigation requires an endpoint host pivot")
+    if "cti_enrichment" in tools and not (
+        _valid_ipv4_values(case.request)
+        or _DOMAIN_RE.search(case.request)
+        or _HASH_RE.search(case.request)
+    ):
+        errors.append(f"{case.case_id}: cti_enrichment requires a supported IOC pivot")
+    return errors
+
+
+def _valid_near_duplicate_waivers(
+    waivers: Sequence[dict[str, Any]], known_ids: set[str]
+) -> tuple[set[frozenset[str]], tuple[str, ...]]:
+    accepted: set[frozenset[str]] = set()
+    errors: list[str] = []
+    for index, waiver in enumerate(waivers, 1):
+        case_ids = waiver.get("case_ids")
+        reason = waiver.get("reason")
+        reviewed_by = waiver.get("reviewed_by")
+        if (
+            not isinstance(case_ids, list)
+            or len(case_ids) != 2
+            or len(set(case_ids)) != 2
+            or any(case_id not in known_ids for case_id in case_ids)
+            or not isinstance(reason, str)
+            or not reason.strip()
+            or not isinstance(reviewed_by, str)
+            or not reviewed_by.strip()
+        ):
+            errors.append(f"waiver {index}: case_ids, reason, and reviewed_by are required")
+            continue
+        accepted.add(frozenset(case_ids))
+    return accepted, tuple(errors)
+
+
+def audit_candidates(
+    cases: Sequence[CandidateCase],
+    existing_cases: Sequence[ToolCallCase],
+    schemas: Sequence[dict[str, Any]],
+    waivers: Sequence[dict[str, Any]],
+) -> CandidateAudit:
+    """Audit candidate independence, leakage and production-schema compatibility."""
+
+    new_items = [(case.case_id, case.request) for case in cases]
+    existing_items = [(case.case_id, case.request) for case in existing_cases]
+    all_items = new_items + existing_items
+    known_ids = {case_id for case_id, _ in all_items}
+    new_ids = {case.case_id for case in cases}
+    accepted_waivers, waiver_errors = _valid_near_duplicate_waivers(waivers, known_ids)
+
+    exact: list[tuple[str, str]] = []
+    pivot: list[tuple[str, str]] = []
+    near: list[tuple[str, str, float]] = []
+    for left_index, (left_id, left_request) in enumerate(all_items):
+        for right_id, right_request in all_items[left_index + 1 :]:
+            if left_id not in new_ids and right_id not in new_ids:
+                continue
+            left_normalized = normalized_request(left_request)
+            right_normalized = normalized_request(right_request)
+            if left_normalized == right_normalized:
+                exact.append((left_id, right_id))
+            left_pivots = _critical_pivots(left_request)
+            right_pivots = _critical_pivots(right_request)
+            if left_pivots and left_pivots == right_pivots:
+                pivot.append((left_id, right_id))
+            if left_normalized != right_normalized:
+                similarity = token_bigram_jaccard(left_request, right_request)
+                pair = frozenset((left_id, right_id))
+                if similarity >= 0.80 and pair not in accepted_waivers:
+                    near.append((left_id, right_id, round(similarity, 6)))
+
+    leakage = tuple(
+        case.case_id
+        for case in cases
+        if any(marker in normalized_request(case.request) for marker in _GOLD_MARKERS)
+    )
+    schema_names = {
+        schema.get("function", {}).get("name") for schema in schemas
+    } - {None}
+    schema_errors: list[str] = []
+    if schemas:
+        for case in cases:
+            schema_errors.extend(_schema_errors_for_case(case, schema_names))
+
+    passed = not (
+        exact or pivot or near or leakage or schema_errors or waiver_errors
+    )
+    return CandidateAudit(
+        passed=passed,
+        case_count=len(cases),
+        exact_duplicates=tuple(exact),
+        pivot_duplicates=tuple(pivot),
+        near_duplicates=tuple(near),
+        leakage_case_ids=leakage,
+        schema_errors=tuple(schema_errors),
+        waiver_errors=waiver_errors,
+    )
+
+
 def load_candidates(path: Path) -> list[CandidateCase]:
     """Load a UTF-8 JSONL pack and reject ambiguous identities."""
 
@@ -276,3 +487,84 @@ def historical_identity(root: Path = Path(".")) -> dict[str, str]:
             root / "evaluation/tool_calling/winner_lock.json"
         ),
     }
+
+
+def _load_jsonl_objects(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    records: list[dict[str, Any]] = []
+    for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not raw_line.strip():
+            continue
+        try:
+            record = json.loads(raw_line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{path.name}:{line_number}: invalid JSON: {exc.msg}") from exc
+        if not isinstance(record, dict):
+            raise TypeError(f"{path.name}:{line_number}: record must be a JSON object")
+        records.append(record)
+    return records
+
+
+def _load_existing_cases(benchmarks_dir: Path) -> list[ToolCallCase]:
+    cases: list[ToolCallCase] = []
+    for split in ("dev", "frozen"):
+        for path in sorted((benchmarks_dir / split).glob("*.json")):
+            cases.append(ToolCallCase.from_dict(json.loads(path.read_text(encoding="utf-8"))))
+    return cases
+
+
+def _audit_command(args: Any) -> int:
+    cases = load_candidates(args.candidates)
+    distribution = audit_candidate_distribution(cases)
+    audit = audit_candidates(
+        cases,
+        _load_existing_cases(args.benchmarks),
+        get_tool_schemas(),
+        _load_jsonl_objects(args.waivers),
+    )
+    receipt = audit.to_dict()
+    receipt["distribution"] = {
+        "passed": distribution.passed,
+        "total": distribution.total,
+        "main_group_counts": distribution.main_group_counts,
+        "single_tool_counts": distribution.single_tool_counts,
+        "two_tool_counts": distribution.two_tool_counts,
+        "robustness_count": distribution.robustness_count,
+        "difficulties": distribution.difficulties,
+        "errors": list(distribution.errors),
+    }
+    receipt["passed"] = audit.passed and distribution.passed
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
+        json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(receipt, ensure_ascii=False))
+    return 0 if receipt["passed"] else 1
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Run offline authoring commands; no command constructs a model provider."""
+
+    parser = ArgumentParser(prog="python -m evaluation.tool_calling.generalization")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    audit_parser = subparsers.add_parser("audit", help="audit candidate pack offline")
+    audit_parser.add_argument("--candidates", type=Path, required=True)
+    audit_parser.add_argument(
+        "--benchmarks", type=Path, default=Path("evaluation/tool_calling/benchmarks")
+    )
+    audit_parser.add_argument(
+        "--waivers",
+        type=Path,
+        default=Path(
+            "evaluation/tool_calling/authoring/generalization_v1/near_duplicate_waivers.jsonl"
+        ),
+    )
+    audit_parser.add_argument("--output", type=Path, required=True)
+    audit_parser.set_defaults(handler=_audit_command)
+    args = parser.parse_args(argv)
+    return args.handler(args)
+
+
+if __name__ == "__main__":  # pragma: no cover - exercised through main()
+    raise SystemExit(main())

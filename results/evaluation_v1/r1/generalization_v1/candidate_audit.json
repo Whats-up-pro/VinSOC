@@ -1,0 +1,56 @@
+{
+  "format": "r1_generalization_candidate_audit_v1",
+  "passed": true,
+  "case_count": 120,
+  "exact_duplicates": [],
+  "pivot_duplicates": [],
+  "near_duplicates": [],
+  "leakage_case_ids": [],
+  "schema_errors": [],
+  "waiver_errors": [],
+  "provider_created": false,
+  "distribution": {
+    "passed": true,
+    "total": 120,
+    "main_group_counts": {
+      "no_tool": 24,
+      "single_tool": 54,
+      "two_tool": 30,
+      "three_tool": 12
+    },
+    "single_tool_counts": {
+      "cti_enrichment": 18,
+      "network_investigation": 18,
+      "endpoint_investigation": 18
+    },
+    "two_tool_counts": {
+      "cti_enrichment+network_investigation": 10,
+      "cti_enrichment+endpoint_investigation": 10,
+      "network_investigation+endpoint_investigation": 10
+    },
+    "robustness_count": 46,
+    "difficulties": {
+      "no_tool": [
+        "advanced",
+        "basic",
+        "intermediate"
+      ],
+      "single_tool": [
+        "advanced",
+        "basic",
+        "intermediate"
+      ],
+      "two_tool": [
+        "advanced",
+        "basic",
+        "intermediate"
+      ],
+      "three_tool": [
+        "advanced",
+        "basic",
+        "intermediate"
+      ]
+    },
+    "errors": []
+  }
+}
