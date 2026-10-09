@@ -1,0 +1,40 @@
+{
+  "status": "completed",
+  "scope": "soc-demo-20261009-v1",
+  "implementation_sha": "7a13cd62c8b203711f4b53c6b17cab881d08f878",
+  "workflow_run_id": 37875105762,
+  "job_id": 113641776524,
+  "artifact_id": 11592083029,
+  "immutable_claim_tag": "vinsoc-window-soc-demo-20261009-v1",
+  "immutable_claim_object_sha": "0852e3e68567de81066e93fe2cce06b8dfe6d3d2",
+  "release_sha256": "0c4371b48745f41962a04fcc6e69b17d6ea147c595461240679cdbb81f860b90",
+  "scenario_id": "SCT-087094",
+  "condition": "S1",
+  "data_origin": "synthetic",
+  "model": "gpt-4.1-mini-2025-04-14",
+  "attempted_calls": 3,
+  "responses_received": 3,
+  "client_created": true,
+  "window_claimed": true,
+  "cost_unknown": false,
+  "new_inference_cost_usd": 0.0028932000000000003,
+  "technical_valid": true,
+  "verdict": "insufficient_evidence",
+  "risk_level": "MEDIUM",
+  "confidence": "MEDIUM",
+  "tools": [
+    "soc_search_events",
+    "soc_get_context"
+  ],
+  "receipt_sha256": "950e6b80032a7699bc6df8a90eae45fb04708d45b82f41c34bf57d36508bd96e",
+  "report_sha256": {
+    "json": "4f54d5dd26f817ccfd6c0aec36252d63fd793eb45f74d0436c9df271e8f14b33",
+    "html": "1a824dcc42d1f91fac41a8fcf9cd2714695961ee7471310feea63f4d59c17617",
+    "markdown": "aef3c2c212660dc2a55f8e44f13a0e27f7ad09df0fab3e821d2d17017dd1cd2e"
+  },
+  "actions_artifact_html_sha256": "9eb61ce266367f6613520438b4d4f47185144973385a1146f33d85965e9dee6b",
+  "source_review_status": "deferred_after_demo",
+  "human_review_status": "awaiting_human",
+  "acceptance_scope": "one_case_integration_demo_only",
+  "benchmark_completion": false
+}

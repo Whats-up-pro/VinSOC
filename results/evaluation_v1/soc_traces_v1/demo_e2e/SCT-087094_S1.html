@@ -1,0 +1,642 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>SCT-087094_S1</title><style>body{font:16px/1.6 system-ui;margin:32px auto;padding:0 24px;max-width:1100px;color:#172b3a}h1,h2{color:#114d70}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f0f4f7;padding:16px}table{border-collapse:collapse;width:100%;margin:16px 0}td,th{border:1px solid #cad6dd;padding:8px;text-align:left;vertical-align:top;overflow-wrap:anywhere}.status{padding:16px;background:#e6f1f7}p,li{overflow-wrap:anywhere}</style>
+<h1>VinSOC — Điều tra SOC</h1><div class="status">SCT-087094 / S1 · Technical: completed · Review: awaiting_human</div>
+<p>Nguồn dữ liệu: tổng hợp. Kiểm schema và citation không xác minh ngữ nghĩa báo cáo.</p><h2>Đầu vào</h2><pre>{
+  &quot;alert&quot;: {
+    &quot;alert_id&quot;: &quot;A-087094&quot;,
+    &quot;description&quot;: &quot;Rapid sequence of domain enumeration commands (net /domain, PowerView) by noah.evans on WKS-034.&quot;,
+    &quot;host&quot;: &quot;WKS-034&quot;,
+    &quot;severity&quot;: &quot;medium&quot;,
+    &quot;source&quot;: &quot;SentinelOne&quot;,
+    &quot;timestamp&quot;: &quot;2026-07-27T09:00:00+00:00&quot;,
+    &quot;title&quot;: &quot;Active Directory discovery burst&quot;,
+    &quot;user&quot;: &quot;noah.evans&quot;
+  },
+  &quot;kind&quot;: &quot;alert&quot;
+}</pre>
+<h2>Tóm tắt và kết luận model</h2><p>The alert indicates a rapid sequence of domain enumeration commands executed by user noah.evans on host WKS-034, suggesting potential reconnaissance activity. However, no additional event logs or process tree context are available to corroborate or refute this behavior. Due to lack of further evidence, the investigation cannot confirm malicious activity or benign intent.</p>
+<table><thead><tr><th>Verdict</th><th>Risk</th><th>Lý do risk</th><th>Confidence</th><th>Lý do confidence</th></tr></thead><tbody><tr><td>insufficient_evidence</td><td>MEDIUM</td><td>The observed behavior is consistent with reconnaissance activity, which is a common precursor to more severe attacks, thus posing a medium risk. However, lack of corroborating evidence limits the risk assessment.</td><td>MEDIUM</td><td>The alert is clear and specific about the suspicious activity, but absence of additional logs or context reduces confidence in a definitive conclusion.</td></tr></tbody></table>
+<h2>Giả thuyết</h2>
+<table><thead><tr><th>Mô tả</th><th>Ủng hộ</th><th>Mâu thuẫn</th><th>Confidence</th></tr></thead><tbody><tr><td>User noah.evans performed rapid domain enumeration commands on WKS-034, possibly for reconnaissance purposes.</td><td>[
+  &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+]</td><td>[]</td><td>MEDIUM</td></tr></tbody></table>
+<h2>Findings</h2>
+<table><thead><tr><th>Loại</th><th>Nhận định</th><th>Evidence IDs</th></tr></thead><tbody><tr><td>observed</td><td>Alert for rapid sequence of domain enumeration commands by noah.evans on WKS-034 was observed.</td><td>[
+  &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+]</td></tr></tbody></table>
+<h2>Giới hạn</h2><ul><li>No additional event logs matching the suspicious commands were found in the given timeframe.</li><li>Process tree context for the host and user is unavailable, limiting behavioral analysis.</li></ul>
+<h2>Hành động đề xuất</h2>
+<table><thead><tr><th>Đề xuất</th><th>Lý do</th><th>Evidence IDs</th></tr></thead><tbody><tr><td>Conduct user interview or review user activity policies for noah.evans to understand the intent behind the domain enumeration commands.</td><td>Clarifying whether the activity was authorized or part of legitimate administrative tasks can help determine if the behavior is malicious.</td><td>[
+  &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+]</td></tr><tr><td>Increase monitoring on WKS-034 and user noah.evans for further suspicious activities, especially related to Active Directory enumeration or lateral movement attempts.</td><td>Continuous monitoring can help detect escalation or follow-up malicious actions if the initial reconnaissance was part of an attack.</td><td>[
+  &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+]</td></tr></tbody></table>
+<h2>Toàn bộ báo cáo JSON</h2><pre>{
+  &quot;confidence&quot;: &quot;MEDIUM&quot;,
+  &quot;confidence_rationale&quot;: &quot;The alert is clear and specific about the suspicious activity, but absence of additional logs or context reduces confidence in a definitive conclusion.&quot;,
+  &quot;evidence_ids&quot;: [
+    &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+  ],
+  &quot;findings&quot;: [
+    {
+      &quot;claim&quot;: &quot;Alert for rapid sequence of domain enumeration commands by noah.evans on WKS-034 was observed.&quot;,
+      &quot;evidence_ids&quot;: [
+        &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+      ],
+      &quot;kind&quot;: &quot;observed&quot;
+    }
+  ],
+  &quot;hypotheses&quot;: [
+    {
+      &quot;confidence&quot;: &quot;MEDIUM&quot;,
+      &quot;contradicting_evidence&quot;: [],
+      &quot;description&quot;: &quot;User noah.evans performed rapid domain enumeration commands on WKS-034, possibly for reconnaissance purposes.&quot;,
+      &quot;supporting_evidence&quot;: [
+        &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+      ]
+    }
+  ],
+  &quot;limitations&quot;: [
+    &quot;No additional event logs matching the suspicious commands were found in the given timeframe.&quot;,
+    &quot;Process tree context for the host and user is unavailable, limiting behavioral analysis.&quot;
+  ],
+  &quot;recommended_actions&quot;: [
+    {
+      &quot;action&quot;: &quot;Conduct user interview or review user activity policies for noah.evans to understand the intent behind the domain enumeration commands.&quot;,
+      &quot;evidence_ids&quot;: [
+        &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+      ],
+      &quot;rationale&quot;: &quot;Clarifying whether the activity was authorized or part of legitimate administrative tasks can help determine if the behavior is malicious.&quot;
+    },
+    {
+      &quot;action&quot;: &quot;Increase monitoring on WKS-034 and user noah.evans for further suspicious activities, especially related to Active Directory enumeration or lateral movement attempts.&quot;,
+      &quot;evidence_ids&quot;: [
+        &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+      ],
+      &quot;rationale&quot;: &quot;Continuous monitoring can help detect escalation or follow-up malicious actions if the initial reconnaissance was part of an attack.&quot;
+    }
+  ],
+  &quot;risk_level&quot;: &quot;MEDIUM&quot;,
+  &quot;risk_rationale&quot;: &quot;The observed behavior is consistent with reconnaissance activity, which is a common precursor to more severe attacks, thus posing a medium risk. However, lack of corroborating evidence limits the risk assessment.&quot;,
+  &quot;summary&quot;: &quot;The alert indicates a rapid sequence of domain enumeration commands executed by user noah.evans on host WKS-034, suggesting potential reconnaissance activity. However, no additional event logs or process tree context are available to corroborate or refute this behavior. Due to lack of further evidence, the investigation cannot confirm malicious activity or benign intent.&quot;,
+  &quot;verdict&quot;: &quot;insufficient_evidence&quot;
+}</pre>
+<h2>Diễn biến công cụ</h2>
+<table><thead><tr><th>Native call ID</th><th>Tool</th><th>UTC</th><th>Arguments</th><th>Evidence IDs</th><th>Duration ms</th><th>Error</th></tr></thead><tbody><tr><td>call_CymfCXuwESvKJlaHMMVyjtQ5</td><td>soc_search_events</td><td>2026-10-09T02:34:57.361420+00:00</td><td>{
+  &quot;end&quot;: &quot;2026-07-27T10:00:00+00:00&quot;,
+  &quot;host&quot;: &quot;WKS-034&quot;,
+  &quot;limit&quot;: 10,
+  &quot;query&quot;: &quot;net /domain OR PowerView&quot;,
+  &quot;source&quot;: null,
+  &quot;start&quot;: &quot;2026-07-27T09:00:00+00:00&quot;,
+  &quot;user&quot;: &quot;noah.evans&quot;
+}</td><td>[]</td><td>7.279374000063399</td><td>None</td></tr><tr><td>call_0zK7c8sRjs604ye6DTc9or4N</td><td>soc_get_context</td><td>2026-10-09T02:34:58.957614+00:00</td><td>{
+  &quot;host&quot;: &quot;WKS-034&quot;,
+  &quot;limit&quot;: 10,
+  &quot;resource&quot;: &quot;process_tree&quot;,
+  &quot;user&quot;: &quot;noah.evans&quot;
+}</td><td>[]</td><td>4.876306000028308</td><td>None</td></tr></tbody></table>
+<h2>Bằng chứng và nguồn</h2>
+<table><thead><tr><th>Evidence ID</th><th>Loại</th><th>Observed at</th><th>Nội dung đầy đủ</th><th>Provenance</th></tr></thead><tbody><tr><td>fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input</td><td>input</td><td>2026-07-27T09:00:00+00:00</td><td>{
+  &quot;alert&quot;: {
+    &quot;alert_id&quot;: &quot;A-087094&quot;,
+    &quot;description&quot;: &quot;Rapid sequence of domain enumeration commands (net /domain, PowerView) by noah.evans on WKS-034.&quot;,
+    &quot;host&quot;: &quot;WKS-034&quot;,
+    &quot;severity&quot;: &quot;medium&quot;,
+    &quot;source&quot;: &quot;SentinelOne&quot;,
+    &quot;timestamp&quot;: &quot;2026-07-27T09:00:00+00:00&quot;,
+    &quot;title&quot;: &quot;Active Directory discovery burst&quot;,
+    &quot;user&quot;: &quot;noah.evans&quot;
+  },
+  &quot;intake&quot;: {
+    &quot;alert&quot;: {
+      &quot;alert_id&quot;: &quot;A-087094&quot;,
+      &quot;description&quot;: &quot;Rapid sequence of domain enumeration commands (net /domain, PowerView) by noah.evans on WKS-034.&quot;,
+      &quot;host&quot;: &quot;WKS-034&quot;,
+      &quot;severity&quot;: &quot;medium&quot;,
+      &quot;source&quot;: &quot;SentinelOne&quot;,
+      &quot;timestamp&quot;: &quot;2026-07-27T09:00:00+00:00&quot;,
+      &quot;title&quot;: &quot;Active Directory discovery burst&quot;,
+      &quot;user&quot;: &quot;noah.evans&quot;
+    },
+    &quot;kind&quot;: &quot;alert&quot;
+  }
+}</td><td>{
+  &quot;data_origin&quot;: &quot;synthetic&quot;,
+  &quot;dataset_revision&quot;: &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2&quot;,
+  &quot;file_sha256&quot;: &quot;9ef309da7ad04f173d89a5f8da238f20db4051b92514531667b30c042da7bd1a&quot;,
+  &quot;json_pointer&quot;: &quot;/alert&quot;,
+  &quot;raw_record_sha256&quot;: &quot;a228877a55dc9db6905f18575ae8167c09622b6d3704f91d6ab1588abd6f2058&quot;,
+  &quot;scenario_id&quot;: &quot;SCT-087094&quot;,
+  &quot;split&quot;: &quot;test&quot;
+}</td></tr></tbody></table>
+<h2>Kết quả tools đã delivered</h2><pre>[
+  {
+    &quot;native_call_id&quot;: &quot;call_CymfCXuwESvKJlaHMMVyjtQ5&quot;,
+    &quot;result&quot;: {
+      &quot;availability&quot;: &quot;no_match&quot;,
+      &quot;limitations&quot;: [
+        &quot;Synthetic recorded observations only; counts describe imported data.&quot;
+      ],
+      &quot;matched_count&quot;: 0,
+      &quot;returned_count&quot;: 0,
+      &quot;rows&quot;: [],
+      &quot;truncated&quot;: false
+    },
+    &quot;tool&quot;: &quot;soc_search_events&quot;,
+    &quot;utf8_bytes&quot;: 179
+  },
+  {
+    &quot;native_call_id&quot;: &quot;call_0zK7c8sRjs604ye6DTc9or4N&quot;,
+    &quot;result&quot;: {
+      &quot;availability&quot;: &quot;unavailable&quot;,
+      &quot;limitations&quot;: [
+        &quot;Synthetic recorded observations only; counts describe imported data.&quot;,
+        &quot;Source resource unavailable.&quot;
+      ],
+      &quot;matched_count&quot;: 0,
+      &quot;returned_count&quot;: 0,
+      &quot;rows&quot;: [],
+      &quot;truncated&quot;: false
+    },
+    &quot;tool&quot;: &quot;soc_get_context&quot;,
+    &quot;utf8_bytes&quot;: 213
+  }
+]</pre>
+<h2>Model outputs</h2><pre>[
+  {
+    &quot;id&quot;: &quot;chatcmpl-EWujgKXPgUbWziHlMPMbUVrrvZaKO&quot;,
+    &quot;message&quot;: {
+      &quot;annotations&quot;: [],
+      &quot;content&quot;: null,
+      &quot;refusal&quot;: null,
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;function&quot;: {
+            &quot;arguments&quot;: &quot;{\&quot;host\&quot;:\&quot;WKS-034\&quot;,\&quot;user\&quot;:\&quot;noah.evans\&quot;,\&quot;source\&quot;:null,\&quot;query\&quot;:\&quot;net /domain OR PowerView\&quot;,\&quot;start\&quot;:\&quot;2026-07-27T09:00:00+00:00\&quot;,\&quot;end\&quot;:\&quot;2026-07-27T10:00:00+00:00\&quot;,\&quot;limit\&quot;:10}&quot;,
+            &quot;name&quot;: &quot;soc_search_events&quot;
+          },
+          &quot;id&quot;: &quot;call_CymfCXuwESvKJlaHMMVyjtQ5&quot;,
+          &quot;type&quot;: &quot;function&quot;
+        }
+      ]
+    },
+    &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+    &quot;usage&quot;: {
+      &quot;completion_tokens&quot;: 81,
+      &quot;completion_tokens_details&quot;: {
+        &quot;accepted_prediction_tokens&quot;: 0,
+        &quot;audio_tokens&quot;: 0,
+        &quot;reasoning_tokens&quot;: 0,
+        &quot;rejected_prediction_tokens&quot;: 0
+      },
+      &quot;prompt_tokens&quot;: 1398,
+      &quot;prompt_tokens_details&quot;: {
+        &quot;audio_tokens&quot;: 0,
+        &quot;cached_tokens&quot;: 0
+      },
+      &quot;total_tokens&quot;: 1479
+    }
+  },
+  {
+    &quot;id&quot;: &quot;chatcmpl-EWujiZGGiPHUoOkZA27I2oXnvDOAK&quot;,
+    &quot;message&quot;: {
+      &quot;annotations&quot;: [],
+      &quot;content&quot;: null,
+      &quot;refusal&quot;: null,
+      &quot;role&quot;: &quot;assistant&quot;,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;function&quot;: {
+            &quot;arguments&quot;: &quot;{\&quot;resource\&quot;:\&quot;process_tree\&quot;,\&quot;host\&quot;:\&quot;WKS-034\&quot;,\&quot;user\&quot;:\&quot;noah.evans\&quot;,\&quot;limit\&quot;:10}&quot;,
+            &quot;name&quot;: &quot;soc_get_context&quot;
+          },
+          &quot;id&quot;: &quot;call_0zK7c8sRjs604ye6DTc9or4N&quot;,
+          &quot;type&quot;: &quot;function&quot;
+        }
+      ]
+    },
+    &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+    &quot;usage&quot;: {
+      &quot;completion_tokens&quot;: 35,
+      &quot;completion_tokens_details&quot;: {
+        &quot;accepted_prediction_tokens&quot;: 0,
+        &quot;audio_tokens&quot;: 0,
+        &quot;reasoning_tokens&quot;: 0,
+        &quot;rejected_prediction_tokens&quot;: 0
+      },
+      &quot;prompt_tokens&quot;: 1525,
+      &quot;prompt_tokens_details&quot;: {
+        &quot;audio_tokens&quot;: 0,
+        &quot;cached_tokens&quot;: 1280
+      },
+      &quot;total_tokens&quot;: 1560
+    }
+  },
+  {
+    &quot;id&quot;: &quot;chatcmpl-EWujjSmhsIDmCxw3ISyrv5NHGWTu9&quot;,
+    &quot;message&quot;: {
+      &quot;annotations&quot;: [],
+      &quot;content&quot;: &quot;{\&quot;summary\&quot;:\&quot;The alert indicates a rapid sequence of domain enumeration commands executed by user noah.evans on host WKS-034, suggesting potential reconnaissance activity. However, no additional event logs or process tree context are available to corroborate or refute this behavior. Due to lack of further evidence, the investigation cannot confirm malicious activity or benign intent.\&quot;,\&quot;verdict\&quot;:\&quot;insufficient_evidence\&quot;,\&quot;hypotheses\&quot;:[{\&quot;description\&quot;:\&quot;User noah.evans performed rapid domain enumeration commands on WKS-034, possibly for reconnaissance purposes.\&quot;,\&quot;supporting_evidence\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;],\&quot;contradicting_evidence\&quot;:[],\&quot;confidence\&quot;:\&quot;MEDIUM\&quot;}],\&quot;findings\&quot;:[{\&quot;claim\&quot;:\&quot;Alert for rapid sequence of domain enumeration commands by noah.evans on WKS-034 was observed.\&quot;,\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;],\&quot;kind\&quot;:\&quot;observed\&quot;}],\&quot;risk_level\&quot;:\&quot;MEDIUM\&quot;,\&quot;risk_rationale\&quot;:\&quot;The observed behavior is consistent with reconnaissance activity, which is a common precursor to more severe attacks, thus posing a medium risk. However, lack of corroborating evidence limits the risk assessment.\&quot;,\&quot;confidence\&quot;:\&quot;MEDIUM\&quot;,\&quot;confidence_rationale\&quot;:\&quot;The alert is clear and specific about the suspicious activity, but absence of additional logs or context reduces confidence in a definitive conclusion.\&quot;,\&quot;limitations\&quot;:[\&quot;No additional event logs matching the suspicious commands were found in the given timeframe.\&quot;,\&quot;Process tree context for the host and user is unavailable, limiting behavioral analysis.\&quot;],\&quot;recommended_actions\&quot;:[{\&quot;action\&quot;:\&quot;Conduct user interview or review user activity policies for noah.evans to understand the intent behind the domain enumeration commands.\&quot;,\&quot;rationale\&quot;:\&quot;Clarifying whether the activity was authorized or part of legitimate administrative tasks can help determine if the behavior is malicious.\&quot;,\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;]},{\&quot;action\&quot;:\&quot;Increase monitoring on WKS-034 and user noah.evans for further suspicious activities, especially related to Active Directory enumeration or lateral movement attempts.\&quot;,\&quot;rationale\&quot;:\&quot;Continuous monitoring can help detect escalation or follow-up malicious actions if the initial reconnaissance was part of an attack.\&quot;,\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;]}],\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;]}&quot;,
+      &quot;refusal&quot;: null,
+      &quot;role&quot;: &quot;assistant&quot;
+    },
+    &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+    &quot;usage&quot;: {
+      &quot;completion_tokens&quot;: 559,
+      &quot;completion_tokens_details&quot;: {
+        &quot;accepted_prediction_tokens&quot;: 0,
+        &quot;audio_tokens&quot;: 0,
+        &quot;reasoning_tokens&quot;: 0,
+        &quot;rejected_prediction_tokens&quot;: 0
+      },
+      &quot;prompt_tokens&quot;: 1610,
+      &quot;prompt_tokens_details&quot;: {
+        &quot;audio_tokens&quot;: 0,
+        &quot;cached_tokens&quot;: 1408
+      },
+      &quot;total_tokens&quot;: 2169
+    }
+  }
+]</pre>
+<h2>Model, tokens và chi phí</h2><pre>{
+  &quot;authentic_responses_received&quot;: 3,
+  &quot;calls&quot;: [
+    {
+      &quot;actual_model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+      &quot;completion_id&quot;: &quot;chatcmpl-EWujgKXPgUbWziHlMPMbUVrrvZaKO&quot;,
+      &quot;estimated_cost_usd&quot;: 0.0006888,
+      &quot;latency_ms&quot;: 2246.257007000054,
+      &quot;request_id&quot;: &quot;req_5197ea0082ea4f4785c8e689780f3e29&quot;,
+      &quot;reservation_id&quot;: 0,
+      &quot;usage&quot;: {
+        &quot;completion_tokens&quot;: 81,
+        &quot;completion_tokens_details&quot;: {
+          &quot;accepted_prediction_tokens&quot;: 0,
+          &quot;audio_tokens&quot;: 0,
+          &quot;reasoning_tokens&quot;: 0,
+          &quot;rejected_prediction_tokens&quot;: 0
+        },
+        &quot;prompt_tokens&quot;: 1398,
+        &quot;prompt_tokens_details&quot;: {
+          &quot;audio_tokens&quot;: 0,
+          &quot;cached_tokens&quot;: 0
+        },
+        &quot;total_tokens&quot;: 1479
+      }
+    },
+    {
+      &quot;actual_model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+      &quot;completion_id&quot;: &quot;chatcmpl-EWujiZGGiPHUoOkZA27I2oXnvDOAK&quot;,
+      &quot;estimated_cost_usd&quot;: 0.000666,
+      &quot;latency_ms&quot;: 1390.9737010000072,
+      &quot;request_id&quot;: &quot;req_ddc420dcf5824a36a3ceb860bd10f858&quot;,
+      &quot;reservation_id&quot;: 1,
+      &quot;usage&quot;: {
+        &quot;completion_tokens&quot;: 35,
+        &quot;completion_tokens_details&quot;: {
+          &quot;accepted_prediction_tokens&quot;: 0,
+          &quot;audio_tokens&quot;: 0,
+          &quot;reasoning_tokens&quot;: 0,
+          &quot;rejected_prediction_tokens&quot;: 0
+        },
+        &quot;prompt_tokens&quot;: 1525,
+        &quot;prompt_tokens_details&quot;: {
+          &quot;audio_tokens&quot;: 0,
+          &quot;cached_tokens&quot;: 1280
+        },
+        &quot;total_tokens&quot;: 1560
+      }
+    },
+    {
+      &quot;actual_model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+      &quot;completion_id&quot;: &quot;chatcmpl-EWujjSmhsIDmCxw3ISyrv5NHGWTu9&quot;,
+      &quot;estimated_cost_usd&quot;: 0.0015384,
+      &quot;latency_ms&quot;: 4863.540636999915,
+      &quot;request_id&quot;: &quot;req_60798ba0c88540d3973151e5b0e6fc90&quot;,
+      &quot;reservation_id&quot;: 2,
+      &quot;usage&quot;: {
+        &quot;completion_tokens&quot;: 559,
+        &quot;completion_tokens_details&quot;: {
+          &quot;accepted_prediction_tokens&quot;: 0,
+          &quot;audio_tokens&quot;: 0,
+          &quot;reasoning_tokens&quot;: 0,
+          &quot;rejected_prediction_tokens&quot;: 0
+        },
+        &quot;prompt_tokens&quot;: 1610,
+        &quot;prompt_tokens_details&quot;: {
+          &quot;audio_tokens&quot;: 0,
+          &quot;cached_tokens&quot;: 1408
+        },
+        &quot;total_tokens&quot;: 2169
+      }
+    }
+  ],
+  &quot;estimated_cost_usd&quot;: 0.0028932000000000003,
+  &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+  &quot;provider&quot;: &quot;soc_openai_official&quot;,
+  &quot;total_calls&quot;: 3
+}</pre>
+<h2>Danh tính và metadata</h2><pre>{
+  &quot;condition&quot;: &quot;S1&quot;,
+  &quot;corpus_sha256&quot;: &quot;2054d36eb67339a201120be75d81823035e6f3194aa9db72b740db10c8cd6c6d&quot;,
+  &quot;cost_unknown&quot;: false,
+  &quot;data_origin&quot;: &quot;synthetic&quot;,
+  &quot;delivered_tools&quot;: [
+    {
+      &quot;native_call_id&quot;: &quot;call_CymfCXuwESvKJlaHMMVyjtQ5&quot;,
+      &quot;result&quot;: {
+        &quot;availability&quot;: &quot;no_match&quot;,
+        &quot;limitations&quot;: [
+          &quot;Synthetic recorded observations only; counts describe imported data.&quot;
+        ],
+        &quot;matched_count&quot;: 0,
+        &quot;returned_count&quot;: 0,
+        &quot;rows&quot;: [],
+        &quot;truncated&quot;: false
+      },
+      &quot;tool&quot;: &quot;soc_search_events&quot;,
+      &quot;utf8_bytes&quot;: 179
+    },
+    {
+      &quot;native_call_id&quot;: &quot;call_0zK7c8sRjs604ye6DTc9or4N&quot;,
+      &quot;result&quot;: {
+        &quot;availability&quot;: &quot;unavailable&quot;,
+        &quot;limitations&quot;: [
+          &quot;Synthetic recorded observations only; counts describe imported data.&quot;,
+          &quot;Source resource unavailable.&quot;
+        ],
+        &quot;matched_count&quot;: 0,
+        &quot;returned_count&quot;: 0,
+        &quot;rows&quot;: [],
+        &quot;truncated&quot;: false
+      },
+      &quot;tool&quot;: &quot;soc_get_context&quot;,
+      &quot;utf8_bytes&quot;: 213
+    }
+  ],
+  &quot;errors&quot;: [],
+  &quot;investigation_duration_seconds&quot;: 9.298568156999977,
+  &quot;lifecycle_trace&quot;: [
+    {
+      &quot;note&quot;: &quot;SOC intake and trusted scope validated&quot;,
+      &quot;phase&quot;: &quot;triage&quot;,
+      &quot;status&quot;: &quot;completed&quot;,
+      &quot;timestamp&quot;: &quot;2026-10-09T02:34:54.905598&quot;
+    },
+    {
+      &quot;note&quot;: &quot;Model selects read-only corpus tools&quot;,
+      &quot;phase&quot;: &quot;investigation&quot;,
+      &quot;status&quot;: &quot;started&quot;,
+      &quot;timestamp&quot;: &quot;2026-10-09T02:34:54.907117&quot;
+    },
+    {
+      &quot;note&quot;: &quot;Final contract checked; prose semantics require human review&quot;,
+      &quot;phase&quot;: &quot;investigation&quot;,
+      &quot;status&quot;: &quot;completed&quot;,
+      &quot;timestamp&quot;: &quot;2026-10-09T02:35:04.204095&quot;
+    },
+    {
+      &quot;note&quot;: &quot;No automatic analyst decision&quot;,
+      &quot;phase&quot;: &quot;review&quot;,
+      &quot;status&quot;: &quot;awaiting_human&quot;,
+      &quot;timestamp&quot;: &quot;2026-10-09T02:35:04.204111&quot;
+    }
+  ],
+  &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+  &quot;model_outputs&quot;: [
+    {
+      &quot;id&quot;: &quot;chatcmpl-EWujgKXPgUbWziHlMPMbUVrrvZaKO&quot;,
+      &quot;message&quot;: {
+        &quot;annotations&quot;: [],
+        &quot;content&quot;: null,
+        &quot;refusal&quot;: null,
+        &quot;role&quot;: &quot;assistant&quot;,
+        &quot;tool_calls&quot;: [
+          {
+            &quot;function&quot;: {
+              &quot;arguments&quot;: &quot;{\&quot;host\&quot;:\&quot;WKS-034\&quot;,\&quot;user\&quot;:\&quot;noah.evans\&quot;,\&quot;source\&quot;:null,\&quot;query\&quot;:\&quot;net /domain OR PowerView\&quot;,\&quot;start\&quot;:\&quot;2026-07-27T09:00:00+00:00\&quot;,\&quot;end\&quot;:\&quot;2026-07-27T10:00:00+00:00\&quot;,\&quot;limit\&quot;:10}&quot;,
+              &quot;name&quot;: &quot;soc_search_events&quot;
+            },
+            &quot;id&quot;: &quot;call_CymfCXuwESvKJlaHMMVyjtQ5&quot;,
+            &quot;type&quot;: &quot;function&quot;
+          }
+        ]
+      },
+      &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+      &quot;usage&quot;: {
+        &quot;completion_tokens&quot;: 81,
+        &quot;completion_tokens_details&quot;: {
+          &quot;accepted_prediction_tokens&quot;: 0,
+          &quot;audio_tokens&quot;: 0,
+          &quot;reasoning_tokens&quot;: 0,
+          &quot;rejected_prediction_tokens&quot;: 0
+        },
+        &quot;prompt_tokens&quot;: 1398,
+        &quot;prompt_tokens_details&quot;: {
+          &quot;audio_tokens&quot;: 0,
+          &quot;cached_tokens&quot;: 0
+        },
+        &quot;total_tokens&quot;: 1479
+      }
+    },
+    {
+      &quot;id&quot;: &quot;chatcmpl-EWujiZGGiPHUoOkZA27I2oXnvDOAK&quot;,
+      &quot;message&quot;: {
+        &quot;annotations&quot;: [],
+        &quot;content&quot;: null,
+        &quot;refusal&quot;: null,
+        &quot;role&quot;: &quot;assistant&quot;,
+        &quot;tool_calls&quot;: [
+          {
+            &quot;function&quot;: {
+              &quot;arguments&quot;: &quot;{\&quot;resource\&quot;:\&quot;process_tree\&quot;,\&quot;host\&quot;:\&quot;WKS-034\&quot;,\&quot;user\&quot;:\&quot;noah.evans\&quot;,\&quot;limit\&quot;:10}&quot;,
+              &quot;name&quot;: &quot;soc_get_context&quot;
+            },
+            &quot;id&quot;: &quot;call_0zK7c8sRjs604ye6DTc9or4N&quot;,
+            &quot;type&quot;: &quot;function&quot;
+          }
+        ]
+      },
+      &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+      &quot;usage&quot;: {
+        &quot;completion_tokens&quot;: 35,
+        &quot;completion_tokens_details&quot;: {
+          &quot;accepted_prediction_tokens&quot;: 0,
+          &quot;audio_tokens&quot;: 0,
+          &quot;reasoning_tokens&quot;: 0,
+          &quot;rejected_prediction_tokens&quot;: 0
+        },
+        &quot;prompt_tokens&quot;: 1525,
+        &quot;prompt_tokens_details&quot;: {
+          &quot;audio_tokens&quot;: 0,
+          &quot;cached_tokens&quot;: 1280
+        },
+        &quot;total_tokens&quot;: 1560
+      }
+    },
+    {
+      &quot;id&quot;: &quot;chatcmpl-EWujjSmhsIDmCxw3ISyrv5NHGWTu9&quot;,
+      &quot;message&quot;: {
+        &quot;annotations&quot;: [],
+        &quot;content&quot;: &quot;{\&quot;summary\&quot;:\&quot;The alert indicates a rapid sequence of domain enumeration commands executed by user noah.evans on host WKS-034, suggesting potential reconnaissance activity. However, no additional event logs or process tree context are available to corroborate or refute this behavior. Due to lack of further evidence, the investigation cannot confirm malicious activity or benign intent.\&quot;,\&quot;verdict\&quot;:\&quot;insufficient_evidence\&quot;,\&quot;hypotheses\&quot;:[{\&quot;description\&quot;:\&quot;User noah.evans performed rapid domain enumeration commands on WKS-034, possibly for reconnaissance purposes.\&quot;,\&quot;supporting_evidence\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;],\&quot;contradicting_evidence\&quot;:[],\&quot;confidence\&quot;:\&quot;MEDIUM\&quot;}],\&quot;findings\&quot;:[{\&quot;claim\&quot;:\&quot;Alert for rapid sequence of domain enumeration commands by noah.evans on WKS-034 was observed.\&quot;,\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;],\&quot;kind\&quot;:\&quot;observed\&quot;}],\&quot;risk_level\&quot;:\&quot;MEDIUM\&quot;,\&quot;risk_rationale\&quot;:\&quot;The observed behavior is consistent with reconnaissance activity, which is a common precursor to more severe attacks, thus posing a medium risk. However, lack of corroborating evidence limits the risk assessment.\&quot;,\&quot;confidence\&quot;:\&quot;MEDIUM\&quot;,\&quot;confidence_rationale\&quot;:\&quot;The alert is clear and specific about the suspicious activity, but absence of additional logs or context reduces confidence in a definitive conclusion.\&quot;,\&quot;limitations\&quot;:[\&quot;No additional event logs matching the suspicious commands were found in the given timeframe.\&quot;,\&quot;Process tree context for the host and user is unavailable, limiting behavioral analysis.\&quot;],\&quot;recommended_actions\&quot;:[{\&quot;action\&quot;:\&quot;Conduct user interview or review user activity policies for noah.evans to understand the intent behind the domain enumeration commands.\&quot;,\&quot;rationale\&quot;:\&quot;Clarifying whether the activity was authorized or part of legitimate administrative tasks can help determine if the behavior is malicious.\&quot;,\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;]},{\&quot;action\&quot;:\&quot;Increase monitoring on WKS-034 and user noah.evans for further suspicious activities, especially related to Active Directory enumeration or lateral movement attempts.\&quot;,\&quot;rationale\&quot;:\&quot;Continuous monitoring can help detect escalation or follow-up malicious actions if the initial reconnaissance was part of an attack.\&quot;,\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;]}],\&quot;evidence_ids\&quot;:[\&quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input\&quot;]}&quot;,
+        &quot;refusal&quot;: null,
+        &quot;role&quot;: &quot;assistant&quot;
+      },
+      &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+      &quot;usage&quot;: {
+        &quot;completion_tokens&quot;: 559,
+        &quot;completion_tokens_details&quot;: {
+          &quot;accepted_prediction_tokens&quot;: 0,
+          &quot;audio_tokens&quot;: 0,
+          &quot;reasoning_tokens&quot;: 0,
+          &quot;rejected_prediction_tokens&quot;: 0
+        },
+        &quot;prompt_tokens&quot;: 1610,
+        &quot;prompt_tokens_details&quot;: {
+          &quot;audio_tokens&quot;: 0,
+          &quot;cached_tokens&quot;: 1408
+        },
+        &quot;total_tokens&quot;: 2169
+      }
+    }
+  ],
+  &quot;prose_semantics_machine_verified&quot;: false,
+  &quot;provider&quot;: {
+    &quot;authentic_responses_received&quot;: 3,
+    &quot;calls&quot;: [
+      {
+        &quot;actual_model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+        &quot;completion_id&quot;: &quot;chatcmpl-EWujgKXPgUbWziHlMPMbUVrrvZaKO&quot;,
+        &quot;estimated_cost_usd&quot;: 0.0006888,
+        &quot;latency_ms&quot;: 2246.257007000054,
+        &quot;request_id&quot;: &quot;req_5197ea0082ea4f4785c8e689780f3e29&quot;,
+        &quot;reservation_id&quot;: 0,
+        &quot;usage&quot;: {
+          &quot;completion_tokens&quot;: 81,
+          &quot;completion_tokens_details&quot;: {
+            &quot;accepted_prediction_tokens&quot;: 0,
+            &quot;audio_tokens&quot;: 0,
+            &quot;reasoning_tokens&quot;: 0,
+            &quot;rejected_prediction_tokens&quot;: 0
+          },
+          &quot;prompt_tokens&quot;: 1398,
+          &quot;prompt_tokens_details&quot;: {
+            &quot;audio_tokens&quot;: 0,
+            &quot;cached_tokens&quot;: 0
+          },
+          &quot;total_tokens&quot;: 1479
+        }
+      },
+      {
+        &quot;actual_model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+        &quot;completion_id&quot;: &quot;chatcmpl-EWujiZGGiPHUoOkZA27I2oXnvDOAK&quot;,
+        &quot;estimated_cost_usd&quot;: 0.000666,
+        &quot;latency_ms&quot;: 1390.9737010000072,
+        &quot;request_id&quot;: &quot;req_ddc420dcf5824a36a3ceb860bd10f858&quot;,
+        &quot;reservation_id&quot;: 1,
+        &quot;usage&quot;: {
+          &quot;completion_tokens&quot;: 35,
+          &quot;completion_tokens_details&quot;: {
+            &quot;accepted_prediction_tokens&quot;: 0,
+            &quot;audio_tokens&quot;: 0,
+            &quot;reasoning_tokens&quot;: 0,
+            &quot;rejected_prediction_tokens&quot;: 0
+          },
+          &quot;prompt_tokens&quot;: 1525,
+          &quot;prompt_tokens_details&quot;: {
+            &quot;audio_tokens&quot;: 0,
+            &quot;cached_tokens&quot;: 1280
+          },
+          &quot;total_tokens&quot;: 1560
+        }
+      },
+      {
+        &quot;actual_model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+        &quot;completion_id&quot;: &quot;chatcmpl-EWujjSmhsIDmCxw3ISyrv5NHGWTu9&quot;,
+        &quot;estimated_cost_usd&quot;: 0.0015384,
+        &quot;latency_ms&quot;: 4863.540636999915,
+        &quot;request_id&quot;: &quot;req_60798ba0c88540d3973151e5b0e6fc90&quot;,
+        &quot;reservation_id&quot;: 2,
+        &quot;usage&quot;: {
+          &quot;completion_tokens&quot;: 559,
+          &quot;completion_tokens_details&quot;: {
+            &quot;accepted_prediction_tokens&quot;: 0,
+            &quot;audio_tokens&quot;: 0,
+            &quot;reasoning_tokens&quot;: 0,
+            &quot;rejected_prediction_tokens&quot;: 0
+          },
+          &quot;prompt_tokens&quot;: 1610,
+          &quot;prompt_tokens_details&quot;: {
+            &quot;audio_tokens&quot;: 0,
+            &quot;cached_tokens&quot;: 1408
+          },
+          &quot;total_tokens&quot;: 2169
+        }
+      }
+    ],
+    &quot;estimated_cost_usd&quot;: 0.0028932000000000003,
+    &quot;model&quot;: &quot;gpt-4.1-mini-2025-04-14&quot;,
+    &quot;provider&quot;: &quot;soc_openai_official&quot;,
+    &quot;total_calls&quot;: 3
+  },
+  &quot;review_status&quot;: &quot;awaiting_human&quot;,
+  &quot;scenario_id&quot;: &quot;SCT-087094&quot;,
+  &quot;soc_policy&quot;: &quot;soc_policy_v1&quot;,
+  &quot;soc_report&quot;: {
+    &quot;confidence&quot;: &quot;MEDIUM&quot;,
+    &quot;confidence_rationale&quot;: &quot;The alert is clear and specific about the suspicious activity, but absence of additional logs or context reduces confidence in a definitive conclusion.&quot;,
+    &quot;evidence_ids&quot;: [
+      &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+    ],
+    &quot;findings&quot;: [
+      {
+        &quot;claim&quot;: &quot;Alert for rapid sequence of domain enumeration commands by noah.evans on WKS-034 was observed.&quot;,
+        &quot;evidence_ids&quot;: [
+          &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+        ],
+        &quot;kind&quot;: &quot;observed&quot;
+      }
+    ],
+    &quot;hypotheses&quot;: [
+      {
+        &quot;confidence&quot;: &quot;MEDIUM&quot;,
+        &quot;contradicting_evidence&quot;: [],
+        &quot;description&quot;: &quot;User noah.evans performed rapid domain enumeration commands on WKS-034, possibly for reconnaissance purposes.&quot;,
+        &quot;supporting_evidence&quot;: [
+          &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+        ]
+      }
+    ],
+    &quot;limitations&quot;: [
+      &quot;No additional event logs matching the suspicious commands were found in the given timeframe.&quot;,
+      &quot;Process tree context for the host and user is unavailable, limiting behavioral analysis.&quot;
+    ],
+    &quot;recommended_actions&quot;: [
+      {
+        &quot;action&quot;: &quot;Conduct user interview or review user activity policies for noah.evans to understand the intent behind the domain enumeration commands.&quot;,
+        &quot;evidence_ids&quot;: [
+          &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+        ],
+        &quot;rationale&quot;: &quot;Clarifying whether the activity was authorized or part of legitimate administrative tasks can help determine if the behavior is malicious.&quot;
+      },
+      {
+        &quot;action&quot;: &quot;Increase monitoring on WKS-034 and user noah.evans for further suspicious activities, especially related to Active Directory enumeration or lateral movement attempts.&quot;,
+        &quot;evidence_ids&quot;: [
+          &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2:SCT-087094:input&quot;
+        ],
+        &quot;rationale&quot;: &quot;Continuous monitoring can help detect escalation or follow-up malicious actions if the initial reconnaissance was part of an attack.&quot;
+      }
+    ],
+    &quot;risk_level&quot;: &quot;MEDIUM&quot;,
+    &quot;risk_rationale&quot;: &quot;The observed behavior is consistent with reconnaissance activity, which is a common precursor to more severe attacks, thus posing a medium risk. However, lack of corroborating evidence limits the risk assessment.&quot;,
+    &quot;summary&quot;: &quot;The alert indicates a rapid sequence of domain enumeration commands executed by user noah.evans on host WKS-034, suggesting potential reconnaissance activity. However, no additional event logs or process tree context are available to corroborate or refute this behavior. Due to lack of further evidence, the investigation cannot confirm malicious activity or benign intent.&quot;,
+    &quot;verdict&quot;: &quot;insufficient_evidence&quot;
+  },
+  &quot;source_revision&quot;: &quot;fe94a95dadbd188c2bf137a9785b82cb5f7865c2&quot;,
+  &quot;technical_status&quot;: &quot;completed&quot;,
+  &quot;terminal&quot;: false
+}</pre>
+<p>Receipt SHA-256: 950e6b80032a7699bc6df8a90eae45fb04708d45b82f41c34bf57d36508bd96e</p></html>

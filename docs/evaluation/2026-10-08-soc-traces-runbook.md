@@ -126,3 +126,9 @@ openssl cms -decrypt -binary -inform DER -in private_journal.cms -recip archive_
 ```
 
 Kiểm SHA archive từ `cloud_run.json` trước giải mã. CI đọc corpus thật không thay cho source-human reviews hoặc ngân sách USD riêng.
+
+## 8. Demo E2E một ca đã chạy
+
+Cửa sổ `soc-demo-20261009-v1` chỉ chứng minh tích hợp alert → model → tools corpus → final report → JSON/HTML/Markdown. Nó dùng ca demo khóa trước `SCT-087094`, condition S1, tối đa6 requests và hard cap `$1`; source review được ghi đúng là `deferred_after_demo`, human review là `awaiting_human`. Cửa sổ được claim bằng tag bất biến và không được chạy lại.
+
+Run chính thức: <https://github.com/Whats-up-pro/VinSOC/actions/runs/37875105762>. Kết quả thực tế3 requests/3 responses, cost `$0.0028932`, technical-valid true, final `insufficient_evidence`. Đọc `results/evaluation_v1/soc_traces_v1/demo_execution_receipt.json` và `demo_e2e/SCT-087094_S1.{json,html,md}`. Không dùng kết quả một ca này làm accuracy, không coi source/human review đã hoàn tất và không gộp với lượt benchmark128.

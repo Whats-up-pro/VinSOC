@@ -11,14 +11,13 @@ def test_demo_release_is_locked_to_preselected_case_and_one_dollar():
 
     root = Path(__file__).resolve().parents[1]
     artifacts = root / "results/evaluation_v1/soc_traces_v1"
-    receipt = json.loads((root / "data/soc_traces_v1/final/corpus_receipt.json").read_text())
     inventory = json.loads((artifacts / "inventory.json").read_text())
     demo = json.loads((artifacts / "demo_selection.json").read_text())
     release = build_demo_release(
         identities={
             "inventory": inventory,
             "demo_selection": demo,
-            "corpus_receipt": receipt,
+            "corpus_receipt": {},
         },
         implementation_sha="a" * 40,
         api_key_sha256="b" * 64,
@@ -48,14 +47,13 @@ def test_demo_release_rejects_case_not_in_preselected_demo():
 
     root = Path(__file__).resolve().parents[1]
     artifacts = root / "results/evaluation_v1/soc_traces_v1"
-    receipt = json.loads((root / "data/soc_traces_v1/final/corpus_receipt.json").read_text())
     inventory = json.loads((artifacts / "inventory.json").read_text())
     demo = json.loads((artifacts / "demo_selection.json").read_text())
     release = build_demo_release(
         identities={
             "inventory": inventory,
             "demo_selection": demo,
-            "corpus_receipt": receipt,
+            "corpus_receipt": {},
         },
         implementation_sha="a" * 40,
         api_key_sha256="b" * 64,

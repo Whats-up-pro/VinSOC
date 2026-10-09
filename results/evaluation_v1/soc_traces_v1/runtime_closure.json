@@ -1,10 +1,11 @@
 {
-  "status": "computed_not_frozen",
-  "computed_at": "2026-10-08T15:04:29.503615+00:00",
-  "implementation_sha": "5c817de869f84441880502fc20fcf78823ebe899",
-  "runtime_closure_sha256": "f62dee2b0e13c7caf4584af66d9170478ee89ab6048c6d563c391fa420f22778",
+  "status": "computed_demo_frozen",
+  "computed_at": "2026-10-09T02:38:01.725053+00:00",
+  "implementation_sha": "7a13cd62c8b203711f4b53c6b17cab881d08f878",
+  "runtime_closure_sha256": "dd5bb5961b728185563ca2e382d52dc1bfe6e0479a692ad3c5249025f04f9331",
   "files": {
     ".github/workflows/ci.yml": "ecfcb5fe3951805c7bb4ad0a34e2a86cdcbcf766a496e4d06c3689ecf9ba0a31",
+    ".github/workflows/soc-traces-demo-e2e-once.yml": "7a060d36750406ebcf93680ba3e0b9805fcf8261783bbef132a3cdc6abadde48",
     ".github/workflows/soc-traces-e2e-once.yml": "899a4ea002121bd569dadbeb60b0435116d5283e27b856760ba7416d372aa070",
     "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
     "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
@@ -26,7 +27,8 @@
     "evaluation/soc_traces_v1/accounting.py": "4618a27a62ac1056274ea9e9648a6448c666ef3ddd93ce8423c8d0bddb15e8d4",
     "evaluation/soc_traces_v1/cloud.py": "b3d4499bedeec955b1fd560c454edd282964161b4a220347600f7666a352e8d6",
     "evaluation/soc_traces_v1/dataset.py": "0d99bd66dfbf3afaec29660847638c9890fb69623cec39ad862f5e0383adc24a",
-    "evaluation/soc_traces_v1/release.py": "ade5232a7f729684ef3ff8d08697b9a8d49b1ba2a2bfbb022a260322ac6effd5",
+    "evaluation/soc_traces_v1/demo.py": "0b0574047ecb1de1de92a8c741ecd4ca24f40891b83f8bf2ec1edcc0bf79598a",
+    "evaluation/soc_traces_v1/release.py": "b4a0d3006b263b500b156668756ce415696cd22b55645b03d763427f16cfa5f5",
     "evaluation/soc_traces_v1/reporting.py": "2a4a6c0adfcd18e88255a3c113860045183d70a48848c90c32fde454032d5de5",
     "evaluation/soc_traces_v1/runner.py": "2c4e4752261f154d1815bd0cfd58caca0b80cdc806cd378dc8ea270f4038035e",
     "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
@@ -42,6 +44,7 @@
     "scripts/prepare_soc_traces.py": "b582155d6224f043a3df7dcefb37dc3e94d4ff549b63379d5c6a2eeac0de5029",
     "scripts/render_soc_report.py": "8a6efb6d3e95c900e920c6cc987650eac976c4d5b112d4207389ce25bfe53360",
     "scripts/review_soc_case.py": "e8906cb0fc769f8d1986f843adee869913e47642dae416cc6c93450e8804cf47",
+    "scripts/run_soc_demo_cloud.py": "be2744d1b5801cac8f9839fea89edd25c314a0d06d97dd33d9162dd2b846d49a",
     "scripts/run_soc_traces.py": "e0f3904a052dbfdcbc0f621ee36d9d0f0c4178d889504b731b101d15ebbe063a",
     "scripts/run_soc_traces_cloud.py": "b932336756dc488f17c54722d8ebeba29f981f410cbb035f429b7ba919284e89",
     "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
@@ -59,5 +62,5 @@
     "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
     "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053"
   },
-  "inference_calls": 0
+  "inference_calls": 3
 }
