@@ -1,0 +1,32 @@
+{
+  "case_id": "gen_044",
+  "category": "network_only",
+  "difficulty": "intermediate",
+  "request": "Analyze network records for 198.51.100.34 between 2026-10-08T08:00:00Z and 2026-10-08T10:00:00Z for beaconing.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "198.51.100.34",
+        "time_range": {
+          "start": "2026-10-08T08:00:00Z",
+          "end": "2026-10-08T10:00:00Z"
+        }
+      },
+      "critical_arguments": [
+        "indicator",
+        "time_range"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:network_investigation\",\"coverage_tags\":[\"network\"],\"scenario_family\":\"network_02\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-044\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"network_request_02\"}"
+}

@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_066",
+  "category": "endpoint_only",
+  "difficulty": "advanced",
+  "request": "Inspect endpoint DB-SRV-071 for suspicious rundll32.exe ancestry.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "DB-SRV-071"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\"],\"scenario_family\":\"endpoint_06\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-066\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_06\"}"
+}

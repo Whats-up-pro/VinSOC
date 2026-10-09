@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_014",
+  "category": "no_tool",
+  "difficulty": "intermediate",
+  "request": "Compare the purpose of network telemetry and endpoint telemetry in general terms. Do not analyze any live case.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\"],\"scenario_family\":\"no_tool_14\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-014\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_14\"}"
+}

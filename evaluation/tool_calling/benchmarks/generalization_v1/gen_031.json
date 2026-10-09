@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_031",
+  "category": "cti_only",
+  "difficulty": "basic",
+  "request": "Look up SHA1 356a192b7913b04c54574d18c28d46e6395428ab for malware-family or actor associations.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "356a192b7913b04c54574d18c28d46e6395428ab"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:cti_enrichment\",\"coverage_tags\":[\"cti\"],\"scenario_family\":\"cti_07\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-031\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_request_07\"}"
+}

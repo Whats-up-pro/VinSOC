@@ -1,0 +1,32 @@
+{
+  "case_id": "gen_062",
+  "category": "endpoint_only",
+  "difficulty": "intermediate",
+  "request": "Analyze process telemetry on ENG-LT-034 between 2026-10-08T09:00:00Z and 2026-10-08T11:00:00Z.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "ENG-LT-034",
+        "time_range": {
+          "start": "2026-10-08T09:00:00Z",
+          "end": "2026-10-08T11:00:00Z"
+        }
+      },
+      "critical_arguments": [
+        "host",
+        "time_range"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\"],\"scenario_family\":\"endpoint_02\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-062\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_02\"}"
+}

@@ -1,0 +1,46 @@
+{
+  "case_id": "gen_117",
+  "category": "cti_network_endpoint",
+  "difficulty": "advanced",
+  "request": "Check CTI for domain update-service.example.test, analyze IPv4 192.0.2.249, and inspect DEV-WS-249; unrelated hash text is a decoy.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "update-service.example.test"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "192.0.2.249"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "DEV-WS-249"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"triple:cti_enrichment+network_investigation+endpoint_investigation\",\"coverage_tags\":[\"all_tools\",\"robustness:wrong_argument_trap\"],\"scenario_family\":\"all_tools_09\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-117\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"all_tools_request_09\"}"
+}

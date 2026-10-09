@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_079",
+  "category": "cti_network",
+  "difficulty": "basic",
+  "request": "Enrich IPv4 198.51.100.211 with CTI and separately inspect its flow frequency and destinations.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "198.51.100.211"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "198.51.100.211"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:cti_enrichment+network_investigation\",\"coverage_tags\":[\"cti_network\"],\"scenario_family\":\"cti_network_01\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-079\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_network_request_01\"}"
+}

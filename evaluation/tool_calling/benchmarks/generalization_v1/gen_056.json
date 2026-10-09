@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_056",
+  "category": "network_only",
+  "difficulty": "intermediate",
+  "request": "Investigate possible command-and-control timing from 198.51.100.152 based on repeated connections.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "198.51.100.152"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:network_investigation\",\"coverage_tags\":[\"network\"],\"scenario_family\":\"network_14\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-056\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"network_request_14\"}"
+}

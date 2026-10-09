@@ -1,0 +1,32 @@
+{
+  "case_id": "gen_071",
+  "category": "endpoint_only",
+  "difficulty": "intermediate",
+  "request": "Inspect host SALES-WS-128 from 2026-10-08T15:00:00Z to 2026-10-08T16:00:00Z without changing the time range.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "SALES-WS-128",
+        "time_range": {
+          "start": "2026-10-08T15:00:00Z",
+          "end": "2026-10-08T16:00:00Z"
+        }
+      },
+      "critical_arguments": [
+        "host",
+        "time_range"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\",\"robustness:argument_value\"],\"scenario_family\":\"endpoint_11\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-071\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_11\"}"
+}

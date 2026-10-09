@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_091",
+  "category": "cti_endpoint",
+  "difficulty": "advanced",
+  "request": "Look up IPv4 203.0.113.223 for threat context and review suspicious process ancestry on host SOC-JUMP-223.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "SOC-JUMP-223"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "203.0.113.223"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:cti_enrichment+endpoint_investigation\",\"coverage_tags\":[\"cti_endpoint\"],\"scenario_family\":\"cti_endpoint_03\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-091\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_endpoint_request_03\"}"
+}

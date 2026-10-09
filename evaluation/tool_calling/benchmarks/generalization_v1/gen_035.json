@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_035",
+  "category": "cti_only",
+  "difficulty": "intermediate",
+  "request": "Assess the reputation of SHA256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01 without treating it as an IP.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa01"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:cti_enrichment\",\"coverage_tags\":[\"cti\",\"robustness:argument_type\"],\"scenario_family\":\"cti_11\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-035\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_request_11\"}"
+}

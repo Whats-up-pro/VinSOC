@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_081",
+  "category": "cti_network",
+  "difficulty": "advanced",
+  "request": "Investigate IPv4 192.0.2.213 in both threat intelligence and flow records during 2026-10-08T01:00:00Z–03:00:00Z.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "192.0.2.213"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "192.0.2.213"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:cti_enrichment+network_investigation\",\"coverage_tags\":[\"cti_network\"],\"scenario_family\":\"cti_network_03\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-081\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_network_request_03\"}"
+}

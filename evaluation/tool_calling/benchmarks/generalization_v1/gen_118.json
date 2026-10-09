@@ -1,0 +1,46 @@
+{
+  "case_id": "gen_118",
+  "category": "cti_network_endpoint",
+  "difficulty": "basic",
+  "request": "Investigate reputation of 198.51.100.250, large outbound transfers from that address, and rundll32 ancestry on FILE-SRV-250.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "FILE-SRV-250"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "198.51.100.250"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "198.51.100.250"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"triple:cti_enrichment+network_investigation+endpoint_investigation\",\"coverage_tags\":[\"all_tools\"],\"scenario_family\":\"all_tools_10\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-118\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"all_tools_request_10\"}"
+}

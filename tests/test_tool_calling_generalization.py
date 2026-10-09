@@ -7,10 +7,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-CANDIDATES = (
-    ROOT
-    / "evaluation/tool_calling/authoring/generalization_v1/candidates.jsonl"
-)
+CANDIDATES = ROOT / "evaluation/tool_calling/authoring/generalization_v1/candidates.jsonl"
 
 
 def _candidate(**overrides):
@@ -181,9 +178,7 @@ def test_candidate_audit_blocks_exact_request_and_pivot_duplicates():
     from evaluation.tool_calling.generalization import CandidateCase, audit_candidates
 
     first = CandidateCase.from_dict(_candidate())
-    exact = CandidateCase.from_dict(
-        _candidate(case_id="gen_002", source_record_id="record-2")
-    )
+    exact = CandidateCase.from_dict(_candidate(case_id="gen_002", source_record_id="record-2"))
     pivot = CandidateCase.from_dict(
         _candidate(
             case_id="gen_003",
@@ -206,9 +201,7 @@ def test_candidate_audit_blocks_near_duplicate_without_complete_waiver():
         "Investigate network telemetry for IPv4 {ip} and identify repeated outbound "
         "connections, destination ports, timing patterns, failed sessions, and transfer volume."
     )
-    first = CandidateCase.from_dict(
-        _candidate(request=common.format(ip="198.51.100.10"))
-    )
+    first = CandidateCase.from_dict(_candidate(request=common.format(ip="198.51.100.10")))
     second = CandidateCase.from_dict(
         _candidate(
             case_id="gen_002",
@@ -226,7 +219,13 @@ def test_candidate_audit_blocks_near_duplicate_without_complete_waiver():
         [first, second],
         [],
         get_tool_schemas(),
-        [{"case_ids": ["gen_001", "gen_002"], "reason": "distinct alert windows", "reviewed_by": "reviewer-1"}],
+        [
+            {
+                "case_ids": ["gen_001", "gen_002"],
+                "reason": "distinct alert windows",
+                "reviewed_by": "reviewer-1",
+            }
+        ],
     )
     assert waived.near_duplicates == ()
 
@@ -342,8 +341,7 @@ def test_review_packs_are_blind_and_contain_120_blank_forms(tmp_path):
         rows = [json.loads(line) for line in (tmp_path / name).read_text().splitlines()]
         assert len(rows) == 120
         assert all(
-            set(row)
-            == {"case_id", "request", "difficulty", "production_schema_reference"}
+            set(row) == {"case_id", "request", "difficulty", "production_schema_reference"}
             for row in rows
         )
         assert all("source_" not in key for row in rows for key in row)
@@ -384,9 +382,7 @@ def test_review_gate_rejects_same_reviewer_blank_signature_and_invalid_argument(
         "required_arguments": {"not_an_argument": "198.51.100.10"},
         "critical_arguments": ["not_an_argument"],
     }
-    _write_jsonl(
-        tmp_path / "a.jsonl", [_completed_review_row(case, "reviewer-1", "", [call])]
-    )
+    _write_jsonl(tmp_path / "a.jsonl", [_completed_review_row(case, "reviewer-1", "", [call])])
     _write_jsonl(tmp_path / "b.jsonl", [_completed_review_row(case, "reviewer-1", "sig-b", [call])])
 
     gate = evaluate_review_gate(
@@ -440,6 +436,49 @@ def test_review_gate_requires_adjudication_for_disagreement(tmp_path):
     )
     assert passed.passed is True
     assert passed.status == "approved"
+
+
+def test_review_gate_rejects_adjudication_when_reviewers_agree(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import CandidateCase, evaluate_review_gate
+
+    case = CandidateCase.from_dict(_candidate())
+    network_call = {
+        "tool": "network_investigation",
+        "required_arguments": {"indicator": "198.51.100.10"},
+        "critical_arguments": ["indicator"],
+    }
+    _write_jsonl(
+        tmp_path / "a.jsonl",
+        [_completed_review_row(case, "reviewer-a", "sig-a", [network_call])],
+    )
+    _write_jsonl(
+        tmp_path / "b.jsonl",
+        [_completed_review_row(case, "reviewer-b", "sig-b", [network_call])],
+    )
+    _write_jsonl(
+        tmp_path / "adjudication.jsonl",
+        [
+            {
+                "case_id": "gen_001",
+                "adjudicator_id": "reviewer-c",
+                "adjudicator_signature": "sig-c",
+                "reason": "Fabricated receipt despite reviewer agreement.",
+                "expected_calls": [network_call],
+            }
+        ],
+    )
+
+    gate = evaluate_review_gate(
+        [case],
+        tmp_path / "a.jsonl",
+        tmp_path / "b.jsonl",
+        tmp_path / "adjudication.jsonl",
+        get_tool_schemas(),
+    )
+    assert gate.passed is False
+    assert gate.status == "blocked_adjudication_validation"
+    assert any("no reviewer disagreement" in error for error in gate.errors)
 
 
 def test_review_gate_rejects_missing_duplicate_and_tampered_records(tmp_path):
@@ -497,3 +536,306 @@ def test_review_gate_command_reports_pending_without_provider(tmp_path, capsys):
     assert receipt["reviewed_a"] == 0
     assert receipt["reviewed_b"] == 0
     assert receipt["provider_created"] is False
+
+
+def _approved_real_review_gate(adjudication_path: Path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import evaluate_review_gate, load_candidates
+
+    reviews = ROOT / "evaluation/tool_calling/authoring/generalization_v1/reviews"
+    return evaluate_review_gate(
+        load_candidates(CANDIDATES),
+        reviews / "reviewer_a.jsonl",
+        reviews / "reviewer_b.jsonl",
+        adjudication_path,
+        get_tool_schemas(),
+    )
+
+
+def _scorer_files() -> list[Path]:
+    version_lock = json.loads(
+        (ROOT / "evaluation/tool_calling/benchmarks/dev/VERSION.lock").read_text(encoding="utf-8")
+    )
+    return [ROOT / path for path in version_lock["scorer_files"]]
+
+
+@pytest.mark.parametrize("status", ["pending_human_review", "blocked_review_validation"])
+def test_locked_split_rejects_unapproved_review_without_creating_directory(tmp_path, status):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        ReviewGate,
+        build_locked_split,
+        load_candidates,
+    )
+
+    output_dir = tmp_path / "generalization_v1"
+    gate = ReviewGate(
+        passed=False,
+        status=status,
+        reviewed_a=119,
+        reviewed_b=120,
+        disagreement_case_ids=(),
+        blocked_case_ids=("gen_120",),
+        errors=(),
+    )
+
+    with pytest.raises(ValueError, match="approved"):
+        build_locked_split(
+            load_candidates(CANDIDATES),
+            gate,
+            output_dir,
+            _scorer_files(),
+            get_tool_schemas(),
+        )
+    assert not output_dir.exists()
+
+
+def test_locked_split_builds_120_schema_compatible_cases_and_complete_lock(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        build_locked_split,
+        load_candidates,
+        verify_generalization_lock,
+    )
+    from evaluation.tool_calling.models import ToolCallCase
+
+    adjudication = tmp_path / "adjudication.jsonl"
+    adjudication.write_text("", encoding="utf-8")
+    gate = _approved_real_review_gate(adjudication)
+    assert gate.status == "approved"
+    assert gate.disagreement_case_ids == ()
+
+    output_dir = tmp_path / "generalization_v1"
+    lock = build_locked_split(
+        load_candidates(CANDIDATES),
+        gate,
+        output_dir,
+        _scorer_files(),
+        get_tool_schemas(),
+    )
+
+    expected_ids = [f"gen_{number:03d}" for number in range(1, 121)]
+    case_paths = sorted(output_dir.glob("gen_*.json"))
+    assert [path.stem for path in case_paths] == expected_ids
+    assert lock.case_count == 120
+    assert list(lock.case_ids) == expected_ids
+    assert lock.distribution == {
+        "no_tool": 24,
+        "single_tool": 54,
+        "two_tool": 30,
+        "three_tool": 12,
+    }
+    assert set(lock.case_files_sha256) == {path.name for path in case_paths}
+    assert lock.candidate_path.endswith("candidates.jsonl")
+    assert lock.candidate_sha256
+    assert set(lock.review_file_sha256) == {"reviewer_a.jsonl", "reviewer_b.jsonl"}
+    assert lock.adjudication_sha256
+    assert lock.scorer_sha256
+    assert lock.prompt_sha256
+    assert lock.production_schema_sha256
+    assert lock.reviewer_ids == ("Whats-up-pro", "openai-codex-reviewer-b")
+    assert lock.model_calls == 0
+
+    for path in case_paths:
+        ToolCallCase.from_dict(json.loads(path.read_text(encoding="utf-8")))
+
+    verification = verify_generalization_lock(output_dir, output_dir / "GENERALIZATION.lock")
+    assert verification.passed is True
+    assert verification.errors == ()
+    assert verification.case_count == 120
+    assert verification.distribution == lock.distribution
+
+
+def test_lock_verification_detects_case_tampering(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        build_locked_split,
+        load_candidates,
+        verify_generalization_lock,
+    )
+
+    adjudication = tmp_path / "adjudication.jsonl"
+    adjudication.write_text("", encoding="utf-8")
+    output_dir = tmp_path / "generalization_v1"
+    build_locked_split(
+        load_candidates(CANDIDATES),
+        _approved_real_review_gate(adjudication),
+        output_dir,
+        _scorer_files(),
+        get_tool_schemas(),
+    )
+    case_path = output_dir / "gen_001.json"
+    case = json.loads(case_path.read_text(encoding="utf-8"))
+    case["request"] += " tampered"
+    case_path.write_text(json.dumps(case), encoding="utf-8")
+
+    verification = verify_generalization_lock(output_dir, output_dir / "GENERALIZATION.lock")
+    assert verification.passed is False
+    assert any("case hash" in error or "split hash" in error for error in verification.errors)
+
+
+def test_lock_verification_rejects_coordinated_regolding_after_review(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        build_locked_split,
+        load_candidates,
+        verify_generalization_lock,
+    )
+    from evaluation.tool_calling.provenance import canonical_sha256
+
+    adjudication = tmp_path / "adjudication.jsonl"
+    adjudication.write_text("", encoding="utf-8")
+    output_dir = tmp_path / "generalization_v1"
+    build_locked_split(
+        load_candidates(CANDIDATES),
+        _approved_real_review_gate(adjudication),
+        output_dir,
+        _scorer_files(),
+        get_tool_schemas(),
+    )
+
+    case_path = output_dir / "gen_025.json"
+    case = json.loads(case_path.read_text(encoding="utf-8"))
+    case["category"] = "no_tool"
+    case["expected_calls"] = []
+    case["forbidden_tools"] = [
+        "cti_enrichment",
+        "network_investigation",
+        "endpoint_investigation",
+    ]
+    case_path.write_text(json.dumps(case, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    contents = {
+        path.name: json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted(output_dir.glob("gen_*.json"))
+    }
+    case_hashes = {filename: canonical_sha256(data) for filename, data in contents.items()}
+    lock_path = output_dir / "GENERALIZATION.lock"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    lock["case_files_sha256"] = case_hashes
+    lock["split_sha256"] = canonical_sha256(contents)
+    lock["case_directory_sha256"] = canonical_sha256(case_hashes)
+    lock["distribution"] = {
+        "no_tool": 25,
+        "single_tool": 53,
+        "two_tool": 30,
+        "three_tool": 12,
+    }
+    lock_path.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    verification = verify_generalization_lock(output_dir, lock_path)
+    assert verification.passed is False
+    assert any(
+        "approved review" in error or "required distribution" in error
+        for error in verification.errors
+    )
+
+
+def test_lock_verification_rejects_coordinated_case_semantics_tampering(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        build_locked_split,
+        load_candidates,
+        verify_generalization_lock,
+    )
+    from evaluation.tool_calling.provenance import canonical_sha256
+
+    adjudication = tmp_path / "adjudication.jsonl"
+    adjudication.write_text("", encoding="utf-8")
+    output_dir = tmp_path / "generalization_v1"
+    build_locked_split(
+        load_candidates(CANDIDATES),
+        _approved_real_review_gate(adjudication),
+        output_dir,
+        _scorer_files(),
+        get_tool_schemas(),
+    )
+
+    case_path = output_dir / "gen_025.json"
+    case = json.loads(case_path.read_text(encoding="utf-8"))
+    case["expected_calls"][0]["optional"] = True
+    case_path.write_text(json.dumps(case, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    contents = {
+        path.name: json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted(output_dir.glob("gen_*.json"))
+    }
+    case_hashes = {filename: canonical_sha256(data) for filename, data in contents.items()}
+    lock_path = output_dir / "GENERALIZATION.lock"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    lock["case_files_sha256"] = case_hashes
+    lock["split_sha256"] = canonical_sha256(contents)
+    lock["case_directory_sha256"] = canonical_sha256(case_hashes)
+    lock_path.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    verification = verify_generalization_lock(output_dir, lock_path)
+    assert verification.passed is False
+    assert any("approved case payload" in error for error in verification.errors)
+
+
+def test_lock_verification_requires_review_and_scorer_evidence(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        build_locked_split,
+        load_candidates,
+        verify_generalization_lock,
+    )
+    from evaluation.tool_calling.provenance import canonical_sha256
+
+    adjudication = tmp_path / "adjudication.jsonl"
+    adjudication.write_text("", encoding="utf-8")
+    output_dir = tmp_path / "generalization_v1"
+    build_locked_split(
+        load_candidates(CANDIDATES),
+        _approved_real_review_gate(adjudication),
+        output_dir,
+        _scorer_files(),
+        get_tool_schemas(),
+    )
+    lock_path = output_dir / "GENERALIZATION.lock"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    lock["review_file_paths"] = {}
+    lock["review_file_sha256"] = {}
+    lock["scorer_files"] = []
+    lock["scorer_file_sha256"] = {}
+    lock["scorer_sha256"] = canonical_sha256({})
+    lock_path.write_text(json.dumps(lock, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    verification = verify_generalization_lock(output_dir, lock_path)
+    assert verification.passed is False
+    assert any("review artifact" in error for error in verification.errors)
+    assert any("scorer" in error for error in verification.errors)
+
+
+def test_build_lock_command_creates_and_verifies_split_offline(tmp_path, capsys):
+    from evaluation.tool_calling.generalization import main
+
+    adjudication = tmp_path / "adjudication.jsonl"
+    adjudication.write_text("", encoding="utf-8")
+    output_dir = tmp_path / "generalization_v1"
+    reviews = ROOT / "evaluation/tool_calling/authoring/generalization_v1/reviews"
+    exit_code = main(
+        [
+            "build-lock",
+            "--candidates",
+            str(CANDIDATES),
+            "--reviews",
+            str(reviews),
+            "--adjudication",
+            str(adjudication),
+            "--output",
+            str(output_dir),
+        ]
+    )
+    receipt = json.loads(capsys.readouterr().out)
+    assert exit_code == 0, receipt
+    assert receipt["status"] == "approved"
+    assert receipt["case_count"] == 120
+    assert receipt["distribution"] == {
+        "no_tool": 24,
+        "single_tool": 54,
+        "two_tool": 30,
+        "three_tool": 12,
+    }
+    assert receipt["lock_verification"] == "PASS"
+    assert receipt["provider_created"] is False
+    assert receipt["model_calls"] == 0

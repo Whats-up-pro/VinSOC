@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_030",
+  "category": "cti_only",
+  "difficulty": "advanced",
+  "request": "Use CTI to check IPv4 203.0.113.44 after a third-party blocklist alert; do not inspect VinSOC flow records.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "203.0.113.44"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:cti_enrichment\",\"coverage_tags\":[\"cti\"],\"scenario_family\":\"cti_06\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-030\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_request_06\"}"
+}

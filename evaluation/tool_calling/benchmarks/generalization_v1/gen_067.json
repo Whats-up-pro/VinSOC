@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_067",
+  "category": "endpoint_only",
+  "difficulty": "basic",
+  "request": "Analyze host MKT-LT-083 for encoded PowerShell execution in its process tree.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "MKT-LT-083"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\"],\"scenario_family\":\"endpoint_07\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-067\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_07\"}"
+}

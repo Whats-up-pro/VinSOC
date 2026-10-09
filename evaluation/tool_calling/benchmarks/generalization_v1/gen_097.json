@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_097",
+  "category": "cti_endpoint",
+  "difficulty": "advanced",
+  "request": "Enrich IPv4 198.51.100.229 and analyze the PowerShell parent on endpoint OPS-WS-229.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "198.51.100.229"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "OPS-WS-229"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:cti_enrichment+endpoint_investigation\",\"coverage_tags\":[\"cti_endpoint\"],\"scenario_family\":\"cti_endpoint_09\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-097\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_endpoint_request_09\"}"
+}

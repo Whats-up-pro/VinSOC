@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_004",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "Look up CVE-2026-41001 and summarize the vulnerability. No IOC or affected endpoint is provided.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\",\"robustness:unsupported_input\"],\"scenario_family\":\"no_tool_04\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-004\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_04\"}"
+}

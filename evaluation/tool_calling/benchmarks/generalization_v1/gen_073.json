@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_073",
+  "category": "endpoint_only",
+  "difficulty": "basic",
+  "request": "Check endpoint DEV-WS-147 for mshta.exe launched by a browser process.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "DEV-WS-147"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\"],\"scenario_family\":\"endpoint_13\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-073\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_13\"}"
+}

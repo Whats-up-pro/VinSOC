@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_011",
+  "category": "no_tool",
+  "difficulty": "intermediate",
+  "request": "Case SR-88412 needs review, but the request contains only the internal ticket number. List the minimum pivots an analyst should add.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\",\"robustness:missing_pivot\"],\"scenario_family\":\"no_tool_11\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-011\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_11\"}"
+}

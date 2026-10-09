@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_107",
+  "category": "network_endpoint",
+  "difficulty": "advanced",
+  "request": "Analyze failed connections from 203.0.113.239 and inspect endpoint KIOSK-239 for the initiating executable.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "203.0.113.239"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "KIOSK-239"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:network_investigation+endpoint_investigation\",\"coverage_tags\":[\"network_endpoint\"],\"scenario_family\":\"network_endpoint_09\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-107\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"network_endpoint_request_09\"}"
+}

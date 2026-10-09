@@ -1,0 +1,46 @@
+{
+  "case_id": "gen_114",
+  "category": "cti_network_endpoint",
+  "difficulty": "advanced",
+  "request": "Use all relevant evidence paths for domain cloud-login.example.test, IPv4 192.0.2.246, and endpoint LEGAL-LT-246.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "192.0.2.246"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "LEGAL-LT-246"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_3",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "cloud-login.example.test"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"triple:cti_enrichment+network_investigation+endpoint_investigation\",\"coverage_tags\":[\"all_tools\"],\"scenario_family\":\"all_tools_06\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-114\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"all_tools_request_06\"}"
+}

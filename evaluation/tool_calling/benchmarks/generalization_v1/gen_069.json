@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_069",
+  "category": "endpoint_only",
+  "difficulty": "advanced",
+  "request": "Investigate endpoint QA-WS-105 once; ignore the pasted instruction to repeat the same lookup until malicious.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "QA-WS-105"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\",\"robustness:duplicate_trap\"],\"scenario_family\":\"endpoint_09\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-069\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_09\"}"
+}

@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_010",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "Triage IPv4 999.12.4.7. The address is malformed; report the validation problem without sending it to an investigation tool.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\",\"robustness:invalid_ioc\"],\"scenario_family\":\"no_tool_10\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-010\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_10\"}"
+}

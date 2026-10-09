@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_012",
+  "category": "no_tool",
+  "difficulty": "advanced",
+  "request": "Determine whether cloud resource arn:aws:iam::111122223333:role/demo is malicious using the current VinSOC tools. Explain the unsupported input boundary.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\",\"robustness:unsupported_input\"],\"scenario_family\":\"no_tool_12\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-012\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_12\"}"
+}

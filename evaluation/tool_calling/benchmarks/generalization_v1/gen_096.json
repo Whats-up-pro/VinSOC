@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_096",
+  "category": "cti_endpoint",
+  "difficulty": "intermediate",
+  "request": "Check SHA256 eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee01 with CTI and inspect server APP-SRV-228; do not call network without an IPv4 pivot.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "APP-SRV-228"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "cti_enrichment",
+      "required_arguments": {
+        "indicator": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee01"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:cti_enrichment+endpoint_investigation\",\"coverage_tags\":[\"cti_endpoint\",\"robustness:overcall_trap\"],\"scenario_family\":\"cti_endpoint_08\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-096\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"cti_endpoint_request_08\"}"
+}

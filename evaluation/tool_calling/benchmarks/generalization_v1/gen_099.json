@@ -1,0 +1,37 @@
+{
+  "case_id": "gen_099",
+  "category": "network_endpoint",
+  "difficulty": "basic",
+  "request": "Analyze flows for IPv4 192.0.2.231 and inspect endpoint ENG-WS-231 for the process that initiated the traffic.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "ENG-WS-231"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    },
+    {
+      "call_id": "call_2",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "192.0.2.231"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"pair:network_investigation+endpoint_investigation\",\"coverage_tags\":[\"network_endpoint\"],\"scenario_family\":\"network_endpoint_01\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-099\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"network_endpoint_request_01\"}"
+}

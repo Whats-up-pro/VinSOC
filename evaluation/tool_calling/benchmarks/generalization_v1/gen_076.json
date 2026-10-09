@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_076",
+  "category": "endpoint_only",
+  "difficulty": "basic",
+  "request": "Analyze process activity on host LAB-WS-181 for suspicious certutil.exe use.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "LAB-WS-181"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\"],\"scenario_family\":\"endpoint_16\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-076\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_16\"}"
+}

@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_003",
+  "category": "no_tool",
+  "difficulty": "advanced",
+  "request": "Check whether analyst@example.test is malicious. The only value supplied is an email address, which is not accepted by the available IOC contract.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\",\"robustness:unsupported_input\"],\"scenario_family\":\"no_tool_03\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-003\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_03\"}"
+}

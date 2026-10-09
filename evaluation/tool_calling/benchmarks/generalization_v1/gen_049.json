@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_049",
+  "category": "network_only",
+  "difficulty": "basic",
+  "request": "Inspect connection periodicity for 192.0.2.73; external reputation enrichment is outside this request.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "192.0.2.73"
+      },
+      "critical_arguments": [
+        "indicator"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:network_investigation\",\"coverage_tags\":[\"network\"],\"scenario_family\":\"network_07\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-049\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"network_request_07\"}"
+}

@@ -1,0 +1,32 @@
+{
+  "case_id": "gen_053",
+  "category": "network_only",
+  "difficulty": "intermediate",
+  "request": "Review IPv4 198.51.100.117 from 2026-10-07T23:30:00Z to 2026-10-08T00:30:00Z; preserve the stated UTC interval.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "network_investigation",
+      "required_arguments": {
+        "indicator": "198.51.100.117",
+        "time_range": {
+          "start": "2026-10-07T23:30:00Z",
+          "end": "2026-10-08T00:30:00Z"
+        }
+      },
+      "critical_arguments": [
+        "indicator",
+        "time_range"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:network_investigation\",\"coverage_tags\":[\"network\",\"robustness:argument_value\"],\"scenario_family\":\"network_11\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-053\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"network_request_11\"}"
+}

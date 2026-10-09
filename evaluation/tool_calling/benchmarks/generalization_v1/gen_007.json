@@ -1,0 +1,16 @@
+{
+  "case_id": "gen_007",
+  "category": "no_tool",
+  "difficulty": "basic",
+  "request": "A DNS alert contains domain beacon.example.test but no resolved IPv4 address. The request is specifically for flow telemetry, so identify the missing IPv4 pivot.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation",
+    "endpoint_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"no_tool\",\"coverage_tags\":[\"no_tool\",\"robustness:unsupported_input\"],\"scenario_family\":\"no_tool_07\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-007\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"no_tool_request_07\"}"
+}

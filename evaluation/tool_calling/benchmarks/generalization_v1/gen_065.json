@@ -1,0 +1,27 @@
+{
+  "case_id": "gen_065",
+  "category": "endpoint_only",
+  "difficulty": "intermediate",
+  "request": "Check host OPS-WS-069 for a process chain starting with outlook.exe and ending in powershell.exe.",
+  "reference_time": "2026-10-09T00:00:00Z",
+  "expected_calls": [
+    {
+      "call_id": "call_1",
+      "tool": "endpoint_investigation",
+      "required_arguments": {
+        "host": "OPS-WS-069"
+      },
+      "critical_arguments": [
+        "host"
+      ],
+      "optional": false
+    }
+  ],
+  "forbidden_tools": [
+    "cti_enrichment",
+    "network_investigation"
+  ],
+  "ordering_constraints": [],
+  "acceptable_trajectories": [],
+  "notes": "{\"authoring_stratum\":\"single:endpoint_investigation\",\"coverage_tags\":[\"endpoint\"],\"scenario_family\":\"endpoint_05\",\"source_kind\":\"production_contract\",\"source_record_id\":\"generalization-v1-065\",\"source_reference\":\"agent.tools.get_tool_schemas()\",\"template_family\":\"endpoint_request_05\"}"
+}
