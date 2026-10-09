@@ -130,3 +130,12 @@ def test_demo_failure_category_preserves_safe_stage_without_external_message():
         == "SOC_DEMO_REMOTE_CLAIM_FAILURE"
     )
     assert safe_failure_category(KeyError("private-value"), "release") == "SOC_DEMO_RELEASE_FAILURE"
+
+
+def test_demo_account_verification_receives_only_evidence_object():
+    from scripts.run_soc_demo_cloud import verify_demo_account
+
+    seen = []
+    evidence = {"account": {"api_key_sha256": "b" * 64}}
+    verify_demo_account({"status": "pass", "evidence": evidence}, seen.append)
+    assert seen == [evidence]

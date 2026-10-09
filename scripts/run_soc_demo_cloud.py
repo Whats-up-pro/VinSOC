@@ -39,6 +39,10 @@ def safe_failure_category(error, stage):
     return "SOC_DEMO_" + safe_stage + "_FAILURE"
 
 
+def verify_demo_account(checked, verifier=_verify_account):
+    return verifier(checked["evidence"])
+
+
 def _identities(source, database, receipt, implementation_sha):
     import duckdb
     import httpx
@@ -119,7 +123,7 @@ def run(output_dir, env):
             "evaluation.soc_traces_v1.demo", fromlist=["validate_demo_release"]
         ).validate_demo_release(release)
         stage = "model_metadata"
-        _verify_account(checked)
+        verify_demo_account(checked)
         stage = "remote_claim"
         api = GitHubAPI(env["GITHUB_TOKEN"])
         store = SocDemoCloudStore(api, env["GITHUB_SHA"], env["GITHUB_RUN_ID"])
