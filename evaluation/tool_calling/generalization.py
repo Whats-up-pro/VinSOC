@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+from collections import Counter, defaultdict
+from collections.abc import Sequence
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
+from agent.tools import get_tool_schemas
 from evaluation.tool_calling.models import CaseDifficulty
 from evaluation.tool_calling.provenance import canonical_sha256
 
@@ -107,6 +110,108 @@ class CandidateCase:
             "authoring_stratum": self.authoring_stratum,
             "coverage_tags": list(self.coverage_tags),
         }
+
+
+@dataclass(frozen=True)
+class DistributionAudit:
+    """Exact allocation receipt for a candidate pack."""
+
+    passed: bool
+    total: int
+    main_group_counts: dict[str, int]
+    single_tool_counts: dict[str, int]
+    two_tool_counts: dict[str, int]
+    robustness_count: int
+    difficulties: dict[str, tuple[str, ...]]
+    errors: tuple[str, ...]
+
+
+def _stratum_tools(stratum: str) -> tuple[str, tuple[str, ...]]:
+    if stratum == "no_tool":
+        return "no_tool", ()
+    prefix, separator, value = stratum.partition(":")
+    expected_sizes = {"single": 1, "pair": 2, "triple": 3}
+    if not separator or prefix not in expected_sizes:
+        raise ValueError(f"invalid authoring_stratum {stratum!r}")
+    tools = tuple(value.split("+"))
+    if len(tools) != expected_sizes[prefix] or len(set(tools)) != len(tools):
+        raise ValueError(f"invalid authoring_stratum {stratum!r}")
+    group = {"single": "single_tool", "pair": "two_tool", "triple": "three_tool"}[prefix]
+    return group, tools
+
+
+def audit_candidate_distribution(cases: Sequence[CandidateCase]) -> DistributionAudit:
+    """Validate the fixed 120-case allocation without altering the pack."""
+
+    production_tools = tuple(
+        schema["function"]["name"] for schema in get_tool_schemas()
+    )
+    allowed_tools = set(production_tools)
+    main_counts: Counter[str] = Counter()
+    single_counts: Counter[str] = Counter()
+    pair_counts: Counter[str] = Counter()
+    difficulties: defaultdict[str, set[str]] = defaultdict(set)
+    errors: list[str] = []
+    robustness_count = 0
+
+    for case in cases:
+        try:
+            group, tools = _stratum_tools(case.authoring_stratum)
+        except ValueError as exc:
+            errors.append(f"{case.case_id}: {exc}")
+            continue
+        unknown_tools = sorted(set(tools).difference(allowed_tools))
+        if unknown_tools:
+            errors.append(f"{case.case_id}: unknown tool(s): {', '.join(unknown_tools)}")
+            continue
+        main_counts[group] += 1
+        difficulties[group].add(case.difficulty)
+        if group == "single_tool":
+            single_counts[tools[0]] += 1
+        elif group == "two_tool":
+            pair_counts["+".join(tools)] += 1
+        elif group == "three_tool" and set(tools) != allowed_tools:
+            errors.append(f"{case.case_id}: triple stratum must contain all production tools")
+        if any(tag == "robustness" or tag.startswith("robustness:") for tag in case.coverage_tags):
+            robustness_count += 1
+
+    expected_main = {"no_tool": 24, "single_tool": 54, "two_tool": 30, "three_tool": 12}
+    expected_single = {tool: 18 for tool in production_tools}
+    expected_pairs = {
+        "cti_enrichment+network_investigation": 10,
+        "cti_enrichment+endpoint_investigation": 10,
+        "network_investigation+endpoint_investigation": 10,
+    }
+    observed_main = {key: main_counts[key] for key in expected_main}
+    observed_single = {key: single_counts[key] for key in expected_single}
+    observed_pairs = {key: pair_counts[key] for key in expected_pairs}
+    if len(cases) != 120:
+        errors.append(f"expected 120 candidates, found {len(cases)}")
+    if observed_main != expected_main:
+        errors.append(f"main allocation mismatch: {observed_main}")
+    if observed_single != expected_single:
+        errors.append(f"single-tool allocation mismatch: {observed_single}")
+    if observed_pairs != expected_pairs:
+        errors.append(f"two-tool allocation mismatch: {observed_pairs}")
+    if robustness_count < 30:
+        errors.append(f"expected at least 30 robustness cases, found {robustness_count}")
+    expected_difficulties = {difficulty.value for difficulty in CaseDifficulty}
+    for group in expected_main:
+        if difficulties[group] != expected_difficulties:
+            errors.append(
+                f"{group} difficulty coverage mismatch: {sorted(difficulties[group])}"
+            )
+
+    return DistributionAudit(
+        passed=not errors,
+        total=len(cases),
+        main_group_counts=observed_main,
+        single_tool_counts=observed_single,
+        two_tool_counts=observed_pairs,
+        robustness_count=robustness_count,
+        difficulties={key: tuple(sorted(difficulties[key])) for key in expected_main},
+        errors=tuple(errors),
+    )
 
 
 def load_candidates(path: Path) -> list[CandidateCase]:

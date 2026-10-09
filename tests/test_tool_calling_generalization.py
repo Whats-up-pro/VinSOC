@@ -6,6 +6,10 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+CANDIDATES = (
+    ROOT
+    / "evaluation/tool_calling/authoring/generalization_v1/candidates.jsonl"
+)
 
 
 def _candidate(**overrides):
@@ -102,3 +106,59 @@ def test_candidate_loader_reports_invalid_jsonl_line(tmp_path):
     path.write_text(json.dumps(_candidate()) + "\n{broken\n", encoding="utf-8")
     with pytest.raises(ValueError, match=r"broken\.jsonl:2"):
         load_candidates(path)
+
+
+def test_candidate_pack_has_exact_ids_and_distribution():
+    from evaluation.tool_calling.generalization import (
+        audit_candidate_distribution,
+        load_candidates,
+    )
+
+    cases = load_candidates(CANDIDATES)
+    assert [case.case_id for case in cases] == [f"gen_{number:03d}" for number in range(1, 121)]
+
+    audit = audit_candidate_distribution(cases)
+    assert audit.passed, audit.errors
+    assert audit.total == 120
+    assert audit.main_group_counts == {
+        "no_tool": 24,
+        "single_tool": 54,
+        "two_tool": 30,
+        "three_tool": 12,
+    }
+    assert audit.single_tool_counts == {
+        "cti_enrichment": 18,
+        "network_investigation": 18,
+        "endpoint_investigation": 18,
+    }
+    assert audit.two_tool_counts == {
+        "cti_enrichment+network_investigation": 10,
+        "cti_enrichment+endpoint_investigation": 10,
+        "network_investigation+endpoint_investigation": 10,
+    }
+    assert audit.robustness_count >= 30
+
+
+def test_candidate_pack_has_all_difficulties_in_each_main_group():
+    from evaluation.tool_calling.generalization import (
+        audit_candidate_distribution,
+        load_candidates,
+    )
+
+    audit = audit_candidate_distribution(load_candidates(CANDIDATES))
+    expected = {"basic", "intermediate", "advanced"}
+    assert all(set(difficulties) == expected for difficulties in audit.difficulties.values())
+
+
+def test_candidate_pack_contains_no_gold_fields():
+    for line in CANDIDATES.read_text(encoding="utf-8").splitlines():
+        row = json.loads(line)
+        assert not {
+            "expected_calls",
+            "forbidden_tools",
+            "ordering_constraints",
+            "acceptable_trajectories",
+            "category",
+            "reference_time",
+            "notes",
+        }.intersection(row)
