@@ -306,3 +306,194 @@ def test_audit_command_is_offline_and_writes_receipt(tmp_path):
     assert receipt["passed"] is True
     assert receipt["case_count"] == 120
     assert receipt["provider_created"] is False
+
+
+def _write_jsonl(path: Path, rows: list[dict]):
+    path.write_text(
+        "\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _completed_review_row(candidate, reviewer_id, signature, expected_calls):
+    return {
+        "case_id": candidate.case_id,
+        "request": candidate.request,
+        "difficulty": candidate.difficulty,
+        "production_schema_reference": "agent.tools.get_tool_schemas()",
+        "reviewer_id": reviewer_id,
+        "reviewer_signature": signature,
+        "expected_calls": expected_calls,
+    }
+
+
+def test_review_packs_are_blind_and_contain_120_blank_forms(tmp_path):
+    from evaluation.tool_calling.generalization import (
+        load_candidates,
+        write_blind_review_packs,
+    )
+
+    cases = load_candidates(CANDIDATES)
+    receipt = write_blind_review_packs(cases, tmp_path)
+    assert receipt.case_count == 120
+    assert set(receipt.pack_sha256) == {"reviewer_a.jsonl", "reviewer_b.jsonl"}
+
+    for name in receipt.pack_sha256:
+        rows = [json.loads(line) for line in (tmp_path / name).read_text().splitlines()]
+        assert len(rows) == 120
+        assert all(
+            set(row)
+            == {"case_id", "request", "difficulty", "production_schema_reference"}
+            for row in rows
+        )
+        assert all("source_" not in key for row in rows for key in row)
+        assert all("authoring_stratum" not in row for row in rows)
+
+
+def test_review_gate_reports_pending_for_blank_packs(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import (
+        evaluate_review_gate,
+        load_candidates,
+        write_blind_review_packs,
+    )
+
+    cases = load_candidates(CANDIDATES)
+    write_blind_review_packs(cases, tmp_path)
+    gate = evaluate_review_gate(
+        cases,
+        tmp_path / "reviewer_a.jsonl",
+        tmp_path / "reviewer_b.jsonl",
+        None,
+        get_tool_schemas(),
+    )
+    assert gate.passed is False
+    assert gate.status == "pending_human_review"
+    assert gate.reviewed_a == 0
+    assert gate.reviewed_b == 0
+    assert gate.provider_created is False
+
+
+def test_review_gate_rejects_same_reviewer_blank_signature_and_invalid_argument(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import CandidateCase, evaluate_review_gate
+
+    case = CandidateCase.from_dict(_candidate())
+    call = {
+        "tool": "network_investigation",
+        "required_arguments": {"not_an_argument": "198.51.100.10"},
+        "critical_arguments": ["not_an_argument"],
+    }
+    _write_jsonl(
+        tmp_path / "a.jsonl", [_completed_review_row(case, "reviewer-1", "", [call])]
+    )
+    _write_jsonl(tmp_path / "b.jsonl", [_completed_review_row(case, "reviewer-1", "sig-b", [call])])
+
+    gate = evaluate_review_gate(
+        [case], tmp_path / "a.jsonl", tmp_path / "b.jsonl", None, get_tool_schemas()
+    )
+    assert gate.passed is False
+    assert any("distinct reviewers" in error for error in gate.errors)
+    assert any("blank reviewer_signature" in error for error in gate.errors)
+    assert any("unknown argument" in error for error in gate.errors)
+
+
+def test_review_gate_requires_adjudication_for_disagreement(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import CandidateCase, evaluate_review_gate
+
+    case = CandidateCase.from_dict(_candidate())
+    network_call = {
+        "tool": "network_investigation",
+        "required_arguments": {"indicator": "198.51.100.10"},
+        "critical_arguments": ["indicator"],
+    }
+    _write_jsonl(
+        tmp_path / "a.jsonl",
+        [_completed_review_row(case, "reviewer-a", "sig-a", [network_call])],
+    )
+    _write_jsonl(
+        tmp_path / "b.jsonl",
+        [_completed_review_row(case, "reviewer-b", "sig-b", [])],
+    )
+
+    blocked = evaluate_review_gate(
+        [case], tmp_path / "a.jsonl", tmp_path / "b.jsonl", None, get_tool_schemas()
+    )
+    assert blocked.status == "pending_adjudication"
+    assert blocked.disagreement_case_ids == ("gen_001",)
+
+    adjudication = {
+        "case_id": "gen_001",
+        "adjudicator_id": "reviewer-c",
+        "adjudicator_signature": "sig-c",
+        "reason": "The request explicitly asks for IPv4 flow telemetry.",
+        "expected_calls": [network_call],
+    }
+    _write_jsonl(tmp_path / "adjudication.jsonl", [adjudication])
+    passed = evaluate_review_gate(
+        [case],
+        tmp_path / "a.jsonl",
+        tmp_path / "b.jsonl",
+        tmp_path / "adjudication.jsonl",
+        get_tool_schemas(),
+    )
+    assert passed.passed is True
+    assert passed.status == "approved"
+
+
+def test_review_gate_rejects_missing_duplicate_and_tampered_records(tmp_path):
+    from agent.tools import get_tool_schemas
+    from evaluation.tool_calling.generalization import CandidateCase, evaluate_review_gate
+
+    first = CandidateCase.from_dict(_candidate())
+    second = CandidateCase.from_dict(
+        _candidate(
+            case_id="gen_002",
+            request="Inspect endpoint HOST-002 for process ancestry.",
+            source_record_id="record-2",
+            authoring_stratum="single:endpoint_investigation",
+        )
+    )
+    first_row = _completed_review_row(first, "reviewer-a", "sig-a", [])
+    tampered = _completed_review_row(first, "reviewer-b", "sig-b", [])
+    tampered["request"] = "tampered request"
+    _write_jsonl(tmp_path / "a.jsonl", [first_row, first_row])
+    _write_jsonl(tmp_path / "b.jsonl", [tampered])
+
+    gate = evaluate_review_gate(
+        [first, second],
+        tmp_path / "a.jsonl",
+        tmp_path / "b.jsonl",
+        None,
+        get_tool_schemas(),
+    )
+    assert gate.passed is False
+    assert any("duplicate record" in error for error in gate.errors)
+    assert any("missing case" in error for error in gate.errors)
+    assert any("prefilled fields changed" in error for error in gate.errors)
+
+
+def test_review_gate_command_reports_pending_without_provider(tmp_path, capsys):
+    from evaluation.tool_calling.generalization import (
+        load_candidates,
+        main,
+        write_blind_review_packs,
+    )
+
+    write_blind_review_packs(load_candidates(CANDIDATES), tmp_path)
+    exit_code = main(
+        [
+            "review-gate",
+            "--candidates",
+            str(CANDIDATES),
+            "--reviews",
+            str(tmp_path),
+        ]
+    )
+    receipt = json.loads(capsys.readouterr().out)
+    assert exit_code == 1
+    assert receipt["status"] == "pending_human_review"
+    assert receipt["reviewed_a"] == 0
+    assert receipt["reviewed_b"] == 0
+    assert receipt["provider_created"] is False

@@ -14,6 +14,8 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.models import CaseDifficulty, ToolCallCase
 from evaluation.tool_calling.provenance import canonical_sha256
@@ -158,6 +160,41 @@ class CandidateAudit:
             "schema_errors": list(self.schema_errors),
             "waiver_errors": list(self.waiver_errors),
             "provider_created": False,
+        }
+
+
+@dataclass(frozen=True)
+class ReviewPackReceipt:
+    """Receipt for two independently completed blind-review packs."""
+
+    case_count: int
+    pack_sha256: dict[str, str]
+
+
+@dataclass(frozen=True)
+class ReviewGate:
+    """Status of the two-reviewer human gold gate."""
+
+    passed: bool
+    status: str
+    reviewed_a: int
+    reviewed_b: int
+    disagreement_case_ids: tuple[str, ...]
+    blocked_case_ids: tuple[str, ...]
+    errors: tuple[str, ...]
+    provider_created: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "format": "r1_generalization_review_gate_v1",
+            "passed": self.passed,
+            "status": self.status,
+            "reviewed_a": self.reviewed_a,
+            "reviewed_b": self.reviewed_b,
+            "disagreement_case_ids": list(self.disagreement_case_ids),
+            "blocked_case_ids": list(self.blocked_case_ids),
+            "errors": list(self.errors),
+            "provider_created": self.provider_created,
         }
 
 
@@ -425,6 +462,333 @@ def audit_candidates(
     )
 
 
+def _blind_review_row(case: CandidateCase) -> dict[str, str]:
+    return {
+        "case_id": case.case_id,
+        "request": case.request,
+        "difficulty": case.difficulty,
+        "production_schema_reference": "agent.tools.get_tool_schemas()",
+    }
+
+
+def write_blind_review_packs(
+    cases: Sequence[CandidateCase], output_dir: Path
+) -> ReviewPackReceipt:
+    """Write blind inputs without source metadata or authoring strata."""
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    payload = "\n".join(
+        json.dumps(_blind_review_row(case), ensure_ascii=False) for case in cases
+    ) + "\n"
+    hashes: dict[str, str] = {}
+    for name in ("reviewer_a.jsonl", "reviewer_b.jsonl"):
+        path = output_dir / name
+        path.write_text(payload, encoding="utf-8")
+        hashes[name] = _raw_sha256(path)
+    return ReviewPackReceipt(case_count=len(cases), pack_sha256=hashes)
+
+
+def _schema_by_tool(schemas: Sequence[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {
+        schema["function"]["name"]: schema["function"]["parameters"]
+        for schema in schemas
+    }
+
+
+def _validate_review_calls(
+    case_id: str,
+    calls: Any,
+    schemas_by_tool: dict[str, dict[str, Any]],
+    label: str,
+) -> tuple[tuple[dict[str, Any], ...] | None, list[str]]:
+    errors: list[str] = []
+    if not isinstance(calls, list):
+        return None, [f"{label} {case_id}: expected_calls must be a list"]
+    normalized_calls: list[dict[str, Any]] = []
+    for index, call in enumerate(calls, 1):
+        prefix = f"{label} {case_id} call {index}"
+        if not isinstance(call, dict):
+            errors.append(f"{prefix}: call must be an object")
+            continue
+        allowed_fields = {"tool", "required_arguments", "critical_arguments"}
+        unknown_fields = sorted(set(call).difference(allowed_fields))
+        if unknown_fields:
+            errors.append(f"{prefix}: unknown field(s): {', '.join(unknown_fields)}")
+        tool = call.get("tool")
+        if tool not in schemas_by_tool:
+            errors.append(f"{prefix}: invalid tool {tool!r}")
+            continue
+        arguments = call.get("required_arguments")
+        critical = call.get("critical_arguments")
+        if not isinstance(arguments, dict):
+            errors.append(f"{prefix}: required_arguments must be an object")
+            continue
+        if (
+            not isinstance(critical, list)
+            or any(not isinstance(name, str) for name in critical)
+            or len(critical) != len(set(critical))
+        ):
+            errors.append(f"{prefix}: critical_arguments must be a unique string list")
+            continue
+        properties = schemas_by_tool[tool].get("properties", {})
+        for argument, value in arguments.items():
+            if argument not in properties:
+                errors.append(f"{prefix}: unknown argument {argument!r} for {tool}")
+                continue
+            validation_errors = list(
+                Draft202012Validator(properties[argument]).iter_errors(value)
+            )
+            if validation_errors:
+                errors.append(
+                    f"{prefix}: invalid value for {argument!r}: "
+                    f"{validation_errors[0].message}"
+                )
+        missing_critical = sorted(set(critical).difference(arguments))
+        if missing_critical:
+            errors.append(
+                f"{prefix}: critical argument(s) absent from required_arguments: "
+                f"{', '.join(missing_critical)}"
+            )
+        normalized_calls.append(
+            {
+                "tool": tool,
+                "required_arguments": arguments,
+                "critical_arguments": critical,
+            }
+        )
+    if errors:
+        return None, errors
+    return tuple(sorted(normalized_calls, key=canonical_sha256)), []
+
+
+def _read_reviewer_pack(
+    path: Path,
+    label: str,
+    cases_by_id: dict[str, CandidateCase],
+    schemas_by_tool: dict[str, dict[str, Any]],
+) -> tuple[dict[str, tuple[dict[str, Any], ...]], int, set[str], list[str], set[str]]:
+    errors: list[str] = []
+    blocked: set[str] = set()
+    indexed: dict[str, dict[str, Any]] = {}
+    for row in _load_jsonl_objects(path):
+        case_id = row.get("case_id")
+        if not isinstance(case_id, str):
+            errors.append(f"{label}: record without a valid case_id")
+            continue
+        if case_id in indexed:
+            errors.append(f"{label} {case_id}: duplicate record")
+            blocked.add(case_id)
+            continue
+        indexed[case_id] = row
+
+    expected_ids = set(cases_by_id)
+    for case_id in sorted(expected_ids.difference(indexed)):
+        errors.append(f"{label} {case_id}: missing case")
+        blocked.add(case_id)
+    for case_id in sorted(set(indexed).difference(expected_ids)):
+        errors.append(f"{label} {case_id}: unexpected case")
+        blocked.add(case_id)
+
+    decisions: dict[str, tuple[dict[str, Any], ...]] = {}
+    reviewer_ids: set[str] = set()
+    for case_id in sorted(expected_ids.intersection(indexed)):
+        row = indexed[case_id]
+        if any(
+            row.get(key) != value
+            for key, value in _blind_review_row(cases_by_id[case_id]).items()
+        ):
+            errors.append(f"{label} {case_id}: prefilled fields changed")
+            blocked.add(case_id)
+            continue
+        review_fields = {"reviewer_id", "reviewer_signature", "expected_calls"}
+        present = review_fields.intersection(row)
+        if not present:
+            continue
+        if present != review_fields:
+            errors.append(f"{label} {case_id}: incomplete review fields")
+            blocked.add(case_id)
+            continue
+        reviewer_id = row["reviewer_id"]
+        signature = row["reviewer_signature"]
+        if not isinstance(reviewer_id, str) or not reviewer_id.strip():
+            errors.append(f"{label} {case_id}: blank reviewer_id")
+            blocked.add(case_id)
+        else:
+            reviewer_ids.add(reviewer_id.strip())
+        if not isinstance(signature, str) or not signature.strip():
+            errors.append(f"{label} {case_id}: blank reviewer_signature")
+            blocked.add(case_id)
+        decision, decision_errors = _validate_review_calls(
+            case_id, row["expected_calls"], schemas_by_tool, label
+        )
+        errors.extend(decision_errors)
+        if decision_errors:
+            blocked.add(case_id)
+        if (
+            decision is not None
+            and isinstance(reviewer_id, str)
+            and reviewer_id.strip()
+            and isinstance(signature, str)
+            and signature.strip()
+        ):
+            decisions[case_id] = decision
+    if len(reviewer_ids) > 1:
+        errors.append(f"{label}: one pack must use one reviewer_id")
+        blocked.update(decisions)
+    return decisions, len(decisions), reviewer_ids, errors, blocked
+
+
+def _read_adjudications(
+    path: Path | None,
+    disagreements: set[str],
+    reviewer_ids: set[str],
+    schemas_by_tool: dict[str, dict[str, Any]],
+) -> tuple[set[str], list[str], set[str]]:
+    if not disagreements:
+        return set(), [], set()
+    if path is None or not path.exists():
+        return set(), [], set(disagreements)
+    errors: list[str] = []
+    resolved: set[str] = set()
+    blocked: set[str] = set()
+    indexed: dict[str, dict[str, Any]] = {}
+    for row in _load_jsonl_objects(path):
+        case_id = row.get("case_id")
+        if not isinstance(case_id, str):
+            errors.append("adjudication: record without a valid case_id")
+            continue
+        if case_id in indexed:
+            errors.append(f"adjudication {case_id}: duplicate record")
+            blocked.add(case_id)
+            continue
+        indexed[case_id] = row
+    for case_id in sorted(disagreements.difference(indexed)):
+        blocked.add(case_id)
+    for case_id, row in indexed.items():
+        if case_id not in disagreements:
+            errors.append(f"adjudication {case_id}: case has no reviewer disagreement")
+            blocked.add(case_id)
+            continue
+        adjudicator = row.get("adjudicator_id")
+        signature = row.get("adjudicator_signature")
+        reason = row.get("reason")
+        if not isinstance(adjudicator, str) or not adjudicator.strip():
+            errors.append(f"adjudication {case_id}: blank adjudicator_id")
+        elif adjudicator.strip() in reviewer_ids:
+            errors.append(f"adjudication {case_id}: adjudicator must be distinct from reviewers")
+        if not isinstance(signature, str) or not signature.strip():
+            errors.append(f"adjudication {case_id}: blank adjudicator_signature")
+        if not isinstance(reason, str) or not reason.strip():
+            errors.append(f"adjudication {case_id}: reason is required")
+        decision, decision_errors = _validate_review_calls(
+            case_id, row.get("expected_calls"), schemas_by_tool, "adjudication"
+        )
+        errors.extend(decision_errors)
+        if (
+            decision is not None
+            and isinstance(adjudicator, str)
+            and adjudicator.strip()
+            and adjudicator.strip() not in reviewer_ids
+            and isinstance(signature, str)
+            and signature.strip()
+            and isinstance(reason, str)
+            and reason.strip()
+            and not decision_errors
+        ):
+            resolved.add(case_id)
+        else:
+            blocked.add(case_id)
+    return resolved, errors, blocked
+
+
+def evaluate_review_gate(
+    cases: Sequence[CandidateCase],
+    review_a_path: Path,
+    review_b_path: Path,
+    adjudication_path: Path | None,
+    schemas: Sequence[dict[str, Any]],
+) -> ReviewGate:
+    """Require complete, independent and schema-valid human gold decisions."""
+
+    cases_by_id = {case.case_id: case for case in cases}
+    schemas_by_tool = _schema_by_tool(schemas)
+    decisions_a, count_a, ids_a, errors_a, blocked_a = _read_reviewer_pack(
+        review_a_path, "reviewer_a", cases_by_id, schemas_by_tool
+    )
+    decisions_b, count_b, ids_b, errors_b, blocked_b = _read_reviewer_pack(
+        review_b_path, "reviewer_b", cases_by_id, schemas_by_tool
+    )
+    errors = errors_a + errors_b
+    blocked = blocked_a | blocked_b
+    if ids_a.intersection(ids_b):
+        errors.append("reviewer_a and reviewer_b must use distinct reviewers")
+        blocked.update(cases_by_id)
+
+    total = len(cases_by_id)
+    if errors:
+        return ReviewGate(
+            False,
+            "blocked_review_validation",
+            count_a,
+            count_b,
+            (),
+            tuple(sorted(blocked)),
+            tuple(errors),
+        )
+    if count_a < total or count_b < total:
+        pending = set(cases_by_id).difference(decisions_a).union(
+            set(cases_by_id).difference(decisions_b)
+        )
+        return ReviewGate(
+            False,
+            "pending_human_review",
+            count_a,
+            count_b,
+            (),
+            tuple(sorted(pending)),
+            (),
+        )
+
+    disagreements = {
+        case_id for case_id in cases_by_id if decisions_a[case_id] != decisions_b[case_id]
+    }
+    resolved, adjudication_errors, adjudication_blocked = _read_adjudications(
+        adjudication_path, disagreements, ids_a | ids_b, schemas_by_tool
+    )
+    errors.extend(adjudication_errors)
+    unresolved = disagreements.difference(resolved)
+    blocked.update(adjudication_blocked)
+    if errors:
+        return ReviewGate(
+            False,
+            "blocked_adjudication_validation",
+            count_a,
+            count_b,
+            tuple(sorted(disagreements)),
+            tuple(sorted(blocked | unresolved)),
+            tuple(errors),
+        )
+    if unresolved:
+        return ReviewGate(
+            False,
+            "pending_adjudication",
+            count_a,
+            count_b,
+            tuple(sorted(disagreements)),
+            tuple(sorted(unresolved)),
+            (),
+        )
+    return ReviewGate(
+        True,
+        "approved",
+        count_a,
+        count_b,
+        tuple(sorted(disagreements)),
+        (),
+        (),
+    )
+
+
 def load_candidates(path: Path) -> list[CandidateCase]:
     """Load a UTF-8 JSONL pack and reject ambiguous identities."""
 
@@ -543,6 +907,22 @@ def _audit_command(args: Any) -> int:
     return 0 if receipt["passed"] else 1
 
 
+def _review_gate_command(args: Any) -> int:
+    adjudication = args.adjudication
+    if adjudication is None:
+        default_adjudication = args.reviews / "adjudication.jsonl"
+        adjudication = default_adjudication if default_adjudication.exists() else None
+    gate = evaluate_review_gate(
+        load_candidates(args.candidates),
+        args.reviews / "reviewer_a.jsonl",
+        args.reviews / "reviewer_b.jsonl",
+        adjudication,
+        get_tool_schemas(),
+    )
+    print(json.dumps(gate.to_dict(), ensure_ascii=False))
+    return 0 if gate.passed else 1
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run offline authoring commands; no command constructs a model provider."""
 
@@ -562,6 +942,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     audit_parser.add_argument("--output", type=Path, required=True)
     audit_parser.set_defaults(handler=_audit_command)
+    review_parser = subparsers.add_parser(
+        "review-gate", help="check two blind human review packs offline"
+    )
+    review_parser.add_argument("--candidates", type=Path, required=True)
+    review_parser.add_argument("--reviews", type=Path, required=True)
+    review_parser.add_argument("--adjudication", type=Path)
+    review_parser.set_defaults(handler=_review_gate_command)
     args = parser.parse_args(argv)
     return args.handler(args)
 
