@@ -31,6 +31,14 @@ from vinsoc_data.soc_corpus import SocCorpusRepository
 REQUIRED = ("OPENAI_API_KEY", "GITHUB_TOKEN", "GITHUB_SHA", "GITHUB_RUN_ID")
 
 
+def safe_failure_category(error, stage):
+    reason = str(error) if isinstance(error, (ValueError, RuntimeError)) else ""
+    if re.fullmatch(r"SOC_[A-Z0-9_:,]+", reason):
+        return reason
+    safe_stage = stage.upper() if re.fullmatch(r"[a-z_]+", stage) else "RUNTIME"
+    return "SOC_DEMO_" + safe_stage + "_FAILURE"
+
+
 def _identities(source, database, receipt, implementation_sha):
     import duckdb
     import httpx
@@ -75,6 +83,7 @@ def run(output_dir, env):
     }
     client = repository = journal = store = None
     receipt_path = None
+    stage = "inputs"
     try:
         missing = [name for name in REQUIRED if not env.get(name)]
         if missing:
@@ -87,11 +96,13 @@ def run(output_dir, env):
             or not re.fullmatch(r"[0-9a-f]{40}", env["GITHUB_SHA"])
         ):
             raise ValueError("SOC_DEMO_CLOUD_CONTEXT_INVALID")
+        stage = "corpus"
         private = Path(env.get("RUNNER_TEMP", "/tmp")) / "vinsoc-soc-demo-private"
         private.mkdir(parents=True, exist_ok=False, mode=0o700)
         source = private / "source"
         database = prepare_cloud_corpus(source, private / "corpus")
         corpus_receipt = json.loads((database.parent / "corpus_receipt.json").read_text())
+        stage = "release"
         identities = _identities(source, database, corpus_receipt, env["GITHUB_SHA"])
         release = build_demo_release(
             identities=identities,
@@ -107,11 +118,14 @@ def run(output_dir, env):
         checked = __import__(
             "evaluation.soc_traces_v1.demo", fromlist=["validate_demo_release"]
         ).validate_demo_release(release)
+        stage = "model_metadata"
         _verify_account(checked)
+        stage = "remote_claim"
         api = GitHubAPI(env["GITHUB_TOKEN"])
         store = SocDemoCloudStore(api, env["GITHUB_SHA"], env["GITHUB_RUN_ID"])
         if store.exists():
             raise ValueError("SOC_DEMO_SCOPE_ALREADY_CONSUMED")
+        stage = "journal_claim"
         journal = SocDemoJournal.claim(
             release, ledger_path=private / "ledger.json", remote_store=store
         )
@@ -126,6 +140,7 @@ def run(output_dir, env):
         )
         import openai
 
+        stage = "sdk_client"
         client = openai.OpenAI(
             api_key=env["OPENAI_API_KEY"],
             base_url="https://api.openai.com/v1",
@@ -176,6 +191,7 @@ def run(output_dir, env):
             )
 
         provider.response_checkpoint = response_checkpoint
+        stage = "investigation"
         case = InvestigationOrchestrator(provider=provider).investigate_alert(
             record["input"], soc_context=context
         )
@@ -197,6 +213,7 @@ def run(output_dir, env):
             receipt=final,
             output_dir=output / "live",
         )
+        stage = "rendering"
         rendered = render_case(receipt_path, output / "report")
         state = journal.snapshot()
         result.update(
@@ -210,10 +227,8 @@ def run(output_dir, env):
             report_files={key: str(Path(value).relative_to(output)) for key, value in rendered.items() if key in ("json", "html", "markdown")},
         )
     except Exception as error:
-        reason = str(error) if isinstance(error, (ValueError, RuntimeError)) else ""
-        result["failure_category"] = (
-            reason if re.fullmatch(r"SOC_[A-Z0-9_:,]+", reason) else "SOC_DEMO_RUNTIME_FAILURE"
-        )
+        result["failed_stage"] = stage
+        result["failure_category"] = safe_failure_category(error, stage)
         if journal:
             state = journal.snapshot()
             result.update(

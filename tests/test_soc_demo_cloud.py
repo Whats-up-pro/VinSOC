@@ -119,3 +119,14 @@ def test_demo_workflow_uses_real_secret_and_native_runner():
     assert "python scripts/run_soc_demo_cloud.py" in workflow
     assert "mock" not in workflow.lower()
     assert "SOC_E2E_GATES_JSON" not in workflow
+
+
+def test_demo_failure_category_preserves_safe_stage_without_external_message():
+    from evaluation.finalization.cloud_window import CloudError
+    from scripts.run_soc_demo_cloud import safe_failure_category
+
+    assert (
+        safe_failure_category(CloudError("REMOTE_STATE_UNAVAILABLE"), "remote_claim")
+        == "SOC_DEMO_REMOTE_CLAIM_FAILURE"
+    )
+    assert safe_failure_category(KeyError("private-value"), "release") == "SOC_DEMO_RELEASE_FAILURE"
