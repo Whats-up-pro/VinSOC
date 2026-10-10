@@ -1,0 +1,19 @@
+{
+  "ci_run": 38021882592,
+  "sha": "c63972f793e6151187fdc9b6761021b019afe51d",
+  "artifact_name": "query-real-data-c63972f793e6151187fdc9b6761021b019afe51d-3.11",
+  "source_artifact_member": "worker_observed_boundaries.json",
+  "member_sha256": "53ea20d5588786ce29633390e86fdff083b839ec8821e7a572ff1ff35f529268",
+  "observation": {
+    "network_namespace_distinct": true,
+    "environment_allowlist_only": true,
+    "only_required_snapshot_read_only": true,
+    "memory_max_bytes": 536870912,
+    "swap_max_bytes": 0,
+    "cpu_max": "100000 100000",
+    "affinity_cpus": 1,
+    "proof": "external /proc and cgroup filesystem, not executor isolation fields",
+    "model_calls": 0
+  },
+  "required_xml_sha256": "efdc9223a291c6a7768e9b4012774165b51efbfae2e8593d6c207cc4f4860f43"
+}

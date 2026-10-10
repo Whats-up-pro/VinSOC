@@ -21,6 +21,8 @@ jobs:
         python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -34,7 +36,27 @@ jobs:
           python scripts/prepare_soc_traces.py --fetch --source-dir "$VINSOC_SOC_SOURCE_DIR" --output-dir data/soc_traces_v1/corpus
       - name: Run full repository test suite
         run: |
-          python -m pytest -q
+          mkdir -p .vinsoc/offline-release-ci
+          python -m pytest -q --junitxml=.vinsoc/offline-release-ci/full.xml
+      - name: Compile and verify immutable resume inputs
+        run: |
+          python -m compileall -q agent cli evaluation skills scripts telemetry vinsoc_data vinsoc_text2sql
+          python -m scripts.verify_query_preservation > .vinsoc/offline-release-ci/preservation.json
+          git diff --exit-code
+      - name: Required offline query guards
+        run: |
+          python -m pytest -q tests/test_query_pipeline_contract.py tests/test_query_acceptance_preflight.py tests/test_query_selection_lock.py tests/test_query_journal_persistence.py tests/test_query_record_normalization.py tests/test_query_reporting.py tests/test_query_pipeline_reporting.py tests/test_query_cli_viewer.py --junitxml=.vinsoc/offline-release-ci/targeted.xml
+          python - <<'PYTHON'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('.vinsoc/offline-release-ci/targeted.xml').getroot()
+          assert not root.findall('.//skipped'), 'REQUIRED_OFFLINE_GUARD_SKIP_FORBIDDEN'
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: query-offline-release-${{ github.sha }}-${{ matrix.python-version }}
+          path: .vinsoc/offline-release-ci/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -55,6 +77,8 @@ jobs:
       VINSOC_QUERY_OBSERVATION_DIR: .vinsoc/query-real-data-ci
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}

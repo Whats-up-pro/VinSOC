@@ -1,0 +1,77 @@
+{
+  "milestone": "r4",
+  "sha": "47f89cdf9b3a6bb9856cd3ec6234021453f56044",
+  "ci_run": 38024305327,
+  "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "query-real-data (3.12)",
+      "databaseId": 114131751804,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/job/114131751804",
+      "conclusion": "success",
+      "counts": {
+        "passed": 13,
+        "skipped": 0,
+        "failed": 0
+      },
+      "pytest_summary": "2026-10-10T04:32:06.4648281Z 13 passed in 45.20s",
+      "uploaded_artifact_evidence": [
+        "2026-10-10T04:32:07.0437022Z SHA256 digest of uploaded artifact zip is 1d0456daef0f7d7bcec6e9dc569703ee9b4fddc0f8952e5078705c1d09998ea8",
+        "2026-10-10T04:32:07.2553484Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/artifacts/11659567230"
+      ]
+    },
+    {
+      "name": "test (3.11)",
+      "databaseId": 114131751871,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/job/114131751871",
+      "conclusion": "success",
+      "counts": {
+        "passed": 1286,
+        "skipped": 7,
+        "failed": 0
+      },
+      "pytest_summary": "2026-10-10T04:34:56.0513245Z 1286 passed, 7 skipped in 178.34s (0:02:58)",
+      "uploaded_artifact_evidence": [
+        "2026-10-10T04:34:57.3045786Z SHA256 digest of uploaded artifact zip is acafd2bbc6b02d500df12a832919686584cfd047298aa03f206d20a92baff61b",
+        "2026-10-10T04:34:57.5651218Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/artifacts/11659832432"
+      ]
+    },
+    {
+      "name": "query-real-data (3.11)",
+      "databaseId": 114131751882,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/job/114131751882",
+      "conclusion": "success",
+      "counts": {
+        "passed": 13,
+        "skipped": 0,
+        "failed": 0
+      },
+      "pytest_summary": "2026-10-10T04:32:34.7820814Z 13 passed in 61.37s (0:01:01)",
+      "uploaded_artifact_evidence": [
+        "2026-10-10T04:32:35.7061730Z SHA256 digest of uploaded artifact zip is 887b1c6d6b939c6f29695644418c1f9ef945c6142d5404d65ea3985a5aa2ea54",
+        "2026-10-10T04:32:35.9292079Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/artifacts/11659602233"
+      ]
+    },
+    {
+      "name": "test (3.12)",
+      "databaseId": 114131752010,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/job/114131752010",
+      "conclusion": "success",
+      "counts": {
+        "passed": 1286,
+        "skipped": 7,
+        "failed": 0
+      },
+      "pytest_summary": "2026-10-10T04:35:27.7663246Z 1286 passed, 7 skipped, 3426 warnings in 198.84s (0:03:18)",
+      "uploaded_artifact_evidence": [
+        "2026-10-10T04:35:29.2788395Z SHA256 digest of uploaded artifact zip is b238abad7a44953f699e0d7f56bb36610d8ac2d71f32076319d586887f1477ba",
+        "2026-10-10T04:35:29.5412698Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38024305327/artifacts/11660007328"
+      ]
+    }
+  ],
+  "log_sha256": "55ea9a83cf76fe7ed0bab5898978fce608eb6efea3632048f4b8e4b8afa0a565",
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0,
+  "positive_new_calibration_evaluation_pipeline": "pending"
+}

@@ -1,0 +1,27 @@
+{
+  "platform": "Windows Python 3.11.9",
+  "status": "local_full_suite_not_passed",
+  "sandbox_run": "failed",
+  "unsandboxed_run": "interrupted_after_long_stall_at_78_percent",
+  "log_tails": {
+    "resume-r2-full.log": [
+      "ERROR tests/test_soc_orchestrator.py::test_scope_provider_mismatch_rejected",
+      "ERROR tests/test_soc_orchestrator.py::test_only_delivered_evidence_registered",
+      "ERROR tests/test_soc_runner.py::test_preflight_zero_calls - urllib.error.URLE...",
+      "ERROR tests/test_soc_runner.py::test_inventory_or_source_mutation_blocks - ur...",
+      "ERROR tests/test_soc_runner.py::test_records_preserve_planned_ids - urllib.er...",
+      "32 failed, 1217 passed, 5 skipped, 23 errors in 298.79s (0:04:58)"
+    ],
+    "resume-full-unsandboxed.log": [
+      "........................................................................ [ 55%]",
+      "........................................................................ [ 61%]",
+      "........................................................................ [ 67%]",
+      "........................................................................ [ 72%]",
+      "........................................................................ [ 78%]",
+      ".........FFFFFFFFFFFF."
+    ]
+  },
+  "acceptance_evidence": "exact-SHA Linux CI 3.11 and 3.12; required real-data jobs must have no skips",
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0
+}

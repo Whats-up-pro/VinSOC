@@ -92,16 +92,29 @@ def test_memory_is_shared_by_all_descendants_and_timeout_kills_group():
                 break
             time.sleep(.02)
         assert int(events['oom_kill']) > 0, 'AGGREGATE_MEMORY_LIMIT_NOT_ENFORCED'
+        memory_events = {k: int(v) for k, v in events.items()}
         group.kill()
         process.communicate(timeout=3)
         assert not (group.path/'cgroup.procs').read_text().strip()
     with ProcessGroup() as group:
+        cpu_started = time.monotonic()
         process = group.spawn([sys.executable, '-c', 'while True: pass'], timeout_seconds=1)
         process.communicate(timeout=5)
         assert process.returncode != 0, 'CPU_TIME_LIMIT_NOT_ENFORCED'
+        cpu_elapsed, cpu_exit = time.monotonic()-cpu_started, process.returncode
+        cpu_stats = {k: int(v) for k, v in (line.split() for line in (group.path/'cpu.stat').read_text().splitlines())}
     with ProcessGroup() as group:
         process = group.spawn([sys.executable, '-c', 'import time; time.sleep(30)'], timeout_seconds=1)
         with pytest.raises(Exception) as failure:
             group.communicate(process, '', timeout_seconds=.1)
         assert str(failure.value) == 'GROUP_TIMEOUT'
         assert not (group.path/'cgroup.procs').read_text().strip()
+    receipt_dir = os.environ.get('VINSOC_QUERY_OBSERVATION_DIR')
+    if receipt_dir:
+        observed = {'memory_events': memory_events, 'two_allocations_bytes_each': 300*1024*1024,
+                    'aggregate_memory_limit_bytes': 536870912, 'cpu_limit_seconds': 1,
+                    'cpu_elapsed_seconds': cpu_elapsed, 'cpu_exit_code': cpu_exit, 'cpu_stat': cpu_stats,
+                    'wall_timeout_seconds': .1, 'wall_failure': str(failure.value),
+                    'descendants_empty_after_timeout': True,
+                    'proof': 'observer reads kernel counters and process completion', 'model_calls': 0}
+        (Path(receipt_dir)/'resource_observed_limits.json').write_text(json.dumps(observed, indent=2))

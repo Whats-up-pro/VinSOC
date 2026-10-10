@@ -32,7 +32,8 @@ RUNTIME_PATHS = ('cli/main.py', 'pyproject.toml', 'agent/orchestrator.py', 'agen
 
 def source_hashes():
     paths = set(RUNTIME_PATHS) | {'requirements.txt', '.github/workflows/ci.yml',
-        'scripts/run_query_real_data_checks.py', 'results/evaluation_v1/text2sql_integration_v1/demo_selection.json'}
+        'scripts/run_query_real_data_checks.py', 'scripts/verify_query_preservation.py',
+        'results/evaluation_v1/text2sql_integration_v1/demo_selection.json'}
     # Bind the full local dependency closure, including lifecycle/evidence and SQL primitives.
     for package in ('agent', 'skills', 'vinsoc_data', 'vinsoc_text2sql', 'telemetry',
                     'evaluation/r2_cross_domain_v1', 'evaluation/finalization'):
