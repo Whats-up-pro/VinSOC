@@ -21,6 +21,21 @@ class QueryContext:
     scope_id: str
 
 
+class NetworkQueryCatalogContext(DatabaseContext):
+    """Application-owned meanings for otherwise ambiguous public CTU columns."""
+    def schema_context(self):
+        catalog = super().schema_context()
+        catalog['column_semantics'] = [
+            {'table':'network_flows', 'column':'source_dataset',
+             'meaning':'CTU scenario and source-partition identifier; scenario references map to this column. A value_search on this small-domain column returns the complete scenario domain when available, so one search can ground multiple requested scenarios.'},
+            {'table':'network_flows', 'column':'label',
+             'meaning':'Per-flow behavioral classification label; this is not the scenario or source-partition identifier.'},
+            {'table':'network_flows', 'column':'protocol',
+             'meaning':'Transport protocol for the flow; stored protocol values require tool grounding.'},
+        ]
+        return catalog
+
+
 class NetworkQuerySkill:
     skill_name = 'network_query'
     skill_version = '1.0.0'
@@ -42,7 +57,7 @@ class NetworkQuerySkill:
         identity['schema'] = [t for t in identity['schema'] if t['name'] == 'network_flows']
         identity['primary_keys'] = {'network_flows': identity['primary_keys']['network_flows']}
         identity['relationships'] = []
-        self.context = DatabaseContext(context.database_id, context.snapshot_path, identity)
+        self.context = NetworkQueryCatalogContext(context.database_id, context.snapshot_path, identity)
         self.query_context = query_context
         self.condition, self.transport = condition, transport
         self.service = service or TextToSQLService()

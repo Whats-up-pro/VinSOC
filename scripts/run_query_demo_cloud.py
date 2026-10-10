@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -18,7 +19,14 @@ from evaluation.r2_cross_domain_v1.release import fresh
 from scripts.run_vinsoc_query_acceptance import ROOT, run_live, run_preflight
 
 CASE_ID = 'ctu_cross_708b66575657429a'
-PRIOR_AUDIT = ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_20261010/outcome_audit.json'
+PRIOR_AUDITS = (
+    {'path':ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_20261010/outcome_audit.json',
+     'run_id':38037640751, 'cost_key':'actual_cost_usd', 'cost_usd':0.00133865,
+     'artifact_digest':'sha256:37ac6fe695f57de0d44ae780d288f8223cbe4cbd0ed6fb70e1117eaee2b23ac9'},
+    {'path':ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_2_20261010/outcome_audit.json',
+     'run_id':38040239630, 'cost_key':'current_run_cost_usd', 'cost_usd':0.00435015,
+     'artifact_digest':'sha256:96790da5da4a967354313c64cac789ea5f5d0ea6c70b8ca81fb5aa08a3a7d828'},
+)
 REQUIRED = ('OPENAI_API_KEY','GITHUB_TOKEN','GITHUB_SHA','GITHUB_RUN_ID','GITHUB_CI_RUN_ID',
             'VINSOC_QUERY_DEMO_AUTH_JSON','VINSOC_GPT5_DOC','VINSOC_GPT41_DOC')
 
@@ -44,6 +52,7 @@ def validate_authorization(value):
     profiles = {
         None:(0.0,3.0),
         'full-e2e-2':(0.00133865,2.99866135),
+        'full-e2e-3':(0.0056888,2.9943112),
     }
     if (value.get('execution_id') not in profiles
             or (value.get('known_prior_cost_usd'), value.get('remaining_allocation_usd'))
@@ -53,19 +62,27 @@ def validate_authorization(value):
 
 
 def prior_demo_receipt(auth):
-    if auth.get('execution_id') is None:
-        return None
-    audit = json.loads(PRIOR_AUDIT.read_text(encoding='utf-8'))
-    expected_digest = 'sha256:37ac6fe695f57de0d44ae780d288f8223cbe4cbd0ed6fb70e1117eaee2b23ac9'
-    if (audit.get('case_id') != CASE_ID or audit.get('workflow',{}).get('run_id') != 38037640751
-            or audit.get('workflow',{}).get('artifact_digest') != expected_digest
-            or audit.get('actual',{}).get('actual_cost_usd') != auth['known_prior_cost_usd']
-            or audit.get('actual',{}).get('cost_unknown') is not False
-            or audit.get('actual',{}).get('pending_exposure_usd') != 0.0):
+    counts = {None:0, 'full-e2e-2':1, 'full-e2e-3':2}
+    count = counts.get(auth.get('execution_id'))
+    if count is None:
         raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')
-    return {'workflow_run_id':38037640751, 'known_cost_usd':auth['known_prior_cost_usd'],
-            'artifact_digest':expected_digest,
-            'audit_sha256':hashlib.sha256(PRIOR_AUDIT.read_bytes()).hexdigest()}
+    receipts = []
+    for expected in PRIOR_AUDITS[:count]:
+        path = expected['path']
+        audit = json.loads(path.read_text(encoding='utf-8'))
+        actual = audit.get('actual',{})
+        if (audit.get('case_id') != CASE_ID or audit.get('workflow',{}).get('run_id') != expected['run_id']
+                or audit.get('workflow',{}).get('artifact_digest') != expected['artifact_digest']
+                or not math.isclose(actual.get(expected['cost_key'],-1), expected['cost_usd'], rel_tol=0, abs_tol=1e-12)
+                or actual.get('cost_unknown') is not False):
+            raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')
+        receipts.append({'workflow_run_id':expected['run_id'], 'known_cost_usd':expected['cost_usd'],
+                         'artifact_digest':expected['artifact_digest'],
+                         'audit_sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+    if not math.isclose(sum(r['known_cost_usd'] for r in receipts), auth['known_prior_cost_usd'],
+                        rel_tol=0, abs_tol=1e-12):
+        raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')
+    return receipts
 
 
 def verify_cloud_ci(api, env):
@@ -113,7 +130,7 @@ def prepare_private_inputs(auth, env, ci_run_id):
     allocation = {'schema_version':1, 'allocation_id':auth['allocation_id'], 'currency':'USD',
                   'authorized_limit_usd':3.0, 'known_prior_cost_usd':auth['known_prior_cost_usd'],
                   'remaining_allocation_usd':auth['remaining_allocation_usd'], 'unknown_exposure_usd':0.0,
-                  'events':[], 'authorization':authorization, 'prior_paid_demo':prior}
+                  'events':[], 'authorization':authorization, 'prior_paid_demos':prior}
     write_json(ledger_path, allocation)
     ledger_sha = hashlib.sha256(ledger_path.read_bytes()).hexdigest()
     receipt_path = allocation_dir/'reconciliation.json'

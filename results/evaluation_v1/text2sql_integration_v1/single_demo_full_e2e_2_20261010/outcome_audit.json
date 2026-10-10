@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "scope": "single_fixed_query_demo_not_calibration_or_evaluation",
+  "execution_id": "full-e2e-2",
+  "case_id": "ctu_cross_708b66575657429a",
+  "condition": "E3",
+  "implementation_sha": "de8b7357f72d4f738668e909dfb405f908578768",
+  "ci": {
+    "run_id": 38039910464,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38039910464",
+    "status": "success",
+    "full_suite_each": {
+      "passed": 1319,
+      "skipped": 7
+    },
+    "required_offline_each": {
+      "passed": 45,
+      "skipped": 0
+    },
+    "required_real_data_each": {
+      "passed": 13,
+      "skipped": 0
+    },
+    "original_databases_verified": 13,
+    "gold_queries_replayed": 120
+  },
+  "workflow": {
+    "run_id": 38040239630,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38040239630",
+    "job_status": "failure_due_to_technical_incomplete",
+    "artifact_id": 11665069512,
+    "artifact_digest": "sha256:96790da5da4a967354313c64cac789ea5f5d0ea6c70b8ca81fb5aa08a3a7d828",
+    "artifact_expires_at": "2027-01-08T09:06:50Z",
+    "remote_window_claimed": true
+  },
+  "preflight": {
+    "status": "preflight_pass",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "hard_budget_usd": 3.0,
+    "prior_cost_usd": 0.00133865,
+    "conservative_cost_ceiling_usd": 1.4532608
+  },
+  "actual": {
+    "status": "technical_incomplete",
+    "failure_stage": "r2_linker_finalization",
+    "failure_reason": "MAX_COMPLETION_TOKENS_NO_VISIBLE_JSON",
+    "attempted_calls": 4,
+    "received_responses": 4,
+    "calls_by_role": {
+      "routing": 1,
+      "r2": 3,
+      "assessment": 0
+    },
+    "usage": {
+      "input_tokens": 6541,
+      "output_tokens": 1462,
+      "cached_tokens": 1024
+    },
+    "current_run_cost_usd": 0.0043501500000000005,
+    "cumulative_cost_usd": 0.005688800000000001,
+    "remaining_cap_usd": 2.9943112,
+    "cost_unknown": false,
+    "generation_error": "MODEL_PARSE_ERROR",
+    "final_sql_present": false,
+    "db_calls": 4,
+    "assessment_calls": 0,
+    "evidence_count": 0,
+    "human_review": "blocked_invalid_technical",
+    "official_eligible": false
+  },
+  "model_score_statement": "Not an official calibration, evaluation, or pipeline score; no final prediction was fabricated."
+}

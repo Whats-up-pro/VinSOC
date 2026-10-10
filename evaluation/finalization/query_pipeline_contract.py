@@ -8,7 +8,7 @@ from evaluation.r2_cross_domain_v1.release import canonical_hash, fresh
 VERSION = 'query_pipeline_release_v1'
 CONTRACTS = {
  'r2': {'model': 'gpt-5-mini-2025-08-07', 'reasoning_effort': 'low',
-        'max_completion_tokens': 1000, 'service_tier': 'default', 'max_retries': 0,
+        'max_completion_tokens': 4000, 'service_tier': 'default', 'max_retries': 0,
         'max_request_bytes': 32768, 'frame_reserve_tokens': 512, 'max_messages': 20},
  'routing': {'model': 'gpt-4.1-mini-2025-04-14', 'temperature': 0,
         'max_completion_tokens': 1000, 'service_tier': 'default', 'max_retries': 0,

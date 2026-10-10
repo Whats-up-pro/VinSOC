@@ -1,0 +1,1068 @@
+{
+  "case_id": "ctu_cross_708b66575657429a",
+  "created_at": "2026-10-10T09:09:27.044924",
+  "initial_indicator": {
+    "type": "query",
+    "value": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries."
+  },
+  "tool_trace": [
+    {
+      "call_id": "tc_df68a2c7_1",
+      "tool": "network_query",
+      "arguments": {
+        "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries."
+      },
+      "timestamp": "2026-10-10T09:09:27.044825",
+      "result_summary": "Error: MODEL_PARSE_ERROR",
+      "evidence_ids": [],
+      "error": "MODEL_PARSE_ERROR",
+      "duration_ms": 17742.704
+    }
+  ],
+  "evidence": [],
+  "hypotheses": [],
+  "risk_level": "UNKNOWN",
+  "confidence": "LOW",
+  "limitations": [
+    "CTI enrichment was not performed",
+    "No evidence was collected during investigation"
+  ],
+  "final_assessment": "",
+  "supporting_evidence": [],
+  "contradicting_evidence": [],
+  "metadata": {
+    "investigation_duration_seconds": 22.48306,
+    "llm_provider": "openai_query_guarded",
+    "llm_run": {
+      "roles": [
+        "routing",
+        "r2",
+        "r2",
+        "r2"
+      ],
+      "attempted": 4,
+      "received": 4,
+      "valid_usage": 4,
+      "known_usd": 0.0043501500000000005,
+      "cost_unknown": false,
+      "cost_events": [
+        {
+          "role": "routing",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "40adf59237ac46e38102435d81507b1b",
+          "request_sha256": "e1d1c0e4b8e6566f0e6faf6d8711eb35d1cf8df2f7574bac3e8809f7f14b8389",
+          "received": true,
+          "reserved_usd": 0.4206304,
+          "cost_usd": 0.00023280000000000002,
+          "usage": {
+            "input_tokens": 318,
+            "output_tokens": 66,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 2.4495315450000135,
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "response_id": "chatcmpl-EXNMhIbn3gr5Y3Mg5T2wx7dEfX551",
+          "provider_request_id": "req_6efd488182a942c28fdae1777dd011a7",
+          "native_tool_calls": [
+            {
+              "id": "call_qy0IKjOysH9FIczkYo8NLPUu",
+              "function": {
+                "arguments": "{\"question\":\"Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.\"}",
+                "name": "network_query"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "c3c0dc2a17664fb58f68101085529cf1",
+          "request_sha256": "9002f1bc15e0ab6cedb2c29e688f8614971c73a0bae24637291f10bcf64656a2",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.00063775,
+          "usage": {
+            "input_tokens": 1223,
+            "output_tokens": 166,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 1.5540683370001034,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EXNMkzkGknHMYwUISO8psvtnuKKJO",
+          "provider_request_id": "req_944fee5575234cd693889f04a63f98a2",
+          "native_tool_calls": [
+            {
+              "id": "call_uAfRsl0vZBgiBpuEbhi7NoPc",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"5\",\"match_kind\":\"contains\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "75da959e68534a4982685f1f40a943bb",
+          "request_sha256": "5c77d22efd099de2122f1761288461ea5fd9033799652ea289f31fc8cb387ec3",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.0007471,
+          "usage": {
+            "input_tokens": 2070,
+            "output_tokens": 230,
+            "cached_tokens": 1024
+          },
+          "latency_seconds": 2.1816889759999185,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EXNMpO4Yc3uoOAmfXP9W2e6ojLCBB",
+          "provider_request_id": "req_46fc2823eb0a4633a3deaa2ea1119c05",
+          "native_tool_calls": [
+            {
+              "id": "call_08cXFjwUIjs3sK0CNbret2oi",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"7\",\"match_kind\":\"contains\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "c28dac99cdec4acca8232a65126aad7a",
+          "request_sha256": "18428eedae378e1ed7833741872a21625908552011a92f9e20b2d843969a40d7",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.0027325,
+          "usage": {
+            "input_tokens": 2930,
+            "output_tokens": 1000,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 6.313883746999977,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EXNMuBcRIaoHjb5CjV4YlsxVLhpJM",
+          "provider_request_id": "req_f5709dbffd4a42718ef5c3a5b141cca6",
+          "native_tool_calls": []
+        }
+      ]
+    },
+    "total_steps": 1,
+    "triage": {
+      "verdict": "NEEDS_INVESTIGATION",
+      "reason": "Authorized query scope; no IOC triage applied",
+      "confidence": "LOW"
+    },
+    "lifecycle_trace": [
+      {
+        "phase": "triage",
+        "status": "completed",
+        "note": "Query and trusted snapshot/table scope validated",
+        "timestamp": "2026-10-10T09:09:04.561836"
+      },
+      {
+        "phase": "investigate",
+        "status": "started",
+        "note": "Running evidence-driven investigation loop",
+        "timestamp": "2026-10-10T09:09:04.561849"
+      },
+      {
+        "phase": "investigate",
+        "status": "completed",
+        "note": "Investigation loop completed",
+        "timestamp": "2026-10-10T09:09:27.044877"
+      },
+      {
+        "phase": "verify",
+        "status": "started",
+        "note": "Validating traceability and schema",
+        "timestamp": "2026-10-10T09:09:27.044892"
+      },
+      {
+        "phase": "verify",
+        "status": "failed",
+        "note": "Network policy validation failed",
+        "timestamp": "2026-10-10T09:09:27.063906"
+      },
+      {
+        "phase": "review",
+        "status": "blocked",
+        "note": "Invalid technical case cannot reach analyst approval",
+        "timestamp": "2026-10-10T09:09:27.063922"
+      }
+    ],
+    "security_flags": [],
+    "skill_contracts": {
+      "cti_enrichment": {
+        "skill_name": "cti_enrichment",
+        "version": "1.2.0",
+        "required_inputs": [
+          "indicator"
+        ],
+        "output_schema": "CTIResult",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      },
+      "network_investigation": {
+        "skill_name": "network_investigation",
+        "version": "2.0.0",
+        "required_inputs": [
+          "indicator"
+        ],
+        "output_schema": "NetworkResult",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      },
+      "endpoint_investigation": {
+        "skill_name": "endpoint_investigation",
+        "version": "1.0.0",
+        "required_inputs": [
+          "host"
+        ],
+        "output_schema": "EndpointResult",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      },
+      "network_query": {
+        "skill_name": "network_query",
+        "version": "1.0.0",
+        "required_inputs": [
+          "question"
+        ],
+        "output_schema": "QueryExecutionReceipt",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      }
+    },
+    "runbook": {
+      "title": "SOC IOC Investigation",
+      "trigger": "Suspicious indicator alert",
+      "triage_checks": [
+        "Validate alert context and source fidelity",
+        "Classify indicator type and trust level",
+        "Decide close vs continue"
+      ],
+      "investigation_steps": [
+        "Collect CTI evidence for the indicator",
+        "Pivot to network telemetry when communication evidence is needed",
+        "Pivot to endpoint telemetry when process execution evidence is needed"
+      ],
+      "verification_checks": [
+        "Ensure every hypothesis cites evidence IDs",
+        "Validate result schema and trace integrity"
+      ],
+      "review_questions": [
+        "What evidence supports or contradicts the assessment?",
+        "What data gaps remain before action by human analyst?"
+      ]
+    },
+    "human_decisions": [],
+    "hitl_enabled": false,
+    "review_status": "blocked_invalid_technical",
+    "traceability_valid": true,
+    "traceability_violations": [],
+    "query_policy": {
+      "termination": "QUERY_TOOL_FAILURE",
+      "assessment": null,
+      "validation": {
+        "valid": false,
+        "issues": [
+          "QUERY_RESULT_NOT_CITED",
+          "QUERY_NATIVE_TOOL_TRACE_INVALID",
+          "MISSING_QUERY_OBSERVATION",
+          "INDEPENDENT_QUERY_REPLAY_REQUIRED"
+        ],
+        "independent_query_replay": false,
+        "semantic_correctness_verified": false
+      },
+      "prose_semantics_machine_verified": false
+    },
+    "schema_valid": true,
+    "orchestration_mode": "query_evidence_driven",
+    "query_scope": {
+      "database_id": "ctu_dev",
+      "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+      "allowed_tables": [
+        "network_flows"
+      ],
+      "scope_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-2"
+    },
+    "query_generation": {
+      "case_id": "query_fbc3b691229a438c82d54643ea66a77e",
+      "database_id": "ctu_dev",
+      "condition": "E3",
+      "final_sql": null,
+      "attempted_calls": 3,
+      "response_count": 3,
+      "responses": [
+        {
+          "role": "linker",
+          "response": {
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_uAfRsl0vZBgiBpuEbhi7NoPc",
+                "function": {
+                  "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"5\",\"match_kind\":\"contains\"}",
+                  "name": "value_search"
+                },
+                "type": "function"
+              }
+            ],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EXNMkzkGknHMYwUISO8psvtnuKKJO",
+            "finish_reason": "tool_calls",
+            "usage": {
+              "input_tokens": 1223,
+              "output_tokens": 166,
+              "cached_tokens": 0
+            },
+            "cost_usd": 0.00063775
+          }
+        },
+        {
+          "role": "linker",
+          "response": {
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_08cXFjwUIjs3sK0CNbret2oi",
+                "function": {
+                  "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"7\",\"match_kind\":\"contains\"}",
+                  "name": "value_search"
+                },
+                "type": "function"
+              }
+            ],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EXNMpO4Yc3uoOAmfXP9W2e6ojLCBB",
+            "finish_reason": "tool_calls",
+            "usage": {
+              "input_tokens": 2070,
+              "output_tokens": 230,
+              "cached_tokens": 1024
+            },
+            "cost_usd": 0.0007471
+          }
+        }
+      ],
+      "trajectory": [
+        {
+          "tool": "value_search",
+          "arguments": {
+            "table": "network_flows",
+            "column": "label",
+            "query": "5",
+            "match_kind": "contains"
+          },
+          "result": {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "label",
+            "type": "VARCHAR",
+            "resolution": "matched",
+            "matches": [
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=Background-google-analytics15",
+                "evidence_id": "catalog_b2deadaccc048e84fcb11022a8a0855d62378b65f856223ba06f969378bc9a0c"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=Background-google-analytics5",
+                "evidence_id": "catalog_4285cbf3dcc2d4dd48014f340486ba60d0515861cb3aab578d5c1c2c95071782"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V46-TCP-CC5-Plain-HTTP-Encrypted-Data",
+                "evidence_id": "catalog_132cf23908eda53fe9cf7ce04706564c85bc3132bc28bf0244f45ca134a68947"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V46-TCP-Established-HTTP-To-Microsoft-5",
+                "evidence_id": "catalog_fb2edab3272884e08318724ae3f1a8176617e2aed5ea19659d83b954e013cf17"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V46-TCP-Established-SSL-To-Microsoft-5",
+                "evidence_id": "catalog_b17aaa058667370f962e12ae42b85cc2f4d32578a97a8f559c7c5e08e2051c9e"
+              }
+            ],
+            "domain_witnesses": [],
+            "domain": [],
+            "domain_complete": false
+          }
+        },
+        {
+          "tool": "value_search",
+          "arguments": {
+            "table": "network_flows",
+            "column": "label",
+            "query": "7",
+            "match_kind": "contains"
+          },
+          "result": {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "label",
+            "type": "VARCHAR",
+            "resolution": "matched",
+            "matches": [
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=Background-google-analytics7",
+                "evidence_id": "catalog_d30d10ec04041823c9c711140eaa8a42c883defd056cac649e654420f8291e9f"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V46-TCP-CC7-Custom-Encryption",
+                "evidence_id": "catalog_9ec97cf5390f43ba82e3d2198326ed449c8b7d41b79cbe952c263cf4c81415d5"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V46-TCP-Established-HTTP-To-Microsoft-7",
+                "evidence_id": "catalog_335d70b5e850dbe006ac628f04f6568ff53a517e4e06be179b1c31845c860a51"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V46-TCP-Established-SSL-To-Microsoft-7",
+                "evidence_id": "catalog_6d0b443350eceedad2a27b6ed947f3b381b66107f7fe91fd0537d3d9488441f8"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V48-TCP-CC77-HTTP-Not-Encrypted",
+                "evidence_id": "catalog_67306860a99bb1407dfb0b44bc31e520360f86da89dba8863881abdd99edc1ae"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "label",
+                "type": "VARCHAR",
+                "value": "flow=From-Botnet-V48-TCP-HTTP-Google-Net-Established-7",
+                "evidence_id": "catalog_6019895cbfd12ed9580f4042cf7a4c98f0ec658dd292cc49f22461801769f900"
+              }
+            ],
+            "domain_witnesses": [],
+            "domain": [],
+            "domain_complete": false
+          }
+        }
+      ],
+      "error_category": "MODEL_PARSE_ERROR",
+      "linked_schema": null,
+      "evidence_kind": "openai_live",
+      "db_calls": 4,
+      "wall_seconds": 17.740717863999976,
+      "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+      "runtime_version": "shared_text2sql_v1",
+      "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+    },
+    "query_execution": null
+  },
+  "condition": "E3",
+  "generation": {
+    "case_id": "query_fbc3b691229a438c82d54643ea66a77e",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": null,
+    "attempted_calls": 3,
+    "response_count": 3,
+    "responses": [
+      {
+        "role": "linker",
+        "response": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_uAfRsl0vZBgiBpuEbhi7NoPc",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"5\",\"match_kind\":\"contains\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EXNMkzkGknHMYwUISO8psvtnuKKJO",
+          "finish_reason": "tool_calls",
+          "usage": {
+            "input_tokens": 1223,
+            "output_tokens": 166,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.00063775
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_08cXFjwUIjs3sK0CNbret2oi",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"7\",\"match_kind\":\"contains\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EXNMpO4Yc3uoOAmfXP9W2e6ojLCBB",
+          "finish_reason": "tool_calls",
+          "usage": {
+            "input_tokens": 2070,
+            "output_tokens": 230,
+            "cached_tokens": 1024
+          },
+          "cost_usd": 0.0007471
+        }
+      }
+    ],
+    "trajectory": [
+      {
+        "tool": "value_search",
+        "arguments": {
+          "table": "network_flows",
+          "column": "label",
+          "query": "5",
+          "match_kind": "contains"
+        },
+        "result": {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "label",
+          "type": "VARCHAR",
+          "resolution": "matched",
+          "matches": [
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=Background-google-analytics15",
+              "evidence_id": "catalog_b2deadaccc048e84fcb11022a8a0855d62378b65f856223ba06f969378bc9a0c"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=Background-google-analytics5",
+              "evidence_id": "catalog_4285cbf3dcc2d4dd48014f340486ba60d0515861cb3aab578d5c1c2c95071782"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V46-TCP-CC5-Plain-HTTP-Encrypted-Data",
+              "evidence_id": "catalog_132cf23908eda53fe9cf7ce04706564c85bc3132bc28bf0244f45ca134a68947"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V46-TCP-Established-HTTP-To-Microsoft-5",
+              "evidence_id": "catalog_fb2edab3272884e08318724ae3f1a8176617e2aed5ea19659d83b954e013cf17"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V46-TCP-Established-SSL-To-Microsoft-5",
+              "evidence_id": "catalog_b17aaa058667370f962e12ae42b85cc2f4d32578a97a8f559c7c5e08e2051c9e"
+            }
+          ],
+          "domain_witnesses": [],
+          "domain": [],
+          "domain_complete": false
+        }
+      },
+      {
+        "tool": "value_search",
+        "arguments": {
+          "table": "network_flows",
+          "column": "label",
+          "query": "7",
+          "match_kind": "contains"
+        },
+        "result": {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "label",
+          "type": "VARCHAR",
+          "resolution": "matched",
+          "matches": [
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=Background-google-analytics7",
+              "evidence_id": "catalog_d30d10ec04041823c9c711140eaa8a42c883defd056cac649e654420f8291e9f"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V46-TCP-CC7-Custom-Encryption",
+              "evidence_id": "catalog_9ec97cf5390f43ba82e3d2198326ed449c8b7d41b79cbe952c263cf4c81415d5"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V46-TCP-Established-HTTP-To-Microsoft-7",
+              "evidence_id": "catalog_335d70b5e850dbe006ac628f04f6568ff53a517e4e06be179b1c31845c860a51"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V46-TCP-Established-SSL-To-Microsoft-7",
+              "evidence_id": "catalog_6d0b443350eceedad2a27b6ed947f3b381b66107f7fe91fd0537d3d9488441f8"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V48-TCP-CC77-HTTP-Not-Encrypted",
+              "evidence_id": "catalog_67306860a99bb1407dfb0b44bc31e520360f86da89dba8863881abdd99edc1ae"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "label",
+              "type": "VARCHAR",
+              "value": "flow=From-Botnet-V48-TCP-HTTP-Google-Net-Established-7",
+              "evidence_id": "catalog_6019895cbfd12ed9580f4042cf7a4c98f0ec658dd292cc49f22461801769f900"
+            }
+          ],
+          "domain_witnesses": [],
+          "domain": [],
+          "domain_complete": false
+        }
+      }
+    ],
+    "error_category": "MODEL_PARSE_ERROR",
+    "linked_schema": null,
+    "evidence_kind": "openai_live",
+    "db_calls": 4,
+    "wall_seconds": 17.740717863999976,
+    "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+    "runtime_version": "shared_text2sql_v1",
+    "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+  },
+  "score": {
+    "case_id": "ctu_cross_708b66575657429a",
+    "execution_accurate": false,
+    "execution_success": false,
+    "scoring_error_category": "NO_FINAL_SQL"
+  },
+  "modules": {
+    "policy": {
+      "version": "module_metrics_v2",
+      "empty_set": "NA_rates_exact_set_success",
+      "alternative": "max_joint_item_f1_stable_first",
+      "coverage": "stage_present_over_all_cases",
+      "numeric_constraints_are_stored_values": false,
+      "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+    },
+    "selected_alternative": null,
+    "schema_linker": null,
+    "value_grounding": null
+  },
+  "runtime_source_sha256": {
+    ".github/workflows/ci.yml": "51a45022d0c3f3da6edaba7b18a9871cf0b66e4b44260e0f2c1ab0b91bdcab83",
+    ".github/workflows/query-demo-once.yml": "18261747eb75162705180351c358e3e8ecea2345c2905209d382a1fbfd79add3",
+    "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
+    "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+    "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+    "agent/integrations.py": "dff3d800215329b4719c8cbf86ede1ac2b17e77bbb1e4178f55f1967a235adbc",
+    "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+    "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+    "agent/network_query_policy.py": "70e88f2ff7d48da68566e300abb75689a92509f8a314136b2833f3068fa90019",
+    "agent/orchestrator.py": "ddbabd451f93616ebc95d11e4896208f3acd2d1ed20aff90341444b9dc137cb2",
+    "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+    "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+    "agent/soc_investigation_policy.py": "390dc7228ccce2d8222636da87118b758daa179beb14e0f28ae49f44f1007db8",
+    "agent/soc_provider.py": "01fa7b405eaafb914753a69d1dbb2a65e5f1a79dcc9bdafec6ada16cc3ac76d0",
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+    "cli/main.py": "186ab83d97060d2533560b6933257ebeaa5d900dedfebba363b6645c4ff13bcb",
+    "evaluation/finalization/__init__.py": "8479c108d265ef93ca754baa7ba51bebeb7b91ca09e007cf70348ecea84fe756",
+    "evaluation/finalization/cloud_window.py": "8db52ee113dc280e702de0dcb2f96cb9eff571ab80db76f9700285a4d36ddb1f",
+    "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+    "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+    "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+    "evaluation/finalization/query_cloud.py": "5814c49fbe32398a1171f957fbee2363bcd569923e778c962c23bf7b661a3656",
+    "evaluation/finalization/query_pipeline_contract.py": "bcd32c210dd89f256739be3902182e732615945d13f93b5a1f459fe4fa9dac23",
+    "evaluation/finalization/query_pipeline_reporting.py": "4399b2d820e733873590115233b85974dd86ad1edb8efab9b7f2f25a46371f17",
+    "evaluation/finalization/query_record_normalization.py": "f53a35b7ac15c2d0c114a431118b3c337a234b8ca18fc4d599442043e068a846",
+    "evaluation/finalization/query_reporting.py": "0da468aa27739c6336d31d7a21c97102d9a7041c57a954e596fc16cf54678edd",
+    "evaluation/finalization/query_runtime_validation.py": "d418af080c9222935b5186023e679139927bfaf9b4f3a26c7bf2c57c2061b77f",
+    "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "evaluation/finalization/query_token_bound.py": "97858f39537d02b169cd7750338dbc5e17c82b14f388d7d7ed48223995c134c3",
+    "evaluation/finalization/query_view.py": "84dfb5e4918414a8c5cee907c3cd778bf35dd12949f920497763fa54da90cd9d",
+    "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+    "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+    "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+    "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+    "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+    "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+    "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+    "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+    "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+    "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+    "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+    "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+    "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+    "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+    "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+    "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+    "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+    "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+    "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+    "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+    "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+    "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+    "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+    "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
+    "results/evaluation_v1/text2sql_integration_v1/demo_selection.json": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+    "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0",
+    "scripts/prepare_query_budget.py": "e1b6167d8b1e79e68bb091aeaae7e9c47f5b5142f712bc6669116d6597c041b5",
+    "scripts/render_query_pipeline_report.py": "c20c2c783b9b38ab0b2184ef163e2cebddcac68c5ded318ef5badc8c2372716e",
+    "scripts/review_vinsoc_query_case.py": "3ca5d7415bcf65c25ea6e8f95c1dea23c728df8bea92e7ac6586bbf1a922562f",
+    "scripts/run_query_demo_cloud.py": "85d999d4725360a4598956c2bc53b8e5b66614914ac388a4abb45b1edc02cedf",
+    "scripts/run_query_real_data_checks.py": "f466226df5ddcf4ca3f5d0d26be99d2f7b45624616c5722336d3b6e217b12c3f",
+    "scripts/run_vinsoc_query_acceptance.py": "1b3e753fd57bc94e5eaf78dfa04337ab7894f85f51fceb77af3743cf2e2a0e26",
+    "scripts/verify_query_preservation.py": "82d9d8de85574c4512cbe0721ad6dcf0a27fb71bccfc565e0469d97d649dbd47",
+    "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
+    "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+    "skills/cti_providers.py": "1341b71972450b06ff8fd4030aaec33d44da8ff4e2bc120b17fa953bdc3c2342",
+    "skills/cti_skill.py": "7438ff3db5e62dcaaecf29416749610a6c5cb3117a63c6de7348ab2fc4c5f944",
+    "skills/endpoint_skill.py": "2f98787b6a5766e893f67c90eff93d1b1ce74209eb4a6d375a94beab5d859021",
+    "skills/network_query_skill.py": "33d9939ca25feac125b28a180787dea95ed0f19193737e6959cd0617f03b1c95",
+    "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+    "skills/soc_corpus_skill.py": "9104fa0a2a6b2a0aa68a4755f648da7cee430ed093fc4404f4952ae135ab1ff5",
+    "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+    "telemetry/network/__init__.py": "247b2b7d30283e515084e44199c263078847f6dd311dc9988578253d2dc7c3f3",
+    "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+    "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+    "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+    "telemetry/network/suricata.py": "acec544916e83e5b6f5f2f695dd5ce35b0765a60e3ed8ef0725ad562c06993e2",
+    "telemetry/network/zeek.py": "9865864f81324141e7022d5045479c5dc4e2afd49a530d05782a6bd0630efd3f",
+    "vinsoc_data/__init__.py": "c3bc2e18d845daf05a375212f6f5e27f6359078ffe286c01043660ddb6d87a25",
+    "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+    "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
+    "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+    "vinsoc_text2sql/__init__.py": "00295daa9c8901515fa2012a2080c586b3e326f45449531356603d02b42dde47",
+    "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+    "vinsoc_text2sql/accounting.py": "284a281637cb82cbeb6cf875c3aa634a744b62c7c02f7327fc63d6b5df83e189",
+    "vinsoc_text2sql/executor.py": "721025a1d8452bcf62055ae6ba1d097201a3a4daf413995291d60f0ed8b6c039",
+    "vinsoc_text2sql/process_group.py": "b528ad72567e2cd424367a812a03c63718a065b6ef7911f7493c6e97b66160c1",
+    "vinsoc_text2sql/provider.py": "107263d68fbe3f867909b1e6060284b214738ad574bdca8f71a115025f4adfed",
+    "vinsoc_text2sql/service.py": "c201b36c9852cab26453690c7dbe5864cc656c392d7f1f58b90c3d5d6234fde2"
+  },
+  "identities": {
+    "runtime_source_sha256": {
+      ".github/workflows/ci.yml": "51a45022d0c3f3da6edaba7b18a9871cf0b66e4b44260e0f2c1ab0b91bdcab83",
+      ".github/workflows/query-demo-once.yml": "18261747eb75162705180351c358e3e8ecea2345c2905209d382a1fbfd79add3",
+      "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
+      "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+      "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+      "agent/integrations.py": "dff3d800215329b4719c8cbf86ede1ac2b17e77bbb1e4178f55f1967a235adbc",
+      "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+      "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+      "agent/network_query_policy.py": "70e88f2ff7d48da68566e300abb75689a92509f8a314136b2833f3068fa90019",
+      "agent/orchestrator.py": "ddbabd451f93616ebc95d11e4896208f3acd2d1ed20aff90341444b9dc137cb2",
+      "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+      "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+      "agent/soc_investigation_policy.py": "390dc7228ccce2d8222636da87118b758daa179beb14e0f28ae49f44f1007db8",
+      "agent/soc_provider.py": "01fa7b405eaafb914753a69d1dbb2a65e5f1a79dcc9bdafec6ada16cc3ac76d0",
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+      "cli/main.py": "186ab83d97060d2533560b6933257ebeaa5d900dedfebba363b6645c4ff13bcb",
+      "evaluation/finalization/__init__.py": "8479c108d265ef93ca754baa7ba51bebeb7b91ca09e007cf70348ecea84fe756",
+      "evaluation/finalization/cloud_window.py": "8db52ee113dc280e702de0dcb2f96cb9eff571ab80db76f9700285a4d36ddb1f",
+      "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+      "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+      "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+      "evaluation/finalization/query_cloud.py": "5814c49fbe32398a1171f957fbee2363bcd569923e778c962c23bf7b661a3656",
+      "evaluation/finalization/query_pipeline_contract.py": "bcd32c210dd89f256739be3902182e732615945d13f93b5a1f459fe4fa9dac23",
+      "evaluation/finalization/query_pipeline_reporting.py": "4399b2d820e733873590115233b85974dd86ad1edb8efab9b7f2f25a46371f17",
+      "evaluation/finalization/query_record_normalization.py": "f53a35b7ac15c2d0c114a431118b3c337a234b8ca18fc4d599442043e068a846",
+      "evaluation/finalization/query_reporting.py": "0da468aa27739c6336d31d7a21c97102d9a7041c57a954e596fc16cf54678edd",
+      "evaluation/finalization/query_runtime_validation.py": "d418af080c9222935b5186023e679139927bfaf9b4f3a26c7bf2c57c2061b77f",
+      "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+      "evaluation/finalization/query_token_bound.py": "97858f39537d02b169cd7750338dbc5e17c82b14f388d7d7ed48223995c134c3",
+      "evaluation/finalization/query_view.py": "84dfb5e4918414a8c5cee907c3cd778bf35dd12949f920497763fa54da90cd9d",
+      "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+      "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+      "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+      "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+      "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+      "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+      "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+      "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+      "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+      "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+      "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+      "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+      "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+      "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+      "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+      "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+      "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+      "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+      "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+      "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+      "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+      "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+      "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+      "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+      "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
+      "results/evaluation_v1/text2sql_integration_v1/demo_selection.json": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+      "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0",
+      "scripts/prepare_query_budget.py": "e1b6167d8b1e79e68bb091aeaae7e9c47f5b5142f712bc6669116d6597c041b5",
+      "scripts/render_query_pipeline_report.py": "c20c2c783b9b38ab0b2184ef163e2cebddcac68c5ded318ef5badc8c2372716e",
+      "scripts/review_vinsoc_query_case.py": "3ca5d7415bcf65c25ea6e8f95c1dea23c728df8bea92e7ac6586bbf1a922562f",
+      "scripts/run_query_demo_cloud.py": "85d999d4725360a4598956c2bc53b8e5b66614914ac388a4abb45b1edc02cedf",
+      "scripts/run_query_real_data_checks.py": "f466226df5ddcf4ca3f5d0d26be99d2f7b45624616c5722336d3b6e217b12c3f",
+      "scripts/run_vinsoc_query_acceptance.py": "1b3e753fd57bc94e5eaf78dfa04337ab7894f85f51fceb77af3743cf2e2a0e26",
+      "scripts/verify_query_preservation.py": "82d9d8de85574c4512cbe0721ad6dcf0a27fb71bccfc565e0469d97d649dbd47",
+      "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
+      "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+      "skills/cti_providers.py": "1341b71972450b06ff8fd4030aaec33d44da8ff4e2bc120b17fa953bdc3c2342",
+      "skills/cti_skill.py": "7438ff3db5e62dcaaecf29416749610a6c5cb3117a63c6de7348ab2fc4c5f944",
+      "skills/endpoint_skill.py": "2f98787b6a5766e893f67c90eff93d1b1ce74209eb4a6d375a94beab5d859021",
+      "skills/network_query_skill.py": "33d9939ca25feac125b28a180787dea95ed0f19193737e6959cd0617f03b1c95",
+      "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+      "skills/soc_corpus_skill.py": "9104fa0a2a6b2a0aa68a4755f648da7cee430ed093fc4404f4952ae135ab1ff5",
+      "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+      "telemetry/network/__init__.py": "247b2b7d30283e515084e44199c263078847f6dd311dc9988578253d2dc7c3f3",
+      "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+      "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+      "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+      "telemetry/network/suricata.py": "acec544916e83e5b6f5f2f695dd5ce35b0765a60e3ed8ef0725ad562c06993e2",
+      "telemetry/network/zeek.py": "9865864f81324141e7022d5045479c5dc4e2afd49a530d05782a6bd0630efd3f",
+      "vinsoc_data/__init__.py": "c3bc2e18d845daf05a375212f6f5e27f6359078ffe286c01043660ddb6d87a25",
+      "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+      "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
+      "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+      "vinsoc_text2sql/__init__.py": "00295daa9c8901515fa2012a2080c586b3e326f45449531356603d02b42dde47",
+      "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+      "vinsoc_text2sql/accounting.py": "284a281637cb82cbeb6cf875c3aa634a744b62c7c02f7327fc63d6b5df83e189",
+      "vinsoc_text2sql/executor.py": "721025a1d8452bcf62055ae6ba1d097201a3a4daf413995291d60f0ed8b6c039",
+      "vinsoc_text2sql/process_group.py": "b528ad72567e2cd424367a812a03c63718a065b6ef7911f7493c6e97b66160c1",
+      "vinsoc_text2sql/provider.py": "107263d68fbe3f867909b1e6060284b214738ad574bdca8f71a115025f4adfed",
+      "vinsoc_text2sql/service.py": "c201b36c9852cab26453690c7dbe5864cc656c392d7f1f58b90c3d5d6234fde2"
+    },
+    "benchmark_identity": "10e124eab0bb918d69595811619990a57e626f64ee23997648cbf79f07029f7d",
+    "scorer_identity": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "snapshot_identities": {
+      "student_transcripts_tracking": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+      "cre_Doc_Template_Mgt": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+      "world_1": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+      "voter_1": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+      "dog_kennels": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+      "orchestra": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+      "concert_singer": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+      "car_1": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+      "flight_2": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+      "course_teach": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+      "poker_player": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+      "tvshow": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+      "ctu_dev": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+    },
+    "implementation_sha": "de8b7357f72d4f738668e909dfb405f908578768"
+  },
+  "cost_events": [
+    {
+      "role": "routing",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "40adf59237ac46e38102435d81507b1b",
+      "request_sha256": "e1d1c0e4b8e6566f0e6faf6d8711eb35d1cf8df2f7574bac3e8809f7f14b8389",
+      "received": true,
+      "reserved_usd": 0.4206304,
+      "cost_usd": 0.00023280000000000002,
+      "usage": {
+        "input_tokens": 318,
+        "output_tokens": 66,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 2.4495315450000135,
+      "actual_model": "gpt-4.1-mini-2025-04-14",
+      "response_id": "chatcmpl-EXNMhIbn3gr5Y3Mg5T2wx7dEfX551",
+      "provider_request_id": "req_6efd488182a942c28fdae1777dd011a7",
+      "native_tool_calls": [
+        {
+          "id": "call_qy0IKjOysH9FIczkYo8NLPUu",
+          "function": {
+            "arguments": "{\"question\":\"Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.\"}",
+            "name": "network_query"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "c3c0dc2a17664fb58f68101085529cf1",
+      "request_sha256": "9002f1bc15e0ab6cedb2c29e688f8614971c73a0bae24637291f10bcf64656a2",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.00063775,
+      "usage": {
+        "input_tokens": 1223,
+        "output_tokens": 166,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 1.5540683370001034,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EXNMkzkGknHMYwUISO8psvtnuKKJO",
+      "provider_request_id": "req_944fee5575234cd693889f04a63f98a2",
+      "native_tool_calls": [
+        {
+          "id": "call_uAfRsl0vZBgiBpuEbhi7NoPc",
+          "function": {
+            "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"5\",\"match_kind\":\"contains\"}",
+            "name": "value_search"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "75da959e68534a4982685f1f40a943bb",
+      "request_sha256": "5c77d22efd099de2122f1761288461ea5fd9033799652ea289f31fc8cb387ec3",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0007471,
+      "usage": {
+        "input_tokens": 2070,
+        "output_tokens": 230,
+        "cached_tokens": 1024
+      },
+      "latency_seconds": 2.1816889759999185,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EXNMpO4Yc3uoOAmfXP9W2e6ojLCBB",
+      "provider_request_id": "req_46fc2823eb0a4633a3deaa2ea1119c05",
+      "native_tool_calls": [
+        {
+          "id": "call_08cXFjwUIjs3sK0CNbret2oi",
+          "function": {
+            "arguments": "{\"table\":\"network_flows\",\"column\":\"label\",\"query\":\"7\",\"match_kind\":\"contains\"}",
+            "name": "value_search"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "c28dac99cdec4acca8232a65126aad7a",
+      "request_sha256": "18428eedae378e1ed7833741872a21625908552011a92f9e20b2d843969a40d7",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0027325,
+      "usage": {
+        "input_tokens": 2930,
+        "output_tokens": 1000,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 6.313883746999977,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EXNMuBcRIaoHjb5CjV4YlsxVLhpJM",
+      "provider_request_id": "req_f5709dbffd4a42718ef5c3a5b141cca6",
+      "native_tool_calls": []
+    }
+  ],
+  "cost_unknown": false
+}
