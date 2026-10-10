@@ -36,6 +36,22 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
     caps = role_caps(scope, condition)
     planned = {'calibration': 24, 'evaluation': 96, 'pipeline': 32}[scope]
     reasons = []
+    from evaluation.finalization.query_runtime_validation import verify_scope_unused, verify_selection_lock, verify_canonical_reconciliation
+    try:
+        verify_scope_unused(scope)
+    except ValueError as error:
+        reasons.append(str(error))
+    if scope in ('evaluation', 'pipeline'):
+        try:
+            selection = verify_selection_lock(identities.get('selection_lock_path') or '', identities=identities)
+            if selection['selected_condition'] != condition:
+                raise ValueError('CALIBRATION_SELECTED_CONDITION_MISMATCH')
+        except (ValueError, OSError, KeyError, TypeError):
+            reasons.append('CALIBRATION_SELECTION_LOCK_REQUIRED')
+    try:
+        verify_canonical_reconciliation(account)
+    except (ValueError, OSError, KeyError, TypeError):
+        reasons.append('CANONICAL_RECONCILIATION_REQUIRED')
     ids = [row.get('case_id') for row in inventory if isinstance(row, dict)]
     if (len(inventory) != planned or len(ids) != planned or len(set(ids)) != planned
             or any(not isinstance(i, str) or not i for i in ids)

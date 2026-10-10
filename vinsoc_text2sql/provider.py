@@ -43,6 +43,10 @@ class QueryProvider(LLMProvider):
         return 'openai_query_guarded'
 
     def get_run_metadata(self):
-        return {'roles': [e['role'] for e in self.journal.data['events'][self.start_event:]],
-                **self.routing.counters(), 'known_usd': self.journal.data['known_usd'],
-                'cost_unknown': self.journal.data['cost_unknown']}
+        events = self.journal.case_events()
+        return {'roles': [e['role'] for e in events], 'attempted': len(events),
+                'received': sum(e['received'] for e in events),
+                'valid_usage': sum(e.get('usage') is not None for e in events),
+                'known_usd': sum(e['cost_usd'] for e in events if e.get('cost_usd') is not None),
+                'cost_unknown': any(e.get('cost_usd') is None for e in events),
+                'cost_events': events}

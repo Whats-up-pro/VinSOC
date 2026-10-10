@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 import urllib.request
 from pathlib import Path
@@ -30,7 +31,183 @@ RUNTIME_PATHS = ('cli/main.py', 'pyproject.toml', 'agent/orchestrator.py', 'agen
 
 
 def source_hashes():
-    return {path: file_hash(ROOT/path, portable=True) for path in RUNTIME_PATHS}
+    paths = set(RUNTIME_PATHS) | {'requirements.txt', '.github/workflows/ci.yml'}
+    # Bind the full local dependency closure, including lifecycle/evidence and SQL primitives.
+    for package in ('agent', 'skills', 'vinsoc_data', 'vinsoc_text2sql', 'telemetry',
+                    'evaluation/r2_cross_domain_v1', 'evaluation/finalization'):
+        paths.update(p.relative_to(ROOT).as_posix() for p in (ROOT/package).glob('**/*.py'))
+    return {path: file_hash(ROOT/path, portable=True) for path in sorted(paths)}
+
+
+def verify_scope_unused(scope):
+    if scope not in ('calibration', 'evaluation', 'pipeline'):
+        raise ValueError('INVALID_RELEASE_SCOPE')
+    root = Path.home()/'.vinsoc/live-windows'/('text2sql-integration-20261008-'+scope)
+    if any((root/name).exists() for name in ('claim.json', 'ledger.json', 'migration.json')):
+        raise ValueError('RELEASE_WINDOW_CONSUMED')
+
+
+def verify_transmission_files(identities):
+    if identities.get('runtime_source_sha256') != source_hashes():
+        raise ValueError('RUNTIME_SOURCE_IDENTITY_MISMATCH')
+    locked = identities.get('transmission_files_sha256')
+    if not isinstance(locked, dict) or not locked:
+        raise ValueError('TRANSMISSION_DATA_BINDING_REQUIRED')
+    for relative, expected in locked.items():
+        path = (ROOT/relative).resolve()
+        if not path.is_relative_to(ROOT) or file_hash(path) != expected:
+            raise ValueError('TRANSMISSION_DATA_IDENTITY_MISMATCH')
+
+
+def transmission_files(contexts):
+    """Recheck original binary/source/benchmark bytes before every transmission."""
+    base = ROOT/'evaluation/r2_cross_domain_v1'
+    lock = json.loads((base/'benchmark.lock.json').read_text())
+    result = dict(lock['files'])
+    result.update({c.snapshot_path.relative_to(ROOT).as_posix(): c.identity['duckdb_binary_sha256']
+                   for c in contexts.values()})
+    source = json.loads((ROOT/lock['source_manifest']).read_text())
+    archive = ROOT/lock['external_source_root']/source['archive_filename']
+    result[archive.relative_to(ROOT).as_posix()] = source['archive_sha256']
+    result['evaluation/r2_cross_domain_v1/runtime_registry.json'] = lock['registry_sha256']
+    return result
+
+
+def verify_canonical_reconciliation(account):
+    """An absent ledger is unknown, not an authoritative declaration of zero spend."""
+    reference = account.get('reconciliation_reference') or {}
+    canonical = Path.home()/'.vinsoc/live-windows'
+    path = Path(reference.get('path', '')).resolve()
+    if not path.is_relative_to(canonical.resolve()) or not path.is_file():
+        raise ValueError('CANONICAL_RECONCILIATION_REQUIRED')
+    if file_hash(path) != reference.get('sha256'):
+        raise ValueError('CANONICAL_RECONCILIATION_HASH_MISMATCH')
+    receipt = json.loads(path.read_text())
+    from evaluation.r2_cross_domain_v1.release import fresh
+    if (not fresh(receipt.get('verified_utc')) or receipt.get('authoritative_host_verified') is not True
+            or receipt.get('prior_hosts_sealed') is not True or receipt.get('unknown_exposure_usd') != 0
+            or receipt.get('allocation_id') != account.get('allocation_id')
+            or receipt.get('known_prior_cost_usd') != account.get('known_prior_cost_usd')
+            or receipt.get('remaining_allocation_usd') != account.get('remaining_allocation_usd')
+            or set(receipt.get('scope_states', {})) != {'calibration','evaluation','pipeline'}):
+        raise ValueError('CANONICAL_RECONCILIATION_UNVERIFIED')
+    ledgers = receipt.get('ledger_artifacts')
+    if not isinstance(ledgers, list) or not ledgers:
+        raise ValueError('CANONICAL_LEDGER_ARTIFACTS_REQUIRED')
+    for artifact in ledgers:
+        target = (canonical/artifact['path']).resolve()
+        if not target.is_relative_to(canonical.resolve()) or file_hash(target) != artifact['sha256']:
+            raise ValueError('CANONICAL_LEDGER_IDENTITY_MISMATCH')
+    return receipt
+
+
+def selection_identities():
+    from evaluation.r2_cross_domain_v1.release import canonical_hash
+    base = ROOT/'evaluation/r2_cross_domain_v1'
+    registry = json.loads((base/'runtime_registry.json').read_text())
+    return {'runtime_source_sha256': source_hashes(),
+            'benchmark_identity': file_hash(base/'benchmark.lock.json'),
+            'scorer_identity': file_hash(ROOT/'evaluation/finalization/query_scoring.py', portable=True),
+            'snapshot_identities': {r['database_id']: r['logical_sha256'] for r in registry['databases']}}
+
+
+def build_selection_lock(records, *, identities, artifacts):
+    from evaluation.r2_cross_domain_v1.release import canonical_hash
+    inventory = json.loads((ROOT/'evaluation/r2_cross_domain_v1/benchmarks/calibration_runtime.json').read_text())
+    metadata = {r['case_id']: r for r in inventory}
+    indexed = {}
+    response_ids = set()
+    for record in records:
+        key = record.get('condition'), record.get('case_id')
+        if key[0] not in ('E0', 'E3') or key[1] not in metadata or key in indexed:
+            raise ValueError('CALIBRATION_RECORD_IDENTITY')
+        indexed[key] = record
+    if len(indexed) != 48:
+        return {'version': 'query_selection_v2', 'status': 'pending', 'calibration_complete': False,
+                'selected_condition': None, 'received_records': len(indexed), 'required_records': 48}
+    required = selection_identities()
+    if any(identities.get(k) != v for k, v in required.items()) or not identities.get('implementation_sha'):
+        raise ValueError('CALIBRATION_PRODUCER_IDENTITY_MISMATCH')
+    totals = {}
+    for condition in ('E0', 'E3'):
+        correct, cost, calls, latency = 0, 0., 0, 0.
+        for row in inventory:
+            record = indexed[(condition, row['case_id'])]
+            generation = record.get('generation', record)
+            events = record.get('cost_events', [])
+            if (record.get('identities') != identities or generation.get('evidence_kind') != 'openai_live'
+                    or generation.get('question') != row['question']
+                    or generation.get('snapshot_identity') != required['snapshot_identities'][row['database_id']]
+                    or type(record.get('score', {}).get('execution_accurate')) is not bool
+                    or not events or record.get('cost_unknown') is not False
+                    or len(events) != generation.get('attempted_calls')
+                    or generation.get('response_count') != len(events)
+                    or type(generation.get('wall_seconds')) not in (int, float)
+                    or not math.isfinite(generation['wall_seconds']) or generation['wall_seconds'] < 0):
+                raise ValueError('CALIBRATION_INCOMPLETE_SCORING_OR_USAGE')
+            for e in events:
+                u = e.get('usage') or {}
+                if (e.get('case_id') != row['case_id'] or e.get('condition') != condition or e.get('role') != 'r2'
+                        or e.get('received') is not True or not e.get('request_id') or not e.get('request_sha256')
+                        or not e.get('response_id') or e['response_id'] in response_ids
+                        or e.get('actual_model') != 'gpt-5-mini-2025-08-07'
+                        or any(type(u.get(k)) is not int or u[k] < 0 for k in ('input_tokens', 'output_tokens', 'cached_tokens'))
+                        or type(e.get('cost_usd')) not in (int, float) or not math.isfinite(e['cost_usd']) or e['cost_usd'] < 0):
+                    raise ValueError('CALIBRATION_INCOMPLETE_SCORING_OR_USAGE')
+                response_ids.add(e['response_id'])
+                cost += e['cost_usd']
+            correct += int(record['score']['execution_accurate'])
+            calls += len(events)
+            latency += generation['wall_seconds']
+        totals[condition] = {'correct': correct, 'n': 24, 'cost_usd': cost, 'calls': calls, 'latency_seconds': latency}
+    if not artifacts:
+        raise ValueError('CALIBRATION_ARTIFACT_BINDING_REQUIRED')
+    selected = min(totals, key=lambda c: (-totals[c]['correct'], totals[c]['cost_usd'], totals[c]['calls'], totals[c]['latency_seconds'], c))
+    result = {'version': 'query_selection_v2', 'status': 'verified', 'calibration_complete': True,
+              'selected_condition': selected, 'received_records': 48, 'required_records': 48,
+              'identities': identities, 'artifacts': artifacts, 'records_sha256': canonical_hash(records),
+              'totals': totals, 'rule': 'EX,cost,calls,latency,E0'}
+    result['selection_sha256'] = canonical_hash(result)
+    return result
+
+
+def load_calibration_artifacts(directory, artifacts):
+    directory = Path(directory).resolve()
+    records = []
+    for artifact in artifacts:
+        target = (directory/artifact['path']).resolve()
+        if not target.is_relative_to(directory) or file_hash(target) != artifact['sha256']:
+            raise ValueError('CALIBRATION_ARTIFACT_HASH_MISMATCH')
+        loaded = json.loads(target.read_text(encoding='utf-8'))
+        if not isinstance(loaded.get('case_records'), list):
+            raise ValueError('CALIBRATION_RECORD_ARTIFACT_REQUIRED')
+        records.extend(loaded['case_records'])
+    return records
+
+
+def verify_selection_lock(path, *, identities):
+    from evaluation.r2_cross_domain_v1.release import canonical_hash
+    path = Path(path)
+    if not path.is_file():
+        raise ValueError('CALIBRATION_SELECTION_LOCK_REQUIRED')
+    lock = json.loads(path.read_text(encoding='utf-8'))
+    if lock.get('version') != 'query_selection_v2' or lock.get('calibration_complete') is not True:
+        raise ValueError('CALIBRATION_SELECTION_LOCK_REQUIRED')
+    unsigned = {k: v for k, v in lock.items() if k != 'selection_sha256'}
+    if canonical_hash(unsigned) != lock.get('selection_sha256') or identities.get('selection_sha256') != lock['selection_sha256']:
+        raise ValueError('CALIBRATION_SELECTION_HASH_MISMATCH')
+    records = load_calibration_artifacts(path.parent, lock.get('artifacts', []))
+    expected = build_selection_lock(records, identities=lock['identities'], artifacts=lock['artifacts'])
+    if expected != lock:
+        raise ValueError('CALIBRATION_SELECTION_RECOMPUTE_MISMATCH')
+    # Producer commit exists and its source bytes match the calibrated runtime.
+    producer = lock['identities']['implementation_sha']
+    for source, expected_hash in lock['identities']['runtime_source_sha256'].items():
+        import hashlib
+        content = subprocess.check_output(['git', 'show', producer+':'+source], cwd=ROOT)
+        if hashlib.sha256(content.replace(b'\r\n', b'\n')).hexdigest() != expected_hash:
+            raise ValueError('CALIBRATION_PRODUCER_IDENTITY_MISMATCH')
+    return lock
 
 
 def validate_data():
@@ -100,6 +277,6 @@ def verify_code_and_ci(identities):
     jobs = fetch('/actions/runs/'+str(run_id)+'/jobs?per_page=100')['jobs']
     if (run.get('head_sha') != head or run.get('conclusion') != 'success'
         or run.get('path') != '.github/workflows/ci.yml'
-        or not {'test (3.11)', 'test (3.12)'}.issubset(
+        or not {'test (3.11)', 'test (3.12)', 'query-real-data (3.11)', 'query-real-data (3.12)'}.issubset(
             {j['name'] for j in jobs if j.get('conclusion') == 'success'})):
         raise ValueError('EXACT_SHA_CI_REQUIRED')

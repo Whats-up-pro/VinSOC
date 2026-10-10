@@ -1,0 +1,19 @@
+{
+  "scope": "R3 offline preflight, selection, durable accounting",
+  "status": "OFFLINE_REJECTION_CHECKS_PASS_AUTHENTIC_SELECTION_PENDING",
+  "python": "3.11.9",
+  "red": {"failed": 8, "passed": 1},
+  "artifact_binding_red": "altered real CI receipt: binding helper absent",
+  "targeted": {"passed": 25, "failed": 0, "skipped": 0},
+  "compile_exit": 0,
+  "diff_check_exit": 0,
+  "full_local_initial": {"passed": 1217, "failed": 32, "errors": 23, "skipped": 5},
+  "local_blockers": ["Windows lacks fcntl and symlink privilege", "sandbox network restriction in historical SOC fixtures", "protected raw-byte checks differ on CRLF checkout", "legacy network-v1 snapshot missing"],
+  "full_local_escalated": "running; not a PASS claim",
+  "selection": {"status": "pending", "required_records": 48, "received_records": 0},
+  "positive_new_calibration_selection_test": "pending real calibration artifacts; no generated records",
+  "canonical_account_reconciliation": "unverified; blocked before SDK",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false
+}

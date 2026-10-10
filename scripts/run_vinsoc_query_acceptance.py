@@ -13,6 +13,12 @@ from evaluation.finalization.query_runtime_validation import (
     source_hashes,
     validate_data,
     verify_code_and_ci,
+    verify_selection_lock,
+    verify_scope_unused,
+    selection_identities,
+    build_selection_lock,
+    transmission_files,
+    verify_transmission_files,
 )
 
 
@@ -40,7 +46,8 @@ def run_preflight(scope, condition, private):
     except Exception as error:
         diagnostics.append({'gate': 'code_ci', 'error_class': type(error).__name__})
     try:
-        validate_data()
+        contexts, _ = validate_data()
+        identities['transmission_files_sha256'] = transmission_files(contexts)
         identities.update(data_verified=True, worker_verified=True)
     except Exception as error:
         diagnostics.append({'gate': 'real_data_and_worker', 'error_class': type(error).__name__})
@@ -53,8 +60,12 @@ def run_preflight(scope, condition, private):
 
 def run_live(release, output):
     release = validate_release(release)
+    verify_scope_unused(release['scope'])
     verify_code_and_ci(release['gate_inputs']['identities'])
     contexts, references = validate_data()  # Exact locked bytes + same worker, before SDK.
+    if release['gate_inputs']['identities'].get('transmission_files_sha256') != transmission_files(contexts):
+        raise ValueError('TRANSMISSION_DATA_BINDING_REQUIRED')
+    verify_transmission_files(release['gate_inputs']['identities'])
     inventory = inventory_for(release['scope'])
     if inventory != release['gate_inputs']['inventory']:
         raise ValueError('LOCKED_INVENTORY_CHANGED')
@@ -68,10 +79,8 @@ def run_live(release, output):
         selection_path = release['gate_inputs']['identities'].get('selection_lock_path')
         if not selection_path:
             raise ValueError('CALIBRATION_SELECTION_LOCK_REQUIRED')
-        selection = json.loads(Path(selection_path).read_text())
-        if (selection.get('runtime_source_sha256') != source_hashes()
-            or selection.get('selected_condition') != release['condition']
-            or selection.get('calibration_complete') is not True):
+        selection = verify_selection_lock(Path(selection_path), identities=release['gate_inputs']['identities'])
+        if selection['selected_condition'] != release['condition']:
             raise ValueError('CALIBRATION_SELECTION_LOCK_REQUIRED')
     import openai
 
@@ -90,6 +99,9 @@ def run_live(release, output):
     persist(output/'report.json', report)
     journal = None
     sdk = None
+    active = None
+    run_identities = {**selection_identities(), 'implementation_sha': release['gate_inputs']['identities']['implementation_sha']}
+    conditions = [release['condition']] if release['scope'] == 'pipeline' else ['E0', 'E3']
     try:
         journal = RunJournal.claim(release, ledger_path=Path.home()/'.vinsoc/live-windows'/release['window_id']/'ledger.json')
         sdk = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'], max_retries=0,
@@ -102,9 +114,27 @@ def run_live(release, output):
         conditions = [release['condition']] if release['scope'] == 'pipeline' else ['E0', 'E3']
         for condition in conditions:
             for row in inventory:  # Locked file order, no output-based selection.
+                if journal.data['terminal'] or journal.data['cost_unknown']:
+                    raise ValueError('TERMINAL_OR_UNKNOWN_COST')
+                journal.set_case(row['case_id'], condition)
                 context = contexts[row['database_id']]
                 target = output/(condition+'_'+row['case_id']+'.json')
-                checkpoint = lambda record: persist(target, record)
+                active = {'case_id': row['case_id'], 'condition': condition, 'question': row['question'],
+                          'status': 'partial', 'identities': run_identities, 'cost_events': []}
+                def checkpoint(record):
+                    active['generation'] = deepcopy(record)
+                    active['cost_events'] = journal.case_events()
+                    active['cost_unknown'] = journal.data['cost_unknown']
+                    persist(target, active)
+                def journal_checkpoint(events):
+                    active['cost_events'] = events
+                    active['cost_unknown'] = journal.data['cost_unknown']
+                    persist(target, active)
+                    report.update(active_case_id=row['case_id'], active_condition=condition,
+                                  **{k: journal.data[k] for k in ('attempted','received','valid_usage','cost_unknown','known_usd')})
+                    persist(output/'report.json', report)
+                journal.checkpoint_sink = journal_checkpoint
+                persist(target, active)
                 if release['scope'] == 'pipeline':
                     provider = QueryProvider(routing=clients['routing'], assessment=clients['assessment'],
                                              r2=clients['r2'], condition=condition)
@@ -128,13 +158,19 @@ def run_live(release, output):
                             if str(error) not in ('SQL_EXECUTION_FAILED', 'SQL_TIMEOUT'):
                                 raise
                             record['execution_error'] = str(error)
+                if journal.data['terminal'] or journal.data['cost_unknown']:
+                    checkpoint(generation)
+                    raise ValueError('TERMINAL_OR_UNKNOWN_COST')
                 # Evaluator-only answers are read only after runtime returned.
                 score = score_saved_generation(refs[row['case_id']], generation,
                     context=context, executor=service.executor)
                 reference = ReferenceCase(**{k: refs[row['case_id']][k] for k in ReferenceCase.__dataclass_fields__})
                 record.update(case_id=row['case_id'], condition=condition, generation=deepcopy(generation), score=score,
-                    modules=score_modules(reference, generation, context), runtime_source_sha256=source_hashes())
-                checkpoint(record)
+                    modules=score_modules(reference, generation, context), runtime_source_sha256=source_hashes(),
+                    identities=run_identities, cost_events=journal.case_events(), cost_unknown=journal.data['cost_unknown'])
+                active.clear()
+                active.update(record)
+                persist(target, active)
                 report['case_records'].append(record)
                 report.update(completed=len(report['case_records']), status='partial', **clients['r2'].counters(),
                               known_usd=journal.data['known_usd'], cost_unknown=journal.data['cost_unknown'])
@@ -146,16 +182,13 @@ def run_live(release, output):
         report['metrics'] = build_query_report(report['case_records'], [refs[r['case_id']] for r in inventory], conditions=tuple(conditions))
         report['official_eligible'] = False  # Full identity/scoring/report audit is a separate gate.
         if release['scope'] == 'calibration':
-            totals = {c: sum(r['score']['execution_accurate'] for r in report['case_records'] if r['condition']==c) for c in conditions}
-            # EX first; costs/requests/latency per condition from saved records, E0 final tie.
-            def rank(c):
-                records = [r for r in report['case_records'] if r['condition']==c]
-                cost = sum(e['response']['cost_usd'] for r in records for e in r['responses'])
-                return (-totals[c], cost, sum(r['attempted_calls'] for r in records),
-                        sum(r['wall_seconds'] for r in records), c)
-            chosen = min(conditions, key=rank)
-            write_new(output/'selection_lock.json', {'calibration_complete': len(report['case_records'])==48,
-                'selected_condition': chosen, 'runtime_source_sha256': source_hashes(), 'execution_correct': totals})
+            import hashlib
+            artifacts = []
+            for row in report['case_records']:
+                wrapper = output/('binding_'+row['condition']+'_'+row['case_id']+'.json')
+                write_new(wrapper, {'case_records': [row]})
+                artifacts.append({'path': wrapper.name, 'sha256': hashlib.sha256(wrapper.read_bytes()).hexdigest()})
+            write_new(output/'selection_lock.json', build_selection_lock(report['case_records'], identities=run_identities, artifacts=artifacts))
         return report
     except Exception as error:
         report.update(status='partial' if journal else 'blocked', failure_category=type(error).__name__)
@@ -163,9 +196,22 @@ def run_live(release, output):
             report.update(**{k: journal.data[k] for k in ('attempted','received','valid_usage','cost_unknown','known_usd')})
         return report
     finally:
+        if journal:
+            journal.checkpoint_sink = None
+            report['cost_events'] = [{k:v for k,v in e.items() if k not in ('request','response')}
+                                     for e in journal.data['events']]
+            if active is not None:
+                persist(target, active)
+            report.update(**{k:journal.data[k] for k in ('attempted','received','valid_usage','cost_unknown','known_usd','pending_exposure_usd')})
+        from evaluation.finalization.query_reporting import build_query_report
+        report['metrics'] = build_query_report(report['case_records'], inventory, conditions=tuple(conditions))
         persist(output/'report.json', report)
         if sdk:
-            sdk.close()
+            try:
+                sdk.close()
+            except Exception:
+                report.update(status='partial', close_error='SDK_CLOSE_FAILED')
+                persist(output/'report.json', report)
 
 
 def main(argv=None):
@@ -180,7 +226,9 @@ def main(argv=None):
     if args.preflight_only:
         private = json.loads(args.private_inputs.read_text()) if args.private_inputs else {}
         result = run_preflight(args.scope, args.condition, private)
-        write_new(args.output, result)
+        public = deepcopy(result)
+        public['release'].pop('gate_inputs', None)
+        write_new(args.output, public)
         receipt = result['release']
     else:
         if not args.release:

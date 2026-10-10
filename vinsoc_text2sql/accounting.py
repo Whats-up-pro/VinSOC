@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import uuid
 from pathlib import Path
 from time import monotonic
 from types import SimpleNamespace
@@ -19,6 +20,13 @@ def persist(path, data):
         out.flush()
         os.fsync(out.fileno())
     os.replace(temporary, path)
+    if os.name == 'posix':
+        os.chmod(path, 0o600)
+        directory = os.open(Path(path).parent, os.O_DIRECTORY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
 
 
 class RunJournal:
@@ -45,8 +53,20 @@ class RunJournal:
         self.persist()
         return self
 
+    def set_case(self, case_id, condition):
+        if case_id not in self.release['case_ids'] or condition not in ('E0', 'E3'):
+            raise ValueError('INVALID_COST_CASE_IDENTITY')
+        self.case_id, self.condition = case_id, condition
+
+    def case_events(self):
+        return [{k: v for k, v in e.items() if k not in ('request', 'response')} for e in self.data['events']
+                if e['case_id'] == self.case_id and e['condition'] == self.condition]
+
     def persist(self):
         persist(self.path, self.data)
+        sink = getattr(self, 'checkpoint_sink', None)
+        if sink and getattr(self, 'case_id', None):
+            sink(self.case_events())
 
     def ensure_case_capacity(self, condition):
         required = {'routing': 1, 'r2': 6 if condition == 'E3' else 1, 'assessment': 1}
@@ -56,10 +76,17 @@ class RunJournal:
                 raise ValueError('WHOLE_CASE_REQUEST_CAP_INSUFFICIENT')
         if self.data['terminal'] or self.data['cost_unknown']:
             raise ValueError('TERMINAL_OR_UNKNOWN_COST')
+        reserve = sum(self.release['reserves_usd'][r]*n for r, n in required.items())
+        if self.data['known_usd']+reserve > self.release['gate_inputs']['budget']['limit_usd']:
+            raise ValueError('WHOLE_CASE_BUDGET_INSUFFICIENT')
 
     def reserve(self, role, payload):
         if self.data['terminal'] or self.data['cost_unknown']:
             raise ValueError('TERMINAL_OR_UNKNOWN_COST')
+        if not getattr(self, 'case_id', None) or not getattr(self, 'condition', None):
+            raise ValueError('COST_CASE_IDENTITY_REQUIRED')
+        from evaluation.finalization.query_runtime_validation import verify_transmission_files
+        verify_transmission_files(self.release['gate_inputs']['identities'])
         cap = self.release['role_caps'][role]
         used = sum(e['role'] == role for e in self.data['events'])
         contract = self.release['contracts'][role]
@@ -77,7 +104,9 @@ class RunJournal:
         reserve = self.release['reserves_usd'][role]
         if self.data['known_usd']+reserve > self.release['gate_inputs']['budget']['limit_usd']:
             raise ValueError('BUDGET_EXCEEDED')
-        event = {'role': role, 'request_sha256': canonical_hash(payload), 'received': False,
+        event = {'role': role, 'case_id': self.case_id, 'condition': self.condition,
+                 'request_id': uuid.uuid4().hex, 'request_sha256': canonical_hash(payload), 'received': False,
+                 'request': payload,
                  'reserved_usd': reserve, 'cost_usd': None, 'usage': None}
         self.data['events'].append(event)
         self.data.update(attempted=self.data['attempted']+1, cost_unknown=True,
@@ -95,18 +124,22 @@ class RunJournal:
         event = self.data['events'][reservation_id]
         if event['received']:
             raise ValueError('RESPONSE_ALREADY_RECORDED')
-        event.update(received=True, actual_model=response.model, response_id=response.id)
+        raw = response if isinstance(response, dict) else response.model_dump(mode='json')
+        event.update(received=True, response=raw, actual_model=raw.get('model'),
+                     response_id=raw.get('id'), provider_request_id=getattr(response, '_request_id', None))
         self.data['received'] += 1
-        usage = response.usage
-        inputs, outputs = getattr(usage, 'prompt_tokens', None), getattr(usage, 'completion_tokens', None)
-        cached = getattr(getattr(usage, 'prompt_tokens_details', None), 'cached_tokens', None)
+        self.persist()  # Full raw response and usage survive even validation/parse failure.
+        usage = raw.get('usage') or {}
+        inputs, outputs = usage.get('prompt_tokens'), usage.get('completion_tokens')
+        cached = (usage.get('prompt_tokens_details') or {}).get('cached_tokens')
         if any(type(v) is not int or v < 0 for v in (inputs, outputs, cached)) or cached > inputs:
             self.fail(reservation_id, 'MISSING_OR_INVALID_USAGE')
             raise ValueError('MISSING_OR_INVALID_USAGE')
         event['usage'] = {'input_tokens': inputs, 'output_tokens': outputs, 'cached_tokens': cached}
-        pricing = self.release['gate_inputs']['pricing'][response.model] if response.model in self.release['gate_inputs']['pricing'] else None
+        model = raw.get('model')
+        pricing = self.release['gate_inputs']['pricing'].get(model)
         contract = self.release['contracts'][event['role']]
-        if response.model != contract['model'] or not pricing:
+        if model != contract['model'] or not pricing or not raw.get('id'):
             self.fail(reservation_id, 'MODEL_MISMATCH')
             raise ValueError('MODEL_MISMATCH')
         cached_rate = pricing.get('cached_input_usd_per_million')
@@ -120,7 +153,6 @@ class RunJournal:
         self.data.update(valid_usage=self.data['valid_usage']+1, known_usd=self.data['known_usd']+cost,
                          pending_exposure_usd=self.data['pending_exposure_usd']-event['reserved_usd'], cost_unknown=False)
         # Keep model response before any parsing. Private journal is never copied wholesale into Git.
-        event['response'] = response.model_dump(mode='json')
         self.persist()
         if inputs > contract['max_request_bytes']+contract['frame_reserve_tokens'] or outputs > 1000 or cost > event['reserved_usd']:
             self.fail(reservation_id, 'USAGE_BOUND_EXCEEDED')
