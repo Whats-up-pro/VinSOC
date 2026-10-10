@@ -1,4 +1,4 @@
-# VinSOC single-case E3 demo ? management report
+# VinSOC single-case E3 demo - management report
 
 ## Executive result
 
@@ -29,7 +29,7 @@ The E3 worker spent its three executed R2 calls on scenario discovery and two se
 - Implementation: `5e8e4ff03a58d7746861152f583d639fc24c2f91`
 - CI: https://github.com/Whats-up-pro/VinSOC/actions/runs/38037320747
 - Paid workflow: https://github.com/Whats-up-pro/VinSOC/actions/runs/38037640751
-- Artifact: ID `11664103562`, SHA-256 `37ac6fe6?2b23ac9`, retained until 2027-01-08
+- Artifact: ID `11664103562`, SHA-256 `37ac6fe695f57de0d44ae780d288f8223cbe4cbd0ed6fb70e1117eaee2b23ac9`, retained until 2027-01-08
 - CI counts: Python 3.11 and 3.12 each 1,314 passed / 7 skipped; required offline each 43/43 with 0 skip; required real-data each 13/13 with 0 skip; 13 DB and 120 gold replayed
 
 ## Management assessment
