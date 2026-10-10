@@ -31,7 +31,7 @@ def persist(path, data):
 
 class RunJournal:
     @classmethod
-    def claim(cls, release, *, ledger_path):
+    def claim(cls, release, *, ledger_path, remote_store=None):
         release = validate_release(release)
         path = Path(ledger_path)
         canonical = Path.home()/'.vinsoc/live-windows'/release['window_id']/'ledger.json'
@@ -39,13 +39,15 @@ class RunJournal:
             raise ValueError('NONCANONICAL_RELEASE_LEDGER')
         if path.exists():
             raise ValueError('RELEASE_WINDOW_CONSUMED')
+        if remote_store is not None:
+            remote_store.claim(release['window_id'], release['release_sha256'])
         path.parent.mkdir(parents=True, exist_ok=True)
         with (path.parent/'claim.json').open('x') as out:
             json.dump({'release_sha256': release['release_sha256']}, out)
             out.flush()
             os.fsync(out.fileno())
         self = cls()
-        self.path, self.release = path, release
+        self.path, self.release, self.remote_store = path, release, remote_store
         self.data = {'window_id': release['window_id'], 'release_sha256': release['release_sha256'],
                      'attempted': 0, 'received': 0, 'valid_usage': 0, 'terminal': False,
                      'known_usd': release['gate_inputs']['account']['known_prior_cost_usd'],
@@ -67,6 +69,16 @@ class RunJournal:
         sink = getattr(self, 'checkpoint_sink', None)
         if sink and getattr(self, 'case_id', None):
             sink(self.case_events())
+
+    @staticmethod
+    def _public_event(event):
+        return {k: v for k, v in event.items() if k not in ('request', 'response', 'native_tool_calls')}
+
+    def _remote_checkpoint(self, reservation_id, phase):
+        store = getattr(self, 'remote_store', None)
+        if store is not None:
+            store.checkpoint(reservation_id+1, phase,
+                             self._public_event(self.data['events'][reservation_id]))
 
     def ensure_case_capacity(self, condition):
         required = {'routing': 1, 'r2': 6 if condition == 'E3' else 1, 'assessment': 1}
@@ -115,6 +127,12 @@ class RunJournal:
         self.data.update(attempted=self.data['attempted']+1, cost_unknown=True,
                          pending_exposure_usd=self.data['pending_exposure_usd']+reserve)
         self.persist()  # crash after reserve is paid exposure, never retry
+        try:
+            self._remote_checkpoint(len(self.data['events'])-1, 'begin')
+        except Exception:
+            self.data['terminal'] = True
+            self.persist()
+            raise ValueError('REMOTE_CHECKPOINT_BEFORE_REQUEST_FAILED') from None
         return len(self.data['events'])-1
 
     def fail(self, reservation_id, safe_code):
@@ -122,6 +140,10 @@ class RunJournal:
         event['error_category'] = safe_code
         self.data['terminal'] = True
         self.persist()
+        try:
+            self._remote_checkpoint(reservation_id, 'end')
+        except Exception:
+            pass  # The immutable begin checkpoint already consumes the remote window.
 
     def record_response(self, reservation_id, response):
         event = self.data['events'][reservation_id]
@@ -164,6 +186,12 @@ class RunJournal:
         if inputs > bound or outputs > contract['max_completion_tokens'] or cost > event['reserved_usd']:
             self.fail(reservation_id, 'USAGE_BOUND_EXCEEDED')
             raise ValueError('USAGE_BOUND_EXCEEDED')
+        try:
+            self._remote_checkpoint(reservation_id, 'end')
+        except Exception:
+            self.data['terminal'] = True
+            self.persist()
+            raise ValueError('REMOTE_CHECKPOINT_AFTER_RESPONSE_FAILED') from None
 
 
 class ScopedOpenAIClient:

@@ -1,0 +1,78 @@
+name: Query demo once
+
+on:
+  workflow_dispatch:
+    inputs:
+      ci_run_id:
+        description: Successful CI run for this exact master SHA
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  live-demo:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      GITHUB_CI_RUN_ID: ${{ inputs.ci_run_id }}
+      VINSOC_GPT5_DOC: .vinsoc/query-demo-inputs/gpt-5-mini.md
+      VINSOC_GPT41_DOC: .vinsoc/query-demo-inputs/gpt-4.1-mini.md
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned dependencies and isolation backend
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          python -m pip install -r requirements.txt
+          python -m pip install duckdb==1.5.5
+      - name: Restore exact original databases and sources
+        run: |
+          mkdir -p .vinsoc/query-demo-inputs .vinsoc/query-demo-cloud
+          python -m scripts.restore_query_data_bundle --repo . --bundle VinSOC_Runtime_DB_20261010.zip > .vinsoc/query-demo-inputs/bundle_restore.json
+          python - <<'PYTHON'
+          import hashlib, urllib.request
+          from pathlib import Path
+          from scripts.export_vinsoc_db_bundle import SOURCES
+          for source in SOURCES['ctu']['sources']:
+              target=Path(source['path']).resolve()
+              root=Path('.').resolve()
+              if not target.is_relative_to(root): raise ValueError('UNSAFE_CTU_SOURCE_DESTINATION')
+              target.parent.mkdir(parents=True,exist_ok=True)
+              with urllib.request.urlopen(source['source_url'],timeout=120) as response,target.open('xb') as out:
+                  out.write(response.read())
+              if hashlib.sha256(target.read_bytes()).hexdigest()!=source['file_sha256']:
+                  raise ValueError('PINNED_CTU_SOURCE_CHECKSUM_MISMATCH')
+          PYTHON
+          python -m scripts.validate_original_query_data --restore-sources --output .vinsoc/query-demo-inputs/original_data_validation.json
+      - name: Fetch current official model documents
+        run: |
+          curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-5-mini.md --output "$VINSOC_GPT5_DOC"
+          curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-4.1-mini.md --output "$VINSOC_GPT41_DOC"
+      - name: Run one fixed E3 demo with remote one-shot checkpoints
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          VINSOC_QUERY_DEMO_AUTH_JSON: ${{ secrets.VINSOC_QUERY_DEMO_AUTH_JSON }}
+        run: |
+          test -n "$OPENAI_API_KEY"
+          test -n "$VINSOC_QUERY_DEMO_AUTH_JSON"
+          sudo systemd-run --unit="vinsoc-query-demo-${GITHUB_RUN_ID}" --uid="$(id -u)" --gid="$(id -g)" --property=Delegate=yes --property=MemoryMax=2G --wait --pipe --collect --working-directory="$PWD" \
+            /usr/bin/env VINSOC_QUERY_CLOUD_REQUIRED=1 OPENAI_API_KEY="$OPENAI_API_KEY" GITHUB_TOKEN="$GITHUB_TOKEN" GITHUB_SHA="$GITHUB_SHA" GITHUB_RUN_ID="$GITHUB_RUN_ID" GITHUB_CI_RUN_ID="$GITHUB_CI_RUN_ID" GITHUB_REPOSITORY="$GITHUB_REPOSITORY" GITHUB_REF="$GITHUB_REF" GITHUB_EVENT_NAME="$GITHUB_EVENT_NAME" VINSOC_QUERY_DEMO_AUTH_JSON="$VINSOC_QUERY_DEMO_AUTH_JSON" VINSOC_GPT5_DOC="$VINSOC_GPT5_DOC" VINSOC_GPT41_DOC="$VINSOC_GPT41_DOC" LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_demo_cloud --mode live --output-dir .vinsoc/query-demo-cloud/run
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: query-demo-${{ github.sha }}-${{ github.run_id }}
+          path: |
+            .vinsoc/query-demo-cloud/
+            .vinsoc/query-demo-inputs/bundle_restore.json
+            .vinsoc/query-demo-inputs/original_data_validation.json
+          if-no-files-found: error
+          retention-days: 90

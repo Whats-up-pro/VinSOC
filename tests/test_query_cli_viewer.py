@@ -50,6 +50,12 @@ def test_demo_cli_passes_one_locked_case_to_preflight(monkeypatch, tmp_path):
     assert saved['release']['client_created'] is False
 
 
+def test_live_entrypoint_accepts_remote_store_for_ephemeral_runner():
+    import inspect
+    from scripts.run_vinsoc_query_acceptance import run_live
+    assert 'remote_store' in inspect.signature(run_live).parameters
+
+
 def test_default_viewer_keeps_four_fixed_ids_and_32_missing_cases(tmp_path):
     from scripts.render_query_pipeline_report import render_report
     source = Path('results/evaluation_v1/text2sql_integration_v1/preflight_pipeline.json')

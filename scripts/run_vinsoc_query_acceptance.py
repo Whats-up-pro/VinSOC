@@ -86,7 +86,7 @@ def run_preflight(scope, condition, private, *, selected_input=None):
             'current_source_sha256': source_hashes(), 'client_created': False, 'attempted': 0, 'received': 0}
 
 
-def run_live(release, output, *, selected_input=None):
+def run_live(release, output, *, selected_input=None, remote_store=None):
     if release.get('scope') == 'demo' and not selected_input:
         raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
     if selected_input:
@@ -138,7 +138,9 @@ def run_live(release, output, *, selected_input=None):
     run_identities = {**selection_identities(), 'implementation_sha': release['gate_inputs']['identities']['implementation_sha']}
     conditions = [release['condition']] if release['scope'] in ('pipeline','demo') else ['E0', 'E3']
     try:
-        journal = RunJournal.claim(release, ledger_path=Path.home()/'.vinsoc/live-windows'/release['window_id']/'ledger.json')
+        journal = RunJournal.claim(release,
+            ledger_path=Path.home()/'.vinsoc/live-windows'/release['window_id']/'ledger.json',
+            remote_store=remote_store)
         sdk = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'], max_retries=0,
                             base_url='https://api.openai.com/v1', timeout=60)
         report['client_created'] = True
