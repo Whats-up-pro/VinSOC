@@ -12,6 +12,7 @@ from pathlib import Path
 from time import monotonic
 
 from evaluation.r2_cross_domain_v1.safety import validate_sql
+from vinsoc_text2sql.process_group import ProcessGroup, GroupError
 
 
 class ExecutorError(ValueError):
@@ -19,7 +20,7 @@ class ExecutorError(ValueError):
 
 
 class SqlExecutor:
-    VERSION = 'text2sql_namespace_executor_v1'
+    VERSION = 'text2sql_namespace_cgroup_executor_v2'
     FINAL_ROW_CAP = 10000
     MEMORY_BYTES = 512 * 1024 * 1024
 
@@ -60,15 +61,13 @@ class SqlExecutor:
         payload = json.dumps({'sql': sql, 'parameters': parameters, 'row_cap': row_cap,
                               'timeout_seconds': timeout_seconds}, ensure_ascii=False)
         started = monotonic()
-        process = subprocess.Popen(self._command(snapshot), stdin=subprocess.PIPE,
-                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                   text=True, env={}, start_new_session=True)
         try:
-            stdout, _stderr = process.communicate(payload, timeout=timeout_seconds + 3)
-        except subprocess.TimeoutExpired:
-            os.killpg(process.pid, signal.SIGKILL)
-            stdout, _stderr = process.communicate()
-            raise ExecutorError(self.timeout_category(stdout)) from None
+            command = self._command(snapshot)
+            with ProcessGroup() as group:
+                process = group.spawn(command, timeout_seconds=timeout_seconds)
+                stdout, _stderr = group.communicate(process, payload, timeout_seconds=timeout_seconds)
+        except GroupError as error:
+            raise ExecutorError('SQL_TIMEOUT' if str(error) == 'GROUP_TIMEOUT' else str(error)) from None
         if process.returncode != 0:
             # Do not leak worker stderr, mount paths or SQL error bodies.
             raise ExecutorError('WORKER_ISOLATION_OR_STARTUP_FAILED')

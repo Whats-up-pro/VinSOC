@@ -1,0 +1,17 @@
+{
+  "base_sha": "3573496a165876f36116b2716ca737d17091aaf7",
+  "scope": "R2 offline worker boundary implementation",
+  "status": "LOCAL_GUARDS_PASS_REQUIRED_LINUX_OBSERVATIONS_PENDING",
+  "python": "3.11.9",
+  "red": "test_group_limit_is_required_before_any_worker: missing ProcessGroup module",
+  "targeted": {"passed": 17, "failed": 0, "skipped": 2},
+  "skips": "Independent kernel boundary tests run in required Linux jobs, never counted as acceptance on Windows",
+  "compile_exit": 0,
+  "diff_check_exit": 0,
+  "full_local_suite": "running; outcome to be recorded separately",
+  "required_boundary_observation": "external /proc and cgroup memory.events, not executor isolation fields",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false,
+  "selection": "pending authentic 48 calibration records"
+}

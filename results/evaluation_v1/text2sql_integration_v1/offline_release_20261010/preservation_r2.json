@@ -1,0 +1,9 @@
+{
+  "baseline_sha": "3573496a165876f36116b2716ca737d17091aaf7",
+  "protected_files": 520,
+  "protected_changed": [],
+  "pinned_zip_sha256": {
+    "VinSOC_Runtime_DB_20261010.zip": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+    "VinSOC_CTU_20261010.zip": "2847ba055dee714195898251e686ad62f0856c721eda84af8782c77a33293dc4"
+  }
+}

@@ -52,6 +52,8 @@ jobs:
         python-version: ["3.11", "3.12"]
     env:
       VINSOC_QUERY_REAL_DATA_REQUIRED: "1"
+      VINSOC_QUERY_CGROUP_ROOT: /sys/fs/cgroup/vinsoc-query-workers
+      VINSOC_QUERY_OBSERVATION_DIR: .vinsoc/query-real-data-ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -63,6 +65,13 @@ jobs:
           sudo apt-get install -y bubblewrap
           python -m pip install -r requirements.txt
           python -m pip install duckdb==1.5.5
+      - name: Delegate kernel resource controllers to unprivileged worker supervisor
+        run: |
+          test -f /sys/fs/cgroup/cgroup.controllers
+          sudo sh -c 'echo "+memory +cpu +pids" > /sys/fs/cgroup/cgroup.subtree_control'
+          sudo mkdir /sys/fs/cgroup/vinsoc-query-workers
+          sudo sh -c 'echo "+memory +cpu +pids" > /sys/fs/cgroup/vinsoc-query-workers/cgroup.subtree_control'
+          sudo chown -R "$(id -u):$(id -g)" /sys/fs/cgroup/vinsoc-query-workers
       - name: Restore exact original snapshots from pinned user-delivered bundle
         run: |
           mkdir -p .vinsoc/query-real-data-ci
@@ -100,7 +109,7 @@ jobs:
           python -m scripts.validate_original_query_data --restore-sources --output .vinsoc/query-real-data-ci/real_data_validation.json
       - name: Required real DB and isolated worker checks (no missing-input skips)
         run: |
-          python -m pytest -q tests/test_query_real_data.py tests/test_query_bundle_restore.py --junitxml=.vinsoc/query-real-data-ci/required_checks.xml
+          python -m pytest -q tests/test_query_real_data.py tests/test_query_bundle_restore.py tests/test_query_worker_boundaries.py --junitxml=.vinsoc/query-real-data-ci/required_checks.xml
       - name: Preserve isolated worker startup diagnostic after a failure
         if: failure()
         run: |
