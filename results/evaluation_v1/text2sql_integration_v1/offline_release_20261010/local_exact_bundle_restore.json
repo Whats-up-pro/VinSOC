@@ -1,0 +1,75 @@
+{
+  "status": "ALL_13_EXACT_ORIGINAL_BINARIES_RESTORED",
+  "bundle_sha256": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+  "database_count": 13,
+  "restored_count": 12,
+  "preserved_count": 1,
+  "model_calls": 0,
+  "files": [
+    {
+      "database_id": "student_transcripts_tracking",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/student_transcripts_tracking/build_1.duckdb",
+      "sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a"
+    },
+    {
+      "database_id": "cre_Doc_Template_Mgt",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/cre_Doc_Template_Mgt/build_1.duckdb",
+      "sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646"
+    },
+    {
+      "database_id": "world_1",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/world_1/build_1.duckdb",
+      "sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242"
+    },
+    {
+      "database_id": "voter_1",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/voter_1/build_1.duckdb",
+      "sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c"
+    },
+    {
+      "database_id": "dog_kennels",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/dog_kennels/build_1.duckdb",
+      "sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711"
+    },
+    {
+      "database_id": "orchestra",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/orchestra/build_1.duckdb",
+      "sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a"
+    },
+    {
+      "database_id": "concert_singer",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/concert_singer/build_1.duckdb",
+      "sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1"
+    },
+    {
+      "database_id": "car_1",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/car_1/build_1.duckdb",
+      "sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2"
+    },
+    {
+      "database_id": "flight_2",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/flight_2/build_1.duckdb",
+      "sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192"
+    },
+    {
+      "database_id": "course_teach",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/course_teach/build_1.duckdb",
+      "sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb"
+    },
+    {
+      "database_id": "poker_player",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/poker_player/build_1.duckdb",
+      "sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323"
+    },
+    {
+      "database_id": "tvshow",
+      "path": "data/r2_cross_domain_v1/snapshots/20261006T014925Z_c66580fa/tvshow/build_1.duckdb",
+      "sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187"
+    },
+    {
+      "database_id": "ctu_dev",
+      "path": "data/ctu_network_public/snapshots/ctu_dev.duckdb",
+      "sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9"
+    }
+  ]
+}

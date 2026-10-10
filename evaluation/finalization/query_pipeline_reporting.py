@@ -11,6 +11,8 @@ from .query_record_normalization import inventory_metadata, normalize_query_reco
 
 def validate_review(review, record):
     expected = record.get('case_receipt_sha256')
+    if not isinstance(review.get('utc'), str):
+        return False
     try:
         utc = datetime.fromisoformat(review.get('utc','').replace('Z','+00:00'))
         time_valid = utc.tzinfo is not None and utc.utcoffset().total_seconds() == 0
@@ -20,7 +22,8 @@ def validate_review(review, record):
             and review.get('case_id') == record.get('case_id')
             and review.get('case_receipt_sha256') == expected
             and review.get('decision') in ('approved','rejected','escalated')
-            and bool(str(review.get('analyst','')).strip()) and bool(str(review.get('rationale','')).strip()) and time_valid)
+            and isinstance(review.get('analyst'), str) and bool(review['analyst'].strip())
+            and isinstance(review.get('rationale'), str) and bool(review['rationale'].strip()) and time_valid)
 
 
 def build_pipeline_report(records, inventory, *, reviews, identities, journal):

@@ -59,3 +59,17 @@ def test_duplicate_real_inventory_is_rejected():
     inventory = inventory_for('pipeline')
     with pytest.raises(ValueError, match='DUPLICATE_PLANNED_CASE'):
         build_pipeline_report([], inventory+[inventory[0]], reviews=[], identities={}, journal={})
+
+
+@pytest.mark.parametrize('utc', ['2026-10-10T00:00:00Z', None])
+def test_null_analyst_and_rationale_are_missing_review_fields(utc):
+    import hashlib
+    from evaluation.finalization.query_pipeline_reporting import validate_review
+    actual_receipt = Path('results/evaluation_v1/text2sql_integration_v1/original_data_20261010/ci_verification.json')
+    record = {'case_id':inventory_for('pipeline')[0]['case_id'],
+              'case_receipt_sha256':hashlib.sha256(actual_receipt.read_bytes()).hexdigest()}
+    # Malformed review metadata only: no human decision or prediction is created/exported.
+    invalid = {'scope':'actual_human_review','case_id':record['case_id'],
+               'case_receipt_sha256':record['case_receipt_sha256'], 'decision':'escalated',
+               'analyst':None,'rationale':None,'utc':utc}
+    assert validate_review(invalid, record) is False

@@ -36,11 +36,13 @@ def test_saved_live_sql_runs_in_isolated_worker_on_locked_db():
     result = SqlExecutor().query(context, sql, row_cap=10000, timeout_seconds=10)
     assert result['status'] == 'OK'
     assert result['truncated'] is False
-    import duckdb
-    with duckdb.connect(str(context.snapshot_path), read_only=True) as conn:
-        cursor = conn.execute(sql)
-        assert result['rows'] == [list(r) for r in cursor.fetchall()]
-        assert result['columns'] == [{'name': c[0], 'type': str(c[1])} for c in cursor.description]
+    reference = json.loads((ROOT/'evaluation/ctu_network_public/dev/ctu_sql_001.json').read_text())
+    # Compare with the existing trusted answer through another isolated worker.
+    # Archived model SQL never executes in the pytest supervisor.
+    expected = SqlExecutor().query(context, reference['gold_sql'][0], row_cap=10000, timeout_seconds=10)
+    assert expected['status'] == 'OK' and expected['truncated'] is False
+    assert result['rows'] == expected['rows']
+    assert result['columns'] == expected['columns']
     identity = {k: result[k] for k in ('columns', 'rows', 'truncated')}
     encoded = json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)
     assert result['result_sha256'] == hashlib.sha256(encoded.encode()).hexdigest()

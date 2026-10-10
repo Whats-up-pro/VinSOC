@@ -43,6 +43,14 @@ def write_new(path, value):
         handle.write('\n')
 
 
+def retain_active_checkpoint(report, active):
+    if active is None:
+        return
+    key = active.get('condition'), active.get('case_id')
+    if not any((r.get('condition'), r.get('case_id')) == key for r in report['case_records']):
+        report['case_records'].append(deepcopy(active))
+
+
 def run_preflight(scope, condition, private):
     identities = deepcopy(private.get('identities', {}))
     identities.update(data_verified=False, source_verified=False, ci_verified=False, worker_verified=False)
@@ -212,6 +220,7 @@ def run_live(release, output, *, selected_input=None):
                                      for e in journal.data['events']]
             if active is not None:
                 persist(target, active)
+                retain_active_checkpoint(report, active)
             report.update(**{k:journal.data[k] for k in ('attempted','received','valid_usage','cost_unknown','known_usd','pending_exposure_usd')})
         from evaluation.finalization.query_reporting import build_query_report
         report['metrics'] = build_query_report(report['case_records'], inventory, conditions=tuple(conditions),
