@@ -64,6 +64,7 @@ class NetworkQuerySkill:
         except ValueError as error:
             return SkillResult(False, error=str(error))
         self.last_execution = result
+        self.telemetry_sink({**generation, 'execution':deepcopy(result)})
         if result['truncated']:
             return SkillResult(False, data={'execution': result}, error='QUERY_RESULT_TRUNCATED')
         provenance = {k: result[k] for k in ('database_id', 'snapshot_binary_sha256',

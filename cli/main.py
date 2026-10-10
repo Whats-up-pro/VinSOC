@@ -515,6 +515,9 @@ def main():
     query_parser.add_argument('--preflight-only', action='store_true')
     query_parser.add_argument('--private-inputs', type=Path)
     query_parser.add_argument('--release', type=Path)
+    query_parser.add_argument('--case-id')
+    query_parser.add_argument('--question')
+    query_parser.add_argument('--source', type=Path)
     query_parser.add_argument('--output', type=Path, required=True)
     review_parser = subparsers.add_parser('query-review', help='Actual analyst review of a technical-valid saved case')
     review_parser.add_argument('case', type=Path)
@@ -556,7 +559,7 @@ def main():
         forwarded = ['--scope', args.scope, '--condition', args.condition, '--output', str(args.output)]
         if args.preflight_only:
             forwarded.append('--preflight-only')
-        for name in ('private_inputs','release'):
+        for name in ('private_inputs','release','case_id','question','source'):
             value = getattr(args,name)
             if value:
                 forwarded += ['--'+name.replace('_','-'),str(value)]

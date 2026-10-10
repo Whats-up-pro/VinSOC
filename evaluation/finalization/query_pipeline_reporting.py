@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from collections import Counter, defaultdict
 from datetime import datetime
 
@@ -51,6 +52,7 @@ def build_pipeline_report(records, inventory, *, reviews, identities, journal):
             generation = record.get('generation', {})
             meta_case = record.get('metadata', {})
             policy = meta_case.get('query_policy', {})
+            assessment = policy.get('assessment') or {}
             trace = record.get('tool_trace', [])
             events = record.get('cost_events', [])
             native = [c for e in events if e.get('role') == 'routing' for c in e.get('native_tool_calls', [])]
@@ -73,13 +75,17 @@ def build_pipeline_report(records, inventory, *, reviews, identities, journal):
                 and execution.get('truncated') is False and len(results) == len(observed) == 1
                 and results[0].get('related_evidence_ids') == [observed[0]['evidence_id']]
                 and results[0].get('data', {}).get('result_sha256') == execution.get('result_sha256')
+                and execution.get('sql_sha256') == hashlib.sha256((generation.get('final_sql') or '').encode()).hexdigest()
+                and execution.get('snapshot_logical_sha256') == generation.get('snapshot_identity')
                 and policy.get('validation', {}).get('independent_query_replay') is True)
-            facts = bool(record.get('observations')) and bool(record.get('assessment_evidence_ids'))
-            for observation in record.get('observations', []):
+            observations = assessment.get('observations', [])
+            citations = assessment.get('evidence_ids', [])
+            facts = bool(observations) and bool(citations) and any(e['evidence_id'] in citations for e in results)
+            for observation in observations:
                 data = by_id.get(observation.get('evidence_id'), {}).get('data', {})
                 value = data.get(observation.get('field'))
                 facts &= (observation.get('field') in data and type(value) is type(observation.get('value')) and value == observation.get('value'))
-            facts &= all(i in by_id for i in record.get('assessment_evidence_ids', []))
+            facts &= all(i in by_id for i in citations)
             runtime = generation.get('runtime_version') == 'shared_text2sql_v1' and generation.get('question') == meta['question']
             integrated = norm['execution_accurate']
             technical = (routing and runtime and integrated is True and provenance and facts
@@ -116,8 +122,10 @@ def build_pipeline_report(records, inventory, *, reviews, identities, journal):
                          'known_cost_usd':sum(e['cost_usd'] for e in events if finite(e.get('cost_usd'))),
                          'unknown_cost_calls':sum(not finite(e.get('cost_usd')) for e in events)}
     decisions = Counter(c['human_decision'] for c in cases)
-    return {'scope':'pipeline32_saved_artifact_metrics', 'planned':32, 'completed':len(indexed),
-            'status':'recorded_awaiting_human' if len(indexed)==32 else 'incomplete', 'cases':cases,
+    completed = sum(r.get('status') != 'partial' for r in records)
+    return {'scope':'pipeline32_saved_artifact_metrics', 'planned':32, 'completed':completed,
+            'recorded':len(indexed), 'partial':len(indexed)-completed,
+            'status':'recorded_awaiting_human' if completed==32 else 'incomplete', 'cases':cases,
             'metrics':{m:{'correct_observed':metrics[m], 'denominator':32, 'measured':known[m],
                           'missing_or_incomplete':32-known[m], 'rate':metrics[m]/32 if known[m]==32 else None} for m in values},
             'human_review':{d:decisions[d] for d in ('approved','rejected','escalated','pending')},

@@ -1,0 +1,16 @@
+{
+  "scope": "R5 CLI, saved artifact viewer, actual human review",
+  "status": "OFFLINE_VIEWER_GUARDS_PASS_AUTHENTIC_TRACE_AND_HUMAN_REVIEW_PENDING",
+  "red": {"failed": 3, "passed": 1},
+  "targeted": {"passed": 46, "failed": 0, "skipped": 0},
+  "compile_exit": 0,
+  "diff_check_exit": 0,
+  "cli_original_question_transcript": {"planned": 32, "cases": 0, "missing": 32, "api_calls": 0, "status": "incomplete"},
+  "demo_ids": ["ctu_cross_708b66575657429a", "ctu_cross_66b8e92a76c3359b", "ctu_cross_3f659571f998adb0", "ctu_cross_bce6d3679ade4cd6"],
+  "human_decisions_created": 0,
+  "utc_auto_filled": false,
+  "positive_full_new_trace_json_html_equality": "pending authentic R8 artifacts",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false
+}

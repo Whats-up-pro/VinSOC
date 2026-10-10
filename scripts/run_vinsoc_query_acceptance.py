@@ -28,6 +28,13 @@ def inventory_for(scope):
     return [r for r in rows if r['database_id'] == 'ctu_dev'] if scope == 'pipeline' else rows
 
 
+def verify_selected_question(case_id, question):
+    row = next((r for r in inventory_for('pipeline') if r['case_id'] == case_id), None)
+    if not row or question != row['question']:
+        raise ValueError('EXACT_ORIGINAL_QUESTION_REQUIRED')
+    return row
+
+
 def write_new(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -58,7 +65,9 @@ def run_preflight(scope, condition, private):
             'current_source_sha256': source_hashes(), 'client_created': False, 'attempted': 0, 'received': 0}
 
 
-def run_live(release, output):
+def run_live(release, output, *, selected_input=None):
+    if selected_input:
+        verify_selected_question(selected_input['case_id'], selected_input['question'])
     release = validate_release(release)
     verify_scope_unused(release['scope'])
     verify_code_and_ci(release['gate_inputs']['identities'])
@@ -96,6 +105,7 @@ def run_live(release, output):
     report = {'scope': release['scope'], 'status': 'blocked', 'planned': release['planned'], 'completed': 0,
               'planned_records': release['planned']*(1 if release['scope']=='pipeline' else 2),
               'client_created': False, 'attempted': 0, 'received': 0, 'case_records': []}
+    report['submitted_input'] = selected_input
     persist(output/'report.json', report)
     journal = None
     sdk = None
@@ -226,8 +236,23 @@ def main(argv=None):
     parser.add_argument('--preflight-only', action='store_true')
     parser.add_argument('--private-inputs', type=Path)
     parser.add_argument('--release', type=Path)
+    parser.add_argument('--case-id')
+    parser.add_argument('--question')
+    parser.add_argument('--source', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args(argv)
+    selected = None
+    if args.case_id is not None or args.question is not None:
+        if args.scope != 'pipeline' or args.case_id is None or args.question is None:
+            parser.error('--case-id and --question require the full locked pipeline scope')
+        selected = verify_selected_question(args.case_id, args.question)
+    if not args.preflight_only and not args.release:
+        from scripts.render_query_pipeline_report import render_report
+        source = args.source or ROOT/'results/evaluation_v1/text2sql_integration_v1/pipeline/report.json'
+        result = render_report(source, args.output)
+        result['submitted_input'] = selected
+        print(json.dumps(result, ensure_ascii=False))
+        return 0
     if args.preflight_only:
         private = json.loads(args.private_inputs.read_text()) if args.private_inputs else {}
         result = run_preflight(args.scope, args.condition, private)
@@ -239,7 +264,7 @@ def main(argv=None):
         if not args.release:
             parser.error('Live requires a separately authorized new release; old network window is insufficient')
         raw = json.loads(args.release.read_text())
-        receipt = run_live(raw.get('release',raw), args.output)
+        receipt = run_live(raw.get('release',raw), args.output, selected_input=selected)
     print(json.dumps({k: receipt.get(k) for k in ('status','reasons','planned','completed','attempted','received','client_created')}))
     return 0 if receipt['status'] in ('completed','technical_complete_awaiting_human','preflight_pass') else 1
 
