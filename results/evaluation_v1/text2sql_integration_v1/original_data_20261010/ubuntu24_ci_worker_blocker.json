@@ -1,0 +1,80 @@
+{
+  "scope": "exact_original_data_ci_pass_worker_gate_blocked",
+  "implementation_sha": "b7adacd9890d7795607d53ff4a51ac9743450742",
+  "ci_run_id": 38018897641,
+  "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38018897641",
+  "ci_conclusion": "failure",
+  "runner_os": "Ubuntu 24.04",
+  "data_identity_and_gold_gate_pass": true,
+  "runtime_worker_gate_pass": false,
+  "required_jobs": [
+    {
+      "job_id": 114115287293,
+      "name": "query-real-data (3.12)",
+      "conclusion": "failure",
+      "data_validation_status": "ALL_120_GOLD_VALIDATED_EXACT_ORIGINAL_BINARIES",
+      "base_gold_replayed": 120,
+      "replayed_by_split": {
+        "calibration": 24,
+        "evaluation": 96
+      },
+      "required_checks": {
+        "passed": 8,
+        "failed": 2,
+        "skipped": 0
+      },
+      "worker_error": "WORKER_ISOLATION_OR_STARTUP_FAILED",
+      "observed_worker_stderr": "bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted"
+    },
+    {
+      "job_id": 114115287301,
+      "name": "query-real-data (3.11)",
+      "conclusion": "failure",
+      "data_validation_status": "ALL_120_GOLD_VALIDATED_EXACT_ORIGINAL_BINARIES",
+      "base_gold_replayed": 120,
+      "replayed_by_split": {
+        "calibration": 24,
+        "evaluation": 96
+      },
+      "required_checks": {
+        "passed": 8,
+        "failed": 2,
+        "skipped": 0
+      },
+      "worker_error": "WORKER_ISOLATION_OR_STARTUP_FAILED",
+      "observed_worker_stderr": "bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted"
+    }
+  ],
+  "regression_jobs": [
+    {
+      "job_id": 114115287311,
+      "name": "test (3.11)",
+      "conclusion": "success"
+    },
+    {
+      "job_id": 114115287362,
+      "name": "test (3.12)",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 11656804881,
+      "name": "query-real-data-b7adacd9890d7795607d53ff4a51ac9743450742-3.11",
+      "digest": "sha256:1210b4f8f6c5b0d6f89304bc9cc7390215c56ffd4b89b14843eee4e10f5a4f39",
+      "size_bytes": 7726,
+      "expires_at": "2027-01-08T02:58:24Z"
+    },
+    {
+      "id": 11656589732,
+      "name": "query-real-data-b7adacd9890d7795607d53ff4a51ac9743450742-3.12",
+      "digest": "sha256:68c078858958be10641325ef879b38abb34d80c3ff974cb44def035ae99ae5c9",
+      "size_bytes": 7733,
+      "expires_at": "2027-01-08T02:58:24Z"
+    }
+  ],
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false,
+  "followup": "Test a pinned Ubuntu 22.04 host with unchanged worker isolation; no security control or data hash relaxed."
+}
