@@ -1,0 +1,83 @@
+{
+  "scope": "exact_sha_original_data_and_worker_positive_path_ci",
+  "implementation_sha": "ab0c2823d80904351bb1f5ff157773efbf72720a",
+  "ci_run_id": 38019271076,
+  "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38019271076",
+  "status": "completed",
+  "conclusion": "success",
+  "runner_label": "ubuntu-22.04",
+  "jobs": [
+    {
+      "id": 114116405838,
+      "name": "test (3.12)",
+      "conclusion": "success"
+    },
+    {
+      "id": 114116405882,
+      "name": "cloud-input-availability",
+      "conclusion": "success"
+    },
+    {
+      "id": 114116405936,
+      "name": "test (3.11)",
+      "conclusion": "success"
+    },
+    {
+      "id": 114116405958,
+      "name": "query-real-data (3.11)",
+      "conclusion": "success"
+    },
+    {
+      "id": 114116405972,
+      "name": "query-real-data (3.12)",
+      "conclusion": "success"
+    }
+  ],
+  "regression_tests_each_python": {
+    "passed": 1269,
+    "failed": 0,
+    "skipped": 5
+  },
+  "required_real_data_tests_each_python": {
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "data_validation": {
+    "original_databases": 13,
+    "base_gold_replayed": 120,
+    "splits": {
+      "calibration": 24,
+      "evaluation": 96
+    },
+    "historical_data_files_verified": 492
+  },
+  "worker_positive_path_pass": true,
+  "full_worker_boundary_gate_pass": false,
+  "pending": [
+    "observed_worker_boundaries_and_total_group_memory_512_MiB",
+    "runner_selection_accounting_source_closure",
+    "statistics_pipeline_reporting_and_demo_viewer",
+    "fresh_account_pricing_budget_authorization",
+    "new_calibration_evaluation_native_pipeline_and_human_review"
+  ],
+  "artifacts": [
+    {
+      "id": 11658000184,
+      "name": "query-real-data-ab0c2823d80904351bb1f5ff157773efbf72720a-3.12",
+      "digest": "sha256:d79be7ac935a1ae2a7df96e4efb5137a980c58636555a38891aaac69e983bc68",
+      "size_bytes": 5763,
+      "expires_at": "2027-01-08T03:04:28Z"
+    },
+    {
+      "id": 11657815365,
+      "name": "query-real-data-ab0c2823d80904351bb1f5ff157773efbf72720a-3.11",
+      "digest": "sha256:3b3a13167ed36b98788eb2c010e2cc5d31c4f9f137d19b5e1c2c02877c088c49",
+      "size_bytes": 5763,
+      "expires_at": "2027-01-08T03:04:28Z"
+    }
+  ],
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false
+}

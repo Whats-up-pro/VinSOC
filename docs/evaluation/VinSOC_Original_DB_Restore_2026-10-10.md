@@ -46,3 +46,19 @@ Receipts: `results/evaluation_v1/text2sql_integration_v1/original_data_20261010/
 [CI 38018897641](https://github.com/Whats-up-pro/VinSOC/actions/runs/38018897641) tại SHA `b7adacd9890d7795607d53ff4a51ac9743450742`: regression jobs 3.11/3.12 PASS; cả hai required jobs xác minh dữ liệu/120 gold PASS, rồi báo **8 passed, 2 failed, 0 skipped**. Hai failures là saved-live-SQL worker và 120-gold-runtime worker; diagnostic trả `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`. CI tổng FAIL; worker gate chưa mở. Receipt `ubuntu24_ci_worker_blocker.json` pin run/job/artifact IDs, digests và retention.
 
 Đổi riêng job required từ `ubuntu-latest` (Ubuntu 24.04 trong log thực) sang label được hỗ trợ `ubuntu-22.04` để kiểm giả thuyết tương thích host. Cùng bytes DB/nguồn, dependencies và command worker; không bỏ network namespace, capability drop hoặc read-only mount, không bật privileged execution. Đây là kiểm hạ tầng offline trước freeze, không phải retry lượt model đã consumed. Kết quả host mới còn pending cho tới khi job hoàn tất.
+
+## Kết quả CI đã hoàn tất và điểm tiếp tục
+
+[CI 38019271076](https://github.com/Whats-up-pro/VinSOC/actions/runs/38019271076) tại **`ab0c2823d80904351bb1f5ff157773efbf72720a` completed/success**. Hai required jobs Ubuntu 22.04 đều **10 passed, 0 failed, 0 skipped**. SQL mô hình lưu sẵn `ctu_sql_001` được chạy qua worker trên CTU binary gốc; typed columns/rows/result hash khớp phép đọc DB thật và snapshot không đổi. Toàn bộ **120 gold** chạy qua chính `SqlExecutor` thành công, không truncation. Hai regression jobs đều **1.269 passed, 5 skipped**; các checks acceptance mới đã chạy riêng và không skip ở required jobs.
+
+`ci_verification.json` và `real_worker_validation.json` pin implementation SHA/run/jobs/artifacts/digests. Artifact IDs **11657815365** (3.11) và **11658000184** (3.12), retention đến **08/01/2027**. Host Ubuntu 22.04 chứng minh positive path với command worker hiện hành; chưa kết luận chính sách kernel/AppArmor cụ thể nào gây lỗi trên Ubuntu 24.04. Giữ nguyên hai receipts CI lỗi trước đó.
+
+**R1/T2 đã đóng gate dữ liệu gốc. Phần CI dữ liệu thật ở R5 đạt; R2 đạt positive path, chưa đạt full boundary gate.** Thứ tự còn lại:
+
+1. R2: quan sát độc lập network/env/mount và memory/CPU/timeout; bổ sung/kiểm giới hạn **tổng process group 512 MiB**. Không dùng fields `isolation` tự ghi để chứng minh. Native conversation mới vẫn chưa có.
+2. R3: khóa selection từ 48 calibration records thật; chặn missing/mutation ngay preflight, hoàn thiện journal/partial checkpoints và source closure.
+3. R4/R5: chuẩn hóa module/statistics/pipeline metrics, CLI chọn đúng câu và viewer bốn demo IDs cố định; không tạo trace/assessment giả.
+4. R6: chốt transmission bound, canonical ledger, account/pricing/allocation và ngân sách từng scope từ bằng chứng thực. Hai ZIP không cấp các gate này.
+5. R7/R8: sau release đủ gate, chạy calibration 24×2, evaluation 96×2, pipeline native 32 câu và người thật duyệt. Sau đó R9 xuất báo cáo/demo thật. Không gọi gold replay là kết quả model hoặc E2E.
+
+Không cần operator xuất lại DB hoặc chạy SQL mô hình trên laptop. A2/A3 network cũ giữ blocker riêng: binary `91a13ab1…`, content lock/canonical state của protocol cũ. Không dùng thành công cross-domain này để nâng trạng thái của network-v1.

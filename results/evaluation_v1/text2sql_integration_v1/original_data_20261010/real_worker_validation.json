@@ -1,0 +1,33 @@
+{
+  "scope": "offline_saved_model_sql_and_120_gold_in_same_isolated_worker_not_model_score",
+  "status": "RUNTIME_POSITIVE_PATH_PASS_FULL_BOUNDARY_PENDING",
+  "implementation_sha": "ab0c2823d80904351bb1f5ff157773efbf72720a",
+  "ci_run_id": 38019271076,
+  "required_job_ids": [
+    114116405958,
+    114116405972
+  ],
+  "saved_model_artifact": "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json",
+  "saved_model_artifact_sha256": "cb14da306ba0cd4bc92f0d239b037da976ef2867cde61e57395fa5f570dc039a",
+  "saved_case_id": "ctu_sql_001",
+  "saved_sql_sha256": "e6f8f0dfd72e80a5464a21b0546d9b92c67869da2e09b85869cd926cff76ce42",
+  "ctu_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+  "observed_checks": [
+    "saved_sql_typed_columns_and_rows_match_direct_real_db_execution",
+    "result_hash_recomputed_from_actual_typed_result",
+    "snapshot_binary_before_and_after_unchanged",
+    "all_120_trusted_gold_queries_pass_same_SqlExecutor_without_truncation"
+  ],
+  "worker_positive_path_pass": true,
+  "full_worker_boundary_gate_pass": false,
+  "self_declared_isolation_fields_used_as_boundary_proof": false,
+  "remaining_boundary_checks": [
+    "network_namespace_and_secret_absence_observed_independently",
+    "read_only_mount_and_only_required_snapshot_observed_independently",
+    "total_group_memory_512_MiB_cpu_and_time_bounds_observed_independently"
+  ],
+  "new_model_sql_generated": false,
+  "native_routing_or_assessment_generated": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0
+}
