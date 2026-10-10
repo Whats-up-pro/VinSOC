@@ -1,0 +1,57 @@
+name: Pinned Spider recovery (offline)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - scripts/recover_vinsoc_spider_bundle.py
+      - tests/test_spider_recovery.py
+      - .github/workflows/recover-spider-data.yml
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pinned data dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install duckdb==1.5.5
+      - name: Verify recovery contract
+        run: python -m pytest -q tests/test_spider_recovery.py
+      - name: Recover real source and replay all 80 Spider gold cases
+        run: |
+          python -m scripts.recover_vinsoc_spider_bundle --repo . --output .vinsoc/spider-recovery-v1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path('.vinsoc/spider-recovery-v1/recovery_receipt.json').read_text())
+          assert receipt['recovered_spider_databases'] == 12
+          assert receipt['base_gold_replayed'] == 80
+          assert receipt['replayed_by_split'] == {'calibration': 16, 'evaluation': 64}
+          assert receipt['external_model_calls'] == 0
+          assert receipt['paid_authorized'] is False
+          assert receipt['full_data_gate_pass'] is False  # Exact CTU still supplied separately.
+          assert len(receipt['pending_gold_case_ids']) == 40
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spider-recovery-${{ github.sha }}-py${{ matrix.python-version }}
+          path: |
+            .vinsoc/spider-recovery-v1/VinSOC_Spider_Recovery_v1.zip
+            .vinsoc/spider-recovery-v1/*receipt.json
+            .vinsoc/spider-recovery-v1/recovery.lock.json
+          if-no-files-found: error
+          retention-days: 90

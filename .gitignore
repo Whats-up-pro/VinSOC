@@ -66,6 +66,7 @@ data/ctu_network_frozen/sources/*.binetflow
 data/ctu_network_frozen/snapshots/*.tmp
 data/r2_cross_domain_v1/sources/
 data/r2_cross_domain_v1/snapshots/
+data/r2_cross_domain_recovery_v1/
 *.zip
 
 # Pinned synthetic SOC source and derived corpus

@@ -1,0 +1,54 @@
+{
+  "scope": "approved_spider_recovery_only_not_model_evaluation_or_e2e",
+  "baseline_sha": "054d508ba5b449076405777ea1fe5325321d95b0",
+  "status": "SPIDER_RECOVERED_CTU_PENDING",
+  "implementation_identity_policy": "exact producer script bytes; implementation/evidence commit identified by its CI run",
+  "producer_script": "scripts/recover_vinsoc_spider_bundle.py",
+  "producer_script_sha256": "516823fcd369923cc78d061b0bc11bac0bf480c7d6a6a18e1f1b44c2165f4438",
+  "commands": [
+    {
+      "command": "python -m scripts.recover_vinsoc_spider_bundle --repo . --archive data/r2_cross_domain_recovery_v1/sources/spider_data.zip --output .vinsoc/spider-recovery-20261010-final",
+      "exit_code": 0,
+      "spider_databases": 12,
+      "real_base_gold_cases_verified": 80,
+      "calibration": 16,
+      "evaluation": 64,
+      "ctu_cases_pending": 40
+    },
+    {
+      "command": "python -m pytest -q tests/test_spider_recovery.py tests/test_r2_cross_domain_data.py tests/test_r2_cross_domain_gold.py tests/test_r2_cross_domain_benchmark_lock.py",
+      "exit_code": 0,
+      "passed": 38,
+      "scope": "regression_and_recovery_contract_not_model_scores"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 1,
+      "passed": 1262,
+      "failed": 1,
+      "skipped": 1,
+      "run": "final_full_regression_after_staging_and_WAL_guard",
+      "failure": "tests/test_network_e2e_lifecycle.py::test_local_verified_snapshot_two_scenario_rehearsal",
+      "reason": "LOCAL_SNAPSHOT_REQUIRED: historical network-demo snapshot is not present; this is a different identity from cross-domain CTU"
+    }
+  ],
+  "bundle_sha256": "d7c942ee67ad430d85a9a075eac02bacadc7e29ebd1eece6c583830070e11bdc",
+  "preserved_historical_data_files": 492,
+  "initial_recovery_failures_preserved": 3,
+  "initial_failure_type": "CatalogException_with_transient_WAL_reappearing_in_synced_checkout",
+  "correction": "build in temporary staging, then copy closed verified binaries; require no WAL and unchanged binary after all replay",
+  "review": "author_self_review; user directed inline master execution without subagents; no human result approval implied",
+  "rulings": [
+    "User approval on 2026-10-10 permits a separate recovery identity; original registry/locks/history remain unchanged.",
+    "Existing versioned tools.py adapter differs from the historical code lock; record mismatch and require a new runtime release before paid transmission.",
+    "Local missing historical network-demo input is recorded; continue independent recovery/code CI as the approved plan requires. Do not claim full local or E2E PASS."
+  ],
+  "external_model_calls": 0,
+  "responses_received": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false,
+  "full_data_gate_pass": false,
+  "runtime_worker_gate_pass": false,
+  "e2e_acceptance_pass": false,
+  "next": "receive exact CTU binary, validate the remaining 40 gold cases without rebuilding Spider; bind a full recovery bundle and worker/runtime release before any model transmission"
+}

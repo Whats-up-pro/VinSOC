@@ -1,0 +1,727 @@
+{
+  "base_gold_replayed": 80,
+  "blockers": [
+    {
+      "database_id": "ctu_dev",
+      "expected_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "status": "EXACT_CTU_BINARY_MISSING"
+    }
+  ],
+  "builds": [
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "student_transcripts_tracking",
+      "duckdb_content_sha256": "68399b6b9e655981e8c0de6f0ed3b7c96559ee2f4590ae4050ec5e1b58e144cc",
+      "historical_binary_sha256": "e24fe6dc3e1fc974d402867e61914dcc98edaf866a42ecf42c0f778b5c60bf8a",
+      "logical_sha256": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "9997139c7341bf2c6b6c074538309158b57520fe6aef3002fd2b840aad013afa"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "cre_Doc_Template_Mgt",
+      "duckdb_content_sha256": "b12857847eefb2d8775ad4ac50e4b6efb778e998a895dd24a6c51bb10bcc9fa3",
+      "historical_binary_sha256": "57f8fe36123efd57eb4064d9b878326570e6779485b9a2a5d0e382f800749646",
+      "logical_sha256": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "2864a6326a41d290ae04a604b3b8132dc5dcd6b794a7e62e735b61f7bfd28ed1"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "world_1",
+      "duckdb_content_sha256": "978cc1ab0972842720accf368b19ac856d50813b7e0e779fccc660a12715a4af",
+      "historical_binary_sha256": "5db49abba55e2fc5ad2602cf70c5a5eefb34026e916b54f38058fdc690aca242",
+      "logical_sha256": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "39009b0dab6320257cef405d97e93db92c72d70894aa37a6c1a0b1512e316a77"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "voter_1",
+      "duckdb_content_sha256": "2f2877ef49d3092c83d3566a2ed57048784543b4c7926f7fccb70dd7935dfa1a",
+      "historical_binary_sha256": "95524b974bb0b562cb5261ab5e1b31e7092524fb8001c85eabe6b9da7415d78c",
+      "logical_sha256": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "6f95bb3c66225ec2eca341b8d1dcd3e5f63c678a2d617d1d557a3069b4ae0bdf"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "dog_kennels",
+      "duckdb_content_sha256": "071f4bcd650aaadd9169153ab5dab1322818973480f4b98f93fc26dce5983d41",
+      "historical_binary_sha256": "e631dc777c2041d11a8f9dd0978c8e01e8a6253af2ff2bc66ab934fc38e19711",
+      "logical_sha256": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "83be9723c5e6979165a84f6d9a4cdb952fc787b7a333adf6d379761ffb644e9a"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "orchestra",
+      "duckdb_content_sha256": "ae3c7e62f77d7e158853ba3edb94fd7a3891d83961a1deb2943c8c05bb7667ee",
+      "historical_binary_sha256": "f7867ab139501fd2c2b772d3ea6e4e8f7271d8ab7858278405bd77740162bc3a",
+      "logical_sha256": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "be9be9354fcef7e857c808a2b19d8d02570f4ac02e6440fd8bec0f5f39be7b91"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "concert_singer",
+      "duckdb_content_sha256": "1ee9716a0f9e30936053e36ca695b3aaa176c8e182e1f016650f6b0dd5732b7c",
+      "historical_binary_sha256": "ec6a69a065840fe18b95fa383cd4e9da57a2acc4aec73c65c9675a95899e19f1",
+      "logical_sha256": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "d1064f124dfa03ed99be70e1192af5e3087f6c7fe37f67cbe9b987a63756acdc"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "car_1",
+      "duckdb_content_sha256": "af28cfa12464806a3380ca84393c2ac77cfb906aee2421415a748aeb4f966e28",
+      "historical_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+      "logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "2a215128c707e437e8b40c7fb615c03505978b935cb6e3ead23851d49f14eea5"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "flight_2",
+      "duckdb_content_sha256": "93fe406380fec38e1ba66dfd8d37fa43f1735a658f6cc9a276e4cfc8e62bc2ca",
+      "historical_binary_sha256": "e7a85f8d8765a6310e74970ae4a9a55ddfa3b78a99fc04f9030611e132b42192",
+      "logical_sha256": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "9afc66a730a1dc259912b6ba44b2e926ca9f5b2839e57089542d66f2783ad738"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "course_teach",
+      "duckdb_content_sha256": "d97951917bcafc0661d63e6d858e59af0b266827d63932d4b79eec94e84d04a1",
+      "historical_binary_sha256": "f54ec5ad018cc60d324b508761a8bd07da8bc58f2dcf787111e2e443a89420fb",
+      "logical_sha256": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "78c780d99304f6a09c782d81562510fadc97a19290130f296087890e39fb3120"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "poker_player",
+      "duckdb_content_sha256": "ce0f4501a5b9133d04a644e3f11291e0f52de331332222bbaa777067a0aa93bb",
+      "historical_binary_sha256": "56edebee2d6c0386cec69843ccd467371941ea630fe0cd2edb35b30c9994a323",
+      "logical_sha256": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "2cac4e4f5af9da279a9e13791bbff02e63fd9ce7911ce6082e057da94f16804e"
+    },
+    {
+      "all_original_content_identities_verified": true,
+      "database_id": "tvshow",
+      "duckdb_content_sha256": "5f0dea4bc478c0f663ea4dcb4c42275dc791034214f91f4d5cc08594907f3b2b",
+      "historical_binary_sha256": "954c9058717139e3c019e87ee59d7d8a73ba53d0c1b531f914da79de589f1187",
+      "logical_sha256": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+      "original_binary_status": "EXACT_BINARY_UNAVAILABLE_ON_THIS_HOST",
+      "recovered_binary_sha256": "6fa9922b8fd554c67d31122fe6608b56157a5fa2c7e26a986e2524fb051f5c6a"
+    }
+  ],
+  "created_at_utc": "2026-10-10T02:18:05.234596+00:00",
+  "external_model_calls": 0,
+  "full_data_gate_pass": false,
+  "gold_replay": [
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "database_id": "cre_Doc_Template_Mgt",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "database_id": "cre_Doc_Template_Mgt",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "database_id": "cre_Doc_Template_Mgt",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "database_id": "cre_Doc_Template_Mgt",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+      "database_id": "student_transcripts_tracking",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "database_id": "student_transcripts_tracking",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "database_id": "student_transcripts_tracking",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "database_id": "student_transcripts_tracking",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_voter_1_22bc102c818388de",
+      "database_id": "voter_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "database_id": "voter_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "database_id": "voter_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "database_id": "voter_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "database_id": "world_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_world_1_329e92f0874dea47",
+      "database_id": "world_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "database_id": "world_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "database_id": "world_1",
+      "gold_execution_verified": true,
+      "split": "calibration"
+    },
+    {
+      "case_id": "external_car_1_2f0d9e35cdcc4bc2",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_47ffa4acc7ba90eb",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_55cf1874c71b6fee",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_72878d40e5fc2141",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_a3e424fdba9f79c4",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_c3c5143d74d3437c",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_car_1_fdc8ee399ddc765f",
+      "database_id": "car_1",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_1313c062638e8562",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_2061015cfe2f236a",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_29bfe250be87c3ae",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_30a94311c8a53879",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_4d9fb537dd762b49",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_6264302aa07ba2e8",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_9754e7b07d3a2f56",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_concert_singer_db703ee8469f32e5",
+      "database_id": "concert_singer",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_2498449e2c383821",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_2d5c36e81b6f4fdc",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_587613ebd0fcbbbe",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_58a6ed9ee32a1545",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_6836a76f20642d62",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_a15b937a6c3852e4",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_a90c07d9d5fb849e",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_course_teach_d5ccd60dd0513e62",
+      "database_id": "course_teach",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_14fcc7dd73ceab81",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_3bed1d18ea095e48",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_5f29631b7287aefb",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_99e10daefae93b3e",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_b9c87e441963b8d0",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_ca0d92216738585b",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_e21e6915192151fc",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_dog_kennels_f04053f680e52ed3",
+      "database_id": "dog_kennels",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_1962776e116f9f03",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_1bbdb29fd76588bf",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_59060b10db344a2c",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_6b0856d8343233e0",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_71ca2299e56319eb",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_ba7a417281056dea",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_cc1d249d05dee220",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_flight_2_dd762b95172800f4",
+      "database_id": "flight_2",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_09dfdff61fbbeb1a",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_333cd27fe66308a4",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_725453fffae8b641",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_7d626e678d642e36",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_8775f636030ff775",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_9e252dcacdf09bde",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_b16253b5de2ff882",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_orchestra_fba9b3fa38f6cf1c",
+      "database_id": "orchestra",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_0bce930263776a39",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_0c1c58daeade41a0",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_27c0d318d77ddd08",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_311ebb051349222c",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_5aa2a36d84bc97bd",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_635f76c3b3aa43fc",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_827c6d91a2ccdded",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_poker_player_af17ae8ff067eded",
+      "database_id": "poker_player",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_1c60aeabf088515a",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_2ba6baeb8b8cc318",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_38dfbde79a7487e2",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_55ce63ef8ba641ea",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_5dd917867752c83a",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_73697be8b93729ee",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_cbea1679ac94abfa",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    },
+    {
+      "case_id": "external_tvshow_f476e6a3b7fb5098",
+      "database_id": "tvshow",
+      "gold_execution_verified": true,
+      "split": "evaluation"
+    }
+  ],
+  "historical_code_lock_pass": false,
+  "historical_data_files_verified": 492,
+  "historical_runtime_changed_files": [
+    "evaluation/r2_cross_domain_v1/tools.py"
+  ],
+  "inventory": {
+    "counts": {
+      "calibration": 24,
+      "evaluation": 96
+    },
+    "difficulty": {
+      "advanced": 24,
+      "basic": 24,
+      "medium": 48
+    },
+    "evaluation_family_count": 93,
+    "evaluation_features": {
+      "distinct": 13,
+      "group_having": 20,
+      "join": 22,
+      "nested": 22,
+      "null": 2,
+      "order_limit": 15,
+      "prefix": 3,
+      "time": 2,
+      "window": 1
+    },
+    "external_calibration_databases": [
+      "cre_Doc_Template_Mgt",
+      "student_transcripts_tracking",
+      "voter_1",
+      "world_1"
+    ],
+    "external_domains": [
+      "animal_services",
+      "automotive",
+      "aviation",
+      "competitive_games",
+      "education",
+      "music",
+      "television"
+    ],
+    "external_evaluation_databases": [
+      "car_1",
+      "concert_singer",
+      "course_teach",
+      "dog_kennels",
+      "flight_2",
+      "orchestra",
+      "poker_player",
+      "tvshow"
+    ],
+    "external_evaluation_family_count": 61,
+    "external_features": {
+      "distinct": 2,
+      "group_having": 8,
+      "join": 22,
+      "nested": 14,
+      "order_limit": 2
+    },
+    "family_independence_assumed": false
+  },
+  "paid_authorized": false,
+  "pending_gold_case_ids": [
+    "ctu_cross_0d22a790584f0155",
+    "ctu_cross_12d2dfbda309cf7a",
+    "ctu_cross_5c5ade01fccce004",
+    "ctu_cross_94d3c478d5858048",
+    "ctu_cross_97cc9c9d5d2fdd3b",
+    "ctu_cross_dda372911befb17e",
+    "ctu_cross_e36ee009626c71c2",
+    "ctu_cross_feab49e4a48ff3aa",
+    "ctu_cross_09368110b7091cb8",
+    "ctu_cross_0b9805ee5f7a7aca",
+    "ctu_cross_111e791fb862cf30",
+    "ctu_cross_116e46aecde5564d",
+    "ctu_cross_179231c51f8af53e",
+    "ctu_cross_1dc9e35510939cd9",
+    "ctu_cross_2e05412218fcc02f",
+    "ctu_cross_3f659571f998adb0",
+    "ctu_cross_3f83eeb648a43168",
+    "ctu_cross_493dba43b24b2e81",
+    "ctu_cross_4b4f065c0737c540",
+    "ctu_cross_4bd089aa77684ec3",
+    "ctu_cross_4dfbfa87ef9eacfa",
+    "ctu_cross_5ba944b403f6456d",
+    "ctu_cross_6113c639deae1326",
+    "ctu_cross_6122c96211b2bfa8",
+    "ctu_cross_66b8e92a76c3359b",
+    "ctu_cross_67db5d7878967de2",
+    "ctu_cross_708b66575657429a",
+    "ctu_cross_71164969e0e0277e",
+    "ctu_cross_71f16246d2fd9590",
+    "ctu_cross_779935acae78c536",
+    "ctu_cross_8b3e2e65524280d5",
+    "ctu_cross_a427f9a05d18b548",
+    "ctu_cross_bce6d3679ade4cd6",
+    "ctu_cross_cd58f61cdff78fbc",
+    "ctu_cross_cf0c8dd93c8be782",
+    "ctu_cross_d914283c880a2dfd",
+    "ctu_cross_da1bacf7b6a0d616",
+    "ctu_cross_db23b6f2a42fd103",
+    "ctu_cross_e09358b4dca10e1f",
+    "ctu_cross_ef8808ed9e47cef2"
+  ],
+  "planned_gold_cases": 120,
+  "recovered_spider_databases": 12,
+  "replayed_by_split": {
+    "calibration": 16,
+    "evaluation": 64
+  },
+  "runtime_worker_gate_pass": false,
+  "scope": "offline_source_recovery_and_gold_validation_not_model_score",
+  "source_attribution": {
+    "archive_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+    "license": "CC BY-SA 4.0",
+    "official_project_url": "https://yale-lily.github.io/spider",
+    "source_id": "spider-1.0-dev",
+    "source_version": "Spider 1.0"
+  },
+  "status": "SPIDER_RECOVERED_CTU_PENDING",
+  "version": "r2_cross_domain_spider_recovery_v1"
+}
