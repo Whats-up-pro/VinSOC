@@ -1,0 +1,29 @@
+{
+  "implementation_sha": "85eec07dae7e754e4879b9c36907a3f4438adb08",
+  "ci_run_id": 38018715823,
+  "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38018715823",
+  "scope": "initial_required_data_ci_failure_preserved",
+  "required_jobs": [
+    {
+      "job_id": 114114726894,
+      "name": "query-real-data (3.11)",
+      "conclusion": "failure"
+    },
+    {
+      "job_id": 114114726872,
+      "name": "query-real-data (3.12)",
+      "conclusion": "failure"
+    }
+  ],
+  "passed_stages": [
+    "restore_exact_13_binaries",
+    "verify_both_user_zip_hashes",
+    "restore_pinned_spider_archive_members"
+  ],
+  "failure_stage": "CTU_original_source_validation",
+  "failure_reason": "Source file does not exist: data/ctu_network_public/sources/capture20110815-2.binetflow",
+  "worker_tests_executed": false,
+  "data_or_code_lock_modified": false,
+  "fix": "Add pinned CTU S5/S7 raw-source restore; preserve every source hash; do not rebuild snapshots",
+  "external_model_calls": 0
+}

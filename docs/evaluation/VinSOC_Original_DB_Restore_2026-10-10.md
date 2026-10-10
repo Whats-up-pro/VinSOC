@@ -37,4 +37,8 @@ CI positive path chưa thay thế việc quan sát boundary và chứng minh t�
 
 Hai ZIP này **không** chứa network-v1 binary `91a13ab1…` hoặc canonical ledger/gates. A2/A3 cũ vẫn cần identity/state của protocol cũ; không tráo binary.
 
-Receipts: `results/evaluation_v1/text2sql_integration_v1/original_data_20261010/{bundle_restore_receipt,real_data_validation,local_worker_probe}.json`. Kết quả local suite và exact-SHA CI được ghi sau khi lệnh/job thực hoàn tất.
+Local targeted data/restore checks: **8 passed**, không skip. Full repository suite: **1.270 passed, 1 failed, 3 skipped**; lỗi là `tests/test_network_e2e_lifecycle.py::test_local_verified_snapshot_two_scenario_rehearsal` do `LOCAL_SNAPSHOT_REQUIRED` của network-v1. Ba checks acceptance mới được chạy riêng trong required CI job, không dùng trạng thái skip của regression suite để nghiệm thu.
+
+[CI đầu tiên 38018715823](https://github.com/Whats-up-pro/VinSOC/actions/runs/38018715823) tại SHA `85eec07dae7e754e4879b9c36907a3f4438adb08`: cả hai job required đã restore đủ 13 binary và Spider source, nhưng FAIL khi kiểm CTU vì job thiếu raw sources. Worker chưa được kiểm ở lượt CI đó. Bước tải/kiểm đúng hai raw sources được bổ sung; không đổi checksum hoặc dựng lại DB. Giữ receipt lỗi đầu tiên; kết quả SHA mới chỉ được ghi sau khi job thực hoàn tất.
+
+Receipts: `results/evaluation_v1/text2sql_integration_v1/original_data_20261010/{bundle_restore_receipt,real_data_validation,local_worker_probe,local_verification,initial_ci_failure}.json`.

@@ -74,12 +74,53 @@ jobs:
           receipt = verify_ctu_bundle(Path('VinSOC_CTU_20261010.zip'))
           Path('.vinsoc/query-real-data-ci/ctu_bundle_receipt.json').write_text(json.dumps(receipt, indent=2))
           PYTHON
+      - name: Restore both pinned CTU raw sources without rebuilding snapshots
+        run: |
+          python - <<'PYTHON'
+          import hashlib, json, shutil, urllib.request
+          from pathlib import Path
+          from scripts.export_vinsoc_db_bundle import SOURCES
+          root = Path('.').resolve()
+          for source in SOURCES['ctu']['sources']:
+              target = root / source['path']
+              if target.resolve() != target or not target.is_relative_to(root):
+                  raise ValueError('UNSAFE_CTU_SOURCE_DESTINATION')
+              if not target.exists():
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  with urllib.request.urlopen(source['source_url'], timeout=120) as response, target.open('xb') as output:
+                      shutil.copyfileobj(response, output)
+              with target.open('rb') as handle:
+                  observed = hashlib.file_digest(handle, 'sha256').hexdigest()
+              if observed != source['file_sha256']:
+                  raise ValueError('PINNED_CTU_SOURCE_CHECKSUM_MISMATCH')
+          Path('.vinsoc/query-real-data-ci/ctu_sources_receipt.json').write_text(json.dumps(SOURCES['ctu'], indent=2))
+          PYTHON
       - name: Verify pinned sources and replay all 120 gold queries
         run: |
           python -m scripts.validate_original_query_data --restore-sources --output .vinsoc/query-real-data-ci/real_data_validation.json
       - name: Required real DB and isolated worker checks (no missing-input skips)
         run: |
           python -m pytest -q tests/test_query_real_data.py tests/test_query_bundle_restore.py --junitxml=.vinsoc/query-real-data-ci/required_checks.xml
+      - name: Preserve isolated worker startup diagnostic after a failure
+        if: failure()
+        run: |
+          python - <<'PYTHON'
+          import json, subprocess
+          from pathlib import Path
+          from evaluation.r2_cross_domain_v1.data import DatabaseContext
+          from vinsoc_text2sql.executor import SqlExecutor
+          report = json.loads(Path('results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json').read_text())
+          sql = next(c['final_sql'] for c in report['case_results'] if c['case_id'] == 'ctu_sql_001')
+          context = DatabaseContext.from_manifest(Path('evaluation/r2_cross_domain_v1/runtime_registry.json'), 'ctu_dev')
+          request = json.dumps({'sql': sql, 'parameters': [], 'row_cap': 10000, 'timeout_seconds': 10})
+          try:
+              result = subprocess.run(SqlExecutor()._command(context.snapshot_path), input=request, text=True, capture_output=True, env={}, timeout=13)
+              diagnostic = {'exit_code': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr, 'external_model_calls': 0}
+          except subprocess.TimeoutExpired:
+              diagnostic = {'status': 'WORKER_STARTUP_TIMEOUT', 'external_model_calls': 0}
+          Path('.vinsoc/query-real-data-ci/worker_startup_diagnostic.json').write_text(json.dumps(diagnostic, indent=2))
+          print(json.dumps(diagnostic))
+          PYTHON
       - uses: actions/upload-artifact@v4
         if: always()
         with:
