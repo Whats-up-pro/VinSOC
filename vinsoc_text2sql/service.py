@@ -79,10 +79,15 @@ def _generate(request, condition, tools, transport, telemetry_sink):
             messages = [{"role": "system", "content": LINKER if role == "linker" else GENERATOR},
                         {"role": "user", "content": json.dumps(data, ensure_ascii=False)}]
             completed = False
-            for _ in range(ROLE_TURN_CAP if condition == "E3" else 1):
+            turn_cap = ROLE_TURN_CAP if condition == "E3" else 1
+            for turn in range(turn_cap):
                 payload = {key: transport.contract[key] for key in ("model", "reasoning_effort", "max_completion_tokens", "service_tier")}
+                finalization_turn = condition == "E3" and turn == turn_cap-1
                 payload["messages"] = deepcopy(messages)
-                if condition == "E3":
+                if finalization_turn:
+                    payload["messages"].append({"role":"user", "content":
+                        "Tool access is complete. Return the required final JSON object now using only the acquired evidence."})
+                elif condition == "E3":
                     payload["tools"] = deepcopy(TOOLS)
                 response = transport.request(payload)
                 event = {"role": role, "response": deepcopy(response)}
@@ -90,7 +95,7 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                 telemetry_sink(deepcopy(record))  # before parsing/scoring
                 calls = response.get("tool_calls") or []
                 if calls:
-                    if condition == "E0" or len(calls) > 4:
+                    if condition == "E0" or finalization_turn or len(calls) > 4:
                         raise ValueError("UNEXPECTED_OR_EXCESS_TOOL_CALLS")
                     messages.append({"role": "assistant", "content": response["content"], "tool_calls": calls})
                     for call in calls:

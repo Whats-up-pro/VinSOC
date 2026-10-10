@@ -18,6 +18,7 @@ from evaluation.r2_cross_domain_v1.release import fresh
 from scripts.run_vinsoc_query_acceptance import ROOT, run_live, run_preflight
 
 CASE_ID = 'ctu_cross_708b66575657429a'
+PRIOR_AUDIT = ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_20261010/outcome_audit.json'
 REQUIRED = ('OPENAI_API_KEY','GITHUB_TOKEN','GITHUB_SHA','GITHUB_RUN_ID','GITHUB_CI_RUN_ID',
             'VINSOC_QUERY_DEMO_AUTH_JSON','VINSOC_GPT5_DOC','VINSOC_GPT41_DOC')
 
@@ -35,13 +36,36 @@ def validate_authorization(value):
     if (not isinstance(value, dict) or not isinstance(value.get('allocation_id'), str)
             or not value['allocation_id'] or value.get('scope') != 'demo'
             or value.get('condition') != 'E3' or value.get('case_id') != CASE_ID
-            or value.get('limit_usd') != 3.0 or value.get('known_prior_cost_usd') != 0.0
-            or value.get('remaining_allocation_usd') != 3.0
+            or value.get('limit_usd') != 3.0
             or value.get('unknown_exposure_usd') != 0.0
             or any(type(value.get(k)) not in (int,float) for k in numbers)
             or not fresh(value.get('confirmed_utc'))):
         raise ValueError('DEMO_AUTHORIZATION_INVALID')
+    profiles = {
+        None:(0.0,3.0),
+        'full-e2e-2':(0.00133865,2.99866135),
+    }
+    if (value.get('execution_id') not in profiles
+            or (value.get('known_prior_cost_usd'), value.get('remaining_allocation_usd'))
+                != profiles[value.get('execution_id')]):
+        raise ValueError('DEMO_AUTHORIZATION_INVALID')
     return value
+
+
+def prior_demo_receipt(auth):
+    if auth.get('execution_id') is None:
+        return None
+    audit = json.loads(PRIOR_AUDIT.read_text(encoding='utf-8'))
+    expected_digest = 'sha256:37ac6fe695f57de0d44ae780d288f8223cbe4cbd0ed6fb70e1117eaee2b23ac9'
+    if (audit.get('case_id') != CASE_ID or audit.get('workflow',{}).get('run_id') != 38037640751
+            or audit.get('workflow',{}).get('artifact_digest') != expected_digest
+            or audit.get('actual',{}).get('actual_cost_usd') != auth['known_prior_cost_usd']
+            or audit.get('actual',{}).get('cost_unknown') is not False
+            or audit.get('actual',{}).get('pending_exposure_usd') != 0.0):
+        raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')
+    return {'workflow_run_id':38037640751, 'known_cost_usd':auth['known_prior_cost_usd'],
+            'artifact_digest':expected_digest,
+            'audit_sha256':hashlib.sha256(PRIOR_AUDIT.read_bytes()).hexdigest()}
 
 
 def verify_cloud_ci(api, env):
@@ -82,21 +106,25 @@ def prepare_private_inputs(auth, env, ci_run_id):
     allocation_dir = canonical/'allocations'/auth['allocation_id']
     allocation_dir.mkdir(parents=True, exist_ok=False)
     ledger_path = allocation_dir/'allocation_ledger.json'
+    prior = prior_demo_receipt(auth)
+    authorization = {k:auth[k] for k in ('scope','condition','case_id','confirmed_utc')}
+    if auth.get('execution_id'):
+        authorization['execution_id'] = auth['execution_id']
     allocation = {'schema_version':1, 'allocation_id':auth['allocation_id'], 'currency':'USD',
-                  'authorized_limit_usd':3.0, 'known_prior_cost_usd':0.0,
-                  'remaining_allocation_usd':3.0, 'unknown_exposure_usd':0.0,
-                  'events':[], 'authorization':{k:auth[k] for k in ('scope','condition','case_id','confirmed_utc')}}
+                  'authorized_limit_usd':3.0, 'known_prior_cost_usd':auth['known_prior_cost_usd'],
+                  'remaining_allocation_usd':auth['remaining_allocation_usd'], 'unknown_exposure_usd':0.0,
+                  'events':[], 'authorization':authorization, 'prior_paid_demo':prior}
     write_json(ledger_path, allocation)
     ledger_sha = hashlib.sha256(ledger_path.read_bytes()).hexdigest()
     receipt_path = allocation_dir/'reconciliation.json'
     receipt = {'schema_version':1, 'verified_utc':stamp, 'allocation_id':auth['allocation_id'],
                'authoritative_host_verified':True, 'prior_hosts_sealed':True,
-               'unknown_exposure_usd':0, 'known_prior_cost_usd':0.0,
-               'remaining_allocation_usd':3.0,
+               'unknown_exposure_usd':0, 'known_prior_cost_usd':auth['known_prior_cost_usd'],
+               'remaining_allocation_usd':auth['remaining_allocation_usd'],
                'scope_states':{'calibration':'outside_demo_allocation','evaluation':'outside_demo_allocation',
-                               'pipeline':'outside_demo_allocation','demo':'unused'},
+                               'pipeline':'outside_demo_allocation','demo':'second_attempt_authorized'},
                'ledger_artifacts':[{'path':ledger_path.relative_to(canonical).as_posix(),'sha256':ledger_sha}],
-               'basis':'dedicated_new_3_usd_allocation_authorized_for_one_fixed_E3_demo'}
+               'basis':'original_3_usd_demo_allocation_less_verified_first_attempt_cost'}
     write_json(receipt_path, receipt)
     receipt_sha = hashlib.sha256(receipt_path.read_bytes()).hexdigest()
     pricing = {}
@@ -112,11 +140,12 @@ def prepare_private_inputs(auth, env, ci_run_id):
     return {
         'pricing':pricing,
         'account':{'confirmed_utc':stamp,'project_verified':True,'allocation_id':auth['allocation_id'],
-                   'known_prior_cost_usd':0.0,'remaining_allocation_usd':3.0,
+                   'known_prior_cost_usd':auth['known_prior_cost_usd'],
+                   'remaining_allocation_usd':auth['remaining_allocation_usd'],
                    'unresolved_cost_unknown':False,
                    'reconciliation_reference':{'path':str(receipt_path.resolve()),'sha256':receipt_sha}},
         'budget':{'paid_authorized':True,'authorization_scope':'demo','limit_usd':3.0,
-                  'decision_reference':'explicit-user-approval-one-fixed-E3-demo-hard-cap-3-USD-2026-10-10'},
+                  'decision_reference':'explicit-user-request-full-real-API-E2E-run-within-original-3-USD-cap-2026-10-10'},
         'identities':{'implementation_sha':env['GITHUB_SHA'],'ci_run_id':ci_run_id,
                       'runtime_source_sha256':source_hashes()},
     }
@@ -142,11 +171,13 @@ def run(mode, output_dir, env, *, api_factory=GitHubAPI):
         if env.get('OPENAI_BASE_URL'):
             raise ValueError('CUSTOM_BASE_URL_REJECTED')
         auth = validate_authorization(json.loads(env['VINSOC_QUERY_DEMO_AUTH_JSON']))
+        control['execution_id'] = auth.get('execution_id')
         api = api_factory(env['GITHUB_TOKEN'])
         ci_run_id = verify_cloud_ci(api, env)
         selected = fixed_selection()
         inputs = prepare_private_inputs(auth, env, ci_run_id)
-        preflight = run_preflight('demo','E3',inputs,selected_input=selected)
+        preflight = run_preflight('demo','E3',inputs,selected_input=selected,
+                                  execution_id=auth.get('execution_id'))
         write_json(private/'release.json', preflight)
         public_preflight = json.loads(json.dumps(preflight))
         public_preflight['release'].pop('gate_inputs',None)
@@ -164,9 +195,11 @@ def run(mode, output_dir, env, *, api_factory=GitHubAPI):
         verify_cloud_ci(api, env)
         store = QueryDemoGitHubStore(api, implementation_sha=env['GITHUB_SHA'], run_id=env['GITHUB_RUN_ID'])
         report = run_live(release, public/'live', selected_input=selected, remote_store=store)
+        current_cost = sum(e.get('cost_usd') or 0 for e in report.get('cost_events',[]))
         control.update(status=report['status'], client_created=report.get('client_created',False),
                        attempted=report.get('attempted',0), received=report.get('received',0),
                        known_usd=report.get('known_usd',0), cost_unknown=report.get('cost_unknown',False),
+                       prior_cost_usd=auth['known_prior_cost_usd'], current_run_cost_usd=current_cost,
                        completed=report.get('completed',0), official_eligible=False,
                        window_claimed=store.claimed)
         window = Path.home()/'.vinsoc/live-windows'/release['window_id']

@@ -74,7 +74,7 @@ def technical_status(scope, records):
     return 'technical_complete_awaiting_human' if records else 'technical_incomplete'
 
 
-def run_preflight(scope, condition, private, *, selected_input=None):
+def run_preflight(scope, condition, private, *, selected_input=None, execution_id=None):
     identities = deepcopy(private.get('identities', {}))
     identities.update(data_verified=False, source_verified=False, ci_verified=False, worker_verified=False)
     diagnostics = []
@@ -93,7 +93,7 @@ def run_preflight(scope, condition, private, *, selected_input=None):
                               question=selected_input.get('question') if selected_input else None)
     result = preflight(scope, condition, inventory=inventory, identities=identities,
                        account=private.get('account', {}), pricing=private.get('pricing', {}),
-                       budget=private.get('budget', {}))
+                       budget=private.get('budget', {}), execution_id=execution_id)
     return {'release': result, 'diagnostics': diagnostics,
             'current_source_sha256': source_hashes(), 'client_created': False, 'attempted': 0, 'received': 0}
 
@@ -105,7 +105,8 @@ def run_live(release, output, *, selected_input=None, remote_store=None):
         verify_selected_question(selected_input['case_id'], selected_input['question'],
                                  require_demo=release.get('scope') == 'demo')
     release = validate_release(release)
-    verify_scope_unused(release['scope'], release['case_ids'][0] if release['scope'] == 'demo' else None)
+    verify_scope_unused(release['scope'], release['case_ids'][0] if release['scope'] == 'demo' else None,
+                        release.get('execution_id'))
     verify_code_and_ci(release['gate_inputs']['identities'])
     contexts, references = validate_data()  # Exact locked bytes + same worker, before SDK.
     if release['gate_inputs']['identities'].get('transmission_files_sha256') != transmission_files(contexts):

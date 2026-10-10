@@ -36,7 +36,7 @@ def number(value):
     return type(value) in (int, float) and math.isfinite(value) and value >= 0
 
 
-def preflight(scope, condition, *, inventory, identities, account, pricing, budget):
+def preflight(scope, condition, *, inventory, identities, account, pricing, budget, execution_id=None):
     caps = role_caps(scope, condition)
     planned = {'calibration': 24, 'evaluation': 96, 'pipeline': 32, 'demo': 1}[scope]
     reasons = []
@@ -44,7 +44,7 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
         verify_selection_lock, verify_canonical_reconciliation, window_id_for)
     ids = [row.get('case_id') for row in inventory if isinstance(row, dict)]
     try:
-        verify_scope_unused(scope, ids[0] if scope == 'demo' and len(ids) == 1 else None)
+        verify_scope_unused(scope, ids[0] if scope == 'demo' and len(ids) == 1 else None, execution_id)
     except ValueError as error:
         reasons.append(str(error))
     if scope in ('evaluation', 'pipeline'):
@@ -99,8 +99,8 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
             or account.get('known_prior_cost_usd', 0)+new_ceiling > budget.get('limit_usd', 0)
             or new_ceiling > account.get('remaining_allocation_usd', 0)):
         reasons.append('FULL_RUN_BUDGET_INSUFFICIENT')
-    result = {'version': VERSION, 'scope': scope, 'condition': condition,
-              'window_id': window_id_for(scope, ids[0] if scope == 'demo' and len(ids) == 1 else None),
+    result = {'version': VERSION, 'scope': scope, 'condition': condition, 'execution_id':execution_id,
+              'window_id': window_id_for(scope, ids[0] if scope == 'demo' and len(ids) == 1 else None, execution_id),
               'authorized': not reasons, 'status': 'preflight_pass' if not reasons else 'blocked',
               'reasons': reasons, 'attempted': 0, 'received': 0, 'client_created': False,
               'planned': planned, 'case_ids': ids, 'role_caps': caps, 'contracts': CONTRACTS,
@@ -115,7 +115,7 @@ def validate_release(release):
     if not isinstance(release, dict) or release.get('version') != VERSION:
         raise ValueError('RELEASE_NOT_AUTHORIZED')
     inputs = release['gate_inputs']
-    expected = preflight(release['scope'], release['condition'], **inputs)
+    expected = preflight(release['scope'], release['condition'], execution_id=release.get('execution_id'), **inputs)
     if not expected['authorized'] or release != expected:
         raise ValueError('RELEASE_NOT_AUTHORIZED')
     return expected

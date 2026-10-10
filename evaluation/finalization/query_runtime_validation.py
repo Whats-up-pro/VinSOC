@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import subprocess
 import urllib.request
 from pathlib import Path
@@ -42,18 +43,22 @@ def source_hashes():
     return {path: file_hash(ROOT/path, portable=True) for path in sorted(paths)}
 
 
-def window_id_for(scope, case_id=None):
+def window_id_for(scope, case_id=None, execution_id=None):
     if scope == 'demo':
         if not isinstance(case_id, str) or not case_id or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in case_id):
             raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
-        return 'text2sql-integration-20261008-demo-'+case_id
+        if execution_id is not None and not re.fullmatch(r'[a-z0-9-]{1,32}', execution_id):
+            raise ValueError('INVALID_DEMO_EXECUTION_ID')
+        return 'text2sql-integration-20261008-demo-'+case_id+('-'+execution_id if execution_id else '')
+    if execution_id is not None:
+        raise ValueError('INVALID_DEMO_EXECUTION_ID')
     if scope not in ('calibration', 'evaluation', 'pipeline'):
         raise ValueError('INVALID_RELEASE_SCOPE')
     return 'text2sql-integration-20261008-'+scope
 
 
-def verify_scope_unused(scope, case_id=None):
-    root = Path.home()/'.vinsoc/live-windows'/window_id_for(scope, case_id)
+def verify_scope_unused(scope, case_id=None, execution_id=None):
+    root = Path.home()/'.vinsoc/live-windows'/window_id_for(scope, case_id, execution_id)
     if any((root/name).exists() for name in ('claim.json', 'ledger.json', 'migration.json')):
         raise ValueError('RELEASE_WINDOW_CONSUMED')
 

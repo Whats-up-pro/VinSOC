@@ -40,6 +40,15 @@ def test_single_demo_rejects_non_e3_condition():
         role_caps('demo', 'E0')
 
 
+def test_second_demo_uses_a_distinct_immutable_window():
+    from scripts.run_vinsoc_query_acceptance import inventory_for
+    selected = inventory_for('demo')
+    receipt = preflight('demo', 'E3', inventory=selected, identities={},
+                        account={}, pricing={}, budget={}, execution_id='full-e2e-2')
+    assert receipt['execution_id'] == 'full-e2e-2'
+    assert receipt['window_id'].endswith('-full-e2e-2')
+
+
 def test_denied_release_cannot_claim_window(tmp_path):
     release = preflight('pipeline', 'E3', inventory=[], identities={}, account={}, pricing={}, budget={})
     with pytest.raises(ValueError, match='RELEASE_NOT_AUTHORIZED'):

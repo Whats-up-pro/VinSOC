@@ -29,7 +29,10 @@ class QueryProvider(LLMProvider):
         c = client.contract
         payload = {k: c[k] for k in ('model', 'temperature', 'max_completion_tokens', 'service_tier')}
         payload['messages'] = ([{'role': 'system', 'content': system_prompt}] if system_prompt else [])+deepcopy(messages)
-        if tools:
+        # The first turn routes through the native query tool.  Once evidence is
+        # present, the assessment turn must return the final JSON contract and
+        # cannot spend the sole assessment call trying to invoke the tool again.
+        if tools and self.turn == 0:
             payload.update(tools=deepcopy(tools), tool_choice='auto', parallel_tool_calls=False)
         response = client.request(payload)
         self.turn += 1

@@ -62,6 +62,22 @@ def test_cloud_authorization_is_exactly_three_dollars_for_fixed_case():
         validate_authorization({**valid, 'limit_usd':3.01})
 
 
+def test_second_demo_authorization_accounts_for_first_paid_run():
+    from datetime import datetime, timezone
+    from scripts.run_query_demo_cloud import validate_authorization
+    valid = {'allocation_id':'demo-allocation-2','execution_id':'full-e2e-2',
+             'limit_usd':3.0,'known_prior_cost_usd':0.00133865,
+             'remaining_allocation_usd':2.99866135,'unknown_exposure_usd':0.0,
+             'scope':'demo','condition':'E3','case_id':'ctu_cross_708b66575657429a',
+             'confirmed_utc':datetime.now(timezone.utc).isoformat()}
+    assert validate_authorization(valid) == valid
+    from scripts.run_query_demo_cloud import prior_demo_receipt
+    receipt = prior_demo_receipt(valid)
+    assert receipt['workflow_run_id'] == 38037640751
+    assert receipt['known_cost_usd'] == 0.00133865
+    assert receipt['artifact_digest'].startswith('sha256:')
+
+
 def test_demo_workflow_is_bound_into_runtime_identity():
     from evaluation.finalization.query_runtime_validation import source_hashes
     assert '.github/workflows/query-demo-once.yml' in source_hashes()
