@@ -1,0 +1,30 @@
+{
+  "scope": "local_original_data_worker_probe_not_model_score",
+  "created_at_utc": "2026-10-10T02:51:51.020767+00:00",
+  "data_identity_and_gold_gate_pass": true,
+  "runtime_worker_gate_pass": false,
+  "status": "BLOCKED_LOCAL_NETWORK_NAMESPACE",
+  "observed_minimal_bubblewrap_exit_code": 1,
+  "observed_minimal_bubblewrap_stderr": "bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted",
+  "saved_live_sql_probe": "WORKER_ISOLATION_OR_STARTUP_FAILED",
+  "isolation_controls_relaxed": false,
+  "required_linux_ci": "query-real-data (3.11), query-real-data (3.12)",
+  "pending_worker_gate_checks": [
+    "all_120_gold_via_worker",
+    "saved_live_sql_typed_result_parity",
+    "observed_boundaries_and_total_group_memory_512_MiB"
+  ],
+  "historical_data_files_verified": 492,
+  "historical_code_lock_pass": false,
+  "historical_runtime_changed_files": [
+    "evaluation/r2_cross_domain_v1/tools.py"
+  ],
+  "preserved_incomplete_source_archive": {
+    "path": "data/r2_cross_domain_v1/sources/spider_data.unverified-preserved-20261010.zip",
+    "sha256": "1870912426625952784580b1715cbe532ae5d839456e8b95269c6d9df1fc3129",
+    "size_bytes": 202363392
+  },
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false
+}

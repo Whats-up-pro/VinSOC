@@ -1,0 +1,58 @@
+{
+  "scope": "original_data_restore_local_verification",
+  "source_hashes": {
+    "scripts/restore_query_data_bundle.py": "2ade9cc0e4a341a8026e529f5abc403bbf63e540b1761c10640f982237c430b0",
+    "scripts/validate_original_query_data.py": "cbf4c883bd0dafcc233f7b350905d43890ded584f1c0c43b9a2957454e02ac7c",
+    "tests/test_query_bundle_restore.py": "953346cade98859001e9cc92c811b083781d85cd9aff9cac2667248ff40d988f",
+    "tests/test_query_real_data.py": "5a847255d861fab1ad86ca07854fad3d9381158ad35101e46c99fb24962438e4",
+    ".github/workflows/ci.yml": "849b4295427849bf46d0acf2e4617ded403a763fbed06d88a067b3ec1e6d31d6",
+    ".gitignore": "4032a8f91a37cc13da94b1e0ee1ceadb257e36eb66b6e87184dd5bcde999e5e9"
+  },
+  "targeted_data_restore": {
+    "command": "VINSOC_QUERY_REAL_DATA_REQUIRED=1 python -m pytest tests/test_query_bundle_restore.py tests/test_query_real_data.py::test_all_120_original_gold_queries_and_sources_validate -q",
+    "exit_code": 0,
+    "passed": 8,
+    "skipped": 0
+  },
+  "full_repository_suite": {
+    "command": "python -m pytest -q",
+    "exit_code": 1,
+    "passed": 1270,
+    "failed": 1,
+    "skipped": 3,
+    "failure_test": "tests/test_network_e2e_lifecycle.py::test_local_verified_snapshot_two_scenario_rehearsal",
+    "failure_reason": "LOCAL_SNAPSHOT_REQUIRED for legacy network-v1 protocol",
+    "acceptance_tests_are_run_separately_with_required_environment": true
+  },
+  "saved_live_sql_worker": {
+    "exit_code": 1,
+    "failure_category": "WORKER_ISOLATION_OR_STARTUP_FAILED",
+    "skipped": 0
+  },
+  "historical_validator": {
+    "exit_code": 1,
+    "failure_category": "LOCKED_FILE_IDENTITY_MISMATCH:evaluation/r2_cross_domain_v1/tools.py",
+    "old_lock_modified": false
+  },
+  "ruff": {
+    "exit_code": 0,
+    "scope": [
+      "scripts/restore_query_data_bundle.py",
+      "scripts/validate_original_query_data.py",
+      "tests/test_query_bundle_restore.py",
+      "tests/test_query_real_data.py"
+    ]
+  },
+  "compileall": {
+    "exit_code": 0,
+    "scope": [
+      "scripts/restore_query_data_bundle.py",
+      "scripts/validate_original_query_data.py",
+      "tests/test_query_bundle_restore.py",
+      "tests/test_query_real_data.py"
+    ]
+  },
+  "git_diff_check_exit_code": 0,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0
+}

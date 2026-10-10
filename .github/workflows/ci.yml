@@ -42,6 +42,52 @@ jobs:
           path: data/soc_traces_v1/corpus/corpus_receipt.json
           if-no-files-found: error
 
+  query-real-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    env:
+      VINSOC_QUERY_REAL_DATA_REQUIRED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pinned dependencies and isolated worker backend
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          python -m pip install -r requirements.txt
+          python -m pip install duckdb==1.5.5
+      - name: Restore exact original snapshots from pinned user-delivered bundle
+        run: |
+          mkdir -p .vinsoc/query-real-data-ci
+          python -m scripts.restore_query_data_bundle --repo . --bundle VinSOC_Runtime_DB_20261010.zip > .vinsoc/query-real-data-ci/bundle_restore_receipt.json
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+          from scripts.restore_query_data_bundle import verify_ctu_bundle
+          receipt = verify_ctu_bundle(Path('VinSOC_CTU_20261010.zip'))
+          Path('.vinsoc/query-real-data-ci/ctu_bundle_receipt.json').write_text(json.dumps(receipt, indent=2))
+          PYTHON
+      - name: Verify pinned sources and replay all 120 gold queries
+        run: |
+          python -m scripts.validate_original_query_data --restore-sources --output .vinsoc/query-real-data-ci/real_data_validation.json
+      - name: Required real DB and isolated worker checks (no missing-input skips)
+        run: |
+          python -m pytest -q tests/test_query_real_data.py tests/test_query_bundle_restore.py --junitxml=.vinsoc/query-real-data-ci/required_checks.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: query-real-data-${{ github.sha }}-${{ matrix.python-version }}
+          path: .vinsoc/query-real-data-ci/
+          if-no-files-found: error
+          retention-days: 90
+
   cloud-input-availability:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest

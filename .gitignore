@@ -59,6 +59,8 @@ data/snapshots/*.duckdb
 data/public_pilot/
 data/ctu_network_public/sources/
 data/ctu_network_public/*.duckdb
+data/ctu_network_public/snapshots/*.duckdb
+data/ctu_network_public/snapshots/*.duckdb.wal
 data/ctu_network_public/*-build-*.tmp
 data/ctu_network_frozen/snapshots/*.duckdb
 data/ctu_network_frozen/snapshots/build_work/
