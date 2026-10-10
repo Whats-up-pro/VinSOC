@@ -1,0 +1,267 @@
+{
+  "status": "decision_preparation_only",
+  "checked_utc": "2026-10-10T04:57:23.036498+00:00",
+  "pricing": {
+    "gpt-5-mini-2025-08-07": {
+      "input_token_ceiling": 400000,
+      "input_usd_per_million": 0.25,
+      "cached_input_usd_per_million": 0.025,
+      "output_usd_per_million": 2.0,
+      "checked_utc": "2026-10-10T04:57:23.036498+00:00",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "token_bound_method": "documented_context_window",
+      "model_document": {
+        "source_url": "https://developers.openai.com/api/docs/models/gpt-5-mini.md",
+        "sha256": "80d97d66caf01b48b1e87df3758df383dea417c8cc4fe76dd05493b2f51f7a9d"
+      }
+    },
+    "gpt-4.1-mini-2025-04-14": {
+      "input_token_ceiling": 1047576,
+      "input_usd_per_million": 0.4,
+      "cached_input_usd_per_million": 0.1,
+      "output_usd_per_million": 1.6,
+      "checked_utc": "2026-10-10T04:57:23.036498+00:00",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "token_bound_method": "documented_context_window",
+      "model_document": {
+        "source_url": "https://developers.openai.com/api/docs/models/gpt-4.1-mini.md",
+        "sha256": "78cab23e43e747d199df10854f27a0bc8ebe1af2bdd66642fe34462e1f680537"
+      }
+    }
+  },
+  "contracts": {
+    "r2": {
+      "model": "gpt-5-mini-2025-08-07",
+      "reasoning_effort": "low",
+      "max_completion_tokens": 1000,
+      "service_tier": "default",
+      "max_retries": 0,
+      "max_request_bytes": 32768,
+      "frame_reserve_tokens": 512,
+      "max_messages": 20
+    },
+    "routing": {
+      "model": "gpt-4.1-mini-2025-04-14",
+      "temperature": 0,
+      "max_completion_tokens": 1000,
+      "service_tier": "default",
+      "max_retries": 0,
+      "max_request_bytes": 32768,
+      "frame_reserve_tokens": 512,
+      "max_messages": 20
+    },
+    "assessment": {
+      "model": "gpt-4.1-mini-2025-04-14",
+      "temperature": 0,
+      "max_completion_tokens": 1000,
+      "service_tier": "default",
+      "max_retries": 0,
+      "max_request_bytes": 65536,
+      "frame_reserve_tokens": 512,
+      "max_messages": 20
+    }
+  },
+  "conservative_documented_bound": {
+    "method": "documented_context_window",
+    "request_reserves_usd": {
+      "r2": "0.102",
+      "routing": "0.4206304",
+      "assessment": "0.4206304"
+    },
+    "scopes": {
+      "calibration": {
+        "request_caps_by_role": {
+          "routing": 0,
+          "r2": 168,
+          "assessment": 0
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 168,
+          "gpt-4.1-mini-2025-04-14": 0
+        },
+        "max_requests": 168,
+        "new_cost_ceiling_usd": "17.1360000"
+      },
+      "evaluation": {
+        "request_caps_by_role": {
+          "routing": 0,
+          "r2": 672,
+          "assessment": 0
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 672,
+          "gpt-4.1-mini-2025-04-14": 0
+        },
+        "max_requests": 672,
+        "new_cost_ceiling_usd": "68.5440000"
+      },
+      "pipeline_E0": {
+        "request_caps_by_role": {
+          "routing": 32,
+          "r2": 32,
+          "assessment": 32
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 32,
+          "gpt-4.1-mini-2025-04-14": 64
+        },
+        "max_requests": 96,
+        "new_cost_ceiling_usd": "30.1843456"
+      },
+      "pipeline_E3": {
+        "request_caps_by_role": {
+          "routing": 32,
+          "r2": 192,
+          "assessment": 32
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 192,
+          "gpt-4.1-mini-2025-04-14": 64
+        },
+        "max_requests": 256,
+        "new_cost_ceiling_usd": "46.5043456"
+      }
+    },
+    "combined": {
+      "E0": {
+        "max_requests": 936,
+        "new_cost_ceiling_usd": "115.8643456"
+      },
+      "E3": {
+        "max_requests": 1096,
+        "new_cost_ceiling_usd": "132.1843456"
+      }
+    },
+    "cached_discount_used": false,
+    "scope_condition_pending": true,
+    "viewer_new_requests": 0,
+    "includes_prior_cost": false,
+    "paid_authorized": false
+  },
+  "conditional_old_bound_not_transmission_authority": {
+    "method": "serialized_bytes_plus_unverified_512_framing",
+    "request_reserves_usd": {
+      "r2": "0.01032",
+      "routing": "0.014912",
+      "assessment": "0.0280192"
+    },
+    "scopes": {
+      "calibration": {
+        "request_caps_by_role": {
+          "routing": 0,
+          "r2": 168,
+          "assessment": 0
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 168,
+          "gpt-4.1-mini-2025-04-14": 0
+        },
+        "max_requests": 168,
+        "new_cost_ceiling_usd": "1.7337600"
+      },
+      "evaluation": {
+        "request_caps_by_role": {
+          "routing": 0,
+          "r2": 672,
+          "assessment": 0
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 672,
+          "gpt-4.1-mini-2025-04-14": 0
+        },
+        "max_requests": 672,
+        "new_cost_ceiling_usd": "6.9350400"
+      },
+      "pipeline_E0": {
+        "request_caps_by_role": {
+          "routing": 32,
+          "r2": 32,
+          "assessment": 32
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 32,
+          "gpt-4.1-mini-2025-04-14": 64
+        },
+        "max_requests": 96,
+        "new_cost_ceiling_usd": "1.7040384"
+      },
+      "pipeline_E3": {
+        "request_caps_by_role": {
+          "routing": 32,
+          "r2": 192,
+          "assessment": 32
+        },
+        "request_caps_by_model": {
+          "gpt-5-mini-2025-08-07": 192,
+          "gpt-4.1-mini-2025-04-14": 64
+        },
+        "max_requests": 256,
+        "new_cost_ceiling_usd": "3.3552384"
+      }
+    },
+    "combined": {
+      "E0": {
+        "max_requests": 936,
+        "new_cost_ceiling_usd": "10.3728384"
+      },
+      "E3": {
+        "max_requests": 1096,
+        "new_cost_ceiling_usd": "12.0240384"
+      }
+    },
+    "cached_discount_used": false,
+    "scope_condition_pending": true,
+    "viewer_new_requests": 0,
+    "includes_prior_cost": false,
+    "paid_authorized": false
+  },
+  "canonical_reconciliation": {
+    "status": "unverified",
+    "authoritative_host_verified": false,
+    "allocation_verified": false,
+    "known_prior_cost_usd": null,
+    "unknown_exposure_usd": null,
+    "verified_remaining_allocation_usd": null,
+    "prior_hosts_sealed": false,
+    "ledgers_observed": [],
+    "scope_states": {
+      "calibration": {
+        "local_state": "no_local_claim_observed",
+        "observed_files": [],
+        "authoritative_state": "unknown"
+      },
+      "evaluation": {
+        "local_state": "no_local_claim_observed",
+        "observed_files": [],
+        "authoritative_state": "unknown"
+      },
+      "pipeline": {
+        "local_state": "no_local_claim_observed",
+        "observed_files": [],
+        "authoritative_state": "unknown"
+      }
+    },
+    "canonical_directory_exists": false,
+    "blockers": [
+      "canonical_allocation_and_prior_cost_not_authoritatively_reconciled",
+      "unknown_exposure_and_remaining_not_verified",
+      "prior_hosts_not_sealed"
+    ]
+  },
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "new_model_cost_usd": 0,
+  "authorization_required": [
+    "calibration",
+    "evaluation_after_48_record_selection",
+    "pipeline_after_selection"
+  ],
+  "pending_real_artifacts": {
+    "calibration_records": 48,
+    "evaluation_records": 192,
+    "pipeline_cases": 32
+  },
+  "framing_512_verified": false,
+  "bound_explanation": "Entire documented context window covers all input/history/schema/results and hidden framing. It over-reserves input and output independently. Request bytes/messages/output caps are still enforced; the 512-token framing estimate does not authorize transmission."
+}

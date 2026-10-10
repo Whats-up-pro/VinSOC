@@ -70,7 +70,12 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
         if not cap:
             continue
         p = pricing.get(CONTRACTS[role]['model'], {})
-        if (not fresh(p.get('checked_utc')) or p.get('input_bound_verified') is not True
+        from evaluation.finalization.query_token_bound import verified_input_bound
+        try:
+            input_ceiling = verified_input_bound(p, CONTRACTS[role]['model'])
+        except (ValueError, OSError, KeyError, TypeError):
+            input_ceiling = None
+        if (not fresh(p.get('checked_utc')) or input_ceiling is None
                 or p.get('source_url') not in ('https://openai.com/api/pricing/',
                     'https://developers.openai.com/api/docs/pricing', 'https://platform.openai.com/docs/pricing')
                 or any(not number(p.get(k)) or p[k] <= 0 for k in
@@ -78,7 +83,7 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
             reasons.append('PRICING_OR_TOKEN_BOUND_UNVERIFIED_'+role.upper())
             continue
         c = CONTRACTS[role]
-        reserves[role] = ((c['max_request_bytes']+c['frame_reserve_tokens'])*p['input_usd_per_million']
+        reserves[role] = (input_ceiling*p['input_usd_per_million']
                          + c['max_completion_tokens']*p['output_usd_per_million'])/1_000_000
     new_ceiling = sum(caps[r]*reserves[r] for r in reserves) if all(r in reserves for r in caps if caps[r]) else None
     if (budget.get('paid_authorized') is not True or budget.get('authorization_scope') != scope

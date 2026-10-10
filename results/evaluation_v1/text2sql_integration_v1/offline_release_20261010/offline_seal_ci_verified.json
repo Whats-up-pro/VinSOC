@@ -1,0 +1,184 @@
+{
+  "sha": "20742903069fb9df0312a4098f9a9807ab82bb80",
+  "ci_run": 38025633969,
+  "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "query-real-data (3.12)",
+      "databaseId": 114135768585,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/job/114135768585",
+      "conclusion": "success",
+      "pytest_summaries": [
+        "2026-10-10T04:56:10.7385159Z 13 passed in 76.37s (0:01:16)"
+      ],
+      "artifact_evidence": [
+        "2026-10-10T04:56:11.3479834Z SHA256 digest of uploaded artifact zip is 4daafec1dc32ecf93968dcf4a4b7f08968cf0fee04900740a35bfa91f3d49101",
+        "2026-10-10T04:56:11.5640237Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/artifacts/11660084340"
+      ]
+    },
+    {
+      "name": "query-real-data (3.11)",
+      "databaseId": 114135768714,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/job/114135768714",
+      "conclusion": "success",
+      "pytest_summaries": [
+        "2026-10-10T04:55:58.4733211Z 13 passed in 73.75s (0:01:13)"
+      ],
+      "artifact_evidence": [
+        "2026-10-10T04:55:59.0276079Z SHA256 digest of uploaded artifact zip is 513f7550ede7a63ceca8c1257e57f674d06624147534425382715ebf27350238",
+        "2026-10-10T04:55:59.2263728Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/artifacts/11659639729"
+      ]
+    },
+    {
+      "name": "test (3.11)",
+      "databaseId": 114135768741,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/job/114135768741",
+      "conclusion": "success",
+      "pytest_summaries": [
+        "2026-10-10T04:58:14.4439747Z 1294 passed, 7 skipped in 182.15s (0:03:02)",
+        "2026-10-10T04:58:15.5608523Z 28 passed in 0.35s"
+      ],
+      "artifact_evidence": [
+        "2026-10-10T04:58:16.6350723Z SHA256 digest of uploaded artifact zip is a34d2ba6a65578c5cd984b1323df052e06c27b14ad3ec2fa28c22650e2a88936",
+        "2026-10-10T04:58:16.9177652Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/artifacts/11659208780",
+        "2026-10-10T04:58:17.8354469Z SHA256 digest of uploaded artifact zip is 3c03443bb0757d998005c7a90c62821e414d67f8d61b08eb8d538265fcdd3c4e",
+        "2026-10-10T04:58:18.0889917Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/artifacts/11659138753"
+      ]
+    },
+    {
+      "name": "test (3.12)",
+      "databaseId": 114135768751,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/job/114135768751",
+      "conclusion": "success",
+      "pytest_summaries": [
+        "2026-10-10T04:58:27.4673472Z 1294 passed, 7 skipped, 3426 warnings in 191.84s (0:03:11)",
+        "2026-10-10T04:58:28.7208812Z 28 passed in 0.47s"
+      ],
+      "artifact_evidence": [
+        "2026-10-10T04:58:29.4651799Z SHA256 digest of uploaded artifact zip is 2e65629850f314ed19c260aa803aa49e2d2d154355793e36c99f1bd0e27f90ef",
+        "2026-10-10T04:58:29.6988241Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/artifacts/11659999623",
+        "2026-10-10T04:58:30.3771389Z SHA256 digest of uploaded artifact zip is 62add37b127eaae0fe43cb82446982eac4233fee7e77fed988367bda2f4f0458",
+        "2026-10-10T04:58:30.6155535Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38025633969/artifacts/11659859708"
+      ]
+    }
+  ],
+  "junit_independent_read": {
+    "seal-offline-311/full.xml": {
+      "counts": {
+        "tests": 1301,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 7
+      },
+      "sha256": "3d47aa4c680c480d456ac5d1d58937d9df68ab90378c5220f9551aae9e6d5069"
+    },
+    "seal-offline-311/targeted.xml": {
+      "counts": {
+        "tests": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "sha256": "77d25ed6576bdabb65bb4ee27e51b5c55d7962777ee6a6a54d7be85f071cd255"
+    },
+    "seal-offline-312/full.xml": {
+      "counts": {
+        "tests": 1301,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 7
+      },
+      "sha256": "d6e774eb09099e31b0c9c3f5661d7e8ba424b42a3f2bb6b480fd4adc219571c2"
+    },
+    "seal-offline-312/targeted.xml": {
+      "counts": {
+        "tests": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "sha256": "a830ef8082975c6121e08d74cc328b5488c95316a9edee575f1bee3bc96f908a"
+    },
+    "seal-real-311/required_checks.xml": {
+      "counts": {
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "sha256": "519543c0839b7c0fd498a091d34f0fcb916cbdbca18afa1e6657d302fef6feca"
+    }
+  },
+  "preservation": {
+    "311": {
+      "baseline_sha": "3573496a165876f36116b2716ca737d17091aaf7",
+      "implementation_sha": "20742903069fb9df0312a4098f9a9807ab82bb80",
+      "baseline_is_ancestor": true,
+      "protected_files": 3640,
+      "protected_changed": [],
+      "pinned_zip_sha256": {
+        "VinSOC_Runtime_DB_20261010.zip": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+        "VinSOC_CTU_20261010.zip": "2847ba055dee714195898251e686ad62f0856c721eda84af8782c77a33293dc4"
+      },
+      "external_model_calls": 0
+    },
+    "312": {
+      "baseline_sha": "3573496a165876f36116b2716ca737d17091aaf7",
+      "implementation_sha": "20742903069fb9df0312a4098f9a9807ab82bb80",
+      "baseline_is_ancestor": true,
+      "protected_files": 3640,
+      "protected_changed": [],
+      "pinned_zip_sha256": {
+        "VinSOC_Runtime_DB_20261010.zip": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+        "VinSOC_CTU_20261010.zip": "2847ba055dee714195898251e686ad62f0856c721eda84af8782c77a33293dc4"
+      },
+      "external_model_calls": 0
+    }
+  },
+  "worker_boundaries": {
+    "network_namespace_distinct": true,
+    "environment_allowlist_only": true,
+    "only_required_snapshot_read_only": true,
+    "memory_max_bytes": 536870912,
+    "swap_max_bytes": 0,
+    "cpu_max": "100000 100000",
+    "affinity_cpus": 1,
+    "proof": "external /proc and cgroup filesystem, not executor isolation fields",
+    "model_calls": 0
+  },
+  "resource_limits": {
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 54,
+      "oom": 2,
+      "oom_kill": 1,
+      "oom_group_kill": 0
+    },
+    "two_allocations_bytes_each": 314572800,
+    "aggregate_memory_limit_bytes": 536870912,
+    "cpu_limit_seconds": 1,
+    "cpu_elapsed_seconds": 2.7101652679999972,
+    "cpu_exit_code": -24,
+    "cpu_stat": {
+      "usage_usec": 1003836,
+      "user_usec": 994838,
+      "system_usec": 8998,
+      "core_sched.force_idle_usec": 0,
+      "nr_periods": 14,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "wall_timeout_seconds": 0.1,
+    "wall_failure": "GROUP_TIMEOUT",
+    "descendants_empty_after_timeout": true,
+    "proof": "observer reads kernel counters and process completion",
+    "model_calls": 0
+  },
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0,
+  "positive_new_calibration_evaluation_pipeline": "pending"
+}

@@ -1,0 +1,33 @@
+{
+  "status": "unverified",
+  "authoritative_host_verified": false,
+  "allocation_verified": false,
+  "known_prior_cost_usd": null,
+  "unknown_exposure_usd": null,
+  "verified_remaining_allocation_usd": null,
+  "prior_hosts_sealed": false,
+  "ledgers_observed": [],
+  "scope_states": {
+    "calibration": {
+      "local_state": "no_local_claim_observed",
+      "observed_files": [],
+      "authoritative_state": "unknown"
+    },
+    "evaluation": {
+      "local_state": "no_local_claim_observed",
+      "observed_files": [],
+      "authoritative_state": "unknown"
+    },
+    "pipeline": {
+      "local_state": "no_local_claim_observed",
+      "observed_files": [],
+      "authoritative_state": "unknown"
+    }
+  },
+  "canonical_directory_exists": false,
+  "blockers": [
+    "canonical_allocation_and_prior_cost_not_authoritatively_reconciled",
+    "unknown_exposure_and_remaining_not_verified",
+    "prior_hosts_not_sealed"
+  ]
+}

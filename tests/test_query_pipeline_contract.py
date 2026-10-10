@@ -26,3 +26,40 @@ def test_denied_release_cannot_claim_window(tmp_path):
     with pytest.raises(ValueError, match='RELEASE_NOT_AUTHORIZED'):
         RunJournal.claim(release, ledger_path=tmp_path/'ledger.json')
     assert not list(tmp_path.iterdir())
+
+
+def test_self_declared_framing_flag_cannot_reserve_paid_exposure():
+    from datetime import datetime, timezone
+    from scripts.run_vinsoc_query_acceptance import inventory_for
+    pricing = {'gpt-5-mini-2025-08-07': {
+        'checked_utc': datetime.now(timezone.utc).isoformat(),
+        'input_bound_verified': True, 'source_url': 'https://developers.openai.com/api/docs/pricing',
+        'input_usd_per_million': .25, 'output_usd_per_million': 2,
+    }}
+    receipt = preflight('calibration', 'E3', inventory=inventory_for('calibration'),
+                        identities={}, account={}, pricing=pricing, budget={})
+    assert receipt['reserves_usd'] == {}
+    assert 'PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2' in receipt['reasons']
+
+
+def test_missing_canonical_ledger_is_unknown_not_zero(tmp_path):
+    from scripts.prepare_query_budget import inspect_canonical
+    observed = inspect_canonical(tmp_path/'absent-canonical-ledger')
+    assert observed['known_prior_cost_usd'] is None
+    assert observed['unknown_exposure_usd'] is None
+    assert observed['verified_remaining_allocation_usd'] is None
+    assert observed['authoritative_host_verified'] is False
+
+
+def test_changed_document_hash_cannot_authorize_input_bound():
+    from datetime import datetime, timezone
+    from pathlib import Path
+    from evaluation.finalization.query_token_bound import verified_input_bound, MODEL_DOCS
+    model = 'gpt-5-mini-2025-08-07'
+    actual = Path('results/evaluation_v1/text2sql_integration_v1/demo_selection.json')
+    assert actual.is_file()
+    pricing = {'checked_utc':datetime.now(timezone.utc).isoformat(),
+               'token_bound_method':'documented_context_window',
+               'model_document':{'source_url':MODEL_DOCS[model], 'path':str(actual), 'sha256':'0'*64}}
+    with pytest.raises(ValueError, match='MODEL_DOCUMENT_HASH_MISMATCH'):
+        verified_input_bound(pricing, model)

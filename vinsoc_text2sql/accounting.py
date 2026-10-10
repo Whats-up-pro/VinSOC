@@ -87,6 +87,9 @@ class RunJournal:
             raise ValueError('COST_CASE_IDENTITY_REQUIRED')
         from evaluation.finalization.query_runtime_validation import verify_transmission_files
         verify_transmission_files(self.release['gate_inputs']['identities'])
+        from evaluation.finalization.query_token_bound import verified_input_bound
+        verified_input_bound(self.release['gate_inputs']['pricing'][self.release['contracts'][role]['model']],
+                             self.release['contracts'][role]['model'])
         cap = self.release['role_caps'][role]
         used = sum(e['role'] == role for e in self.data['events'])
         contract = self.release['contracts'][role]
@@ -156,7 +159,9 @@ class RunJournal:
                          pending_exposure_usd=self.data['pending_exposure_usd']-event['reserved_usd'], cost_unknown=False)
         # Keep model response before any parsing. Private journal is never copied wholesale into Git.
         self.persist()
-        if inputs > contract['max_request_bytes']+contract['frame_reserve_tokens'] or outputs > 1000 or cost > event['reserved_usd']:
+        from evaluation.finalization.query_token_bound import verified_input_bound
+        bound = verified_input_bound(pricing, model)
+        if inputs > bound or outputs > contract['max_completion_tokens'] or cost > event['reserved_usd']:
             self.fail(reservation_id, 'USAGE_BOUND_EXCEEDED')
             raise ValueError('USAGE_BOUND_EXCEEDED')
 
