@@ -1,0 +1,294 @@
+{
+  "implementation_sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
+  "ci_run": 38029084117,
+  "python_versions": {
+    "311": {
+      "xml": {
+        "full.xml": {
+          "counts": {
+            "tests": 1307,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 7,
+            "passed": 1300
+          },
+          "skipped": [
+            {
+              "classname": "tests.test_network_e2e_lifecycle",
+              "test": "test_local_verified_snapshot_two_scenario_rehearsal",
+              "reason": "CI lacks the ignored local snapshot; not local/live acceptance"
+            },
+            {
+              "classname": "tests.test_query_real_data",
+              "test": "test_all_120_original_gold_queries_and_sources_validate",
+              "reason": "Required real-data CI job runs these acceptance checks"
+            },
+            {
+              "classname": "tests.test_query_real_data",
+              "test": "test_saved_live_sql_runs_in_isolated_worker_on_locked_db",
+              "reason": "Required real-data CI job runs these acceptance checks"
+            },
+            {
+              "classname": "tests.test_query_real_data",
+              "test": "test_all_120_gold_queries_use_same_runtime_worker",
+              "reason": "Required real-data CI job runs these acceptance checks"
+            },
+            {
+              "classname": "tests.test_query_worker_boundaries",
+              "test": "test_worker_observed_boundaries",
+              "reason": "Required Linux real-data job observes kernel boundaries"
+            },
+            {
+              "classname": "tests.test_query_worker_boundaries",
+              "test": "test_memory_is_shared_by_all_descendants_and_timeout_kills_group",
+              "reason": "Required Linux real-data job observes kernel boundaries"
+            },
+            {
+              "classname": "tests.test_vinsoc_finalization_contract",
+              "test": "test_current_v4_lock_binds_verified_snapshot_and_controller_sources",
+              "reason": "The locked snapshot is an ignored local evaluation input, absent from CI."
+            }
+          ],
+          "sha256": "d8f14bed091a6051b73746dca69f754e9d64b45d20e0d3908f040688a32dea53"
+        },
+        "targeted.xml": {
+          "counts": {
+            "tests": 34,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": 34
+          },
+          "skipped": [],
+          "sha256": "fde730c000babccef83a23d6c97887d6bce3937a5dad61c27cde54a1cf3a331d"
+        },
+        "required_checks.xml": {
+          "counts": {
+            "tests": 13,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": 13
+          },
+          "skipped": [],
+          "sha256": "9a822c45e1baf4fa5dac05001097a4701b607a78ba00d162f6c9bcc43f43adf5"
+        }
+      },
+      "preservation": {
+        "baseline_sha": "3573496a165876f36116b2716ca737d17091aaf7",
+        "implementation_sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
+        "baseline_is_ancestor": true,
+        "protected_files": 3640,
+        "protected_changed": [],
+        "pinned_zip_sha256": {
+          "VinSOC_Runtime_DB_20261010.zip": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+          "VinSOC_CTU_20261010.zip": "2847ba055dee714195898251e686ad62f0856c721eda84af8782c77a33293dc4"
+        },
+        "external_model_calls": 0
+      },
+      "worker_observed_boundaries": {
+        "observation": {
+          "network_namespace_distinct": true,
+          "environment_allowlist_only": true,
+          "only_required_snapshot_read_only": true,
+          "memory_max_bytes": 536870912,
+          "swap_max_bytes": 0,
+          "cpu_max": "100000 100000",
+          "affinity_cpus": 1,
+          "proof": "external /proc and cgroup filesystem, not executor isolation fields",
+          "model_calls": 0
+        },
+        "sha256": "53ea20d5588786ce29633390e86fdff083b839ec8821e7a572ff1ff35f529268"
+      },
+      "resource_observed_limits": {
+        "observation": {
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 19,
+            "oom": 1,
+            "oom_kill": 1,
+            "oom_group_kill": 0
+          },
+          "two_allocations_bytes_each": 314572800,
+          "aggregate_memory_limit_bytes": 536870912,
+          "cpu_limit_seconds": 1,
+          "cpu_elapsed_seconds": 1.6481634959999951,
+          "cpu_exit_code": -24,
+          "cpu_stat": {
+            "usage_usec": 1004633,
+            "user_usec": 991637,
+            "system_usec": 12995,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 13,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "wall_timeout_seconds": 0.1,
+          "wall_failure": "GROUP_TIMEOUT",
+          "descendants_empty_after_timeout": true,
+          "proof": "observer reads kernel counters and process completion",
+          "model_calls": 0
+        },
+        "sha256": "247dceb6412e47a3578faa6afa63d47a98951a548bfa9114f3ec558550255069"
+      },
+      "original_data": {
+        "status": "ALL_120_GOLD_VALIDATED_EXACT_ORIGINAL_BINARIES",
+        "base_gold_replayed": 120,
+        "original_databases_verified": 13,
+        "external_model_calls": 0,
+        "replayed_by_split": {
+          "calibration": 24,
+          "evaluation": 96
+        }
+      }
+    },
+    "312": {
+      "xml": {
+        "full.xml": {
+          "counts": {
+            "tests": 1307,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 7,
+            "passed": 1300
+          },
+          "skipped": [
+            {
+              "classname": "tests.test_network_e2e_lifecycle",
+              "test": "test_local_verified_snapshot_two_scenario_rehearsal",
+              "reason": "CI lacks the ignored local snapshot; not local/live acceptance"
+            },
+            {
+              "classname": "tests.test_query_real_data",
+              "test": "test_all_120_original_gold_queries_and_sources_validate",
+              "reason": "Required real-data CI job runs these acceptance checks"
+            },
+            {
+              "classname": "tests.test_query_real_data",
+              "test": "test_saved_live_sql_runs_in_isolated_worker_on_locked_db",
+              "reason": "Required real-data CI job runs these acceptance checks"
+            },
+            {
+              "classname": "tests.test_query_real_data",
+              "test": "test_all_120_gold_queries_use_same_runtime_worker",
+              "reason": "Required real-data CI job runs these acceptance checks"
+            },
+            {
+              "classname": "tests.test_query_worker_boundaries",
+              "test": "test_worker_observed_boundaries",
+              "reason": "Required Linux real-data job observes kernel boundaries"
+            },
+            {
+              "classname": "tests.test_query_worker_boundaries",
+              "test": "test_memory_is_shared_by_all_descendants_and_timeout_kills_group",
+              "reason": "Required Linux real-data job observes kernel boundaries"
+            },
+            {
+              "classname": "tests.test_vinsoc_finalization_contract",
+              "test": "test_current_v4_lock_binds_verified_snapshot_and_controller_sources",
+              "reason": "The locked snapshot is an ignored local evaluation input, absent from CI."
+            }
+          ],
+          "sha256": "b2374902bc51a8cf7f0393018f3204099c3ffc172d0ff63ca48374baa5bc0a29"
+        },
+        "targeted.xml": {
+          "counts": {
+            "tests": 34,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": 34
+          },
+          "skipped": [],
+          "sha256": "fa1522780463d985575811d1ebbe2bda5b34660bb2660f4be881eaa96b9255db"
+        },
+        "required_checks.xml": {
+          "counts": {
+            "tests": 13,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": 13
+          },
+          "skipped": [],
+          "sha256": "b7ee48e3aa2bd31c7d63ad00eff7ecb794638c86bb7d1982f8ac8c9cd47f01fb"
+        }
+      },
+      "preservation": {
+        "baseline_sha": "3573496a165876f36116b2716ca737d17091aaf7",
+        "implementation_sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
+        "baseline_is_ancestor": true,
+        "protected_files": 3640,
+        "protected_changed": [],
+        "pinned_zip_sha256": {
+          "VinSOC_Runtime_DB_20261010.zip": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+          "VinSOC_CTU_20261010.zip": "2847ba055dee714195898251e686ad62f0856c721eda84af8782c77a33293dc4"
+        },
+        "external_model_calls": 0
+      },
+      "worker_observed_boundaries": {
+        "observation": {
+          "network_namespace_distinct": true,
+          "environment_allowlist_only": true,
+          "only_required_snapshot_read_only": true,
+          "memory_max_bytes": 536870912,
+          "swap_max_bytes": 0,
+          "cpu_max": "100000 100000",
+          "affinity_cpus": 1,
+          "proof": "external /proc and cgroup filesystem, not executor isolation fields",
+          "model_calls": 0
+        },
+        "sha256": "53ea20d5588786ce29633390e86fdff083b839ec8821e7a572ff1ff35f529268"
+      },
+      "resource_observed_limits": {
+        "observation": {
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 313,
+            "oom": 17,
+            "oom_kill": 1,
+            "oom_group_kill": 0
+          },
+          "two_allocations_bytes_each": 314572800,
+          "aggregate_memory_limit_bytes": 536870912,
+          "cpu_limit_seconds": 1,
+          "cpu_elapsed_seconds": 1.1249159619999887,
+          "cpu_exit_code": -24,
+          "cpu_stat": {
+            "usage_usec": 1001475,
+            "user_usec": 992498,
+            "system_usec": 8977,
+            "core_sched.force_idle_usec": 0,
+            "nr_periods": 11,
+            "nr_throttled": 1,
+            "throttled_usec": 906,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "wall_timeout_seconds": 0.1,
+          "wall_failure": "GROUP_TIMEOUT",
+          "descendants_empty_after_timeout": true,
+          "proof": "observer reads kernel counters and process completion",
+          "model_calls": 0
+        },
+        "sha256": "fdf0d1fcdc792f17a323d168c245fed9ba53f1cc0ca9fc4f6e638c9254471127"
+      },
+      "original_data": {
+        "status": "ALL_120_GOLD_VALIDATED_EXACT_ORIGINAL_BINARIES",
+        "base_gold_replayed": 120,
+        "original_databases_verified": 13,
+        "external_model_calls": 0,
+        "replayed_by_split": {
+          "calibration": 24,
+          "evaluation": 96
+        }
+      }
+    }
+  },
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0
+}

@@ -1,0 +1,661 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>VinSOC — pipeline artifacts</title><style>body{font:16px system-ui;max-width:1200px;margin:32px auto;padding:0 20px;color:#173c58}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f5f7;padding:16px}summary{cursor:pointer;padding:12px}a{color:#173c58}</style></head><body><h1>VinSOC — xem artifacts pipeline ngoại tuyến</h1><p>Trang chỉ đọc artifacts đã lưu, không gọi API. Các stage chưa có hiện missing; người duyệt nhập quyết định qua CLI.</p><h2>Bốn demo ID cố định</h2><ul><li><a href="#ctu_cross_708b66575657429a">ctu_cross_708b66575657429a</a> — missing<p>Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.</p></li><li><a href="#ctu_cross_66b8e92a76c3359b">ctu_cross_66b8e92a76c3359b</a> — missing<p>List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.</p></li><li><a href="#ctu_cross_3f659571f998adb0">ctu_cross_3f659571f998adb0</a> — missing<p>For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.</p></li><li><a href="#ctu_cross_bce6d3679ade4cd6">ctu_cross_bce6d3679ade4cd6</a> — missing<p>List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.</p></li></ul><h2>Toàn bộ 32 câu CTU</h2><table><thead><tr><th>Case</th><th>Câu hỏi gốc</th><th>Trạng thái</th></tr></thead><tbody><tr data-case-id="ctu_cross_09368110b7091cb8"><td><a href="#ctu_cross_09368110b7091cb8">ctu_cross_09368110b7091cb8</a></td><td>Count distinct source/destination IP pairs for UDP in CTU scenario 5, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.</td><td>missing</td></tr><tr data-case-id="ctu_cross_0b9805ee5f7a7aca"><td><a href="#ctu_cross_0b9805ee5f7a7aca">ctu_cross_0b9805ee5f7a7aca</a></td><td>Count the latest flow per source IP in CTU scenario 7, selecting by event time descending then source row ID descending within each source IP.</td><td>missing</td></tr><tr data-case-id="ctu_cross_111e791fb862cf30"><td><a href="#ctu_cross_111e791fb862cf30">ctu_cross_111e791fb862cf30</a></td><td>Return the three most frequent UDP destination IPs in CTU scenario 7 with their flow counts; break count ties by destination IP ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_116e46aecde5564d"><td><a href="#ctu_cross_116e46aecde5564d">ctu_cross_116e46aecde5564d</a></td><td>List source IP, source port and destination IP of IGMP flows in CTU scenario 7 with a missing source port.</td><td>missing</td></tr><tr data-case-id="ctu_cross_179231c51f8af53e"><td><a href="#ctu_cross_179231c51f8af53e">ctu_cross_179231c51f8af53e</a></td><td>For each source dataset and protocol, return total outbound bytes and average inbound bytes, ordered by source dataset then protocol.</td><td>missing</td></tr><tr data-case-id="ctu_cross_1dc9e35510939cd9"><td><a href="#ctu_cross_1dc9e35510939cd9">ctu_cross_1dc9e35510939cd9</a></td><td>List destination IP and destination port of RTCP flows in CTU scenario 7 with zero outbound bytes.</td><td>missing</td></tr><tr data-case-id="ctu_cross_2e05412218fcc02f"><td><a href="#ctu_cross_2e05412218fcc02f">ctu_cross_2e05412218fcc02f</a></td><td>List source IP, destination IP and protocol of CTU scenario 7 flows with over 1000000 outbound bytes and zero inbound bytes.</td><td>missing</td></tr><tr data-case-id="ctu_cross_3f659571f998adb0"><td><a href="#ctu_cross_3f659571f998adb0">ctu_cross_3f659571f998adb0</a></td><td>For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_3f83eeb648a43168"><td><a href="#ctu_cross_3f83eeb648a43168">ctu_cross_3f83eeb648a43168</a></td><td>For each protocol in CTU scenario 5, return the flow count and minimum/maximum outbound bytes, ordered by protocol.</td><td>missing</td></tr><tr data-case-id="ctu_cross_493dba43b24b2e81"><td><a href="#ctu_cross_493dba43b24b2e81">ctu_cross_493dba43b24b2e81</a></td><td>List distinct protocol/action pairs in CTU scenario 7.</td><td>missing</td></tr><tr data-case-id="ctu_cross_4b4f065c0737c540"><td><a href="#ctu_cross_4b4f065c0737c540">ctu_cross_4b4f065c0737c540</a></td><td>How many distinct destination ports occur in TCP flows in CTU scenario 7?</td><td>missing</td></tr><tr data-case-id="ctu_cross_4bd089aa77684ec3"><td><a href="#ctu_cross_4bd089aa77684ec3">ctu_cross_4bd089aa77684ec3</a></td><td>List labels with at least 100 flows in CTU scenario 7 with their counts, ordered by label.</td><td>missing</td></tr><tr data-case-id="ctu_cross_4dfbfa87ef9eacfa"><td><a href="#ctu_cross_4dfbfa87ef9eacfa">ctu_cross_4dfbfa87ef9eacfa</a></td><td>List distinct destination IPs in CTU scenario 7 whose label begins with flow=From-Normal.</td><td>missing</td></tr><tr data-case-id="ctu_cross_5ba944b403f6456d"><td><a href="#ctu_cross_5ba944b403f6456d">ctu_cross_5ba944b403f6456d</a></td><td>List source IP and outbound bytes of ICMP flows in CTU scenario 5 whose outbound bytes exceed 1000.</td><td>missing</td></tr><tr data-case-id="ctu_cross_6113c639deae1326"><td><a href="#ctu_cross_6113c639deae1326">ctu_cross_6113c639deae1326</a></td><td>List source row ID and label of PIM flows in CTU scenario 5.</td><td>missing</td></tr><tr data-case-id="ctu_cross_6122c96211b2bfa8"><td><a href="#ctu_cross_6122c96211b2bfa8">ctu_cross_6122c96211b2bfa8</a></td><td>Return dataset/protocol flow counts exceeding that dataset&#x27;s average protocol-group count; order by dataset then protocol.</td><td>missing</td></tr><tr data-case-id="ctu_cross_66b8e92a76c3359b"><td><a href="#ctu_cross_66b8e92a76c3359b">ctu_cross_66b8e92a76c3359b</a></td><td>List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.</td><td>missing</td></tr><tr data-case-id="ctu_cross_67db5d7878967de2"><td><a href="#ctu_cross_67db5d7878967de2">ctu_cross_67db5d7878967de2</a></td><td>How many distinct source ports occur in UDP flows in CTU scenario 5?</td><td>missing</td></tr><tr data-case-id="ctu_cross_708b66575657429a"><td><a href="#ctu_cross_708b66575657429a">ctu_cross_708b66575657429a</a></td><td>Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.</td><td>missing</td></tr><tr data-case-id="ctu_cross_71164969e0e0277e"><td><a href="#ctu_cross_71164969e0e0277e">ctu_cross_71164969e0e0277e</a></td><td>List source IPs observed in both CTU scenario 5 and scenario 7, without duplicates.</td><td>missing</td></tr><tr data-case-id="ctu_cross_71f16246d2fd9590"><td><a href="#ctu_cross_71f16246d2fd9590">ctu_cross_71f16246d2fd9590</a></td><td>For each source dataset, return the fraction of all flows whose label begins with flow=From-Botnet; include all labels in the denominator and order datasets ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_779935acae78c536"><td><a href="#ctu_cross_779935acae78c536">ctu_cross_779935acae78c536</a></td><td>For each source dataset, return its number of distinct source IPs, ordered by source dataset.</td><td>missing</td></tr><tr data-case-id="ctu_cross_8b3e2e65524280d5"><td><a href="#ctu_cross_8b3e2e65524280d5">ctu_cross_8b3e2e65524280d5</a></td><td>Return the seven most frequent TCP destination ports at most 1024 in CTU scenario 5 with counts; break count ties by port ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_a427f9a05d18b548"><td><a href="#ctu_cross_a427f9a05d18b548">ctu_cross_a427f9a05d18b548</a></td><td>How many distinct labels occur in CTU scenario 5?</td><td>missing</td></tr><tr data-case-id="ctu_cross_bce6d3679ade4cd6"><td><a href="#ctu_cross_bce6d3679ade4cd6">ctu_cross_bce6d3679ade4cd6</a></td><td>List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_cd58f61cdff78fbc"><td><a href="#ctu_cross_cd58f61cdff78fbc">ctu_cross_cd58f61cdff78fbc</a></td><td>List source and destination IPs of RSVP flows in CTU scenario 5.</td><td>missing</td></tr><tr data-case-id="ctu_cross_cf0c8dd93c8be782"><td><a href="#ctu_cross_cf0c8dd93c8be782">ctu_cross_cf0c8dd93c8be782</a></td><td>Count CTU scenario 5 flows whose outbound bytes exceed the average outbound bytes of scenario 5.</td><td>missing</td></tr><tr data-case-id="ctu_cross_d914283c880a2dfd"><td><a href="#ctu_cross_d914283c880a2dfd">ctu_cross_d914283c880a2dfd</a></td><td>Return the two source IPs with highest total outbound bytes in CTU scenario 5 and their totals; break total ties by source IP ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_da1bacf7b6a0d616"><td><a href="#ctu_cross_da1bacf7b6a0d616">ctu_cross_da1bacf7b6a0d616</a></td><td>For each calendar date in CTU scenario 5, count flows with a label beginning flow=From-Botnet; order dates ascending.</td><td>missing</td></tr><tr data-case-id="ctu_cross_db23b6f2a42fd103"><td><a href="#ctu_cross_db23b6f2a42fd103">ctu_cross_db23b6f2a42fd103</a></td><td>List event time and action of RTP flows in CTU scenario 5 at or after 2011-08-15 17:00:00.</td><td>missing</td></tr><tr data-case-id="ctu_cross_e09358b4dca10e1f"><td><a href="#ctu_cross_e09358b4dca10e1f">ctu_cross_e09358b4dca10e1f</a></td><td>List event time, source IP and destination IP of ARP flows in CTU scenario 7 with a missing destination port.</td><td>missing</td></tr><tr data-case-id="ctu_cross_ef8808ed9e47cef2"><td><a href="#ctu_cross_ef8808ed9e47cef2">ctu_cross_ef8808ed9e47cef2</a></td><td>List distinct source IP/label pairs in CTU scenario 5 whose label begins with flow=From-Botnet.</td><td>missing</td></tr></tbody></table><h2>Trạng thái lượt đã lưu</h2><pre>{
+  &quot;scope&quot;: null,
+  &quot;status&quot;: null,
+  &quot;failure_category&quot;: null,
+  &quot;planned&quot;: null,
+  &quot;completed&quot;: null,
+  &quot;attempted&quot;: 0,
+  &quot;received&quot;: 0,
+  &quot;client_created&quot;: false,
+  &quot;known_usd&quot;: null,
+  &quot;cost_unknown&quot;: null,
+  &quot;pending_exposure_usd&quot;: null
+}</pre><h2>Coverage, technical checks, human review và chi phí</h2><pre>{
+  &quot;scope&quot;: &quot;pipeline32_saved_artifact_metrics&quot;,
+  &quot;planned&quot;: 32,
+  &quot;completed&quot;: 0,
+  &quot;recorded&quot;: 0,
+  &quot;partial&quot;: 0,
+  &quot;status&quot;: &quot;incomplete&quot;,
+  &quot;cases&quot;: [
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_09368110b7091cb8&quot;,
+      &quot;question&quot;: &quot;Count distinct source/destination IP pairs for UDP in CTU scenario 5, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_0b9805ee5f7a7aca&quot;,
+      &quot;question&quot;: &quot;Count the latest flow per source IP in CTU scenario 7, selecting by event time descending then source row ID descending within each source IP.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_111e791fb862cf30&quot;,
+      &quot;question&quot;: &quot;Return the three most frequent UDP destination IPs in CTU scenario 7 with their flow counts; break count ties by destination IP ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_116e46aecde5564d&quot;,
+      &quot;question&quot;: &quot;List source IP, source port and destination IP of IGMP flows in CTU scenario 7 with a missing source port.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_179231c51f8af53e&quot;,
+      &quot;question&quot;: &quot;For each source dataset and protocol, return total outbound bytes and average inbound bytes, ordered by source dataset then protocol.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_1dc9e35510939cd9&quot;,
+      &quot;question&quot;: &quot;List destination IP and destination port of RTCP flows in CTU scenario 7 with zero outbound bytes.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_2e05412218fcc02f&quot;,
+      &quot;question&quot;: &quot;List source IP, destination IP and protocol of CTU scenario 7 flows with over 1000000 outbound bytes and zero inbound bytes.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_3f659571f998adb0&quot;,
+      &quot;question&quot;: &quot;For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_3f83eeb648a43168&quot;,
+      &quot;question&quot;: &quot;For each protocol in CTU scenario 5, return the flow count and minimum/maximum outbound bytes, ordered by protocol.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_493dba43b24b2e81&quot;,
+      &quot;question&quot;: &quot;List distinct protocol/action pairs in CTU scenario 7.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_4b4f065c0737c540&quot;,
+      &quot;question&quot;: &quot;How many distinct destination ports occur in TCP flows in CTU scenario 7?&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_4bd089aa77684ec3&quot;,
+      &quot;question&quot;: &quot;List labels with at least 100 flows in CTU scenario 7 with their counts, ordered by label.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_4dfbfa87ef9eacfa&quot;,
+      &quot;question&quot;: &quot;List distinct destination IPs in CTU scenario 7 whose label begins with flow=From-Normal.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_5ba944b403f6456d&quot;,
+      &quot;question&quot;: &quot;List source IP and outbound bytes of ICMP flows in CTU scenario 5 whose outbound bytes exceed 1000.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_6113c639deae1326&quot;,
+      &quot;question&quot;: &quot;List source row ID and label of PIM flows in CTU scenario 5.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_6122c96211b2bfa8&quot;,
+      &quot;question&quot;: &quot;Return dataset/protocol flow counts exceeding that dataset&#x27;s average protocol-group count; order by dataset then protocol.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_66b8e92a76c3359b&quot;,
+      &quot;question&quot;: &quot;List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_67db5d7878967de2&quot;,
+      &quot;question&quot;: &quot;How many distinct source ports occur in UDP flows in CTU scenario 5?&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_708b66575657429a&quot;,
+      &quot;question&quot;: &quot;Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_71164969e0e0277e&quot;,
+      &quot;question&quot;: &quot;List source IPs observed in both CTU scenario 5 and scenario 7, without duplicates.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_71f16246d2fd9590&quot;,
+      &quot;question&quot;: &quot;For each source dataset, return the fraction of all flows whose label begins with flow=From-Botnet; include all labels in the denominator and order datasets ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_779935acae78c536&quot;,
+      &quot;question&quot;: &quot;For each source dataset, return its number of distinct source IPs, ordered by source dataset.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_8b3e2e65524280d5&quot;,
+      &quot;question&quot;: &quot;Return the seven most frequent TCP destination ports at most 1024 in CTU scenario 5 with counts; break count ties by port ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_a427f9a05d18b548&quot;,
+      &quot;question&quot;: &quot;How many distinct labels occur in CTU scenario 5?&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_bce6d3679ade4cd6&quot;,
+      &quot;question&quot;: &quot;List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_cd58f61cdff78fbc&quot;,
+      &quot;question&quot;: &quot;List source and destination IPs of RSVP flows in CTU scenario 5.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_cf0c8dd93c8be782&quot;,
+      &quot;question&quot;: &quot;Count CTU scenario 5 flows whose outbound bytes exceed the average outbound bytes of scenario 5.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_d914283c880a2dfd&quot;,
+      &quot;question&quot;: &quot;Return the two source IPs with highest total outbound bytes in CTU scenario 5 and their totals; break total ties by source IP ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_da1bacf7b6a0d616&quot;,
+      &quot;question&quot;: &quot;For each calendar date in CTU scenario 5, count flows with a label beginning flow=From-Botnet; order dates ascending.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_db23b6f2a42fd103&quot;,
+      &quot;question&quot;: &quot;List event time and action of RTP flows in CTU scenario 5 at or after 2011-08-15 17:00:00.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_e09358b4dca10e1f&quot;,
+      &quot;question&quot;: &quot;List event time, source IP and destination IP of ARP flows in CTU scenario 7 with a missing destination port.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    },
+    {
+      &quot;case_id&quot;: &quot;ctu_cross_ef8808ed9e47cef2&quot;,
+      &quot;question&quot;: &quot;List distinct source IP/label pairs in CTU scenario 5 whose label begins with flow=From-Botnet.&quot;,
+      &quot;status&quot;: &quot;missing&quot;,
+      &quot;metrics&quot;: {
+        &quot;routing&quot;: null,
+        &quot;runtime&quot;: null,
+        &quot;integrated_ex&quot;: null,
+        &quot;provenance&quot;: null,
+        &quot;factual_verification&quot;: null,
+        &quot;technical_workflow&quot;: null,
+        &quot;human_review_coverage&quot;: null,
+        &quot;human_approved_completion&quot;: null
+      },
+      &quot;human_decision&quot;: &quot;pending&quot;,
+      &quot;review_status&quot;: &quot;missing&quot;
+    }
+  ],
+  &quot;metrics&quot;: {
+    &quot;routing&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;runtime&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;integrated_ex&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;provenance&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;factual_verification&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;technical_workflow&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;human_review_coverage&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    },
+    &quot;human_approved_completion&quot;: {
+      &quot;correct_observed&quot;: 0,
+      &quot;denominator&quot;: 32,
+      &quot;measured&quot;: 0,
+      &quot;missing_or_incomplete&quot;: 32,
+      &quot;rate&quot;: null
+    }
+  },
+  &quot;human_review&quot;: {
+    &quot;approved&quot;: 0,
+    &quot;rejected&quot;: 0,
+    &quot;escalated&quot;: 0,
+    &quot;pending&quot;: 32
+  },
+  &quot;role_overhead&quot;: {
+    &quot;routing&quot;: {
+      &quot;calls&quot;: 0,
+      &quot;received&quot;: 0,
+      &quot;input_tokens&quot;: 0,
+      &quot;output_tokens&quot;: 0,
+      &quot;latency_seconds_known&quot;: 0,
+      &quot;known_cost_usd&quot;: 0,
+      &quot;unknown_cost_calls&quot;: 0
+    },
+    &quot;r2&quot;: {
+      &quot;calls&quot;: 0,
+      &quot;received&quot;: 0,
+      &quot;input_tokens&quot;: 0,
+      &quot;output_tokens&quot;: 0,
+      &quot;latency_seconds_known&quot;: 0,
+      &quot;known_cost_usd&quot;: 0,
+      &quot;unknown_cost_calls&quot;: 0
+    },
+    &quot;assessment&quot;: {
+      &quot;calls&quot;: 0,
+      &quot;received&quot;: 0,
+      &quot;input_tokens&quot;: 0,
+      &quot;output_tokens&quot;: 0,
+      &quot;latency_seconds_known&quot;: 0,
+      &quot;known_cost_usd&quot;: 0,
+      &quot;unknown_cost_calls&quot;: 0
+    }
+  },
+  &quot;official_eligible&quot;: false,
+  &quot;positive_new_pipeline_trace_validation&quot;: &quot;pending_authentic_pipeline_records&quot;
+}</pre><details id="ctu_cross_09368110b7091cb8"><summary>ctu_cross_09368110b7091cb8 — missing</summary><h3>original_question</h3><pre>&quot;Count distinct source/destination IP pairs for UDP in CTU scenario 5, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_0b9805ee5f7a7aca"><summary>ctu_cross_0b9805ee5f7a7aca — missing</summary><h3>original_question</h3><pre>&quot;Count the latest flow per source IP in CTU scenario 7, selecting by event time descending then source row ID descending within each source IP.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_111e791fb862cf30"><summary>ctu_cross_111e791fb862cf30 — missing</summary><h3>original_question</h3><pre>&quot;Return the three most frequent UDP destination IPs in CTU scenario 7 with their flow counts; break count ties by destination IP ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_116e46aecde5564d"><summary>ctu_cross_116e46aecde5564d — missing</summary><h3>original_question</h3><pre>&quot;List source IP, source port and destination IP of IGMP flows in CTU scenario 7 with a missing source port.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_179231c51f8af53e"><summary>ctu_cross_179231c51f8af53e — missing</summary><h3>original_question</h3><pre>&quot;For each source dataset and protocol, return total outbound bytes and average inbound bytes, ordered by source dataset then protocol.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_1dc9e35510939cd9"><summary>ctu_cross_1dc9e35510939cd9 — missing</summary><h3>original_question</h3><pre>&quot;List destination IP and destination port of RTCP flows in CTU scenario 7 with zero outbound bytes.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_2e05412218fcc02f"><summary>ctu_cross_2e05412218fcc02f — missing</summary><h3>original_question</h3><pre>&quot;List source IP, destination IP and protocol of CTU scenario 7 flows with over 1000000 outbound bytes and zero inbound bytes.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_3f659571f998adb0"><summary>ctu_cross_3f659571f998adb0 — missing</summary><h3>original_question</h3><pre>&quot;For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_3f83eeb648a43168"><summary>ctu_cross_3f83eeb648a43168 — missing</summary><h3>original_question</h3><pre>&quot;For each protocol in CTU scenario 5, return the flow count and minimum/maximum outbound bytes, ordered by protocol.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_493dba43b24b2e81"><summary>ctu_cross_493dba43b24b2e81 — missing</summary><h3>original_question</h3><pre>&quot;List distinct protocol/action pairs in CTU scenario 7.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_4b4f065c0737c540"><summary>ctu_cross_4b4f065c0737c540 — missing</summary><h3>original_question</h3><pre>&quot;How many distinct destination ports occur in TCP flows in CTU scenario 7?&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_4bd089aa77684ec3"><summary>ctu_cross_4bd089aa77684ec3 — missing</summary><h3>original_question</h3><pre>&quot;List labels with at least 100 flows in CTU scenario 7 with their counts, ordered by label.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_4dfbfa87ef9eacfa"><summary>ctu_cross_4dfbfa87ef9eacfa — missing</summary><h3>original_question</h3><pre>&quot;List distinct destination IPs in CTU scenario 7 whose label begins with flow=From-Normal.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_5ba944b403f6456d"><summary>ctu_cross_5ba944b403f6456d — missing</summary><h3>original_question</h3><pre>&quot;List source IP and outbound bytes of ICMP flows in CTU scenario 5 whose outbound bytes exceed 1000.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_6113c639deae1326"><summary>ctu_cross_6113c639deae1326 — missing</summary><h3>original_question</h3><pre>&quot;List source row ID and label of PIM flows in CTU scenario 5.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_6122c96211b2bfa8"><summary>ctu_cross_6122c96211b2bfa8 — missing</summary><h3>original_question</h3><pre>&quot;Return dataset/protocol flow counts exceeding that dataset&#x27;s average protocol-group count; order by dataset then protocol.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_66b8e92a76c3359b"><summary>ctu_cross_66b8e92a76c3359b — missing</summary><h3>original_question</h3><pre>&quot;List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_67db5d7878967de2"><summary>ctu_cross_67db5d7878967de2 — missing</summary><h3>original_question</h3><pre>&quot;How many distinct source ports occur in UDP flows in CTU scenario 5?&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_708b66575657429a"><summary>ctu_cross_708b66575657429a — missing</summary><h3>original_question</h3><pre>&quot;Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_71164969e0e0277e"><summary>ctu_cross_71164969e0e0277e — missing</summary><h3>original_question</h3><pre>&quot;List source IPs observed in both CTU scenario 5 and scenario 7, without duplicates.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_71f16246d2fd9590"><summary>ctu_cross_71f16246d2fd9590 — missing</summary><h3>original_question</h3><pre>&quot;For each source dataset, return the fraction of all flows whose label begins with flow=From-Botnet; include all labels in the denominator and order datasets ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_779935acae78c536"><summary>ctu_cross_779935acae78c536 — missing</summary><h3>original_question</h3><pre>&quot;For each source dataset, return its number of distinct source IPs, ordered by source dataset.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_8b3e2e65524280d5"><summary>ctu_cross_8b3e2e65524280d5 — missing</summary><h3>original_question</h3><pre>&quot;Return the seven most frequent TCP destination ports at most 1024 in CTU scenario 5 with counts; break count ties by port ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_a427f9a05d18b548"><summary>ctu_cross_a427f9a05d18b548 — missing</summary><h3>original_question</h3><pre>&quot;How many distinct labels occur in CTU scenario 5?&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_bce6d3679ade4cd6"><summary>ctu_cross_bce6d3679ade4cd6 — missing</summary><h3>original_question</h3><pre>&quot;List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_cd58f61cdff78fbc"><summary>ctu_cross_cd58f61cdff78fbc — missing</summary><h3>original_question</h3><pre>&quot;List source and destination IPs of RSVP flows in CTU scenario 5.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_cf0c8dd93c8be782"><summary>ctu_cross_cf0c8dd93c8be782 — missing</summary><h3>original_question</h3><pre>&quot;Count CTU scenario 5 flows whose outbound bytes exceed the average outbound bytes of scenario 5.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_d914283c880a2dfd"><summary>ctu_cross_d914283c880a2dfd — missing</summary><h3>original_question</h3><pre>&quot;Return the two source IPs with highest total outbound bytes in CTU scenario 5 and their totals; break total ties by source IP ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_da1bacf7b6a0d616"><summary>ctu_cross_da1bacf7b6a0d616 — missing</summary><h3>original_question</h3><pre>&quot;For each calendar date in CTU scenario 5, count flows with a label beginning flow=From-Botnet; order dates ascending.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_db23b6f2a42fd103"><summary>ctu_cross_db23b6f2a42fd103 — missing</summary><h3>original_question</h3><pre>&quot;List event time and action of RTP flows in CTU scenario 5 at or after 2011-08-15 17:00:00.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_e09358b4dca10e1f"><summary>ctu_cross_e09358b4dca10e1f — missing</summary><h3>original_question</h3><pre>&quot;List event time, source IP and destination IP of ARP flows in CTU scenario 7 with a missing destination port.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details><details id="ctu_cross_ef8808ed9e47cef2"><summary>ctu_cross_ef8808ed9e47cef2 — missing</summary><h3>original_question</h3><pre>&quot;List distinct source IP/label pairs in CTU scenario 5 whose label begins with flow=From-Botnet.&quot;</pre><h3>record</h3><pre>&quot;missing&quot;</pre></details></body></html>

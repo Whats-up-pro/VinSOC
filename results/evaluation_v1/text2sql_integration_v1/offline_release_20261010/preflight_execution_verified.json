@@ -1,0 +1,63 @@
+{
+  "checks": [
+    {
+      "scope": "calibration",
+      "exit_code": 1,
+      "receipt": "preflight_calibration_frozen.json",
+      "sha256": "9e59c28216aad65c6d5bc7d06fdce6f58a7aadea9f84bc644b0bd910fbde713d",
+      "status": "blocked",
+      "reasons": [
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PAID_RELEASE_NOT_AUTHORIZED",
+        "FULL_RUN_BUDGET_INSUFFICIENT"
+      ],
+      "attempted": 0,
+      "received": 0,
+      "client_created": false
+    },
+    {
+      "scope": "evaluation",
+      "exit_code": 1,
+      "receipt": "preflight_evaluation_frozen.json",
+      "sha256": "720215191b0e3a352d50cb51a135abfda4fa3c0e667d9a864f3cab6cc0902276",
+      "status": "blocked",
+      "reasons": [
+        "CALIBRATION_SELECTION_LOCK_REQUIRED",
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PAID_RELEASE_NOT_AUTHORIZED",
+        "FULL_RUN_BUDGET_INSUFFICIENT"
+      ],
+      "attempted": 0,
+      "received": 0,
+      "client_created": false
+    },
+    {
+      "scope": "pipeline",
+      "exit_code": 1,
+      "receipt": "preflight_pipeline_frozen.json",
+      "sha256": "cb2bb45546e6ecc6317eafc91811808870eef32928fb33eb2f0486514ab96819",
+      "status": "blocked",
+      "reasons": [
+        "CALIBRATION_SELECTION_LOCK_REQUIRED",
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PAID_RELEASE_NOT_AUTHORIZED",
+        "FULL_RUN_BUDGET_INSUFFICIENT"
+      ],
+      "attempted": 0,
+      "received": 0,
+      "client_created": false
+    }
+  ],
+  "new_model_cost_usd": 0,
+  "prior_cost": null,
+  "verified_remaining": null
+}

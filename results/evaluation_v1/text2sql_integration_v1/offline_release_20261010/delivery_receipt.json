@@ -1,0 +1,38 @@
+{
+  "status": "offline_handoff_paid_release_blocked",
+  "implementation_sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
+  "ci_run": 38029084117,
+  "gates": {
+    "R1_T2": "preserved_verified_13_DB_120_gold",
+    "R2_kernel_boundaries": "verified_both_required_python_jobs",
+    "R3_guards_journal": "offline_verified_positive_48_record_selection_pending",
+    "R4_reporting": "offline_verified_positive_192_records_and_pipeline32_pending",
+    "R5_CLI_HTML_review": "offline_verified_positive_trace_and_actual_human_review_pending",
+    "full_suite": "1300_passed_7_regression_skips_reported_separately",
+    "required_real_data": "13_passed_zero_skipped_per_python",
+    "required_targeted": "34_passed_zero_skipped_per_python",
+    "R6": "decision_package_prepared_preflight_blocked",
+    "calibration": "pending_0_of_48_real_records",
+    "evaluation": "pending_0_of_192_real_records",
+    "pipeline": "pending_0_of_32_real_cases",
+    "human_review": "pending_no_actual_reviews_created"
+  },
+  "open_paid_gates": [
+    "authoritative_canonical_ledger_and_scope_state",
+    "account_allocation_prior_unknown_remaining",
+    "prior_host_sealing",
+    "specific_new_budget_and_scope_authorization",
+    "clean_supported_execution_host_preflight",
+    "48_real_record_selection_before_evaluation_pipeline"
+  ],
+  "conditional_low_bound_gate": "512_token_framing_not_verified",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "new_model_cost_usd": 0,
+  "known_prior_cost_usd": null,
+  "unknown_exposure_usd": null,
+  "verified_remaining_allocation_usd": null,
+  "historical_SQL_role": "offline_worker_test_only_not_model_score_or_demo",
+  "no_branches_PRs_or_agents_created": true
+}

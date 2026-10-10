@@ -1,0 +1,118 @@
+{
+  "sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
+  "ci_run": 38029084117,
+  "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "query-real-data (3.12)",
+      "databaseId": 114146046194,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/job/114146046194",
+      "conclusion": "success",
+      "pytest": [
+        {
+          "stage": "Required real DB and isolated worker checks (no missing-input skips)",
+          "summary": "2026-10-10T05:56:24.4072518Z 13 passed in 61.35s (0:01:01)",
+          "counts": {
+            "passed": 13,
+            "skipped": 0,
+            "failed": 0
+          }
+        }
+      ],
+      "artifact_evidence": [
+        "2026-10-10T05:56:25.3578797Z SHA256 digest of uploaded artifact zip is 5045ac957d8c7e3913c0e4f7ffc315fa052fccd085af972c674db51ddf532484",
+        "2026-10-10T05:56:25.5947072Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/artifacts/11661485659"
+      ]
+    },
+    {
+      "name": "test (3.11)",
+      "databaseId": 114146046310,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/job/114146046310",
+      "conclusion": "success",
+      "pytest": [
+        {
+          "stage": "Run full repository test suite",
+          "summary": "2026-10-10T05:58:53.4736699Z 1300 passed, 7 skipped in 180.21s (0:03:00)",
+          "counts": {
+            "passed": 1300,
+            "skipped": 7,
+            "failed": 0
+          }
+        },
+        {
+          "stage": "Required offline query guards",
+          "summary": "2026-10-10T05:58:54.5031904Z 34 passed in 0.35s",
+          "counts": {
+            "passed": 34,
+            "skipped": 0,
+            "failed": 0
+          }
+        }
+      ],
+      "artifact_evidence": [
+        "2026-10-10T05:58:55.5956869Z SHA256 digest of uploaded artifact zip is f4b2bab5e0baec5067475f990d2c16ce37fcfda0e7b2900941c9445859ff4291",
+        "2026-10-10T05:58:55.8634836Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/artifacts/11661860659",
+        "2026-10-10T05:58:56.8482244Z SHA256 digest of uploaded artifact zip is d01d052f02d690839d5165f29d59195072eca4e67b3656b64e4eab67b553799a",
+        "2026-10-10T05:58:57.0962047Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/artifacts/11661446103"
+      ]
+    },
+    {
+      "name": "query-real-data (3.11)",
+      "databaseId": 114146046319,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/job/114146046319",
+      "conclusion": "success",
+      "pytest": [
+        {
+          "stage": "Required real DB and isolated worker checks (no missing-input skips)",
+          "summary": "2026-10-10T05:56:34.8217712Z 13 passed in 74.84s (0:01:14)",
+          "counts": {
+            "passed": 13,
+            "skipped": 0,
+            "failed": 0
+          }
+        }
+      ],
+      "artifact_evidence": [
+        "2026-10-10T05:56:35.5412096Z SHA256 digest of uploaded artifact zip is aafbf31f6b756864807feeff0e8e48bb4842d50f6a3aee0be006a86fca02cb07",
+        "2026-10-10T05:56:35.7717050Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/artifacts/11660987955"
+      ]
+    },
+    {
+      "name": "test (3.12)",
+      "databaseId": 114146046380,
+      "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/job/114146046380",
+      "conclusion": "success",
+      "pytest": [
+        {
+          "stage": "Run full repository test suite",
+          "summary": "2026-10-10T05:59:10.0713055Z 1300 passed, 7 skipped, 3426 warnings in 194.96s (0:03:14)",
+          "counts": {
+            "passed": 1300,
+            "skipped": 7,
+            "failed": 0
+          }
+        },
+        {
+          "stage": "Required offline query guards",
+          "summary": "2026-10-10T05:59:11.3563278Z 34 passed in 0.51s",
+          "counts": {
+            "passed": 34,
+            "skipped": 0,
+            "failed": 0
+          }
+        }
+      ],
+      "artifact_evidence": [
+        "2026-10-10T05:59:11.8994626Z SHA256 digest of uploaded artifact zip is dc1355c945c2af25a08235bffbf3b4d5fd9a1b8562d2a4d1005c25cf13d257a2",
+        "2026-10-10T05:59:12.0741032Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/artifacts/11661616002",
+        "2026-10-10T05:59:12.5406319Z SHA256 digest of uploaded artifact zip is 04f8b7e118c21b4798e1129755737261f0fc56a26fe24b32b4e84dc13db14fcb",
+        "2026-10-10T05:59:12.7228863Z Artifact download URL: https://github.com/Whats-up-pro/VinSOC/actions/runs/38029084117/artifacts/11662145202"
+      ]
+    }
+  ],
+  "log_sha256": "8125ca8872d48e3673936f5334e1adcd0741ca8fda7854fe1e0888c1243cbf46",
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0,
+  "calibration_evaluation_pipeline_new_runs": "pending"
+}

@@ -1,0 +1,203 @@
+{
+  "scope": "new_offline_release_receipts_only",
+  "implementation_sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
+  "files": [
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/canonical_readonly_scan.json",
+      "sha256": "2d5223148c5a4e1a09a4edf666615630ea33e0be48ed0db72038081d10191933",
+      "bytes": 961
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/delivery_receipt.json",
+      "sha256": "c9fc7e28b58ecebebf631d2f888d766a11f64ea3e261d7a99dcb1708fa97f46c",
+      "bytes": 1738
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/final_runtime_ci_verified.json",
+      "sha256": "390bbdd034b9ecb2f833dcc8a7ba6eff8fb274fb22a27bad719a8df254b4c3b7",
+      "bytes": 5071
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/final_runtime_kernel_xml_verification.json",
+      "sha256": "b827dc7a10c9e621ce3650f73b077a89527fb2c1b73437179ea37ba7533388a2",
+      "bytes": 11241
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/initial_payload_byte_audit.json",
+      "sha256": "0cdf0a332e83399b75759bc4f317905a29482963fb034141fcf0cda0eb5007d8",
+      "bytes": 117812
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/local_exact_bundle_restore.json",
+      "sha256": "bd67c3a1cfcb922c82e5bbf4db1650809b9a1eb8b6ea15cb701995099069de2e",
+      "bytes": 3367
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/local_full_suite_blocker.json",
+      "sha256": "f746de64522aa6e7f56891d7f9b2fb33c5d4ebfcdfc0d87a1b3cc4b966842c9f",
+      "bytes": 1452
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/local_gate_diagnostics.json",
+      "sha256": "3a218a3870669a27ca9d3556dc07f940c676e7ce8cdda6644e1fed15752e0b14",
+      "bytes": 553
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/offline_pipeline_viewer.html",
+      "sha256": "dbc6e2e66dd2c1f4474604b27fdc46bead225769a3b3b4350dfd6ad9c9cf3abe",
+      "bytes": 48845
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/offline_seal_ci_verified.json",
+      "sha256": "c45f0c0c6cdcefbfd997e2bb743861cdbefe1a2f8f0b89be42ca5b3c16de4372",
+      "bytes": 7395
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_calibration.json",
+      "sha256": "5871aae27a4bbdc0483e7de9a9760cc9a8b9979add9aa9f2a21238a7e95110b8",
+      "bytes": 13061
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_calibration_frozen.json",
+      "sha256": "9e59c28216aad65c6d5bc7d06fdce6f58a7aadea9f84bc644b0bd910fbde713d",
+      "bytes": 13061
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_evaluation.json",
+      "sha256": "e0c1eecda9cdc786cf940050bc837bd5432d13076de52e076792282edcc8fcfb",
+      "bytes": 16137
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_evaluation_frozen.json",
+      "sha256": "720215191b0e3a352d50cb51a135abfda4fa3c0e667d9a864f3cab6cc0902276",
+      "bytes": 16137
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_execution_verified.json",
+      "sha256": "00073c214b095d5ec56faff94d4759586b83751989c8654fe0100251b31e05e5",
+      "bytes": 2038
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_pipeline.json",
+      "sha256": "f77afddaea5177fb5584e97295d113a32c432d8bc4c804186cc8012c2e4a2e7d",
+      "bytes": 13216
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_pipeline_frozen.json",
+      "sha256": "cb2bb45546e6ecc6317eafc91811808870eef32928fb33eb2f0486514ab96819",
+      "bytes": 13216
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preservation_final_runtime.json",
+      "sha256": "a41afdccb74eca83c7dc6c69c6fe3e742d7c22f776136a0438437151e27e6f0d",
+      "bytes": 494
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preservation_r2.json",
+      "sha256": "77ca6ed3942f253b8b6223f6ea40c2791ebea30f61e692b3a6b88a49ccbd2d2e",
+      "bytes": 359
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preservation_r3.json",
+      "sha256": "77ca6ed3942f253b8b6223f6ea40c2791ebea30f61e692b3a6b88a49ccbd2d2e",
+      "bytes": 359
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preservation_r4.json",
+      "sha256": "77ca6ed3942f253b8b6223f6ea40c2791ebea30f61e692b3a6b88a49ccbd2d2e",
+      "bytes": 359
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preservation_r5.json",
+      "sha256": "77ca6ed3942f253b8b6223f6ea40c2791ebea30f61e692b3a6b88a49ccbd2d2e",
+      "bytes": 359
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/public_cost_bound.json",
+      "sha256": "589931e07e6ee170636f9d80c8dcf798a1aa2eb2cd1c0421977f5ea339e09083",
+      "bytes": 8133
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r2_ci_verified.json",
+      "sha256": "18f2e8a4a6077c7e1e25335efb6dc5dfc5717922096b41a9e8fe6b0675dae841",
+      "bytes": 3451
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r2_environment_observation_failure.json",
+      "sha256": "343069df68b8fdd3643dbdf816e3b8a46c53e8dcb00a96239a09ed4ad180ebfc",
+      "bytes": 809
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r2_independent_kernel_observation.json",
+      "sha256": "be5bb6cf86c735da2de7873bb002c1ca9357a33100dadb738232db44f4ffe8a6",
+      "bytes": 798
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r2_initial_ci_failure.json",
+      "sha256": "5b79e8c8e06ab75ea1377a9b6d09f9ff2cc70a0439db81c281f6bc2208eff4ac",
+      "bytes": 1076
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r2_local_verification.json",
+      "sha256": "9c2e09192453df4a95d970d5dded788d9ca16e03fb5d7db28e899b3285283f5b",
+      "bytes": 837
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r3_ci_verified.json",
+      "sha256": "cce4d14b7381b14bd539c056fd5449f7f9987ec8f9e2166986a12af334e6b354",
+      "bytes": 3441
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r3_local_verification.json",
+      "sha256": "7c7eafd18a25753ae24815af79ad63d0b971c45aa4937bcb873c7880d6d9e197",
+      "bytes": 1084
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r3_regression_ci_failure.json",
+      "sha256": "4095bbc23968ddf6294df1fa1c39c26c09ee2350380c00f8a1581574465dce30",
+      "bytes": 743
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r4_ci_verified.json",
+      "sha256": "caea1883d74659261d70624d1afc6f5b4ce0f0f884a8e5b6cf5498d29aeb3944",
+      "bytes": 3441
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r4_local_verification.json",
+      "sha256": "abb797de8d41f949fb4510c8a0bc99ee7921701adce833b5cab9304b24e8bec5",
+      "bytes": 837
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r5_ci_verified.json",
+      "sha256": "ccfb47051ef3a478e100d4cf70b1f22c7b5553392d903f78acfb026b122ca5f7",
+      "bytes": 3441
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r5_local_verification.json",
+      "sha256": "50aade41544b5eaec75cc0b7fce6f6ac0d6fa7c065dce274febd51af15bde20e",
+      "bytes": 778
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r6_cost_guard_ci_verified.json",
+      "sha256": "2a4dcb801817f472bfa7bfc64f6d662e93bc002ece78c83064a0cd6283cbe56d",
+      "bytes": 5071
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/resume_inputs_manifest.json",
+      "sha256": "f2febfed04fb5391ad975ef3ee500af4ea3acca1193a07eefaf2054d115315a6",
+      "bytes": 7340
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/runtime_freeze.json",
+      "sha256": "74f6d097573082831b27d4cde1cb6997c94b2a693a4f945d2734c35ca1d46234",
+      "bytes": 21548
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/selection_pending.json",
+      "sha256": "02b5ae58bdae4f428f9bb6b943663dd431b7ae169aa70b05a9d7a37356e01add",
+      "bytes": 181
+    }
+  ],
+  "manifest_self_hash_excluded": true,
+  "future_commit_hash_excluded": true
+}

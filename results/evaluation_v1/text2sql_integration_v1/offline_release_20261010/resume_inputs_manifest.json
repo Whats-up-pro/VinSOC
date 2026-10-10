@@ -1,0 +1,233 @@
+{
+  "requested_inputs": [
+    {
+      "path": "docs/superpowers/plans/2026-10-08-vinsoc-text2sql-integration-and-final-demo.md",
+      "sha256": "a66c178d02a48a70d6f779f92377e38c6c255a18ff9187c742e364bca9005616",
+      "bytes": 55431,
+      "lines": 590
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-08-vinsoc-remaining-work-and-release-gates.md",
+      "sha256": "ae4b8ff563a30f2f7d799da254912bd8024a2b7864f9fd7b88c7a1f3aa75a694",
+      "bytes": 36827,
+      "lines": 251
+    },
+    {
+      "path": "docs/evaluation/VinSOC_Original_DB_Restore_2026-10-10.md",
+      "sha256": "81baeb0884839e789df34105861901fa5fcd27a7ab3087f6be5f3507dda7f4c8",
+      "bytes": 8811,
+      "lines": 64
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/bundle_restore_receipt.json",
+      "sha256": "cb2dd28208d26e8592856a77e405b2f00f95a5de22896b67928b1660bdb0f223",
+      "bytes": 3734,
+      "lines": 82,
+      "root_keys": [
+        "status",
+        "bundle_sha256",
+        "database_count",
+        "restored_count",
+        "preserved_count",
+        "model_calls",
+        "files",
+        "user_delivery_commit",
+        "ctu_archive"
+      ],
+      "states": {
+        "ALL_13_EXACT_ORIGINAL_BINARIES_RESTORED": 1
+      }
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/ci_verification.json",
+      "sha256": "6863f62c8e682fe5a5ad30229845cd90bda1d1fad695d72d62b7b7e6c9679a0d",
+      "bytes": 2399,
+      "lines": 83,
+      "root_keys": [
+        "scope",
+        "implementation_sha",
+        "ci_run_id",
+        "ci_url",
+        "status",
+        "conclusion",
+        "runner_label",
+        "jobs",
+        "regression_tests_each_python",
+        "required_real_data_tests_each_python",
+        "data_validation",
+        "worker_positive_path_pass",
+        "full_worker_boundary_gate_pass",
+        "pending",
+        "artifacts",
+        "external_model_calls",
+        "new_inference_cost_usd",
+        "paid_authorized"
+      ],
+      "states": {
+        "completed": 1,
+        "success": 6
+      }
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/initial_ci_failure.json",
+      "sha256": "dd2f2d3d98c81e0b222249cc6e27c2eb4bb9a059d0a545935d113cd28c783b42",
+      "bytes": 1025,
+      "lines": 29,
+      "root_keys": [
+        "implementation_sha",
+        "ci_run_id",
+        "ci_url",
+        "scope",
+        "required_jobs",
+        "passed_stages",
+        "failure_stage",
+        "failure_reason",
+        "worker_tests_executed",
+        "data_or_code_lock_modified",
+        "fix",
+        "external_model_calls"
+      ],
+      "states": {
+        "failure": 2
+      }
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/local_verification.json",
+      "sha256": "6197e7e30e6cad33e72f6067a92726afea26d171a2119e396375f66de744be2d",
+      "bytes": 2346,
+      "lines": 58,
+      "root_keys": [
+        "scope",
+        "source_hashes",
+        "targeted_data_restore",
+        "full_repository_suite",
+        "saved_live_sql_worker",
+        "historical_validator",
+        "ruff",
+        "compileall",
+        "git_diff_check_exit_code",
+        "external_model_calls",
+        "new_inference_cost_usd"
+      ],
+      "states": {}
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/local_worker_probe.json",
+      "sha256": "1f5037f44111e8bb2d43f8da22c5c251100aaf68bab4f755e64899ee328b9f6e",
+      "bytes": 1302,
+      "lines": 30,
+      "root_keys": [
+        "scope",
+        "created_at_utc",
+        "data_identity_and_gold_gate_pass",
+        "runtime_worker_gate_pass",
+        "status",
+        "observed_minimal_bubblewrap_exit_code",
+        "observed_minimal_bubblewrap_stderr",
+        "saved_live_sql_probe",
+        "isolation_controls_relaxed",
+        "required_linux_ci",
+        "pending_worker_gate_checks",
+        "historical_data_files_verified",
+        "historical_code_lock_pass",
+        "historical_runtime_changed_files",
+        "preserved_incomplete_source_archive",
+        "external_model_calls",
+        "new_inference_cost_usd",
+        "paid_authorized"
+      ],
+      "states": {
+        "BLOCKED_LOCAL_NETWORK_NAMESPACE": 1
+      }
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/real_data_validation.json",
+      "sha256": "8943c3c4e5b85f22cf53bd992cd7b7546821c2d8eaa38a9746957066fc7c55e9",
+      "bytes": 23683,
+      "lines": 820,
+      "root_keys": [
+        "base_gold_replayed",
+        "benchmark_lock_sha256",
+        "changed_runtime_source_sha256",
+        "created_at_utc",
+        "external_model_calls",
+        "gold_replay",
+        "historical_code_lock_pass",
+        "historical_data_files_verified",
+        "historical_runtime_changed_files",
+        "inventory",
+        "new_inference_cost_usd",
+        "original_databases_verified",
+        "paid_authorized",
+        "registry_sha256",
+        "replayed_by_database",
+        "replayed_by_split",
+        "runtime_worker_gate_pass",
+        "scope",
+        "source_archive_sha256",
+        "status"
+      ],
+      "states": {
+        "ALL_120_GOLD_VALIDATED_EXACT_ORIGINAL_BINARIES": 1
+      }
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/real_worker_validation.json",
+      "sha256": "f09531ffaebd53071f195a8dccadb1ab06c6e85f744f07c2d7ddf0dff2eb931f",
+      "bytes": 1614,
+      "lines": 33,
+      "root_keys": [
+        "scope",
+        "status",
+        "implementation_sha",
+        "ci_run_id",
+        "required_job_ids",
+        "saved_model_artifact",
+        "saved_model_artifact_sha256",
+        "saved_case_id",
+        "saved_sql_sha256",
+        "ctu_binary_sha256",
+        "observed_checks",
+        "worker_positive_path_pass",
+        "full_worker_boundary_gate_pass",
+        "self_declared_isolation_fields_used_as_boundary_proof",
+        "remaining_boundary_checks",
+        "new_model_sql_generated",
+        "native_routing_or_assessment_generated",
+        "external_model_calls",
+        "new_inference_cost_usd"
+      ],
+      "states": {
+        "RUNTIME_POSITIVE_PATH_PASS_FULL_BOUNDARY_PENDING": 1
+      }
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/original_data_20261010/ubuntu24_ci_worker_blocker.json",
+      "sha256": "114e7339e54f7189f4f3da0ea125438fe81463329327f376790848485eecad91",
+      "bytes": 2651,
+      "lines": 80,
+      "root_keys": [
+        "scope",
+        "implementation_sha",
+        "ci_run_id",
+        "ci_url",
+        "ci_conclusion",
+        "runner_os",
+        "data_identity_and_gold_gate_pass",
+        "runtime_worker_gate_pass",
+        "required_jobs",
+        "regression_jobs",
+        "artifacts",
+        "external_model_calls",
+        "new_inference_cost_usd",
+        "paid_authorized",
+        "followup"
+      ],
+      "states": {
+        "failure": 2,
+        "success": 2
+      }
+    }
+  ],
+  "historical_files_changed": false
+}

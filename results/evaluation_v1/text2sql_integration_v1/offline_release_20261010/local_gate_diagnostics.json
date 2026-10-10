@@ -1,0 +1,18 @@
+{
+  "local_data": {
+    "error_class": "ValueError",
+    "safe_code": "LOCKED_DATA_FILE_IDENTITY_MISMATCH"
+  },
+  "local_code_ci": {
+    "error_class": "ValueError",
+    "safe_code": "GIT_NOT_EXACT_CLEAN_MASTER"
+  },
+  "tracked_working_tree_clean": true,
+  "untracked_user_files_present": true,
+  "worker_platform": "win32",
+  "required_execution_host": "Linux with delegated cgroup v2 and bubblewrap; exact-SHA CI verifies both Python versions",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "new_model_cost_usd": 0
+}

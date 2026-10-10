@@ -1,0 +1,8 @@
+{
+  "version": "query_selection_v2",
+  "status": "pending",
+  "calibration_complete": false,
+  "selected_condition": null,
+  "received_records": 0,
+  "required_records": 48
+}
