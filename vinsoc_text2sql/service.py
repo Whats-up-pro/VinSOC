@@ -95,7 +95,10 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                 telemetry_sink(deepcopy(record))  # before parsing/scoring
                 calls = response.get("tool_calls") or []
                 if calls:
-                    if condition == "E0" or finalization_turn or len(calls) > 4:
+                    if finalization_turn:
+                        record["error_category"] = "TOOL_LIMIT"
+                        return record
+                    if condition == "E0" or len(calls) > 4:
                         raise ValueError("UNEXPECTED_OR_EXCESS_TOOL_CALLS")
                     messages.append({"role": "assistant", "content": response["content"], "tool_calls": calls})
                     for call in calls:
