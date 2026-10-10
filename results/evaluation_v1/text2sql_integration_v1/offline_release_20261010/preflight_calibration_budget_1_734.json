@@ -1,0 +1,99 @@
+{
+  "scope": "calibration_preflight_only_user_selected_budget",
+  "checked_utc": "2026-10-10T06:41:54.913001+00:00",
+  "release": {
+    "version": "query_pipeline_release_v1",
+    "scope": "calibration",
+    "condition": "E3",
+    "window_id": "text2sql-integration-20261008-calibration",
+    "authorized": false,
+    "status": "blocked",
+    "reasons": [
+      "CANONICAL_RECONCILIATION_REQUIRED",
+      "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+      "FULL_RUN_BUDGET_INSUFFICIENT"
+    ],
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "planned": 24,
+    "case_ids": [
+      "ctu_cross_0d22a790584f0155",
+      "ctu_cross_12d2dfbda309cf7a",
+      "ctu_cross_5c5ade01fccce004",
+      "ctu_cross_94d3c478d5858048",
+      "ctu_cross_97cc9c9d5d2fdd3b",
+      "ctu_cross_dda372911befb17e",
+      "ctu_cross_e36ee009626c71c2",
+      "ctu_cross_feab49e4a48ff3aa",
+      "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "external_student_transcripts_tracking_088b4f272f7580e1",
+      "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "external_student_transcripts_tracking_8895afc977f48f4f",
+      "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "external_voter_1_22bc102c818388de",
+      "external_voter_1_4426d844af6ad576",
+      "external_voter_1_958013b9b7385ffa",
+      "external_voter_1_f220617d91c88779",
+      "external_world_1_118fd339fffc525f",
+      "external_world_1_329e92f0874dea47",
+      "external_world_1_c16f04754e67aa3c",
+      "external_world_1_c87de933bb535d25"
+    ],
+    "role_caps": {
+      "routing": 0,
+      "r2": 168,
+      "assessment": 0
+    },
+    "contracts": {
+      "r2": {
+        "model": "gpt-5-mini-2025-08-07",
+        "reasoning_effort": "low",
+        "max_completion_tokens": 1000,
+        "service_tier": "default",
+        "max_retries": 0,
+        "max_request_bytes": 32768,
+        "frame_reserve_tokens": 512,
+        "max_messages": 20
+      },
+      "routing": {
+        "model": "gpt-4.1-mini-2025-04-14",
+        "temperature": 0,
+        "max_completion_tokens": 1000,
+        "service_tier": "default",
+        "max_retries": 0,
+        "max_request_bytes": 32768,
+        "frame_reserve_tokens": 512,
+        "max_messages": 20
+      },
+      "assessment": {
+        "model": "gpt-4.1-mini-2025-04-14",
+        "temperature": 0,
+        "max_completion_tokens": 1000,
+        "service_tier": "default",
+        "max_retries": 0,
+        "max_request_bytes": 65536,
+        "frame_reserve_tokens": 512,
+        "max_messages": 20
+      }
+    },
+    "reserves_usd": {
+      "r2": 0.102
+    },
+    "new_cost_ceiling_usd": 17.136,
+    "release_sha256": "804b4f01c845caa8dc270322b243078012d009d9e389aafa74001177265e9766"
+  },
+  "evidence": {
+    "implementation_sha": "e54b2465c2a50159e7ab78b7170ef8288c76687f",
+    "ci_run_id": 38029858848,
+    "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38029858848",
+    "pricing_and_context_bound": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/public_cost_bound.json"
+  },
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "new_model_cost_usd": 0
+}

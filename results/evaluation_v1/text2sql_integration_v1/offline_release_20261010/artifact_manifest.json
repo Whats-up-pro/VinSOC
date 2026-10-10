@@ -3,6 +3,11 @@
   "implementation_sha": "285a9439d001bd3d2fd046b690730d791cb2c184",
   "files": [
     {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/calibration_budget_1_734_decision.json",
+      "sha256": "b06c9be719a42988db8fd06f0a733a754e186e67cf7fc7a538722016029340f6",
+      "bytes": 1470
+    },
+    {
       "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/canonical_readonly_scan.json",
       "sha256": "2d5223148c5a4e1a09a4edf666615630ea33e0be48ed0db72038081d10191933",
       "bytes": 961
@@ -56,6 +61,11 @@
       "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_calibration.json",
       "sha256": "5871aae27a4bbdc0483e7de9a9760cc9a8b9979add9aa9f2a21238a7e95110b8",
       "bytes": 13061
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_calibration_budget_1_734.json",
+      "sha256": "3acef5178d04560d798c2c5059f36c2fdf8eb0edac7fdf549b6d97bb6f8584c2",
+      "bytes": 3418
     },
     {
       "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_calibration_frozen.json",

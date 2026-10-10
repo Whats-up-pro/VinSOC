@@ -1,0 +1,27 @@
+{
+  "scope": "calibration",
+  "status": "selected_budget_blocked_before_sdk",
+  "recorded_utc": "2026-10-10T06:41:54.913001+00:00",
+  "decision_reference": "user conversation 2026-10-10: selected payload-size ceiling approximately 1.734 USD",
+  "selected_limit_usd": 1.734,
+  "conditional_payload_size_ceiling_usd": 1.73376,
+  "verified_documented_context_ceiling_usd": 17.136,
+  "max_requests": 168,
+  "model": "gpt-5-mini-2025-08-07",
+  "why_blocked": [
+    "The 1.73376 USD calculation assumes serialized UTF-8 bytes plus a fixed 512-token framing allowance.",
+    "Official OpenAI documentation provides exact preflight token counting for the Responses API, not a binding Chat Completions framing ceiling for this locked runtime.",
+    "The release contract therefore continues to reserve the documented 400000-token context window per request.",
+    "Canonical allocation, prior cost, unknown exposure, remaining allocation, and prior-host sealing are also not reconciled."
+  ],
+  "official_sources": [
+    "https://developers.openai.com/api/docs/guides/token-counting",
+    "https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create"
+  ],
+  "preflight_receipt": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/preflight_calibration_budget_1_734.json",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "new_model_cost_usd": 0,
+  "paid_request_sent": false
+}
