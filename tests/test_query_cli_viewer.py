@@ -56,6 +56,18 @@ def test_live_entrypoint_accepts_remote_store_for_ephemeral_runner():
     assert 'remote_store' in inspect.signature(run_live).parameters
 
 
+def test_demo_with_no_final_sql_is_technical_incomplete():
+    from scripts.run_vinsoc_query_acceptance import technical_status
+    failed = {'generation':{'error_category':'TOOL_LIMIT','final_sql':None},
+              'metadata':{'review_status':'blocked_invalid_technical',
+                          'query_policy':{'validation':{'valid':False}}}}
+    assert technical_status('demo',[failed]) == 'technical_incomplete'
+    passed = {'generation':{'error_category':'OK','final_sql':'SELECT 1'},
+              'metadata':{'review_status':'awaiting_human',
+                          'query_policy':{'validation':{'valid':True}}}}
+    assert technical_status('demo',[passed]) == 'technical_complete_awaiting_human'
+
+
 def test_default_viewer_keeps_four_fixed_ids_and_32_missing_cases(tmp_path):
     from scripts.render_query_pipeline_report import render_report
     source = Path('results/evaluation_v1/text2sql_integration_v1/preflight_pipeline.json')

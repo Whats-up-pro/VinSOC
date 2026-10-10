@@ -62,6 +62,18 @@ def retain_active_checkpoint(report, active):
         report['case_records'].append(deepcopy(active))
 
 
+def technical_status(scope, records):
+    if scope not in ('pipeline','demo'):
+        return 'completed'
+    for record in records:
+        generation = record.get('generation') or {}
+        validation = ((record.get('metadata') or {}).get('query_policy') or {}).get('validation') or {}
+        if (generation.get('error_category') != 'OK' or not generation.get('final_sql')
+                or validation.get('valid') is not True):
+            return 'technical_incomplete'
+    return 'technical_complete_awaiting_human' if records else 'technical_incomplete'
+
+
 def run_preflight(scope, condition, private, *, selected_input=None):
     identities = deepcopy(private.get('identities', {}))
     identities.update(data_verified=False, source_verified=False, ci_verified=False, worker_verified=False)
@@ -214,7 +226,7 @@ def run_live(release, output, *, selected_input=None, remote_store=None):
                 persist(output/'report.json', report)
                 if journal.data['terminal']:
                     return report
-        report['status'] = 'technical_complete_awaiting_human' if release['scope'] in ('pipeline','demo') else 'completed'
+        report['status'] = technical_status(release['scope'], report['case_records'])
         from evaluation.finalization.query_reporting import build_query_report
         report['metrics'] = build_query_report(report['case_records'], [refs[r['case_id']] for r in inventory], conditions=tuple(conditions))
         report['official_eligible'] = False  # Full identity/scoring/report audit is a separate gate.
@@ -249,8 +261,10 @@ def run_live(release, output, *, selected_input=None, remote_store=None):
             report['pipeline_metrics'] = build_pipeline_report(report['case_records'], inventory, reviews=[],
                                                               identities=run_identities, journal={'events':report.get('cost_events', [])})
         elif release['scope'] == 'demo':
+            review_status = ((report['case_records'][0].get('metadata') or {}).get('review_status')
+                             if report['case_records'] else 'missing')
             report['demo'] = {'case_id': inventory[0]['case_id'], 'condition': release['condition'],
-                              'official_eligible': False, 'human_review': 'awaiting_human'}
+                              'official_eligible': False, 'human_review': review_status}
         persist(output/'report.json', report)
         if sdk:
             try:

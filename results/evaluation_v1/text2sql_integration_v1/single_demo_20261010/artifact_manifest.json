@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "files": {
+    "bundle_restore.json": {
+      "bytes": 3294,
+      "sha256": "6b1ae8c5e96f5309a2ac7532c5bc0466d00c5efd68133d3b059b6c08d9763fc2"
+    },
+    "case_record.json": {
+      "bytes": 48309,
+      "sha256": "0c6f0fa7f23b56136382b0b3551ce976dca3696f34d3641691a16db2021a54fe"
+    },
+    "command_log.md": {
+      "bytes": 3155,
+      "sha256": "4a5665d07ef70a5dab8ad48e1a5599cf023b22b87c4bab67269191287db14780"
+    },
+    "manager_report.html": {
+      "bytes": 3415,
+      "sha256": "38126c3595525a8dd6f1db936146bea49d2618841437ba17e6c7d375b36c7267"
+    },
+    "manager_report.md": {
+      "bytes": 3107,
+      "sha256": "b310bb942b2a8fe74fc8a6219494bba09eacc1dfd5b82a4714c0fa9a29273d48"
+    },
+    "original_data_validation.json": {
+      "bytes": 22863,
+      "sha256": "eea21c7606c06d01b6656701857c243c7f130f0dc765018853484beb63d82fd3"
+    },
+    "outcome_audit.json": {
+      "bytes": 3642,
+      "sha256": "92367c84cecdeb0701a50e93f677efc2b37d729bbf9634a8ac0f46288d870f1e"
+    },
+    "preflight.json": {
+      "bytes": 11785,
+      "sha256": "3c196dbe62585a19e5c73727fb12514f5fd0405aeeb41cbe93021f701ad4668c"
+    },
+    "runner_cloud_run.json": {
+      "bytes": 594,
+      "sha256": "d778f69e3febdf7be85ebbe5491c7c1be5762bf010096336ba273f009274274a"
+    },
+    "runner_report.json": {
+      "bytes": 86416,
+      "sha256": "1ba8c5f986f79d48c81dd7df40f06aa503db591beede5cddb807dc30be5f9a3d"
+    }
+  }
+}

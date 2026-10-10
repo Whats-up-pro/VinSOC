@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "scope": "single_fixed_query_demo_not_calibration_or_evaluation",
+  "case_id": "ctu_cross_708b66575657429a",
+  "condition": "E3",
+  "implementation_sha": "5e8e4ff03a58d7746861152f583d639fc24c2f91",
+  "ci": {
+    "run_id": 38037320747,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38037320747",
+    "status": "success",
+    "full_suite": {
+      "python_3_11": {
+        "passed": 1314,
+        "skipped": 7
+      },
+      "python_3_12": {
+        "passed": 1314,
+        "skipped": 7
+      }
+    },
+    "required_offline": {
+      "python_3_11": {
+        "passed": 43,
+        "skipped": 0
+      },
+      "python_3_12": {
+        "passed": 43,
+        "skipped": 0
+      }
+    },
+    "required_real_data": {
+      "python_3_11": {
+        "passed": 13,
+        "skipped": 0
+      },
+      "python_3_12": {
+        "passed": 13,
+        "skipped": 0
+      }
+    },
+    "original_databases_verified": 13,
+    "gold_queries_replayed": 120
+  },
+  "workflow": {
+    "run_id": 38037640751,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38037640751",
+    "job_status": "success",
+    "artifact_id": 11664103562,
+    "artifact_digest": "sha256:37ac6fe695f57de0d44ae780d288f8223cbe4cbd0ed6fb70e1117eaee2b23ac9",
+    "artifact_expires_at": "2027-01-08T08:22:20Z",
+    "remote_window_claimed": true
+  },
+  "preflight": {
+    "status": "preflight_pass",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "hard_budget_usd": 3.0,
+    "conservative_cost_ceiling_usd": 1.4532608,
+    "max_calls_by_role": {
+      "routing": 1,
+      "r2": 6,
+      "assessment": 1
+    }
+  },
+  "actual": {
+    "status": "technical_incomplete",
+    "runner_reported_status": "technical_complete_awaiting_human",
+    "status_correction_reason": "TOOL_LIMIT_NO_FINAL_SQL_AND_VERIFICATION_FAILED",
+    "completed_record_count": 1,
+    "attempted_calls": 4,
+    "received_responses": 4,
+    "valid_usage_records": 4,
+    "calls_by_role": {
+      "routing": 1,
+      "r2": 3
+    },
+    "usage": {
+      "input_tokens": 4407,
+      "output_tokens": 367,
+      "cached_tokens": 2304
+    },
+    "actual_cost_usd": 0.00133865,
+    "remaining_demo_cap_usd": 2.99866135,
+    "cost_unknown": false,
+    "pending_exposure_usd": 0.0,
+    "db_calls": 3,
+    "final_sql_present": false,
+    "generation_error": "TOOL_LIMIT",
+    "scoring_error": "NO_FINAL_SQL",
+    "execution_success": false,
+    "execution_accurate": false,
+    "evidence_count": 0,
+    "assessment_present": false,
+    "verification_valid": false,
+    "verification_issues": [
+      "QUERY_RESULT_NOT_CITED",
+      "QUERY_NATIVE_TOOL_TRACE_INVALID",
+      "MISSING_QUERY_OBSERVATION",
+      "INDEPENDENT_QUERY_REPLAY_REQUIRED"
+    ],
+    "human_review": "blocked_invalid_technical",
+    "official_eligible": false
+  },
+  "observed_probe_results": [
+    {
+      "purpose": "enumerate locked scenario values",
+      "rows": [
+        [
+          "ctu13_s5"
+        ],
+        [
+          "ctu13_s7"
+        ]
+      ]
+    },
+    {
+      "purpose": "scenario 5 strict-bound distinct destinations",
+      "value": 1529
+    },
+    {
+      "purpose": "scenario 7 strict-bound distinct destinations",
+      "value": 1210
+    }
+  ],
+  "human_review": {
+    "analyst": null,
+    "decision": null,
+    "rationale": null,
+    "utc": null,
+    "status": "blocked_invalid_technical"
+  },
+  "model_score_statement": "Not an official calibration, evaluation, or pipeline score; no final prediction was fabricated."
+}
