@@ -46,7 +46,9 @@ def test_worker_observed_boundaries(tmp_path):
         assert worker is not None, 'ISOLATED_WORKER_NOT_OBSERVED'
         assert os.readlink(worker/'ns/net') != os.readlink('/proc/self/ns/net')
         environment = (worker/'environ').read_bytes().split(b'\0')
-        assert all(e.split(b'=')[0] in (b'', b'LC_CTYPE') for e in environment)
+        # bubblewrap sets PWD after --clearenv; it must be its fixed sandbox cwd.
+        assert all(e.split(b'=')[0] in (b'', b'LC_CTYPE', b'PWD') for e in environment), [e.split(b'=')[0] for e in environment]
+        assert b'PWD=/tmp' in environment
         assert b'must-never-enter-worker' not in b'\0'.join(environment)
         mounts = (worker/'mountinfo').read_text().splitlines()
         snapshot_mounts = [m.split() for m in mounts if m.split()[4].startswith('/snapshot/')]

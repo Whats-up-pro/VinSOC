@@ -1,0 +1,13 @@
+{
+  "implementation_sha": "d354c960b4d511da0d446b65436b2a864c5f9439",
+  "ci_run_id": 38021519034,
+  "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38021519034",
+  "required_tests_each_python": {"passed": 12, "failed": 1, "skipped": 0},
+  "passed": ["all 120 gold through cgroup worker", "archived live SQL worker", "aggregate memory OOM observation", "CPU enforcement", "timeout group termination"],
+  "failure": "environment allowlist omitted bubblewrap-managed PWD",
+  "followup": "Observe only empty/LC_CTYPE/PWD keys and require PWD=/tmp; retain secret sentinel rejection and all isolation controls",
+  "source_reference": "https://github.com/containers/bubblewrap/blob/main/bubblewrap.c",
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "worker_boundary_gate_pass": false
+}
