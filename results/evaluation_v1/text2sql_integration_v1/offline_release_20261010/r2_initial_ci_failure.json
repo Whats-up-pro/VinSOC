@@ -1,0 +1,16 @@
+{
+  "scope": "R2 independent worker boundaries, initial cgroup delegation failure",
+  "implementation_sha": "bc252ab75a6bf3a5a48d2f44e6aeadaa714e2f03",
+  "ci_run_id": 38020969029,
+  "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38020969029",
+  "required_job_ids": [114121648356, 114121648384],
+  "required_tests_python_311": {"passed": 9, "failed": 4, "skipped": 0},
+  "observed_error": "subprocess.SubprocessError: Exception occurred in preexec_fn",
+  "data_gate": "13 DB/source checks and 120 trusted gold PASS",
+  "hypothesis": "Migration from the Actions service into a sibling cgroup requires common-ancestor cgroup.procs write access. A chowned destination alone is insufficient.",
+  "reference": "https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#delegation-containment",
+  "followup": "Run supervisor and descendants as the same unprivileged runner inside a systemd-delegated subtree. Keep all isolation and 512 MiB aggregate limits.",
+  "worker_boundary_gate_pass": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0
+}
