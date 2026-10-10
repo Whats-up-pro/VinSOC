@@ -204,7 +204,12 @@ def run_live(release, output):
                 persist(target, active)
             report.update(**{k:journal.data[k] for k in ('attempted','received','valid_usage','cost_unknown','known_usd','pending_exposure_usd')})
         from evaluation.finalization.query_reporting import build_query_report
-        report['metrics'] = build_query_report(report['case_records'], inventory, conditions=tuple(conditions))
+        report['metrics'] = build_query_report(report['case_records'], inventory, conditions=tuple(conditions),
+                                             identities=run_identities, journal={'events':report.get('cost_events', [])})
+        if release['scope'] == 'pipeline':
+            from evaluation.finalization.query_pipeline_reporting import build_pipeline_report
+            report['pipeline_metrics'] = build_pipeline_report(report['case_records'], inventory, reviews=[],
+                                                              identities=run_identities, journal={'events':report.get('cost_events', [])})
         persist(output/'report.json', report)
         if sdk:
             try:

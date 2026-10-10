@@ -1,0 +1,19 @@
+{
+  "scope": "R4 record normalization, module/statistics and pipeline reporting",
+  "status": "OFFLINE_MISSING_AND_IDENTITY_GUARDS_PASS_POSITIVE_NEW_RUN_PENDING",
+  "red_tests": 3,
+  "targeted": {"passed": 17, "failed": 0, "skipped": 0},
+  "compile_exit": 0,
+  "diff_check_exit": 0,
+  "evaluation_denominators": {"external": 64, "ctu": 32, "total": 96, "condition_slots": 192},
+  "pipeline_denominator_every_stage": 32,
+  "bootstrap": {"seed": 20261007, "replicates": 10000, "clusters": ["database", "family"]},
+  "records_created": 0,
+  "new_calibration_evaluation_pipeline_positive_path": "pending authentic paid artifacts",
+  "missing_accuracy": null,
+  "missing_paired_delta": null,
+  "historical_reporting_statistics_modules_modified": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "paid_authorized": false
+}

@@ -127,6 +127,8 @@ class RunJournal:
         raw = response if isinstance(response, dict) else response.model_dump(mode='json')
         event.update(received=True, response=raw, actual_model=raw.get('model'),
                      response_id=raw.get('id'), provider_request_id=getattr(response, '_request_id', None))
+        choices = raw.get('choices') or []
+        event['native_tool_calls'] = (choices[0].get('message') or {}).get('tool_calls') or [] if choices else []
         self.data['received'] += 1
         self.persist()  # Full raw response and usage survive even validation/parse failure.
         usage = raw.get('usage') or {}
