@@ -15,6 +15,41 @@ def test_exact_original_question_is_required_before_any_action():
         verify_selected_question(row['case_id'], row['question']+' ')
 
 
+def test_demo_inventory_is_one_fixed_selection_with_exact_original_question():
+    from scripts.run_vinsoc_query_acceptance import verify_selected_question
+
+    selection = json.loads(Path('results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())
+    chosen = selection['cases'][0]
+    row = verify_selected_question(chosen['case_id'], chosen['question'], require_demo=True)
+    assert inventory_for('demo', case_id=chosen['case_id'], question=chosen['question']) == [row]
+    with pytest.raises(ValueError, match='FIXED_DEMO_SELECTION_REQUIRED'):
+        verify_selected_question(inventory_for('pipeline')[0]['case_id'],
+                                 inventory_for('pipeline')[0]['question'], require_demo=True)
+    with pytest.raises(ValueError, match='EXACT_ORIGINAL_QUESTION_REQUIRED'):
+        inventory_for('demo', case_id=chosen['case_id'], question=chosen['question']+' ')
+
+
+def test_demo_cli_passes_one_locked_case_to_preflight(monkeypatch, tmp_path):
+    import scripts.run_vinsoc_query_acceptance as runner
+
+    chosen = json.loads(Path('results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())['cases'][0]
+    captured = {}
+    def fake_preflight(scope, condition, private, *, selected_input=None):
+        captured.update(scope=scope, condition=condition, selected_input=selected_input)
+        return {'release': {'status': 'preflight_pass', 'planned': 1, 'attempted': 0,
+                            'received': 0, 'client_created': False, 'gate_inputs': {}},
+                'diagnostics': [], 'client_created': False, 'attempted': 0, 'received': 0}
+    monkeypatch.setattr(runner, 'run_preflight', fake_preflight)
+    output = tmp_path/'preflight.json'
+    assert runner.main(['--scope','demo','--condition','E3','--preflight-only',
+                        '--case-id',chosen['case_id'],'--question',chosen['question'],
+                        '--output',str(output)]) == 0
+    assert captured == {'scope':'demo', 'condition':'E3', 'selected_input':chosen}
+    saved = json.loads(output.read_text())
+    assert saved['release']['attempted'] == saved['release']['received'] == 0
+    assert saved['release']['client_created'] is False
+
+
 def test_default_viewer_keeps_four_fixed_ids_and_32_missing_cases(tmp_path):
     from scripts.render_query_pipeline_report import render_report
     source = Path('results/evaluation_v1/text2sql_integration_v1/preflight_pipeline.json')

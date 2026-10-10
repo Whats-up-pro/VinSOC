@@ -36,6 +36,36 @@ def test_missing_ledger_is_not_zero_prior_cost():
         verify_canonical_reconciliation({'known_prior_cost_usd': 0, 'remaining_allocation_usd': 100})
 
 
+def test_demo_reconciliation_requires_demo_scope_state(tmp_path, monkeypatch):
+    import json
+    from datetime import datetime, timezone
+    from evaluation.r2_cross_domain_v1.benchmark_lock import file_hash
+    from evaluation.finalization.query_runtime_validation import verify_canonical_reconciliation
+
+    monkeypatch.setattr('pathlib.Path.home', lambda: tmp_path)
+    canonical = tmp_path/'.vinsoc/live-windows'
+    canonical.mkdir(parents=True)
+    ledger = canonical/'allocation-ledger.json'
+    ledger.write_text('{}')
+    receipt_path = canonical/'reconciliation.json'
+    receipt = {'verified_utc':datetime.now(timezone.utc).isoformat(),
+               'authoritative_host_verified':True, 'prior_hosts_sealed':True,
+               'unknown_exposure_usd':0, 'allocation_id':'demo-$3',
+               'known_prior_cost_usd':0, 'remaining_allocation_usd':3,
+               'scope_states':{'calibration':'outside_allocation','evaluation':'outside_allocation',
+                               'pipeline':'outside_allocation'},
+               'ledger_artifacts':[{'path':ledger.name,'sha256':file_hash(ledger)}]}
+    receipt_path.write_text(json.dumps(receipt))
+    account = {'allocation_id':'demo-$3','known_prior_cost_usd':0,'remaining_allocation_usd':3,
+               'reconciliation_reference':{'path':str(receipt_path),'sha256':file_hash(receipt_path)}}
+    with pytest.raises(ValueError, match='CANONICAL_RECONCILIATION_UNVERIFIED'):
+        verify_canonical_reconciliation(account, required_scope='demo')
+    receipt['scope_states']['demo'] = 'unused'
+    receipt_path.write_text(json.dumps(receipt))
+    account['reconciliation_reference']['sha256'] = file_hash(receipt_path)
+    assert verify_canonical_reconciliation(account, required_scope='demo') == receipt
+
+
 def test_unfinished_checkpoint_is_retained_in_partial_report():
     from scripts.run_vinsoc_query_acceptance import retain_active_checkpoint
     row = inventory_for('pipeline')[0]

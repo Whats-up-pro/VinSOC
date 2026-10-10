@@ -53,9 +53,9 @@ def cost_bound(pricing, method):
         reserves[role] = (Decimal(inputs)*Decimal(str(p['input_usd_per_million']))
                          + Decimal(contract['max_completion_tokens'])*Decimal(str(p['output_usd_per_million'])))/Decimal(1000000)
     scopes = {}
-    for scope, condition in [('calibration','E3'),('evaluation','E3'),('pipeline','E0'),('pipeline','E3')]:
+    for scope, condition in [('calibration','E3'),('evaluation','E3'),('pipeline','E0'),('pipeline','E3'),('demo','E3')]:
         caps = role_caps(scope, condition)
-        scopes[scope+('_'+condition if scope == 'pipeline' else '')] = {
+        scopes[scope+('_'+condition if scope in ('pipeline','demo') else '')] = {
             'request_caps_by_role': caps,
             'request_caps_by_model': {model:sum(caps[role] for role,c in CONTRACTS.items() if c['model']==model) for model in pricing},
             'max_requests': sum(caps.values()), 'new_cost_ceiling_usd': str(sum(caps[r]*reserves[r] for r in caps))}
@@ -91,7 +91,7 @@ def main(argv=None):
             'conditional_old_bound_not_transmission_authority':conditional,
             'canonical_reconciliation':inspect_canonical(Path.home()/'.vinsoc/live-windows'),
             'attempted':0, 'received':0, 'client_created':False, 'new_model_cost_usd':0,
-            'authorization_required':['calibration','evaluation_after_48_record_selection','pipeline_after_selection'],
+            'authorization_required':['demo_single_case_E3','calibration','evaluation_after_48_record_selection','pipeline_after_selection'],
             'pending_real_artifacts':{'calibration_records':48, 'evaluation_records':192, 'pipeline_cases':32},
             'framing_512_verified':False,
             'bound_explanation':'Entire documented context window covers all input/history/schema/results and hidden framing. It over-reserves input and output independently. Request bytes/messages/output caps are still enforced; the 512-token framing estimate does not authorize transmission.'}

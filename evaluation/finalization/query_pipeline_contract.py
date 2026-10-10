@@ -25,6 +25,10 @@ def role_caps(scope, condition):
         return {'routing': 0, 'r2': (24 if scope == 'calibration' else 96)*7, 'assessment': 0}
     if scope == 'pipeline':
         return {'routing': 32, 'r2': 32*(6 if condition == 'E3' else 1), 'assessment': 32}
+    if scope == 'demo':
+        if condition != 'E3':
+            raise ValueError('DEMO_REQUIRES_E3')
+        return {'routing': 1, 'r2': 6, 'assessment': 1}
     raise ValueError('INVALID_RELEASE_SCOPE')
 
 
@@ -34,11 +38,13 @@ def number(value):
 
 def preflight(scope, condition, *, inventory, identities, account, pricing, budget):
     caps = role_caps(scope, condition)
-    planned = {'calibration': 24, 'evaluation': 96, 'pipeline': 32}[scope]
+    planned = {'calibration': 24, 'evaluation': 96, 'pipeline': 32, 'demo': 1}[scope]
     reasons = []
-    from evaluation.finalization.query_runtime_validation import verify_scope_unused, verify_selection_lock, verify_canonical_reconciliation
+    from evaluation.finalization.query_runtime_validation import (verify_scope_unused,
+        verify_selection_lock, verify_canonical_reconciliation, window_id_for)
+    ids = [row.get('case_id') for row in inventory if isinstance(row, dict)]
     try:
-        verify_scope_unused(scope)
+        verify_scope_unused(scope, ids[0] if scope == 'demo' and len(ids) == 1 else None)
     except ValueError as error:
         reasons.append(str(error))
     if scope in ('evaluation', 'pipeline'):
@@ -49,10 +55,9 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
         except (ValueError, OSError, KeyError, TypeError):
             reasons.append('CALIBRATION_SELECTION_LOCK_REQUIRED')
     try:
-        verify_canonical_reconciliation(account)
+        verify_canonical_reconciliation(account, required_scope=scope)
     except (ValueError, OSError, KeyError, TypeError):
         reasons.append('CANONICAL_RECONCILIATION_REQUIRED')
-    ids = [row.get('case_id') for row in inventory if isinstance(row, dict)]
     if (len(inventory) != planned or len(ids) != planned or len(set(ids)) != planned
             or any(not isinstance(i, str) or not i for i in ids)
             or identities.get('data_verified') is not True):
@@ -95,7 +100,7 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
             or new_ceiling > account.get('remaining_allocation_usd', 0)):
         reasons.append('FULL_RUN_BUDGET_INSUFFICIENT')
     result = {'version': VERSION, 'scope': scope, 'condition': condition,
-              'window_id': 'text2sql-integration-20261008-'+scope,
+              'window_id': window_id_for(scope, ids[0] if scope == 'demo' and len(ids) == 1 else None),
               'authorized': not reasons, 'status': 'preflight_pass' if not reasons else 'blocked',
               'reasons': reasons, 'attempted': 0, 'received': 0, 'client_created': False,
               'planned': planned, 'case_ids': ids, 'role_caps': caps, 'contracts': CONTRACTS,

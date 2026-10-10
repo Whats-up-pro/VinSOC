@@ -22,16 +22,27 @@ from evaluation.finalization.query_runtime_validation import (
 )
 
 
-def inventory_for(scope):
+def inventory_for(scope, *, case_id=None, question=None):
     path = ROOT/'evaluation/r2_cross_domain_v1/benchmarks'/('calibration_runtime.json' if scope == 'calibration' else 'evaluation_runtime.json')
     rows = json.loads(path.read_text())
+    if scope == 'demo':
+        if case_id is None and question is None:
+            selection = json.loads((ROOT/'results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())
+            case_id, question = selection['cases'][0]['case_id'], selection['cases'][0]['question']
+        if case_id is None or question is None:
+            raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
+        return [verify_selected_question(case_id, question, require_demo=True)]
     return [r for r in rows if r['database_id'] == 'ctu_dev'] if scope == 'pipeline' else rows
 
 
-def verify_selected_question(case_id, question):
+def verify_selected_question(case_id, question, *, require_demo=False):
     row = next((r for r in inventory_for('pipeline') if r['case_id'] == case_id), None)
     if not row or question != row['question']:
         raise ValueError('EXACT_ORIGINAL_QUESTION_REQUIRED')
+    if require_demo:
+        selection = json.loads((ROOT/'results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())
+        if not any(c.get('case_id') == case_id and c.get('question') == question for c in selection.get('cases', [])):
+            raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
     return row
 
 
@@ -51,7 +62,7 @@ def retain_active_checkpoint(report, active):
         report['case_records'].append(deepcopy(active))
 
 
-def run_preflight(scope, condition, private):
+def run_preflight(scope, condition, private, *, selected_input=None):
     identities = deepcopy(private.get('identities', {}))
     identities.update(data_verified=False, source_verified=False, ci_verified=False, worker_verified=False)
     diagnostics = []
@@ -66,7 +77,9 @@ def run_preflight(scope, condition, private):
         identities.update(data_verified=True, worker_verified=True)
     except Exception as error:
         diagnostics.append({'gate': 'real_data_and_worker', 'error_class': type(error).__name__})
-    result = preflight(scope, condition, inventory=inventory_for(scope), identities=identities,
+    inventory = inventory_for(scope, case_id=selected_input.get('case_id') if selected_input else None,
+                              question=selected_input.get('question') if selected_input else None)
+    result = preflight(scope, condition, inventory=inventory, identities=identities,
                        account=private.get('account', {}), pricing=private.get('pricing', {}),
                        budget=private.get('budget', {}))
     return {'release': result, 'diagnostics': diagnostics,
@@ -74,16 +87,20 @@ def run_preflight(scope, condition, private):
 
 
 def run_live(release, output, *, selected_input=None):
+    if release.get('scope') == 'demo' and not selected_input:
+        raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
     if selected_input:
-        verify_selected_question(selected_input['case_id'], selected_input['question'])
+        verify_selected_question(selected_input['case_id'], selected_input['question'],
+                                 require_demo=release.get('scope') == 'demo')
     release = validate_release(release)
-    verify_scope_unused(release['scope'])
+    verify_scope_unused(release['scope'], release['case_ids'][0] if release['scope'] == 'demo' else None)
     verify_code_and_ci(release['gate_inputs']['identities'])
     contexts, references = validate_data()  # Exact locked bytes + same worker, before SDK.
     if release['gate_inputs']['identities'].get('transmission_files_sha256') != transmission_files(contexts):
         raise ValueError('TRANSMISSION_DATA_BINDING_REQUIRED')
     verify_transmission_files(release['gate_inputs']['identities'])
-    inventory = inventory_for(release['scope'])
+    inventory = inventory_for(release['scope'], case_id=selected_input.get('case_id') if selected_input else None,
+                              question=selected_input.get('question') if selected_input else None)
     if inventory != release['gate_inputs']['inventory']:
         raise ValueError('LOCKED_INVENTORY_CHANGED')
     output = Path(output)
@@ -111,7 +128,7 @@ def run_live(release, output, *, selected_input=None):
     from vinsoc_text2sql.service import QueryRequest, TextToSQLService
     output.mkdir(parents=True, exist_ok=False)
     report = {'scope': release['scope'], 'status': 'blocked', 'planned': release['planned'], 'completed': 0,
-              'planned_records': release['planned']*(1 if release['scope']=='pipeline' else 2),
+              'planned_records': release['planned']*(1 if release['scope'] in ('pipeline','demo') else 2),
               'client_created': False, 'attempted': 0, 'received': 0, 'case_records': []}
     report['submitted_input'] = selected_input
     persist(output/'report.json', report)
@@ -119,7 +136,7 @@ def run_live(release, output, *, selected_input=None):
     sdk = None
     active = None
     run_identities = {**selection_identities(), 'implementation_sha': release['gate_inputs']['identities']['implementation_sha']}
-    conditions = [release['condition']] if release['scope'] == 'pipeline' else ['E0', 'E3']
+    conditions = [release['condition']] if release['scope'] in ('pipeline','demo') else ['E0', 'E3']
     try:
         journal = RunJournal.claim(release, ledger_path=Path.home()/'.vinsoc/live-windows'/release['window_id']/'ledger.json')
         sdk = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'], max_retries=0,
@@ -129,7 +146,7 @@ def run_live(release, output, *, selected_input=None):
                    for role, c in CONTRACTS.items()}
         service = TextToSQLService()
         refs = {r['case_id']: r for r in references}
-        conditions = [release['condition']] if release['scope'] == 'pipeline' else ['E0', 'E3']
+        conditions = [release['condition']] if release['scope'] in ('pipeline','demo') else ['E0', 'E3']
         for condition in conditions:
             for row in inventory:  # Locked file order, no output-based selection.
                 if journal.data['terminal'] or journal.data['cost_unknown']:
@@ -153,11 +170,11 @@ def run_live(release, output, *, selected_input=None):
                     persist(output/'report.json', report)
                 journal.checkpoint_sink = journal_checkpoint
                 persist(target, active)
-                if release['scope'] == 'pipeline':
+                if release['scope'] in ('pipeline', 'demo'):
                     provider = QueryProvider(routing=clients['routing'], assessment=clients['assessment'],
                                              r2=clients['r2'], condition=condition)
                     scope = QueryContext(context.database_id, context.snapshot_path, context.identity['logical_sha256'],
-                                         ('network_flows',), 'pipeline')
+                                         ('network_flows',), release['window_id'])
                     skill = NetworkQuerySkill(context=context, query_context=scope, condition=condition,
                                               transport=clients['r2'], service=service, telemetry_sink=checkpoint)
                     orchestrator = InvestigationOrchestrator(provider=provider, query_skill=skill, max_steps=2, max_review_cycles=0)
@@ -195,7 +212,7 @@ def run_live(release, output, *, selected_input=None):
                 persist(output/'report.json', report)
                 if journal.data['terminal']:
                     return report
-        report['status'] = 'technical_complete_awaiting_human' if release['scope'] == 'pipeline' else 'completed'
+        report['status'] = 'technical_complete_awaiting_human' if release['scope'] in ('pipeline','demo') else 'completed'
         from evaluation.finalization.query_reporting import build_query_report
         report['metrics'] = build_query_report(report['case_records'], [refs[r['case_id']] for r in inventory], conditions=tuple(conditions))
         report['official_eligible'] = False  # Full identity/scoring/report audit is a separate gate.
@@ -229,6 +246,9 @@ def run_live(release, output, *, selected_input=None):
             from evaluation.finalization.query_pipeline_reporting import build_pipeline_report
             report['pipeline_metrics'] = build_pipeline_report(report['case_records'], inventory, reviews=[],
                                                               identities=run_identities, journal={'events':report.get('cost_events', [])})
+        elif release['scope'] == 'demo':
+            report['demo'] = {'case_id': inventory[0]['case_id'], 'condition': release['condition'],
+                              'official_eligible': False, 'human_review': 'awaiting_human'}
         persist(output/'report.json', report)
         if sdk:
             try:
@@ -240,7 +260,7 @@ def run_live(release, output, *, selected_input=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--scope', choices=['calibration','evaluation','pipeline'], default='pipeline')
+    parser.add_argument('--scope', choices=['calibration','evaluation','pipeline','demo'], default='pipeline')
     parser.add_argument('--condition', choices=['E0','E3'], default='E3')
     parser.add_argument('--preflight-only', action='store_true')
     parser.add_argument('--private-inputs', type=Path)
@@ -251,7 +271,15 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args(argv)
     selected = None
-    if args.case_id is not None or args.question is not None:
+    if args.scope == 'demo':
+        if args.condition != 'E3':
+            parser.error('the single-case demo requires --condition E3')
+        if args.case_id is None or args.question is None:
+            parser.error('--case-id and --question are required for the fixed demo selection')
+        verify_selected_question(args.case_id, args.question, require_demo=True)
+        selection = json.loads((ROOT/'results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())
+        selected = next(c for c in selection['cases'] if c['case_id'] == args.case_id)
+    elif args.case_id is not None or args.question is not None:
         if args.scope != 'pipeline' or args.case_id is None or args.question is None:
             parser.error('--case-id and --question require the full locked pipeline scope')
         selected = verify_selected_question(args.case_id, args.question)
@@ -264,7 +292,7 @@ def main(argv=None):
         return 0
     if args.preflight_only:
         private = json.loads(args.private_inputs.read_text()) if args.private_inputs else {}
-        result = run_preflight(args.scope, args.condition, private)
+        result = run_preflight(args.scope, args.condition, private, selected_input=selected)
         public = deepcopy(result)
         public['release'].pop('gate_inputs', None)
         write_new(args.output, public)

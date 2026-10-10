@@ -21,6 +21,25 @@ def test_all_layers_counted_in_upper_bound():
     assert role_caps('pipeline', 'E0') == {'routing': 32, 'r2': 32, 'assessment': 32}
 
 
+def test_single_demo_reserves_one_complete_e3_case_without_selection_gate():
+    from scripts.run_vinsoc_query_acceptance import inventory_for
+
+    selected = inventory_for('demo')
+    assert len(selected) == 1
+    assert role_caps('demo', 'E3') == {'routing': 1, 'r2': 6, 'assessment': 1}
+    receipt = preflight('demo', 'E3', inventory=selected, identities={},
+                        account={}, pricing={}, budget={})
+    assert receipt['planned'] == 1
+    assert receipt['case_ids'] == [selected[0]['case_id']]
+    assert receipt['window_id'] == 'text2sql-integration-20261008-demo-'+selected[0]['case_id']
+    assert 'CALIBRATION_SELECTION_LOCK_REQUIRED' not in receipt['reasons']
+
+
+def test_single_demo_rejects_non_e3_condition():
+    with pytest.raises(ValueError, match='DEMO_REQUIRES_E3'):
+        role_caps('demo', 'E0')
+
+
 def test_denied_release_cannot_claim_window(tmp_path):
     release = preflight('pipeline', 'E3', inventory=[], identities={}, account={}, pricing={}, budget={})
     with pytest.raises(ValueError, match='RELEASE_NOT_AUTHORIZED'):
@@ -63,3 +82,20 @@ def test_changed_document_hash_cannot_authorize_input_bound():
                'model_document':{'source_url':MODEL_DOCS[model], 'path':str(actual), 'sha256':'0'*64}}
     with pytest.raises(ValueError, match='MODEL_DOCUMENT_HASH_MISMATCH'):
         verified_input_bound(pricing, model)
+
+
+def test_budget_package_includes_single_demo_e3_ceiling(monkeypatch):
+    import scripts.prepare_query_budget as budgeter
+    monkeypatch.setattr(budgeter, 'verified_input_bound',
+                        lambda pricing, model: pricing['input_token_ceiling'])
+    pricing = {
+        'gpt-5-mini-2025-08-07': {'input_token_ceiling':400000,
+            'input_usd_per_million':.25,'output_usd_per_million':2},
+        'gpt-4.1-mini-2025-04-14': {'input_token_ceiling':1047576,
+            'input_usd_per_million':.4,'output_usd_per_million':1.6},
+    }
+    result = budgeter.cost_bound(pricing, 'documented_context_window')
+    demo = result['scopes']['demo_E3']
+    assert demo['request_caps_by_role'] == {'routing':1,'r2':6,'assessment':1}
+    assert demo['max_requests'] == 8
+    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.4532608)

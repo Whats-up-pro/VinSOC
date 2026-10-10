@@ -41,10 +41,18 @@ def source_hashes():
     return {path: file_hash(ROOT/path, portable=True) for path in sorted(paths)}
 
 
-def verify_scope_unused(scope):
+def window_id_for(scope, case_id=None):
+    if scope == 'demo':
+        if not isinstance(case_id, str) or not case_id or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-' for c in case_id):
+            raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
+        return 'text2sql-integration-20261008-demo-'+case_id
     if scope not in ('calibration', 'evaluation', 'pipeline'):
         raise ValueError('INVALID_RELEASE_SCOPE')
-    root = Path.home()/'.vinsoc/live-windows'/('text2sql-integration-20261008-'+scope)
+    return 'text2sql-integration-20261008-'+scope
+
+
+def verify_scope_unused(scope, case_id=None):
+    root = Path.home()/'.vinsoc/live-windows'/window_id_for(scope, case_id)
     if any((root/name).exists() for name in ('claim.json', 'ledger.json', 'migration.json')):
         raise ValueError('RELEASE_WINDOW_CONSUMED')
 
@@ -75,7 +83,7 @@ def transmission_files(contexts):
     return result
 
 
-def verify_canonical_reconciliation(account):
+def verify_canonical_reconciliation(account, *, required_scope=None):
     """An absent ledger is unknown, not an authoritative declaration of zero spend."""
     reference = account.get('reconciliation_reference') or {}
     canonical = Path.home()/'.vinsoc/live-windows'
@@ -86,12 +94,13 @@ def verify_canonical_reconciliation(account):
         raise ValueError('CANONICAL_RECONCILIATION_HASH_MISMATCH')
     receipt = json.loads(path.read_text())
     from evaluation.r2_cross_domain_v1.release import fresh
+    required_scopes = {'calibration','evaluation','pipeline'} | ({'demo'} if required_scope == 'demo' else set())
     if (not fresh(receipt.get('verified_utc')) or receipt.get('authoritative_host_verified') is not True
             or receipt.get('prior_hosts_sealed') is not True or receipt.get('unknown_exposure_usd') != 0
             or receipt.get('allocation_id') != account.get('allocation_id')
             or receipt.get('known_prior_cost_usd') != account.get('known_prior_cost_usd')
             or receipt.get('remaining_allocation_usd') != account.get('remaining_allocation_usd')
-            or set(receipt.get('scope_states', {})) != {'calibration','evaluation','pipeline'}):
+            or set(receipt.get('scope_states', {})) != required_scopes):
         raise ValueError('CANONICAL_RECONCILIATION_UNVERIFIED')
     ledgers = receipt.get('ledger_artifacts')
     if not isinstance(ledgers, list) or not ledgers:
