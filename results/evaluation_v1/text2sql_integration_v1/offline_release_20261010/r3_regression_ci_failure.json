@@ -1,0 +1,12 @@
+{
+  "implementation_sha": "31b062975f8290e6f2b5758cde79c472abafd385",
+  "ci_run_id": 38023232196,
+  "ci_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38023232196",
+  "full_suite_each_python": {"passed": 1281, "failed": 1, "skipped": 7},
+  "failure": "test_live_controller_boundary_uses_runtime_only_and_preserves_linker_at_generator_limit: duplicate seventh checkpoint",
+  "required_real_data_each_python": {"passed": 13, "failed": 0, "skipped": 0},
+  "fix": "Keep response checkpoints in the shared generator and final/partial checkpoint in TextToSQLService.generate wrapper, preserving historical adapter callback contract",
+  "old_tests_or_protocol_changed": false,
+  "external_model_calls": 0,
+  "new_inference_cost_usd": 0
+}

@@ -133,5 +133,4 @@ def _generate(request, condition, tools, transport, telemetry_sink):
         record.update(attempted_calls=transport.counters()["attempted"]-attempted_before,
                       response_count=transport.counters()["received"]-received_before,
                       trajectory=deepcopy(tools.trajectory), db_calls=tools.db_calls, wall_seconds=monotonic()-started)
-        telemetry_sink(deepcopy(record))
 
