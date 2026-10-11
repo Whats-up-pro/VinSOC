@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "receipt_type": "protocol_drift_correction_and_r6_decision_stop",
+  "created_utc": "2026-10-11T13:54:31Z",
+  "status": "OFFLINE_GATES_VERIFIED_PAID_SCOPES_BLOCKED",
+  "repository": "Whats-up-pro/VinSOC",
+  "branch": "master",
+  "required_resume_ancestor": "3573496a165876f36116b2716ca737d17091aaf7",
+  "implementation_sha": "69b3c9b82325564df60a4b692fee51273dee2062",
+  "implementation_commit_url": "https://github.com/Whats-up-pro/VinSOC/commit/69b3c9b82325564df60a4b692fee51273dee2062",
+  "protocol_correction": {
+    "drift_sha": "e1077bee07e03ae3e2f0ed2d484a534658cc6e9b",
+    "field": "CONTRACTS.r2.max_completion_tokens",
+    "drift_value": 4000,
+    "restored_value": 1000,
+    "reason": "The approved plan and frozen R6 preflight/cost receipts fix the value at 1000. A failed demo does not amend the evaluation protocol.",
+    "runtime_file_sha256": "bcd32c210dd89f256739be3902182e732615945d13f93b5a1f459fe4fa9dac23",
+    "contract_test_sha256": "01b55ed318f8e8c91879b9964d98500a5ce704c2b4d50351f338132ad56ff7a3"
+  },
+  "test_first_evidence": {
+    "red": {
+      "command": "PYTHONPATH=.venv/lib/python3.12/site-packages python -m pytest -q tests/test_query_pipeline_contract.py",
+      "passed": 9,
+      "failed": 2,
+      "failures": [
+        "R2 completion cap was 4000 instead of 1000",
+        "demo E3 ceiling was 1.4892608 instead of 1.4532608"
+      ]
+    },
+    "green": {
+      "command": "PYTHONPATH=.venv/lib/python3.12/site-packages python -m pytest -q tests/test_query_pipeline_contract.py",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    "local_required_offline": {
+      "passed": 46,
+      "failed": 0,
+      "skipped": 0
+    },
+    "local_runtime_support": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 5,
+      "gate_claimed": false,
+      "note": "Local skips require the delegated systemd/cgroup environment and are not counted as required acceptance."
+    },
+    "local_full_suite_diagnostic": {
+      "passed": 1322,
+      "failed": 1,
+      "skipped": 6,
+      "gate_claimed": false,
+      "failure": "LOCAL_SNAPSHOT_REQUIRED in the pre-existing network E2E lifecycle test when CI=false"
+    },
+    "compileall": "pass",
+    "git_diff_check": "pass"
+  },
+  "ci": {
+    "run_id": 38144605030,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38144605030",
+    "head_sha": "69b3c9b82325564df60a4b692fee51273dee2062",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "test_python_3_11": {
+        "job_id": 114485222202,
+        "full_passed": 1322,
+        "full_skipped": 7,
+        "required_offline_passed": 46,
+        "required_offline_skipped": 0
+      },
+      "test_python_3_12": {
+        "job_id": 114485222147,
+        "full_passed": 1322,
+        "full_skipped": 7,
+        "required_offline_passed": 46,
+        "required_offline_skipped": 0
+      },
+      "query_real_data_python_3_11": {
+        "job_id": 114485222163,
+        "passed": 13,
+        "skipped": 0
+      },
+      "query_real_data_python_3_12": {
+        "job_id": 114485222198,
+        "passed": 13,
+        "skipped": 0
+      },
+      "cloud_input_availability": {
+        "job_id": 114485222006,
+        "conclusion": "success"
+      }
+    }
+  },
+  "preservation": {
+    "baseline_is_ancestor": true,
+    "protected_files_checked": 3640,
+    "protected_files_changed": [],
+    "pinned_zip_sha256": {
+      "VinSOC_Runtime_DB_20261010.zip": "7cc72e34d50b5533ae44d23abcf1b68aa949a8fed972ccce73c932bd6c67114e",
+      "VinSOC_CTU_20261010.zip": "2847ba055dee714195898251e686ad62f0856c721eda84af8782c77a33293dc4"
+    },
+    "original_databases_preserved": 13,
+    "trusted_gold_queries_preserved": 120,
+    "demo_selection_sha256": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+    "fixed_demo_case_ids": [
+      "ctu_cross_708b66575657429a",
+      "ctu_cross_66b8e92a76c3359b",
+      "ctu_cross_3f659571f998adb0",
+      "ctu_cross_bce6d3679ade4cd6"
+    ]
+  },
+  "r2_to_r5": {
+    "r2_worker_boundary": "closed_by_independent_kernel_evidence_and_required_real_data_ci",
+    "r3_preflight_accounting": "offline_guards_closed_positive_selection_pending",
+    "r4_reporting_statistics": "offline_adapters_closed_real_evaluation_and_pipeline_records_pending",
+    "r5_cli_review_html": "offline_guards_closed_successful_human_approved_demo_pending"
+  },
+  "selection_lock": {
+    "status": "pending",
+    "received_records": 0,
+    "required_records": 48,
+    "selected_condition": null,
+    "synthetic_records_created": 0
+  },
+  "preflight_only": {
+    "calibration": {
+      "status": "blocked",
+      "planned_cases": 24,
+      "max_requests": 168,
+      "attempted": 0,
+      "received": 0,
+      "client_created": false,
+      "reasons": [
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+        "PAID_RELEASE_NOT_AUTHORIZED"
+      ]
+    },
+    "evaluation": {
+      "status": "blocked",
+      "planned_cases": 96,
+      "max_requests": 672,
+      "attempted": 0,
+      "received": 0,
+      "client_created": false,
+      "reasons": [
+        "CALIBRATION_SELECTION_LOCK_REQUIRED",
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+        "PAID_RELEASE_NOT_AUTHORIZED"
+      ]
+    },
+    "pipeline": {
+      "status": "blocked",
+      "planned_cases": 32,
+      "max_requests_e3": 256,
+      "attempted": 0,
+      "received": 0,
+      "client_created": false,
+      "reasons": [
+        "CALIBRATION_SELECTION_LOCK_REQUIRED",
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ROUTING",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ASSESSMENT",
+        "PAID_RELEASE_NOT_AUTHORIZED"
+      ]
+    },
+    "note": "These three actual local preflights ran before the exact-SHA CI completed and without restored ignored registry paths. The subsequent exact-SHA CI closes code, isolation, and real-data execution evidence but does not grant paid authorization or synthesize a release."
+  },
+  "pricing_and_token_bounds": {
+    "checked_utc": "2026-10-11T13:54:31Z",
+    "sources": [
+      "https://developers.openai.com/api/docs/models/gpt-5-mini",
+      "https://developers.openai.com/api/docs/models/gpt-4.1-mini",
+      "https://developers.openai.com/api/docs/pricing"
+    ],
+    "models": {
+      "gpt-5-mini-2025-08-07": {
+        "input_usd_per_million": 0.25,
+        "cached_input_usd_per_million": 0.025,
+        "output_usd_per_million": 2.0,
+        "documented_context_window": 400000,
+        "locked_max_completion_tokens": 1000,
+        "deprecation_shutdown_utc": "2026-12-11"
+      },
+      "gpt-4.1-mini-2025-04-14": {
+        "input_usd_per_million": 0.4,
+        "cached_input_usd_per_million": 0.1,
+        "output_usd_per_million": 1.6,
+        "documented_context_window": 1047576,
+        "locked_max_completion_tokens": 1000
+      }
+    },
+    "conservative_request_reserve_usd": {
+      "r2": 0.102,
+      "routing": 0.4206304,
+      "assessment": 0.4206304
+    },
+    "scopes": {
+      "calibration": {
+        "max_requests": 168,
+        "new_cost_ceiling_usd": 17.136
+      },
+      "evaluation": {
+        "max_requests": 672,
+        "new_cost_ceiling_usd": 68.544
+      },
+      "pipeline_e0": {
+        "max_requests": 96,
+        "new_cost_ceiling_usd": 30.1843456
+      },
+      "pipeline_e3": {
+        "max_requests": 256,
+        "new_cost_ceiling_usd": 46.5043456
+      },
+      "single_demo_e3": {
+        "max_requests": 8,
+        "new_cost_ceiling_usd": 1.4532608
+      }
+    },
+    "combined": {
+      "evaluation_path_e0": {
+        "max_requests": 936,
+        "new_cost_ceiling_usd": 115.8643456
+      },
+      "evaluation_path_e3": {
+        "max_requests": 1096,
+        "new_cost_ceiling_usd": 132.1843456
+      }
+    },
+    "cached_discount_used": false,
+    "includes_prior_cost": false,
+    "public_cost_bound_sha256": "458d660f2f7dfe3327efa107ffb98cf61137c05da3b89cbd4bf8d12026def606"
+  },
+  "canonical_reconciliation": {
+    "status": "unverified",
+    "authoritative_host_verified": false,
+    "known_prior_cost_usd": null,
+    "unknown_exposure_usd": null,
+    "verified_remaining_allocation_usd": null,
+    "allocation_verified": false,
+    "prior_hosts_sealed": false,
+    "scope_states": {
+      "calibration": "unknown",
+      "evaluation": "unknown",
+      "pipeline": "unknown"
+    }
+  },
+  "model_usage": {
+    "this_resume_session": {
+      "model_calls": 0,
+      "model_cost_usd": 0.0
+    },
+    "new_calibration_evaluation_pipeline": {
+      "model_calls": 0,
+      "model_cost_usd": 0.0
+    },
+    "two_prior_single_case_demo_attempts_only": {
+      "model_calls": 8,
+      "actual_cost_usd": 0.0056888,
+      "official_score": false,
+      "technical_successes": 0,
+      "human_approvals": 0
+    }
+  },
+  "open_gates_before_any_paid_request": [
+    "authoritative canonical ledger reconciliation",
+    "verified account allocation and remaining balance",
+    "explicit scope-specific paid authorization",
+    "fresh release bound to the exact authorized scope and current source/data identities",
+    "48 authentic calibration records and immutable selection lock before evaluation or pipeline",
+    "model replacement protocol revision if execution occurs on or after the pinned GPT-5 mini shutdown date"
+  ],
+  "completion_claims": {
+    "calibration": "PENDING_NO_ARTIFACTS",
+    "evaluation": "PENDING_NO_ARTIFACTS",
+    "pipeline": "PENDING_NO_ARTIFACTS",
+    "successful_human_approved_demo": "PENDING",
+    "paid_request_authorized": false
+  }
+}
