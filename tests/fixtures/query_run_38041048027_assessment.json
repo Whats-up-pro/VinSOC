@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "source": "authentic_paid_workflow_artifact_regression_fixture",
+  "workflow_run_id": 38041048027,
+  "workflow_head_sha": "e1077bee07e03ae3e2f0ed2d484a534658cc6e9b",
+  "artifact_id": 11665876457,
+  "artifact_sha256": "0fea94b507c15e66099d73e813624e2150975384fb711622d17a83c258d3f3ac",
+  "case_id": "ctu_cross_708b66575657429a",
+  "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+  "response_id": "chatcmpl-EXNaRab6Nw1Zj34zO8HowJ1p1xe74",
+  "query_execution_evidence": {
+    "evidence_id": "ev_772d8985_2",
+    "source_tool": "network_query",
+    "evidence_class": "OBSERVED",
+    "type": "query_execution",
+    "data": {
+      "database_id": "ctu_dev",
+      "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+      "sql_sha256": "97e51cfbf836a65d1a209b4c9f4b885d7002da133da79f70e9d91dfa90e52be8",
+      "result_sha256": "49ceee443f2ee4490fdf7db4b9495d35c90aaac924fe89c7545a85fa5ee56ec5",
+      "executor_version": "text2sql_namespace_cgroup_executor_v2",
+      "scope_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-3",
+      "tables": [
+        "network_flows"
+      ],
+      "lineage_mode": "snapshot_query",
+      "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+      "sql": "SELECT\n  (SELECT COUNT(DISTINCT dst_ip)\n   FROM network_flows\n   WHERE source_dataset = 'ctu13_s5'\n     AND protocol = 'TCP'\n     AND dst_ip IS NOT NULL\n     AND event_time > TIMESTAMP '2011-08-15 17:00:00') AS s5_distinct_dst_ip_count,\n  (SELECT COUNT(DISTINCT dst_ip)\n   FROM network_flows\n   WHERE source_dataset = 'ctu13_s7'\n     AND protocol = 'TCP'\n     AND dst_ip IS NOT NULL\n     AND event_time > TIMESTAMP '2011-08-16 14:00:00') AS s7_distinct_dst_ip_count;",
+      "isolation": {
+        "backend": "bubblewrap",
+        "network": "unshared",
+        "secrets": "absent",
+        "snapshot_mount": "read_only",
+        "memory_bytes": 536870912,
+        "cpu_count": 1,
+        "timeout_seconds": 10
+      }
+    },
+    "collected_at": "2026-10-10T09:23:17.493214",
+    "related_evidence_ids": []
+  },
+  "query_result_evidence": {
+    "evidence_id": "ev_e82649d5_3",
+    "source_tool": "network_query",
+    "evidence_class": "DERIVED",
+    "type": "query_result",
+    "data": {
+      "columns": [
+        {
+          "name": "s5_distinct_dst_ip_count",
+          "type": "BIGINT"
+        },
+        {
+          "name": "s7_distinct_dst_ip_count",
+          "type": "BIGINT"
+        }
+      ],
+      "rows": [
+        [
+          1529,
+          1210
+        ]
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "result_sha256": "49ceee443f2ee4490fdf7db4b9495d35c90aaac924fe89c7545a85fa5ee56ec5"
+    },
+    "collected_at": "2026-10-10T09:23:17.493257",
+    "related_evidence_ids": [
+      "ev_772d8985_2"
+    ]
+  },
+  "assessment_response": {
+    "assessment": "The count of distinct destination IPs receiving TCP flows after the specified strict time boundaries in CTU scenarios 5 and 7 has been determined.",
+    "evidence_ids": [
+      "ev_772d8985_2",
+      "ev_e82649d5_3"
+    ],
+    "observations": [
+      {
+        "evidence_id": "ev_e82649d5_3",
+        "field": "s5_distinct_dst_ip_count",
+        "value": 1529
+      },
+      {
+        "evidence_id": "ev_e82649d5_3",
+        "field": "s7_distinct_dst_ip_count",
+        "value": 1210
+      }
+    ],
+    "hypotheses": [
+      {
+        "description": "The number of distinct destination IPs receiving TCP flows after the given timestamps in scenarios 5 and 7 reflects active network communication endpoints in these CTU datasets.",
+        "supporting_evidence": [
+          "ev_772d8985_2",
+          "ev_e82649d5_3"
+        ],
+        "confidence": "HIGH"
+      }
+    ],
+    "risk_level": "UNKNOWN",
+    "confidence": "HIGH",
+    "limitations": "The data is limited to the CTU datasets and the specified time boundaries; no contextual threat intelligence or endpoint verification was performed. The correctness of the semantic interpretation of the query is assumed but not independently verified."
+  }
+}
