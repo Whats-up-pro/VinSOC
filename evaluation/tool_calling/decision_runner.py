@@ -7,14 +7,19 @@ No production skill execution.
 from __future__ import annotations
 
 import json
+import subprocess
 import uuid
 from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Mapping, Optional
 
-from agent.provider import LLMProvider, OpenAIProvider, ProviderError, create_provider
+from agent.provider import (
+    LLMProvider, ModelPricing, MonthlyBudgetGuard, OpenAIProvider, ProviderError,
+    create_provider,
+)
 from agent.tools import get_tool_schemas
 from evaluation.tool_calling.models import (
     CaseResult,
@@ -26,6 +31,175 @@ from evaluation.tool_calling.arguments import normalize_arguments
 from evaluation.tool_calling.matching import compute_case_metrics
 from evaluation.tool_calling.metrics import aggregate_case_results, generate_error_summary
 from evaluation.tool_calling.provenance import build_a1_provenance
+
+
+@dataclass(frozen=True)
+class RunGateReceipt:
+    """Offline authorization and immutable-input check before provider creation."""
+
+    passed: bool
+    errors: tuple[str, ...]
+    case_count: int
+    distribution: dict[str, int]
+    lock_sha256: str | None
+    authorization_id: str | None
+    authorization_sha256: str | None
+    requested_model: str
+    budget_limit_usd: Decimal
+    worst_case_cost_usd: Decimal
+    pricing: dict[str, Any]
+    provider_created: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "format": "r1_generalization_run_gate_v1",
+            "passed": self.passed,
+            "errors": list(self.errors),
+            "case_count": self.case_count,
+            "distribution": self.distribution,
+            "lock_sha256": self.lock_sha256,
+            "authorization_id": self.authorization_id,
+            "authorization_sha256": self.authorization_sha256,
+            "requested_model": self.requested_model,
+            "budget_limit_usd": str(self.budget_limit_usd),
+            "worst_case_cost_usd": str(self.worst_case_cost_usd),
+            "pricing": self.pricing,
+            "provider_created": self.provider_created,
+            "model_calls": 0,
+        }
+
+
+def generalization_git_identity(root: Path = Path(".")) -> dict[str, Any]:
+    """Read the local release identity without modifying the repository."""
+
+    def git(*args: str) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=root, check=True, capture_output=True,
+            text=True, timeout=10,
+        ).stdout.strip()
+
+    try:
+        return {
+            "commit_sha": git("rev-parse", "HEAD"),
+            "origin_master_sha": git("rev-parse", "origin/master"),
+            "branch": git("symbolic-ref", "--quiet", "--short", "HEAD"),
+            "working_tree_clean": not bool(git("status", "--porcelain")),
+        }
+    except (OSError, subprocess.SubprocessError):
+        return {
+            "commit_sha": None,
+            "origin_master_sha": None,
+            "branch": None,
+            "working_tree_clean": False,
+        }
+
+
+def _positive_decimal(value: Any) -> Decimal | None:
+    if isinstance(value, bool) or not isinstance(value, (str, int, Decimal)):
+        return None
+    try:
+        number = Decimal(value)
+    except (InvalidOperation, ValueError):
+        return None
+    return number if number.is_finite() and number > 0 else None
+
+
+def validate_generalization_run_gate(
+    split_dir: Path,
+    lock_path: Path,
+    authorization: Mapping[str, Any],
+    requested_model: str,
+    budget_limit_usd: Decimal,
+    git_identity: Mapping[str, Any],
+) -> RunGateReceipt:
+    """Fail closed on review, lock, exact SHA, one-suite authority and cost."""
+
+    from evaluation.tool_calling.generalization import verify_generalization_lock
+    from evaluation.tool_calling.provenance import canonical_sha256
+
+    verification = verify_generalization_lock(split_dir, lock_path)
+    errors = list(verification.errors)
+    if not verification.passed:
+        errors.append("generalization lock verification failed")
+
+    commit_sha = git_identity.get("commit_sha")
+    if git_identity.get("branch") != "master":
+        errors.append("run requires master branch")
+    if git_identity.get("working_tree_clean") is not True:
+        errors.append("run requires a clean working tree")
+    if not commit_sha or git_identity.get("origin_master_sha") != commit_sha:
+        errors.append("HEAD must equal origin/master")
+
+    if authorization.get("authorized") is not True:
+        errors.append("explicit authorization is required")
+    if authorization.get("scope") != "r1_tool_calling_generalization_v1":
+        errors.append("authorization scope must be R1 generalization only")
+    authorization_id = authorization.get("authorization_id")
+    if not isinstance(authorization_id, str) or not authorization_id.strip():
+        errors.append("authorization ID is required")
+    if not isinstance(authorization.get("authorized_by"), str) or not authorization["authorized_by"].strip():
+        errors.append("authorization identity is required")
+    if type(authorization.get("max_suites")) is not int or authorization["max_suites"] != 1:
+        errors.append("authorization must grant exactly one suite")
+    if authorization.get("provider") != "openai":
+        errors.append("authorization provider must be openai")
+    if not requested_model or authorization.get("model") != requested_model:
+        errors.append("authorization model does not match requested model")
+    if authorization.get("implementation_sha") != commit_sha:
+        errors.append("authorization implementation SHA does not match HEAD")
+    if authorization.get("lock_sha256") != verification.lock_sha256:
+        errors.append("authorization lock hash mismatch")
+    try:
+        locked_split_hash = json.loads(Path(lock_path).read_text(encoding="utf-8"))["split_sha256"]
+    except (OSError, KeyError, ValueError, TypeError):
+        locked_split_hash = None
+    if authorization.get("split_sha256") != locked_split_hash or not locked_split_hash:
+        errors.append("authorization split hash mismatch")
+    if type(authorization.get("max_completion_tokens")) is not int or authorization["max_completion_tokens"] != 1000:
+        errors.append("output limit must be 1000 tokens")
+    if type(authorization.get("sdk_max_retries")) is not int or authorization["sdk_max_retries"] != 0:
+        errors.append("zero retry is required")
+
+    pricing = authorization.get("pricing")
+    pricing = pricing if isinstance(pricing, dict) else {}
+    input_rate = _positive_decimal(pricing.get("input_usd_per_million"))
+    output_rate = _positive_decimal(pricing.get("output_usd_per_million"))
+    max_input_tokens = pricing.get("max_input_tokens")
+    if (
+        input_rate is None or output_rate is None
+        or type(max_input_tokens) is not int or max_input_tokens <= 0
+        or not isinstance(pricing.get("source"), str) or not pricing["source"].strip()
+        or not isinstance(pricing.get("checked_utc"), str) or not pricing["checked_utc"].strip()
+    ):
+        errors.append("complete positive pricing and max input bound are required")
+        worst_case_cost = Decimal("0")
+    else:
+        worst_case_cost = (
+            Decimal(120) * (Decimal(max_input_tokens) * input_rate + Decimal(1000) * output_rate)
+            / Decimal(1_000_000)
+        )
+    approved_budget = _positive_decimal(authorization.get("budget_limit_usd"))
+    requested_budget = _positive_decimal(budget_limit_usd)
+    if (
+        approved_budget is None or requested_budget is None
+        or requested_budget > approved_budget
+        or worst_case_cost > requested_budget
+    ):
+        errors.append("budget is missing, mismatched or below the 120-case cost bound")
+
+    return RunGateReceipt(
+        passed=not errors,
+        errors=tuple(errors),
+        case_count=verification.case_count,
+        distribution=verification.distribution,
+        lock_sha256=verification.lock_sha256,
+        authorization_id=authorization_id if isinstance(authorization_id, str) else None,
+        authorization_sha256=canonical_sha256(dict(authorization)) if authorization else None,
+        requested_model=requested_model,
+        budget_limit_usd=requested_budget or Decimal("0"),
+        worst_case_cost_usd=worst_case_cost,
+        pricing=pricing,
+    )
 
 
 @dataclass
@@ -52,8 +226,23 @@ class DecisionRunner:
         config: Optional[A1Config] = None,
         benchmarks_dir: Optional[Path] = None,
         provider: Optional[LLMProvider] = None,
+        split: str = "dev",
+        generalization_gate: Optional[RunGateReceipt] = None,
     ):
         self.config = config or A1Config()
+        self.generalization_gate = generalization_gate
+        self.authorized_split = split
+        self._generalization_suite_started = False
+        self._generalization_suite_active = False
+        if split == "generalization_v1":
+            if (generalization_gate is None or not generalization_gate.passed
+                    or generalization_gate.case_count != 120
+                    or generalization_gate.requested_model != self.config.model
+                    or self.config.provider != "openai"
+                    or self.config.max_tokens != 1000
+                    or self.config.temperature != 0.0
+                    or provider is not None):
+                raise ValueError("generalization gate must pass before provider creation")
         if type(self.config.max_tokens) is not int or self.config.max_tokens <= 0:
             raise ValueError("max_tokens must be a positive integer")
         if not isinstance(self.config.provider, str):
@@ -77,6 +266,20 @@ class DecisionRunner:
                 provider_kwargs["request_overrides"] = {
                     "max_completion_tokens": self.config.max_tokens,
                 }
+                if split == "generalization_v1":
+                    assert generalization_gate is not None
+                    pricing = generalization_gate.pricing
+                    provider_kwargs.update({
+                        "max_retries": 0,
+                        "pricing": ModelPricing(
+                            float(pricing["input_usd_per_million"]),
+                            float(pricing["output_usd_per_million"]),
+                            pricing["source"], pricing["checked_utc"],
+                        ),
+                        "budget_guard": MonthlyBudgetGuard(
+                            limit_usd=float(generalization_gate.budget_limit_usd),
+                        ),
+                    })
             if self.config.provider == "routed":
                 # Evaluation must stay on the pinned provider/model.
                 provider_kwargs["mode"] = "evaluation"
@@ -140,6 +343,8 @@ If no tool is needed, do not call one."""
         """
         Run A1 decision evaluation for a single case.
         """
+        if self.authorized_split == "generalization_v1" and not self._generalization_suite_active:
+            raise ValueError("generalization requires a full 120-case suite")
         result = CaseResult(
             case_id=case.case_id,
             expected_calls=case.expected_calls,
@@ -222,17 +427,39 @@ If no tool is needed, do not call one."""
         """
         Run A1 evaluation for a suite of cases.
         """
+        if split == "generalization_v1" or self.authorized_split == "generalization_v1":
+            if (split != "generalization_v1" or self.authorized_split != split
+                    or self.generalization_gate is None or not self.generalization_gate.passed):
+                raise ValueError("generalization gate is required for this split")
+            if case_ids is not None:
+                raise ValueError("generalization requires a full 120-case suite")
+            if self._generalization_suite_started:
+                raise ValueError("generalization authorization allows only one suite")
+            from evaluation.tool_calling.generalization import verify_generalization_lock
+            split_dir = self.benchmarks_dir / split
+            verification = verify_generalization_lock(split_dir, split_dir / "GENERALIZATION.lock")
+            if (not verification.passed or verification.case_count != 120
+                    or verification.lock_sha256 != self.generalization_gate.lock_sha256):
+                raise ValueError("generalization lock changed after preflight")
         if case_ids is None:
             cases = self.load_cases(split)
             case_ids = [c.case_id for c in cases]
         else:
             cases = [self.load_case(cid, split) for cid in case_ids]
+        if split == "generalization_v1" and len(cases) != 120:
+            raise ValueError("generalization requires a full 120-case suite")
 
         self._run_cases = cases
         results = []
-        for case in cases:
-            result = self.run_decision(case)
-            results.append(result)
+        if split == "generalization_v1":
+            self._generalization_suite_started = True
+            self._generalization_suite_active = True
+        try:
+            for case in cases:
+                result = self.run_decision(case)
+                results.append(result)
+        finally:
+            self._generalization_suite_active = False
 
         return results
 
@@ -247,6 +474,8 @@ def run_a1_benchmark(
 
     Returns results dict.
     """
+    if split == "generalization_v1":
+        raise ValueError("generalization gate is required; use the authorized CLI run")
     runner = DecisionRunner(config=config)
 
     # Load cases
