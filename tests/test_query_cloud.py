@@ -92,6 +92,20 @@ def test_third_demo_authorization_reconciles_both_paid_attempts():
     assert sum(r['known_cost_usd'] for r in receipts) == pytest.approx(0.0056888)
 
 
+def test_fourth_demo_authorization_reconciles_all_three_paid_attempts():
+    from datetime import datetime, timezone
+    from scripts.run_query_demo_cloud import validate_authorization, prior_demo_receipt
+    valid = {'allocation_id':'demo-allocation-4','execution_id':'full-e2e-4',
+             'limit_usd':3.0,'known_prior_cost_usd':0.01226935,
+             'remaining_allocation_usd':2.98773065,'unknown_exposure_usd':0.0,
+             'scope':'demo','condition':'E3','case_id':'ctu_cross_708b66575657429a',
+             'confirmed_utc':datetime.now(timezone.utc).isoformat()}
+    assert validate_authorization(valid) == valid
+    receipts = prior_demo_receipt(valid)
+    assert [r['workflow_run_id'] for r in receipts] == [38037640751, 38040239630, 38041048027]
+    assert sum(r['known_cost_usd'] for r in receipts) == pytest.approx(0.01226935)
+
+
 def test_demo_workflow_is_bound_into_runtime_identity():
     from evaluation.finalization.query_runtime_validation import source_hashes
     assert '.github/workflows/query-demo-once.yml' in source_hashes()

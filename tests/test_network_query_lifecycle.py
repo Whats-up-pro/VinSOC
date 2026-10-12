@@ -52,3 +52,8 @@ def test_query_assessment_turn_cannot_call_the_query_tool_again(monkeypatch):
     provider.generate([], tools=tool)
     assert 'tools' in routing.requests[0]
     assert 'tools' not in assessment.requests[0]
+    response_format = assessment.requests[0]['response_format']
+    assert response_format['type'] == 'json_schema'
+    schema = response_format['json_schema']['schema']
+    assert schema['properties']['limitations']['type'] == 'array'
+    assert schema['additionalProperties'] is False

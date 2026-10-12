@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "files": {
+    "bundle_restore.json": {
+      "bytes": 3294,
+      "sha256": "6b1ae8c5e96f5309a2ac7532c5bc0466d00c5efd68133d3b059b6c08d9763fc2"
+    },
+    "case_record.json": {
+      "bytes": 77379,
+      "sha256": "ce6e7525426411b248b36d0f47c038692b90ffef2fb3f9cb2eb70d5821e0571c"
+    },
+    "cloud_run.json": {
+      "bytes": 703,
+      "sha256": "104e5a55bab217e7071b251800dda0ee13a4ec5ee8013b6eec99b5507e14a3e2"
+    },
+    "original_data_validation.json": {
+      "bytes": 22863,
+      "sha256": "7fc58846e65483290eb9889e8b22aa3e0dec0f84bb50deca0507b0574011eec8"
+    },
+    "outcome_audit.json": {
+      "bytes": 2590,
+      "sha256": "72ad43f1b96e7cccf1153e91cd2357623dead801788818c221e4683c5b26dece"
+    },
+    "preflight.json": {
+      "bytes": 11830,
+      "sha256": "aa65fca9c48cbacfee8a66ea8fb20dea53428906e70d4fbf762bf8df1dac7b66"
+    },
+    "runner_report.json": {
+      "bytes": 125850,
+      "sha256": "19a6778803b0bec8ac0d76d4b7c1499c806b85c7e9f1f5e70153abe85d8a4555"
+    }
+  }
+}

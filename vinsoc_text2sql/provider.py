@@ -7,6 +7,51 @@ from agent.provider import LLMProvider, LLMResponse
 from .accounting import ScopedOpenAIClient
 
 
+ASSESSMENT_RESPONSE_FORMAT = {
+    'type': 'json_schema',
+    'json_schema': {
+        'name': 'network_query_assessment',
+        'strict': True,
+        'schema': {
+            'type': 'object',
+            'properties': {
+                'assessment': {'type': 'string'},
+                'evidence_ids': {'type': 'array', 'items': {'type': 'string'}},
+                'observations': {'type': 'array', 'items': {
+                    'type': 'object',
+                    'properties': {
+                        'evidence_id': {'type': 'string'},
+                        'field': {'type': 'string'},
+                        'value': {'anyOf': [
+                            {'type': 'string'}, {'type': 'number'},
+                            {'type': 'boolean'}, {'type': 'null'},
+                        ]},
+                    },
+                    'required': ['evidence_id', 'field', 'value'],
+                    'additionalProperties': False,
+                }},
+                'hypotheses': {'type': 'array', 'items': {
+                    'type': 'object',
+                    'properties': {
+                        'description': {'type': 'string'},
+                        'supporting_evidence': {'type': 'array', 'items': {'type': 'string'}},
+                        'confidence': {'type': 'string', 'enum': ['LOW', 'MEDIUM', 'HIGH']},
+                    },
+                    'required': ['description', 'supporting_evidence', 'confidence'],
+                    'additionalProperties': False,
+                }},
+                'risk_level': {'type': 'string', 'enum': ['LOW', 'MEDIUM', 'HIGH', 'UNKNOWN']},
+                'confidence': {'type': 'string', 'enum': ['LOW', 'MEDIUM', 'HIGH']},
+                'limitations': {'type': 'array', 'items': {'type': 'string'}},
+            },
+            'required': ['assessment', 'evidence_ids', 'observations', 'hypotheses',
+                         'risk_level', 'confidence', 'limitations'],
+            'additionalProperties': False,
+        },
+    },
+}
+
+
 class QueryProvider(LLMProvider):
     def __init__(self, *, routing, assessment, r2, condition):
         if (any(type(c) is not ScopedOpenAIClient for c in (routing, assessment, r2))
@@ -34,6 +79,8 @@ class QueryProvider(LLMProvider):
         # cannot spend the sole assessment call trying to invoke the tool again.
         if tools and self.turn == 0:
             payload.update(tools=deepcopy(tools), tool_choice='auto', parallel_tool_calls=False)
+        if self.turn == 1:
+            payload['response_format'] = deepcopy(ASSESSMENT_RESPONSE_FORMAT)
         response = client.request(payload)
         self.turn += 1
         calls = [{'id': c['id'], 'name': c['function']['name'],

@@ -96,3 +96,27 @@ def test_remote_begin_checkpoint_is_durable_before_transport(tmp_path, monkeypat
     assert checkpoints[0][0:2] == (1, 'begin')
     assert 'request' not in checkpoints[0][2]
     assert json.loads(journal.path.read_text())['attempted'] == 1
+
+
+def test_assessment_response_format_is_an_allowed_bounded_request_field(tmp_path, monkeypatch):
+    journal = RunJournal()
+    journal.path = tmp_path/'ledger.json'
+    journal.remote_store = None
+    contract = {'model':'gpt-4.1-mini-2025-04-14','temperature':0,
+                'max_completion_tokens':1000,'service_tier':'default',
+                'max_request_bytes':65536,'max_messages':20}
+    journal.release = {
+        'role_caps':{'assessment':1}, 'reserves_usd':{'assessment':.5},
+        'contracts':{'assessment':contract},
+        'gate_inputs':{'budget':{'limit_usd':3},'identities':{},
+            'pricing':{'gpt-4.1-mini-2025-04-14':{}}}}
+    journal.data = {'attempted':0,'received':0,'valid_usage':0,'known_usd':0,
+                    'pending_exposure_usd':0,'cost_unknown':False,'terminal':False,'events':[]}
+    journal.case_id, journal.condition = 'case', 'E3'
+    monkeypatch.setattr('evaluation.finalization.query_runtime_validation.verify_transmission_files', lambda _: None)
+    monkeypatch.setattr('evaluation.finalization.query_token_bound.verified_input_bound', lambda *_: 400000)
+    payload = {'model':contract['model'],'temperature':0,'max_completion_tokens':1000,
+               'service_tier':'default','messages':[],
+               'response_format':{'type':'json_schema','json_schema':{'name':'assessment','strict':True,
+                   'schema':{'type':'object','properties':{},'required':[], 'additionalProperties':False}}}}
+    assert journal.reserve('assessment', payload) == 0

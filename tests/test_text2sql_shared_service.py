@@ -98,3 +98,48 @@ def test_e3_reserves_last_turn_for_role_finalization(tmp_path):
     assert record['final_sql'] == 'SELECT COUNT(*) FROM customers'
     assert len(transport.requests) == 6
     assert ['tools' in request for request in transport.requests] == [True, True, False, True, True, False]
+
+
+def test_e3_generator_semantically_reviews_first_sql_candidate(tmp_path):
+    """E3 does not treat the first syntactically valid SQL as the final answer."""
+    import duckdb
+    from evaluation.r2_cross_domain_v1.data import DatabaseContext
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from vinsoc_text2sql.service import _generate
+
+    snapshot = tmp_path/'flows.duckdb'
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute('CREATE TABLE flows(dst_ip VARCHAR, scenario VARCHAR)')
+    context = DatabaseContext('flows', snapshot, {
+        'database_id':'flows', 'schema':[{'name':'flows','columns':[
+            {'name':'dst_ip','duckdb_type':'VARCHAR','sqlite_type':'TEXT'},
+            {'name':'scenario','duckdb_type':'VARCHAR','sqlite_type':'TEXT'}]}],
+        'primary_keys':{'flows':[]}, 'relationships':[],
+        'logical_sha256':'fixture-logical-sha',
+    })
+
+    linker = {'tables':['flows'], 'columns':[{'table':'flows','column':'dst_ip'},
+        {'table':'flows','column':'scenario'}], 'relationships':[],
+        'grounded_values':[], 'constraints':[]}
+    first = {'sql':'SELECT COUNT(DISTINCT dst_ip) FROM flows'}
+    reviewed = {'sql':"SELECT COUNT(*) FROM (SELECT dst_ip FROM flows WHERE scenario='a' INTERSECT SELECT dst_ip FROM flows WHERE scenario='b') shared"}
+
+    class Transport:
+        contract = {'model':'fixture','reasoning_effort':'low',
+                    'max_completion_tokens':1000,'service_tier':'default'}
+        def __init__(self): self.requests = []
+        def counters(self):
+            count = len(self.requests)
+            return {'attempted':count,'received':count,'valid_usage':count,'terminal':False}
+        def request(self, payload):
+            self.requests.append(payload)
+            response = linker if len(self.requests) == 1 else first if len(self.requests) == 2 else reviewed
+            return {'content':json.dumps(response), 'tool_calls':[]}
+
+    transport = Transport()
+    record = _generate(QueryRequest('case','flows','Count destination IPs shared by scenario a and b'),
+                       'E3', DatabaseTools(context), transport, lambda event: None)
+    assert record['error_category'] == 'OK'
+    assert record['final_sql'] == reviewed['sql']
+    assert len(transport.requests) == 3
+    assert 'semantic audit' in transport.requests[2]['messages'][-1]['content'].lower()

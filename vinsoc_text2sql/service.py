@@ -79,6 +79,7 @@ def _generate(request, condition, tools, transport, telemetry_sink):
             messages = [{"role": "system", "content": LINKER if role == "linker" else GENERATOR},
                         {"role": "user", "content": json.dumps(data, ensure_ascii=False)}]
             completed = False
+            candidate_sql = None
             turn_cap = ROLE_TURN_CAP if condition == "E3" else 1
             for turn in range(turn_cap):
                 payload = {key: transport.contract[key] for key in ("model", "reasoning_effort", "max_completion_tokens", "service_tier")}
@@ -114,8 +115,18 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                 else:
                     if not isinstance(answer, dict) or not isinstance(answer.get("sql"), str):
                         raise ValueError("INVALID_FINAL_SQL")
-                    record["final_sql"] = answer["sql"]
                     validate_sql(answer["sql"], tools.context)
+                    # E3 has an explicit second-pass semantic check when budgeted
+                    # turns remain.  Syntax/safety alone cannot catch a query that
+                    # returns the wrong cardinality or combines scoped clauses with
+                    # the wrong set operation.
+                    if candidate_sql is None and turn < turn_cap-1:
+                        candidate_sql = answer["sql"]
+                        messages.append({"role":"assistant", "content":response.get("content") or ""})
+                        messages.append({"role":"user", "content":
+                            "Perform an independent semantic audit of the SQL candidate against the exact original question and linked context. Check output shape and cardinality, conjunctions between scoped clauses, required set operations, grouping, distinctness, ordering, limits, null semantics, and strict boundaries. Return the final corrected JSON object with only the sql key."})
+                        continue
+                    record["final_sql"] = answer["sql"]
                 completed = True
                 break
             if not completed:

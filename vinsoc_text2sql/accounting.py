@@ -113,7 +113,7 @@ class RunJournal:
                 or not isinstance(payload.get('messages'), list)
                 or len(payload['messages']) > contract['max_messages']):
             raise ValueError('REQUEST_CONTRACT_OR_CAP_MISMATCH')
-        allowed = set(config)|{'messages', 'tools', 'tool_choice', 'parallel_tool_calls'}
+        allowed = set(config)|{'messages', 'tools', 'tool_choice', 'parallel_tool_calls', 'response_format'}
         if not set(payload) <= allowed or payload.get('tool_choice', 'auto') != 'auto':
             raise ValueError('REQUEST_CONTRACT_OR_CAP_MISMATCH')
         reserve = self.release['reserves_usd'][role]
