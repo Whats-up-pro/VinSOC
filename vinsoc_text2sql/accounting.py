@@ -223,7 +223,11 @@ class ScopedOpenAIClient:
     def request(self, payload):
         response = self.create(**payload)
         choice = response.choices[0]
-        if choice.finish_reason not in ('stop', 'tool_calls'):
+        # A bounded `length` response is a valid paid provider response.  Return
+        # it to the service so an application-level turn can repair an empty
+        # completion without losing the durable usage/cost receipt.
+        if (choice.finish_reason not in ('stop', 'tool_calls')
+                and not (self.role == 'r2' and choice.finish_reason == 'length')):
             raise ValueError('INVALID_FINISH_REASON')
         calls = [c.model_dump(mode='json') for c in (choice.message.tool_calls or [])]
         return {'content': choice.message.content, 'tool_calls': calls, 'model': response.model,

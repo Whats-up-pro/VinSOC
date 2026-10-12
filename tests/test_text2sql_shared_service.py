@@ -97,7 +97,59 @@ def test_e3_reserves_last_turn_for_role_finalization(tmp_path):
     assert record['error_category'] == 'OK'
     assert record['final_sql'] == 'SELECT COUNT(*) FROM customers'
     assert len(transport.requests) == 6
-    assert ['tools' in request for request in transport.requests] == [True, True, True, True, False, False]
+    assert ['tools' in request for request in transport.requests] == [True, True, True, False, True, False]
+
+
+def test_e3_retries_empty_length_response_without_exceeding_shared_cap(tmp_path):
+    """A paid length response is journaled and repaired inside the six-call case cap."""
+    import duckdb
+    from evaluation.r2_cross_domain_v1.data import DatabaseContext
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from vinsoc_text2sql.service import _generate
+
+    snapshot = tmp_path/'shop.duckdb'
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute('CREATE TABLE customers(id INTEGER)')
+        connection.execute('INSERT INTO customers VALUES (1), (2)')
+    context = DatabaseContext('shop', snapshot, {
+        'database_id':'shop', 'schema':[{'name':'customers','columns':[
+            {'name':'id','duckdb_type':'INTEGER','sqlite_type':'INTEGER'}]}],
+        'primary_keys':{'customers':[]}, 'relationships':[],
+        'logical_sha256':'fixture-logical-sha',
+    })
+    link = {'tables':['customers'],'columns':[], 'relationships':[],
+            'grounded_values':[],'constraints':[]}
+
+    class Transport:
+        contract = {'model':'fixture','reasoning_effort':'low',
+                    'max_completion_tokens':1000,'service_tier':'default'}
+        def __init__(self): self.requests = []
+        def counters(self):
+            count = len(self.requests)
+            return {'attempted':count,'received':count,'valid_usage':count,'terminal':False}
+        def request(self, payload):
+            self.requests.append(payload)
+            index = len(self.requests)
+            if index <= 3:
+                return {'content':None,'tool_calls':[{'id':f'probe-{index}','function':{
+                    'name':'database_profiler','arguments':{'table':'customers'}}}],
+                    'finish_reason':'tool_calls'}
+            if index == 4:
+                return {'content':None,'tool_calls':[], 'finish_reason':'length'}
+            if index == 5:
+                return {'content':json.dumps(link),'tool_calls':[], 'finish_reason':'stop'}
+            return {'content':json.dumps({'sql':'SELECT COUNT(*) FROM customers'}),
+                    'tool_calls':[], 'finish_reason':'stop'}
+
+    transport = Transport()
+    record = _generate(QueryRequest('case','shop','Count customers'), 'E3',
+                       DatabaseTools(context), transport, lambda event: None)
+    assert record['error_category'] == 'OK'
+    assert record['final_sql'] == 'SELECT COUNT(*) FROM customers'
+    assert len(transport.requests) == 6
+    assert ['tools' in request for request in transport.requests] == [True, True, True, False, False, False]
+    assert any('token limit' in message['content'].lower()
+               for message in transport.requests[4]['messages'] if message['role'] == 'user')
 
 
 def test_e3_generator_semantically_reviews_first_sql_candidate(tmp_path):

@@ -97,7 +97,16 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                 return record
             for turn in range(turn_cap):
                 payload = {key: transport.contract[key] for key in ("model", "reasoning_effort", "max_completion_tokens", "service_tier")}
-                finalization_turn = condition == "E3" and turn == turn_cap-1
+                # Three tool turns are enough to collect the bounded schema/value
+                # evidence.  Ask for the linker contract on turn four so two
+                # generator turns remain in the common successful path.  A fifth
+                # linker turn remains available only to repair a truncated final
+                # response.
+                linker_finalization_start = min(3, turn_cap-1)
+                finalization_turn = condition == "E3" and (
+                    (role == "linker" and turn >= linker_finalization_start)
+                    or (role == "generator" and turn == turn_cap-1)
+                )
                 payload["messages"] = deepcopy(messages)
                 if finalization_turn:
                     payload["messages"].append({"role":"user", "content":
@@ -121,6 +130,12 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                         arguments = json.loads(function["arguments"]) if isinstance(function["arguments"], str) else function["arguments"]
                         result = tools.call(function["name"], arguments)
                         messages.append({"role": "tool", "tool_call_id": call["id"], "content": json.dumps(result, ensure_ascii=False)})
+                    continue
+                if response.get("finish_reason") == "length" and not response.get("content"):
+                    if turn >= turn_cap-1:
+                        raise ValueError("EMPTY_LENGTH_RESPONSE")
+                    messages.append({"role":"user", "content":
+                        "The previous response used its token limit without emitting the required JSON. Return the final JSON object immediately and do not include reasoning or commentary."})
                     continue
                 answer = json.loads(response.get("content") or "")
                 if role == "linker":

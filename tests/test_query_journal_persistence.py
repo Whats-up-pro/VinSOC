@@ -1,5 +1,6 @@
 """Fault-input durability tests, not fabricated model runs or acceptance records."""
 import json
+from types import SimpleNamespace
 
 import pytest
 
@@ -120,3 +121,23 @@ def test_assessment_response_format_is_an_allowed_bounded_request_field(tmp_path
                'response_format':{'type':'json_schema','json_schema':{'name':'assessment','strict':True,
                    'schema':{'type':'object','properties':{},'required':[], 'additionalProperties':False}}}}
     assert journal.reserve('assessment', payload) == 0
+
+
+def test_scoped_client_returns_paid_length_response_for_bounded_repair():
+    from vinsoc_text2sql.accounting import ScopedOpenAIClient
+
+    response = SimpleNamespace(
+        choices=[SimpleNamespace(finish_reason='length', message=SimpleNamespace(
+            content=None, tool_calls=[]))],
+        model='gpt-5-mini-2025-08-07', id='chatcmpl-length')
+    client = object.__new__(ScopedOpenAIClient)
+    client.role = 'r2'
+    client.create = lambda **payload: response
+    client.journal = SimpleNamespace(data={'events':[{
+        'usage':{'input_tokens':10,'output_tokens':1000,'cached_tokens':0},
+        'cost_usd':0.00201}]})
+
+    result = client.request({'messages':[]})
+    assert result['finish_reason'] == 'length'
+    assert result['content'] is None
+    assert result['usage']['output_tokens'] == 1000
