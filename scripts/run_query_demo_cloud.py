@@ -29,6 +29,9 @@ PRIOR_AUDITS = (
     {'path':ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_3_20261010/outcome_audit.json',
      'run_id':38041048027, 'cost_key':'current_run_cost_usd', 'cost_usd':0.00658055,
      'artifact_digest':'sha256:0fea94b507c15e66099d73e813624e2150975384fb711622d17a83c258d3f3ac'},
+    {'path':ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_4_20261012/outcome_audit.json',
+     'run_id':38193493518, 'cost_key':'current_run_cost_usd', 'cost_usd':0.00361535,
+     'artifact_digest':'sha256:9d91d979fdde5cc1971f851b92d444a7ecbf11f05750a05789a69a553345b9ec'},
 )
 REQUIRED = ('OPENAI_API_KEY','GITHUB_TOKEN','GITHUB_SHA','GITHUB_RUN_ID','GITHUB_CI_RUN_ID',
             'VINSOC_QUERY_DEMO_AUTH_JSON','VINSOC_GPT5_DOC','VINSOC_GPT41_DOC')
@@ -57,6 +60,7 @@ def validate_authorization(value):
         'full-e2e-2':(0.00133865,2.99866135),
         'full-e2e-3':(0.0056888,2.9943112),
         'full-e2e-4':(0.01226935,2.98773065),
+        'full-e2e-5':(0.0158847,2.9841153),
     }
     if (value.get('execution_id') not in profiles
             or (value.get('known_prior_cost_usd'), value.get('remaining_allocation_usd'))
@@ -66,7 +70,7 @@ def validate_authorization(value):
 
 
 def prior_demo_receipt(auth):
-    counts = {None:0, 'full-e2e-2':1, 'full-e2e-3':2, 'full-e2e-4':3}
+    counts = {None:0, 'full-e2e-2':1, 'full-e2e-3':2, 'full-e2e-4':3, 'full-e2e-5':4}
     count = counts.get(auth.get('execution_id'))
     if count is None:
         raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')

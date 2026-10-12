@@ -86,7 +86,7 @@ def test_e3_reserves_last_turn_for_role_finalization(tmp_path):
                 index = len(self.requests)
                 return {'content':None,'tool_calls':[{'id':f'probe-{index}','function':{
                     'name':'database_profiler','arguments':{'table':'customers'}}}]}
-            if len(self.requests) == 3:
+            if 'Link the analyst question' in payload['messages'][0]['content']:
                 return {'content':json.dumps({'tables':['customers'],'columns':[],
                     'relationships':[],'grounded_values':[],'constraints':[]}), 'tool_calls':[]}
             return {'content':json.dumps({'sql':'SELECT COUNT(*) FROM customers'}), 'tool_calls':[]}
@@ -97,7 +97,7 @@ def test_e3_reserves_last_turn_for_role_finalization(tmp_path):
     assert record['error_category'] == 'OK'
     assert record['final_sql'] == 'SELECT COUNT(*) FROM customers'
     assert len(transport.requests) == 6
-    assert ['tools' in request for request in transport.requests] == [True, True, False, True, True, False]
+    assert ['tools' in request for request in transport.requests] == [True, True, True, True, False, False]
 
 
 def test_e3_generator_semantically_reviews_first_sql_candidate(tmp_path):
@@ -143,3 +143,47 @@ def test_e3_generator_semantically_reviews_first_sql_candidate(tmp_path):
     assert record['final_sql'] == reviewed['sql']
     assert len(transport.requests) == 3
     assert 'semantic audit' in transport.requests[2]['messages'][-1]['content'].lower()
+
+
+def test_e3_normalizes_equivalent_column_map_and_repairs_grounding_error(tmp_path):
+    """A repair turn keeps strict grounding while accepting an equivalent column shape."""
+    import duckdb
+    from evaluation.r2_cross_domain_v1.data import DatabaseContext
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from vinsoc_text2sql.service import _generate
+
+    snapshot = tmp_path/'shop.duckdb'
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute('CREATE TABLE customers(id INTEGER)')
+    context = DatabaseContext('shop', snapshot, {
+        'database_id':'shop', 'schema':[{'name':'customers','columns':[
+            {'name':'id','duckdb_type':'INTEGER','sqlite_type':'INTEGER'}]}],
+        'primary_keys':{'customers':[]}, 'relationships':[],
+        'logical_sha256':'fixture-logical-sha',
+    })
+    invalid = {'tables':['customers'], 'columns':{'customers':['id']},
+        'relationships':[], 'grounded_values':[], 'constraints':[{
+            'kind':'derived_expression','expression':'id','operator':'=','value':'not-numeric'}]}
+    valid = {'tables':['customers'], 'columns':[{'table':'customers','column':'id'}],
+        'relationships':[], 'grounded_values':[], 'constraints':[]}
+
+    class Transport:
+        contract = {'model':'fixture','reasoning_effort':'low',
+                    'max_completion_tokens':1000,'service_tier':'default'}
+        def __init__(self): self.requests = []
+        def counters(self):
+            count=len(self.requests)
+            return {'attempted':count,'received':count,'valid_usage':count,'terminal':False}
+        def request(self, payload):
+            self.requests.append(payload)
+            index=len(self.requests)
+            response = invalid if index == 1 else valid if index == 2 else {'sql':'SELECT COUNT(*) FROM customers'}
+            return {'content':json.dumps(response),'tool_calls':[]}
+
+    transport=Transport()
+    record=_generate(QueryRequest('case','shop','Count customers'), 'E3',
+                     DatabaseTools(context), transport, lambda event:None)
+    assert record['error_category'] == 'OK'
+    assert record['linked_schema']['columns'] == [{'table':'customers','column':'id'}]
+    assert 'INVALID_DERIVED_CONSTRAINT' in transport.requests[1]['messages'][-1]['content']
+    assert len(transport.requests) == 4

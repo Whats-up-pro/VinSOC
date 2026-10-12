@@ -14,6 +14,9 @@ from evaluation.r2_cross_domain_v1.tools import DatabaseTools
 from .executor import SqlExecutor
 
 
+R2_CASE_CALL_CAP = 6
+
+
 @dataclass(frozen=True)
 class QueryRequest:
     request_id: str
@@ -80,7 +83,18 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                         {"role": "user", "content": json.dumps(data, ensure_ascii=False)}]
             completed = False
             candidate_sql = None
-            turn_cap = ROLE_TURN_CAP if condition == "E3" else 1
+            used_r2_calls = transport.counters()["attempted"]-attempted_before
+            if condition == "E3":
+                # The release reserves six R2 calls per case.  Give schema
+                # grounding enough room to repair a rejected link while always
+                # preserving at least one generator call.
+                turn_cap = min(5 if role == "linker" else ROLE_TURN_CAP,
+                               R2_CASE_CALL_CAP-used_r2_calls)
+            else:
+                turn_cap = 1
+            if turn_cap < 1:
+                record["error_category"] = "TOOL_LIMIT"
+                return record
             for turn in range(turn_cap):
                 payload = {key: transport.contract[key] for key in ("model", "reasoning_effort", "max_completion_tokens", "service_tier")}
                 finalization_turn = condition == "E3" and turn == turn_cap-1
@@ -110,7 +124,17 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                     continue
                 answer = json.loads(response.get("content") or "")
                 if role == "linker":
-                    linked = validate_link(request.question, answer, tools.trajectory, tools.context)
+                    answer = _normalize_link_shape(answer)
+                    try:
+                        linked = validate_link(request.question, answer, tools.trajectory, tools.context)
+                    except GroundingError as error:
+                        if turn >= turn_cap-1:
+                            raise
+                        messages.append({"role":"assistant", "content":response.get("content") or ""})
+                        messages.append({"role":"user", "content":
+                            "The submitted link failed strict validation with code " + str(error) +
+                            ". Correct the JSON contract without inventing evidence. Stored string values require value_search evidence IDs; sql_probe does not ground literals. Return the corrected link JSON, using tools first if evidence is missing."})
+                        continue
                     record["linked_schema"] = deepcopy(linked)
                 else:
                     if not isinstance(answer, dict) or not isinstance(answer.get("sql"), str):
@@ -152,4 +176,18 @@ def _generate(request, condition, tools, transport, telemetry_sink):
         record.update(attempted_calls=transport.counters()["attempted"]-attempted_before,
                       response_count=transport.counters()["received"]-received_before,
                       trajectory=deepcopy(tools.trajectory), db_calls=tools.db_calls, wall_seconds=monotonic()-started)
+
+
+def _normalize_link_shape(answer):
+    """Canonicalize one equivalent column-map representation before validation."""
+    if not isinstance(answer, dict) or not isinstance(answer.get("columns"), dict):
+        return answer
+    columns = []
+    for table, names in answer["columns"].items():
+        if not isinstance(table, str) or not isinstance(names, list) or any(not isinstance(name, str) for name in names):
+            return answer
+        columns.extend({"table":table, "column":name} for name in names)
+    normalized = deepcopy(answer)
+    normalized["columns"] = columns
+    return normalized
 

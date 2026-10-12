@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "scope": "demo_transport_preflight_failure",
+  "execution_id": "full-e2e-4",
+  "implementation_sha": "624cca6b19fb4683bfe89209cbb8f0f109567a84",
+  "workflow": {
+    "run_id": 38193367587,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38193367587",
+    "artifact_id": 11721883767,
+    "artifact_digest": "sha256:d493b775fc9b458b71ece5683499bbd10148048c2d714db7a6a9c8011e3be450",
+    "artifact_expires_at": "2027-01-10T01:49:18Z"
+  },
+  "result": {
+    "scope": "single_fixed_query_demo",
+    "condition": "E3",
+    "case_id": "ctu_cross_708b66575657429a",
+    "status": "blocked",
+    "client_created": false,
+    "attempted": 0,
+    "received": 0,
+    "known_usd": 0.0,
+    "cost_unknown": false,
+    "window_claimed": false,
+    "failure_category": "JSONDecodeError"
+  },
+  "diagnosis": "PowerShell argument transport corrupted authorization JSON; corrected by setting the GitHub secret through stdin.",
+  "paid_model_calls": 0,
+  "new_cost_usd": 0.0,
+  "window_consumed": false
+}

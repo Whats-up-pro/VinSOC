@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "scope": "single_fixed_query_demo_not_calibration_or_evaluation",
+  "execution_id": "full-e2e-4",
+  "case_id": "ctu_cross_708b66575657429a",
+  "condition": "E3",
+  "implementation_sha": "624cca6b19fb4683bfe89209cbb8f0f109567a84",
+  "ci": {
+    "run_id": 38192999297,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38192999297",
+    "status": "success",
+    "full_suite_each": {
+      "passed": 1328,
+      "skipped": 7
+    },
+    "required_offline_each": {
+      "passed": 47,
+      "skipped": 0
+    },
+    "required_real_data_each": {
+      "passed": 13,
+      "skipped": 0
+    },
+    "original_databases_verified": 13,
+    "gold_queries_replayed": 120
+  },
+  "workflow": {
+    "run_id": 38193493518,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38193493518",
+    "job_status": "failure_due_to_technical_incomplete",
+    "artifact_id": 11722697265,
+    "artifact_digest": "sha256:9d91d979fdde5cc1971f851b92d444a7ecbf11f05750a05789a69a553345b9ec",
+    "artifact_expires_at": "2027-01-10T01:51:11Z",
+    "remote_window_claimed": true
+  },
+  "preflight": {
+    "status": "preflight_pass",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "hard_budget_usd": 3.0,
+    "prior_cost_usd": 0.01226935,
+    "conservative_cost_ceiling_usd": 1.4532608
+  },
+  "actual": {
+    "status": "technical_incomplete",
+    "failure_stage": "r2_schema_link_validation",
+    "failure_reason": "INVALID_LINKED_SCHEMA",
+    "validation_detail": "INVALID_LINKED_COLUMNS_THEN_INVALID_DERIVED_CONSTRAINT",
+    "attempted_calls": 4,
+    "received_responses": 4,
+    "calls_by_role": {
+      "routing": 1,
+      "r2": 3,
+      "assessment": 0
+    },
+    "usage": {
+      "input_tokens": 6699,
+      "output_tokens": 1087,
+      "cached_tokens": 1152
+    },
+    "current_run_cost_usd": 0.00361535,
+    "cumulative_cost_usd": 0.0158847,
+    "remaining_cap_usd": 2.9841153,
+    "cost_unknown": false,
+    "generation_error": "INVALID_LINKED_SCHEMA",
+    "final_sql_present": false,
+    "execution_success": false,
+    "execution_accurate": false,
+    "scoring_error_category": "NO_FINAL_SQL",
+    "db_calls": 3,
+    "assessment_calls": 0,
+    "evidence_count": 0,
+    "independent_query_replay": false,
+    "human_review": "blocked_invalid_technical",
+    "official_eligible": false
+  },
+  "model_score_statement": "Not an official calibration, evaluation, or pipeline score; the real model failure is retained without a fabricated prediction."
+}
