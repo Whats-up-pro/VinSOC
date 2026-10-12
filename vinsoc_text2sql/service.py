@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from copy import deepcopy
 from dataclasses import dataclass
 from time import monotonic
@@ -162,8 +163,20 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                     if candidate_sql is None and turn < turn_cap-1:
                         candidate_sql = answer["sql"]
                         messages.append({"role":"assistant", "content":response.get("content") or ""})
+                        findings = _semantic_findings(request.question, candidate_sql)
+                        finding_text = (" Runtime semantic findings: " + " ".join(findings)) if findings else ""
                         messages.append({"role":"user", "content":
                             "Perform an independent semantic audit of the SQL candidate against the exact original question and linked context. Check output shape and cardinality, conjunctions between scoped clauses, required set operations, grouping, distinctness, ordering, limits, null semantics, and strict boundaries. Return the final corrected JSON object with only the sql key."})
+                        messages[-1]["content"] += finding_text
+                        continue
+                    findings = _semantic_findings(request.question, answer["sql"])
+                    if findings and turn < turn_cap-1:
+                        candidate_sql = answer["sql"]
+                        messages.append({"role":"assistant", "content":response.get("content") or ""})
+                        messages.append({"role":"user", "content":
+                            "The candidate still has unresolved runtime semantic findings: "
+                            + " ".join(findings)
+                            + " Re-read the exact original question, correct the SQL if the findings apply, and return only the final JSON object with the sql key."})
                         continue
                     record["final_sql"] = answer["sql"]
                 completed = True
@@ -205,4 +218,28 @@ def _normalize_link_shape(answer):
     normalized = deepcopy(answer)
     normalized["columns"] = columns
     return normalized
+
+
+def _semantic_findings(question, sql):
+    """Conservative question/SQL shape findings; never reads reference answers."""
+    if not isinstance(question, str) or not isinstance(sql, str):
+        return []
+    q = " ".join(question.lower().split())
+    statement = " ".join(sql.upper().split())
+    if not re.match(r"^(count\b|how many\b)", q):
+        return []
+    asks_for_groups = any(phrase in q for phrase in (
+        " for each ", " per ", " grouped by ", " breakdown by ", " for every "))
+    grouped = " GROUP BY " in " " + statement + " "
+    findings = []
+    if grouped and not asks_for_groups:
+        findings.append(
+            "SINGULAR_COUNT_GROUPED_OUTPUT: the question asks for one count, but GROUP BY produces per-group rows; return one scalar count unless grouping was explicitly requested."
+        )
+    if (grouped and " and " in q and re.search(r"\bOR\b", statement)
+            and not re.search(r"\b(INTERSECT|EXISTS)\b", statement)):
+        findings.append(
+            "CONJUNCTIVE_SCOPES_COLLAPSED_BY_OR: the question conjoins scoped conditions for the counted entity, while OR plus grouping computes separate scope counts; verify shared-entity set semantics such as INTERSECT or EXISTS."
+        )
+    return findings
 

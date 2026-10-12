@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scope": "single_fixed_query_demo_not_calibration_or_evaluation",
+  "execution_id": "full-e2e-6",
+  "case_id": "ctu_cross_708b66575657429a",
+  "condition": "E3",
+  "implementation_sha": "c58080a436df2223dbf0f2637cbf73730e0cc1c3",
+  "ci": {
+    "run_id": 38195554857,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38195554857",
+    "status": "success",
+    "full_suite_each": {
+      "passed": 1333,
+      "skipped": 7
+    },
+    "required_offline_each": {
+      "passed": 48,
+      "skipped": 0
+    },
+    "required_real_data_each": {
+      "passed": 13,
+      "skipped": 0
+    },
+    "original_databases_verified": 13,
+    "gold_queries_replayed": 120
+  },
+  "workflow": {
+    "run_id": 38195921557,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38195921557",
+    "job_status": "failure_due_to_technical_incomplete",
+    "artifact_id": 11723173243,
+    "artifact_digest": "sha256:e855420962955ed217ce296b9e0b9f87881ef981d3d8580190116c030c1b894a",
+    "artifact_expires_at": "2027-01-10T02:28:31Z",
+    "remote_window_claimed": true
+  },
+  "preflight": {
+    "status": "preflight_pass",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "hard_budget_usd": 3.0,
+    "prior_cost_usd": 0.0201791,
+    "conservative_cost_ceiling_usd": 1.4532608
+  },
+  "actual": {
+    "status": "technical_incomplete",
+    "failure_stage": "semantic_execution_and_assessment_validation",
+    "failure_reason": "RESULT_MISMATCH",
+    "validation_detail": "GROUPED_PER_SCOPE_COUNTS_INSTEAD_OF_SINGLE_CONJUNCTIVE_ENTITY_COUNT",
+    "attempted_calls": 6,
+    "received_responses": 6,
+    "calls_by_role": {
+      "routing": 1,
+      "r2": 4,
+      "assessment": 1
+    },
+    "usage": {
+      "input_tokens": 10539,
+      "output_tokens": 2335,
+      "cached_tokens": 2944
+    },
+    "current_run_cost_usd": 0.0068423,
+    "cumulative_cost_usd": 0.0270214,
+    "remaining_cap_usd": 2.9729786,
+    "cost_unknown": false,
+    "generation_error": "OK",
+    "final_sql_present": true,
+    "execution_success": true,
+    "execution_accurate": false,
+    "scoring_error_category": "RESULT_MISMATCH",
+    "db_calls": 3,
+    "assessment_calls": 1,
+    "evidence_count": 2,
+    "independent_query_replay": true,
+    "assessment_contract_valid": false,
+    "human_review": "blocked_invalid_technical",
+    "official_eligible": false
+  },
+  "model_score_statement": "Not an official calibration, evaluation, or pipeline score; the real model result and assessment failure are retained without a fabricated correction."
+}

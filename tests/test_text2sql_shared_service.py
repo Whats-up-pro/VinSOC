@@ -197,6 +197,54 @@ def test_e3_generator_semantically_reviews_first_sql_candidate(tmp_path):
     assert 'semantic audit' in transport.requests[2]['messages'][-1]['content'].lower()
 
 
+def test_e3_reaudits_grouped_or_for_singular_conjunctive_count(tmp_path):
+    """Generic question/SQL findings trigger the remaining bounded audit turn."""
+    import duckdb
+    from evaluation.r2_cross_domain_v1.data import DatabaseContext
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from vinsoc_text2sql.service import _generate
+
+    snapshot = tmp_path/'flows.duckdb'
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute('CREATE TABLE flows(dst_ip VARCHAR, scenario VARCHAR)')
+    context = DatabaseContext('flows', snapshot, {
+        'database_id':'flows', 'schema':[{'name':'flows','columns':[
+            {'name':'dst_ip','duckdb_type':'VARCHAR','sqlite_type':'TEXT'},
+            {'name':'scenario','duckdb_type':'VARCHAR','sqlite_type':'TEXT'}]}],
+        'primary_keys':{'flows':[]}, 'relationships':[],
+        'logical_sha256':'fixture-logical-sha',
+    })
+    linker = {'tables':['flows'], 'columns':[{'table':'flows','column':'dst_ip'},
+        {'table':'flows','column':'scenario'}], 'relationships':[],
+        'grounded_values':[], 'constraints':[]}
+    grouped = {'sql':"SELECT scenario, COUNT(DISTINCT dst_ip) FROM flows WHERE scenario='a' OR scenario='b' GROUP BY scenario"}
+    intersected = {'sql':"SELECT COUNT(*) FROM (SELECT dst_ip FROM flows WHERE scenario='a' INTERSECT SELECT dst_ip FROM flows WHERE scenario='b') shared"}
+
+    class Transport:
+        contract = {'model':'fixture','reasoning_effort':'low',
+                    'max_completion_tokens':1000,'service_tier':'default'}
+        def __init__(self): self.requests = []
+        def counters(self):
+            count = len(self.requests)
+            return {'attempted':count,'received':count,'valid_usage':count,'terminal':False}
+        def request(self, payload):
+            self.requests.append(payload)
+            response = linker if len(self.requests) == 1 else grouped if len(self.requests) < 4 else intersected
+            return {'content':json.dumps(response), 'tool_calls':[], 'finish_reason':'stop'}
+
+    transport = Transport()
+    record = _generate(QueryRequest('case','flows',
+        'Count destination IPs appearing in scenario a and in scenario b.'),
+        'E3', DatabaseTools(context), transport, lambda event: None)
+    assert record['error_category'] == 'OK'
+    assert record['final_sql'] == intersected['sql']
+    assert len(transport.requests) == 4
+    audit = ' '.join(message['content'] for message in transport.requests[3]['messages']
+                     if message['role'] == 'user')
+    assert 'SINGULAR_COUNT_GROUPED_OUTPUT' in audit
+    assert 'CONJUNCTIVE_SCOPES_COLLAPSED_BY_OR' in audit
+
+
 def test_e3_normalizes_equivalent_column_map_and_repairs_grounding_error(tmp_path):
     """A repair turn keeps strict grounding while accepting an equivalent column shape."""
     import duckdb

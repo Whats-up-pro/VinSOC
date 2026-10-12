@@ -1,0 +1,22 @@
+{
+  "scope": "single_fixed_query_demo",
+  "condition": "E3",
+  "case_id": "ctu_cross_708b66575657429a",
+  "status": "technical_incomplete",
+  "client_created": true,
+  "attempted": 6,
+  "received": 6,
+  "known_usd": 0.0270214,
+  "cost_unknown": false,
+  "window_claimed": true,
+  "execution_id": "full-e2e-6",
+  "preflight_status": "preflight_pass",
+  "new_cost_ceiling_usd": 1.4532608,
+  "window_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-6",
+  "implementation_sha": "c58080a436df2223dbf0f2637cbf73730e0cc1c3",
+  "ci_run_id": 38195554857,
+  "prior_cost_usd": 0.0201791,
+  "current_run_cost_usd": 0.0068423,
+  "completed": 1,
+  "official_eligible": false
+}
