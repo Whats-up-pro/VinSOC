@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
@@ -18,8 +19,9 @@ from pathlib import Path
 import streamlit as st
 from dotenv import load_dotenv
 
-# Define BASE_DIR before loading .env
+# Define BASE_DIR and add to sys.path BEFORE loading .env
 BASE_DIR = Path(__file__).parent.parent
+sys.path.insert(0, str(BASE_DIR))
 load_dotenv(BASE_DIR / ".env")
 
 # =============================================================================
