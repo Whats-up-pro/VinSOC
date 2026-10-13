@@ -16,6 +16,16 @@ nên chưa đóng human approval. Task E vẫn `0/48`, `0/192`, `0/32`; không m
 Nguồn bàn giao: [runbook hiện hành](../../VINSOC_E2E_DEMO_RUNBOOK.md),
 [manifest v2](../../../results/evaluation_v1/text2sql_integration_v1/offline_demo_v2_20261013/manifest.json).
 
+**Checkpoint sau polish:** `3725ec3cc50f92d5e2a27ee3ce4232f63a4efa81`,
+CI [38359598774](https://github.com/Whats-up-pro/VinSOC/actions/runs/38359598774) success.
+Reporter/CLI đã hoàn thiện; tiếp tục chuẩn bị ba ID còn thiếu bằng preflight
+thật. Mở `demo` trong CLI public, bind grant vào case/condition/execution và
+từ chối release khác lựa chọn CLI trước provider. [Gói chuẩn bị](../../../results/evaluation_v1/text2sql_integration_v1/remaining_demo_preflight_20261013/README.md)
+ghi ba receipt blocked, code/source hashes, 0 calls/cost. Cloud adapter mới,
+private account/pricing/reconciliation và ngân sách cho cả ba còn pending.
+Tổng cận planning theo run10 là `$5.0197824` cho ba ca, cộng prior cần
+`$5.0809374`; đây chưa phải giá/account được xác minh hiện tại và không tự tăng cap `$3`.
+
 **Mốc đầu:** execution `full-e2e-8` tại `09cfbfaee49e780d3ca1afd02c89ae3ef55c3168`, CI [38335064157](https://github.com/Whats-up-pro/VinSOC/actions/runs/38335064157) success; workflow [38335534597](https://github.com/Whats-up-pro/VinSOC/actions/runs/38335534597) có artifact partial. `0e85e637bbc5828c221f1d0d2dac0a91090c3c28` đã commit audit và bản sửa checkpoint/semantic; [CI #339](https://github.com/Whats-up-pro/VinSOC/actions/runs/38336323978) success. [Workflow #10](https://github.com/Whats-up-pro/VinSOC/actions/runs/38336761761) trên SHA đó thất bại (`full-e2e-9`, 6/6 response, `technical_incomplete`, cost lũy kế `$0.05375795`); [audit run 9](../../../results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_9_20261013/outcome_audit.json) đã commit tại `master@7c6e5b907934b8ce76f7f88d4dd9edd80834d9eb`, xác định lỗi linker ba lần chạm output cap, không có SQL cuối. SHA mới nâng cap R2 1.000→2.000, chưa có live success. [Status 13/10](../../evaluation/VinSOC_E2E_Demo_Status_2026-10-13.md) và [audit run 8](../../../results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_8_20261013/outcome_audit.json) là checkpoint. Chưa có E2E approved; official scopes `0/48`, `0/192`, `0/32`.
 
 ## Quy tắc quyết định

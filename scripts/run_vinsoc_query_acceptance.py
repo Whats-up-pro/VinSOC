@@ -317,8 +317,14 @@ def main(argv=None):
     else:
         if not args.release:
             parser.error('Live requires a separately authorized new release; old network window is insufficient')
-        raw = json.loads(args.release.read_text())
-        receipt = run_live(raw.get('release',raw), args.output, selected_input=selected)
+        raw = json.loads(args.release.read_text(encoding='utf-8'))
+        release = raw.get('release',raw) if isinstance(raw, dict) else None
+        if (not isinstance(release, dict) or release.get('scope') != args.scope
+                or release.get('condition') != args.condition):
+            parser.error('LIVE_RELEASE_SCOPE_OR_CONDITION_MISMATCH')
+        if args.scope == 'demo' and release.get('case_ids') != [selected['case_id']]:
+            parser.error('DEMO_RELEASE_CASE_MISMATCH')
+        receipt = run_live(release, args.output, selected_input=selected)
     print(json.dumps({k: receipt.get(k) for k in ('status','reasons','planned','completed','attempted','received','client_created')}))
     return 0 if receipt['status'] in ('completed','technical_complete_awaiting_human','preflight_pass') else 1
 

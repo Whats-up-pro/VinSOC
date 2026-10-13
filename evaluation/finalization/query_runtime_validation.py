@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import re
 import subprocess
@@ -89,7 +90,7 @@ def transmission_files(contexts):
     return result
 
 
-def verify_canonical_reconciliation(account, *, required_scope=None):
+def verify_canonical_reconciliation(account, *, required_scope=None, required_authorization=None):
     """An absent ledger is unknown, not an authoritative declaration of zero spend."""
     reference = account.get('reconciliation_reference') or {}
     canonical = Path.home()/'.vinsoc/live-windows'
@@ -111,10 +112,22 @@ def verify_canonical_reconciliation(account, *, required_scope=None):
     ledgers = receipt.get('ledger_artifacts')
     if not isinstance(ledgers, list) or not ledgers:
         raise ValueError('CANONICAL_LEDGER_ARTIFACTS_REQUIRED')
+    authorization_matches = required_authorization is None
     for artifact in ledgers:
         target = (canonical/artifact['path']).resolve()
-        if not target.is_relative_to(canonical.resolve()) or file_hash(target) != artifact['sha256']:
+        if not target.is_relative_to(canonical.resolve()):
             raise ValueError('CANONICAL_LEDGER_IDENTITY_MISMATCH')
+        raw = target.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != artifact['sha256']:
+            raise ValueError('CANONICAL_LEDGER_IDENTITY_MISMATCH')
+        if required_authorization is not None:
+            ledger = json.loads(raw)
+            grant = ledger.get('authorization') if isinstance(ledger, dict) else None
+            if (isinstance(grant, dict) and fresh(grant.get('confirmed_utc'))
+                    and all(grant.get(k) == v for k, v in required_authorization.items())):
+                authorization_matches = True
+    if not authorization_matches:
+        raise ValueError('DEMO_CASE_AUTHORIZATION_REQUIRED')
     return receipt
 
 

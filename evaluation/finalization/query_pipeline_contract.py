@@ -55,9 +55,13 @@ def preflight(scope, condition, *, inventory, identities, account, pricing, budg
         except (ValueError, OSError, KeyError, TypeError):
             reasons.append('CALIBRATION_SELECTION_LOCK_REQUIRED')
     try:
-        verify_canonical_reconciliation(account, required_scope=scope)
-    except (ValueError, OSError, KeyError, TypeError):
-        reasons.append('CANONICAL_RECONCILIATION_REQUIRED')
+        required_authorization = ({'scope':'demo', 'condition':condition, 'execution_id':execution_id,
+                                   'case_id':ids[0] if len(ids) == 1 else None} if scope == 'demo' else None)
+        verify_canonical_reconciliation(account, required_scope=scope,
+                                        required_authorization=required_authorization)
+    except (ValueError, OSError, KeyError, TypeError) as error:
+        reasons.append('DEMO_CASE_AUTHORIZATION_REQUIRED' if str(error) == 'DEMO_CASE_AUTHORIZATION_REQUIRED'
+                       else 'CANONICAL_RECONCILIATION_REQUIRED')
     if (len(inventory) != planned or len(ids) != planned or len(set(ids)) != planned
             or any(not isinstance(i, str) or not i for i in ids)
             or identities.get('data_verified') is not True):

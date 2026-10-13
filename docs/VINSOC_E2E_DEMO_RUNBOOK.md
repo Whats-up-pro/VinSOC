@@ -89,6 +89,11 @@ Các số VinSOC là phép đo của repo; không phải điểm trên bộ BFCL
 
 ## Kiểm tra và vấn đề còn mở
 
+[Gói preflight ba demo còn thiếu](../results/evaluation_v1/text2sql_integration_v1/remaining_demo_preflight_20261013/README.md)
+có receipt thật và blocker cụ thể. CLI public nhận `--scope demo`; grant phải
+khớp case/E3/execution trong canonical ledger và release phải khớp lựa chọn CLI.
+Cloud wrapper vẫn chỉ chạy ca đầu; gói preflight không cấp paid release mới.
+
 Nhóm offline bắt buộc của CI kiểm contract, preflight, selection, journal,
 normalization, reporting, pipeline reporting và CLI/viewer. Required real-data
 CI khôi phục 13 DB pin, replay 120 gold queries và kiểm worker cô lập. Số test lấy

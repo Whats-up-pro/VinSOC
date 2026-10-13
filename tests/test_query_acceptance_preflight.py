@@ -66,6 +66,38 @@ def test_demo_reconciliation_requires_demo_scope_state(tmp_path, monkeypatch):
     assert verify_canonical_reconciliation(account, required_scope='demo') == receipt
 
 
+@pytest.mark.parametrize('mismatch', ['case_id', 'condition', 'execution_id', None])
+def test_demo_grant_is_bound_to_case_condition_and_execution_without_authorizing_payment(tmp_path, monkeypatch, mismatch):
+    import json
+    from datetime import datetime, timezone
+    from evaluation.r2_cross_domain_v1.benchmark_lock import file_hash
+    row = inventory_for('demo')[0]
+    monkeypatch.setattr('pathlib.Path.home', lambda: tmp_path)
+    canonical = tmp_path/'.vinsoc/live-windows'
+    canonical.mkdir(parents=True)
+    stamp = datetime.now(timezone.utc).isoformat()
+    grant = {'scope':'demo','case_id':row['case_id'],'condition':'E3',
+             'execution_id':'test-only-execution','confirmed_utc':stamp}
+    if mismatch:
+        grant[mismatch] = {'case_id':'another-case','condition':'E0','execution_id':'another-execution'}[mismatch]
+    ledger = canonical/'test-only-ledger.json'
+    ledger.write_text(json.dumps({'authorization':grant}))
+    receipt_path = canonical/'test-only-reconciliation.json'
+    receipt = {'verified_utc':stamp,'authoritative_host_verified':True,'prior_hosts_sealed':True,
+               'unknown_exposure_usd':0,'allocation_id':'test-only-allocation',
+               'known_prior_cost_usd':0,'remaining_allocation_usd':3,
+               'scope_states':{s:'test-only' for s in ('calibration','evaluation','pipeline','demo')},
+               'ledger_artifacts':[{'path':ledger.name,'sha256':file_hash(ledger)}]}
+    receipt_path.write_text(json.dumps(receipt))
+    account = {'allocation_id':'test-only-allocation','known_prior_cost_usd':0,'remaining_allocation_usd':3,
+               'reconciliation_reference':{'path':str(receipt_path),'sha256':file_hash(receipt_path)}}
+    result = preflight('demo','E3',inventory=[row],identities={},account=account,pricing={},
+                       budget={'paid_authorized':False},execution_id='test-only-execution')
+    assert ('DEMO_CASE_AUTHORIZATION_REQUIRED' in result['reasons']) is (mismatch is not None)
+    assert result['authorized'] is False and 'PAID_RELEASE_NOT_AUTHORIZED' in result['reasons']
+    assert result['attempted'] == result['received'] == 0 and result['client_created'] is False
+
+
 def test_unfinished_checkpoint_is_retained_in_partial_report():
     from scripts.run_vinsoc_query_acceptance import retain_active_checkpoint
     row = inventory_for('pipeline')[0]

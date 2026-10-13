@@ -510,7 +510,7 @@ def main():
     benchmark_parser.add_argument("--limit", type=int, default=None, help="Optional number of scenarios to run")
 
     query_parser = subparsers.add_parser('query', help='Guarded real query batch or offline preflight')
-    query_parser.add_argument('--scope', choices=['calibration','evaluation','pipeline'], default='pipeline')
+    query_parser.add_argument('--scope', choices=['calibration','evaluation','pipeline','demo'], default='pipeline')
     query_parser.add_argument('--condition', choices=['E0','E3'], default='E3')
     query_parser.add_argument('--preflight-only', action='store_true')
     query_parser.add_argument('--private-inputs', type=Path)

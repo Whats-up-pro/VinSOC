@@ -193,6 +193,68 @@ def test_public_cli_forwards_verbose_to_review(monkeypatch, tmp_path):
     assert captured == ['case.json', '--output', 'review.json', '--verbose']
 
 
+@pytest.mark.parametrize('index', range(4))
+def test_public_query_preflight_accepts_each_locked_demo_without_live_execution(monkeypatch, tmp_path, index):
+    import cli.main as cli
+    import scripts.run_vinsoc_query_acceptance as runner
+    chosen = json.loads(Path('results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())['cases'][index]
+    def forbidden_live(*args, **kwargs):
+        pytest.fail('Preflight must stop before live/provider creation')
+    monkeypatch.setattr(runner, 'run_live', forbidden_live)
+    output = tmp_path/'preflight.json'
+    monkeypatch.setattr('sys.argv', ['vinsoc', 'query', '--scope', 'demo', '--condition', 'E3',
+                                   '--case-id', chosen['case_id'], '--question', chosen['question'],
+                                   '--preflight-only', '--output', str(output)])
+    assert cli.main() == 1  # No private authorization/CI/runtime data are supplied.
+    result = json.loads(output.read_text(encoding='utf-8'))
+    assert result['release']['case_ids'] == [chosen['case_id']]
+    assert result['release']['authorized'] is False
+    assert result['release']['client_created'] is False
+    assert result['release']['attempted'] == result['release']['received'] == 0
+
+
+def test_public_demo_cli_requires_e3_before_preflight_or_provider(monkeypatch, tmp_path, capsys):
+    import cli.main as cli
+    chosen = json.loads(Path('results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())['cases'][0]
+    output = tmp_path/'preflight.json'
+    monkeypatch.setattr('sys.argv', ['vinsoc', 'query', '--scope', 'demo', '--condition', 'E0',
+                                   '--case-id', chosen['case_id'], '--question', chosen['question'],
+                                   '--preflight-only', '--output', str(output)])
+    with pytest.raises(SystemExit) as raised:
+        cli.main()
+    assert raised.value.code == 2
+    assert 'single-case demo requires --condition E3' in capsys.readouterr().err
+    assert not output.exists()
+
+
+@pytest.mark.parametrize('mismatch', ['scope', 'condition', 'case_id'])
+def test_cli_rejects_a_release_that_disagrees_with_selected_demo_before_live(monkeypatch, tmp_path, mismatch):
+    import cli.main as cli
+    import scripts.run_vinsoc_query_acceptance as runner
+    cases = json.loads(Path('results/evaluation_v1/text2sql_integration_v1/demo_selection.json').read_text())['cases']
+    chosen = cases[1]
+    release = {'scope':'demo','condition':'E3','case_ids':[chosen['case_id']]}
+    if mismatch == 'scope':
+        release['scope'] = 'pipeline'
+    elif mismatch == 'condition':
+        release['condition'] = 'E0'
+    else:
+        release['case_ids'] = [cases[0]['case_id']]
+    # Deliberately incomplete release: no paid authorization, model output or SDK stand-in.
+    path = tmp_path/'invalid-release.json'
+    path.write_text(json.dumps(release))
+    def forbidden_live(*args, **kwargs):
+        pytest.fail('Mismatched release must be rejected before entering live execution')
+    monkeypatch.setattr(runner, 'run_live', forbidden_live)
+    monkeypatch.setattr('sys.argv', ['vinsoc','query','--scope','demo','--condition','E3',
+                                   '--case-id',chosen['case_id'],'--question',chosen['question'],
+                                   '--release',str(path),'--output',str(tmp_path/'live')])
+    with pytest.raises(SystemExit) as raised:
+        cli.main()
+    assert raised.value.code == 2
+    assert not (tmp_path/'live').exists()
+
+
 def test_saved_artifact_text_is_escaped():
     from scripts.render_query_pipeline_report import escaped_json
     saved = json.loads(Path('results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json').read_text())

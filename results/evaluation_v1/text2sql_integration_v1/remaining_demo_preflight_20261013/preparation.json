@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "purpose": "actual_offline_preflight_for_remaining_pinned_demos_not_model_results",
+  "source_ci_run_id": 38359598774,
+  "locked_selection_sha256": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+  "prior_audit_sha256": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e",
+  "existing_case": "ctu_cross_708b66575657429a",
+  "missing_cases": [
+    {
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.",
+      "receipt": "results/evaluation_v1/text2sql_integration_v1/remaining_demo_preflight_20261013/ctu_cross_66b8e92a76c3359b.json",
+      "sha256": "49239a1edce0f8618b411a218f7c83885216c2d2fe4744a5c9a0e1b92395a4db",
+      "exit_code": 1,
+      "status": "blocked",
+      "reasons": [
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ROUTING",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ASSESSMENT",
+        "PAID_RELEASE_NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.",
+      "receipt": "results/evaluation_v1/text2sql_integration_v1/remaining_demo_preflight_20261013/ctu_cross_3f659571f998adb0.json",
+      "sha256": "3dbf91adb611c2f83cba7e39afadf1c9265b6b984c09e145753da3dc65f9ae41",
+      "exit_code": 1,
+      "status": "blocked",
+      "reasons": [
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ROUTING",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ASSESSMENT",
+        "PAID_RELEASE_NOT_AUTHORIZED"
+      ]
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "question": "List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.",
+      "receipt": "results/evaluation_v1/text2sql_integration_v1/remaining_demo_preflight_20261013/ctu_cross_bce6d3679ade4cd6.json",
+      "sha256": "fd5a78be0c3207728fa92aaf1c9052df33201203ba5b38fbbb07d73197636021",
+      "exit_code": 1,
+      "status": "blocked",
+      "reasons": [
+        "CANONICAL_RECONCILIATION_REQUIRED",
+        "FULL_LOCKED_INVENTORY_UNVERIFIED",
+        "RUNTIME_CODE_CI_OR_ISOLATION_UNVERIFIED",
+        "ACCOUNT_OR_RECONCILIATION_UNVERIFIED",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ROUTING",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_R2",
+        "PRICING_OR_TOKEN_BOUND_UNVERIFIED_ASSESSMENT",
+        "PAID_RELEASE_NOT_AUTHORIZED"
+      ]
+    }
+  ],
+  "budget_planning": {
+    "basis": "sum of three conservative single-case ceilings from the committed run10 preflight; current pricing/account validation remains required",
+    "existing_allocation_limit_usd": "3.0",
+    "verified_prior_cost_usd": "0.061155",
+    "remaining_allocation_usd": "2.938845",
+    "historical_single_case_ceiling_usd": "1.6732608",
+    "three_case_ceiling_usd": "5.0197824",
+    "minimum_total_allocation_under_historical_bound_usd": "5.0809374",
+    "gap_for_three_case_batch_under_historical_bound_usd": "2.0809374",
+    "batch_release_implemented": false,
+    "batch_release_authorized": false
+  },
+  "cloud_runner_support": {
+    "current_supported_case_id": "ctu_cross_708b66575657429a",
+    "selected_other_cases_supported": false,
+    "reason": "existing cloud authorization and selection are pinned to the first case and full-e2e-10 is already consumed"
+  },
+  "new_model_calls": 0,
+  "new_cost_usd": 0,
+  "provider_created": false,
+  "human_review_receipt_available": false,
+  "source_parent_commit": "3725ec3cc50f92d5e2a27ee3ce4232f63a4efa81",
+  "code_files": {
+    "cli/main.py": "d8bd46f2a13dd460eff702fca60d869fe650d0c081635a311a9df61e8dbba25d",
+    "scripts/run_vinsoc_query_acceptance.py": "fba0afe09a9c155e61424a032b30e25e5976a41ef7616f85e1588bc8588c0ce9",
+    "evaluation/finalization/query_pipeline_contract.py": "33ab50b8d79ee212a5c87c2bceb2acc2e95ec25784d6fcaeb388709ced61b705",
+    "evaluation/finalization/query_runtime_validation.py": "28ee81d7500ba761646ad43d1333b7600ce11ac08ac22952280847b7b0e9cd88"
+  },
+  "authorization_gate": "Demo case, E3 condition and execution ID must match a fresh authorization in a hash-bound canonical allocation ledger; CLI must match the supplied live release."
+}
