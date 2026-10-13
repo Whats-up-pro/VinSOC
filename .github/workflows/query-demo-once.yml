@@ -7,6 +7,14 @@ on:
         description: Successful CI run for this exact master SHA
         required: true
         type: string
+      run_mode:
+        description: Stop after preflight or execute the authorized live demo
+        required: true
+        type: choice
+        default: preflight
+        options:
+          - preflight
+          - live
 
 permissions:
   contents: write
@@ -56,7 +64,7 @@ jobs:
         run: |
           curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-5-mini.md --output "$VINSOC_GPT5_DOC"
           curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-4.1-mini.md --output "$VINSOC_GPT41_DOC"
-      - name: Run one fixed E3 demo with remote one-shot checkpoints
+      - name: Run guarded preflight or one fixed E3 demo
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -65,7 +73,7 @@ jobs:
           test -n "$OPENAI_API_KEY"
           test -n "$VINSOC_QUERY_DEMO_AUTH_JSON"
           sudo systemd-run --unit="vinsoc-query-demo-${GITHUB_RUN_ID}" --uid="$(id -u)" --gid="$(id -g)" --property=Delegate=yes --property=MemoryMax=2G --wait --pipe --collect --working-directory="$PWD" \
-            /usr/bin/env VINSOC_QUERY_CLOUD_REQUIRED=1 OPENAI_API_KEY="$OPENAI_API_KEY" GITHUB_TOKEN="$GITHUB_TOKEN" GITHUB_SHA="$GITHUB_SHA" GITHUB_RUN_ID="$GITHUB_RUN_ID" GITHUB_CI_RUN_ID="$GITHUB_CI_RUN_ID" GITHUB_REPOSITORY="$GITHUB_REPOSITORY" GITHUB_REF="$GITHUB_REF" GITHUB_EVENT_NAME="$GITHUB_EVENT_NAME" VINSOC_QUERY_DEMO_AUTH_JSON="$VINSOC_QUERY_DEMO_AUTH_JSON" VINSOC_GPT5_DOC="$VINSOC_GPT5_DOC" VINSOC_GPT41_DOC="$VINSOC_GPT41_DOC" LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_demo_cloud --mode live --output-dir .vinsoc/query-demo-cloud/run
+            /usr/bin/env VINSOC_QUERY_CLOUD_REQUIRED=1 OPENAI_API_KEY="$OPENAI_API_KEY" GITHUB_TOKEN="$GITHUB_TOKEN" GITHUB_SHA="$GITHUB_SHA" GITHUB_RUN_ID="$GITHUB_RUN_ID" GITHUB_CI_RUN_ID="$GITHUB_CI_RUN_ID" GITHUB_REPOSITORY="$GITHUB_REPOSITORY" GITHUB_REF="$GITHUB_REF" GITHUB_EVENT_NAME="$GITHUB_EVENT_NAME" VINSOC_QUERY_DEMO_AUTH_JSON="$VINSOC_QUERY_DEMO_AUTH_JSON" VINSOC_GPT5_DOC="$VINSOC_GPT5_DOC" VINSOC_GPT41_DOC="$VINSOC_GPT41_DOC" LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_demo_cloud --mode "${{ inputs.run_mode }}" --output-dir .vinsoc/query-demo-cloud/run
       - uses: actions/upload-artifact@v4
         if: always()
         with:

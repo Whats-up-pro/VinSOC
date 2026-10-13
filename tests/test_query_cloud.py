@@ -214,3 +214,13 @@ def test_tenth_demo_authorization_reconciles_nine_transmitted_attempts():
 def test_demo_workflow_is_bound_into_runtime_identity():
     from evaluation.finalization.query_runtime_validation import source_hashes
     assert '.github/workflows/query-demo-once.yml' in source_hashes()
+
+
+def test_demo_workflow_can_stop_after_cloud_preflight_without_api_calls():
+    from pathlib import Path
+    workflow = Path('.github/workflows/query-demo-once.yml').read_text(encoding='utf-8')
+    assert 'run_mode:' in workflow
+    assert 'options:' in workflow
+    assert "- preflight" in workflow
+    assert "- live" in workflow
+    assert '--mode "${{ inputs.run_mode }}"' in workflow
