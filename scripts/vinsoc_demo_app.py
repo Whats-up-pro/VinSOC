@@ -290,23 +290,51 @@ def run_investigation(scenario: dict):
 
         # Import and run
         from agent.orchestrator import InvestigationOrchestrator
-        from agent.network_investigation_policy import NetworkInvestigationPolicy
-        from vinsoc_data.duckdb_store import DuckDBSnapshot
 
-        snapshot = DuckDBSnapshot(str(SNAPSHOT_PATH), read_only=True)
-        policy = NetworkInvestigationPolicy()
-        orchestrator = InvestigationOrchestrator(policy=policy)
-
-        # Step 4: Investigate
-        status_text.text("🤖 Model analyzing evidence...")
-        progress_bar.progress(70)
-
-        case = orchestrator.investigate(
-            snapshot=snapshot,
-            indicator=scenario["indicator"],
-            indicator_type=scenario.get("indicator_type", "ipv4"),
-            time_range=scenario["time_range"],
+        orchestrator = InvestigationOrchestrator(
+            max_steps=1,
+            duckdb_snapshot_path=str(SNAPSHOT_PATH)
         )
+        orchestrator.case_id = "demo_investigation"
+        orchestrator.evidence_store.clear()
+        orchestrator.messages = []
+        orchestrator.investigation_active = True
+
+        # Execute network investigation tool
+        args = {
+            "indicator": scenario["indicator"],
+            "indicator_type": scenario.get("indicator_type", "ipv4"),
+            "time_range": scenario["time_range"]
+        }
+
+        orchestrator._execute_tool_call({
+            "id": "demo_network_1",
+            "name": "network_investigation",
+            "arguments": args
+        })
+
+        # Get evidence
+        trace = [item.to_dict() for item in orchestrator.evidence_store.get_all_tool_calls()]
+        evidence = [
+            item.to_dict()
+            for item in orchestrator.evidence_store.get_all_evidence()
+            if item.provenance.get("source_records")
+        ]
+
+        # Build result case
+        result = {
+            "case_id": orchestrator.case_id,
+            "indicator": scenario["indicator"],
+            "time_range": scenario["time_range"],
+            "evidence": evidence,
+            "assessment": {
+                "assessment": f"Investigation of {scenario['indicator']} completed. Found {len(evidence)} evidence items.",
+                "risk_level": "UNKNOWN",
+                "confidence": "MEDIUM",
+                "observations": [],
+                "limitations": ["This is a demo - full assessment requires model review"]
+            }
+        }
 
         progress_bar.progress(90)
         time.sleep(0.5)
@@ -315,7 +343,7 @@ def run_investigation(scenario: dict):
         progress_bar.progress(100)
         status_text.text("✅ Investigation complete!")
 
-        st.session_state.investigation_results = case
+        st.session_state.investigation_results = result
         st.session_state.investigation_running = False
 
     except Exception as e:
