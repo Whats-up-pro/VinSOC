@@ -1,0 +1,35 @@
+{
+  "status": "blocked_before_guarded_runner",
+  "workflow_run_id": 38366545085,
+  "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38366545085",
+  "implementation_sha": "89409ea4d3f55b818948a7ffa3214326ffb67589",
+  "failed_stage": "Restore exact original databases and sources",
+  "failure_category": "SOURCE_CHECKSUM_MISMATCH",
+  "guarded_runner_step": "skipped_before_SDK_environment",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "model_cost_usd": 0,
+  "paid_window_claimed": false,
+  "artifact": {
+    "id": 11796308705,
+    "name": "query-demo-89409ea4d3f55b818948a7ffa3214326ffb67589-38366545085",
+    "digest": "sha256:4b225406d3e545f1a57f251f45dec04c8e890282c267ba549ceb3bb45b15c6b9",
+    "expires_at": "2027-01-11T08:02:08Z"
+  },
+  "local_endpoint_probe": {
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 2040,
+    "category": "Google Drive Quota exceeded",
+    "observed_sha256": "32a976fd794d9110556fd918d9b863d526a1fdf3a33738b1425d3a3849f9b371"
+  },
+  "original_archive_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+  "mirror": {
+    "dataset": "HAL-9001/spider-databases",
+    "revision": "4a01bbac6520cd35b216db9e1724e5e1ada60aa4",
+    "lfs_sha256": "00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b",
+    "bytes": 205800266,
+    "source_identity_changed": false
+  },
+  "created_at_utc": "2026-10-13T08:15:26.099927+00:00"
+}

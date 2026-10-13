@@ -67,7 +67,8 @@ jobs:
               if hashlib.sha256(target.read_bytes()).hexdigest()!=source['file_sha256']:
                   raise ValueError('PINNED_CTU_SOURCE_CHECKSUM_MISMATCH')
           PYTHON
-          python -m scripts.validate_original_query_data --restore-sources --output .vinsoc/query-demo-inputs/original_data_validation.json
+          curl --fail --silent --show-error --location https://huggingface.co/datasets/HAL-9001/spider-databases/resolve/4a01bbac6520cd35b216db9e1724e5e1ada60aa4/spider_data.zip --output .vinsoc/query-demo-inputs/spider_data.zip
+          python -m scripts.validate_original_query_data --restore-sources --archive .vinsoc/query-demo-inputs/spider_data.zip --output .vinsoc/query-demo-inputs/original_data_validation.json
       - name: Fetch current official model documents
         run: |
           curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-5-mini.md --output "$VINSOC_GPT5_DOC"

@@ -122,7 +122,8 @@ jobs:
           PYTHON
       - name: Verify pinned sources and replay all 120 gold queries
         run: |
-          python -m scripts.validate_original_query_data --restore-sources --output .vinsoc/query-real-data-ci/real_data_validation.json
+          curl --fail --silent --show-error --location https://huggingface.co/datasets/HAL-9001/spider-databases/resolve/4a01bbac6520cd35b216db9e1724e5e1ada60aa4/spider_data.zip --output .vinsoc/query-real-data-ci/spider_data.zip
+          python -m scripts.validate_original_query_data --restore-sources --archive .vinsoc/query-real-data-ci/spider_data.zip --output .vinsoc/query-real-data-ci/real_data_validation.json
       - name: Required real DB and isolated worker checks (no missing-input skips)
         run: |
           sudo systemd-run --unit=vinsoc-query-real-data --uid="$(id -u)" --gid="$(id -g)" --property=Delegate=yes --property=MemoryMax=2G --wait --pipe --collect --working-directory="$PWD" /usr/bin/env VINSOC_QUERY_REAL_DATA_REQUIRED=1 VINSOC_QUERY_OBSERVATION_DIR=.vinsoc/query-real-data-ci LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_real_data_checks

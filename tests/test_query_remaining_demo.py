@@ -97,3 +97,13 @@ def test_remaining_guards_are_required_in_both_python_ci_jobs():
     ci = Path('.github/workflows/ci.yml').read_text(encoding='utf-8')
     assert 'tests/test_query_remaining_demo.py' in ci
     assert 'REQUIRED_OFFLINE_GUARD_SKIP_FORBIDDEN' in ci
+
+
+def test_workflows_restore_same_pinned_archive_from_immutable_mirror():
+    mirror = 'https://huggingface.co/datasets/HAL-9001/spider-databases/resolve/4a01bbac6520cd35b216db9e1724e5e1ada60aa4/spider_data.zip'
+    for path, directory in [('.github/workflows/ci.yml', 'query-real-data-ci'),
+                            ('.github/workflows/query-demo-once.yml', 'query-demo-inputs')]:
+        workflow = Path(path).read_text(encoding='utf-8')
+        assert mirror in workflow
+        assert '--archive .vinsoc/'+directory+'/spider_data.zip' in workflow
+        assert '--restore-sources' in workflow

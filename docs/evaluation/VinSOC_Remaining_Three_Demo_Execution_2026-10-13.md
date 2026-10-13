@@ -64,3 +64,21 @@ and cloud preflight-only receipt are required before live dispatch.
 
 No paid calls were made while preparing this change. Actual workflow IDs, usage,
 costs, per-case outputs, CI and viewer are recorded in the subsequent handoff.
+
+## Original archive transport blocker
+
+Cloud preflight `38366545085` on `89409ea` stopped in source restoration before
+the guarded runner step. The official Google Drive endpoint returned a quota
+page rather than the ZIP, and the existing checksum gate rejected it. No SDK
+client, model request or paid claim was created.
+
+The source bytes are now restored from an immutable public mirror revision:
+`HAL-9001/spider-databases@4a01bbac6520cd35b216db9e1724e5e1ada60aa4`.
+The publisher's LFS object hash matches the original locked archive SHA-256
+`00636695dabed6b5f4b8328a16b13e069a2f16591d5efcce57660669c85b121b`.
+The original validator checks that full archive and all pinned members before
+materialization; a mismatch still fails. The original source manifest, DB
+binaries, two delivered ZIPs and gold remain unchanged. This is transport of
+the same original archive, not a reconstruction or new source identity.
+
+Mirror provenance: https://huggingface.co/datasets/HAL-9001/spider-databases.
