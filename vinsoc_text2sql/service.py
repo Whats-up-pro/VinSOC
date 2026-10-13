@@ -15,7 +15,7 @@ from evaluation.r2_cross_domain_v1.tools import DatabaseTools
 from .executor import SqlExecutor
 
 
-R2_CASE_CALL_CAP = 6
+R2_CASE_CALL_CAP = 8
 
 
 @dataclass(frozen=True)
@@ -86,9 +86,10 @@ def _generate(request, condition, tools, transport, telemetry_sink):
             candidate_sql = None
             used_r2_calls = transport.counters()["attempted"]-attempted_before
             if condition == "E3":
-                # The release reserves six R2 calls per case.  Give schema
-                # grounding enough room to repair a rejected link while always
-                # preserving at least one generator call.
+                # The release reserves eight R2 calls per case.  A linker may
+                # need all five bounded turns to recover truncated final JSON;
+                # keep three generator turns for the candidate and semantic
+                # re-audits observed in the live E3 path.
                 turn_cap = min(5 if role == "linker" else ROLE_TURN_CAP,
                                R2_CASE_CALL_CAP-used_r2_calls)
             else:

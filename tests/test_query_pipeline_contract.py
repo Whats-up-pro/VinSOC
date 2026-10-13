@@ -15,9 +15,9 @@ def test_release_denies_missing_inputs_without_client():
 
 
 def test_all_layers_counted_in_upper_bound():
-    assert role_caps('calibration', 'E3') == {'routing': 0, 'r2': 168, 'assessment': 0}
-    assert role_caps('evaluation', 'E3') == {'routing': 0, 'r2': 672, 'assessment': 0}
-    assert role_caps('pipeline', 'E3') == {'routing': 32, 'r2': 192, 'assessment': 32}
+    assert role_caps('calibration', 'E3') == {'routing': 0, 'r2': 192, 'assessment': 0}
+    assert role_caps('evaluation', 'E3') == {'routing': 0, 'r2': 768, 'assessment': 0}
+    assert role_caps('pipeline', 'E3') == {'routing': 32, 'r2': 256, 'assessment': 32}
     assert role_caps('pipeline', 'E0') == {'routing': 32, 'r2': 32, 'assessment': 32}
 
 
@@ -31,7 +31,7 @@ def test_single_demo_reserves_one_complete_e3_case_without_selection_gate():
 
     selected = inventory_for('demo')
     assert len(selected) == 1
-    assert role_caps('demo', 'E3') == {'routing': 1, 'r2': 6, 'assessment': 1}
+    assert role_caps('demo', 'E3') == {'routing': 1, 'r2': 8, 'assessment': 1}
     receipt = preflight('demo', 'E3', inventory=selected, identities={},
                         account={}, pricing={}, budget={})
     assert receipt['planned'] == 1
@@ -110,6 +110,6 @@ def test_budget_package_includes_single_demo_e3_ceiling(monkeypatch):
     }
     result = budgeter.cost_bound(pricing, 'documented_context_window')
     demo = result['scopes']['demo_E3']
-    assert demo['request_caps_by_role'] == {'routing':1,'r2':6,'assessment':1}
-    assert demo['max_requests'] == 8
-    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.4532608)
+    assert demo['request_caps_by_role'] == {'routing':1,'r2':8,'assessment':1}
+    assert demo['max_requests'] == 10
+    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.6572608)

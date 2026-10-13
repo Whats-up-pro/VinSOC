@@ -22,13 +22,13 @@ def role_caps(scope, condition):
     if condition not in ('E0', 'E3'):
         raise ValueError('INVALID_CONDITION')
     if scope in ('calibration', 'evaluation'):
-        return {'routing': 0, 'r2': (24 if scope == 'calibration' else 96)*7, 'assessment': 0}
+        return {'routing': 0, 'r2': (24 if scope == 'calibration' else 96)*8, 'assessment': 0}
     if scope == 'pipeline':
-        return {'routing': 32, 'r2': 32*(6 if condition == 'E3' else 1), 'assessment': 32}
+        return {'routing': 32, 'r2': 32*(8 if condition == 'E3' else 1), 'assessment': 32}
     if scope == 'demo':
         if condition != 'E3':
             raise ValueError('DEMO_REQUIRES_E3')
-        return {'routing': 1, 'r2': 6, 'assessment': 1}
+        return {'routing': 1, 'r2': 8, 'assessment': 1}
     raise ValueError('INVALID_RELEASE_SCOPE')
 
 

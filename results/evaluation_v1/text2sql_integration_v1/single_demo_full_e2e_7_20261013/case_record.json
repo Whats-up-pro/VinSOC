@@ -1,0 +1,1647 @@
+{
+  "case_id": "ctu_cross_708b66575657429a",
+  "created_at": "2026-10-13T01:58:05.895322",
+  "initial_indicator": {
+    "type": "query",
+    "value": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries."
+  },
+  "tool_trace": [
+    {
+      "call_id": "tc_3e45fcd7_1",
+      "tool": "network_query",
+      "arguments": {
+        "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries."
+      },
+      "timestamp": "2026-10-13T01:58:00.865429",
+      "result_summary": "Result received",
+      "evidence_ids": [
+        "ev_df6fb75f_2",
+        "ev_93260275_3"
+      ],
+      "error": null,
+      "duration_ms": 40162.484
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ev_df6fb75f_2",
+      "source_tool": "network_query",
+      "source_name": "CTU-13 S5/S7 verified snapshot",
+      "evidence_class": "OBSERVED",
+      "type": "query_execution",
+      "data": {
+        "database_id": "ctu_dev",
+        "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+        "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+        "sql_sha256": "1e89d33f934099a3ef4a87ec4532fa857c22b0423f1e48e3456304c7bb0b7cad",
+        "result_sha256": "afee621deda655e463f2e024d586f6e02cced8b24bf779ef830857795b66abb0",
+        "executor_version": "text2sql_namespace_cgroup_executor_v2",
+        "scope_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-7",
+        "tables": [
+          "network_flows"
+        ],
+        "lineage_mode": "snapshot_query",
+        "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+        "sql": "SELECT source_dataset AS scenario,\n       COUNT(DISTINCT dst_ip) AS distinct_dst_ip_count\nFROM network_flows\nWHERE protocol = 'TCP'\n  AND ((source_dataset = 'ctu13_s5' AND event_time > TIMESTAMP '2011-08-15 17:00:00')\n       OR (source_dataset = 'ctu13_s7' AND event_time > TIMESTAMP '2011-08-16 14:00:00'))\nGROUP BY source_dataset;",
+        "isolation": {
+          "backend": "bubblewrap",
+          "network": "unshared",
+          "secrets": "absent",
+          "snapshot_mount": "read_only",
+          "memory_bytes": 536870912,
+          "cpu_count": 1,
+          "timeout_seconds": 10
+        }
+      },
+      "collected_at": "2026-10-13T01:58:00.865471",
+      "observed_at": null,
+      "confidence": null,
+      "provenance": {
+        "database_id": "ctu_dev",
+        "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+        "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+        "sql_sha256": "1e89d33f934099a3ef4a87ec4532fa857c22b0423f1e48e3456304c7bb0b7cad",
+        "result_sha256": "afee621deda655e463f2e024d586f6e02cced8b24bf779ef830857795b66abb0",
+        "executor_version": "text2sql_namespace_cgroup_executor_v2",
+        "scope_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-7",
+        "tables": [
+          "network_flows"
+        ],
+        "lineage_mode": "snapshot_query"
+      },
+      "references": [],
+      "related_evidence_ids": [],
+      "linked_from": "tc_3e45fcd7_1"
+    },
+    {
+      "evidence_id": "ev_93260275_3",
+      "source_tool": "network_query",
+      "source_name": "CTU-13 SQL result",
+      "evidence_class": "DERIVED",
+      "type": "query_result",
+      "data": {
+        "columns": [
+          {
+            "name": "scenario",
+            "type": "VARCHAR"
+          },
+          {
+            "name": "distinct_dst_ip_count",
+            "type": "BIGINT"
+          }
+        ],
+        "rows": [
+          [
+            "ctu13_s5",
+            1529
+          ],
+          [
+            "ctu13_s7",
+            1210
+          ]
+        ],
+        "row_count": 2,
+        "truncated": false,
+        "result_sha256": "afee621deda655e463f2e024d586f6e02cced8b24bf779ef830857795b66abb0"
+      },
+      "collected_at": "2026-10-13T01:58:00.865515",
+      "observed_at": null,
+      "confidence": null,
+      "provenance": {
+        "database_id": "ctu_dev",
+        "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+        "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+        "sql_sha256": "1e89d33f934099a3ef4a87ec4532fa857c22b0423f1e48e3456304c7bb0b7cad",
+        "result_sha256": "afee621deda655e463f2e024d586f6e02cced8b24bf779ef830857795b66abb0",
+        "executor_version": "text2sql_namespace_cgroup_executor_v2",
+        "scope_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-7",
+        "tables": [
+          "network_flows"
+        ],
+        "lineage_mode": "snapshot_query"
+      },
+      "references": [],
+      "related_evidence_ids": [
+        "ev_df6fb75f_2"
+      ],
+      "linked_from": "tc_3e45fcd7_1"
+    }
+  ],
+  "hypotheses": [],
+  "risk_level": "UNKNOWN",
+  "confidence": "LOW",
+  "limitations": [
+    "CTI enrichment was not performed"
+  ],
+  "final_assessment": "",
+  "supporting_evidence": [],
+  "contradicting_evidence": [],
+  "metadata": {
+    "investigation_duration_seconds": 49.392054,
+    "llm_provider": "openai_query_guarded",
+    "llm_run": {
+      "roles": [
+        "routing",
+        "r2",
+        "r2",
+        "r2",
+        "r2",
+        "r2",
+        "r2",
+        "assessment"
+      ],
+      "attempted": 8,
+      "received": 8,
+      "valid_usage": 8,
+      "known_usd": 0.0105364,
+      "cost_unknown": false,
+      "cost_events": [
+        {
+          "role": "routing",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "a6da9c31eea446b5b1f8c4150471a92c",
+          "request_sha256": "0562a0aefae768e03283294aaf33a98e480328f54d5f030594dd559d93143c11",
+          "received": true,
+          "reserved_usd": 0.4206304,
+          "cost_usd": 0.0002448,
+          "usage": {
+            "input_tokens": 348,
+            "output_tokens": 66,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 2.336267590000034,
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "response_id": "chatcmpl-EYM3ToliuH7CyluuxZaeQfYA6WX2Y",
+          "provider_request_id": "req_8622c4fa967a4ec4b0dbc5616b6dc367",
+          "native_tool_calls": [
+            {
+              "id": "call_tgrMTGig3ZNJwM35ywbMWQHP",
+              "function": {
+                "arguments": "{\"question\":\"Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.\"}",
+                "name": "network_query"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "09c7d01ad0a64354ae11cbcbe71dab94",
+          "request_sha256": "3e6f2226e10f3b0da48b186826233a5bd54a1ce83cde7c7883c454b44f086fd8",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.00080725,
+          "usage": {
+            "input_tokens": 1357,
+            "output_tokens": 234,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 2.5348912070001006,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3WGwt0og3W1fxW5eEDavpikAid",
+          "provider_request_id": "req_4455df58839b475c911b3ac8456bf6fa",
+          "native_tool_calls": [
+            {
+              "id": "call_sOLSvVmAHAUf4PU2rdBJFpCk",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"query\":\"CTU-5\",\"match_kind\":\"exact\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "681f2d7880de4af0ab998188687ce8fe",
+          "request_sha256": "1a34b67485ea27fb08b8ffc279535189638fa46ee04fcb26696312bc1a611266",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.0003923,
+          "usage": {
+            "input_tokens": 1790,
+            "output_tokens": 102,
+            "cached_tokens": 1152
+          },
+          "latency_seconds": 1.2585823690000097,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3aVp2XfBOL9ka9nZ3w74fFRYch",
+          "provider_request_id": "req_0eaa657d2b9240fd9169d0b738edd0e8",
+          "native_tool_calls": [
+            {
+              "id": "call_hpMjMcuUvyT9JQo64xl90fmf",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"protocol\",\"query\":\"TCP\",\"match_kind\":\"exact\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "7e8fc4fab833474b8021e3c04b951d40",
+          "request_sha256": "46668fdf4dc69f71684b820d02d1b7b40d252938125ee23d7d17b8a87837d623",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.0021531,
+          "usage": {
+            "input_tokens": 2110,
+            "output_tokens": 1000,
+            "cached_tokens": 1664
+          },
+          "latency_seconds": 6.637288904999991,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3eJYgHv2kYsZ1BiUNCm5WRwZRP",
+          "provider_request_id": "req_311f80cc406b4d1d963e435a56884781",
+          "native_tool_calls": []
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "8ae7320af3424472a46abac78535172b",
+          "request_sha256": "410478eaff7bcf2e5b21b356fbb7f1669bc55558f4631ad7623f5e8f02965f36",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.002499,
+          "usage": {
+            "input_tokens": 1996,
+            "output_tokens": 1000,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 7.5267026940000505,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3mea2FvDwblAf7IK00ekMI4qye",
+          "provider_request_id": "req_cfe989fcbb054155b94dc165e701cbf1",
+          "native_tool_calls": []
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "00af1ed471db423697b9313ef851db55",
+          "request_sha256": "64386954ececf79f745b79f1f19a7461f6adf597a9d7b6c313f7126fef0efe94",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.00195475,
+          "usage": {
+            "input_tokens": 2027,
+            "output_tokens": 940,
+            "cached_tokens": 1920
+          },
+          "latency_seconds": 7.021465876999969,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3wkKV1hPW082DcSR3Y18kVf5Ko",
+          "provider_request_id": "req_ab114ec6777743c3ba36fd8bf83313f9",
+          "native_tool_calls": []
+        },
+        {
+          "role": "r2",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "4e93eaab50004f0585c734e925fdb027",
+          "request_sha256": "310f4411149ed7db3048f9877a4573f7303821112c6ef3472a1f5aac9e705280",
+          "received": true,
+          "reserved_usd": 0.102,
+          "cost_usd": 0.001202,
+          "usage": {
+            "input_tokens": 1792,
+            "output_tokens": 377,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 2.9945029479999903,
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM45J3lBMYUh0LwBfCpAsR8Tavji",
+          "provider_request_id": "req_d46224ac85b64af19908d595fdb5c8c9",
+          "native_tool_calls": []
+        },
+        {
+          "role": "assessment",
+          "case_id": "ctu_cross_708b66575657429a",
+          "condition": "E3",
+          "request_id": "565b0ae4b8934e48b7aa44c8c14830d8",
+          "request_sha256": "e565db0eaaadad8cb0c8522188f6b39b5d0b4e6b6fd5d2b040f93cc6c0542c2b",
+          "received": true,
+          "reserved_usd": 0.4206304,
+          "cost_usd": 0.0012832,
+          "usage": {
+            "input_tokens": 1900,
+            "output_tokens": 327,
+            "cached_tokens": 0
+          },
+          "latency_seconds": 2.964442381000026,
+          "actual_model": "gpt-4.1-mini-2025-04-14",
+          "response_id": "chatcmpl-EYM4AbXQzmQolk87oVjCHPwlZHzto",
+          "provider_request_id": "req_87034ee12c934d1585eda6c5fdc5e401",
+          "native_tool_calls": []
+        }
+      ]
+    },
+    "total_steps": 1,
+    "triage": {
+      "verdict": "NEEDS_INVESTIGATION",
+      "reason": "Authorized query scope; no IOC triage applied",
+      "confidence": "LOW"
+    },
+    "lifecycle_trace": [
+      {
+        "phase": "triage",
+        "status": "completed",
+        "note": "Query and trusted snapshot/table scope validated",
+        "timestamp": "2026-10-13T01:57:16.503241"
+      },
+      {
+        "phase": "investigate",
+        "status": "started",
+        "note": "Running evidence-driven investigation loop",
+        "timestamp": "2026-10-13T01:57:16.503252"
+      },
+      {
+        "phase": "investigate",
+        "status": "completed",
+        "note": "Investigation loop completed",
+        "timestamp": "2026-10-13T01:58:05.895267"
+      },
+      {
+        "phase": "verify",
+        "status": "started",
+        "note": "Validating traceability and schema",
+        "timestamp": "2026-10-13T01:58:05.895293"
+      },
+      {
+        "phase": "verify",
+        "status": "failed",
+        "note": "Network policy validation failed",
+        "timestamp": "2026-10-13T01:58:06.086120"
+      },
+      {
+        "phase": "review",
+        "status": "blocked",
+        "note": "Invalid technical case cannot reach analyst approval",
+        "timestamp": "2026-10-13T01:58:06.086159"
+      }
+    ],
+    "security_flags": [],
+    "skill_contracts": {
+      "cti_enrichment": {
+        "skill_name": "cti_enrichment",
+        "version": "1.2.0",
+        "required_inputs": [
+          "indicator"
+        ],
+        "output_schema": "CTIResult",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      },
+      "network_investigation": {
+        "skill_name": "network_investigation",
+        "version": "2.0.0",
+        "required_inputs": [
+          "indicator"
+        ],
+        "output_schema": "NetworkResult",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      },
+      "endpoint_investigation": {
+        "skill_name": "endpoint_investigation",
+        "version": "1.0.0",
+        "required_inputs": [
+          "host"
+        ],
+        "output_schema": "EndpointResult",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      },
+      "network_query": {
+        "skill_name": "network_query",
+        "version": "1.0.0",
+        "required_inputs": [
+          "question"
+        ],
+        "output_schema": "QueryExecutionReceipt",
+        "lifecycle_stage": "investigate",
+        "read_only": true
+      }
+    },
+    "runbook": {
+      "title": "SOC IOC Investigation",
+      "trigger": "Suspicious indicator alert",
+      "triage_checks": [
+        "Validate alert context and source fidelity",
+        "Classify indicator type and trust level",
+        "Decide close vs continue"
+      ],
+      "investigation_steps": [
+        "Collect CTI evidence for the indicator",
+        "Pivot to network telemetry when communication evidence is needed",
+        "Pivot to endpoint telemetry when process execution evidence is needed"
+      ],
+      "verification_checks": [
+        "Ensure every hypothesis cites evidence IDs",
+        "Validate result schema and trace integrity"
+      ],
+      "review_questions": [
+        "What evidence supports or contradicts the assessment?",
+        "What data gaps remain before action by human analyst?"
+      ]
+    },
+    "human_decisions": [],
+    "hitl_enabled": false,
+    "review_status": "blocked_invalid_technical",
+    "traceability_valid": true,
+    "traceability_violations": [],
+    "query_policy": {
+      "termination": "ASSESSMENT_VALIDATION_FAILED",
+      "assessment": null,
+      "validation": {
+        "valid": false,
+        "issues": [
+          "QUERY_RESULT_NOT_CITED",
+          "MISSING_QUERY_OBSERVATION"
+        ],
+        "independent_query_replay": true,
+        "semantic_correctness_verified": false
+      },
+      "prose_semantics_machine_verified": false
+    },
+    "schema_valid": true,
+    "orchestration_mode": "query_evidence_driven",
+    "query_scope": {
+      "database_id": "ctu_dev",
+      "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+      "allowed_tables": [
+        "network_flows"
+      ],
+      "scope_id": "text2sql-integration-20261008-demo-ctu_cross_708b66575657429a-full-e2e-7"
+    },
+    "query_generation": {
+      "case_id": "query_833ee41d5e5541638d8a2f63d976a8de",
+      "database_id": "ctu_dev",
+      "condition": "E3",
+      "final_sql": "SELECT source_dataset AS scenario,\n       COUNT(DISTINCT dst_ip) AS distinct_dst_ip_count\nFROM network_flows\nWHERE protocol = 'TCP'\n  AND ((source_dataset = 'ctu13_s5' AND event_time > TIMESTAMP '2011-08-15 17:00:00')\n       OR (source_dataset = 'ctu13_s7' AND event_time > TIMESTAMP '2011-08-16 14:00:00'))\nGROUP BY source_dataset;",
+      "attempted_calls": 6,
+      "response_count": 6,
+      "responses": [
+        {
+          "role": "linker",
+          "response": {
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_sOLSvVmAHAUf4PU2rdBJFpCk",
+                "function": {
+                  "arguments": "{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"query\":\"CTU-5\",\"match_kind\":\"exact\"}",
+                  "name": "value_search"
+                },
+                "type": "function"
+              }
+            ],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EYM3WGwt0og3W1fxW5eEDavpikAid",
+            "finish_reason": "tool_calls",
+            "usage": {
+              "input_tokens": 1357,
+              "output_tokens": 234,
+              "cached_tokens": 0
+            },
+            "cost_usd": 0.00080725
+          }
+        },
+        {
+          "role": "linker",
+          "response": {
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_hpMjMcuUvyT9JQo64xl90fmf",
+                "function": {
+                  "arguments": "{\"table\":\"network_flows\",\"column\":\"protocol\",\"query\":\"TCP\",\"match_kind\":\"exact\"}",
+                  "name": "value_search"
+                },
+                "type": "function"
+              }
+            ],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EYM3aVp2XfBOL9ka9nZ3w74fFRYch",
+            "finish_reason": "tool_calls",
+            "usage": {
+              "input_tokens": 1790,
+              "output_tokens": 102,
+              "cached_tokens": 1152
+            },
+            "cost_usd": 0.0003923
+          }
+        },
+        {
+          "role": "linker",
+          "response": {
+            "content": "",
+            "tool_calls": [],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EYM3eJYgHv2kYsZ1BiUNCm5WRwZRP",
+            "finish_reason": "length",
+            "usage": {
+              "input_tokens": 2110,
+              "output_tokens": 1000,
+              "cached_tokens": 1664
+            },
+            "cost_usd": 0.0021531
+          }
+        },
+        {
+          "role": "linker",
+          "response": {
+            "content": "",
+            "tool_calls": [],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EYM3mea2FvDwblAf7IK00ekMI4qye",
+            "finish_reason": "length",
+            "usage": {
+              "input_tokens": 1996,
+              "output_tokens": 1000,
+              "cached_tokens": 0
+            },
+            "cost_usd": 0.002499
+          }
+        },
+        {
+          "role": "linker",
+          "response": {
+            "content": "{\n  \"tables\": [\"network_flows\"],\n  \"columns\": [\n    {\"table\": \"network_flows\", \"column\": \"source_dataset\"},\n    {\"table\": \"network_flows\", \"column\": \"event_time\"},\n    {\"table\": \"network_flows\", \"column\": \"dst_ip\"},\n    {\"table\": \"network_flows\", \"column\": \"protocol\"}\n  ],\n  \"relationships\": [],\n  \"grounded_values\": [\n    {\"evidence_id\": \"catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4\", \"operator\": \"=\"},\n    {\"evidence_id\": \"catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c\", \"operator\": \"=\"},\n    {\"evidence_id\": \"catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254\", \"operator\": \"=\"}\n  ],\n  \"constraints\": [\n    {\"kind\": \"domain_predicate\", \"table\": \"network_flows\", \"column\": \"source_dataset\", \"operator\": \"exact\", \"value\": \"ctu13_s5\", \"evidence_id\": \"catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4\"},\n    {\"kind\": \"time_threshold\", \"table\": \"network_flows\", \"column\": \"event_time\", \"operator\": \">\", \"value\": \"2011-08-15T17:00:00\", \"time_type\": \"timestamp\"},\n    {\"kind\": \"domain_predicate\", \"table\": \"network_flows\", \"column\": \"source_dataset\", \"operator\": \"exact\", \"value\": \"ctu13_s7\", \"evidence_id\": \"catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c\"},\n    {\"kind\": \"time_threshold\", \"table\": \"network_flows\", \"column\": \"event_time\", \"operator\": \">\", \"value\": \"2011-08-16T14:00:00\", \"time_type\": \"timestamp\"},\n    {\"kind\": \"domain_predicate\", \"table\": \"network_flows\", \"column\": \"protocol\", \"operator\": \"exact\", \"value\": \"TCP\", \"evidence_id\": \"catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254\"}\n  ]\n}",
+            "tool_calls": [],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EYM3wkKV1hPW082DcSR3Y18kVf5Ko",
+            "finish_reason": "stop",
+            "usage": {
+              "input_tokens": 2027,
+              "output_tokens": 940,
+              "cached_tokens": 1920
+            },
+            "cost_usd": 0.00195475
+          }
+        },
+        {
+          "role": "generator",
+          "response": {
+            "content": "{\"sql\":\"SELECT source_dataset AS scenario,\\n       COUNT(DISTINCT dst_ip) AS distinct_dst_ip_count\\nFROM network_flows\\nWHERE protocol = 'TCP'\\n  AND ((source_dataset = 'ctu13_s5' AND event_time > TIMESTAMP '2011-08-15 17:00:00')\\n       OR (source_dataset = 'ctu13_s7' AND event_time > TIMESTAMP '2011-08-16 14:00:00'))\\nGROUP BY source_dataset;\"}",
+            "tool_calls": [],
+            "model": "gpt-5-mini-2025-08-07",
+            "actual_model": "gpt-5-mini-2025-08-07",
+            "response_id": "chatcmpl-EYM45J3lBMYUh0LwBfCpAsR8Tavji",
+            "finish_reason": "stop",
+            "usage": {
+              "input_tokens": 1792,
+              "output_tokens": 377,
+              "cached_tokens": 0
+            },
+            "cost_usd": 0.001202
+          }
+        }
+      ],
+      "trajectory": [
+        {
+          "tool": "value_search",
+          "arguments": {
+            "table": "network_flows",
+            "column": "source_dataset",
+            "query": "CTU-5",
+            "match_kind": "exact"
+          },
+          "result": {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "source_dataset",
+            "type": "VARCHAR",
+            "resolution": "unresolved",
+            "matches": [],
+            "domain_witnesses": [
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "source_dataset",
+                "type": "VARCHAR",
+                "value": "ctu13_s5",
+                "evidence_id": "catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4"
+              },
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "source_dataset",
+                "type": "VARCHAR",
+                "value": "ctu13_s7",
+                "evidence_id": "catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c"
+              }
+            ],
+            "domain": [
+              "ctu13_s5",
+              "ctu13_s7"
+            ],
+            "domain_complete": true
+          }
+        },
+        {
+          "tool": "value_search",
+          "arguments": {
+            "table": "network_flows",
+            "column": "protocol",
+            "query": "TCP",
+            "match_kind": "exact"
+          },
+          "result": {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "protocol",
+            "type": "VARCHAR",
+            "resolution": "matched",
+            "matches": [
+              {
+                "database_id": "ctu_dev",
+                "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+                "table": "network_flows",
+                "column": "protocol",
+                "type": "VARCHAR",
+                "value": "TCP",
+                "evidence_id": "catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254"
+              }
+            ],
+            "domain_witnesses": [],
+            "domain": [
+              "ARP",
+              "ICMP",
+              "IGMP",
+              "IPV6",
+              "IPV6-ICMP",
+              "PIM",
+              "RSVP",
+              "RTCP",
+              "RTP",
+              "TCP",
+              "UDP"
+            ],
+            "domain_complete": true
+          }
+        }
+      ],
+      "error_category": "OK",
+      "linked_schema": {
+        "tables": [
+          "network_flows"
+        ],
+        "columns": [
+          {
+            "table": "network_flows",
+            "column": "source_dataset"
+          },
+          {
+            "table": "network_flows",
+            "column": "event_time"
+          },
+          {
+            "table": "network_flows",
+            "column": "dst_ip"
+          },
+          {
+            "table": "network_flows",
+            "column": "protocol"
+          }
+        ],
+        "relationships": [],
+        "grounded_values": [
+          {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "source_dataset",
+            "type": "VARCHAR",
+            "value": "ctu13_s5",
+            "evidence_id": "catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4",
+            "operator": "="
+          },
+          {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "source_dataset",
+            "type": "VARCHAR",
+            "value": "ctu13_s7",
+            "evidence_id": "catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c",
+            "operator": "="
+          },
+          {
+            "database_id": "ctu_dev",
+            "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+            "table": "network_flows",
+            "column": "protocol",
+            "type": "VARCHAR",
+            "value": "TCP",
+            "evidence_id": "catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254",
+            "operator": "="
+          }
+        ],
+        "constraints": [
+          {
+            "kind": "domain_predicate",
+            "table": "network_flows",
+            "column": "source_dataset",
+            "operator": "exact",
+            "value": "ctu13_s5",
+            "evidence_id": "catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4"
+          },
+          {
+            "kind": "time_threshold",
+            "table": "network_flows",
+            "column": "event_time",
+            "operator": ">",
+            "value": "2011-08-15T17:00:00",
+            "time_type": "timestamp"
+          },
+          {
+            "kind": "domain_predicate",
+            "table": "network_flows",
+            "column": "source_dataset",
+            "operator": "exact",
+            "value": "ctu13_s7",
+            "evidence_id": "catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c"
+          },
+          {
+            "kind": "time_threshold",
+            "table": "network_flows",
+            "column": "event_time",
+            "operator": ">",
+            "value": "2011-08-16T14:00:00",
+            "time_type": "timestamp"
+          },
+          {
+            "kind": "domain_predicate",
+            "table": "network_flows",
+            "column": "protocol",
+            "operator": "exact",
+            "value": "TCP",
+            "evidence_id": "catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254"
+          }
+        ],
+        "database_id": "ctu_dev",
+        "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+      },
+      "evidence_kind": "openai_live",
+      "db_calls": 2,
+      "wall_seconds": 39.990053680000074,
+      "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+      "runtime_version": "shared_text2sql_v1",
+      "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+    },
+    "query_execution": {
+      "status": "OK",
+      "columns": [
+        {
+          "name": "scenario",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "distinct_dst_ip_count",
+          "type": "BIGINT"
+        }
+      ],
+      "rows": [
+        [
+          "ctu13_s5",
+          1529
+        ],
+        [
+          "ctu13_s7",
+          1210
+        ]
+      ],
+      "truncated": false,
+      "row_count": 2,
+      "result_sha256": "afee621deda655e463f2e024d586f6e02cced8b24bf779ef830857795b66abb0",
+      "database_id": "ctu_dev",
+      "snapshot_binary_sha256": "0b29765b9a175d00e0a193039a1b058691406e28a434e10030ae78265cfa67b9",
+      "snapshot_logical_sha256": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+      "sql": "SELECT source_dataset AS scenario,\n       COUNT(DISTINCT dst_ip) AS distinct_dst_ip_count\nFROM network_flows\nWHERE protocol = 'TCP'\n  AND ((source_dataset = 'ctu13_s5' AND event_time > TIMESTAMP '2011-08-15 17:00:00')\n       OR (source_dataset = 'ctu13_s7' AND event_time > TIMESTAMP '2011-08-16 14:00:00'))\nGROUP BY source_dataset;",
+      "sql_sha256": "1e89d33f934099a3ef4a87ec4532fa857c22b0423f1e48e3456304c7bb0b7cad",
+      "executor_version": "text2sql_namespace_cgroup_executor_v2",
+      "wall_seconds": 0.15382382699999653,
+      "isolation": {
+        "backend": "bubblewrap",
+        "network": "unshared",
+        "secrets": "absent",
+        "snapshot_mount": "read_only",
+        "memory_bytes": 536870912,
+        "cpu_count": 1,
+        "timeout_seconds": 10
+      }
+    }
+  },
+  "condition": "E3",
+  "generation": {
+    "case_id": "query_833ee41d5e5541638d8a2f63d976a8de",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": "SELECT source_dataset AS scenario,\n       COUNT(DISTINCT dst_ip) AS distinct_dst_ip_count\nFROM network_flows\nWHERE protocol = 'TCP'\n  AND ((source_dataset = 'ctu13_s5' AND event_time > TIMESTAMP '2011-08-15 17:00:00')\n       OR (source_dataset = 'ctu13_s7' AND event_time > TIMESTAMP '2011-08-16 14:00:00'))\nGROUP BY source_dataset;",
+    "attempted_calls": 6,
+    "response_count": 6,
+    "responses": [
+      {
+        "role": "linker",
+        "response": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_sOLSvVmAHAUf4PU2rdBJFpCk",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"query\":\"CTU-5\",\"match_kind\":\"exact\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3WGwt0og3W1fxW5eEDavpikAid",
+          "finish_reason": "tool_calls",
+          "usage": {
+            "input_tokens": 1357,
+            "output_tokens": 234,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.00080725
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_hpMjMcuUvyT9JQo64xl90fmf",
+              "function": {
+                "arguments": "{\"table\":\"network_flows\",\"column\":\"protocol\",\"query\":\"TCP\",\"match_kind\":\"exact\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3aVp2XfBOL9ka9nZ3w74fFRYch",
+          "finish_reason": "tool_calls",
+          "usage": {
+            "input_tokens": 1790,
+            "output_tokens": 102,
+            "cached_tokens": 1152
+          },
+          "cost_usd": 0.0003923
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": "",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3eJYgHv2kYsZ1BiUNCm5WRwZRP",
+          "finish_reason": "length",
+          "usage": {
+            "input_tokens": 2110,
+            "output_tokens": 1000,
+            "cached_tokens": 1664
+          },
+          "cost_usd": 0.0021531
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": "",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3mea2FvDwblAf7IK00ekMI4qye",
+          "finish_reason": "length",
+          "usage": {
+            "input_tokens": 1996,
+            "output_tokens": 1000,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.002499
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": "{\n  \"tables\": [\"network_flows\"],\n  \"columns\": [\n    {\"table\": \"network_flows\", \"column\": \"source_dataset\"},\n    {\"table\": \"network_flows\", \"column\": \"event_time\"},\n    {\"table\": \"network_flows\", \"column\": \"dst_ip\"},\n    {\"table\": \"network_flows\", \"column\": \"protocol\"}\n  ],\n  \"relationships\": [],\n  \"grounded_values\": [\n    {\"evidence_id\": \"catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4\", \"operator\": \"=\"},\n    {\"evidence_id\": \"catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c\", \"operator\": \"=\"},\n    {\"evidence_id\": \"catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254\", \"operator\": \"=\"}\n  ],\n  \"constraints\": [\n    {\"kind\": \"domain_predicate\", \"table\": \"network_flows\", \"column\": \"source_dataset\", \"operator\": \"exact\", \"value\": \"ctu13_s5\", \"evidence_id\": \"catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4\"},\n    {\"kind\": \"time_threshold\", \"table\": \"network_flows\", \"column\": \"event_time\", \"operator\": \">\", \"value\": \"2011-08-15T17:00:00\", \"time_type\": \"timestamp\"},\n    {\"kind\": \"domain_predicate\", \"table\": \"network_flows\", \"column\": \"source_dataset\", \"operator\": \"exact\", \"value\": \"ctu13_s7\", \"evidence_id\": \"catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c\"},\n    {\"kind\": \"time_threshold\", \"table\": \"network_flows\", \"column\": \"event_time\", \"operator\": \">\", \"value\": \"2011-08-16T14:00:00\", \"time_type\": \"timestamp\"},\n    {\"kind\": \"domain_predicate\", \"table\": \"network_flows\", \"column\": \"protocol\", \"operator\": \"exact\", \"value\": \"TCP\", \"evidence_id\": \"catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254\"}\n  ]\n}",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM3wkKV1hPW082DcSR3Y18kVf5Ko",
+          "finish_reason": "stop",
+          "usage": {
+            "input_tokens": 2027,
+            "output_tokens": 940,
+            "cached_tokens": 1920
+          },
+          "cost_usd": 0.00195475
+        }
+      },
+      {
+        "role": "generator",
+        "response": {
+          "content": "{\"sql\":\"SELECT source_dataset AS scenario,\\n       COUNT(DISTINCT dst_ip) AS distinct_dst_ip_count\\nFROM network_flows\\nWHERE protocol = 'TCP'\\n  AND ((source_dataset = 'ctu13_s5' AND event_time > TIMESTAMP '2011-08-15 17:00:00')\\n       OR (source_dataset = 'ctu13_s7' AND event_time > TIMESTAMP '2011-08-16 14:00:00'))\\nGROUP BY source_dataset;\"}",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EYM45J3lBMYUh0LwBfCpAsR8Tavji",
+          "finish_reason": "stop",
+          "usage": {
+            "input_tokens": 1792,
+            "output_tokens": 377,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.001202
+        }
+      }
+    ],
+    "trajectory": [
+      {
+        "tool": "value_search",
+        "arguments": {
+          "table": "network_flows",
+          "column": "source_dataset",
+          "query": "CTU-5",
+          "match_kind": "exact"
+        },
+        "result": {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "source_dataset",
+          "type": "VARCHAR",
+          "resolution": "unresolved",
+          "matches": [],
+          "domain_witnesses": [
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "source_dataset",
+              "type": "VARCHAR",
+              "value": "ctu13_s5",
+              "evidence_id": "catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4"
+            },
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "source_dataset",
+              "type": "VARCHAR",
+              "value": "ctu13_s7",
+              "evidence_id": "catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c"
+            }
+          ],
+          "domain": [
+            "ctu13_s5",
+            "ctu13_s7"
+          ],
+          "domain_complete": true
+        }
+      },
+      {
+        "tool": "value_search",
+        "arguments": {
+          "table": "network_flows",
+          "column": "protocol",
+          "query": "TCP",
+          "match_kind": "exact"
+        },
+        "result": {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "protocol",
+          "type": "VARCHAR",
+          "resolution": "matched",
+          "matches": [
+            {
+              "database_id": "ctu_dev",
+              "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+              "table": "network_flows",
+              "column": "protocol",
+              "type": "VARCHAR",
+              "value": "TCP",
+              "evidence_id": "catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254"
+            }
+          ],
+          "domain_witnesses": [],
+          "domain": [
+            "ARP",
+            "ICMP",
+            "IGMP",
+            "IPV6",
+            "IPV6-ICMP",
+            "PIM",
+            "RSVP",
+            "RTCP",
+            "RTP",
+            "TCP",
+            "UDP"
+          ],
+          "domain_complete": true
+        }
+      }
+    ],
+    "error_category": "OK",
+    "linked_schema": {
+      "tables": [
+        "network_flows"
+      ],
+      "columns": [
+        {
+          "table": "network_flows",
+          "column": "source_dataset"
+        },
+        {
+          "table": "network_flows",
+          "column": "event_time"
+        },
+        {
+          "table": "network_flows",
+          "column": "dst_ip"
+        },
+        {
+          "table": "network_flows",
+          "column": "protocol"
+        }
+      ],
+      "relationships": [],
+      "grounded_values": [
+        {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "source_dataset",
+          "type": "VARCHAR",
+          "value": "ctu13_s5",
+          "evidence_id": "catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4",
+          "operator": "="
+        },
+        {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "source_dataset",
+          "type": "VARCHAR",
+          "value": "ctu13_s7",
+          "evidence_id": "catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c",
+          "operator": "="
+        },
+        {
+          "database_id": "ctu_dev",
+          "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0",
+          "table": "network_flows",
+          "column": "protocol",
+          "type": "VARCHAR",
+          "value": "TCP",
+          "evidence_id": "catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254",
+          "operator": "="
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "domain_predicate",
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "exact",
+          "value": "ctu13_s5",
+          "evidence_id": "catalog_6d476288679921fc87e6d6853d31122f519ced7ee3d969da61d06a38330233d4"
+        },
+        {
+          "kind": "time_threshold",
+          "table": "network_flows",
+          "column": "event_time",
+          "operator": ">",
+          "value": "2011-08-15T17:00:00",
+          "time_type": "timestamp"
+        },
+        {
+          "kind": "domain_predicate",
+          "table": "network_flows",
+          "column": "source_dataset",
+          "operator": "exact",
+          "value": "ctu13_s7",
+          "evidence_id": "catalog_a66c0d759522b81b65859a5e7d3189d9085c4f1472b903bdcb641ce4c4a3909c"
+        },
+        {
+          "kind": "time_threshold",
+          "table": "network_flows",
+          "column": "event_time",
+          "operator": ">",
+          "value": "2011-08-16T14:00:00",
+          "time_type": "timestamp"
+        },
+        {
+          "kind": "domain_predicate",
+          "table": "network_flows",
+          "column": "protocol",
+          "operator": "exact",
+          "value": "TCP",
+          "evidence_id": "catalog_f2550afb5c18be43c5f61ccf911ca9ac3e5e9576f1984671cf3bf476621b2254"
+        }
+      ],
+      "database_id": "ctu_dev",
+      "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+    },
+    "evidence_kind": "openai_live",
+    "db_calls": 2,
+    "wall_seconds": 39.990053680000074,
+    "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+    "runtime_version": "shared_text2sql_v1",
+    "snapshot_identity": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+  },
+  "score": {
+    "case_id": "ctu_cross_708b66575657429a",
+    "execution_accurate": false,
+    "execution_success": true,
+    "scoring_error_category": "RESULT_MISMATCH",
+    "gold_result_sha256": "2875b445b97b2a59197e9344ea99e421187f1d12ba4c41dbcd7ec805fdfde6be",
+    "predicted_result_sha256": "afee621deda655e463f2e024d586f6e02cced8b24bf779ef830857795b66abb0"
+  },
+  "modules": {
+    "policy": {
+      "version": "module_metrics_v2",
+      "empty_set": "NA_rates_exact_set_success",
+      "alternative": "max_joint_item_f1_stable_first",
+      "coverage": "stage_present_over_all_cases",
+      "numeric_constraints_are_stored_values": false,
+      "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+    },
+    "selected_alternative": 0,
+    "schema_linker": {
+      "tables": {
+        "correct": 1,
+        "predicted": 1,
+        "required": 1,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "columns": {
+        "correct": 4,
+        "predicted": 4,
+        "required": 4,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "correct": 0,
+        "predicted": 0,
+        "required": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "case_success": true,
+      "valid_relationship_path": true
+    },
+    "value_grounding": {
+      "predicates": {
+        "correct": 0,
+        "predicted": 5,
+        "required": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "case_success": false,
+      "witness_precision": {
+        "correct": 3,
+        "total": 3,
+        "precision": 1.0
+      },
+      "provenance_status": "VERIFIED_CONTEXT",
+      "unsupported_literal_rate": {
+        "unsupported": 0,
+        "total": 3,
+        "rate": 0.0
+      }
+    }
+  },
+  "runtime_source_sha256": {
+    ".github/workflows/ci.yml": "51a45022d0c3f3da6edaba7b18a9871cf0b66e4b44260e0f2c1ab0b91bdcab83",
+    ".github/workflows/query-demo-once.yml": "18261747eb75162705180351c358e3e8ecea2345c2905209d382a1fbfd79add3",
+    "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
+    "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+    "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+    "agent/integrations.py": "dff3d800215329b4719c8cbf86ede1ac2b17e77bbb1e4178f55f1967a235adbc",
+    "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+    "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+    "agent/network_query_policy.py": "9ebfbfa982a0a2ebb68085ab83888634c5d5b9b3137532f368ab9ad69e908429",
+    "agent/orchestrator.py": "ddbabd451f93616ebc95d11e4896208f3acd2d1ed20aff90341444b9dc137cb2",
+    "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+    "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+    "agent/soc_investigation_policy.py": "390dc7228ccce2d8222636da87118b758daa179beb14e0f28ae49f44f1007db8",
+    "agent/soc_provider.py": "01fa7b405eaafb914753a69d1dbb2a65e5f1a79dcc9bdafec6ada16cc3ac76d0",
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+    "cli/main.py": "186ab83d97060d2533560b6933257ebeaa5d900dedfebba363b6645c4ff13bcb",
+    "evaluation/finalization/__init__.py": "8479c108d265ef93ca754baa7ba51bebeb7b91ca09e007cf70348ecea84fe756",
+    "evaluation/finalization/cloud_window.py": "8db52ee113dc280e702de0dcb2f96cb9eff571ab80db76f9700285a4d36ddb1f",
+    "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+    "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+    "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+    "evaluation/finalization/query_cloud.py": "5814c49fbe32398a1171f957fbee2363bcd569923e778c962c23bf7b661a3656",
+    "evaluation/finalization/query_pipeline_contract.py": "bcd32c210dd89f256739be3902182e732615945d13f93b5a1f459fe4fa9dac23",
+    "evaluation/finalization/query_pipeline_reporting.py": "4399b2d820e733873590115233b85974dd86ad1edb8efab9b7f2f25a46371f17",
+    "evaluation/finalization/query_record_normalization.py": "f53a35b7ac15c2d0c114a431118b3c337a234b8ca18fc4d599442043e068a846",
+    "evaluation/finalization/query_reporting.py": "0da468aa27739c6336d31d7a21c97102d9a7041c57a954e596fc16cf54678edd",
+    "evaluation/finalization/query_runtime_validation.py": "d418af080c9222935b5186023e679139927bfaf9b4f3a26c7bf2c57c2061b77f",
+    "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "evaluation/finalization/query_token_bound.py": "97858f39537d02b169cd7750338dbc5e17c82b14f388d7d7ed48223995c134c3",
+    "evaluation/finalization/query_view.py": "84dfb5e4918414a8c5cee907c3cd778bf35dd12949f920497763fa54da90cd9d",
+    "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+    "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+    "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+    "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+    "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+    "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+    "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+    "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+    "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+    "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+    "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+    "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+    "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+    "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+    "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+    "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+    "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+    "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+    "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+    "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+    "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+    "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+    "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+    "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
+    "results/evaluation_v1/text2sql_integration_v1/demo_selection.json": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+    "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0",
+    "scripts/prepare_query_budget.py": "e1b6167d8b1e79e68bb091aeaae7e9c47f5b5142f712bc6669116d6597c041b5",
+    "scripts/render_query_pipeline_report.py": "c20c2c783b9b38ab0b2184ef163e2cebddcac68c5ded318ef5badc8c2372716e",
+    "scripts/review_vinsoc_query_case.py": "3ca5d7415bcf65c25ea6e8f95c1dea23c728df8bea92e7ac6586bbf1a922562f",
+    "scripts/run_query_demo_cloud.py": "6583292ea0d7032083bb102ee28a413bdbb83ec6e11ab254f29ed384a0d4406d",
+    "scripts/run_query_real_data_checks.py": "f466226df5ddcf4ca3f5d0d26be99d2f7b45624616c5722336d3b6e217b12c3f",
+    "scripts/run_vinsoc_query_acceptance.py": "1b3e753fd57bc94e5eaf78dfa04337ab7894f85f51fceb77af3743cf2e2a0e26",
+    "scripts/verify_query_preservation.py": "82d9d8de85574c4512cbe0721ad6dcf0a27fb71bccfc565e0469d97d649dbd47",
+    "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
+    "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+    "skills/cti_providers.py": "1341b71972450b06ff8fd4030aaec33d44da8ff4e2bc120b17fa953bdc3c2342",
+    "skills/cti_skill.py": "7438ff3db5e62dcaaecf29416749610a6c5cb3117a63c6de7348ab2fc4c5f944",
+    "skills/endpoint_skill.py": "2f98787b6a5766e893f67c90eff93d1b1ce74209eb4a6d375a94beab5d859021",
+    "skills/network_query_skill.py": "1a857c9cb26c982aef6cf0e7bdc5079e3b312301782f1da036d36328ffc2cd12",
+    "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+    "skills/soc_corpus_skill.py": "9104fa0a2a6b2a0aa68a4755f648da7cee430ed093fc4404f4952ae135ab1ff5",
+    "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+    "telemetry/network/__init__.py": "247b2b7d30283e515084e44199c263078847f6dd311dc9988578253d2dc7c3f3",
+    "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+    "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+    "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+    "telemetry/network/suricata.py": "acec544916e83e5b6f5f2f695dd5ce35b0765a60e3ed8ef0725ad562c06993e2",
+    "telemetry/network/zeek.py": "9865864f81324141e7022d5045479c5dc4e2afd49a530d05782a6bd0630efd3f",
+    "vinsoc_data/__init__.py": "c3bc2e18d845daf05a375212f6f5e27f6359078ffe286c01043660ddb6d87a25",
+    "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+    "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
+    "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+    "vinsoc_text2sql/__init__.py": "00295daa9c8901515fa2012a2080c586b3e326f45449531356603d02b42dde47",
+    "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+    "vinsoc_text2sql/accounting.py": "3d1c28aa1bc302ba7b8cf0dc66ba1ed1ccb08378f27ce81091413bbde55bc00f",
+    "vinsoc_text2sql/executor.py": "721025a1d8452bcf62055ae6ba1d097201a3a4daf413995291d60f0ed8b6c039",
+    "vinsoc_text2sql/process_group.py": "b528ad72567e2cd424367a812a03c63718a065b6ef7911f7493c6e97b66160c1",
+    "vinsoc_text2sql/provider.py": "5cba63a1d70c4d4d6c520e0e4f1cd3eb2f391d74508867111f7f417e1cf22cbe",
+    "vinsoc_text2sql/service.py": "df496c626441f4e073d83fbd651e1b9001689e8427cf1b3dc09e28164230ee73"
+  },
+  "identities": {
+    "runtime_source_sha256": {
+      ".github/workflows/ci.yml": "51a45022d0c3f3da6edaba7b18a9871cf0b66e4b44260e0f2c1ab0b91bdcab83",
+      ".github/workflows/query-demo-once.yml": "18261747eb75162705180351c358e3e8ecea2345c2905209d382a1fbfd79add3",
+      "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
+      "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+      "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+      "agent/integrations.py": "dff3d800215329b4719c8cbf86ede1ac2b17e77bbb1e4178f55f1967a235adbc",
+      "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+      "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+      "agent/network_query_policy.py": "9ebfbfa982a0a2ebb68085ab83888634c5d5b9b3137532f368ab9ad69e908429",
+      "agent/orchestrator.py": "ddbabd451f93616ebc95d11e4896208f3acd2d1ed20aff90341444b9dc137cb2",
+      "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+      "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+      "agent/soc_investigation_policy.py": "390dc7228ccce2d8222636da87118b758daa179beb14e0f28ae49f44f1007db8",
+      "agent/soc_provider.py": "01fa7b405eaafb914753a69d1dbb2a65e5f1a79dcc9bdafec6ada16cc3ac76d0",
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+      "cli/main.py": "186ab83d97060d2533560b6933257ebeaa5d900dedfebba363b6645c4ff13bcb",
+      "evaluation/finalization/__init__.py": "8479c108d265ef93ca754baa7ba51bebeb7b91ca09e007cf70348ecea84fe756",
+      "evaluation/finalization/cloud_window.py": "8db52ee113dc280e702de0dcb2f96cb9eff571ab80db76f9700285a4d36ddb1f",
+      "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+      "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+      "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+      "evaluation/finalization/query_cloud.py": "5814c49fbe32398a1171f957fbee2363bcd569923e778c962c23bf7b661a3656",
+      "evaluation/finalization/query_pipeline_contract.py": "bcd32c210dd89f256739be3902182e732615945d13f93b5a1f459fe4fa9dac23",
+      "evaluation/finalization/query_pipeline_reporting.py": "4399b2d820e733873590115233b85974dd86ad1edb8efab9b7f2f25a46371f17",
+      "evaluation/finalization/query_record_normalization.py": "f53a35b7ac15c2d0c114a431118b3c337a234b8ca18fc4d599442043e068a846",
+      "evaluation/finalization/query_reporting.py": "0da468aa27739c6336d31d7a21c97102d9a7041c57a954e596fc16cf54678edd",
+      "evaluation/finalization/query_runtime_validation.py": "d418af080c9222935b5186023e679139927bfaf9b4f3a26c7bf2c57c2061b77f",
+      "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+      "evaluation/finalization/query_token_bound.py": "97858f39537d02b169cd7750338dbc5e17c82b14f388d7d7ed48223995c134c3",
+      "evaluation/finalization/query_view.py": "84dfb5e4918414a8c5cee907c3cd778bf35dd12949f920497763fa54da90cd9d",
+      "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+      "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+      "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+      "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+      "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+      "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+      "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+      "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+      "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+      "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+      "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+      "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+      "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+      "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+      "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+      "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+      "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+      "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+      "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+      "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+      "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+      "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+      "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+      "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+      "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
+      "results/evaluation_v1/text2sql_integration_v1/demo_selection.json": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+      "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0",
+      "scripts/prepare_query_budget.py": "e1b6167d8b1e79e68bb091aeaae7e9c47f5b5142f712bc6669116d6597c041b5",
+      "scripts/render_query_pipeline_report.py": "c20c2c783b9b38ab0b2184ef163e2cebddcac68c5ded318ef5badc8c2372716e",
+      "scripts/review_vinsoc_query_case.py": "3ca5d7415bcf65c25ea6e8f95c1dea23c728df8bea92e7ac6586bbf1a922562f",
+      "scripts/run_query_demo_cloud.py": "6583292ea0d7032083bb102ee28a413bdbb83ec6e11ab254f29ed384a0d4406d",
+      "scripts/run_query_real_data_checks.py": "f466226df5ddcf4ca3f5d0d26be99d2f7b45624616c5722336d3b6e217b12c3f",
+      "scripts/run_vinsoc_query_acceptance.py": "1b3e753fd57bc94e5eaf78dfa04337ab7894f85f51fceb77af3743cf2e2a0e26",
+      "scripts/verify_query_preservation.py": "82d9d8de85574c4512cbe0721ad6dcf0a27fb71bccfc565e0469d97d649dbd47",
+      "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
+      "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+      "skills/cti_providers.py": "1341b71972450b06ff8fd4030aaec33d44da8ff4e2bc120b17fa953bdc3c2342",
+      "skills/cti_skill.py": "7438ff3db5e62dcaaecf29416749610a6c5cb3117a63c6de7348ab2fc4c5f944",
+      "skills/endpoint_skill.py": "2f98787b6a5766e893f67c90eff93d1b1ce74209eb4a6d375a94beab5d859021",
+      "skills/network_query_skill.py": "1a857c9cb26c982aef6cf0e7bdc5079e3b312301782f1da036d36328ffc2cd12",
+      "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+      "skills/soc_corpus_skill.py": "9104fa0a2a6b2a0aa68a4755f648da7cee430ed093fc4404f4952ae135ab1ff5",
+      "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+      "telemetry/network/__init__.py": "247b2b7d30283e515084e44199c263078847f6dd311dc9988578253d2dc7c3f3",
+      "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+      "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+      "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+      "telemetry/network/suricata.py": "acec544916e83e5b6f5f2f695dd5ce35b0765a60e3ed8ef0725ad562c06993e2",
+      "telemetry/network/zeek.py": "9865864f81324141e7022d5045479c5dc4e2afd49a530d05782a6bd0630efd3f",
+      "vinsoc_data/__init__.py": "c3bc2e18d845daf05a375212f6f5e27f6359078ffe286c01043660ddb6d87a25",
+      "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+      "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
+      "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+      "vinsoc_text2sql/__init__.py": "00295daa9c8901515fa2012a2080c586b3e326f45449531356603d02b42dde47",
+      "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+      "vinsoc_text2sql/accounting.py": "3d1c28aa1bc302ba7b8cf0dc66ba1ed1ccb08378f27ce81091413bbde55bc00f",
+      "vinsoc_text2sql/executor.py": "721025a1d8452bcf62055ae6ba1d097201a3a4daf413995291d60f0ed8b6c039",
+      "vinsoc_text2sql/process_group.py": "b528ad72567e2cd424367a812a03c63718a065b6ef7911f7493c6e97b66160c1",
+      "vinsoc_text2sql/provider.py": "5cba63a1d70c4d4d6c520e0e4f1cd3eb2f391d74508867111f7f417e1cf22cbe",
+      "vinsoc_text2sql/service.py": "df496c626441f4e073d83fbd651e1b9001689e8427cf1b3dc09e28164230ee73"
+    },
+    "benchmark_identity": "10e124eab0bb918d69595811619990a57e626f64ee23997648cbf79f07029f7d",
+    "scorer_identity": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "snapshot_identities": {
+      "student_transcripts_tracking": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+      "cre_Doc_Template_Mgt": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+      "world_1": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+      "voter_1": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+      "dog_kennels": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+      "orchestra": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+      "concert_singer": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+      "car_1": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+      "flight_2": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+      "course_teach": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+      "poker_player": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+      "tvshow": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+      "ctu_dev": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+    },
+    "implementation_sha": "3ac9a5680adf26c30599ffe328ef819166f9d867"
+  },
+  "cost_events": [
+    {
+      "role": "routing",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "a6da9c31eea446b5b1f8c4150471a92c",
+      "request_sha256": "0562a0aefae768e03283294aaf33a98e480328f54d5f030594dd559d93143c11",
+      "received": true,
+      "reserved_usd": 0.4206304,
+      "cost_usd": 0.0002448,
+      "usage": {
+        "input_tokens": 348,
+        "output_tokens": 66,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 2.336267590000034,
+      "actual_model": "gpt-4.1-mini-2025-04-14",
+      "response_id": "chatcmpl-EYM3ToliuH7CyluuxZaeQfYA6WX2Y",
+      "provider_request_id": "req_8622c4fa967a4ec4b0dbc5616b6dc367",
+      "native_tool_calls": [
+        {
+          "id": "call_tgrMTGig3ZNJwM35ywbMWQHP",
+          "function": {
+            "arguments": "{\"question\":\"Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.\"}",
+            "name": "network_query"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "09c7d01ad0a64354ae11cbcbe71dab94",
+      "request_sha256": "3e6f2226e10f3b0da48b186826233a5bd54a1ce83cde7c7883c454b44f086fd8",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.00080725,
+      "usage": {
+        "input_tokens": 1357,
+        "output_tokens": 234,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 2.5348912070001006,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EYM3WGwt0og3W1fxW5eEDavpikAid",
+      "provider_request_id": "req_4455df58839b475c911b3ac8456bf6fa",
+      "native_tool_calls": [
+        {
+          "id": "call_sOLSvVmAHAUf4PU2rdBJFpCk",
+          "function": {
+            "arguments": "{\"table\":\"network_flows\",\"column\":\"source_dataset\",\"query\":\"CTU-5\",\"match_kind\":\"exact\"}",
+            "name": "value_search"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "681f2d7880de4af0ab998188687ce8fe",
+      "request_sha256": "1a34b67485ea27fb08b8ffc279535189638fa46ee04fcb26696312bc1a611266",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0003923,
+      "usage": {
+        "input_tokens": 1790,
+        "output_tokens": 102,
+        "cached_tokens": 1152
+      },
+      "latency_seconds": 1.2585823690000097,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EYM3aVp2XfBOL9ka9nZ3w74fFRYch",
+      "provider_request_id": "req_0eaa657d2b9240fd9169d0b738edd0e8",
+      "native_tool_calls": [
+        {
+          "id": "call_hpMjMcuUvyT9JQo64xl90fmf",
+          "function": {
+            "arguments": "{\"table\":\"network_flows\",\"column\":\"protocol\",\"query\":\"TCP\",\"match_kind\":\"exact\"}",
+            "name": "value_search"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "7e8fc4fab833474b8021e3c04b951d40",
+      "request_sha256": "46668fdf4dc69f71684b820d02d1b7b40d252938125ee23d7d17b8a87837d623",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0021531,
+      "usage": {
+        "input_tokens": 2110,
+        "output_tokens": 1000,
+        "cached_tokens": 1664
+      },
+      "latency_seconds": 6.637288904999991,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EYM3eJYgHv2kYsZ1BiUNCm5WRwZRP",
+      "provider_request_id": "req_311f80cc406b4d1d963e435a56884781",
+      "native_tool_calls": []
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "8ae7320af3424472a46abac78535172b",
+      "request_sha256": "410478eaff7bcf2e5b21b356fbb7f1669bc55558f4631ad7623f5e8f02965f36",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.002499,
+      "usage": {
+        "input_tokens": 1996,
+        "output_tokens": 1000,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 7.5267026940000505,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EYM3mea2FvDwblAf7IK00ekMI4qye",
+      "provider_request_id": "req_cfe989fcbb054155b94dc165e701cbf1",
+      "native_tool_calls": []
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "00af1ed471db423697b9313ef851db55",
+      "request_sha256": "64386954ececf79f745b79f1f19a7461f6adf597a9d7b6c313f7126fef0efe94",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.00195475,
+      "usage": {
+        "input_tokens": 2027,
+        "output_tokens": 940,
+        "cached_tokens": 1920
+      },
+      "latency_seconds": 7.021465876999969,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EYM3wkKV1hPW082DcSR3Y18kVf5Ko",
+      "provider_request_id": "req_ab114ec6777743c3ba36fd8bf83313f9",
+      "native_tool_calls": []
+    },
+    {
+      "role": "r2",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "4e93eaab50004f0585c734e925fdb027",
+      "request_sha256": "310f4411149ed7db3048f9877a4573f7303821112c6ef3472a1f5aac9e705280",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.001202,
+      "usage": {
+        "input_tokens": 1792,
+        "output_tokens": 377,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 2.9945029479999903,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EYM45J3lBMYUh0LwBfCpAsR8Tavji",
+      "provider_request_id": "req_d46224ac85b64af19908d595fdb5c8c9",
+      "native_tool_calls": []
+    },
+    {
+      "role": "assessment",
+      "case_id": "ctu_cross_708b66575657429a",
+      "condition": "E3",
+      "request_id": "565b0ae4b8934e48b7aa44c8c14830d8",
+      "request_sha256": "e565db0eaaadad8cb0c8522188f6b39b5d0b4e6b6fd5d2b040f93cc6c0542c2b",
+      "received": true,
+      "reserved_usd": 0.4206304,
+      "cost_usd": 0.0012832,
+      "usage": {
+        "input_tokens": 1900,
+        "output_tokens": 327,
+        "cached_tokens": 0
+      },
+      "latency_seconds": 2.964442381000026,
+      "actual_model": "gpt-4.1-mini-2025-04-14",
+      "response_id": "chatcmpl-EYM4AbXQzmQolk87oVjCHPwlZHzto",
+      "provider_request_id": "req_87034ee12c934d1585eda6c5fdc5e401",
+      "native_tool_calls": []
+    }
+  ],
+  "cost_unknown": false
+}
