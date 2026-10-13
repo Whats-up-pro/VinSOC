@@ -5,7 +5,16 @@
   "source_implementation_sha": "0d813371a713839e712bb36c2a2ca6a8fd60ebab",
   "source_workflow_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38338493466",
   "github_reported_artifact_digest": "sha256:ed290e86e1342bc0c9bb5d45d1319094c90d477597015d75480fa92f97c52540",
-  "artifact_zip_independently_verified": false,
+  "artifact_zip_independently_verified": true,
+  "zip_public_files_matching_committed_bytes": [
+    "cloud_run.json",
+    "case_record.json",
+    "runner_report.json",
+    "preflight.json",
+    "bundle_restore.json",
+    "original_data_validation.json"
+  ],
+  "outcome_audit_in_source_zip": false,
   "source_file_hashes": {
     "artifact_manifest.json": "85de074b59505f43c67718ac69158083477f0ae07f208ecee32b22c37edfb81c",
     "runner_report.json": "21675136f2a6fada7af124910934a9fe856e89c3c35ea4e1acb995ecfc02091a",
@@ -24,7 +33,7 @@
         "committed_sha256": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e"
       }
     },
-    "resolution": "The original source manifest and audit remain immutable; this receipt binds the committed bytes. Do not claim the original manifest passes."
+    "resolution": "The original source manifest and audit remain immutable; this receipt binds the committed bytes. The ZIP does not include outcome_audit.json. Do not claim the original manifest passes."
   },
   "renderer": "scripts.render_query_pipeline_report",
   "report_html_sha256": "9ea07ca115d08d75060e375199d45e898ffab655eb7b068bd794d6f622710001",

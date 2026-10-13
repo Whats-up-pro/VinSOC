@@ -67,9 +67,12 @@ Mục `outcome_audit.json` ghi `13187` byte và
 file đã commit có `12824` byte và
 `274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e`.
 Hai file gốc được giữ nguyên. Manifest mới ghi cả giá trị khai báo lẫn byte đã
-commit, nên có thể kiểm riêng report/case/HTML. Digest ZIP lấy từ GitHub Actions;
-ZIP chưa được tải và kiểm hash độc lập trong lần bàn giao này. Không tuyên bố
-manifest nguồn `PASS` trước khi có đối soát artifact ZIP và lý do lệch audit.
+commit, nên có thể kiểm riêng report/case/HTML. ZIP workflow đã tải và kiểm
+SHA-256 `ed290e86e1342bc0c9bb5d45d1319094c90d477597015d75480fa92f97c52540`.
+Sáu file public trong ZIP khớp byte với bản commit, gồm report và case record.
+ZIP **không chứa `outcome_audit.json`**; mục audit trong manifest nguồn được ghi
+cho một file dẫn xuất sau run nhưng không khớp byte đã commit. Không tuyên bố
+manifest nguồn `PASS`; cần versioned correction hoặc giải trình từ người tạo audit.
 
 Metric phụ `value_grounding.predicates` là `0/6/5`, còn witness precision `3/3`
 và unsupported literal `0/3`. Đây là chênh lệch annotation cần điều tra riêng;
