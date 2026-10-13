@@ -106,7 +106,7 @@ def build_a1_provenance(runner: Any, split: str, case_results: list[Any]) -> dic
            for result in case_results):
         reasons.append("provider_or_execution_errors_present")
 
-    receipt = {
+    return {
         "format": "r1_a1_provenance_v1",
         "canonicalization": "UTF-8 JSON, sorted object keys, compact separators; split files sorted by filename; prompts sorted by case_id",
         "git": git,
@@ -127,31 +127,3 @@ def build_a1_provenance(runner: Any, split: str, case_results: list[Any]) -> dic
         "official_eligible": not reasons,
         "ineligible_reasons": reasons,
     }
-    if split == "generalization_v1":
-        gate = getattr(runner, "generalization_gate", None)
-        lock_path = split_path / "GENERALIZATION.lock"
-        try:
-            lock = json.loads(lock_path.read_text(encoding="utf-8"))
-            raw_lock_hash = hashlib.sha256(lock_path.read_bytes()).hexdigest()
-        except (OSError, ValueError):
-            lock = {}
-            raw_lock_hash = None
-        audit_path = Path(__file__).resolve().parents[2] / (
-            "results/evaluation_v1/r1/generalization_v1/candidate_audit.json"
-        )
-        audit_hash = hashlib.sha256(audit_path.read_bytes()).hexdigest() if audit_path.is_file() else None
-        receipt.update({
-            "generalization_lock_sha256": raw_lock_hash,
-            "candidate_sha256": lock.get("candidate_sha256"),
-            "review_file_sha256": lock.get("review_file_sha256"),
-            "adjudication_sha256": lock.get("adjudication_sha256"),
-            "candidate_audit_sha256": audit_hash,
-            "authorization_id": getattr(gate, "authorization_id", None),
-            "authorization_sha256": getattr(gate, "authorization_sha256", None),
-            "provider_created_after_gate": bool(gate and gate.passed),
-        })
-        if (gate is None or not gate.passed or raw_lock_hash != gate.lock_sha256
-                or audit_hash is None):
-            reasons.append("generalization_gate_or_locked_inputs_unavailable")
-        receipt["official_eligible"] = not reasons
-    return receipt

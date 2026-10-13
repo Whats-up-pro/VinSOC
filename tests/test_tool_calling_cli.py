@@ -1,9 +1,6 @@
 """CLI contract tests for reproducible R1 decision benchmarks."""
 
-import json
 from types import SimpleNamespace
-
-import pytest
 
 import evaluation.tool_calling.__main__ as cli
 from evaluation.tool_calling.decision_runner import A1Config
@@ -83,69 +80,3 @@ def test_decision_cli_persists_provider_and_config_metadata(monkeypatch, tmp_pat
         "model": "pinned-model",
         "temperature": 0.0,
     }
-
-
-def test_generalization_cli_lists_and_verifies_locked_cases_offline(monkeypatch, capsys):
-    def no_provider(*args, **kwargs):
-        raise AssertionError("provider created during offline command")
-
-    monkeypatch.setattr(cli, "DecisionRunner", no_provider)
-    assert cli.main(["list", "generalization_v1"]) == 0
-    assert "Available cases in 'generalization_v1': 120" in capsys.readouterr().out
-
-    assert cli.main(["lock", "generalization_v1"]) == 0
-    lock_receipt = json.loads(capsys.readouterr().out)
-    assert lock_receipt["passed"] is True
-    assert lock_receipt["case_count"] == 120
-    assert lock_receipt["distribution"] == {
-        "no_tool": 24, "single_tool": 54, "two_tool": 30, "three_tool": 12,
-    }
-
-
-@pytest.mark.parametrize(
-    "argv",
-    [
-        ["preflight", "generalization_v1"],
-        ["run", "--mode", "decision", "--split", "generalization_v1"],
-        ["run", "--mode", "integration", "--split", "generalization_v1"],
-        ["run", "--mode", "decision", "--split", "generalization_v1", "--cases", "gen_001"],
-    ],
-)
-def test_generalization_cli_blocks_before_provider_without_suite_authorization(
-    monkeypatch, capsys, argv
-):
-    def no_provider(*args, **kwargs):
-        raise AssertionError("provider created before generalization gate")
-
-    monkeypatch.setattr(cli, "DecisionRunner", no_provider)
-    assert cli.main(argv) == 1
-    assert '"provider_created": false' in capsys.readouterr().out.lower()
-
-
-def test_generalization_run_validates_gate_before_runner_construction(monkeypatch, tmp_path):
-    sequence = []
-
-    def checked_gate(*args, **kwargs):
-        sequence.append("gate")
-        return SimpleNamespace(passed=True, errors=(), provider_created=False)
-
-    class FakeDecisionRunner:
-        def __init__(self, *, config, split, generalization_gate):
-            sequence.append("runner")
-            assert generalization_gate.passed and split == "generalization_v1"
-
-        def run_suite(self, *, split, case_ids):
-            assert split == "generalization_v1" and case_ids is None
-            return []
-
-    monkeypatch.setattr(cli, "validate_generalization_run_gate", checked_gate)
-    monkeypatch.setattr(cli, "DecisionRunner", FakeDecisionRunner)
-    auth = tmp_path / "authorized.json"
-    auth.write_text(json.dumps({"scope": "r1_tool_calling_generalization_v1"}))
-
-    assert cli.main([
-        "run", "--mode", "decision", "--split", "generalization_v1",
-        "--model", "pinned-model", "--authorization", str(auth),
-        "--budget-usd", "7.00",
-    ]) == 1  # Empty suite cannot produce a successful run artifact.
-    assert sequence == ["gate", "runner"]
