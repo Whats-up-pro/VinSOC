@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-demo.txt
           pip install duckdb==1.5.5
       - name: Restore pinned SOC corpus
         run: |
@@ -45,7 +45,7 @@ jobs:
           git diff --exit-code
       - name: Required offline query guards
         run: |
-          python -m pytest -q tests/test_query_pipeline_contract.py tests/test_query_acceptance_preflight.py tests/test_query_selection_lock.py tests/test_query_journal_persistence.py tests/test_query_record_normalization.py tests/test_query_reporting.py tests/test_query_pipeline_reporting.py tests/test_query_cli_viewer.py tests/test_query_remaining_demo.py --junitxml=.vinsoc/offline-release-ci/targeted.xml
+          python -m pytest -q tests/test_query_pipeline_contract.py tests/test_query_acceptance_preflight.py tests/test_query_selection_lock.py tests/test_query_journal_persistence.py tests/test_query_record_normalization.py tests/test_query_reporting.py tests/test_query_pipeline_reporting.py tests/test_query_cli_viewer.py tests/test_query_remaining_demo.py tests/test_vinsoc_demo_data.py tests/test_vinsoc_demo_ui.py --junitxml=.vinsoc/offline-release-ci/targeted.xml
           python - <<'PYTHON'
           import xml.etree.ElementTree as ET
           root = ET.parse('.vinsoc/offline-release-ci/targeted.xml').getroot()

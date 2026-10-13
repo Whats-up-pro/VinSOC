@@ -1,0 +1,211 @@
+{
+  "scope": "offline_interface_precommit_verification_not_new_model_run",
+  "created_at_utc": "2026-10-13T14:30:10.313066+00:00",
+  "base_sha": "9df434e55b31987eba431c4b3c66b5ff3ca1966f",
+  "new_model_calls": 0,
+  "new_inference_cost_usd": 0,
+  "actual_human_decisions_created": 0,
+  "red_green_observed": true,
+  "targeted": {
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0
+  },
+  "windows_full": {
+    "passed": 1377,
+    "failed": 39,
+    "skipped": 5,
+    "started_before_final_test_added": true,
+    "failure_categories": {
+      "windows_symlink_privilege": 2,
+      "fcntl_unavailable_on_windows": 35,
+      "raw_artifact_identity": 2
+    },
+    "failures": [
+      {
+        "test": "tests.test_query_bundle_restore.test_symlinked_parent_cannot_escape_destination",
+        "message": "OSError: [WinError 1314] A required privilege is not held by the client: 'C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Admin\\\\pytest-451\\\\test_symlinked_parent_cannot_e0\\\\outside' -> 'C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Admin\\\\pytest-451\\\\test_symlinked_parent_cannot_e0\\\\repo\\\\data'"
+      },
+      {
+        "test": "tests.test_soc_accounting.test_claim_race_and_crash_consumed",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_accounting.test_response_persisted_before_validation",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_accounting.test_canonical_ledger_cannot_be_moved",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_missing_inputs_has_no_client_or_claim",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_bundle_cannot_write_without_source_reviews",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_state_requires_previous_hosts_sealed",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_secret_documents_reject_path_traversal",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_journal_remote_claim_required_before_native_claim",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_run_mode_is_explicit",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_preparation_imports_actual_pinned_sources",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_cloud_render_preserves_not_run_instead_of_fabricating_reports",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_cloud.test_private_archive_uses_real_encryption_and_round_trip",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_corpus_acceptance.test_prepare_rejects_stale_importer_receipt",
+        "message": "OSError: [WinError 1314] A required privilege is not held by the client: 'C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Admin\\\\pytest-451\\\\soc-real2\\\\corpus.duckdb' -> 'C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\pytest-of-Admin\\\\pytest-451\\\\test_prepare_rejects_stale_imp0\\\\corpus.duckdb'"
+      },
+      {
+        "test": "tests.test_soc_demo_cloud.test_demo_release_is_locked_to_preselected_case_and_one_dollar",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_demo_cloud.test_demo_release_rejects_case_not_in_preselected_demo",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_demo_cloud.test_demo_journal_allows_only_locked_s1_case",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_demo_cloud.test_demo_failure_category_preserves_safe_stage_without_external_message",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_demo_cloud.test_demo_account_verification_receives_only_evidence_object",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_orchestrator.test_ioc_missing_or_ambiguous_blocks_without_calls",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_orchestrator.test_scope_provider_mismatch_rejected",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_release.test_request_contract_and_bytes",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_release.test_mock_transport_rejected_before_authority_or_transmission",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_citation_case_validity_is_independent_of_completion",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_missing_failed_abstained_remain_denominator",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_review_hash_binding",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_render_full_unicode_and_escape",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_no_output_no_success_report",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_input_only_citations_separate",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_full_model_summary_format_unit_only",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_invalid_raw_citations_count_unit_only",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_reporting.test_missing_demos_remain_visible",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_runner.test_preflight_zero_calls",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_runner.test_inventory_or_source_mutation_blocks",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_runner.test_records_preserve_planned_ids",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_runner.test_partial_after_failure_persists",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_soc_runner.test_output_change_cannot_reopen_scope",
+        "message": "ModuleNotFoundError: No module named 'fcntl'"
+      },
+      {
+        "test": "tests.test_spider_recovery.test_preflight_reports_missing_archive_without_creating_outputs",
+        "message": "AssertionError: assert 'BLOCKED_PROT..._runtime.json' == 'BLOCKED_SOUR...CHIVE_MISSING'"
+      },
+      {
+        "test": "tests.test_tool_calling_generalization.test_historical_r1_bytes_match_committed_identities",
+        "message": "AssertionError: assert {'dev_split_s...e070745269e9'} == {'dev_split_s...e070745269e9'}"
+      }
+    ],
+    "acceptance": "NOT_PASS"
+  },
+  "browser": {
+    "desktop_width": 1440,
+    "mobile_width": 390,
+    "screenshots": {
+      "avg-assessment.png": "5aeea97d6d2a342a0f7be32a8509362c3a19d8a3686528b872c90db025831564",
+      "avg-result.png": "dfbc79dd62ba0e77c49f224afb2bad1eb84bcb9848b2a9969ce58cd1d805b707",
+      "mobile.png": "4531554aad2947ac89ac00557481bb973211551d1c26a699560e961de4545afd",
+      "overview.png": "5640817ebf733b43b0a6618a8f561903ca5baf47cf55fc461351945a4e8e9635",
+      "r1.png": "6a0d004e1395888f69cd63b08c9ae78250d03cee4cd107bbe3a7fc13a6aa1ba8",
+      "soc.png": "8ded89116dba554fee82235fd62dfb7d55077b2d1c0d83b2b50a56ed2403c2d0"
+    },
+    "model_requests": 0,
+    "review_submissions": 0,
+    "horizontal_overflow": false
+  },
+  "compile_pass": true,
+  "ruff_E9_F_I_pass": true,
+  "protected_files": 3640,
+  "protected_changed": [],
+  "canonical_source_sha256": {
+    "scripts/vinsoc_demo_app.py": "c548af8dcac6b0a9d54303c22a894c54734487156860915a0e623b6169a2bd03",
+    "scripts/vinsoc_demo_dashboard.py": "8eb927e7c3be33e3aa9749fd3a5e1ea612165c815ba01442714b297ed0fafb81",
+    "scripts/vinsoc_demo_data.py": "228b12a19a4adaa16974ab8eb3c5bb7f8d534e3c1149ca0c49cda6b3d1fd1c77",
+    ".streamlit/config.toml": "bd4f3b9a0b49f689d7f5f6e52e7d344302a5eb9b103270a36a0bfaa51bd8be9f",
+    "requirements-demo.txt": "2ac1e56fb2039c8b2245fb45e87412aa7f866e33113bb4231a563c5b66f34128"
+  },
+  "ci_policy": "Full and required jobs must pass on exact final commit; CI URL delivered in final handoff."
+}

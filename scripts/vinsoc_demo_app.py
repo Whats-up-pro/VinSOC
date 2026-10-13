@@ -1,696 +1,458 @@
-"""
-VinSOC E2E Demo - Interactive Demo Interface
-
-A fully interactive demo interface for:
-1. Enter investigation question
-2. Run E2E pipeline with real API calls
-3. View results, evidence, and assessment
-4. Human review workflow
-"""
+"""Mentor presentation of authentic saved API runs; viewing never calls a model."""
 from __future__ import annotations
 
 import json
-import os
+import math
 import sys
-import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
+import pandas as pd
 import streamlit as st
-from dotenv import load_dotenv
 
-# Define BASE_DIR and add to sys.path BEFORE loading .env
-BASE_DIR = Path(__file__).parent.parent
-sys.path.insert(0, str(BASE_DIR))
-load_dotenv(BASE_DIR / ".env")
+BASE_DIR = Path(__file__).resolve().parents[1]
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 
-# =============================================================================
-# CONFIGURATION
-# =============================================================================
-
-st.set_page_config(
-    page_title="VinSOC E2E Demo",
-    page_icon="🔍",
-    layout="wide",
-    initial_sidebar_state="collapsed",
+from evaluation.finalization.query_pipeline_reporting import validate_review  # noqa: E402
+from scripts.vinsoc_demo_data import (  # noqa: E402
+    INTEGRATION,
+    PACKAGE,
+    STATUS_LABELS,
+    load_demo,
+    load_routing,
+    load_soc,
+    read_json,
+    save_review,
 )
 
-# Paths
-BASE_DIR = Path(__file__).parent.parent
-SNAPSHOT_PATH = BASE_DIR / "data/ctu_network_public/snapshots/ctu_dev.duckdb"
-
-# Demo scenarios
-DEMO_SCENARIOS = {
-    "botnet": {
-        "name": "Botnet Detection",
-        "indicator": "147.32.84.165",
-        "time_range": {
-            "start": "2011-08-15 00:00:00",
-            "end": "2011-08-15 23:59:59"
-        },
-        "ground_truth": "Botnet",
-        "description": "Known botnet source from CTU-13 Scenario 5"
-    },
-    "normal": {
-        "name": "Normal Traffic",
-        "indicator": "147.32.84.165",
-        "time_range": {
-            "start": "2011-08-16 00:00:00",
-            "end": "2011-08-16 23:59:59"
-        },
-        "ground_truth": "Normal",
-        "description": "Same IP, different time - normal traffic pattern"
-    },
-    "custom": {
-        "name": "Custom Query",
-        "indicator": "",
-        "time_range": {
-            "start": "2011-08-15 00:00:00",
-            "end": "2011-08-15 23:59:59"
-        },
-        "ground_truth": "Unknown",
-        "description": "Enter your own IP address and time range"
-    }
+REVIEW_DIR = BASE_DIR / '.vinsoc/mentor-reviews'
+PAGES = ('Tổng quan', 'Luồng query', 'R1 chọn công cụ', 'SOC thiếu bằng chứng',
+         'Chi phí & nghiệm thu', 'Hồ sơ & chạy mới')
+STAGES = ('Câu hỏi gốc', 'Model chọn công cụ', 'Schema & giá trị thực', 'SQL của model',
+          'Kết quả DB', 'Bằng chứng & nguồn', 'Assessment & kiểm chứng', 'Người duyệt')
+NOTES = (
+    'Câu hỏi gắn với case ID đã chọn. Xác định dữ liệu và phép tính cần tìm trước khi đọc kết quả.',
+    'Model gọi network_query bằng native tool call. Đây là response API đã lưu, kèm arguments và ID thật.',
+    'R2 tra schema và giá trị trong DB. Trajectory cho biết model đã tìm bảng, cột và giá trị nào.',
+    'SQL do model tạo. Với COUNT, xem candidate trước để giải thích vì sao UNION ALL không giải bài toán giao hai tập.',
+    'Worker chạy SQL trên DB gốc. Kiểu cột, số hàng và trạng thái truncated đi cùng kết quả. SQL chạy được vẫn có thể trả sai.',
+    'Evidence có ID, nguồn và hash. Assessment phải dẫn về những evidence này để người duyệt kiểm lại.',
+    'Tách SQL đúng, facts, provenance và nhận định. TCP hoặc 459 chưa chứng minh có tấn công; diễn giải cần analyst.',
+    'Người thật tự nhập identity, quyết định, lý do và UTC. Chỉ case đạt kỹ thuật mới được chấp thuận.',
+)
+CASE_GOALS = {
+    'ctu_cross_708b66575657429a':'Đếm IP đích chung của hai scenario sau hai mốc thời gian riêng.',
+    'ctu_cross_66b8e92a76c3359b':'Tìm UDP destination ở S5 nhưng không có ở S7, bỏ trùng.',
+    'ctu_cross_3f659571f998adb0':'Đếm hai byte fields NULL cho từng protocol, giữ cả nhóm có count 0.',
+    'ctu_cross_bce6d3679ade4cd6':'So sánh AVG từng protocol với AVG của toàn scenario 7.',
 }
 
 
-# =============================================================================
-# UTILITIES
-# =============================================================================
-
-def check_environment():
-    """Check if environment is ready."""
-    issues = []
-
-    # Check snapshot
-    if not SNAPSHOT_PATH.exists():
-        issues.append(f"Snapshot not found: {SNAPSHOT_PATH}")
-
-    # Check OpenAI key - load from .env if not set
-    if not os.environ.get("OPENAI_API_KEY"):
-        # Try loading from .env file
-        env_path = BASE_DIR / ".env"
-        if env_path.exists():
-            try:
-                from dotenv import load_dotenv
-                load_dotenv(env_path)
-            except ImportError:
-                pass
-
-    if not os.environ.get("OPENAI_API_KEY"):
-        issues.append("OPENAI_API_KEY not set")
-
-    return issues
+def fingerprint(*folders):
+    values = []
+    for folder in folders:
+        folder = Path(folder)
+        paths = [folder] if folder.is_file() else sorted(folder.rglob('*.json'))
+        for path in paths:
+            stat = path.stat()
+            values.append((str(path), stat.st_mtime_ns, stat.st_size))
+    return tuple(values)
 
 
-def render_header():
-    """Render page header."""
-    st.html("""
-    <style>
-    .main-header {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin-bottom: 1rem;
-    }
-    .main-header h1 {
-        color: #00d4ff;
-        margin: 0;
-        font-size: 2rem;
-    }
-    .main-header p {
-        color: #a0a0a0;
-        margin: 0.5rem 0 0 0;
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-    .status-ready { background: #00c853; color: white; }
-    .status-error { background: #ff1744; color: white; }
-    .status-running { background: #ff9100; color: white; }
-    .status-complete { background: #00bcd4; color: white; }
-    </style>
-    <div class="main-header">
-        <h1>🔍 VinSOC E2E Demo</h1>
-        <p>Interactive SOC Investigation with AI</p>
-    </div>
-    """)
+@st.cache_data(ttl=60, max_entries=4, show_spinner=False)
+def cached_demo(version):
+    return load_demo(BASE_DIR, review_dir=REVIEW_DIR)
 
 
-def render_status_banner(issues: list):
-    """Render status banner."""
-    if not issues:
-        st.success("✅ Environment ready - all checks passed")
-    else:
-        for issue in issues:
-            st.error(f"❌ {issue}")
+@st.cache_data(ttl=60, max_entries=4, show_spinner=False)
+def cached_routing(version):
+    return load_routing(BASE_DIR)
 
 
-def render_scenario_selector():
-    """Render scenario selector."""
-    st.subheader("🎯 Select Investigation Scenario")
-
-    col1, col2, col3 = st.columns(3)
-
-    scenario_keys = list(DEMO_SCENARIOS.keys())
-
-    selected = st.radio(
-        "Scenario",
-        scenario_keys,
-        format_func=lambda x: DEMO_SCENARIOS[x]["name"],
-        horizontal=True,
-        label_visibility="collapsed"
-    )
-
-    scenario = DEMO_SCENARIOS[selected]
-
-    # Display scenario info
-    cols = st.columns([1, 2])
-    with cols[0]:
-        st.info(f"""
-        **Ground Truth:** {scenario['ground_truth']}
-
-        **Indicator:** `{scenario['indicator']}`
-
-        **Time Range:**
-        - Start: `{scenario['time_range']['start']}`
-        - End: `{scenario['time_range']['end']}`
-        """)
-
-    with cols[1]:
-        st.markdown(f"**Description:** {scenario['description']}")
-
-    return scenario, selected
+def navigate(page, case_id=None):
+    st.session_state.demo_page = page
+    if case_id is not None:
+        st.session_state.demo_case = case_id
+        reset_case_state()
 
 
-def render_custom_inputs(scenario: dict):
-    """Render custom input fields."""
-    st.subheader("✏️ Custom Parameters")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        indicator = st.text_input(
-            "IP Address / Indicator",
-            value=scenario.get("indicator", ""),
-            placeholder="e.g., 147.32.84.165",
-            help="Enter IP address, domain, or other indicator to investigate"
-        )
-
-    with col2:
-        indicator_type = st.selectbox(
-            "Indicator Type",
-            ["ipv4", "domain", "ipv6"],
-            index=0
-        )
-
-    col3, col4 = st.columns(2)
-
-    with col3:
-        start_time = st.text_input(
-            "Start Time",
-            value=scenario.get("time_range", {}).get("start", "2011-08-15 00:00:00"),
-            placeholder="YYYY-MM-DD HH:MM:SS"
-        )
-
-    with col4:
-        end_time = st.text_input(
-            "End Time",
-            value=scenario.get("time_range", {}).get("end", "2011-08-15 23:59:59"),
-            placeholder="YYYY-MM-DD HH:MM:SS"
-        )
-
-    return {
-        "indicator": indicator,
-        "indicator_type": indicator_type,
-        "time_range": {
-            "start": start_time,
-            "end": end_time
-        }
-    }
+def reset_case_state():
+    st.session_state.demo_stage = 0
+    for key in ('review_analyst', 'review_decision', 'review_rationale', 'review_utc'):
+        st.session_state.pop(key, None)
 
 
-def render_investigate_button(scenario_key: str):
-    """Render investigate button."""
-    st.divider()
-
-    col1, col2, col3 = st.columns([2, 1, 1])
-
-    with col1:
-        button_text = "🚀 Start Investigation"
-        if scenario_key == "custom":
-            button_text = "🚀 Start Custom Investigation"
-
-        if st.button(button_text, type="primary", use_container_width=True):
-            return True
-
-    with col2:
-        st.caption("Estimated cost: ~$0.004")
-
-    with col3:
-        st.caption("Max time: ~30s")
-
-    return False
+def change_stage(delta):
+    st.session_state.demo_stage = max(0, min(7, st.session_state.demo_stage + delta))
 
 
-def run_investigation(scenario: dict):
-    """Run the investigation pipeline."""
-    # Initialize session state
-    if "investigation_results" not in st.session_state:
-        st.session_state.investigation_results = None
-
-    if "investigation_running" not in st.session_state:
-        st.session_state.investigation_running = False
-
-    if "investigation_error" not in st.session_state:
-        st.session_state.investigation_error = None
-
-    # Progress indicators
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-
-    try:
-        # Step 1: Initialize
-        status_text.text("📡 Initializing investigation...")
-        progress_bar.progress(10)
-        time.sleep(0.5)
-
-        # Step 2: Route to tool
-        status_text.text("🔍 Routing query to network tool...")
-        progress_bar.progress(30)
-        time.sleep(1)
-
-        # Step 3: Execute tool (simulate for demo)
-        status_text.text("💾 Executing query on DuckDB...")
-        progress_bar.progress(50)
-
-        # Import and run
-        from agent.orchestrator import InvestigationOrchestrator
-
-        orchestrator = InvestigationOrchestrator(
-            max_steps=1,
-            duckdb_snapshot_path=str(SNAPSHOT_PATH)
-        )
-        orchestrator.case_id = "demo_investigation"
-        orchestrator.evidence_store.clear()
-        orchestrator.messages = []
-        orchestrator.investigation_active = True
-
-        # Execute network investigation tool
-        args = {
-            "indicator": scenario["indicator"],
-            "indicator_type": scenario.get("indicator_type", "ipv4"),
-            "time_range": scenario["time_range"]
-        }
-
-        orchestrator._execute_tool_call({
-            "id": "demo_network_1",
-            "name": "network_investigation",
-            "arguments": args
-        })
-
-        # Get evidence
-        trace = [item.to_dict() for item in orchestrator.evidence_store.get_all_tool_calls()]
-        evidence = [
-            item.to_dict()
-            for item in orchestrator.evidence_store.get_all_evidence()
-            if item.provenance.get("source_records")
-        ]
-
-        # Build result case
-        result = {
-            "case_id": orchestrator.case_id,
-            "indicator": scenario["indicator"],
-            "time_range": scenario["time_range"],
-            "evidence": evidence,
-            "assessment": {
-                "assessment": f"Investigation of {scenario['indicator']} completed. Found {len(evidence)} evidence items.",
-                "risk_level": "UNKNOWN",
-                "confidence": "MEDIUM",
-                "observations": [],
-                "limitations": ["This is a demo - full assessment requires model review"]
-            }
-        }
-
-        progress_bar.progress(90)
-        time.sleep(0.5)
-
-        # Complete
-        progress_bar.progress(100)
-        status_text.text("✅ Investigation complete!")
-
-        st.session_state.investigation_results = result
-        st.session_state.investigation_running = False
-
-    except Exception as e:
-        st.session_state.investigation_error = str(e)
-        st.session_state.investigation_running = False
-        progress_bar.progress(0)
-        status_text.error(f"❌ Error: {e}")
+def status(case):
+    value = case['status']
+    color = 'green' if value == 'approved' else 'blue' if value == 'awaiting_human' else 'orange' if value in ('incomplete','missing','escalated') else 'red'
+    st.badge(STATUS_LABELS.get(value, value), color=color)
 
 
-def render_results(results: dict):
-    """Render investigation results."""
-    if not results:
+def money(value):
+    return 'Chưa xác định' if value is None else f'${value:.8f}'
+
+
+def download(path, label, key):
+    if path and Path(path).is_file():
+        st.download_button(label, Path(path).read_bytes(), file_name=Path(path).name,
+                           mime='application/json' if str(path).endswith('.json') else 'text/plain',
+                           key=key, icon=':material/download:')
+
+
+def gate_table(case):
+    labels = {'routing':'Routing', 'runtime':'DB / runtime', 'integrated_ex':'SQL đúng (EX)',
+              'provenance':'Nguồn & liên kết', 'factual_verification':'Facts theo kết quả',
+              'technical_workflow':'Luồng kỹ thuật', 'human_review_coverage':'Có review hợp lệ',
+              'human_approved_completion':'Người duyệt chấp thuận'}
+    st.dataframe([{'Gate':labels[k], 'Trạng thái':'Đạt' if v is True else
+                  'Chưa chấm' if v is None else 'Chưa đạt'} for k,v in case['metrics'].items()],
+                 hide_index=True, alt='Các gate độc lập của case đang chọn')
+
+
+def overview(data):
+    st.title('Demo VinSOC từ câu hỏi đến bằng chứng')
+    st.caption('Bốn query đã gọi API thật, các nhánh routing R1 và một case SOC thiếu dữ liệu.')
+    cases, summary = data['cases'], data['summary']
+    with st.container(horizontal=True):
+        st.metric('Query có record', f"{sum(c['record'] is not None for c in cases)}/4", border=True)
+        st.metric('Đạt kỹ thuật', f"{sum(c['metrics'].get('technical_workflow') is True for c in cases)}/4", border=True)
+        st.metric('Response ở lượt mới', summary.get('new_run_received', 'Chưa có'), border=True)
+        st.metric('Chi phí lượt mới', money(summary.get('new_run_cost_usd')), border=True)
+    st.info('Bắt đầu với AVG → TCP để trình bày luồng mới. COUNT → 459 giải thích giao tập; NULL và UDP là hai edge case thật.')
+    for pair in (cases[:2], cases[2:]):
+        for col, case in zip(st.columns(2), pair):
+            with col.container(border=True):
+                st.subheader(case['title'])
+                status(case)
+                st.text(CASE_GOALS[case['case_id']])
+                with st.expander('Câu hỏi và giải thích đầy đủ'):
+                    st.text(case['question'])
+                    st.caption(case['explanation'] or case.get('error') or 'Chưa có giải thích từ receipt.')
+                st.button('Trình bày case', key='open_' + case['case_id'], width='stretch',
+                          on_click=navigate, args=('Luồng query', case['case_id']), icon=':material/play_arrow:')
+    st.subheader('Lộ trình trình bày 15–20 phút')
+    st.markdown('1. **R1:** network, CTI, endpoint, nhiều tool và no-tool.\n'
+                '2. **AVG:** đi tám bước, đọc SQL, TCP, evidence và assessment.\n'
+                '3. **Edge cases:** NULL sai cách đếm; UDP vượt giới hạn payload.\n'
+                '4. **SOC:** no_match khác unavailable; chưa đủ kết luận host sạch.\n'
+                '5. **Kết thúc:** chi phí, gate đã kiểm và phần còn mở.')
+    st.caption('Coverage demo 4 case. Calibration 0/48, evaluation 0/192 và pipeline chính thức 32 câu chưa chạy. Các producer giữ riêng.')
+
+
+def typed_result(case):
+    result = case['view'].get('typed_result')
+    if result is None:
+        st.warning('Bước DB chưa có artifact; không tạo kết quả thay thế.')
         return
-
-    st.divider()
-    st.subheader("📊 Investigation Results")
-
-    # Assessment
-    assessment = results.get("assessment", {})
-    evidence = results.get("evidence", [])
-
-    # Key metrics
-    col1, col2, col3, col4 = st.columns(4)
-
-    with col1:
-        risk = assessment.get("risk_level", "UNKNOWN")
-        risk_color = {"HIGH": "🔴", "MEDIUM": "🟡", "LOW": "🟢", "UNKNOWN": "⚪"}.get(risk, "⚪")
-        st.metric(f"{risk_color} Risk Level", risk)
-
-    with col2:
-        confidence = assessment.get("confidence", "UNKNOWN")
-        st.metric("Confidence", confidence)
-
-    with col3:
-        st.metric("Evidence Items", len(evidence))
-
-    with col4:
-        observations = assessment.get("observations", [])
-        st.metric("Observations", len(observations))
-
-    # Assessment text
-    st.markdown("---")
-    st.subheader("🤖 Model Assessment")
-
-    assessment_text = assessment.get("assessment", "No assessment available")
-    st.info(assessment_text)
-
-    # Evidence
-    st.markdown("---")
-    st.subheader("🔎 Evidence Collected")
-
-    if evidence:
-        # Show evidence table
-        evidence_data = []
-        for i, ev in enumerate(evidence[:10], 1):  # Show first 10
-            evidence_data.append({
-                "#": i,
-                "ID": ev.get("evidence_id", "N/A")[:20],
-                "Type": ev.get("type", "N/A"),
-                "Class": ev.get("evidence_class", "N/A"),
-            })
-
-        if evidence_data:
-            st.dataframe(evidence_data, use_container_width=True, hide_index=True)
-
-        if len(evidence) > 10:
-            st.caption(f"Showing 10 of {len(evidence)} evidence items")
-    else:
-        st.info("No evidence collected")
-
-    # Observations
-    observations = assessment.get("observations", [])
-    if observations:
-        st.markdown("---")
-        st.subheader("📈 Key Observations")
-
-        for obs in observations:
-            field = obs.get("field", "unknown")
-            value = obs.get("value", "N/A")
-            st.write(f"- **{field}**: {value}")
-
-    # Limitations
-    limitations = assessment.get("limitations", [])
-    if limitations:
-        st.markdown("---")
-        st.warning("⚠️ Limitations")
-        for lim in limitations:
-            st.markdown(f"- {lim}")
-
-    # Human review
-    st.markdown("---")
-    render_human_review(results)
-
-
-def render_human_review(results: dict):
-    """Render human review section."""
-    st.subheader("👤 Human Review")
-
-    col1, col2 = st.columns([1, 2])
-
-    with col1:
-        st.info("**Status:** ⏳ PENDING REVIEW")
-
-    with col2:
-        st.markdown("""
-        As an analyst, review the assessment and evidence:
-
-        1. **Verify** the evidence supports the assessment
-        2. **Check** observations match your expectations
-        3. **Consider** the limitations noted
-        4. **Decide** on next steps
-        """)
-
-    # Review buttons
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        if st.button("✅ Approve", use_container_width=True):
-            st.success("✅ Investigation approved!")
-            st.balloons()
-
-    with col2:
-        if st.button("❌ Reject", use_container_width=True):
-            st.error("❌ Investigation rejected - requires further analysis")
-
-    with col3:
-        if st.button("🔄 Request More Evidence", use_container_width=True):
-            st.info("🔄 Additional investigation requested")
-
-
-def render_sidebar():
-    """Render sidebar with info."""
-    with st.sidebar:
-        st.header("ℹ️ About")
-
-        st.markdown("""
-        **VinSOC E2E Demo**
-
-        Interactive SOC investigation using AI:
-
-        1. Enter investigation parameters
-        2. Run E2E pipeline
-        3. View evidence and assessment
-        4. Human review and approval
-
-        **Reference Frameworks:**
-        - R1: BFCL (Tool Calling)
-        - R2: Spider/BIRD (Text-to-SQL)
-        """)
-
-        st.divider()
-
-        st.subheader("📁 Source Artifacts")
-
-        st.markdown("""
-        - [Mentor Runbook](results/mentor_demo_20261013_104603/MENTOR_RUNBOOK.md)
-        - [Query HTML](results/mentor_demo_20261013_104603/query.html)
-        - [R1 Results](results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json)
-        """)
-
-        st.divider()
-
-        st.subheader("🔧 Settings")
-
-        budget = st.slider("Budget (USD)", 0.01, 1.0, 0.25, 0.01)
-        st.session_state.budget_usd = budget
-
-        st.caption(f"Max API calls: ~4")
-        st.caption(f"Estimated cost: ~${budget * 0.1:.4f}")
-
-
-# =============================================================================
-# MAIN TABS
-# =============================================================================
-
-def tab_demo_scenarios():
-    """Demo scenarios tab."""
-    st.header("🎯 Demo Scenarios")
-
-    # Initialize session state
-    if "investigation_results" not in st.session_state:
-        st.session_state.investigation_results = None
-    if "investigation_running" not in st.session_state:
-        st.session_state.investigation_running = False
-
-    scenario, selected_key = render_scenario_selector()
-
-    # Run investigation
-    if render_investigate_button(selected_key):
-        st.session_state.investigation_running = True
-        run_investigation(scenario)
-
-    # Show results if available
-    if st.session_state.investigation_results:
-        render_results(st.session_state.investigation_results)
-
-
-def tab_custom_query():
-    """Custom query tab."""
-    st.header("✏️ Custom Investigation")
-
-    # Initialize session state
-    if "investigation_results" not in st.session_state:
-        st.session_state.investigation_results = None
-    if "investigation_running" not in st.session_state:
-        st.session_state.investigation_running = False
-
-    scenario, _ = render_scenario_selector()
-    custom_params = render_custom_inputs(scenario)
-
-    # Run investigation
-    if render_investigate_button("custom"):
-        st.session_state.investigation_running = True
-        custom_params["indicator_type"] = scenario.get("indicator_type", "ipv4")
-        run_investigation(custom_params)
-
-    # Show results if available
-    if st.session_state.investigation_results:
-        render_results(st.session_state.investigation_results)
-
-
-def tab_results_review():
-    """Results and review tab."""
-    st.header("📋 Results & Review")
-
-    if not st.session_state.investigation_results:
-        st.info("👆 Run an investigation first to see results here")
+    rows, columns = result.get('rows') or [], result.get('columns') or []
+    st.caption(f"{result.get('row_count', len(rows)):,} hàng · truncated={result.get('truncated')} · full rows giữ trong JSON gốc")
+    if not rows:
+        st.info('DB trả 0 hàng. Đối chiếu yêu cầu giữ các nhóm có count bằng 0.')
         return
-
-    render_results(st.session_state.investigation_results)
-
-
-def tab_pipeline_flow():
-    """Pipeline flow visualization tab."""
-    st.header("🔄 Pipeline Flow")
-
-    st.markdown("""
-    ## How VinSOC E2E Works
-
-    ### 1. Query Input
-    User provides investigation question with indicator and time range
-
-    ### 2. Model Routing
-    Model analyzes query and selects appropriate tool(s)
-    - **Network tool**: Flow telemetry queries
-    - **CTI tool**: Threat intelligence lookup
-    - **Endpoint tool**: Process/registry data
-    """)
-
-    # Visual flow
-    flow_html = """
-    <style>
-    .flow-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        gap: 1rem;
-    }
-    .flow-step {
-        background: #1a1a2e;
-        padding: 1rem 1.5rem;
-        border-radius: 10px;
-        text-align: center;
-        min-width: 120px;
-    }
-    .flow-step.active {
-        background: #00bcd4;
-        color: white;
-    }
-    .flow-arrow {
-        font-size: 1.5rem;
-        color: #00d4ff;
-    }
-    </style>
-
-    <div class="flow-container">
-        <div class="flow-step">📝 Query</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">🤖 Model</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">🔧 Tool</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">💾 DB</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">🔎 Evidence</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">📊 Assessment</div>
-    </div>
-    """
-    st.html(flow_html)
-
-    st.markdown("""
-    ### 3. Tool Execution
-    Selected tool executes on read-only DuckDB database
-
-    ### 4. Evidence Collection
-    Query results are stored as evidence with provenance
-
-    ### 5. Assessment
-    Model generates assessment with evidence citations
-
-    ### 6. Human Review
-    Analyst reviews and approves/rejects assessment
-    """)
+    page_count = max(1, math.ceil(len(rows) / 50))
+    page = int(st.number_input('Trang kết quả (50 hàng/trang)', min_value=1, max_value=page_count,
+                               value=1, step=1, key='rows_' + case['case_id'])) if page_count > 1 else 1
+    names = [c.get('name', str(i)) if isinstance(c, dict) else c[0] if isinstance(c, (list,tuple)) else str(c)
+             for i,c in enumerate(columns)]
+    st.dataframe(pd.DataFrame(rows[(page-1)*50:page*50], columns=names or None),
+                 hide_index=True, alt='Trang kết quả typed của SQL đã chạy thật')
+    st.caption(f'Trang {page}/{page_count}. Phân trang màn hình không sửa kết quả hoặc scorer.')
+    with st.expander('Kiểu cột và hash kết quả'):
+        st.json({'columns':columns, 'result_sha256':result.get('result_sha256')})
 
 
-# =============================================================================
-# MAIN
-# =============================================================================
+def evidence_view(case):
+    evidence = case['view'].get('evidence') or []
+    if not evidence:
+        st.warning('Chưa có evidence cho bước này.')
+        return
+    st.dataframe([{'ID':e.get('evidence_id'), 'Loại':e.get('type'), 'Nguồn':e.get('source_tool'),
+                   'Class':e.get('evidence_class'), 'Parent':e.get('linked_from')} for e in evidence],
+                 hide_index=True, alt='Evidence IDs và liên kết nguồn của query')
+    selected = st.selectbox('Mở evidence', range(len(evidence)),
+                            format_func=lambda i:str(evidence[i].get('evidence_id')), key='evidence_' + case['case_id'])
+    ev = evidence[selected]
+    st.json({k:v for k,v in ev.items() if k != 'data'}, expanded=False)
+    st.json(ev.get('data'), expanded=False)
+
+
+def assessment_view(case):
+    assessment = case['view'].get('assessment')
+    if assessment:
+        st.subheader('Assessment được pipeline chấp nhận')
+        st.text(assessment.get('assessment', str(assessment)) if isinstance(assessment,dict) else assessment)
+        if isinstance(assessment, dict):
+            st.caption(f"Risk {assessment.get('risk_level','UNKNOWN')} · confidence {assessment.get('confidence','UNKNOWN')}")
+            st.json({'observations':assessment.get('observations'), 'evidence_ids':assessment.get('evidence_ids'),
+                     'limitations':assessment.get('limitations')}, expanded=False)
+    else:
+        st.warning('Chưa có assessment hợp lệ. Giữ partial hoặc response bị từ chối.')
+    if case['raw_assessment']:
+        with st.expander('Response assessment nguyên gốc, kể cả response bị từ chối'):
+            st.json(case['raw_assessment'])
+    gate_table(case)
+    st.json({'verification':case['view'].get('verification'), 'integrated_ex':case['view'].get('integrated_ex')}, expanded=False)
+    st.caption('Independent replay kiểm kết quả và nguồn. Ngữ nghĩa phần diễn giải cần người thật review.')
+
+
+def human_review(case):
+    st.subheader('Quyết định của người duyệt')
+    if case['review_status'] == 'valid':
+        st.success('Review liên kết đúng hash của case gốc.')
+        st.json(case['reviews'][0])
+        return
+    if case['review_status'] != 'pending':
+        st.error('Review duplicate hoặc không khớp hash/identity. Chưa tính chấp thuận.')
+        st.json(case['reviews'])
+        return
+    st.caption('Identity do người nhập tự khai báo. Rationale là lý do quyết định dựa trên SQL, kết quả và bằng chứng.')
+    if not case['metrics'].get('technical_workflow'):
+        st.warning('Case chưa đạt kỹ thuật: chỉ có thể từ chối hoặc chuyển điều tra thêm.')
+    st.caption('UTC hiện tại để đối chiếu: ' + datetime.now(timezone.utc).isoformat(timespec='seconds'))
+    with st.form('human_review_' + case['case_id']):
+        analyst = st.text_input('Identity / tên người duyệt', key='review_analyst')
+        choices = ('approved','rejected','escalated') if case['metrics'].get('technical_workflow') else ('rejected','escalated')
+        decision = st.selectbox('Quyết định', choices, index=None, placeholder='Tự chọn quyết định', key='review_decision')
+        rationale = st.text_area('Rationale / lý do quyết định', key='review_rationale')
+        utc = st.text_input('UTC thực tế (ISO 8601, kết thúc bằng Z hoặc +00:00)', key='review_utc')
+        submit = st.form_submit_button('Lưu quyết định của tôi', type='primary', icon=':material/save:')
+    if submit:
+        try:
+            save_review(case, REVIEW_DIR, analyst=analyst, decision=decision, rationale=rationale, utc=utc)
+        except (OSError, ValueError) as exc:
+            st.error(str(exc))
+        else:
+            st.rerun()
+    uploaded = st.file_uploader('Đối chiếu review JSON có sẵn', type=['json'], key='review_upload_' + case['case_id'])
+    if uploaded:
+        try:
+            receipt = json.loads(uploaded.getvalue())
+            valid = validate_review(receipt, case['record'])
+            st.success('Hash/identity khớp. File chỉ được xem, chưa nhập vào ledger.') if valid else st.error('Review hash/identity mismatch; không tính chấp thuận.')
+            st.json(receipt)
+        except (ValueError, TypeError, AttributeError) as exc:
+            st.error('Review không hợp lệ: ' + str(exc))
+
+
+def query_flow(data):
+    st.title('Một query, tám bước có bằng chứng')
+    cases = {c['case_id']:c for c in data['cases']}
+    case_id = st.selectbox('Chọn query demo', list(cases), index=3, key='demo_case',
+                           on_change=reset_case_state,
+                           format_func=lambda c:cases[c]['title'] + ' · ' + STATUS_LABELS.get(cases[c]['status'],cases[c]['status']))
+    case = cases[case_id]
+    status(case)
+    st.text(case['question'])
+    stage = st.selectbox('Bước đang trình bày', range(8), key='demo_stage', format_func=lambda i:f'{i+1}. {STAGES[i]}')
+    with st.container(horizontal=True):
+        st.button('Bước trước', on_click=change_stage, args=(-1,), disabled=stage == 0, icon=':material/arrow_back:')
+        st.button('Bước tiếp', on_click=change_stage, args=(1,), disabled=stage == 7, type='primary', icon=':material/arrow_forward:')
+        download(case['case_path'], 'Case JSON gốc', 'case_download')
+    with st.container(border=True):
+        st.caption('GIẢI THÍCH CHO MENTOR')
+        st.text(NOTES[stage])
+        if case['explanation']:
+            st.caption(case['explanation'])
+    if not case['record']:
+        st.error(case['error'] or 'Case missing. Không có prediction thay thế.')
+        return
+    generation = case['record'].get('generation', {})
+    if stage == 0:
+        st.subheader('Yêu cầu giữ nguyên')
+        st.text(case['question'])
+        st.code(case_id, language=None)
+    elif stage == 1:
+        st.json(case['view'].get('native_tool_call'))
+        st.caption('Routing dùng API thật; schema/value tools truy cập dữ liệu.')
+    elif stage == 2:
+        st.subheader('Trajectory đã lưu')
+        st.json(generation.get('trajectory'), expanded=False)
+        with st.expander('Linked schema và responses R2 nguyên gốc'):
+            st.json({'linked_schema':generation.get('linked_schema'), 'responses':generation.get('responses')})
+    elif stage == 3:
+        st.code(case['view'].get('sql') or 'Chưa có SQL cuối', language='sql')
+        with st.expander('Candidate / response đã lưu trước parse'):
+            st.json(generation.get('responses'))
+    elif stage == 4:
+        typed_result(case)
+    elif stage == 5:
+        evidence_view(case)
+    elif stage == 6:
+        assessment_view(case)
+    else:
+        human_review(case)
+    st.caption('Producer ' + case['producer_sha'])
+    st.link_button('Workflow của lượt này', 'https://github.com/Whats-up-pro/VinSOC/actions/runs/' + str(case['source_run_id']), icon=':material/open_in_new:')
+
+
+def routing_page():
+    st.title('R1: model chọn công cụ nào?')
+    data = cached_routing(fingerprint(BASE_DIR / 'results/evaluation_v1/r1'))
+    cases = {c['case_id']:c for c in data['cases']}
+    if not cases:
+        st.warning(data.get('error', 'Chưa có R1 records.'))
+        return
+    succeeded = sum(c['result'].get('trajectory_success') is True for c in cases.values())
+    with st.container(horizontal=True):
+        st.metric('Trajectory đạt ở dev', f'{succeeded}/{len(cases)}', border=True)
+        st.metric('Model', data['report']['config']['model'], border=True)
+    st.caption('Records chứng minh quyết định routing, chưa chứng minh tất cả tool cùng thực thi trong incident. Holdout cần nghiệm thu riêng.')
+    st.dataframe([{'Ví dụ':label, 'Case':case_id} for label,case_id in
+        (('Network','case_001'),('CTI','case_004'),('Endpoint','case_003'),('Ba công cụ','case_005'),
+         ('CTI + endpoint','case_007'),('No-tool','case_022'),('Routing sai thật','case_002'))],
+        hide_index=True, alt='Các nhánh routing chính để demo')
+    selected = st.selectbox('Chọn case R1 (đủ 24 case)', list(cases), key='r1_case',
+        format_func=lambda c:c + ' · ' + data['report'].get('case_metadata',{}).get(c,{}).get('category',''))
+    case, benchmark = cases[selected], cases[selected]['benchmark']
+    if benchmark is None:
+        st.warning('Thiếu câu hỏi/expected calls gốc; không tự dựng benchmark.')
+    else:
+        st.text(benchmark['request'])
+        left,right = st.columns(2)
+        with left:
+            st.subheader('Theo benchmark')
+            st.json(benchmark.get('expected_calls'))
+        with right:
+            st.subheader('Model thực sự chọn')
+            st.json(case['result']['predicted_calls'])
+        if benchmark.get('notes'):
+            st.caption(benchmark['notes'])
+    st.success('Trajectory khớp benchmark.') if case['result'].get('trajectory_success') else st.error('Routing chưa khớp; giữ lỗi thật.')
+    with st.expander('Scorer, breakdown và nguồn producer'):
+        st.json({'case_result':case['result'], 'aggregate':data['report'].get('aggregate'),
+                 'producer':data['report'].get('evaluator_commit_sha'), 'provenance':data['report'].get('provenance')})
+    download(data['source'], 'R1 results gốc', 'r1_download')
+
+
+def soc_page():
+    st.title('SOC: biết dừng khi thiếu bằng chứng')
+    data = load_soc(BASE_DIR)
+    trace, receipt = data['trace'], data['receipt']
+    if not trace or not receipt:
+        st.warning('Thiếu SOC trace hoặc receipt; không tạo incident thay thế.')
+        return
+    st.badge('Dữ liệu synthetic · model API thật', color='orange')
+    st.caption(f"{receipt['responses_received']} responses · {money(receipt['new_inference_cost_usd'])} · {receipt['acceptance_scope']}")
+    st.text(str(trace['input'].get('alert', trace['input'])))
+    for output in trace['model_outputs']:
+        for call in output.get('message', {}).get('tool_calls') or []:
+            with st.expander(call['function']['name'] + ' · native tool call', expanded=True):
+                st.json(call)
+    st.subheader('Kết quả công cụ')
+    for tool in trace['case']['metadata'].get('delivered_tools', []):
+        with st.container(border=True):
+            st.markdown('**' + tool['tool'] + '**')
+            st.json(tool['result'])
+    st.info('no_match: đã tra nhưng không có event khớp. unavailable: nguồn context không có. Cả hai chưa đủ để kết luận host sạch.')
+    st.subheader('Assessment thật: insufficient_evidence')
+    st.text(trace['case']['final_assessment'])
+    with st.expander('Evidence, report, limitations và response IDs'):
+        st.json({'evidence':trace['case']['evidence'], 'report':trace['report'], 'model_outputs':trace['model_outputs']})
+    st.warning('Người duyệt pending. Một case integration không thay điểm toàn suite.')
+    st.link_button('Workflow SOC gốc', f"https://github.com/Whats-up-pro/VinSOC/actions/runs/{receipt['workflow_run_id']}")
+    download(data['source'], 'SOC JSON gốc', 'soc_download')
+
+
+def cost_page(data):
+    st.title('Chi phí thực và trạng thái nghiệm thu')
+    summary = data['summary']
+    with st.container(horizontal=True):
+        st.metric('Lượt mới', money(summary.get('new_run_cost_usd')), border=True)
+        st.metric('Query-demo tích lũy', money(summary.get('query_demo_allocation_cumulative_cost_usd')), border=True)
+        st.metric('Allocation còn lại', money(summary.get('remaining_allocation_cap_usd')), border=True)
+    st.caption('Allocation query-demo $3. R1 và SOC có scope riêng; số dư này không phải số dư tài khoản nhà cung cấp.')
+    events = [e for c in data['cases'] if c['record'] for e in c['record'].get('cost_events', [])]
+    selected = st.selectbox('Lọc chi phí theo case', ['Tất cả'] + [c['case_id'] for c in data['cases']], key='cost_case')
+    filtered = [e for e in events if selected == 'Tất cả' or e['case_id'] == selected]
+    st.caption(f'{len(filtered)} events hiển thị. COUNT thuộc run trước; 23 events mới thuộc ba case còn lại.')
+    st.dataframe([{'Case':e['case_id'], 'Condition':e.get('condition'), 'Role':e.get('role'),
+                   'Model':e.get('actual_model'), 'USD':e.get('cost_usd'),
+                   'Input tokens':e.get('usage',{}).get('input_tokens'),
+                   'Output tokens':e.get('usage',{}).get('output_tokens'),
+                   'Cached tokens':e.get('usage',{}).get('cached_tokens'),
+                   'Latency ms':e['latency_seconds'] * 1000 if e.get('latency_seconds') is not None else None,
+                   'Request ID':e.get('request_id'),
+                   'Response ID':e.get('response_id')} for e in filtered],
+                 hide_index=True, alt='Usage, chi phí và request response IDs thật')
+    st.subheader('Các thước đo độc lập')
+    st.dataframe([{'Case':c['title'], 'Trạng thái':STATUS_LABELS.get(c['status'],c['status']),
+                   'SQL EX':c['metrics'].get('integrated_ex'), 'Facts':c['metrics'].get('factual_verification'),
+                   'Provenance':c['metrics'].get('provenance'), 'Kỹ thuật':c['metrics'].get('technical_workflow'),
+                   'Human approved':c['metrics'].get('human_approved_completion')} for c in data['cases']],
+                 hide_index=True, alt='Gate kỹ thuật và human review riêng của bốn demo')
+    st.warning('Gate mở: UDP payload; NULL zero-group semantics / assessment; human review. Calibration 0/48, evaluation 0/192, pipeline32 NOT_RUN.')
+    validation = BASE_DIR / INTEGRATION / 'original_data_20261010/real_data_validation.json'
+    if validation.is_file():
+        receipt = read_json(validation)
+        with st.expander('R2: DB gốc và 120 gold queries đã kiểm ngoại tuyến'):
+            st.json({k:receipt.get(k) for k in ('status','original_databases_verified',
+                      'base_gold_replayed','replayed_by_database','source_archive_sha256','external_model_calls')})
+            st.caption('Đây là kiểm DB và gold SQL; không tính thành điểm model. Model calibration/evaluation vẫn chưa chạy.')
+    observation = BASE_DIR / INTEGRATION / 'offline_release_20261010/r2_independent_kernel_observation.json'
+    if observation.is_file():
+        with st.expander('Giới hạn worker: bằng chứng kernel độc lập'):
+            st.json(read_json(observation))
+    st.link_button('CI của gói demo trên Python 3.11/3.12', 'https://github.com/Whats-up-pro/VinSOC/actions/runs/38381443972')
+    st.caption('CI artifacts bbc66f1: full 1398 passed, 7 skipped; required offline 102/0 skip; real-data 13/0 skip mỗi Python. CI này không tự nghiệm thu các thay đổi sau đó.')
+
+
+def artifacts_page(data):
+    st.title('Hồ sơ đối chiếu và lượt chạy mới')
+    st.caption('Viewer đọc lượt đã gọi API thật. Mỗi case giữ producer riêng; xem/download là ngoại tuyến.')
+    for case in data['cases']:
+        with st.expander(case['title'] + ' · ' + case['case_id']):
+            if case['record']:
+                st.code(str(case['case_path'].relative_to(BASE_DIR)), language=None)
+                st.code(case['record'].get('case_receipt_sha256'), language=None)
+                download(case['source'], 'Report gốc', 'report_' + case['case_id'])
+                download(case['case_path'], 'Case gốc', 'raw_' + case['case_id'])
+                st.link_button('Workflow nguồn', 'https://github.com/Whats-up-pro/VinSOC/actions/runs/' + str(case['source_run_id']))
+            else:
+                st.warning(case['error'] or 'Missing')
+    for name,label in (('README.md','Runbook mentor'), ('demo_summary.json','Demo summary'),
+                       ('artifact_manifest.json','Hashes và nguồn artifacts'), ('source_artifacts.json','Receipts Actions')):
+        download(data['package'] / name, label, 'artifact_' + name)
+    st.subheader('Trạng thái lượt gọi mới')
+    st.info('Scope demo đã dùng giữ consumed. Một lượt mới cần execution scope, ngân sách, selection lock và preflight riêng. Windows viewer xem được trace Linux đã chạy thật.')
+    st.markdown('CLI query nhận **case ID và đúng câu hỏi gốc**, đi qua public `investigate_query`.\n'
+                'Preflight đạt trước khi tạo SDK client; SQL chạy trong worker cách ly.\n'
+                'Viewer không cấp scope mới hoặc gọi model khi chuyển trang.')
+    st.code('py -m cli.main query --help', language='powershell')
+    st.caption('Chạy mới qua workflow có guard và CI đúng SHA; authorization của lượt consumed không được tái sử dụng.')
+
 
 def main():
-    """Main app."""
-    # Check environment
-    issues = check_environment()
-
-    # Header
-    render_header()
-
-    # Status
-    render_status_banner(issues)
-
-    if issues:
-        st.stop()
-
-    # Tabs
-    tabs = [
-        "🎯 Demo Scenarios",
-        "✏️ Custom Query",
-        "📋 Results & Review",
-        "🔄 Pipeline Flow",
-    ]
-
-    selected_tab = st.radio("Navigation", tabs, horizontal=True, label_visibility="collapsed")
-
-    if selected_tab == "🎯 Demo Scenarios":
-        tab_demo_scenarios()
-    elif selected_tab == "✏️ Custom Query":
-        tab_custom_query()
-    elif selected_tab == "📋 Results & Review":
-        tab_results_review()
-    elif selected_tab == "🔄 Pipeline Flow":
-        tab_pipeline_flow()
-
-    # Sidebar
-    render_sidebar()
+    st.set_page_config(page_title='VinSOC | Mentor demo', page_icon=':material/security:',
+                       layout='wide', initial_sidebar_state='expanded')
+    st.session_state.setdefault('demo_page', 'Tổng quan')
+    st.session_state.setdefault('demo_stage', 0)
+    with st.sidebar:
+        st.title('VinSOC')
+        st.caption('ĐIỀU TRA · BẰNG CHỨNG · NGƯỜI DUYỆT')
+        page = st.radio('Điều hướng demo', PAGES, key='demo_page', label_visibility='collapsed')
+        st.badge('Xem trace đã gọi API thật', icon=':material/verified:', color='blue')
+        st.caption('Chuyển trang không gọi API, không tốn thêm tiền.')
+    data = cached_demo(fingerprint(BASE_DIR / PACKAGE, REVIEW_DIR, BASE_DIR / INTEGRATION / 'demo_selection.json'))
+    for error in data['errors']:
+        st.warning('Artifact chưa đọc được: ' + error)
+    if page == 'Tổng quan':
+        overview(data)
+    elif page == 'Luồng query':
+        query_flow(data)
+    elif page == 'R1 chọn công cụ':
+        routing_page()
+    elif page == 'SOC thiếu bằng chứng':
+        soc_page()
+    elif page == 'Chi phí & nghiệm thu':
+        cost_page(data)
+    else:
+        artifacts_page(data)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
