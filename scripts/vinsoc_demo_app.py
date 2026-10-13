@@ -16,6 +16,10 @@ from datetime import datetime
 from pathlib import Path
 
 import streamlit as st
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv(BASE_DIR / ".env")
 
 # =============================================================================
 # CONFIGURATION
@@ -79,7 +83,17 @@ def check_environment():
     if not SNAPSHOT_PATH.exists():
         issues.append(f"Snapshot not found: {SNAPSHOT_PATH}")
 
-    # Check OpenAI key
+    # Check OpenAI key - load from .env if not set
+    if not os.environ.get("OPENAI_API_KEY"):
+        # Try loading from .env file
+        env_path = BASE_DIR / ".env"
+        if env_path.exists():
+            try:
+                from dotenv import load_dotenv
+                load_dotenv(env_path)
+            except ImportError:
+                pass
+
     if not os.environ.get("OPENAI_API_KEY"):
         issues.append("OPENAI_API_KEY not set")
 
