@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "purpose": "offline_progress_rehearsal_not_acceptance",
+  "source_execution_id": "full-e2e-8",
+  "source_implementation_sha": "09cfbfaee49e780d3ca1afd02c89ae3ef55c3168",
+  "source_artifact_id": 11784501792,
+  "source_artifact_sha256": "cdfea925759faa5b5281778180435703a8086d2ff2b49a752de459821ce1e045",
+  "source_report_sha256": "e953f4736056711b72c50070bea46a08125f96ee5aca046444bdb93af4e2e8ef",
+  "source_case_sha256": "90939de7714b48bb6337ffbf8ec79029c5a4eb62aa71f78f30db0865044f63a0",
+  "renderer": "scripts.render_query_pipeline_report",
+  "renderer_command": "python -m scripts.render_query_pipeline_report <extracted-public-live>/report.json --output report.html",
+  "report_html_sha256": "2f7574eb308e98c1532dea626aa3ec8fed971a47287f091474bd09a7f9bee3df",
+  "planned_pipeline_cases": 32,
+  "recorded_cases": 1,
+  "missing_cases": 31,
+  "recorded_case_status": "incomplete",
+  "report_status": "incomplete",
+  "api_calls_during_render": 0,
+  "technical_acceptance": false,
+  "human_approved": false
+}
