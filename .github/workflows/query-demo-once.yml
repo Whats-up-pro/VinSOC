@@ -15,6 +15,14 @@ on:
         options:
           - preflight
           - live
+      selection_mode:
+        description: Original single case or the three preselected cases still missing
+        required: true
+        type: choice
+        default: fixed
+        options:
+          - fixed
+          - remaining3
 
 permissions:
   contents: write
@@ -64,7 +72,7 @@ jobs:
         run: |
           curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-5-mini.md --output "$VINSOC_GPT5_DOC"
           curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-4.1-mini.md --output "$VINSOC_GPT41_DOC"
-      - name: Run guarded preflight or one fixed E3 demo
+      - name: Run guarded preflight or the explicitly authorized fixed selection
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
@@ -73,7 +81,14 @@ jobs:
           test -n "$OPENAI_API_KEY"
           test -n "$VINSOC_QUERY_DEMO_AUTH_JSON"
           sudo systemd-run --unit="vinsoc-query-demo-${GITHUB_RUN_ID}" --uid="$(id -u)" --gid="$(id -g)" --property=Delegate=yes --property=MemoryMax=2G --wait --pipe --collect --working-directory="$PWD" \
-            /usr/bin/env VINSOC_QUERY_CLOUD_REQUIRED=1 OPENAI_API_KEY="$OPENAI_API_KEY" GITHUB_TOKEN="$GITHUB_TOKEN" GITHUB_SHA="$GITHUB_SHA" GITHUB_RUN_ID="$GITHUB_RUN_ID" GITHUB_CI_RUN_ID="$GITHUB_CI_RUN_ID" GITHUB_REPOSITORY="$GITHUB_REPOSITORY" GITHUB_REF="$GITHUB_REF" GITHUB_EVENT_NAME="$GITHUB_EVENT_NAME" VINSOC_QUERY_DEMO_AUTH_JSON="$VINSOC_QUERY_DEMO_AUTH_JSON" VINSOC_GPT5_DOC="$VINSOC_GPT5_DOC" VINSOC_GPT41_DOC="$VINSOC_GPT41_DOC" LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_demo_cloud --mode "${{ inputs.run_mode }}" --output-dir .vinsoc/query-demo-cloud/run
+            /usr/bin/env VINSOC_QUERY_CLOUD_REQUIRED=1 OPENAI_API_KEY="$OPENAI_API_KEY" GITHUB_TOKEN="$GITHUB_TOKEN" GITHUB_SHA="$GITHUB_SHA" GITHUB_RUN_ID="$GITHUB_RUN_ID" GITHUB_CI_RUN_ID="$GITHUB_CI_RUN_ID" GITHUB_REPOSITORY="$GITHUB_REPOSITORY" GITHUB_REF="$GITHUB_REF" GITHUB_EVENT_NAME="$GITHUB_EVENT_NAME" VINSOC_QUERY_DEMO_AUTH_JSON="$VINSOC_QUERY_DEMO_AUTH_JSON" VINSOC_GPT5_DOC="$VINSOC_GPT5_DOC" VINSOC_GPT41_DOC="$VINSOC_GPT41_DOC" LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_demo_cloud --mode "${{ inputs.run_mode }}" --selection-mode "${{ inputs.selection_mode }}" --output-dir .vinsoc/query-demo-cloud/run
+      - name: Preserve canonical journals after failure or cancellation
+        if: always()
+        run: |
+          if [ -d "$HOME/.vinsoc/live-windows" ]; then
+            mkdir -p .vinsoc/query-demo-cloud/run/private
+            cp -a "$HOME/.vinsoc/live-windows" .vinsoc/query-demo-cloud/run/private/canonical-ledgers
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

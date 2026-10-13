@@ -147,13 +147,20 @@ def fixed_selection():
     return chosen
 
 
-def prepare_private_inputs(auth, env, ci_run_id):
+def prepare_private_inputs(auth, env, ci_run_id, *, verified_prior=None):
     stamp = datetime.now(timezone.utc).isoformat()
     canonical = Path.home()/'.vinsoc/live-windows'
     allocation_dir = canonical/'allocations'/auth['allocation_id']
+    if verified_prior is not None:
+        if not re.fullmatch(r'ctu_cross_[0-9a-f]{16}', auth.get('case_id', '')):
+            raise ValueError('FIXED_DEMO_SELECTION_REQUIRED')
+        allocation_dir = allocation_dir/auth['case_id']
     allocation_dir.mkdir(parents=True, exist_ok=False)
     ledger_path = allocation_dir/'allocation_ledger.json'
-    prior = prior_demo_receipt(auth)
+    prior = prior_demo_receipt(auth) if verified_prior is None else verified_prior
+    if not math.isclose(sum(r['known_cost_usd'] for r in prior), auth['known_prior_cost_usd'],
+                        rel_tol=0, abs_tol=1e-12):
+        raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')
     authorization = {k:auth[k] for k in ('scope','condition','case_id','confirmed_utc')}
     if auth.get('execution_id'):
         authorization['execution_id'] = auth['execution_id']
@@ -187,18 +194,25 @@ def prepare_private_inputs(auth, env, ci_run_id):
     return {
         'pricing':pricing,
         'account':{'confirmed_utc':stamp,'project_verified':True,'allocation_id':auth['allocation_id'],
-                   'known_prior_cost_usd':auth['known_prior_cost_usd'],
+                  'known_prior_cost_usd':auth['known_prior_cost_usd'],
                    'remaining_allocation_usd':auth['remaining_allocation_usd'],
                    'unresolved_cost_unknown':False,
                    'reconciliation_reference':{'path':str(receipt_path.resolve()),'sha256':receipt_sha}},
         'budget':{'paid_authorized':True,'authorization_scope':'demo','limit_usd':3.0,
-                  'decision_reference':'explicit-user-request-full-real-API-E2E-run-within-original-3-USD-cap-2026-10-10'},
+                  'decision_reference': ('explicit-user-full-authority-real-API-three-remaining-demo-cases-2026-10-13'
+                                         if verified_prior is not None else
+                                         'explicit-user-request-full-real-API-E2E-run-within-original-3-USD-cap-2026-10-10')},
         'identities':{'implementation_sha':env['GITHUB_SHA'],'ci_run_id':ci_run_id,
                       'runtime_source_sha256':source_hashes()},
     }
 
 
-def run(mode, output_dir, env, *, api_factory=GitHubAPI):
+def run(mode, output_dir, env, *, api_factory=GitHubAPI, selection_mode='fixed'):
+    if selection_mode == 'remaining3':
+        from scripts.run_query_remaining_demo_cloud import run_remaining
+        return run_remaining(mode, output_dir, env, api_factory=api_factory)
+    if selection_mode != 'fixed':
+        raise ValueError('CLOUD_SELECTION_MODE_INVALID')
     output_dir = Path(output_dir)
     if output_dir.exists():
         raise ValueError('CLOUD_OUTPUT_ALREADY_EXISTS')
@@ -281,10 +295,11 @@ def enter_delegated_cgroup():
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode', choices=['preflight','live'], required=True)
+    parser.add_argument('--selection-mode', choices=['fixed','remaining3'], default='fixed')
     parser.add_argument('--output-dir', type=Path, required=True)
     args = parser.parse_args(argv)
     enter_delegated_cgroup()
-    result = run(args.mode, args.output_dir, os.environ)
+    result = run(args.mode, args.output_dir, os.environ, selection_mode=args.selection_mode)
     print(json.dumps(result, ensure_ascii=False))
     return 0 if result['status'] in ('preflight_pass','technical_complete_awaiting_human') else 1
 
