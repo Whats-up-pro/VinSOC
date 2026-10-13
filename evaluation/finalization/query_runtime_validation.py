@@ -36,6 +36,10 @@ def source_hashes():
     paths = set(RUNTIME_PATHS) | {'requirements.txt', '.github/workflows/ci.yml',
         '.github/workflows/query-demo-once.yml', 'scripts/run_query_demo_cloud.py',
         'scripts/run_query_remaining_demo_cloud.py',
+        '.github/workflows/query-live-ui.yml', 'scripts/run_query_live_ui_cloud.py',
+        'scripts/vinsoc_live_protocol.py',
+        'scripts/vinsoc_live_ui.py', 'scripts/vinsoc_demo_app.py',
+        'scripts/vinsoc_demo_data.py', 'requirements-demo.txt',
         'scripts/run_query_real_data_checks.py', 'scripts/verify_query_preservation.py', 'scripts/prepare_query_budget.py',
         'results/evaluation_v1/text2sql_integration_v1/demo_selection.json'}
     # Bind the full local dependency closure, including lifecycle/evidence and SQL primitives.

@@ -19,6 +19,7 @@ from scripts.vinsoc_demo_data import (  # noqa: E402
     INTEGRATION,
     PACKAGE,
     STATUS_LABELS,
+    TITLES,
     load_demo,
     load_routing,
     load_soc,
@@ -28,7 +29,7 @@ from scripts.vinsoc_demo_data import (  # noqa: E402
 
 REVIEW_DIR = BASE_DIR / '.vinsoc/mentor-reviews'
 PAGES = ('Tổng quan', 'Luồng query', 'R1 chọn công cụ', 'SOC thiếu bằng chứng',
-         'Chi phí & nghiệm thu', 'Hồ sơ & chạy mới')
+         'Chi phí & nghiệm thu', 'Hồ sơ & chạy mới', 'Chạy pipeline thật')
 STAGES = ('Câu hỏi gốc', 'Model chọn công cụ', 'Schema & giá trị thực', 'SQL của model',
           'Kết quả DB', 'Bằng chứng & nguồn', 'Assessment & kiểm chứng', 'Người duyệt')
 NOTES = (
@@ -200,7 +201,7 @@ def assessment_view(case):
     st.caption('Independent replay kiểm kết quả và nguồn. Ngữ nghĩa phần diễn giải cần người thật review.')
 
 
-def human_review(case):
+def human_review(case, review_dir=None):
     st.subheader('Quyết định của người duyệt')
     if case['review_status'] == 'valid':
         st.success('Review liên kết đúng hash của case gốc.')
@@ -223,7 +224,7 @@ def human_review(case):
         submit = st.form_submit_button('Lưu quyết định của tôi', type='primary', icon=':material/save:')
     if submit:
         try:
-            save_review(case, REVIEW_DIR, analyst=analyst, decision=decision, rationale=rationale, utc=utc)
+            save_review(case, review_dir or REVIEW_DIR, analyst=analyst, decision=decision, rationale=rationale, utc=utc)
         except (OSError, ValueError) as exc:
             st.error(str(exc))
         else:
@@ -426,6 +427,147 @@ def artifacts_page(data):
     st.caption('Chạy mới qua workflow có guard và CI đúng SHA; authorization của lượt consumed không được tái sử dụng.')
 
 
+@st.cache_resource
+def live_controller():
+    from scripts.vinsoc_live_ui import LiveController
+    return LiveController(BASE_DIR)
+
+
+def reset_live_input():
+    st.session_state.pop('live_question',None)
+    st.session_state.pop('live_case',None)
+
+
+@st.fragment(run_every='5s')
+def live_monitor(execution_id, current_input):
+    from scripts.vinsoc_live_ui import load_live_cases, local_identity
+    controller = live_controller()
+    state = controller.read(execution_id)
+    if state['phase'] in ('preflight_submitted','preflight_running','live_submitted','live_running','dispatch_delivery_unknown'):
+        try:
+            state = controller.poll(execution_id)
+        except (OSError,ValueError) as exc:
+            st.warning('Chưa lấy được trạng thái: ' + str(exc))
+    st.subheader('Lượt chạy mới: ' + execution_id)
+    st.badge(state['phase'],color='blue' if state['phase'].endswith('running') else 'orange')
+    workflow = state.get('workflow') or {}
+    if workflow.get('url'):
+        st.link_button('Mở job Linux đang chạy',workflow['url'],icon=':material/open_in_new:')
+    steps = [{'Job':job['name'],'Bước':step['name'],'Trạng thái':step['status'],
+              'Kết quả':step.get('conclusion')} for job in workflow.get('jobs',[]) for step in job.get('steps',[])]
+    if steps:
+        with st.expander('Tiến độ thật từ GitHub Actions',expanded=state['phase'].endswith('running')):
+            st.dataframe(steps,hide_index=True,alt='Tiến độ thực của các bước runner Linux')
+    events = state.get('events',[])
+    if events:
+        st.dataframe([{'Request':e['request_number'],'Phase':e['phase'],'Role':e['event'].get('role'),
+                       'Response ID':e['event'].get('response_id'),'USD':e['event'].get('cost_usd')} for e in events],
+                     hide_index=True,alt='Checkpoints của các request model thật trong lượt đang chạy')
+    control = state.get('control') or {}
+    if control:
+        with st.container(horizontal=True):
+            st.metric('Attempted / received',f"{control.get('attempted',0)} / {control.get('received',0)}",border=True)
+            st.metric('Chi phí lượt này',money(control.get('current_run_cost_usd')),border=True)
+            st.metric('Allocation còn lại',money(control.get('remaining_cap_usd')),border=True)
+        if control.get('gate_reasons'):
+            st.error('Preflight bị chặn: ' + ', '.join(control['gate_reasons']))
+        st.caption(f"client_created={control.get('client_created')} · cost_unknown={control.get('cost_unknown')}")
+    request = state['request']
+    unchanged = current_input == (request['scope'],request['case_id'],request['question'])
+    if state['phase'] == 'preflight_pass':
+        st.success('Preflight Linux đạt; chưa gọi model. Kiểm cận tiền trước khi bắt đầu.')
+        st.json({'cost_ceiling_usd':control.get('cost_ceiling_usd'),'role_caps':control.get('role_caps')},expanded=False)
+        consent = st.checkbox('Tôi cho phép lượt API thật này trong allocation tích lũy $3',key='live_consent_'+execution_id)
+        if not unchanged:
+            st.warning('Input đã đổi sau preflight; cần tạo preflight mới cho input này.')
+        if st.button('Chạy pipeline API thật',type='primary',disabled=not consent or not unchanged,
+                     key='start_'+execution_id,icon=':material/play_arrow:'):
+            try:
+                identity = local_identity(BASE_DIR)
+                controller.start_live(execution_id,consent=consent,current_sha=identity['head_sha'])
+                st.rerun(scope='fragment')
+            except (OSError,ValueError) as exc:
+                st.error(str(exc))
+    try:
+        cases = load_live_cases(state)
+    except (OSError,ValueError) as exc:
+        st.error('Artifact của lượt mới chưa hợp lệ: ' + str(exc))
+        cases = []
+    if cases:
+        st.subheader('Kết quả của chính lượt mới')
+        selected = st.selectbox('Case / condition nhận được',range(len(cases)),
+                               format_func=lambda i:cases[i]['case_id']+' / '+cases[i]['condition'],key='fresh_case_'+execution_id)
+        case = cases[selected]
+        status(case)
+        st.text(case['view'].get('original_question') or case['question'])
+        stage = st.selectbox('Bước pipeline thật',range(8),format_func=lambda i:f'{i+1}. {STAGES[i]}',key='fresh_stage_'+execution_id)
+        st.caption(NOTES[stage])
+        if stage == 0:
+            st.text(case['question'])
+        elif stage == 1:
+            st.json(case['view'].get('native_tool_call'))
+        elif stage == 2:
+            st.json(case['record'].get('generation',{}).get('trajectory'),expanded=False)
+        elif stage == 3:
+            st.code(case['view'].get('sql') or 'Chưa có final SQL',language='sql')
+        elif stage == 4:
+            typed_result(case)
+        elif stage == 5:
+            evidence_view(case)
+        elif stage == 6:
+            assessment_view(case)
+        else:
+            human_review(case,review_dir=controller.directory(execution_id)/'reviews')
+        download(case['case_path'],'Case mới nguyên gốc','fresh_download_'+execution_id)
+        with st.expander('Usage, request/response IDs và chi phí thật'):
+            st.json(case['record'].get('cost_events'))
+    elif state['mode'] == 'live':
+        st.caption('Lượt này chưa có case artifact để đọc. Không dùng kết quả cũ thay thế.')
+    if state.get('error'):
+        st.error(state['error'])
+
+
+def live_page():
+    from scripts.vinsoc_live_protocol import catalog, create_request
+    from scripts.vinsoc_live_ui import local_identity
+    st.title('Chạy pipeline thật từ giao diện')
+    st.caption('Nhập câu hỏi gốc, kiểm preflight, cho phép chạy mới rồi theo dõi model → SQL worker → evidence → assessment → review.')
+    labels = {'demo':'Một query end-to-end (4 demo đã pin)','pipeline':'Toàn bộ pipeline CTU32',
+              'calibration':'Calibration 24 cases × E0/E3','evaluation':'Evaluation 96 cases × E0/E3'}
+    scope = st.selectbox('Phạm vi chạy',list(labels),format_func=labels.get,key='live_scope',on_change=reset_live_input)
+    inventory = catalog(scope)
+    if scope == 'demo':
+        case_id = st.selectbox('Case ID', [r['case_id'] for r in inventory], index=3,
+                               format_func=lambda c:TITLES.get(c,c),key='live_case',on_change=lambda:st.session_state.pop('live_question',None))
+        original = next(r['question'] for r in inventory if r['case_id'] == case_id)
+        question = st.text_area('Câu hỏi điều tra (đúng câu hỏi gốc của case)',value=original,key='live_question',height=110)
+        st.caption('Bạn có thể nhập/dán câu hỏi. Câu hỏi khác case gốc sẽ bị chặn trước SDK.')
+    else:
+        case_id,question = None,None
+        st.dataframe([{'Case ID':r['case_id'],'Database':r['database_id'],'Câu hỏi gốc':r['question']} for r in inventory],
+                     hide_index=True,alt='Toàn bộ catalog case chuẩn của phạm vi đã chọn')
+        if scope == 'calibration':
+            st.caption('Calibration tạo 48 records thật cho E0/E3 và selection lock; cận cả lượt phải nằm trong allocation.')
+        else:
+            st.warning('Selection lock cần 48 calibration records thật; cận cả lượt phải nằm trong allocation. Chưa có artifacts thì giữ NOT_RUN.')
+    if st.button('Chạy preflight Linux (0 model calls)',key='live_preflight',icon=':material/fact_check:'):
+        try:
+            identity = local_identity(BASE_DIR)
+            request = create_request(scope=scope,case_id=case_id,question=question,**identity)
+            live_controller().submit_preflight(request)
+            st.session_state.live_session_id = request['execution_id']
+            st.session_state.live_history = request['execution_id']
+        except (OSError,ValueError) as exc:
+            st.error(str(exc))
+    sessions = live_controller().storage
+    existing = sorted([p.name for p in sessions.glob('liveui-*') if (p/'state.json').is_file()],reverse=True)
+    if existing:
+        current = st.session_state.get('live_session_id')
+        selected = st.selectbox('Mở / tiếp tục một lượt đã gửi',existing,
+                               index=existing.index(current) if current in existing else 0,key='live_history')
+        live_monitor(selected,(scope,case_id,question))
+
+
 def main():
     st.set_page_config(page_title='VinSOC | Mentor demo', page_icon=':material/security:',
                        layout='wide', initial_sidebar_state='expanded')
@@ -450,6 +592,8 @@ def main():
         soc_page()
     elif page == 'Chi phí & nghiệm thu':
         cost_page(data)
+    elif page == 'Chạy pipeline thật':
+        live_page()
     else:
         artifacts_page(data)
 

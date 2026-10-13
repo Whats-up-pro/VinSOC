@@ -80,3 +80,15 @@ def test_cost_table_uses_actual_model_and_measured_latency(monkeypatch):
     assert costs['Model'].notna().all()
     assert costs['Latency ms'].notna().all()
     assert (costs['Latency ms'] >= 0).all()
+
+
+def test_live_page_has_separate_preflight_and_full_case_catalog(monkeypatch):
+    at = app(monkeypatch)
+    assert 'Chạy pipeline thật' in at.radio(key='demo_page').options
+    at.radio(key='demo_page').set_value('Chạy pipeline thật').run()
+    assert not at.exception
+    assert at.text_area(key='live_question').value
+    assert any('preflight' in b.label.lower() for b in at.button)
+    at.selectbox(key='live_scope').set_value('pipeline').run()
+    assert not at.exception
+    assert any(len(frame.value) == 32 for frame in at.dataframe)

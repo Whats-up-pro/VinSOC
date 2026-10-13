@@ -1,0 +1,97 @@
+name: VinSOC live UI pipeline
+run-name: VinSOC UI ${{ inputs.mode }} / ${{ inputs.execution_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        required: true
+        type: choice
+        default: preflight
+        options: [preflight, live]
+      execution_id:
+        required: true
+        type: string
+      ci_run_id:
+        required: true
+        type: string
+      request_json:
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vinsoc-query-original-3usd-allocation
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      GITHUB_CI_RUN_ID: ${{ inputs.ci_run_id }}
+      VINSOC_LIVE_UI_REQUEST: ${{ inputs.request_json }}
+      VINSOC_LIVE_UI_EXECUTION_ID: ${{ inputs.execution_id }}
+      VINSOC_GPT5_DOC: .vinsoc/live-ui-inputs/gpt-5-mini.md
+      VINSOC_GPT41_DOC: .vinsoc/live-ui-inputs/gpt-4.1-mini.md
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install SDK and Linux isolation backend
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          python -m pip install -r requirements.txt
+          python -m pip install duckdb==1.5.5
+      - name: Restore exact original DBs and sources
+        run: |
+          mkdir -p .vinsoc/live-ui-inputs .vinsoc/live-ui-cloud
+          python -m scripts.restore_query_data_bundle --repo . --bundle VinSOC_Runtime_DB_20261010.zip > .vinsoc/live-ui-inputs/bundle_restore.json
+          python - <<'PYTHON'
+          import hashlib, urllib.request
+          from pathlib import Path
+          from scripts.export_vinsoc_db_bundle import SOURCES
+          for source in SOURCES['ctu']['sources']:
+              target = Path(source['path']).resolve()
+              if not target.is_relative_to(Path('.').resolve()): raise ValueError('UNSAFE_CTU_SOURCE_DESTINATION')
+              target.parent.mkdir(parents=True, exist_ok=True)
+              with urllib.request.urlopen(source['source_url'], timeout=120) as response, target.open('xb') as out:
+                  out.write(response.read())
+              if hashlib.sha256(target.read_bytes()).hexdigest() != source['file_sha256']:
+                  raise ValueError('PINNED_CTU_SOURCE_CHECKSUM_MISMATCH')
+          PYTHON
+          curl --fail --silent --show-error --location https://huggingface.co/datasets/HAL-9001/spider-databases/resolve/4a01bbac6520cd35b216db9e1724e5e1ada60aa4/spider_data.zip --output .vinsoc/live-ui-inputs/spider_data.zip
+          python -m scripts.validate_original_query_data --restore-sources --archive .vinsoc/live-ui-inputs/spider_data.zip --output .vinsoc/live-ui-inputs/original_validation.json
+      - name: Fetch current model pricing and context limits
+        run: |
+          curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-5-mini.md --output "$VINSOC_GPT5_DOC"
+          curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-4.1-mini.md --output "$VINSOC_GPT41_DOC"
+      - name: Guarded preflight or real model pipeline
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          VINSOC_LIVE_UI_MODE: ${{ inputs.mode }}
+        run: |
+          sudo systemd-run --unit="vinsoc-live-ui-${GITHUB_RUN_ID}" --uid="$(id -u)" --gid="$(id -g)" --property=Delegate=yes --property=MemoryMax=2G --wait --pipe --collect --working-directory="$PWD" \
+            /usr/bin/env VINSOC_QUERY_CLOUD_REQUIRED=1 OPENAI_API_KEY="$OPENAI_API_KEY" GITHUB_TOKEN="$GITHUB_TOKEN" GITHUB_SHA="$GITHUB_SHA" GITHUB_RUN_ID="$GITHUB_RUN_ID" GITHUB_CI_RUN_ID="$GITHUB_CI_RUN_ID" GITHUB_REPOSITORY="$GITHUB_REPOSITORY" GITHUB_REF="$GITHUB_REF" GITHUB_EVENT_NAME="$GITHUB_EVENT_NAME" VINSOC_LIVE_UI_REQUEST="$VINSOC_LIVE_UI_REQUEST" VINSOC_LIVE_UI_EXECUTION_ID="$VINSOC_LIVE_UI_EXECUTION_ID" VINSOC_GPT5_DOC="$VINSOC_GPT5_DOC" VINSOC_GPT41_DOC="$VINSOC_GPT41_DOC" LD_LIBRARY_PATH="$pythonLocation/lib" "$pythonLocation/bin/python" -m scripts.run_query_live_ui_cloud --mode "$VINSOC_LIVE_UI_MODE" --output-dir .vinsoc/live-ui-cloud/run
+      - name: Preserve partial journals even after failure
+        if: always()
+        run: |
+          if [ -d "$HOME/.vinsoc/live-windows" ]; then
+            mkdir -p .vinsoc/live-ui-cloud/run/private
+            cp -a "$HOME/.vinsoc/live-windows" .vinsoc/live-ui-cloud/run/private/canonical-ledgers
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-ui-${{ github.sha }}-${{ inputs.execution_id }}-${{ github.run_id }}
+          path: .vinsoc/live-ui-cloud/
+          if-no-files-found: error
+          retention-days: 90
