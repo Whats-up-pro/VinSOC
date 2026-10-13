@@ -4,6 +4,18 @@
 
 **Đích gần:** một gói offline mở được ngay và mô tả trung thực các lần thất bại gần nhất; sau khi khóa protocol và ngân sách, một execution E2E mới có SQL đúng, real DB result, evidence, assessment hợp lệ và quyết định của người duyệt. **Đích đầy đủ:** 48 calibration, 192 evaluation và 32 pipeline records thật theo đặc tả; demo một câu không thay các tập đó.
 
+**Checkpoint tiếp tục 13/10:** master nguồn `9b44eb605f418fea2d65e5b3eaa043949a200e6f`,
+CI [38347712931](https://github.com/Whats-up-pro/VinSOC/actions/runs/38347712931) success.
+Task A có gói offline; Task C đã preflight và chạy một execution `full-e2e-10`
+ở `0d813371...` với 7/7 response, `$0.00739705`, cumulative `$0.06115500`.
+Task D có trace kỹ thuật nhưng reporter cũ fail factual vì lookup nhầm vị trí
+scalar trong typed result. Tiếp tục sửa mapping bằng test RED/GREEN, kiểm
+result evidence hash và rút gọn CLI review với `--verbose`; xuất projection/viewer
+v2 trong thư mục mới, không sửa output/scorer lịch sử. Chưa nhận receipt review,
+nên chưa đóng human approval. Task E vẫn `0/48`, `0/192`, `0/32`; không mở paid scope mới.
+Nguồn bàn giao: [runbook hiện hành](../../VINSOC_E2E_DEMO_RUNBOOK.md),
+[manifest v2](../../../results/evaluation_v1/text2sql_integration_v1/offline_demo_v2_20261013/manifest.json).
+
 **Mốc đầu:** execution `full-e2e-8` tại `09cfbfaee49e780d3ca1afd02c89ae3ef55c3168`, CI [38335064157](https://github.com/Whats-up-pro/VinSOC/actions/runs/38335064157) success; workflow [38335534597](https://github.com/Whats-up-pro/VinSOC/actions/runs/38335534597) có artifact partial. `0e85e637bbc5828c221f1d0d2dac0a91090c3c28` đã commit audit và bản sửa checkpoint/semantic; [CI #339](https://github.com/Whats-up-pro/VinSOC/actions/runs/38336323978) success. [Workflow #10](https://github.com/Whats-up-pro/VinSOC/actions/runs/38336761761) trên SHA đó thất bại (`full-e2e-9`, 6/6 response, `technical_incomplete`, cost lũy kế `$0.05375795`); [audit run 9](../../../results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_9_20261013/outcome_audit.json) đã commit tại `master@7c6e5b907934b8ce76f7f88d4dd9edd80834d9eb`, xác định lỗi linker ba lần chạm output cap, không có SQL cuối. SHA mới nâng cap R2 1.000→2.000, chưa có live success. [Status 13/10](../../evaluation/VinSOC_E2E_Demo_Status_2026-10-13.md) và [audit run 8](../../../results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_8_20261013/outcome_audit.json) là checkpoint. Chưa có E2E approved; official scopes `0/48`, `0/192`, `0/32`.
 
 ## Quy tắc quyết định

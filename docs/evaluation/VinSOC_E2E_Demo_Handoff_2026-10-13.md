@@ -1,5 +1,13 @@
 # VinSOC — gói demo E2E và bàn giao người duyệt (13/10/2026)
 
+> **Bản viewer mới:** dùng [offline demo v2](../../results/evaluation_v1/text2sql_integration_v1/offline_demo_v2_20261013/report.html)
+> và [manifest v2](../../results/evaluation_v1/text2sql_integration_v1/offline_demo_v2_20261013/manifest.json).
+> Reporter trước đây tìm observation trực tiếp trong `evidence.data`, nên báo
+> factual/technical failed dù scalar nằm trong `columns/rows`. Bản mới kiểm
+> cột duy nhất của một hàng, giá trị/kiểu và hash result evidence. Artifact,
+> gold, SQL và các projection trước được giữ nguyên. Review vẫn pending vì chưa có receipt.
+> CLI duyệt hiện tóm tắt; thêm `--verbose` để xem JSON đầy đủ.
+
 ## Trạng thái có thể công bố
 
 Lượt `full-e2e-10`, ca khóa `ctu_cross_708b66575657429a` / E3, trên mã

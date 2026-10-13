@@ -110,6 +110,89 @@ def test_saved_single_demo_mismatched_case_file_is_rejected(tmp_path):
         load_records(tmp_path/'runner_report.json')
 
 
+def run_saved_review(monkeypatch, tmp_path, extra=(), *, decision='escalated', mutate=None):
+    from scripts.review_vinsoc_query_case import main
+    source = Path('results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/case_record.json')
+    case = tmp_path/'case.json'
+    if mutate:
+        record = json.loads(source.read_text(encoding='utf-8'))
+        mutate(record)
+        case.write_text(json.dumps(record), encoding='utf-8')
+    else:
+        case.write_bytes(source.read_bytes())
+    answers = iter(['test-only analyst', decision, 'Test-only review receipt; never published.', '2026-10-13T00:00:00Z'])
+    monkeypatch.setattr('builtins.input', lambda prompt: next(answers))
+    output = tmp_path/'review.json'
+    assert main([str(case), '--output', str(output), *extra]) == 0
+    return json.loads(output.read_text(encoding='utf-8')), case
+
+
+def test_review_default_shows_sql_once_and_preserves_bound_receipt(monkeypatch, tmp_path, capsys):
+    receipt, case = run_saved_review(monkeypatch, tmp_path)
+    preview = capsys.readouterr().out
+    assert preview.count('SELECT COUNT(DISTINCT dst_ip)') == 1
+    assert '459' in preview and 'Evidence:' in preview and 'factual=PASS' in preview
+    assert 'provider_request_id' not in preview and 'snapshot_binary_sha256' not in preview
+    assert '--verbose' in preview
+    assert receipt['scope'] == 'actual_human_review'
+    assert receipt['analyst'] == 'test-only analyst' and receipt['decision'] == 'escalated'
+    assert receipt['case_receipt_sha256'] == hashlib.sha256(case.read_bytes()).hexdigest()
+
+
+def test_review_verbose_retains_complete_saved_projection(monkeypatch, tmp_path, capsys):
+    from evaluation.finalization.query_view import case_view
+    _, case = run_saved_review(monkeypatch, tmp_path, ['--verbose'])
+    preview = json.loads(capsys.readouterr().out)
+    assert preview == case_view(json.loads(case.read_text(encoding='utf-8')))
+
+
+def test_review_cannot_approve_fact_mismatch_even_when_saved_stage_flag_is_valid(monkeypatch, tmp_path):
+    def mutate(record):
+        record['metadata']['query_policy']['assessment']['observations'][0]['value'] = 460
+    with pytest.raises(SystemExit) as raised:
+        run_saved_review(monkeypatch, tmp_path, decision='approved', mutate=mutate)
+    assert raised.value.code == 2
+    assert not (tmp_path/'review.json').exists()
+
+
+def test_review_missing_assessment_can_be_escalated_with_failed_facts(monkeypatch, tmp_path, capsys):
+    def mutate(record):
+        record['metadata']['query_policy']['assessment'] = None
+    receipt, _ = run_saved_review(monkeypatch, tmp_path, mutate=mutate)
+    assert receipt['decision'] == 'escalated'
+    assert 'factual=FAIL' in capsys.readouterr().out
+
+
+@pytest.mark.parametrize('mutation', ['execution_cell', 'execution_rehashed', 'lineage', 'execution_evidence_hash'])
+def test_review_cannot_approve_execution_evidence_disagreement(monkeypatch, tmp_path, mutation):
+    def mutate(record):
+        execution = record['metadata']['query_execution']
+        if mutation in ('execution_cell', 'execution_rehashed'):
+            execution['rows'] = [[460]]
+            if mutation == 'execution_rehashed':
+                data = {k:execution[k] for k in ('columns', 'rows', 'truncated')}
+                execution['result_sha256'] = hashlib.sha256(json.dumps(
+                    data, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
+        elif mutation == 'lineage':
+            next(e for e in record['evidence'] if e['type'] == 'query_result')['related_evidence_ids'] = []
+        else:
+            next(e for e in record['evidence'] if e['type'] == 'query_execution')['data']['result_sha256'] = 'wrong'
+    with pytest.raises(SystemExit) as raised:
+        run_saved_review(monkeypatch, tmp_path, decision='approved', mutate=mutate)
+    assert raised.value.code == 2
+    assert not (tmp_path/'review.json').exists()
+
+
+def test_public_cli_forwards_verbose_to_review(monkeypatch, tmp_path):
+    import cli.main as cli
+    import scripts.review_vinsoc_query_case as review
+    captured = []
+    monkeypatch.setattr(review, 'main', lambda argv: captured.extend(argv) or 0)
+    monkeypatch.setattr('sys.argv', ['vinsoc', 'query-review', 'case.json', '--output', 'review.json', '--verbose'])
+    assert cli.main() == 0
+    assert captured == ['case.json', '--output', 'review.json', '--verbose']
+
+
 def test_saved_artifact_text_is_escaped():
     from scripts.render_query_pipeline_report import escaped_json
     saved = json.loads(Path('results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json').read_text())

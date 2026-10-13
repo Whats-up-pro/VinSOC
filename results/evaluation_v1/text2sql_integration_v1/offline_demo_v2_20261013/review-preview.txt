@@ -1,0 +1,37 @@
+VinSOC — review ctu_cross_708b66575657429a
+Câu hỏi: Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.
+
+SQL:
+SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips
+FROM network_flows f
+WHERE f.dst_ip IS NOT NULL
+  AND EXISTS (
+    SELECT 1 FROM network_flows s5
+    WHERE s5.dst_ip = f.dst_ip
+      AND s5.source_dataset = 'ctu13_s5'
+      AND s5.protocol = 'TCP'
+      AND s5.event_time > TIMESTAMP '2011-08-15 17:00:00'
+  )
+  AND EXISTS (
+    SELECT 1 FROM network_flows s7
+    WHERE s7.dst_ip = f.dst_ip
+      AND s7.source_dataset = 'ctu13_s7'
+      AND s7.protocol = 'TCP'
+      AND s7.event_time > TIMESTAMP '2011-08-16 14:00:00'
+  );
+
+Kết quả (tối đa 5 dòng; JSON đầy đủ qua --verbose):
+{"columns": [{"name": "distinct_dst_ips", "type": "BIGINT"}], "row_count": 1, "truncated": false, "rows": [[459]]}
+
+Kiểm tra: schema=PASS; execution=PASS; factual=PASS; provenance=PASS; replay=PASS
+Evidence: ev_bf7ff9fc_2, ev_03d85032_3
+Assessment: There are 459 distinct destination IPs that received TCP flows after the specified strict time boundaries in CTU scenario 5 (after 2011-08-15 17:00:00) and scenario 7 (after 2011-08-16 14:00:00).
+Risk: UNKNOWN
+
+Hạn chế:
+- The data only reflects the CTU dataset scenarios 5 and 7 and the specified time boundaries; it may not represent other scenarios or time periods.
+- The analysis does not include context on the nature of the TCP flows or whether these IPs are benign or malicious.
+- CTI (Cyber Threat Intelligence) and endpoint context or semantic correctness of the data are not verified.
+Ngữ nghĩa phần diễn giải: cần người duyệt xác nhận
+Danh tính trong receipt do người nhập khai báo; CLI chưa xác thực danh tính.
+Chi tiết toàn bộ: thêm --verbose.

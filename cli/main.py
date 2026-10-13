@@ -522,6 +522,7 @@ def main():
     review_parser = subparsers.add_parser('query-review', help='Actual analyst review of a technical-valid saved case')
     review_parser.add_argument('case', type=Path)
     review_parser.add_argument('--output', type=Path, required=True)
+    review_parser.add_argument('--verbose', action='store_true', help='Show full saved review evidence')
     render_parser = subparsers.add_parser('query-render', help='Render saved query receipts offline')
     render_parser.add_argument('source', type=Path)
     render_parser.add_argument('--output', type=Path, required=True)
@@ -566,7 +567,10 @@ def main():
         return query_main(forwarded)
     elif args.command == 'query-review':
         from scripts.review_vinsoc_query_case import main as review_main
-        return review_main([str(args.case),'--output',str(args.output)])
+        forwarded = [str(args.case),'--output',str(args.output)]
+        if args.verbose:
+            forwarded.append('--verbose')
+        return review_main(forwarded)
     elif args.command == 'query-render':
         from scripts.render_query_pipeline_report import main as render_main
         return render_main([str(args.source),'--output',str(args.output)])

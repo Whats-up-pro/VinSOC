@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "purpose": "offline_reprojection_of_authentic_fixed_demo_pending_review",
+  "source_execution_id": "full-e2e-10",
+  "source_parent_commit": "9b44eb605f418fea2d65e5b3eaa043949a200e6f",
+  "source_files": {
+    "results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/runner_report.json": "21675136f2a6fada7af124910934a9fe856e89c3c35ea4e1acb995ecfc02091a",
+    "results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/case_record.json": "374224fff7c242d6a2c7f66d07bb0c6c5768cc97964c9d998e1bafa0a5041eb4",
+    "results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/outcome_audit.json": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e"
+  },
+  "code_files": {
+    "scripts/render_query_pipeline_report.py": "f69cf0d4fecd66445b770674a0c05b8da686ab14dd015ee5e9bd3ee789ccd8ef",
+    "evaluation/finalization/query_pipeline_reporting.py": "a59ec5d1c2b7335f1b940dcb87a3c7d4563b26046edc00b3e69136697ac2b36a",
+    "scripts/review_vinsoc_query_case.py": "f5576ddfac72cbcfffd0315a6669219a662e1d421ebb56984aee5397ea8b5cd3"
+  },
+  "generated_files": {
+    "report.html": "07bd8c57b94619a80c6506baaf897c94601beabdc773a77bbb6a6b0652cbf13c",
+    "pipeline_projection.json": "cb97c1bfaaac607914192632ba39c6f945a8cd910a32a5034234130a782a8299",
+    "review-preview.txt": "cc830900eb86a9beaa95f3ac394b918568372af766de8761ff96e2dc65b6db68"
+  },
+  "change": "Reporter resolves unambiguous typed result columns, rejects metadata/column collisions and binds result evidence to displayed execution/SQL/lineage. Original outputs and projections remain preserved.",
+  "planned_pipeline_cases": 32,
+  "recorded_fixed_demo_cases": 1,
+  "missing_cases": 31,
+  "recorded_case_status": "awaiting_human",
+  "factual_verification": true,
+  "technical_workflow": true,
+  "human_approved": false,
+  "official_eligible": false,
+  "source_manifest_audit_hash_mismatch": "8/9 entries match; see offline_demo_20261013/manifest.json for ZIP verification and declared vs committed audit hash.",
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0
+}

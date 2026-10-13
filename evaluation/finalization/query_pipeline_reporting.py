@@ -9,6 +9,88 @@ from datetime import datetime
 from .query_record_normalization import inventory_metadata, normalize_query_records, result_hash_valid, finite
 
 
+def query_observations_verified(assessment, evidence):
+    """Match cited facts to metadata or an unambiguous single-row result cell."""
+    if not isinstance(assessment, dict) or not isinstance(evidence, list):
+        return False
+    by_id = {}
+    for item in evidence:
+        if not isinstance(item, dict) or not isinstance(item.get('evidence_id'), str):
+            return False
+        if item['evidence_id'] in by_id:
+            return False
+        by_id[item['evidence_id']] = item
+    observations, citations = assessment.get('observations'), assessment.get('evidence_ids')
+    if (not isinstance(observations, list) or not observations
+            or not isinstance(citations, list) or not citations
+            or any(not isinstance(i, str) or i not in by_id for i in citations)
+            or not any(by_id[i].get('type') == 'query_result' for i in citations)):
+        return False
+    seen = set()
+    for observation in observations:
+        if (not isinstance(observation, dict) or set(observation) != {'evidence_id', 'field', 'value'}
+                or not isinstance(observation['evidence_id'], str)
+                or not isinstance(observation['field'], str)):
+            return False
+        key = observation['evidence_id'], observation['field']
+        if key in seen or key[0] not in by_id:
+            return False
+        seen.add(key)
+        item = by_id[key[0]]
+        data = item.get('data')
+        if not isinstance(data, dict):
+            return False
+        columns, rows = data.get('columns'), data.get('rows')
+        matches = ([i for i, column in enumerate(columns)
+                    if isinstance(column, dict) and column.get('name') == key[1]]
+                   if item.get('type') == 'query_result' and isinstance(columns, list) else [])
+        if key[1] in data and matches:
+            return False  # The same field names metadata and a result column.
+        if key[1] in data:
+            expected = data[key[1]]
+        elif item.get('type') == 'query_result':
+            if (not isinstance(rows, list) or len(rows) != 1 or len(matches) != 1
+                    or not isinstance(rows[0], list) or len(rows[0]) != len(columns)):
+                return False
+            expected = rows[0][matches[0]]
+        else:
+            return False
+        if type(expected) is not type(observation['value']) or expected != observation['value']:
+            return False
+    return True
+
+
+def query_execution_verified(record):
+    """Bind displayed execution, result evidence, SQL and execution lineage."""
+    metadata = record.get('metadata', {})
+    generation = record.get('generation', {})
+    execution = metadata.get('query_execution', record.get('execution'))
+    results = [e for e in record.get('evidence', []) if e.get('type') == 'query_result']
+    observed = [e for e in record.get('evidence', []) if e.get('type') == 'query_execution']
+    sql = generation.get('final_sql')
+    if not isinstance(sql, str) or not sql or len(results) != 1 or len(observed) != 1:
+        return False
+    result, observed_data = results[0].get('data'), observed[0].get('data')
+    if not isinstance(result, dict) or not isinstance(observed_data, dict):
+        return False
+    try:
+        if not result_hash_valid(execution) or not result_hash_valid(result):
+            return False
+    except (ValueError, TypeError):
+        return False
+    identity_fields = ('database_id', 'snapshot_binary_sha256', 'snapshot_logical_sha256',
+                       'sql_sha256', 'result_sha256', 'executor_version')
+    return (execution.get('truncated') is False
+            and bool(observed[0].get('evidence_id'))
+            and results[0].get('related_evidence_ids') == [observed[0]['evidence_id']]
+            and result.get('result_sha256') == execution.get('result_sha256')
+            and all(isinstance(execution.get(k), str) and bool(execution[k])
+                    and observed_data.get(k) == execution[k] for k in identity_fields)
+            and execution.get('sql_sha256') == hashlib.sha256(sql.encode()).hexdigest()
+            and execution.get('snapshot_logical_sha256') == generation.get('snapshot_identity')
+            and metadata.get('query_policy', {}).get('validation', {}).get('independent_query_replay') is True)
+
+
 def validate_review(review, record):
     expected = record.get('case_receipt_sha256')
     if not isinstance(review.get('utc'), str):
@@ -69,26 +151,9 @@ def build_pipeline_report(records, inventory, *, reviews, identities, journal):
                 except (ValueError,KeyError,TypeError):
                     routing = False
             norm = normalized[(record['condition'],meta['case_id'])]
-            execution = meta_case.get('query_execution', record.get('execution'))
             evidence = record.get('evidence', [])
-            by_id = {e['evidence_id']:e for e in evidence}
-            results = [e for e in evidence if e.get('type') == 'query_result']
-            observed = [e for e in evidence if e.get('type') == 'query_execution']
-            provenance = (norm['provenance_valid'] and result_hash_valid(execution)
-                and execution.get('truncated') is False and len(results) == len(observed) == 1
-                and results[0].get('related_evidence_ids') == [observed[0]['evidence_id']]
-                and results[0].get('data', {}).get('result_sha256') == execution.get('result_sha256')
-                and execution.get('sql_sha256') == hashlib.sha256((generation.get('final_sql') or '').encode()).hexdigest()
-                and execution.get('snapshot_logical_sha256') == generation.get('snapshot_identity')
-                and policy.get('validation', {}).get('independent_query_replay') is True)
-            observations = assessment.get('observations', [])
-            citations = assessment.get('evidence_ids', [])
-            facts = bool(observations) and bool(citations) and any(e['evidence_id'] in citations for e in results)
-            for observation in observations:
-                data = by_id.get(observation.get('evidence_id'), {}).get('data', {})
-                value = data.get(observation.get('field'))
-                facts &= (observation.get('field') in data and type(value) is type(observation.get('value')) and value == observation.get('value'))
-            facts &= all(i in by_id for i in citations)
+            provenance = norm['provenance_valid'] and query_execution_verified(record)
+            facts = query_observations_verified(assessment, evidence)
             runtime = generation.get('runtime_version') == 'shared_text2sql_v1' and generation.get('question') == meta['question']
             integrated = norm['execution_accurate']
             technical = (routing and runtime and integrated is True and provenance and facts
