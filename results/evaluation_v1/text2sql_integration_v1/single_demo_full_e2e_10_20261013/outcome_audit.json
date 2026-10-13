@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "scope": "single_fixed_query_demo_not_calibration_or_evaluation",
+  "execution_id": "full-e2e-10",
+  "case_id": "ctu_cross_708b66575657429a",
+  "condition": "E3",
+  "implementation_sha": "0d813371a713839e712bb36c2a2ca6a8fd60ebab",
+  "ci": {
+    "run_id": 38337917138,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38337917138",
+    "status": "success",
+    "full_suite_each": {
+      "passed": 1345,
+      "skipped": 7
+    },
+    "required_offline_each": {
+      "passed": 49,
+      "skipped": 0
+    },
+    "required_real_data_each": {
+      "passed": 13,
+      "skipped": 0
+    },
+    "original_databases_verified": 13,
+    "gold_queries_replayed": 120
+  },
+  "preflight_only_workflow": {
+    "run_id": 38338323675,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38338323675",
+    "status": "success",
+    "artifact_id": 11786265638,
+    "artifact_digest": "sha256:602cb765a5ee73a27e724c0d2f4b582a1e90028450b1ec48f29beab21e03264b",
+    "artifact_expires_at": "2027-01-11T02:44:26Z",
+    "authorized": true,
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "cost_usd": 0.0,
+    "cost_unknown": false
+  },
+  "workflow": {
+    "run_id": 38338493466,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38338493466",
+    "job_status": "success",
+    "artifact_id": 11785766818,
+    "artifact_digest": "sha256:ed290e86e1342bc0c9bb5d45d1319094c90d477597015d75480fa92f97c52540",
+    "artifact_expires_at": "2027-01-11T02:46:29Z",
+    "remote_window_claimed": true,
+    "authorization_secret_revoked": true
+  },
+  "preflight": {
+    "status": "preflight_pass",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "hard_budget_usd": 3.0,
+    "prior_cost_usd": 0.05375795,
+    "remaining_before_run_usd": 2.94624205,
+    "conservative_cost_ceiling_usd": 1.6732608,
+    "role_caps": {
+      "routing": 1,
+      "r2": 8,
+      "assessment": 1
+    }
+  },
+  "actual": {
+    "status": "technical_complete_awaiting_human",
+    "provider_transmitted_calls": 7,
+    "received_responses": 7,
+    "calls_by_role_transmitted": {
+      "routing": 1,
+      "r2": 5,
+      "assessment": 1
+    },
+    "r2_stage_calls": {
+      "schema_linker": 3,
+      "sql_generator": 2
+    },
+    "usage": {
+      "input_tokens": 12067,
+      "output_tokens": 2689,
+      "cached_tokens": 5376
+    },
+    "current_run_cost_usd": 0.00739705,
+    "cumulative_cost_usd": 0.061155,
+    "remaining_cap_usd": 2.938845,
+    "cost_unknown": false,
+    "generation_error": "OK",
+    "final_sql_present": true,
+    "final_sql": "SELECT COUNT(DISTINCT dst_ip) AS distinct_dst_ips\nFROM network_flows f\nWHERE f.dst_ip IS NOT NULL\n  AND EXISTS (\n    SELECT 1 FROM network_flows s5\n    WHERE s5.dst_ip = f.dst_ip\n      AND s5.source_dataset = 'ctu13_s5'\n      AND s5.protocol = 'TCP'\n      AND s5.event_time > TIMESTAMP '2011-08-15 17:00:00'\n  )\n  AND EXISTS (\n    SELECT 1 FROM network_flows s7\n    WHERE s7.dst_ip = f.dst_ip\n      AND s7.source_dataset = 'ctu13_s7'\n      AND s7.protocol = 'TCP'\n      AND s7.event_time > TIMESTAMP '2011-08-16 14:00:00'\n  );",
+    "result": {
+      "columns": [
+        {
+          "name": "distinct_dst_ips",
+          "type": "BIGINT"
+        }
+      ],
+      "rows": [
+        [
+          459
+        ]
+      ],
+      "row_count": 1,
+      "truncated": false,
+      "result_sha256": "6b37895a4fca494ca4b56e959e24c9169d8dba5f6b722435f340aef06bfb3c5c"
+    },
+    "execution_success": true,
+    "execution_accurate": true,
+    "scoring_error_category": "OK",
+    "semantic_audit": {
+      "first_generator_candidate_rejected": true,
+      "first_candidate_shape": "two grouped counts joined by UNION ALL",
+      "accepted_candidate_shape": "one distinct count constrained by two correlated EXISTS clauses"
+    },
+    "assessment_calls": 1,
+    "assessment_contract_valid": true,
+    "assessment": {
+      "assessment": "There are 459 distinct destination IPs that received TCP flows after the specified strict time boundaries in CTU scenario 5 (after 2011-08-15 17:00:00) and scenario 7 (after 2011-08-16 14:00:00).",
+      "evidence_ids": [
+        "ev_bf7ff9fc_2",
+        "ev_03d85032_3"
+      ],
+      "observations": [
+        {
+          "evidence_id": "ev_03d85032_3",
+          "field": "distinct_dst_ips",
+          "value": 459
+        }
+      ],
+      "hypotheses": [
+        {
+          "description": "The distinct destination IPs receiving TCP flows after the given time boundaries in both CTU scenarios 5 and 7 represent active communication endpoints potentially relevant for network monitoring or threat analysis.",
+          "supporting_evidence": [
+            "ev_bf7ff9fc_2",
+            "ev_03d85032_3"
+          ],
+          "confidence": "HIGH"
+        }
+      ],
+      "risk_level": "UNKNOWN",
+      "confidence": "HIGH",
+      "limitations": [
+        "The data only reflects the CTU dataset scenarios 5 and 7 and the specified time boundaries; it may not represent other scenarios or time periods.",
+        "The analysis does not include context on the nature of the TCP flows or whether these IPs are benign or malicious.",
+        "CTI (Cyber Threat Intelligence) and endpoint context or semantic correctness of the data are not verified."
+      ],
+      "validation_passed": true,
+      "validation_errors": []
+    },
+    "independent_query_replay": true,
+    "semantic_correctness_verified": false,
+    "schema_valid": true,
+    "traceability_valid": true,
+    "human_review": "awaiting_human",
+    "human_decisions": [],
+    "official_eligible": false,
+    "worker_execution_receipt": {
+      "backend": "bubblewrap",
+      "network": "unshared",
+      "secrets": "absent",
+      "snapshot_mount": "read_only",
+      "memory_bytes": 536870912,
+      "cpu_count": 1,
+      "timeout_seconds": 10
+    },
+    "independent_worker_boundary_evidence": {
+      "path": "results/evaluation_v1/text2sql_integration_v1/offline_release_20261010/r2_independent_kernel_observation.json",
+      "sha256": "be5bb6cf86c735da2de7873bb002c1ca9357a33100dadb738232db44f4ffe8a6",
+      "basis": "external /proc and cgroup filesystem, not executor isolation fields",
+      "revalidated_by_required_real_data_ci_run": 38337917138
+    },
+    "module_metrics": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": 0,
+      "schema_linker": {
+        "tables": {
+          "correct": 1,
+          "predicted": 1,
+          "required": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "columns": {
+          "correct": 4,
+          "predicted": 4,
+          "required": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "relationships": {
+          "correct": 0,
+          "predicted": 0,
+          "required": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "case_success": true,
+        "valid_relationship_path": true
+      },
+      "value_grounding": {
+        "predicates": {
+          "correct": 0,
+          "predicted": 6,
+          "required": 5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "case_success": false,
+        "witness_precision": {
+          "correct": 3,
+          "total": 3,
+          "precision": 1.0
+        },
+        "provenance_status": "VERIFIED_CONTEXT",
+        "unsupported_literal_rate": {
+          "unsupported": 0,
+          "total": 3,
+          "rate": 0.0
+        }
+      }
+    },
+    "model_call_receipts": [
+      {
+        "sequence": 1,
+        "role": "routing",
+        "request_id": "7e57f196211c4947b628ecd92681e503",
+        "request_sha256": "0562a0aefae768e03283294aaf33a98e480328f54d5f030594dd559d93143c11",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMr1eZVBnWAVh6s7UG1DoaC22nY1",
+        "provider_request_id": "req_a2be1c4eda7c429c9227025bafd709e9",
+        "model": "gpt-4.1-mini-2025-04-14",
+        "usage": {
+          "input_tokens": 348,
+          "output_tokens": 66,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.0002448,
+        "latency_seconds": 1.9744700070000363
+      },
+      {
+        "sequence": 2,
+        "role": "r2",
+        "request_id": "4e5f10366a8d48e68539fc5bcf772bed",
+        "request_sha256": "5f7d13f2ef123b7dd224a42d6495f1e1f60cc65bd7f5c2dff64fdb6aa0b2b295",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMr49QQTh6Xzf0LY5BnwwmuT9NkQ",
+        "provider_request_id": "req_3c93ddcdf8a94051b8046fe4066608ea",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 1357,
+          "output_tokens": 167,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.00067325,
+        "latency_seconds": 2.272913582000001
+      },
+      {
+        "sequence": 3,
+        "role": "r2",
+        "request_id": "2fe56cba71ba4a588cc7839ba0eb7500",
+        "request_sha256": "6d356b1b510fd6bd6e02082ad368f4d8e14417ad6e9e3bfbb5f638b4276ee2c7",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMr8rEpFhpLxVJGXVXqCZiUPPUqe",
+        "provider_request_id": "req_0c162601b78f464aa9d9979db3e756a8",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 1917,
+          "output_tokens": 102,
+          "cached_tokens": 1536
+        },
+        "cost_usd": 0.00033765,
+        "latency_seconds": 1.4577756800000543
+      },
+      {
+        "sequence": 4,
+        "role": "r2",
+        "request_id": "454a996515164c018e954f66d61ac9c4",
+        "request_sha256": "4fecda7ec6c3944b91cdc76ebdaa7b2f024fdee422213c7e855f4471610aef52",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMrBxMdcP2HRV2RhTR7UKxHARABT",
+        "provider_request_id": "req_c2464b7ab6444898aadde52f4d253f16",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 2237,
+          "output_tokens": 1004,
+          "cached_tokens": 2048
+        },
+        "cost_usd": 0.0021064499999999997,
+        "latency_seconds": 7.453402141999959
+      },
+      {
+        "sequence": 5,
+        "role": "r2",
+        "request_id": "a72e9aafbf2f41678cfca8f5afcca671",
+        "request_sha256": "c33c2b7f368133dc4b98ac967e362a6237dd9e8be676e31578cae79c95a5d61e",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMrMC9BntE2QFUpk9HFwPQsDbKha",
+        "provider_request_id": "req_d8a64def7efb4defad94c562a666d0c2",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 1955,
+          "output_tokens": 429,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.00134675,
+        "latency_seconds": 4.757079696000005
+      },
+      {
+        "sequence": 6,
+        "role": "r2",
+        "request_id": "ef188802b91b4b5f901235b1c9dbbaab",
+        "request_sha256": "61f0b5a2a9f78c59eb1d01c6069ddb3b885dd6f67370fa1005626da98a08a8b7",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMrUWqYQWPI63OWSxYOmG3aOVNgM",
+        "provider_request_id": "req_69bfd968ee9143558331757047098214",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 2279,
+          "output_tokens": 646,
+          "cached_tokens": 1792
+        },
+        "cost_usd": 0.0014585499999999999,
+        "latency_seconds": 7.913480840000034
+      },
+      {
+        "sequence": 7,
+        "role": "assessment",
+        "request_id": "e6dda0d326484fca8168ec93de38ff25",
+        "request_sha256": "3e033668c6ecac5840be65ea6b9a4158f7143c886c139662928e6e943a118c13",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMrcPlm1Bf0KXUZng0gwE89IktiF",
+        "provider_request_id": "req_81f3e8ed377743b786f021e8fb1151f3",
+        "model": "gpt-4.1-mini-2025-04-14",
+        "usage": {
+          "input_tokens": 1974,
+          "output_tokens": 275,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.0012296,
+        "latency_seconds": 2.268264482999939
+      }
+    ]
+  },
+  "model_score_statement": "This is one authentic fixed-case E3 demo, not an official calibration, 96-case evaluation, or 32-case pipeline score. Technical execution is complete; human review remains pending."
+}
