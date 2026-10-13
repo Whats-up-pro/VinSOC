@@ -1,0 +1,3 @@
+*.json -text
+*.html -text
+MENTOR_RUNBOOK.md text eol=lf

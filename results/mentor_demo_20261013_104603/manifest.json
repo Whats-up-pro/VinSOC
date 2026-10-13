@@ -1,0 +1,43 @@
+{
+  "purpose": "offline mentor presentation from existing authentic artifacts",
+  "source_run": "full-e2e-10",
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0,
+  "human_review_created": false,
+  "predictions_created": false,
+  "copies": [
+    {
+      "source": "results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/runner_report.json",
+      "copy": "report.json",
+      "sha256": "21675136f2a6fada7af124910934a9fe856e89c3c35ea4e1acb995ecfc02091a",
+      "byte_identical": true
+    },
+    {
+      "source": "results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/case_record.json",
+      "copy": "E3_ctu_cross_708b66575657429a.json",
+      "sha256": "374224fff7c242d6a2c7f66d07bb0c6c5768cc97964c9d998e1bafa0a5041eb4",
+      "byte_identical": true
+    },
+    {
+      "source": "results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013/outcome_audit.json",
+      "copy": "outcome_audit.json",
+      "sha256": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e",
+      "byte_identical": true
+    }
+  ],
+  "renderer": {
+    "planned": 32,
+    "cases": 1,
+    "missing": 31,
+    "demo_ids": [
+      "ctu_cross_708b66575657429a",
+      "ctu_cross_66b8e92a76c3359b",
+      "ctu_cross_3f659571f998adb0",
+      "ctu_cross_bce6d3679ade4cd6"
+    ],
+    "api_calls": 0,
+    "status": "incomplete"
+  },
+  "source_git_commit": "978197608c84c1e2819a411fceddd86e04456262",
+  "copy_basis": "exact committed source Git blobs; working-tree line ending conversion is not an artifact identity"
+}
