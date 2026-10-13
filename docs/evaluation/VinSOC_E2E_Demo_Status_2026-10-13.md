@@ -1,5 +1,11 @@
 # VinSOC — trạng thái E2E trước buổi demo (13/10/2026)
 
+> **Cập nhật sau run 10:** [Lượt `full-e2e-10`](https://github.com/Whats-up-pro/VinSOC/actions/runs/38338493466)
+> đã đạt kỹ thuật cho một ca cố định: SQL/DB/evidence/assessment, EX `459`, 7/7
+> response, chi phí lượt `$0.00739705`. Người duyệt thật chưa quyết định; các tập
+> chính thức vẫn `0/48`, `0/192`, `0/32`. [Mở gói demo mới và hướng dẫn duyệt](VinSOC_E2E_Demo_Handoff_2026-10-13.md).
+> Các phần bên dưới ghi lại **mốc trước run 10**, không còn là trạng thái mới nhất.
+
 ## Kết luận có thể trình bày
 
 `full-e2e-8` chạy trên `09cfbfaee49e780d3ca1afd02c89ae3ef55c3168` với [CI đúng SHA xanh](https://github.com/Whats-up-pro/VinSOC/actions/runs/38335064157). `0e85e637bbc5828c221f1d0d2dac0a91090c3c28` đã commit audit và bản sửa checkpoint/semantic; [CI đúng SHA #339](https://github.com/Whats-up-pro/VinSOC/actions/runs/38336323978) thành công. [Lượt live #10](https://github.com/Whats-up-pro/VinSOC/actions/runs/38336761761) trên SHA đó kết thúc `technical_incomplete`. `master@7c6e5b907934b8ce76f7f88d4dd9edd80834d9eb` đã thêm audit #10 và nâng cap R2; chưa có bằng chứng live đạt trên commit này. Public orchestrator, `network_query`, dịch vụ Text-to-SQL chung, DuckDB chỉ đọc, evidence, assessment, HITL và viewer ngoại tuyến đã có đường mã và kiểm thử. CI xanh là bằng chứng mã và dữ liệu, **chưa phải một lần E2E sống thành công**.

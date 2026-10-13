@@ -1,5 +1,10 @@
 # VinSOC — lời dẫn demo tiến độ ngoại tuyến (5–7 phút)
 
+> **Bản lịch sử trước run 10.** Để trình bày trace hoàn chỉnh về kỹ thuật mới
+> nhất, dùng [gói demo run 10](VinSOC_E2E_Demo_Handoff_2026-10-13.md).
+> Trang dưới đây vẫn lưu run 8 không hoàn chỉnh để đối chiếu, không dùng làm
+> câu trả lời về trạng thái hiện tại.
+
 Mở [trang offline](../../results/evaluation_v1/text2sql_integration_v1/offline_rehearsal_20261013/report.html). Trang được render từ artifact sống `full-e2e-8`; [manifest](../../results/evaluation_v1/text2sql_integration_v1/offline_rehearsal_20261013/manifest.json) ghi hash nguồn và `api_calls_during_render=0`. Có execution `full-e2e-9` mới hơn, vẫn `technical_incomplete` (6/6 response, không có SQL vì linker chạm output cap); trang này chỉ xem lại **run 8**, chưa bao gồm artifact của run 9. Đây là buổi trình bày tiến độ và lỗi thật, chưa phải nghiệm thu E2E.
 
 | Thời gian | Trình bày và thao tác |

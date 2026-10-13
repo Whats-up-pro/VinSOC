@@ -1,5 +1,6 @@
 """CLI selection and viewer consume locked inventory and real existing receipts."""
 import json
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -83,6 +84,30 @@ def test_default_viewer_keeps_four_fixed_ids_and_32_missing_cases(tmp_path):
         assert row['case_id'] in page and row['question'] in page
     assert page.count('data-case-id=') == 32
     assert '<script' not in page
+
+
+def test_saved_single_demo_case_file_binds_review_to_report(tmp_path):
+    from scripts.render_query_pipeline_report import load_records, render_report
+    source = Path('results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013')
+    for name in ('runner_report.json', 'case_record.json'):
+        (tmp_path/name).write_bytes((source/name).read_bytes())
+    report = load_records(tmp_path/'runner_report.json')
+    assert report['case_records'][0]['case_receipt_sha256'] == hashlib.sha256(
+        (tmp_path/'case_record.json').read_bytes()).hexdigest()
+    result = render_report(tmp_path/'runner_report.json', tmp_path/'view.html')
+    assert (result['cases'], result['missing'], result['status'], result['api_calls']) == (1, 31, 'incomplete', 0)
+    assert 'awaiting_human' in (tmp_path/'view.html').read_text(encoding='utf-8')
+
+
+def test_saved_single_demo_mismatched_case_file_is_rejected(tmp_path):
+    from scripts.render_query_pipeline_report import load_records
+    source = Path('results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_10_20261013')
+    (tmp_path/'runner_report.json').write_bytes((source/'runner_report.json').read_bytes())
+    case = json.loads((source/'case_record.json').read_text(encoding='utf-8'))
+    case['final_assessment'] = 'tampered'
+    (tmp_path/'case_record.json').write_text(json.dumps(case), encoding='utf-8')
+    with pytest.raises(ValueError, match='CASE_ARTIFACT_REPORT_MISMATCH'):
+        load_records(tmp_path/'runner_report.json')
 
 
 def test_saved_artifact_text_is_escaped():

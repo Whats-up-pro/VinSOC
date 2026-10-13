@@ -40,6 +40,12 @@ def load_records(source):
     report['case_records'] = records
     for record in records:
         artifact = source.parent/(record.get('condition','')+'_'+record['case_id']+'.json')
+        if report.get('scope') == 'demo' and len(records) == 1:
+            demo_artifact = source.parent/'case_record.json'
+            if demo_artifact.is_file():
+                if artifact.is_file():
+                    raise ValueError('DUPLICATE_DEMO_CASE_ARTIFACT')
+                artifact = demo_artifact
         if artifact.is_file():
             bound = json.loads(artifact.read_text(encoding='utf-8'))
             if bound != {k:v for k,v in record.items() if k != 'case_receipt_sha256'}:

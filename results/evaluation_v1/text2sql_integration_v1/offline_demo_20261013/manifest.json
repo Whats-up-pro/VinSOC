@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "purpose": "offline_fixed_case_demo_pending_human_review",
+  "source_execution_id": "full-e2e-10",
+  "source_implementation_sha": "0d813371a713839e712bb36c2a2ca6a8fd60ebab",
+  "source_workflow_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38338493466",
+  "github_reported_artifact_digest": "sha256:ed290e86e1342bc0c9bb5d45d1319094c90d477597015d75480fa92f97c52540",
+  "artifact_zip_independently_verified": false,
+  "source_file_hashes": {
+    "artifact_manifest.json": "85de074b59505f43c67718ac69158083477f0ae07f208ecee32b22c37edfb81c",
+    "runner_report.json": "21675136f2a6fada7af124910934a9fe856e89c3c35ea4e1acb995ecfc02091a",
+    "case_record.json": "374224fff7c242d6a2c7f66d07bb0c6c5768cc97964c9d998e1bafa0a5041eb4",
+    "outcome_audit.json": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e"
+  },
+  "source_manifest_check": {
+    "status": "mismatch",
+    "matching_files": 8,
+    "total_files": 9,
+    "mismatches": {
+      "outcome_audit.json": {
+        "declared_bytes": 13187,
+        "declared_sha256": "bc412ef320fb52ee2b7b30ce647d56809fc4f9f7ab967e88df1618a2df402a92",
+        "committed_bytes": 12824,
+        "committed_sha256": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e"
+      }
+    },
+    "resolution": "The original source manifest and audit remain immutable; this receipt binds the committed bytes. Do not claim the original manifest passes."
+  },
+  "renderer": "scripts.render_query_pipeline_report",
+  "report_html_sha256": "9ea07ca115d08d75060e375199d45e898ffab655eb7b068bd794d6f622710001",
+  "planned_pipeline_cases": 32,
+  "recorded_cases": 1,
+  "missing_cases": 31,
+  "recorded_case_status": "awaiting_human",
+  "pipeline_status": "incomplete",
+  "actual_model_calls_source_run": 7,
+  "actual_cost_source_run_usd": 0.00739705,
+  "api_calls_during_render": 0,
+  "human_approved": false,
+  "official_eligible": false
+}
