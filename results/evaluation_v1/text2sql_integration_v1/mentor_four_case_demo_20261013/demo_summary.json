@@ -1,0 +1,152 @@
+{
+  "scope": "four_independent_fixed_demo_receipts_not_one_pipeline32_run",
+  "created_at_utc": "2026-10-13T09:55:29.463656+00:00",
+  "demo_denominator": 4,
+  "recorded_demo_cases": 4,
+  "missing_demo_cases": 0,
+  "pipeline_inventory": 32,
+  "other_inventory_cases_without_demo_records": 28,
+  "calibration_real_records": 0,
+  "calibration_required_records": 48,
+  "evaluation_real_records": 0,
+  "evaluation_required_records": 192,
+  "official_pipeline32": "not_run",
+  "official_eligible": false,
+  "human_review_created": false,
+  "api_calls_during_render": 0,
+  "new_run_attempted": 23,
+  "new_run_received": 23,
+  "new_run_cost_usd": 0.0204042,
+  "query_demo_allocation_cumulative_cost_usd": 0.0815592,
+  "remaining_allocation_cap_usd": 2.9184408,
+  "cost_unknown": false,
+  "cases": [
+    {
+      "case_id": "ctu_cross_708b66575657429a",
+      "question": "Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.",
+      "status": "awaiting_human",
+      "metrics": {
+        "routing": true,
+        "runtime": true,
+        "integrated_ex": true,
+        "provenance": true,
+        "factual_verification": true,
+        "technical_workflow": true,
+        "human_review_coverage": false,
+        "human_approved_completion": false
+      },
+      "human_decision": "pending",
+      "review_status": "missing",
+      "condition": "E3",
+      "source_report": "existing_count_demo/report.json",
+      "producer_sha": "0d813371a713839e712bb36c2a2ca6a8fd60ebab",
+      "source_run_id": 38338493466,
+      "calls": 7,
+      "cost_usd": 0.00739705,
+      "result_row_count": 1,
+      "explanation": "Model và DB đã chạy thật, trả đúng 459. Facts/provenance đạt; chờ người duyệt."
+    },
+    {
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.",
+      "status": "incomplete",
+      "metrics": {
+        "routing": false,
+        "runtime": true,
+        "integrated_ex": null,
+        "provenance": false,
+        "factual_verification": false,
+        "technical_workflow": false,
+        "human_review_coverage": false,
+        "human_approved_completion": false
+      },
+      "human_decision": "pending",
+      "review_status": "missing",
+      "condition": "E3",
+      "source_report": "cloud_public/ctu_cross_66b8e92a76c3359b/live/report.json",
+      "producer_sha": "1263308b05f06defa48ee4b1ab6712d16e15850c",
+      "source_run_id": 38369416643,
+      "calls": 7,
+      "cost_usd": 0.005294750000000001,
+      "result_row_count": 9780,
+      "explanation": "SQL và DB đã chạy thật, giữ được 9.780 hàng, không truncated. Dữ liệu rows riêng đã vượt cap 32 KiB của assessment; pipeline dừng trước call assessment. Không có score EX được lưu: giữ unscored/incomplete."
+    },
+    {
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.",
+      "status": "technical_failed",
+      "metrics": {
+        "routing": true,
+        "runtime": true,
+        "integrated_ex": false,
+        "provenance": true,
+        "factual_verification": false,
+        "technical_workflow": false,
+        "human_review_coverage": false,
+        "human_approved_completion": false
+      },
+      "human_decision": "pending",
+      "review_status": "missing",
+      "condition": "E3",
+      "source_report": "cloud_public/ctu_cross_3f659571f998adb0/live/report.json",
+      "producer_sha": "1263308b05f06defa48ee4b1ab6712d16e15850c",
+      "source_run_id": 38369416643,
+      "calls": 8,
+      "cost_usd": 0.007031399999999998,
+      "result_row_count": 0,
+      "explanation": "SQL lọc WHERE trước GROUP BY nên mất các protocol có count bằng 0. Theo gold contract phải giữ các nhóm đó. Assessment trả observations rỗng, bị contract từ chối. Giữ failed."
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "question": "List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.",
+      "status": "awaiting_human",
+      "metrics": {
+        "routing": true,
+        "runtime": true,
+        "integrated_ex": true,
+        "provenance": true,
+        "factual_verification": true,
+        "technical_workflow": true,
+        "human_review_coverage": false,
+        "human_approved_completion": false
+      },
+      "human_decision": "pending",
+      "review_status": "missing",
+      "condition": "E3",
+      "source_report": "cloud_public/ctu_cross_bce6d3679ade4cd6/live/report.json",
+      "producer_sha": "1263308b05f06defa48ee4b1ab6712d16e15850c",
+      "source_run_id": 38369416643,
+      "calls": 8,
+      "cost_usd": 0.00807805,
+      "result_row_count": 1,
+      "explanation": "Model trả SQL đúng, DB trả TCP; assessment có dẫn chứng hợp lệ. Đây là luồng end-to-end mới để trình bày, chờ người duyệt."
+    }
+  ],
+  "new_usage": {
+    "input_tokens": 35617,
+    "output_tokens": 6868,
+    "cached_tokens": 12032
+  },
+  "new_calls_by_role": {
+    "routing": 3,
+    "r2": 18,
+    "assessment": 2
+  },
+  "demo_receipt_calls": 30,
+  "demo_receipt_cost_usd": 0.02780125,
+  "statuses": {
+    "awaiting_human": 2,
+    "incomplete": 1,
+    "technical_failed": 1
+  },
+  "udp_payload_diagnosis": {
+    "cloud_exception_class": "ValueError",
+    "retained_result_row_count": 9780,
+    "retained_result_rows_json_bytes": 186810,
+    "assessment_payload_limit_bytes": 32768,
+    "diagnosis": "ASSESSMENT_EVIDENCE_PAYLOAD_LIMIT",
+    "basis": "The retained complete result rows alone exceed the policy envelope; NetworkQueryPolicy.tool_response raises this category. The cloud report preserved only ValueError, so the specific category is a diagnosis, not a logged literal.",
+    "integrated_ex": "not_scored_in_live_report",
+    "no_posthoc_model_score_created": true
+  }
+}

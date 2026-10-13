@@ -1,0 +1,16 @@
+{
+  "verified_at_utc": "2026-10-13T10:09:07.998748+00:00",
+  "verification": "PASS",
+  "public_original_files_byte_equal": 14,
+  "case_projections_verified": 4,
+  "unique_real_response_ids": 30,
+  "new_real_response_ids": 23,
+  "human_approvals_created": 0,
+  "model_calls_during_verification": 0,
+  "targeted_tests": {
+    "command": ".\\.venv\\Scripts\\python.exe -m pytest tests/test_query_pipeline_reporting.py tests/test_query_cli_viewer.py -q",
+    "passed": 45,
+    "skipped": 0
+  },
+  "environment_note": "Global Python 3.13 lacks sqlglot; initial collection failed. Repeated in existing project .venv: 45 passed."
+}

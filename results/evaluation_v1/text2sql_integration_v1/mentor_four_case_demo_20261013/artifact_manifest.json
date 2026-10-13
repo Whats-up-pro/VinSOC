@@ -1,0 +1,56 @@
+{
+  "producer_code_sha": "1263308b05f06defa48ee4b1ab6712d16e15850c",
+  "producer_ci": 38368039406,
+  "live_run": 38369416643,
+  "preflight_run": 38368861277,
+  "source_artifacts": {
+    "38368861277": {
+      "id": 11798596416,
+      "name": "query-demo-1263308b05f06defa48ee4b1ab6712d16e15850c-38368861277",
+      "digest": "sha256:795dc07699f2240e5d53276be50e39085c8fe7085004501b2bca9da26cd74536",
+      "expires_at": "2027-01-11T08:22:52Z"
+    },
+    "38369416643": {
+      "id": 11798712801,
+      "name": "query-demo-1263308b05f06defa48ee4b1ab6712d16e15850c-38369416643",
+      "digest": "sha256:f8646fbb512d7de14a5b694c1afafe84ee3daaf580537da71cf71aa620e38cfe",
+      "expires_at": "2027-01-11T08:27:49Z"
+    }
+  },
+  "files": {
+    ".gitattributes": "460a26e40d77d9e9788fcf00dddc5ac32cee9c14388fa5f084f22c4f39d5e4cf",
+    "demo_summary.json": "2756d1532834b349862d88c148821e67d01ea0151b8ce439618dd906872a51fd",
+    "index.html": "33cfac1164dc2ba3a19c4fa5df216419fb9fedd7042862632bec84ce7b9a5d2d",
+    "README.md": "29a7642f5232a828b0567e3ffb0c506e9cf9d4978bb0a28858a6854498a09696",
+    "source_artifacts.json": "43121a3bd6237685d8078ecfe64a556997b2df45cd8a8b428d48f9235d506f6a",
+    "verification_receipt.json": "d29bead20361c16860ea6dac82f36ee83937ebb48581e5608e1939f94c02637b",
+    "assessment_responses/ctu_cross_3f659571f998adb0.json": "7991a9b256c5c66ed6cdb09ccfe1933b75b9a5a4e49758417393db40f7290726",
+    "assessment_responses/ctu_cross_bce6d3679ade4cd6.json": "70a1b0f306093a7687d9472d8379276d0d8fa3f9ea10f199b8a275ed99557d11",
+    "cloud_public/cloud_run.json": "613db2d8ee6355bcbe403419cdd6e3786f125edd5f74d3e0664b84b71b6d9081",
+    "cloud_public/ctu_cross_3f659571f998adb0/preflight.json": "a02f33e284a75778aa36a9e2af5849525b7d261389773b1b4b7ab7667b130c96",
+    "cloud_public/ctu_cross_3f659571f998adb0/live/E3_ctu_cross_3f659571f998adb0.json": "49f6b2008573906c2930ee47e4f4e594433a744f15911a26928ca06165e8fbe9",
+    "cloud_public/ctu_cross_3f659571f998adb0/live/report.json": "9f8ed3d4eea903549a30f171b5d1df0a649e8eb2310f609efc75a734d8f39e8c",
+    "cloud_public/ctu_cross_66b8e92a76c3359b/preflight.json": "4cdd19ee4fb29a9561e4ddffc45eb2871d15f0abd10f0ada3464841b12900da6",
+    "cloud_public/ctu_cross_66b8e92a76c3359b/live/E3_ctu_cross_66b8e92a76c3359b.json": "51d0ac3aa895184a07c0c4006395f75ddd9c4ead5f13fa9e92ea6317dc43ecc7",
+    "cloud_public/ctu_cross_66b8e92a76c3359b/live/report.json": "5c6822b37dd5e99168cc8843333980a9cd4d10b0e39e04ffe02027938f9398bd",
+    "cloud_public/ctu_cross_bce6d3679ade4cd6/preflight.json": "5b1c5cd86ae05964fbecf3d8e14a577e22d9b1d90b6216afd65ef9bf50c29b90",
+    "cloud_public/ctu_cross_bce6d3679ade4cd6/live/E3_ctu_cross_bce6d3679ade4cd6.json": "63ea55e118f1ed6ad90fbddb85bbafa6b9257aab2958af7b0ccd4a202ab676d8",
+    "cloud_public/ctu_cross_bce6d3679ade4cd6/live/report.json": "fe4b0e5a1e64a11ad06185831f29b96783af9ae05145e4ae53ce45db0fb051c5",
+    "existing_count_demo/E3_ctu_cross_708b66575657429a.json": "374224fff7c242d6a2c7f66d07bb0c6c5768cc97964c9d998e1bafa0a5041eb4",
+    "existing_count_demo/outcome_audit.json": "274c4815f01ba3db471ab6045d8f5e5f0e12be78a08cc718cbb004fae760957e",
+    "existing_count_demo/report.json": "21675136f2a6fada7af124910934a9fe856e89c3c35ea4e1acb995ecfc02091a",
+    "preflight_public/cloud_run.json": "0165a6bcfd9c14daab9c2970d07a09e8293e8319578f234d99a5190572941b24",
+    "preflight_public/ctu_cross_3f659571f998adb0/preflight.json": "6b9ed76a5b1177db11c313f1250912564705109dc7e3567ac06aafc3b902081d",
+    "preflight_public/ctu_cross_66b8e92a76c3359b/preflight.json": "e5f14da74588b5c0f0330ae2337788959d8dde49ecb2ae77f8963d6ec748298a",
+    "preflight_public/ctu_cross_bce6d3679ade4cd6/preflight.json": "ad635c7c69c3198465397492a3a7be45b82d76918b918a05151312394bd5f8c7",
+    "views/ctu_cross_3f659571f998adb0.html": "27929ce1188ac63077fe8d8bfdc733e045f375acd4902d1f2cacbb733216f465",
+    "views/ctu_cross_66b8e92a76c3359b.html": "1928cd07ef4dd7bba8e2a2e91a65f8c58ae354042fd0ad0c0467b69825cc482d",
+    "views/ctu_cross_708b66575657429a.html": "07bd8c57b94619a80c6506baaf897c94601beabdc773a77bbb6a6b0652cbf13c",
+    "views/ctu_cross_bce6d3679ade4cd6.html": "bc2d9253cac7a83972319bb82c4eaf647c073bbcac69417e8e331cd7746120be"
+  },
+  "render_model_calls": 0,
+  "original_reports_unchanged": true,
+  "mixed_producers_preserved_per_case": true,
+  "new_human_decisions": 0,
+  "private_journals_committed": false
+}

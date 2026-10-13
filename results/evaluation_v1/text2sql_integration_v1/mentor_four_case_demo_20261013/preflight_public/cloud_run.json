@@ -1,0 +1,55 @@
+{
+  "scope": "three_fixed_missing_query_demos_not_pipeline32",
+  "execution_id": "mentor-remaining3-20261013",
+  "case_ids": [
+    "ctu_cross_66b8e92a76c3359b",
+    "ctu_cross_3f659571f998adb0",
+    "ctu_cross_bce6d3679ade4cd6"
+  ],
+  "planned": 3,
+  "status": "preflight_pass",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "window_claimed": false,
+  "current_run_cost_usd": 0.0,
+  "prior_cost_usd": 0.061155,
+  "known_usd": 0.061155,
+  "remaining_cap_usd": 2.938845,
+  "cost_unknown": false,
+  "official_eligible": false,
+  "cases": [
+    {
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.",
+      "preflight_status": "preflight_pass",
+      "cost_ceiling_usd": 1.6732608,
+      "window_id": "text2sql-integration-20261008-demo-ctu_cross_66b8e92a76c3359b-mentor-remaining3-20261013",
+      "status": "preflight_pass",
+      "attempted": 0,
+      "received": 0
+    },
+    {
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "question": "For each protocol in CTU scenario 7, count flows with both byte fields NULL; order protocols ascending.",
+      "preflight_status": "preflight_pass",
+      "cost_ceiling_usd": 1.6732608,
+      "window_id": "text2sql-integration-20261008-demo-ctu_cross_3f659571f998adb0-mentor-remaining3-20261013",
+      "status": "preflight_pass",
+      "attempted": 0,
+      "received": 0
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "question": "List protocols in CTU scenario 7 whose average outbound bytes exceed the average across all scenario 7 flows; order protocols ascending.",
+      "preflight_status": "preflight_pass",
+      "cost_ceiling_usd": 1.6732608,
+      "window_id": "text2sql-integration-20261008-demo-ctu_cross_bce6d3679ade4cd6-mentor-remaining3-20261013",
+      "status": "preflight_pass",
+      "attempted": 0,
+      "received": 0
+    }
+  ],
+  "implementation_sha": "1263308b05f06defa48ee4b1ab6712d16e15850c",
+  "ci_run_id": 38368039406
+}
