@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "scope": "single_fixed_query_demo_not_calibration_or_evaluation",
+  "execution_id": "full-e2e-9",
+  "case_id": "ctu_cross_708b66575657429a",
+  "condition": "E3",
+  "implementation_sha": "0e85e637bbc5828c221f1f0d2dac0a91090c3c28",
+  "ci": {
+    "run_id": 38336323978,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38336323978",
+    "status": "success",
+    "full_suite_each": {
+      "passed": 1343,
+      "skipped": 7
+    },
+    "required_offline_each": {
+      "passed": 49,
+      "skipped": 0
+    },
+    "required_real_data_each": {
+      "passed": 13,
+      "skipped": 0
+    },
+    "original_databases_verified": 13,
+    "gold_queries_replayed": 120
+  },
+  "workflow": {
+    "run_id": 38336761761,
+    "url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38336761761",
+    "job_status": "technical_incomplete_model_length_limit",
+    "artifact_id": 11785262841,
+    "artifact_digest": "sha256:f2e0935674056f6a03230485df508573a2d46a7417d42af9627b519b0c98d243",
+    "artifact_expires_at": "2027-01-11T02:24:53Z",
+    "remote_window_claimed": true,
+    "authorization_secret_revoked": true
+  },
+  "preflight": {
+    "status": "preflight_pass",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "hard_budget_usd": 3.0,
+    "prior_cost_usd": 0.04565135,
+    "conservative_cost_ceiling_usd": 1.6572608
+  },
+  "actual": {
+    "status": "technical_incomplete",
+    "failure_stage": "schema_linker_finalization",
+    "failure_reason": "MODEL_PARSE_ERROR_AFTER_THREE_LENGTH_RESPONSES",
+    "provider_transmitted_calls": 6,
+    "received_responses": 6,
+    "calls_by_role_transmitted": {
+      "routing": 1,
+      "r2": 5,
+      "assessment": 0
+    },
+    "usage": {
+      "input_tokens": 10136,
+      "output_tokens": 3335,
+      "cached_tokens": 4992
+    },
+    "current_run_cost_usd": 0.0081066,
+    "cumulative_cost_usd": 0.05375795,
+    "remaining_cap_usd": 2.94624205,
+    "cost_unknown": false,
+    "generation_error": "MODEL_PARSE_ERROR",
+    "final_sql_present": false,
+    "execution_success": false,
+    "execution_accurate": false,
+    "scoring_error_category": "NO_FINAL_SQL",
+    "final_sql": null,
+    "result_rows": null,
+    "expected_scalar_result": 459,
+    "linker_calls": 5,
+    "generator_calls": 0,
+    "assessment_calls": 0,
+    "assessment_contract_valid": false,
+    "human_review": "blocked_invalid_technical",
+    "official_eligible": false,
+    "worker_isolation": {
+      "status": "not_reached_no_sql_execution"
+    },
+    "linker_observations": {
+      "successful_tool_calls": [
+        "value_search(source_dataset contains 5)",
+        "value_search(protocol exact TCP)"
+      ],
+      "length_limited_response_ids": [
+        "chatcmpl-EYMWZY0mJ9h6Rb9RWL5y2gjMdys1m",
+        "chatcmpl-EYMWkpfyyuFaXJZn28BuRsvVnrqYe",
+        "chatcmpl-EYMWvWW0zwul2NNc59y8vQ3FqPvoU"
+      ],
+      "length_limited_output_tokens": [
+        1000,
+        1000,
+        1000
+      ]
+    },
+    "model_call_receipts": [
+      {
+        "sequence": 1,
+        "role": "routing",
+        "request_id": "9d795c7786da4436afced3ded0ce00a9",
+        "request_sha256": "0562a0aefae768e03283294aaf33a98e480328f54d5f030594dd559d93143c11",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMWM3LYbvBWNfIfPYm6vufcWDjaD",
+        "provider_request_id": "req_3140a9389e354b04b3cac6e8e8020944",
+        "model": "gpt-4.1-mini-2025-04-14",
+        "usage": {
+          "input_tokens": 348,
+          "output_tokens": 66,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.0002448,
+        "latency_seconds": 2.0414060589999963
+      },
+      {
+        "sequence": 2,
+        "role": "r2",
+        "request_id": "09116ac7a18e4717b06928baf8bc79ad",
+        "request_sha256": "3e6f2226e10f3b0da48b186826233a5bd54a1ce83cde7c7883c454b44f086fd8",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMWQZ0G4JlojFNI3nTZnFx2idoSm",
+        "provider_request_id": "req_62457dfe4d274400a91578d5d29c52a8",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 1357,
+          "output_tokens": 167,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.00067325,
+        "latency_seconds": 2.9464912329999606
+      },
+      {
+        "sequence": 3,
+        "role": "r2",
+        "request_id": "289a3dae0d0d4f69aa8b01d70a210435",
+        "request_sha256": "162fcaaa8ed39e3c7b7444022c5f60cdabfd69231bfb7e131afef29f6fb2907d",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMWVaB0lqEnAU7NwNzfl3KNvdTC6",
+        "provider_request_id": "req_e3cd2ec130264fa5abdd9e2375d3d738",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 1917,
+          "output_tokens": 102,
+          "cached_tokens": 1152
+        },
+        "cost_usd": 0.00042405000000000003,
+        "latency_seconds": 1.448366286999999
+      },
+      {
+        "sequence": 4,
+        "role": "r2",
+        "request_id": "233969bb24ae40439cc192ca90583012",
+        "request_sha256": "61329afced9e2985f970845779b5637ba7208674680402c14161c183913c935b",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMWZY0mJ9h6Rb9RWL5y2gjMdys1m",
+        "provider_request_id": "req_fb76df6ab3ce4dd79d4df1276fa33032",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 2237,
+          "output_tokens": 1000,
+          "cached_tokens": 1792
+        },
+        "cost_usd": 0.00215605,
+        "latency_seconds": 8.12986409899986
+      },
+      {
+        "sequence": 5,
+        "role": "r2",
+        "request_id": "b431efa4798548cc87ff784c373179a3",
+        "request_sha256": "69b1ba5408a4e8a46cce5224457f50614b6792888a9a4294e52b4ccdaefc74a1",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMWkpfyyuFaXJZn28BuRsvVnrqYe",
+        "provider_request_id": "req_c23a7b349eef42e2b2caab1ca257e39a",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 2123,
+          "output_tokens": 1000,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.00253075,
+        "latency_seconds": 9.036935862999826
+      },
+      {
+        "sequence": 6,
+        "role": "r2",
+        "request_id": "e9d97a1661824f81a0658a2e45de2389",
+        "request_sha256": "230dec54272b061dd5de39a58f0a03e3d4eb61841da8e4047b877762893b4409",
+        "provider_transmitted": true,
+        "received": true,
+        "response_id": "chatcmpl-EYMWvWW0zwul2NNc59y8vQ3FqPvoU",
+        "provider_request_id": "req_584c8564cee84c14b9c4114a0e9bf56f",
+        "model": "gpt-5-mini-2025-08-07",
+        "usage": {
+          "input_tokens": 2154,
+          "output_tokens": 1000,
+          "cached_tokens": 2048
+        },
+        "cost_usd": 0.0020777,
+        "latency_seconds": 7.8810954890000176
+      }
+    ]
+  },
+  "model_score_statement": "Not an official calibration, evaluation, or pipeline score; the authentic linker length failure is retained without fabricated SQL, execution, assessment, or human review."
+}

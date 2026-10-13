@@ -21,9 +21,11 @@ def test_all_layers_counted_in_upper_bound():
     assert role_caps('pipeline', 'E0') == {'routing': 32, 'r2': 32, 'assessment': 32}
 
 
-def test_r2_completion_budget_matches_the_frozen_release_contract():
+def test_r2_completion_budget_allows_live_linker_to_finish_after_tool_calls():
     from evaluation.finalization.query_pipeline_contract import CONTRACTS
-    assert CONTRACTS['r2']['max_completion_tokens'] == 1000
+    # Run 38336761761 returned three empty linker completions with
+    # finish_reason=length at the previous 1,000-token ceiling.
+    assert CONTRACTS['r2']['max_completion_tokens'] == 2000
 
 
 def test_single_demo_reserves_one_complete_e3_case_without_selection_gate():
@@ -112,4 +114,4 @@ def test_budget_package_includes_single_demo_e3_ceiling(monkeypatch):
     demo = result['scopes']['demo_E3']
     assert demo['request_caps_by_role'] == {'routing':1,'r2':8,'assessment':1}
     assert demo['max_requests'] == 10
-    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.6572608)
+    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.6732608)
