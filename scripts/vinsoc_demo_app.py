@@ -18,7 +18,8 @@ from pathlib import Path
 import streamlit as st
 from dotenv import load_dotenv
 
-# Load .env file
+# Define BASE_DIR before loading .env
+BASE_DIR = Path(__file__).parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 # =============================================================================
@@ -492,6 +493,12 @@ def tab_demo_scenarios():
     """Demo scenarios tab."""
     st.header("🎯 Demo Scenarios")
 
+    # Initialize session state
+    if "investigation_results" not in st.session_state:
+        st.session_state.investigation_results = None
+    if "investigation_running" not in st.session_state:
+        st.session_state.investigation_running = False
+
     scenario, selected_key = render_scenario_selector()
 
     # Run investigation
@@ -507,6 +514,12 @@ def tab_demo_scenarios():
 def tab_custom_query():
     """Custom query tab."""
     st.header("✏️ Custom Investigation")
+
+    # Initialize session state
+    if "investigation_results" not in st.session_state:
+        st.session_state.investigation_results = None
+    if "investigation_running" not in st.session_state:
+        st.session_state.investigation_running = False
 
     scenario, _ = render_scenario_selector()
     custom_params = render_custom_inputs(scenario)
