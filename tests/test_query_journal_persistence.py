@@ -99,6 +99,43 @@ def test_remote_begin_checkpoint_is_durable_before_transport(tmp_path, monkeypat
     assert json.loads(journal.path.read_text())['attempted'] == 1
 
 
+def test_remote_begin_failure_records_zero_cost_without_unknown_exposure(tmp_path, monkeypatch):
+    import vinsoc_text2sql.accounting as accounting
+
+    journal = RunJournal()
+    journal.path = tmp_path/'ledger.json'
+    class Store:
+        def checkpoint(self, request_number, phase, event):
+            raise ValueError('checkpoint rejected before transport')
+    journal.remote_store = Store()
+    contract = {'model':'gpt-4.1-mini-2025-04-14','temperature':0,
+                'max_completion_tokens':1000,'service_tier':'default',
+                'max_request_bytes':65536,'max_messages':20}
+    journal.release = {
+        'role_caps':{'assessment':1}, 'reserves_usd':{'assessment':.4206304},
+        'contracts':{'assessment':contract},
+        'gate_inputs':{'budget':{'limit_usd':3},'identities':{},
+            'pricing':{'gpt-4.1-mini-2025-04-14':{}}}}
+    journal.data = {'attempted':0,'received':0,'valid_usage':0,'known_usd':0,
+                    'pending_exposure_usd':0,'cost_unknown':False,'terminal':False,'events':[]}
+    journal.case_id, journal.condition = 'case', 'E3'
+    monkeypatch.setattr('evaluation.finalization.query_runtime_validation.verify_transmission_files', lambda _: None)
+    monkeypatch.setattr('evaluation.finalization.query_token_bound.verified_input_bound', lambda *_: 400000)
+    payload = {'model':contract['model'],'temperature':0,'max_completion_tokens':1000,
+               'service_tier':'default','messages':[]}
+
+    with pytest.raises(ValueError, match='REMOTE_CHECKPOINT_BEFORE_REQUEST_FAILED'):
+        journal.reserve('assessment', payload)
+
+    saved = json.loads(journal.path.read_text())
+    assert saved['attempted'] == 0
+    assert saved['pending_exposure_usd'] == 0
+    assert saved['cost_unknown'] is False
+    assert saved['terminal'] is True
+    assert saved['events'][0]['transmitted'] is False
+    assert saved['events'][0]['cost_usd'] == 0
+
+
 def test_assessment_response_format_is_an_allowed_bounded_request_field(tmp_path, monkeypatch):
     journal = RunJournal()
     journal.path = tmp_path/'ledger.json'

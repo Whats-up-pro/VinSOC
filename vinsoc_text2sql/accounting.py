@@ -130,9 +130,24 @@ class RunJournal:
         try:
             self._remote_checkpoint(len(self.data['events'])-1, 'begin')
         except Exception:
-            self.data['terminal'] = True
+            # This checkpoint is deliberately before the SDK call.  A failure
+            # here proves that no provider transmission occurred, so retain the
+            # reservation receipt without inventing paid or unknown exposure.
+            event.update(transmitted=False, cost_usd=0.0,
+                         error_category='REMOTE_CHECKPOINT_BEFORE_REQUEST_FAILED')
+            self.data.update(
+                attempted=self.data['attempted']-1,
+                pending_exposure_usd=self.data['pending_exposure_usd']-reserve,
+                cost_unknown=any(
+                    prior is not event and prior.get('cost_usd') is None
+                    for prior in self.data['events']
+                ),
+                terminal=True,
+            )
             self.persist()
             raise ValueError('REMOTE_CHECKPOINT_BEFORE_REQUEST_FAILED') from None
+        event['transmitted'] = True
+        self.persist()
         return len(self.data['events'])-1
 
     def fail(self, reservation_id, safe_code):

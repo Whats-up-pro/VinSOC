@@ -171,7 +171,10 @@ def _generate(request, condition, tools, transport, telemetry_sink):
                         messages[-1]["content"] += finding_text
                         continue
                     findings = _semantic_findings(request.question, answer["sql"])
-                    if findings and turn < turn_cap-1:
+                    if findings:
+                        if turn >= turn_cap-1:
+                            record["error_category"] = "SEMANTIC_REJECTION"
+                            return record
                         candidate_sql = answer["sql"]
                         messages.append({"role":"assistant", "content":response.get("content") or ""})
                         messages.append({"role":"user", "content":
@@ -232,6 +235,8 @@ def _semantic_findings(question, sql):
     asks_for_groups = any(phrase in q for phrase in (
         " for each ", " per ", " grouped by ", " breakdown by ", " for every "))
     grouped = " GROUP BY " in " " + statement + " "
+    union_all_counts = (" UNION ALL " in " " + statement + " "
+                        and len(re.findall(r"\bCOUNT\s*\(", statement)) > 1)
     findings = []
     if grouped and not asks_for_groups:
         findings.append(
@@ -241,6 +246,15 @@ def _semantic_findings(question, sql):
             and not re.search(r"\b(INTERSECT|EXISTS)\b", statement)):
         findings.append(
             "CONJUNCTIVE_SCOPES_COLLAPSED_BY_OR: the question conjoins scoped conditions for the counted entity, while OR plus grouping computes separate scope counts; verify shared-entity set semantics such as INTERSECT or EXISTS."
+        )
+    if union_all_counts and not asks_for_groups:
+        findings.append(
+            "SINGULAR_COUNT_MULTIPLE_ROWS: the question asks for one count, but UNION ALL combines multiple aggregate rows; return one scalar count unless separate per-scope counts were explicitly requested."
+        )
+    if (union_all_counts and " and " in q
+            and not re.search(r"\b(INTERSECT|EXISTS)\b", statement)):
+        findings.append(
+            "CONJUNCTIVE_SCOPES_SEPARATED: the question conjoins scoped conditions for the counted entity, while UNION ALL reports separate scope counts; verify the shared-entity set relationship such as INTERSECT or EXISTS."
         )
     return findings
 

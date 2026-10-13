@@ -41,6 +41,9 @@ PRIOR_AUDITS = (
     {'path':ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_7_20261013/outcome_audit.json',
      'run_id':38334401664, 'cost_key':'current_run_cost_usd', 'cost_usd':0.0105364,
      'artifact_digest':'sha256:b7c35f90fb822292973d3be8897d4ddb0fa93f666d2267153377317d6b78966d'},
+    {'path':ROOT/'results/evaluation_v1/text2sql_integration_v1/single_demo_full_e2e_8_20261013/outcome_audit.json',
+     'run_id':38335534597, 'cost_key':'current_run_cost_usd', 'cost_usd':0.00809355,
+     'artifact_digest':'sha256:cdfea925759faa5b5281778180435703a8086d2ff2b49a752de459821ce1e045'},
 )
 REQUIRED = ('OPENAI_API_KEY','GITHUB_TOKEN','GITHUB_SHA','GITHUB_RUN_ID','GITHUB_CI_RUN_ID',
             'VINSOC_QUERY_DEMO_AUTH_JSON','VINSOC_GPT5_DOC','VINSOC_GPT41_DOC')
@@ -73,6 +76,7 @@ def validate_authorization(value):
         'full-e2e-6':(0.0201791,2.9798209),
         'full-e2e-7':(0.0270214,2.9729786),
         'full-e2e-8':(0.0375578,2.9624422),
+        'full-e2e-9':(0.04565135,2.95434865),
     }
     if (value.get('execution_id') not in profiles
             or (value.get('known_prior_cost_usd'), value.get('remaining_allocation_usd'))
@@ -83,7 +87,7 @@ def validate_authorization(value):
 
 def prior_demo_receipt(auth):
     counts = {None:0, 'full-e2e-2':1, 'full-e2e-3':2, 'full-e2e-4':3, 'full-e2e-5':4,
-              'full-e2e-6':5, 'full-e2e-7':6, 'full-e2e-8':7}
+              'full-e2e-6':5, 'full-e2e-7':6, 'full-e2e-8':7, 'full-e2e-9':8}
     count = counts.get(auth.get('execution_id'))
     if count is None:
         raise ValueError('PRIOR_DEMO_RECEIPT_INVALID')
@@ -160,9 +164,9 @@ def prepare_private_inputs(auth, env, ci_run_id):
                'unknown_exposure_usd':0, 'known_prior_cost_usd':auth['known_prior_cost_usd'],
                'remaining_allocation_usd':auth['remaining_allocation_usd'],
                'scope_states':{'calibration':'outside_demo_allocation','evaluation':'outside_demo_allocation',
-                               'pipeline':'outside_demo_allocation','demo':'second_attempt_authorized'},
+                               'pipeline':'outside_demo_allocation','demo':'continuation_authorized'},
                'ledger_artifacts':[{'path':ledger_path.relative_to(canonical).as_posix(),'sha256':ledger_sha}],
-               'basis':'original_3_usd_demo_allocation_less_verified_first_attempt_cost'}
+               'basis':'original_3_usd_demo_allocation_less_verified_prior_transmitted_cost'}
     write_json(receipt_path, receipt)
     receipt_sha = hashlib.sha256(receipt_path.read_bytes()).hexdigest()
     pricing = {}

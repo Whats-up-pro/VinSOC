@@ -30,6 +30,21 @@ def test_demo_remote_store_claims_unique_tag_before_checkpoints():
     assert store.claimed is True
 
 
+def test_demo_remote_store_supports_all_ten_release_requests():
+    from evaluation.finalization.query_cloud import QueryDemoGitHubStore, QueryCloudError
+
+    api = FakeAPI()
+    store = QueryDemoGitHubStore(api, implementation_sha='a'*40, run_id='123')
+    store.claim('text2sql-integration-20261008-demo-case', 'c'*64)
+
+    store.checkpoint(10, 'begin', {'role':'assessment','request_sha256':'request-hash'})
+    with pytest.raises(QueryCloudError, match='REMOTE_CHECKPOINT_INVALID'):
+        store.checkpoint(11, 'begin', {'role':'assessment','request_sha256':'request-hash'})
+
+    refs = [call[2]['ref'] for call in api.calls if call[1].endswith('/git/refs')]
+    assert refs[-1].endswith('-request-10-begin')
+
+
 def test_existing_demo_remote_tag_blocks_without_new_ref():
     from evaluation.finalization.query_cloud import QueryDemoGitHubStore, QueryCloudError
 
@@ -166,6 +181,20 @@ def test_eighth_demo_authorization_reconciles_all_seven_paid_attempts():
         38037640751, 38040239630, 38041048027, 38193493518, 38194392829,
         38195921557, 38334401664]
     assert sum(r['known_cost_usd'] for r in receipts) == pytest.approx(0.0375578)
+
+
+def test_ninth_demo_authorization_reconciles_eight_transmitted_attempts():
+    from datetime import datetime, timezone
+    from scripts.run_query_demo_cloud import validate_authorization, prior_demo_receipt
+    valid = {'allocation_id':'demo-allocation-9','execution_id':'full-e2e-9',
+             'limit_usd':3.0,'known_prior_cost_usd':0.04565135,
+             'remaining_allocation_usd':2.95434865,'unknown_exposure_usd':0.0,
+             'scope':'demo','condition':'E3','case_id':'ctu_cross_708b66575657429a',
+             'confirmed_utc':datetime.now(timezone.utc).isoformat()}
+    assert validate_authorization(valid) == valid
+    receipts = prior_demo_receipt(valid)
+    assert [r['workflow_run_id'] for r in receipts][-1] == 38335534597
+    assert sum(r['known_cost_usd'] for r in receipts) == pytest.approx(0.04565135)
 
 
 def test_demo_workflow_is_bound_into_runtime_identity():

@@ -8,6 +8,9 @@ from datetime import datetime, timezone
 from evaluation.finalization.cloud_window import REPOSITORY
 
 
+MAX_DEMO_REQUESTS = 10  # routing 1 + E3 R2 8 + assessment 1
+
+
 class QueryCloudError(ValueError):
     pass
 
@@ -60,7 +63,8 @@ class QueryDemoGitHubStore:
     def checkpoint(self, request_number, phase, event):
         if not self.claimed:
             raise QueryCloudError('REMOTE_CLAIM_REQUIRED')
-        if type(request_number) is not int or not 1 <= request_number <= 8 or phase not in ('begin','end'):
+        if (type(request_number) is not int or not 1 <= request_number <= MAX_DEMO_REQUESTS
+                or phase not in ('begin','end')):
             raise QueryCloudError('REMOTE_CHECKPOINT_INVALID')
         if not isinstance(event, dict) or 'request' in event or 'response' in event:
             raise QueryCloudError('REMOTE_CHECKPOINT_INVALID')

@@ -155,7 +155,7 @@ def run_live(release, output, *, selected_input=None, remote_store=None):
             ledger_path=Path.home()/'.vinsoc/live-windows'/release['window_id']/'ledger.json',
             remote_store=remote_store)
         sdk = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'], max_retries=0,
-                            base_url='https://api.openai.com/v1', timeout=60)
+                            base_url='https://api.openai.com/v1', timeout=120)
         report['client_created'] = True
         clients = {role: ScopedOpenAIClient(sdk, role=role, contract=c, journal=journal)
                    for role, c in CONTRACTS.items()}

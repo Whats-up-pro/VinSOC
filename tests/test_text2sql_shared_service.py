@@ -300,6 +300,50 @@ def test_e3_reaudits_grouped_or_for_singular_conjunctive_count(tmp_path):
     assert 'CONJUNCTIVE_SCOPES_COLLAPSED_BY_OR' in audit
 
 
+def test_e3_rejects_unresolved_semantic_findings_on_last_turn(tmp_path):
+    """A bounded audit must fail closed when the final SQL keeps a known shape error."""
+    import duckdb
+    from evaluation.r2_cross_domain_v1.data import DatabaseContext
+    from evaluation.r2_cross_domain_v1.tools import DatabaseTools
+    from vinsoc_text2sql.service import _generate
+
+    snapshot = tmp_path/'flows.duckdb'
+    with duckdb.connect(str(snapshot)) as connection:
+        connection.execute('CREATE TABLE flows(dst_ip VARCHAR, scenario VARCHAR)')
+    context = DatabaseContext('flows', snapshot, {
+        'database_id':'flows', 'schema':[{'name':'flows','columns':[
+            {'name':'dst_ip','duckdb_type':'VARCHAR','sqlite_type':'TEXT'},
+            {'name':'scenario','duckdb_type':'VARCHAR','sqlite_type':'TEXT'}]}],
+        'primary_keys':{'flows':[]}, 'relationships':[],
+        'logical_sha256':'fixture-logical-sha',
+    })
+    linker = {'tables':['flows'], 'columns':[{'table':'flows','column':'dst_ip'},
+        {'table':'flows','column':'scenario'}], 'relationships':[],
+        'grounded_values':[], 'constraints':[]}
+    invalid = {'sql':"SELECT scenario, COUNT(DISTINCT dst_ip) FROM flows WHERE scenario='a' OR scenario='b' GROUP BY scenario"}
+
+    class Transport:
+        contract = {'model':'fixture','reasoning_effort':'low',
+                    'max_completion_tokens':1000,'service_tier':'default'}
+        def __init__(self): self.requests = []
+        def counters(self):
+            count = len(self.requests)
+            return {'attempted':count,'received':count,'valid_usage':count,'terminal':False}
+        def request(self, payload):
+            self.requests.append(payload)
+            response = linker if len(self.requests) == 1 else invalid
+            return {'content':json.dumps(response), 'tool_calls':[], 'finish_reason':'stop'}
+
+    transport = Transport()
+    record = _generate(QueryRequest('case','flows',
+        'Count destination IPs appearing in scenario a and in scenario b.'),
+        'E3', DatabaseTools(context), transport, lambda event: None)
+
+    assert record['error_category'] == 'SEMANTIC_REJECTION'
+    assert record['final_sql'] is None
+    assert len(transport.requests) == 4
+
+
 def test_e3_normalizes_equivalent_column_map_and_repairs_grounding_error(tmp_path):
     """A repair turn keeps strict grounding while accepting an equivalent column shape."""
     import duckdb
