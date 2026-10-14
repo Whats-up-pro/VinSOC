@@ -1,0 +1,66 @@
+{
+  "schema_version": "vinsoc_live_ui_acceptance_receipt_v1",
+  "status": "ACCEPTED_WITH_OPEN_HUMAN_AND_FORMAL_GATES",
+  "implementation_sha": "3c9e44a68d887f90b7ef23c8f64fcf2fc7f39fe6",
+  "acceptance_base_sha": "e14beb7782230bb818016317bdb951612cdfd907",
+  "ui_fix_sha": "e6504d594715e685eb539d534b1a514f7cfe8192",
+  "ui_fix_ci_run_id": 38498145776,
+  "observable_capabilities": {
+    "exact_original_question_gate": true,
+    "zero_call_linux_preflight": true,
+    "explicit_live_consent": true,
+    "durable_single_dispatch_marker": true,
+    "real_github_actions_progress": true,
+    "real_routing_r2_assessment_calls": true,
+    "isolated_sql_worker": true,
+    "request_response_usage_cost_ids": true,
+    "eight_stage_result_view": true,
+    "partial_and_blocked_display": true,
+    "manual_human_review_only": true,
+    "viewer_read_only_by_default": true
+  },
+  "new_live_outcomes": [
+    {
+      "case_id": "ctu_cross_708b66575657429a",
+      "execution_id": "liveui-9d9844c08417492a976eb360",
+      "status": "technical_complete_awaiting_human",
+      "execution_accurate": true,
+      "typed_result": 459,
+      "human_review": "pending"
+    },
+    {
+      "case_id": "ctu_cross_bce6d3679ade4cd6",
+      "execution_id": "liveui-5ccddb346587414d998fa145",
+      "status": "technical_incomplete",
+      "execution_accurate": false,
+      "failure": "TOOL_FAILURE / NO_FINAL_SQL",
+      "human_review": "not_eligible"
+    },
+    {
+      "case_id": "ctu_cross_66b8e92a76c3359b",
+      "execution_id": "liveui-2d7feac422f24667928c9789",
+      "status": "blocked",
+      "failure": "REMOTE_MASTER_CHANGED",
+      "attempted": 0,
+      "client_created": false
+    }
+  ],
+  "saved_demo_coverage": {
+    "records": 4,
+    "denominator": 4,
+    "technical_complete": 2,
+    "incomplete": 1,
+    "technical_failed": 1,
+    "human_approved": 0,
+    "source": "mentor_four_case_demo_20261013"
+  },
+  "formal_scopes": {
+    "calibration": "NOT_RUN_0_OF_48_REAL_RECORDS",
+    "selection_lock": "PENDING_NO_48_RECORD_INPUT",
+    "evaluation": "NOT_RUN_0_OF_192_REAL_RECORDS",
+    "pipeline": "NOT_RUN_0_OF_32_REAL_CASES"
+  },
+  "protected_assets_changed": false,
+  "private_journals_or_secrets_committed": false,
+  "automatic_human_approval_created": false
+}

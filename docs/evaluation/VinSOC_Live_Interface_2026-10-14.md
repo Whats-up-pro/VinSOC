@@ -47,7 +47,7 @@ Catalog đầy đủ không có nghĩa đã chạy/đạt đủ suite. Calibrati
 cho full reserve. Evaluation/pipeline cần selection lock từ 48 records thật và
 CI/source đúng identity. Với allocation hiện tại, UI phải lưu receipts blocked
 nếu cận tiền hoặc lock chưa đủ; không giảm reserve, bỏ case hoặc điền predictions.
-Calibraton/evaluation/pipeline vẫn NOT_RUN cho đến khi actual artifacts tồn tại.
+Calibration/evaluation/pipeline vẫn NOT_RUN cho đến khi actual artifacts tồn tại.
 
 R1 dev24 và SOC insufficient_evidence giữ phần presentation riêng. Những trang
 đó đọc history; không được báo là R1/SOC vừa gọi API do một query demo mới.
@@ -58,6 +58,12 @@ Base query-demo spend xác minh từ 10 prior receipts và remaining3 run:
 $0.08155920, remaining cap $2.91844080 trước các lượt UI mới. Runner cộng tất cả
 append-only UI allocation receipts sau đó. Claim không có end, unknown usage/cost
 hoặc chain mismatch chặn lượt trả phí tiếp. Allocation không là provider balance.
+
+Sau hai live UI runs có model calls, cumulative đã xác minh là $0.09061250 và
+remaining cap là $2.90938750. Lượt UDP bị source-change gate chặn trước SDK nên
+không tạo claim và không phát sinh chi phí. Chi tiết nằm trong
+`live_ui_acceptance_20261014/cost_reconciliation.json` và báo cáo
+`VinSOC_Live_UI_Acceptance_2026-10-14.md`.
 
 Workflow dùng concurrency chung cho allocation, immutable per-window claims và
 begin/end cost events. Raw response/usage được giữ trước parse. Private journals

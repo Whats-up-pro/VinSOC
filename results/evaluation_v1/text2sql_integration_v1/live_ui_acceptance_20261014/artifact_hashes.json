@@ -1,0 +1,66 @@
+{
+  "schema_version": "vinsoc_live_ui_artifact_hashes_v1",
+  "verification": "Each archive was downloaded independently through the authenticated GitHub artifact endpoint. Its local SHA-256 and byte length matched the digest and size returned by the Actions API.",
+  "private_journals_committed": false,
+  "artifacts": [
+    {
+      "artifact_id": 11836311945,
+      "archive_sha256": "b03cfe7912d384ecb2709aa93faafab2f93157c2e8eb19fbe7e6ef2894352685",
+      "archive_bytes": 40137,
+      "public_files": {
+        "run/public/cloud_run.json": "8ae455a0f26fda875bed2c24d4e26e47e57c7e6fbb2fe37c19da5074268909ea",
+        "run/public/preflight.json": "0474220d235680bf2d8e65ea5d8ea7df8b2481a3154a953c4a2e139249af9946"
+      }
+    },
+    {
+      "artifact_id": 11837061024,
+      "archive_sha256": "f28ea6fec1f9d8a96584e2614760bbbeebe1180e85a492746c3e86c6168c6654",
+      "archive_bytes": 76776,
+      "private_ledger_sha256": "245d52abf8f11a0ffb8c9d0f9f13c6767f0dc3431e47ba003a3b582bdbaaeec5",
+      "public_files": {
+        "run/public/cloud_run.json": "cd8ceb14bd92a6d5ed66cd9b0ed0b36701395ea4c46450251db49ce9c14bedc4",
+        "run/public/preflight.json": "3392b463bf26b27af30f36520378129ffd6ca6849a423f2246dd489e04b14d59",
+        "run/public/live/E3_ctu_cross_bce6d3679ade4cd6.json": "f92a43f57fb94da1a6134accbc771188f28ae271d2ce4479104cc01c713490df",
+        "run/public/live/report.json": "60407ec814349a623bc1b2c3804207dc3fb19658109516a4e27abc00d9d0bfa2"
+      }
+    },
+    {
+      "artifact_id": 11838051842,
+      "archive_sha256": "78b59ef9eb6ea65cde13da61df72c1afe56ba9127b8c610a70a387ff4a96ff8a",
+      "archive_bytes": 40234,
+      "public_files": {
+        "run/public/cloud_run.json": "5abecd0f9aa896801745bbd6871a15de5faf56ba537983b02e2d5a4d977da0e1",
+        "run/public/preflight.json": "31697b257dbe597a1277d4415169c4f97cc8f1d5e2de0b1dbfb37678bf4cabc1"
+      }
+    },
+    {
+      "artifact_id": 11837992856,
+      "archive_sha256": "6a80429c9b3d09b70b618a034ae7110e20768d6e184f180e73fe6678588abfc8",
+      "archive_bytes": 102926,
+      "private_ledger_sha256": "51d41e110daffca0bbca4b0ea791644b3c1a65cd46cacccc8a0e3d79ec83d6f5",
+      "public_files": {
+        "run/public/cloud_run.json": "8c9c17fbee53b2b93f675a21dc53fcdfcc1f9e3cf58ddd0ba821b81728cb4851",
+        "run/public/preflight.json": "6b995411a35348edf2bf555c92b8cb745a369a6b32a19361b3040dffefa0ff33",
+        "run/public/live/E3_ctu_cross_708b66575657429a.json": "614dc8dba42c42fda2bfb3d58b4b066dd413dcc79dab9545fd3deed5033934e3",
+        "run/public/live/report.json": "4823087c6c18950af541dc11442067efe31026933cb93e0a6673f901ba2fe2f5"
+      }
+    },
+    {
+      "artifact_id": 11863637736,
+      "archive_sha256": "38ee47d588311b807e7d7c268344d7fde2b495206cb43c24a95fc94baf883006",
+      "archive_bytes": 40268,
+      "public_files": {
+        "run/public/cloud_run.json": "4d9718a4429a638087e789a958baed5da28a002a412d53d742ca7c149487ad6c",
+        "run/public/preflight.json": "b60bd51fc917ce14cff4d73bfb72515b360cdb7c4f39c3cc03b94e5ac5530108"
+      }
+    },
+    {
+      "artifact_id": 11863801848,
+      "archive_sha256": "8ba67bddb3aae86ba9127c87ddb256281e21c15d45f520b4b174bbded904d3e1",
+      "archive_bytes": 620,
+      "public_files": {
+        "run/public/cloud_run.json": "efa0ac727f78360928966f7dcf272551e15866d7282196cabc64b887d01e6695"
+      }
+    }
+  ]
+}

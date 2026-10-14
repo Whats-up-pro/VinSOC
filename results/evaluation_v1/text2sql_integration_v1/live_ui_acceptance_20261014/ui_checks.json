@@ -1,0 +1,47 @@
+{
+  "schema_version": "vinsoc_live_ui_browser_checks_v1",
+  "checked_at_utc": "2026-10-14T01:48:15Z",
+  "ui_fix_sha": "e6504d594715e685eb539d534b1a514f7cfe8192",
+  "ui_fix_ci_run_id": 38498145776,
+  "browser": "Playwright with installed Chrome, localhost Streamlit",
+  "read_only_reopen_created_new_workflow": false,
+  "count_execution": {
+    "execution_id": "liveui-9d9844c08417492a976eb360",
+    "phase": "technical_complete_awaiting_human",
+    "stages_opened": [1, 2, 3, 4, 5, 6, 7, 8],
+    "typed_result_visible": 459,
+    "review_defaults_empty": true,
+    "screenshots": {
+      "count-stage-1.png": "6b5473c9b21df8f0f38bf6ef890bbf6dc2dcd65b52fd2264f5177d0c72d8a5f3",
+      "count-stage-2.png": "6320801762dcaea3177751da3cdb053d0b6449b4c1b7a29c81d9adc3969e622a",
+      "count-stage-3.png": "562084c5abc367229c4061e09dac245aad160a4ece308205e8134618a6f79292",
+      "count-stage-4.png": "b72077439a95b3ec985322d13adc1b9b603222d9ade813ae7695623f145d8872",
+      "count-stage-5.png": "66980f13cd025ef8fcbb24e4d7b84fad4b348cde6b9ea7467750f57e88a3d5c4",
+      "count-stage-6.png": "40dbe30eccd8f14f92a3865ff4aff5f2b14cbced8e63fdc9a7e8bd48d71cdbb4",
+      "count-stage-7.png": "f1cc1f18fa6143e7a490da1af44377e7ac90167a64618e4126392c798460414b",
+      "count-stage-8.png": "6939329c38b2651dbbbbd9b92570dead6c8445889a44e6cdc13b6ece13476f5d"
+    }
+  },
+  "avg_partial_execution": {
+    "execution_id": "liveui-5ccddb346587414d998fa145",
+    "phase": "technical_incomplete",
+    "final_sql_display": "Chưa có final SQL",
+    "assessment_display": "Chưa có assessment hợp lệ",
+    "screenshots": {
+      "avg-stage-4-sql-missing.png": "8318977733870f3e2a2276104b09fb02c7ec972aacb6d656296a0554de39805e",
+      "avg-stage-7-verification.png": "616bbc65d127a1a57bb7909cd045dfee0df95b5bfd09265c844c6cda15a51f91"
+    }
+  },
+  "udp_blocked_execution": {
+    "execution_id": "liveui-2d7feac422f24667928c9789",
+    "phase": "blocked",
+    "failure_visible": "REMOTE_MASTER_CHANGED",
+    "attempted_received_visible": "0 / 0",
+    "run_cost_visible_usd": 0.0,
+    "old_result_substituted": false,
+    "screenshot": {
+      "udp-blocked-source-changed.png": "170f6fc9f0d4e0bb71cc57c5c94b19866ff9c74fd96f7e7c1bc6c7e9ef12d15a"
+    }
+  },
+  "human_review_submitted": false
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "vinsoc_live_ui_cost_reconciliation_v1",
+  "allocation_cap_usd": 3.0,
+  "verified_base_cost_usd": 0.0815592,
+  "verified_base_model_calls": 80,
+  "ui_allocation_entries": [
+    {
+      "execution_id": "liveui-5ccddb346587414d998fa145",
+      "run_id": 38442744166,
+      "begin_prior_cost_usd": 0.0815592,
+      "attempted": 3,
+      "received": 3,
+      "cost_usd": 0.0013901,
+      "cost_unknown": false,
+      "begin_end_pair_verified": true
+    },
+    {
+      "execution_id": "liveui-9d9844c08417492a976eb360",
+      "run_id": 38444497641,
+      "begin_prior_cost_usd": 0.0829493,
+      "attempted": 8,
+      "received": 8,
+      "cost_usd": 0.0076632,
+      "cost_unknown": false,
+      "begin_end_pair_verified": true
+    }
+  ],
+  "blocked_without_claim": {
+    "execution_id": "liveui-2d7feac422f24667928c9789",
+    "run_id": 38496491276,
+    "failure_category": "REMOTE_MASTER_CHANGED",
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "cost_usd": 0.0
+  },
+  "new_ui_model_calls": 11,
+  "new_ui_calls_by_role": {
+    "routing": 2,
+    "r2": 8,
+    "assessment": 1
+  },
+  "new_ui_usage": {
+    "input_tokens": 16819,
+    "output_tokens": 2918,
+    "cached_tokens": 5504
+  },
+  "new_ui_cost_usd": 0.0090533,
+  "cumulative_model_calls": 91,
+  "cumulative_known_cost_usd": 0.0906125,
+  "remaining_allocation_cap_usd": 2.9093875,
+  "unknown_exposure": false,
+  "provider_balance_claimed": false,
+  "formal_scope_conservative_bounds": {
+    "calibration_48_records": {
+      "max_requests": 192,
+      "gpt_5_mini_requests": 192,
+      "cost_ceiling_usd": 19.968
+    },
+    "evaluation_192_records": {
+      "max_requests": 768,
+      "gpt_5_mini_requests": 768,
+      "cost_ceiling_usd": 79.872
+    },
+    "pipeline_32_cases": {
+      "max_requests": 320,
+      "gpt_5_mini_requests": 256,
+      "gpt_4_1_mini_requests": 64,
+      "cost_ceiling_usd": 53.5443456
+    },
+    "all_three_scopes_cost_ceiling_usd": 153.3843456,
+    "status": "decision_bound_only_not_actual_usage"
+  }
+}
