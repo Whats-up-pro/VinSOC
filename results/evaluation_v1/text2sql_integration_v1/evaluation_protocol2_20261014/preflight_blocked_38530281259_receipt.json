@@ -1,0 +1,16 @@
+{
+  "version": "evaluation_preflight_blocker_v1",
+  "status": "blocked_before_model",
+  "run_id": 38530281259,
+  "artifact_id": 11877536749,
+  "artifact_sha256": "51452b8b694ea14fe777ff2d8cfc1f715cd44d3bc7b5b758c07775c814153ac9",
+  "producer_sha": "506f10c446a2bd51b523f05e38af0b460463512f",
+  "execution_id": "liveui-ef1838a637ac4eb6bbfab456",
+  "failure": "CALIBRATION_SELECTION_LOCK_REQUIRED",
+  "root_cause": "selection_lock_path was transmitted without selection_sha256",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "window_claimed": false,
+  "current_run_cost_usd": 0.0
+}

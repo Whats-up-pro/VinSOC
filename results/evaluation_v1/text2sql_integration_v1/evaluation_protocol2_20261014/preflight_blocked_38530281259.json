@@ -1,0 +1,40 @@
+{
+  "status": "blocked",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "cost_unknown": false,
+  "window_claimed": false,
+  "new_run": true,
+  "request": {
+    "version": "vinsoc_live_ui_v1",
+    "scope": "evaluation",
+    "case_id": null,
+    "question": null,
+    "condition": "E0",
+    "head_sha": "506f10c446a2bd51b523f05e38af0b460463512f",
+    "ci_run_id": 38529927620,
+    "execution_id": "liveui-ef1838a637ac4eb6bbfab456",
+    "limit_usd": 100.0,
+    "confirmed_utc": "2026-10-14T07:44:11.893347+00:00",
+    "live_consent": false
+  },
+  "implementation_sha": "506f10c446a2bd51b523f05e38af0b460463512f",
+  "ci_run_id": 38529927620,
+  "prior_cost_usd": 0.42655345000000056,
+  "known_usd": 0.42655345000000056,
+  "remaining_cap_usd": 99.57344655,
+  "current_run_cost_usd": 0.0,
+  "preflight_status": "blocked",
+  "gate_reasons": [
+    "CALIBRATION_SELECTION_LOCK_REQUIRED"
+  ],
+  "cost_ceiling_usd": 68.544,
+  "role_caps": {
+    "routing": 0,
+    "r2": 672,
+    "assessment": 0
+  },
+  "window_id": "text2sql-integration-20261014-protocol2-evaluation",
+  "failure_category": "LIVE_UI_PREFLIGHT_BLOCKED"
+}

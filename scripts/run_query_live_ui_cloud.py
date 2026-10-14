@@ -70,7 +70,11 @@ def private_inputs(request, env, ci_id, allocation):
         account['reconciliation_reference']['sha256'] = hashlib.sha256(reference.read_bytes()).hexdigest()
         lock = ROOT/'results/evaluation_v1/text2sql_integration_v1/selection_lock.json'
         if lock.is_file():
+            selection_sha256 = json.loads(lock.read_text(encoding='utf-8')).get('selection_sha256')
+            if not isinstance(selection_sha256, str) or not re.fullmatch(r'[a-f0-9]{64}', selection_sha256):
+                raise ValueError('CALIBRATION_SELECTION_LOCK_REQUIRED')
             inputs['identities']['selection_lock_path'] = str(lock)
+            inputs['identities']['selection_sha256'] = selection_sha256
     return inputs
 
 
