@@ -1,0 +1,85 @@
+{
+  "version": "calibration_protocol2_acceptance_v1",
+  "status": "verified",
+  "scope": "calibration",
+  "producer_sha": "995946998066983bd2f5aa3c844c67c3d0089b65",
+  "ci_run_id": 38526700368,
+  "preflight_run_id": 38527289020,
+  "live_run_id": 38527512069,
+  "execution_id": "liveui-5f465d7d2aee42b8b703e523",
+  "workflow_conclusion": "success",
+  "artifact_id": 11876918823,
+  "artifact_size_bytes": 1357923,
+  "artifact_sha256": "9f6efe9fc1a4c3209f776bab896fe3dda23dffebb023c4a41ed46fd0fd8a5519",
+  "preflight_artifact_id": 11876177407,
+  "preflight_artifact_sha256": "53ca6816b81e3ea2a82d86d16bff51a9e31f430e58d750490f4df1876f650602",
+  "preflight_zero_call": {
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "window_claimed": false
+  },
+  "records": {
+    "required": 48,
+    "received": 48,
+    "E0": 24,
+    "E3": 24
+  },
+  "api": {
+    "attempted": 139,
+    "received": 139,
+    "valid_usage": 139,
+    "cost_unknown": false,
+    "pending_exposure_usd": 0.0,
+    "max_output_tokens_observed": 1000,
+    "cases_over_six_r2_calls": 0
+  },
+  "cost_usd": {
+    "current_run": 0.16758280000000042,
+    "prior_verified": 0.25897065000000014,
+    "cumulative_verified": 0.42655345000000056
+  },
+  "generation_outcomes": {
+    "OK": 28,
+    "SEMANTIC_REJECTION": 2,
+    "MODEL_PARSE_ERROR": 4,
+    "TOOL_FAILURE": 2,
+    "INVALID_LINKED_SCHEMA": 12
+  },
+  "selection": {
+    "selected_condition": "E0",
+    "producer_selection_sha256": "12626a05e95bd6f5039c5d61520229c387c7c52b6614ac98b813f34d9c98d80f",
+    "canonical_selection_sha256": "140388b24ed0803aaa23a7e1a8ffebb25e4f2c698b07df29bd7791c663b80dc3",
+    "totals": {
+      "E0": {
+        "correct": 15,
+        "n": 24,
+        "cost_usd": 0.018048249999999995,
+        "calls": 24,
+        "latency_seconds": 124.40220050700015
+      },
+      "E3": {
+        "correct": 5,
+        "n": 24,
+        "cost_usd": 0.14953455000000002,
+        "calls": 115,
+        "latency_seconds": 799.383749922
+      }
+    },
+    "rule": "EX,cost,calls,latency,E0"
+  },
+  "acceptance": {
+    "binding_artifacts": 48,
+    "binding_hash_mismatches": 0,
+    "request_ids_unique": true,
+    "response_ids_unique": true,
+    "request_response_case_condition_role_bound": true,
+    "protocol_max_completion_tokens": 1000,
+    "protocol_max_e3_calls_per_case": 6
+  },
+  "notes": [
+    "Workflow success was not used as query correctness.",
+    "The producer report keeps official_eligible=false; this receipt verifies calibration completeness and promotes only the immutable selection lock.",
+    "The previous 20261008 candidate remains immutable and is not used by this selection."
+  ]
+}
