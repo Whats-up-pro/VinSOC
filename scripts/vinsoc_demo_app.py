@@ -98,6 +98,24 @@ def money(value):
     return 'Chưa xác định' if value is None else f'${value:.8f}'
 
 
+def displayed_run_cost(control):
+    value = control.get('current_run_cost_usd')
+    if (value is None and control.get('attempted') == control.get('received') == 0
+            and control.get('client_created') is False and control.get('cost_unknown') is False):
+        return 0.0
+    return value
+
+
+def live_failure_notice(control):
+    category = control.get('failure_category')
+    if not category:
+        return None
+    before_model = (control.get('attempted') == control.get('received') == 0
+                    and control.get('client_created') is False)
+    prefix = 'Lượt chạy bị chặn trước model' if before_model else 'Lượt chạy dừng với lỗi'
+    return f'{prefix}: {category}'
+
+
 def download(path, label, key):
     if path and Path(path).is_file():
         st.download_button(label, Path(path).read_bytes(), file_name=Path(path).name,
@@ -467,10 +485,13 @@ def live_monitor(execution_id, current_input):
     if control:
         with st.container(horizontal=True):
             st.metric('Attempted / received',f"{control.get('attempted',0)} / {control.get('received',0)}",border=True)
-            st.metric('Chi phí lượt này',money(control.get('current_run_cost_usd')),border=True)
+            st.metric('Chi phí lượt này',money(displayed_run_cost(control)),border=True)
             st.metric('Allocation còn lại',money(control.get('remaining_cap_usd')),border=True)
         if control.get('gate_reasons'):
             st.error('Preflight bị chặn: ' + ', '.join(control['gate_reasons']))
+        failure_notice = live_failure_notice(control)
+        if failure_notice:
+            st.error(failure_notice)
         st.caption(f"client_created={control.get('client_created')} · cost_unknown={control.get('cost_unknown')}")
     request = state['request']
     unchanged = current_input == (request['scope'],request['case_id'],request['question'])

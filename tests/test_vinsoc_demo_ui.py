@@ -92,3 +92,22 @@ def test_live_page_has_separate_preflight_and_full_case_catalog(monkeypatch):
     at.selectbox(key='live_scope').set_value('pipeline').run()
     assert not at.exception
     assert any(len(frame.value) == 32 for frame in at.dataframe)
+
+
+def test_blocked_live_run_exposes_safe_failure_reason_and_zero_cost():
+    from scripts.vinsoc_demo_app import displayed_run_cost, live_failure_notice
+
+    control = {
+        'status': 'blocked',
+        'failure_category': 'REMOTE_MASTER_CHANGED',
+        'attempted': 0,
+        'received': 0,
+        'client_created': False,
+        'cost_unknown': False,
+    }
+    assert live_failure_notice(control) == (
+        'Lượt chạy bị chặn trước model: REMOTE_MASTER_CHANGED'
+    )
+    assert displayed_run_cost(control) == 0.0
+    assert live_failure_notice({'status': 'preflight_pass'}) is None
+    assert displayed_run_cost({'attempted': 1, 'received': 0}) is None
