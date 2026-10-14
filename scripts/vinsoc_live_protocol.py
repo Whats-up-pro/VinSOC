@@ -19,8 +19,8 @@ VERSION = 'vinsoc_live_ui_v1'
 LIMIT_USD = 3.0
 SCOPE_LIMITS_USD = {
     'demo': LIMIT_USD,
-    'pipeline': LIMIT_USD,
-    'evaluation': LIMIT_USD,
+    'pipeline': 150.0,
+    'evaluation': 100.0,
     'calibration': 21.0,
 }
 BASE_USD = .0815592

@@ -20,7 +20,8 @@ def inspect_canonical(root):
     try:
         result['canonical_directory_exists'] = root.is_dir()
         for scope in ('calibration', 'evaluation', 'pipeline'):
-            window = root/('text2sql-integration-20261008-'+scope)
+            from evaluation.finalization.query_runtime_validation import window_id_for
+            window = root/window_id_for(scope)
             present = [name for name in ('claim.json','ledger.json','migration.json') if (window/name).exists()]
             result['scope_states'][scope] = {'local_state': 'consumed' if present else 'no_local_claim_observed',
                                             'observed_files': present, 'authoritative_state': 'unknown'}

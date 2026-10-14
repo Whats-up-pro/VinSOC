@@ -8,7 +8,7 @@ from evaluation.r2_cross_domain_v1.release import canonical_hash, fresh
 VERSION = 'query_pipeline_release_v1'
 CONTRACTS = {
  'r2': {'model': 'gpt-5-mini-2025-08-07', 'reasoning_effort': 'low',
-        'max_completion_tokens': 2000, 'service_tier': 'default', 'max_retries': 0,
+        'max_completion_tokens': 1000, 'service_tier': 'default', 'max_retries': 0,
         'max_request_bytes': 32768, 'frame_reserve_tokens': 512, 'max_messages': 20},
  'routing': {'model': 'gpt-4.1-mini-2025-04-14', 'temperature': 0,
         'max_completion_tokens': 1000, 'service_tier': 'default', 'max_retries': 0,
@@ -22,13 +22,14 @@ def role_caps(scope, condition):
     if condition not in ('E0', 'E3'):
         raise ValueError('INVALID_CONDITION')
     if scope in ('calibration', 'evaluation'):
-        return {'routing': 0, 'r2': (24 if scope == 'calibration' else 96)*8, 'assessment': 0}
+        # Each paired case uses one E0 request and at most six E3 requests.
+        return {'routing': 0, 'r2': (24 if scope == 'calibration' else 96)*7, 'assessment': 0}
     if scope == 'pipeline':
-        return {'routing': 32, 'r2': 32*(8 if condition == 'E3' else 1), 'assessment': 32}
+        return {'routing': 32, 'r2': 32*(6 if condition == 'E3' else 1), 'assessment': 32}
     if scope == 'demo':
         if condition != 'E3':
             raise ValueError('DEMO_REQUIRES_E3')
-        return {'routing': 1, 'r2': 8, 'assessment': 1}
+        return {'routing': 1, 'r2': 6, 'assessment': 1}
     raise ValueError('INVALID_RELEASE_SCOPE')
 
 

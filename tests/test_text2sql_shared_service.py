@@ -96,8 +96,8 @@ def test_e3_reserves_last_turn_for_role_finalization(tmp_path):
                        DatabaseTools(context), transport, lambda event: None)
     assert record['error_category'] == 'OK'
     assert record['final_sql'] == 'SELECT COUNT(*) FROM customers'
-    assert len(transport.requests) == 7
-    assert ['tools' in request for request in transport.requests] == [True, True, True, False, True, True, False]
+    assert len(transport.requests) == 6
+    assert ['tools' in request for request in transport.requests] == [True, True, True, False, True, False]
 
 
 def test_e3_retries_empty_length_response_without_exceeding_shared_cap(tmp_path):
@@ -146,14 +146,14 @@ def test_e3_retries_empty_length_response_without_exceeding_shared_cap(tmp_path)
                        DatabaseTools(context), transport, lambda event: None)
     assert record['error_category'] == 'OK'
     assert record['final_sql'] == 'SELECT COUNT(*) FROM customers'
-    assert len(transport.requests) == 7
-    assert ['tools' in request for request in transport.requests] == [True, True, True, False, False, True, True]
+    assert len(transport.requests) == 6
+    assert ['tools' in request for request in transport.requests] == [True, True, True, False, False, False]
     assert any('token limit' in message['content'].lower()
                for message in transport.requests[4]['messages'] if message['role'] == 'user')
 
 
-def test_e3_preserves_semantic_audit_after_five_linker_calls(tmp_path):
-    """The bounded case budget still audits SQL after linker length recovery."""
+def test_e3_fails_closed_when_six_call_cap_leaves_no_semantic_repair(tmp_path):
+    """The frozen cap retains the partial failure instead of making request seven."""
     import duckdb
     from evaluation.r2_cross_domain_v1.data import DatabaseContext
     from evaluation.r2_cross_domain_v1.tools import DatabaseTools
@@ -198,13 +198,9 @@ def test_e3_preserves_semantic_audit_after_five_linker_calls(tmp_path):
     record = _generate(QueryRequest('case','flows',
         'Count destination IPs appearing in scenario a and in scenario b.'),
         'E3', DatabaseTools(context), transport, lambda event: None)
-    assert record['error_category'] == 'OK'
-    assert record['final_sql'] == corrected['sql']
-    assert len(transport.requests) == 7
-    audit = ' '.join(message['content'] for message in transport.requests[6]['messages']
-                     if message['role'] == 'user')
-    assert 'SINGULAR_COUNT_GROUPED_OUTPUT' in audit
-    assert 'CONJUNCTIVE_SCOPES_COLLAPSED_BY_OR' in audit
+    assert record['error_category'] == 'SEMANTIC_REJECTION'
+    assert record['final_sql'] is None
+    assert len(transport.requests) == 6
 
 
 def test_e3_generator_semantically_reviews_first_sql_candidate(tmp_path):

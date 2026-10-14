@@ -17,7 +17,7 @@ def test_missing_selection_denied_before_client(scope):
 def test_consumed_scope_blocks_without_account_or_sdk(tmp_path, monkeypatch):
     from evaluation.finalization.query_runtime_validation import verify_scope_unused
     monkeypatch.setattr('pathlib.Path.home', lambda: tmp_path)
-    window = tmp_path/'.vinsoc/live-windows/text2sql-integration-20261008-calibration'
+    window = tmp_path/'.vinsoc/live-windows/text2sql-integration-20261014-protocol2-calibration'
     window.mkdir(parents=True)
     (window/'claim.json').write_text('{}')
     with pytest.raises(ValueError, match='RELEASE_WINDOW_CONSUMED'):

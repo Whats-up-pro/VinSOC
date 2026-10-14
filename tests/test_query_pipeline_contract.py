@@ -15,17 +15,15 @@ def test_release_denies_missing_inputs_without_client():
 
 
 def test_all_layers_counted_in_upper_bound():
-    assert role_caps('calibration', 'E3') == {'routing': 0, 'r2': 192, 'assessment': 0}
-    assert role_caps('evaluation', 'E3') == {'routing': 0, 'r2': 768, 'assessment': 0}
-    assert role_caps('pipeline', 'E3') == {'routing': 32, 'r2': 256, 'assessment': 32}
+    assert role_caps('calibration', 'E3') == {'routing': 0, 'r2': 168, 'assessment': 0}
+    assert role_caps('evaluation', 'E3') == {'routing': 0, 'r2': 672, 'assessment': 0}
+    assert role_caps('pipeline', 'E3') == {'routing': 32, 'r2': 192, 'assessment': 32}
     assert role_caps('pipeline', 'E0') == {'routing': 32, 'r2': 32, 'assessment': 32}
 
 
-def test_r2_completion_budget_allows_live_linker_to_finish_after_tool_calls():
+def test_r2_completion_budget_matches_frozen_protocol():
     from evaluation.finalization.query_pipeline_contract import CONTRACTS
-    # Run 38336761761 returned three empty linker completions with
-    # finish_reason=length at the previous 1,000-token ceiling.
-    assert CONTRACTS['r2']['max_completion_tokens'] == 2000
+    assert CONTRACTS['r2']['max_completion_tokens'] == 1000
 
 
 def test_single_demo_reserves_one_complete_e3_case_without_selection_gate():
@@ -33,7 +31,7 @@ def test_single_demo_reserves_one_complete_e3_case_without_selection_gate():
 
     selected = inventory_for('demo')
     assert len(selected) == 1
-    assert role_caps('demo', 'E3') == {'routing': 1, 'r2': 8, 'assessment': 1}
+    assert role_caps('demo', 'E3') == {'routing': 1, 'r2': 6, 'assessment': 1}
     receipt = preflight('demo', 'E3', inventory=selected, identities={},
                         account={}, pricing={}, budget={})
     assert receipt['planned'] == 1
@@ -54,6 +52,13 @@ def test_second_demo_uses_a_distinct_immutable_window():
                         account={}, pricing={}, budget={}, execution_id='full-e2e-2')
     assert receipt['execution_id'] == 'full-e2e-2'
     assert receipt['window_id'].endswith('-full-e2e-2')
+
+
+def test_corrected_official_scopes_use_a_new_immutable_release_series():
+    from evaluation.finalization.query_runtime_validation import window_id_for
+    assert window_id_for('calibration') == 'text2sql-integration-20261014-protocol2-calibration'
+    assert window_id_for('evaluation') == 'text2sql-integration-20261014-protocol2-evaluation'
+    assert window_id_for('pipeline') == 'text2sql-integration-20261014-protocol2-pipeline'
 
 
 def test_denied_release_cannot_claim_window(tmp_path):
@@ -112,6 +117,6 @@ def test_budget_package_includes_single_demo_e3_ceiling(monkeypatch):
     }
     result = budgeter.cost_bound(pricing, 'documented_context_window')
     demo = result['scopes']['demo_E3']
-    assert demo['request_caps_by_role'] == {'routing':1,'r2':8,'assessment':1}
-    assert demo['max_requests'] == 10
-    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.6732608)
+    assert demo['request_caps_by_role'] == {'routing':1,'r2':6,'assessment':1}
+    assert demo['max_requests'] == 8
+    assert float(demo['new_cost_ceiling_usd']) == pytest.approx(1.4532608)

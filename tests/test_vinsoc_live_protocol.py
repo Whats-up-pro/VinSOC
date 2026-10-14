@@ -46,6 +46,16 @@ def test_calibration_request_uses_explicit_authorized_cap_only_for_that_scope():
     assert state['remaining_usd'] == pytest.approx(20.9184408)
 
 
+def test_full_release_scopes_use_explicit_cumulative_caps():
+    m = module()
+    evaluation = m.create_request(scope='evaluation', case_id=None, question=None,
+                                  head_sha='a'*40, ci_run_id=123, live_consent=True)
+    pipeline = m.create_request(scope='pipeline', case_id=None, question=None,
+                                head_sha='a'*40, ci_run_id=123, live_consent=True)
+    assert evaluation['limit_usd'] == 100.0
+    assert pipeline['limit_usd'] == 150.0
+
+
 @pytest.mark.parametrize('change', [{'question':'changed'}, {'case_id':'unknown'},
                                   {'limit_usd':30.0}, {'head_sha':'master'},
                                   {'execution_id':'../escape'}])

@@ -35,7 +35,7 @@ def test_malformed_response_is_saved_before_usage_validation(tmp_path):
 def test_crash_after_reserve_never_reopens_claim(tmp_path, monkeypatch):
     from evaluation.finalization.query_runtime_validation import verify_scope_unused
     monkeypatch.setattr('pathlib.Path.home', lambda: tmp_path)
-    window = tmp_path/'.vinsoc/live-windows/text2sql-integration-20261008-pipeline'
+    window = tmp_path/'.vinsoc/live-windows/text2sql-integration-20261014-protocol2-pipeline'
     window.mkdir(parents=True)
     (window/'claim.json').write_text('{}')
     # No ledger exists: an interrupted atomic claim is still consumed.

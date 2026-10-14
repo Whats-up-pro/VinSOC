@@ -30,19 +30,19 @@ def test_demo_remote_store_claims_unique_tag_before_checkpoints():
     assert store.claimed is True
 
 
-def test_demo_remote_store_supports_all_ten_release_requests():
+def test_demo_remote_store_supports_all_eight_release_requests():
     from evaluation.finalization.query_cloud import QueryDemoGitHubStore, QueryCloudError
 
     api = FakeAPI()
     store = QueryDemoGitHubStore(api, implementation_sha='a'*40, run_id='123')
     store.claim('text2sql-integration-20261008-demo-case', 'c'*64)
 
-    store.checkpoint(10, 'begin', {'role':'assessment','request_sha256':'request-hash'})
+    store.checkpoint(8, 'begin', {'role':'assessment','request_sha256':'request-hash'})
     with pytest.raises(QueryCloudError, match='REMOTE_CHECKPOINT_INVALID'):
-        store.checkpoint(11, 'begin', {'role':'assessment','request_sha256':'request-hash'})
+        store.checkpoint(9, 'begin', {'role':'assessment','request_sha256':'request-hash'})
 
     refs = [call[2]['ref'] for call in api.calls if call[1].endswith('/git/refs')]
-    assert refs[-1].endswith('-request-10-begin')
+    assert refs[-1].endswith('-request-8-begin')
 
 
 def test_existing_demo_remote_tag_blocks_without_new_ref():

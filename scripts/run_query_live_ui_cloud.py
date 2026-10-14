@@ -35,7 +35,9 @@ class LiveUiStore(QueryDemoGitHubStore):
 
     @staticmethod
     def _tag_component(window_id):
-        if not re.fullmatch(r'text2sql-integration-20261008-(?:demo-[A-Za-z0-9_-]+|calibration|evaluation|pipeline)',window_id):
+        if not re.fullmatch(
+                r'text2sql-integration-(?:20261008-demo-[A-Za-z0-9_-]+|20261014-protocol2-(?:calibration|evaluation|pipeline))',
+                window_id):
             raise ValueError('CLOUD_WINDOW_ID_INVALID')
         return 'vinsoc-query-ui-'+window_id
 
@@ -58,9 +60,7 @@ def private_inputs(request, env, ci_id, allocation):
         authorized_limit_usd=request['limit_usd'])
     inputs['budget'].update(authorization_scope=request['scope'],
         decision_reference=(
-            'explicit-user-full-calibration-with-21-USD-cumulative-cap-20261014'
-            if request['scope'] == 'calibration' else
-            'explicit-user-live-interface-reimplementation-within-existing-3-USD-allocation-20261014'))
+            'explicit-user-all-official-scopes-20261014-cumulative-cap-'+str(request['limit_usd'])+'-USD'))
     if request['scope'] != 'demo':
         account = inputs['account']
         reference = Path(account['reconciliation_reference']['path'])

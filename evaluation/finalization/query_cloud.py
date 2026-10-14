@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from evaluation.finalization.cloud_window import REPOSITORY
 
 
-MAX_DEMO_REQUESTS = 10  # routing 1 + E3 R2 8 + assessment 1
+MAX_DEMO_REQUESTS = 8  # routing 1 + E3 R2 6 + assessment 1
 
 
 class QueryCloudError(ValueError):

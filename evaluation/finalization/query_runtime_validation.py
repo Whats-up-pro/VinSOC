@@ -60,7 +60,11 @@ def window_id_for(scope, case_id=None, execution_id=None):
         raise ValueError('INVALID_DEMO_EXECUTION_ID')
     if scope not in ('calibration', 'evaluation', 'pipeline'):
         raise ValueError('INVALID_RELEASE_SCOPE')
-    return 'text2sql-integration-20261008-'+scope
+    # The original 20261008 calibration window was consumed by a producer
+    # whose token/request limits did not conform to the frozen protocol.
+    # Keep that evidence immutable and use one successor series for the
+    # corrected calibration, evaluation, and pipeline sequence.
+    return 'text2sql-integration-20261014-protocol2-'+scope
 
 
 def verify_scope_unused(scope, case_id=None, execution_id=None):
