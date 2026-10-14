@@ -1,0 +1,56 @@
+{
+  "schema_version": "vinsoc_calibration_preflight_blocked_v1",
+  "created_at_utc": "2026-10-14T03:30:43Z",
+  "status": "BLOCKED_BEFORE_MODEL",
+  "scope": "calibration",
+  "catalog_cases": 24,
+  "required_records": 48,
+  "execution_id": "liveui-55f6b4a303944906ac16360a",
+  "workflow_run_id": 38506476366,
+  "workflow_url": "https://github.com/Whats-up-pro/VinSOC/actions/runs/38506476366",
+  "implementation_sha": "aa97a21dbae9e9c5d8898ac2f222c85f35ab590c",
+  "ci_run_id": 38502476739,
+  "request_limit_usd": 3.0,
+  "live_consent": false,
+  "preflight": {
+    "status": "blocked",
+    "failure_category": "LIVE_UI_PREFLIGHT_BLOCKED",
+    "gate_reasons": [
+      "FULL_RUN_BUDGET_INSUFFICIENT"
+    ],
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "window_claimed": false,
+    "cost_unknown": false,
+    "current_run_cost_usd": 0.0,
+    "cost_ceiling_usd": 19.968,
+    "role_caps": {
+      "routing": 0,
+      "r2": 192,
+      "assessment": 0
+    },
+    "window_id": "text2sql-integration-20261008-calibration"
+  },
+  "allocation": {
+    "current_cumulative_cap_usd": 3.0,
+    "verified_prior_cost_usd": 0.0906125,
+    "verified_remaining_cap_usd": 2.9093875,
+    "minimum_cumulative_cap_for_full_reserve_usd": 20.0586125,
+    "minimum_cap_increase_usd": 17.0586125,
+    "provider_balance_verified": false
+  },
+  "artifact": {
+    "artifact_id": 11868485180,
+    "name": "live-ui-aa97a21dbae9e9c5d8898ac2f222c85f35ab590c-liveui-55f6b4a303944906ac16360a-38506476366",
+    "archive_bytes": 41891,
+    "archive_sha256": "aaad93a1707c308ea18f09fd2b060e411ab9f1176346fa1499200073a27408ad",
+    "public_files": {
+      "run/public/cloud_run.json": "6e9d01cea541d49e8447afab398045c76c290a7b45567e805011a270484b38b6",
+      "run/public/preflight.json": "fa3b9dfc2be351f00b6fd009cfc473dd006c2f9e54e9c24098204b932b36584e"
+    }
+  },
+  "model_calls_for_this_attempt": 0,
+  "actual_cost_usd": 0.0,
+  "next_action": "Require an explicit new cumulative allocation cap of at least 20.0586125 USD, then commit the cap change, pass exact-SHA CI, and run a fresh preflight before any live calibration request."
+}
