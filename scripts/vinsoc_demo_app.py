@@ -498,7 +498,9 @@ def live_monitor(execution_id, current_input):
     if state['phase'] == 'preflight_pass':
         st.success('Preflight Linux đạt; chưa gọi model. Kiểm cận tiền trước khi bắt đầu.')
         st.json({'cost_ceiling_usd':control.get('cost_ceiling_usd'),'role_caps':control.get('role_caps')},expanded=False)
-        consent = st.checkbox('Tôi cho phép lượt API thật này trong allocation tích lũy $3',key='live_consent_'+execution_id)
+        consent = st.checkbox(
+            f"Tôi cho phép lượt API thật này trong allocation tích lũy ${request['limit_usd']:g}",
+            key='live_consent_'+execution_id)
         if not unchanged:
             st.warning('Input đã đổi sau preflight; cần tạo preflight mới cho input này.')
         if st.button('Chạy pipeline API thật',type='primary',disabled=not consent or not unchanged,

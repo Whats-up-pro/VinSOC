@@ -147,7 +147,11 @@ def fixed_selection():
     return chosen
 
 
-def prepare_private_inputs(auth, env, ci_run_id, *, verified_prior=None):
+def prepare_private_inputs(auth, env, ci_run_id, *, verified_prior=None,
+                           authorized_limit_usd=3.0):
+    if (type(authorized_limit_usd) not in (int, float)
+            or auth.get('limit_usd') != authorized_limit_usd):
+        raise ValueError('AUTHORIZED_LIMIT_MISMATCH')
     stamp = datetime.now(timezone.utc).isoformat()
     canonical = Path.home()/'.vinsoc/live-windows'
     allocation_dir = canonical/'allocations'/auth['allocation_id']
@@ -165,7 +169,8 @@ def prepare_private_inputs(auth, env, ci_run_id, *, verified_prior=None):
     if auth.get('execution_id'):
         authorization['execution_id'] = auth['execution_id']
     allocation = {'schema_version':1, 'allocation_id':auth['allocation_id'], 'currency':'USD',
-                  'authorized_limit_usd':3.0, 'known_prior_cost_usd':auth['known_prior_cost_usd'],
+                  'authorized_limit_usd':authorized_limit_usd,
+                  'known_prior_cost_usd':auth['known_prior_cost_usd'],
                   'remaining_allocation_usd':auth['remaining_allocation_usd'], 'unknown_exposure_usd':0.0,
                   'events':[], 'authorization':authorization, 'prior_paid_demos':prior}
     write_json(ledger_path, allocation)
@@ -178,7 +183,9 @@ def prepare_private_inputs(auth, env, ci_run_id, *, verified_prior=None):
                'scope_states':{'calibration':'outside_demo_allocation','evaluation':'outside_demo_allocation',
                                'pipeline':'outside_demo_allocation','demo':'continuation_authorized'},
                'ledger_artifacts':[{'path':ledger_path.relative_to(canonical).as_posix(),'sha256':ledger_sha}],
-               'basis':'original_3_usd_demo_allocation_less_verified_prior_transmitted_cost'}
+               'basis':('original_3_usd_demo_allocation_less_verified_prior_transmitted_cost'
+                        if authorized_limit_usd == 3.0 else
+                        'explicit_cumulative_allocation_less_verified_prior_transmitted_cost')}
     write_json(receipt_path, receipt)
     receipt_sha = hashlib.sha256(receipt_path.read_bytes()).hexdigest()
     pricing = {}
@@ -198,7 +205,8 @@ def prepare_private_inputs(auth, env, ci_run_id, *, verified_prior=None):
                    'remaining_allocation_usd':auth['remaining_allocation_usd'],
                    'unresolved_cost_unknown':False,
                    'reconciliation_reference':{'path':str(receipt_path.resolve()),'sha256':receipt_sha}},
-        'budget':{'paid_authorized':True,'authorization_scope':'demo','limit_usd':3.0,
+        'budget':{'paid_authorized':True,'authorization_scope':'demo',
+                  'limit_usd':authorized_limit_usd,
                   'decision_reference': ('explicit-user-full-authority-real-API-three-remaining-demo-cases-2026-10-13'
                                          if verified_prior is not None else
                                          'explicit-user-request-full-real-API-E2E-run-within-original-3-USD-cap-2026-10-10')},

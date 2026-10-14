@@ -33,6 +33,19 @@ def test_request_preserves_question_and_binds_fresh_window():
     assert len(m.catalog('evaluation')) == 96
 
 
+def test_calibration_request_uses_explicit_authorized_cap_only_for_that_scope():
+    m = module()
+    calibration = m.create_request(scope='calibration', case_id=None, question=None,
+                                   head_sha='a'*40, ci_run_id=123, live_consent=True)
+    assert calibration['limit_usd'] == 21.0
+    assert m.validate_request(calibration, mode='live') == calibration
+    assert request()['limit_usd'] == 3.0
+
+    state = m.reconcile_allocation([], limit_usd=calibration['limit_usd'])
+    assert state['known_usd'] == pytest.approx(.0815592)
+    assert state['remaining_usd'] == pytest.approx(20.9184408)
+
+
 @pytest.mark.parametrize('change', [{'question':'changed'}, {'case_id':'unknown'},
                                   {'limit_usd':30.0}, {'head_sha':'master'},
                                   {'execution_id':'../escape'}])

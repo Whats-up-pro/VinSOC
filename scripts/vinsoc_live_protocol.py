@@ -17,6 +17,12 @@ from scripts.run_vinsoc_query_acceptance import inventory_for, verify_selected_q
 
 VERSION = 'vinsoc_live_ui_v1'
 LIMIT_USD = 3.0
+SCOPE_LIMITS_USD = {
+    'demo': LIMIT_USD,
+    'pipeline': LIMIT_USD,
+    'evaluation': LIMIT_USD,
+    'calibration': 21.0,
+}
 BASE_USD = .0815592
 REGISTRY_PREFIX = 'vinsoc-ui-allocation-'
 WORKFLOW = 'query-live-ui.yml'
@@ -34,7 +40,8 @@ def catalog(scope):
 def create_request(*, scope, case_id, question, head_sha, ci_run_id, live_consent=False):
     value = {'version':VERSION, 'scope':scope, 'case_id':case_id, 'question':question,
              'condition':'E3', 'head_sha':head_sha, 'ci_run_id':int(ci_run_id),
-             'execution_id':'liveui-'+uuid.uuid4().hex[:24], 'limit_usd':LIMIT_USD,
+             'execution_id':'liveui-'+uuid.uuid4().hex[:24],
+             'limit_usd':SCOPE_LIMITS_USD.get(scope),
              'confirmed_utc':datetime.now(timezone.utc).isoformat(), 'live_consent':live_consent}
     return validate_request(value)
 
@@ -48,7 +55,8 @@ def validate_request(value, *, mode='preflight'):
             or not isinstance(value['head_sha'],str) or not re.fullmatch(r'[a-f0-9]{40}',value['head_sha'])
             or type(value['ci_run_id']) is not int or value['ci_run_id'] <= 0
             or not isinstance(value['execution_id'],str) or not re.fullmatch(r'liveui-[a-f0-9]{24}',value['execution_id'])
-            or type(value['limit_usd']) not in (int,float) or value['limit_usd'] != LIMIT_USD
+            or type(value['limit_usd']) not in (int,float)
+            or value['limit_usd'] != SCOPE_LIMITS_USD.get(value['scope'])
             or type(value['live_consent']) is not bool or not fresh(value['confirmed_utc'])):
         raise ValueError('LIVE_REQUEST_INVALID')
     if value['scope'] == 'demo':
@@ -84,7 +92,9 @@ def base_receipts():
     return prior
 
 
-def reconcile_allocation(entries):
+def reconcile_allocation(entries, *, limit_usd=LIMIT_USD):
+    if type(limit_usd) not in (int,float) or limit_usd not in set(SCOPE_LIMITS_USD.values()):
+        raise ValueError('ALLOCATION_LIMIT_UNAUTHORIZED')
     prior = base_receipts()
     grouped = {}
     for entry in entries:
@@ -114,9 +124,9 @@ def reconcile_allocation(entries):
         known += end['current_run_cost_usd']
         prior.append({'execution_id':key,'known_cost_usd':end['current_run_cost_usd'],
                       'report_sha256':end['report_sha256']})
-    if known > LIMIT_USD:
+    if known > limit_usd:
         raise ValueError('ALLOCATION_CAP_EXCEEDED')
-    return {'known_usd':known,'remaining_usd':LIMIT_USD-known,'cost_unknown':False,'receipts':prior}
+    return {'known_usd':known,'remaining_usd':limit_usd-known,'cost_unknown':False,'receipts':prior}
 
 
 class AllocationRegistry:

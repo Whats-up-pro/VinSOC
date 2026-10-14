@@ -53,9 +53,14 @@ def private_inputs(request, env, ci_id, allocation):
     auth = {**request,'scope':request['scope'],'case_id':case_id,
             'allocation_id':request['execution_id'], 'known_prior_cost_usd':allocation['known_usd'],
             'remaining_allocation_usd':allocation['remaining_usd'],'unknown_exposure_usd':0}
-    inputs = prepare_private_inputs(auth,env,ci_id,verified_prior=allocation['receipts'])
+    inputs = prepare_private_inputs(
+        auth, env, ci_id, verified_prior=allocation['receipts'],
+        authorized_limit_usd=request['limit_usd'])
     inputs['budget'].update(authorization_scope=request['scope'],
-        decision_reference='explicit-user-live-interface-reimplementation-within-existing-3-USD-allocation-20261014')
+        decision_reference=(
+            'explicit-user-full-calibration-with-21-USD-cumulative-cap-20261014'
+            if request['scope'] == 'calibration' else
+            'explicit-user-live-interface-reimplementation-within-existing-3-USD-allocation-20261014'))
     if request['scope'] != 'demo':
         account = inputs['account']
         reference = Path(account['reconciliation_reference']['path'])
@@ -94,7 +99,7 @@ def run(mode, output_dir, env, *, api_factory=GitHubAPI):
         api = api_factory(env['GITHUB_TOKEN'])
         ci_id = verify_cloud_ci(api,env)
         registry = AllocationRegistry(api,sha=env['GITHUB_SHA'],run_id=env['GITHUB_RUN_ID'])
-        allocation = reconcile_allocation(registry.entries())
+        allocation = reconcile_allocation(registry.entries(), limit_usd=request['limit_usd'])
         control.update(request=request,implementation_sha=env['GITHUB_SHA'],ci_run_id=ci_id,
                        prior_cost_usd=allocation['known_usd'],known_usd=allocation['known_usd'],
                        remaining_cap_usd=allocation['remaining_usd'],current_run_cost_usd=0.0)
@@ -132,7 +137,7 @@ def run(mode, output_dir, env, *, api_factory=GitHubAPI):
                        received=report.get('received',0),client_created=report.get('client_created',False),
                        window_claimed=store.claimed,cost_unknown=report.get('cost_unknown',False),
                        known_usd=known,current_run_cost_usd=known-allocation['known_usd'],
-                       remaining_cap_usd=3.0-known,official_eligible=False)
+                       remaining_cap_usd=request['limit_usd']-known,official_eligible=False)
         if report.get('failure_category'):
             control['failure_category'] = report['failure_category']
         return control
@@ -152,7 +157,8 @@ def run(mode, output_dir, env, *, api_factory=GitHubAPI):
                 ledger = json.loads((window/'ledger.json').read_text())
                 prior = control['prior_cost_usd']
                 control.update(known_usd=ledger['known_usd'],current_run_cost_usd=ledger['known_usd']-prior,
-                               remaining_cap_usd=3.0-ledger['known_usd'],cost_unknown=ledger['cost_unknown'],
+                               remaining_cap_usd=request['limit_usd']-ledger['known_usd'],
+                               cost_unknown=ledger['cost_unknown'],
                                attempted=ledger['attempted'],received=ledger['received'])
         write_json(public/'cloud_run.json',control)
         if allocation_claimed:
