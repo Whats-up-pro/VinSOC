@@ -1,237 +1,202 @@
-# VinSOC — Kịch bản giới thiệu kiến trúc và demo cho mentor
+# VinSOC Kịch bản giới thiệu kiến trúc và demo
 
-Cập nhật: 14/10/2026. Thời lượng: 15–20 phút, sau đó hỏi đáp.
+Cập nhật ngày 14/10/2026. Thời lượng dự kiến 15–20 phút, sau đó trao đổi với mentor.
 
-**Mạch trình bày:** Bài toán → kiến trúc chung → R1 → R2 → một luồng thật → các giới hạn có bằng chứng → kết luận và cải tiến.
+Kịch bản đi từ bài toán điều tra đến kiến trúc R1/R2, rồi dùng những lượt chạy thật để giải thích hệ thống làm được gì và còn vướng ở đâu. Phần thao tác chỉ ghi những điểm cần mở trên màn hình; lệnh khởi động và hồ sơ đối chiếu nằm ở cuối tài liệu.
 
-Buổi trình bày dùng lại kết quả API và dữ liệu thật đã lưu. Mở giao diện không gọi thêm model. Bốn ID demo giữ nguyên; người duyệt chưa quyết định thì giữ trạng thái chờ duyệt. Hướng dẫn vận hành nằm ở phụ lục.
+## 1. Vì sao xây dựng VinSOC — 1 phút
 
-## 1. Bài toán và giá trị của hệ thống — 1 phút
+*Mở trang Tổng quan.*
 
-**Mở trang Tổng quan. Nói:**
+Khi nhận một cảnh báo, người phân tích thường phải tra nhiều nguồn trước khi có thể đưa ra nhận định. Họ cần biết địa chỉ IP này đã được ghi nhận ở đâu, có những kết nối nào và có dấu hiệu liên quan trên máy trạm hay không. Với một câu hỏi về dữ liệu mạng, họ còn phải xác định bảng, cột và viết truy vấn phù hợp.
 
-> Khi nhận một cảnh báo hoặc câu hỏi điều tra, analyst cần biết phải tra nguồn nào, tìm dữ liệu gì và kết luận dựa vào đâu. VinSOC chia công việc này thành hai phần: R1 chọn công cụ và tham số; R2 biến câu hỏi thành SQL để lấy dữ liệu. Kết quả đi qua bước lưu dẫn chứng, nhận định của model, kiểm chứng và người duyệt trước khi xuất báo cáo.
+VinSOC được xây dựng để hỗ trợ những bước đó. R1 phụ trách lựa chọn công cụ và tham số; R2 chuyển câu hỏi bằng ngôn ngữ tự nhiên thành SQL. Kết quả được lưu cùng nguồn dữ liệu, sau đó đưa vào bước nhận định và kiểm chứng. Người phân tích vẫn là người quyết định cuối cùng.
 
-> Giá trị cần chứng minh là giảm thao tác tra cứu và giữ được đường đi từ câu hỏi đến kết luận. Một câu trả lời nghe hợp lý chưa đủ; người xem phải kiểm lại được SQL, dữ liệu, nguồn và giới hạn của nó.
+Trong buổi demo, em sẽ bắt đầu bằng kiến trúc chung, trình bày cách R1 và R2 hoạt động, rồi mở một câu hỏi đã đi hết luồng trên dữ liệu CTU-13 thật. Các ví dụ còn lại sẽ giúp giải thích những lỗi hệ thống đã gặp và hướng xử lý tiếp theo. Hiện đã có bằng chứng cho luồng câu hỏi network; việc kết hợp đầy đủ CTI, network và endpoint trong cùng một sự cố thật vẫn chưa được nghiệm thu.
 
-**Phạm vi hiện tại:** nhánh câu hỏi network đã có ví dụ chạy từ đầu đến cuối trên CTU-13 S5/S7 thật. Kết quả R1 cho ba công cụ là phép đo riêng. Chưa có bằng chứng rằng toàn bộ CTI, network và endpoint đều hoàn tất trong cùng một sự cố thật.
-
-## 2. Kiến trúc chung — 2 phút
+## 2. Các thành phần phối hợp với nhau như thế nào — 2 phút
 
 ```mermaid
 flowchart TD
     I["Cảnh báo / IOC"] --> O["Public InvestigationOrchestrator"]
     Q["Câu hỏi network"] --> O
-    O --> R["Model chọn công cụ và tham số"]
-    R --> T["CTI / network / endpoint: profile IOC"]
-    R --> N["network_query: profile câu hỏi"]
+    O --> R["Mô hình chọn công cụ và tham số"]
+    R --> T["CTI / network / endpoint trong profile IOC"]
+    R --> N["network_query trong profile câu hỏi"]
     N --> S["TextToSQLService dùng chung"]
     S --> W["SqlExecutor và worker cách ly"]
-    T --> E["EvidenceStore: dữ liệu và nguồn"]
+    T --> E["EvidenceStore lưu dữ liệu và nguồn"]
     W --> E
-    E --> A["Nhận định model và kiểm chứng"]
-    A --> H["Người duyệt → báo cáo JSON / HTML"]
+    E --> A["Nhận định của mô hình và kiểm chứng"]
+    A --> H["Người duyệt và báo cáo JSON HTML"]
 ```
 
-| Thành phần | Trách nhiệm | Điều cần giải thích |
-|---|---|---|
-| Public orchestrator | Nhận đầu vào, điều phối công cụ và các bước điều tra | IOC dùng `investigate()`; câu hỏi dùng `investigate_query()` trên cùng orchestrator |
-| R1 / lựa chọn công cụ | Chọn nguồn cần tra và tạo lời gọi hàm | Chọn đúng công cụ chưa có nghĩa dữ liệu hoặc kết luận đã đúng |
-| R2 / Text-to-SQL | Chọn bảng/cột/giá trị phù hợp và sinh SQL | Bộ đánh giá và `network_query` gọi cùng `TextToSQLService`, không có bộ sinh SQL riêng để demo |
-| SqlExecutor | Kiểm SQL và thực thi trên DB được cấp | Model không tự chọn đường dẫn DB; SQL chạy trong worker chỉ đọc, tách khỏi process giữ secret |
-| EvidenceStore và kiểm chứng | Gắn nguồn, SQL/result hash; kiểm dữ kiện và dẫn chứng | Kiểm số liệu khớp kết quả không tự chứng minh SQL trả lời đúng câu hỏi |
-| Người duyệt và viewer | Xem hồ sơ, đưa quyết định; mở báo cáo đã lưu | Không tự phê duyệt; viewer đọc artifacts, không tạo prediction hoặc nhận định mới |
+Ở giữa sơ đồ là `InvestigationOrchestrator`, bộ điều phối chung của hệ thống. Cảnh báo hoặc IOC đi vào qua `investigate()`, còn câu hỏi về dữ liệu mạng đi vào qua `investigate_query()`. Hai đường vào dùng cấu hình công cụ phù hợp với đầu vào, rồi đưa kết quả về các bước lưu dẫn chứng, nhận định và kiểm chứng.
 
-**Nói khi chỉ vào sơ đồ:**
+Với IOC, mô hình có thể chọn công cụ CTI, network hoặc endpoint. Với câu hỏi network, công cụ mới `network_query` nhận nguyên văn câu hỏi và gọi `TextToSQLService`. Đây cũng là dịch vụ được bộ đánh giá R2 sử dụng. Nhờ vậy, phần được đo và phần được tích hợp dùng chung thuật toán sinh SQL, thay vì có một bản riêng chỉ phục vụ demo.
 
-> Có hai đường vào nhưng dùng chung nền điều phối và dẫn chứng. Nhánh IOC giữ ba công cụ cũ. Nhánh câu hỏi thêm `network_query` để dùng chính môđun R2. Vì profile và schema công cụ khác nhau, điểm R1 lịch sử không được gán thành điểm routing của profile mới.
+SQL do mô hình tạo ra được kiểm tra trước khi đưa vào `SqlExecutor`. Worker thực thi chỉ được đọc database đã cấp và bị giới hạn về mạng, tài nguyên, thời gian chạy. Kết quả sau đó đi vào `EvidenceStore`, nơi lưu dữ liệu cùng thông tin về snapshot, truy vấn và nguồn tạo ra nó.
 
-Nguồn mã: [orchestrator](../../agent/orchestrator.py), [query policy](../../agent/network_query_policy.py), [query skill](../../skills/network_query_skill.py), [dịch vụ R2](../../vinsoc_text2sql/service.py).
+Từ những dẫn chứng này, mô hình viết nhận định. Hệ thống kiểm tra số liệu và tham chiếu trong nhận định, rồi giữ hồ sơ cho người duyệt. Cần phân biệt hai việc: nhận định có khớp dữ liệu đã nhận hay không, và SQL có trả lời đúng câu hỏi hay không. Một nhận định có thể diễn giải chính xác kết quả của một truy vấn sai.
 
-## 3. R1: chọn đúng công cụ — 3 phút
+Các ví dụ trên giao diện đều là kết quả API đã lưu. Việc mở lại hồ sơ không gọi mô hình thêm và không tự tạo quyết định của người duyệt.
 
-### Kiến trúc và luồng xử lý
+## 3. R1 lựa chọn nguồn điều tra — 3 phút
 
-R1 nhận yêu cầu cùng mô tả/schema công cụ. Cấu hình thắng trên bộ dev dùng `gpt-4.1-mini-2025-04-14`. Model trả lời gọi hàm nguyên gốc gồm tên công cụ và tham số. Hệ thống kiểm tham số rồi mới chuyển sang công cụ thực thi. Một yêu cầu có thể cần một nguồn, nhiều nguồn hoặc không cần tra cứu.
+*Mở trang R1 chọn công cụ.*
 
-| Công cụ trong profile IOC | Dùng khi cần |
-|---|---|
-| `cti_enrichment` | Tra thông tin đe dọa về IP, domain hoặc hash |
-| `network_investigation` | Điều tra luồng mạng của một IPv4 cụ thể |
-| `endpoint_investigation` | Điều tra host, process hoặc sự kiện endpoint |
+R1 nhận yêu cầu cùng mô tả và schema của các công cụ. Mô hình trả về lời gọi hàm gồm tên công cụ và tham số; hệ thống kiểm tham số trước khi chuyển cho công cụ thực thi. Cấu hình được chọn trên bộ dev dùng `gpt-4.1-mini-2025-04-14`.
 
-`network_query` thuộc profile câu hỏi mới. Nó nhận đúng câu hỏi gốc, không nhận SQL hay đường dẫn DB do model đưa vào.
+Ba công cụ có vai trò khác nhau. `cti_enrichment` tra thông tin đe dọa về IP, domain hoặc hash. `network_investigation` làm việc với luồng mạng của một IPv4 cụ thể. `endpoint_investigation` dùng khi cần xem host, process hoặc sự kiện trên máy trạm. Một yêu cầu có thể cần phối hợp các nguồn này, trong khi câu hỏi về chức năng của sản phẩm có thể không cần tra cứu.
 
-### Minh họa trên trang R1 chọn công cụ
+Ở `case_001`, yêu cầu là kiểm tra lượng kết nối của DNS server `10.0.0.53`. Mô hình chọn `network_investigation` và giữ đúng IP. Sang `case_005`, yêu cầu có cả IOC `185.220.101.45` và host `WS023`; mô hình trả đủ ba lời gọi CTI, network và endpoint. Hai ví dụ này cho thấy R1 có thể lựa chọn một nguồn hoặc nhiều nguồn theo nội dung yêu cầu.
 
-| Case | Yêu cầu và kết quả thật | Ý nghĩa |
-|---|---|---|
-| `case_001` | Điều tra lượng kết nối của DNS server `10.0.0.53`; model chọn `network_investigation` đúng IP | Chọn được nguồn network theo mục tiêu điều tra |
-| `case_005` | IOC `185.220.101.45` và host `WS023`; model trả đủ CTI, network, endpoint | Một yêu cầu có thể cần nhiều nguồn; phải giữ được tham số của từng lời gọi |
-| `case_022` | Hỏi công cụ hỗ trợ loại đầu vào nào; model không gọi công cụ | Không phải câu hỏi nào cũng cần truy cập dữ liệu |
-| `case_002` | Cần xác minh IP thuộc nhà cung cấp đáng tin; đáp án yêu cầu CTI nhưng model chọn network | Có thể nhầm mục đích tra danh tính/reputation với điều tra kết nối |
+`case_022` chỉ hỏi các công cụ hỗ trợ loại đầu vào nào. Mô hình không gọi công cụ, phù hợp với mục đích của câu hỏi. Đây cũng là một quyết định cần đánh giá, vì gọi công cụ không cần thiết vẫn làm tăng thời gian và chi phí.
 
-**Nói:**
+Tuy nhiên, `case_002` cho thấy R1 còn nhầm giữa các mục đích điều tra. Yêu cầu cần xác minh IP thuộc một nhà cung cấp đáng tin, nên đáp án yêu cầu tra CTI; mô hình lại chọn network. Lỗi xuất hiện ngay ở bước chọn nguồn, trước khi có DB hoặc SQL worker. Chưa có thí nghiệm tách riêng nguyên nhân sâu hơn, nên chưa thể kết luận rằng chỉ sửa mô tả công cụ là đủ khắc phục.
 
-> R1 đạt 22 trên 24 case dev, exact-call F1 là 0,9508 và đúng cả 5 case không cần công cụ. Điểm mạnh được quan sát là lựa chọn công cụ và giữ tham số trong các tình huống này. Case 002 cho thấy hạn chế ở quyết định chọn nguồn, không phải DB hoặc SQL worker: model đã chọn sai công cụ trước khi đến các bước đó.
+Trên bộ dev, R1 đạt **22/24 case**, exact-call F1 **0,9508** và đúng cả **5 case không cần công cụ**. Các kết quả này cho thấy khả năng lựa chọn công cụ và giữ tham số trong phạm vi đã đo. Tuy vậy, bộ dữ liệu còn nhỏ và 11/24 gold đã được xử lý sau khi xem đầu ra ban đầu. Đây chưa phải phép đo trên tập kiểm tra độc lập; R1 frozen vẫn chưa chạy.
 
-Nguyên nhân sâu hơn của nhầm lẫn trong `case_002` chưa được thí nghiệm tách riêng; không khẳng định chỉ sửa mô tả công cụ là sẽ hết lỗi. Các tham số được chấm đạt không có nghĩa mọi yêu cầu mới đều được bảo toàn đúng.
+Cũng cần giữ đúng phạm vi của kết quả: artifact R1 chứng minh lời gọi mà mô hình trả về, chưa chứng minh cả ba công cụ cùng thực thi thành công trong một sự cố. Điểm 22/24 được đo với schema công cụ cũ, nên không được dùng làm điểm routing của profile `network_query` mới.
 
-**Giới hạn phép đo:** 24 case dev còn nhỏ; 11/24 gold đã được xử lý sau khi xem output ban đầu. Đây không phải tập kiểm tra độc lập. R1 frozen chưa được chạy. Artifact R1 chứng minh lời gọi model trả về, không chứng minh ba công cụ cùng thực thi thành công trong một sự cố.
+## 4. R2 chuyển câu hỏi thành truy vấn — 3 phút
 
-Nguồn: [winner lock và caveats](../../evaluation/tool_calling/winner_lock.json), [24 kết quả R1](../../results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json), [schema công cụ](../../agent/tools.py).
-
-## 4. R2: từ câu hỏi đến SQL và dữ liệu — 3 phút
-
-### Hai cấu hình cần phân biệt
+R1 quyết định cần tra nguồn nào. Khi công cụ được chọn là `network_query`, R2 tiếp nhận câu hỏi và tìm cách lấy câu trả lời từ database đã cấp. Công cụ chỉ nhận câu hỏi; mô hình không được tự đưa vào SQL hoặc đường dẫn database.
 
 ```mermaid
 flowchart TD
-    Q["Câu hỏi + catalog DB được cấp"] --> C{"Cấu hình"}
-    C -->|E0| G0["Model sinh SQL trực tiếp"]
-    C -->|E3| L["Schema Linker: bảng, cột, giá trị"]
-    L --> D["Profiler / value_search / sql_probe"]
+    Q["Câu hỏi và catalog DB được cấp"] --> C{"Cấu hình"}
+    C -->|E0| G0["Mô hình sinh SQL trực tiếp"]
+    C -->|E3| L["Schema Linker xác định bảng cột và giá trị"]
+    L --> D["database_profiler value_search sql_probe"]
     D --> L
-    L --> G3["SQL Generator và kiểm lại candidate"]
-    G0 --> W["Kiểm SQL → worker → typed result"]
+    L --> G3["SQL Generator tạo và kiểm lại truy vấn"]
+    G0 --> W["Kiểm SQL rồi chạy worker và nhận kết quả"]
     G3 --> W
     W --> P["Dẫn chứng và nhận định trong pipeline"]
-    W --> X["Scorer riêng trong bộ đánh giá"]
+    W --> X["Bộ chấm riêng trong đánh giá"]
 ```
 
-**E0:** một request sinh SQL từ câu hỏi và catalog. Ít bước, ít chi phí; không có bước liên kết giá trị bằng công cụ như E3.
+R2 có hai cấu hình để đối chiếu. **E0** sinh SQL trực tiếp từ câu hỏi và catalog, chỉ cần một request. **E3** bổ sung bước Schema Linker để xác định bảng, cột và giá trị liên quan trước khi SQL Generator tạo truy vấn.
 
-**E3:** Schema Linker xác định bảng/cột và giá trị lưu thật; SQL Generator dùng kết quả đó để sinh truy vấn. `database_profiler` xem thông tin bảng/cột, `value_search` tìm giá trị, `sql_probe` kiểm truy vấn thử. Các bước chịu giới hạn số lượt gọi, thời gian và kích thước kết quả. Nhiều bước tạo khả năng giải thích tốt hơn nhưng cũng thêm điểm có thể lỗi.
+Trong E3, `database_profiler` cung cấp thông tin bảng/cột, `value_search` tìm giá trị được lưu thật và `sql_probe` kiểm truy vấn thử. Những công cụ này giúp mô hình làm việc với dữ liệu cụ thể, nhưng đồng thời tạo thêm yêu cầu về lời gọi hàm, bằng chứng giá trị và định dạng JSON. Mỗi bước đều chịu giới hạn về số lượt gọi, thời gian và kích thước kết quả.
 
-Cả hai dùng model R2 `gpt-5-mini-2025-08-07` và cùng executor. Đáp án chuẩn chỉ vào scorer sau khi runtime trả kết quả, không đưa vào prompt sinh SQL. Routing và nhận định của query profile dùng `gpt-4.1-mini-2025-04-14`.
+Hai cấu hình dùng `gpt-5-mini-2025-08-07` và cùng executor. Đáp án chuẩn chỉ được bộ chấm đọc sau khi runtime trả kết quả; nó không nằm trong đầu vào sinh SQL. Mô hình routing và viết nhận định của query profile là `gpt-4.1-mini-2025-04-14`.
 
-### Kết quả calibration hiện có
+### Kết quả hiện tại nói gì về hai cấu hình
 
-Archive của [lượt 38507847503](https://github.com/Whats-up-pro/VinSOC/actions/runs/38507847503) chứa đủ 24 case × E0/E3. Hash 48 binding files, hash records, producer source hashes và totals của selection đã được đối chiếu độc lập khi cập nhật tài liệu này.
+Lượt calibration đã tạo đủ **24 case × 2 điều kiện = 48 records thật**. Khi cập nhật tài liệu, archive, hash của các binding files, hash records, mã nguồn producer và tổng số liệu của selection đã được đối chiếu độc lập.
 
-| Cấu hình | Execution accuracy (EX) | Model calls | Chi phí thực |
+| Cấu hình | Execution accuracy (EX) | Số lượt gọi mô hình | Chi phí thực |
 |---|---:|---:|---:|
 | E0 | 15/24 = 62,5% | 24 | $0.01872625 |
 | E3 | 2/24 = 8,33% | 108 | $0.14963190 |
 
-**Giải thích có bằng chứng:** 21/24 case E3 không có SQL cuối. Mã lỗi gồm 9 `INVALID_LINKED_SCHEMA`, 10 `MODEL_PARSE_ERROR`, 1 `SAFETY_REJECTION`, 1 `SEMANTIC_REJECTION`; chỉ 3 case có category `OK`, trong đó 2 case đạt EX. Lỗi tập trung trước hoặc tại hợp đồng đầu ra, không thể quy toàn bộ điểm thấp cho SQL executor.
+Với bộ này, E0 trả lời đúng nhiều hơn và có chi phí thấp hơn. E3 tốn khoảng tám lần tiền, nhưng **21/24 case không có SQL cuối**. Đầu ra ghi nhận 9 `INVALID_LINKED_SCHEMA`, 10 `MODEL_PARSE_ERROR`, 1 `SAFETY_REJECTION` và 1 `SEMANTIC_REJECTION`. Chỉ 3 case có category `OK`, trong đó 2 case đạt EX. Như vậy, phần lớn lỗi xảy ra trước khi có truy vấn cuối để thực thi, chứ không thể quy toàn bộ điểm thấp cho executor.
 
-Ví dụ `ctu_cross_94d3c478d5858048`: ở bước linker cuối, model nói sẽ chạy `value_search` nhưng trả văn bản thay cho lời gọi hàm/JSON đúng hợp đồng. Bộ điều khiển đã đến bước kết thúc quyền dùng công cụ; bộ phân tích JSON không nhận được đầu ra hợp lệ. Đây là điểm cần kiểm tra phối hợp giữa linker, hợp đồng JSON và bộ điều khiển. Không có response nào mang `finish_reason=length` trong lượt calibration này, nên chưa có bằng chứng rằng tăng giới hạn token đầu ra là cách khắc phục chính.
+Có thể thấy rõ vấn đề ở `ctu_cross_94d3c478d5858048`. Đến bước linker cuối, mô hình nói sẽ chạy `value_search`, nhưng trả văn bản thay cho lời gọi hàm hoặc JSON hợp lệ. Lúc này bộ điều khiển đã yêu cầu kết thúc việc dùng công cụ, nên quá trình không nhận được đầu ra phù hợp để tiếp tục. Cần xem lại sự phối hợp giữa linker, hợp đồng đầu ra và thời điểm bộ điều khiển yêu cầu kết thúc.
 
-**Nói:**
+Không response nào trong lượt này mang `finish_reason=length`. Vì vậy, dữ liệu hiện có chưa cho thấy tăng giới hạn token đầu ra là cách khắc phục chính. Việc cần làm trước là phân loại đúng lỗi và kiểm tra những bước khiến E3 dừng, rồi mới đánh giá thay đổi nào thực sự cải thiện chất lượng.
 
-> Với lượt calibration này, E0 vừa đúng nhiều hơn vừa rẻ hơn. E3 tốn khoảng tám lần tiền nhưng phần lớn case dừng trước khi có SQL cuối. Vì vậy thêm một agent hoặc thêm công cụ chưa tự tạo cải thiện. Cần sửa và đo đúng điểm lỗi của quá trình liên kết schema, không chỉ tăng ngân sách.
+Selection trong archive chọn **E0**, nhưng mốc nghiệm thu calibration vẫn chưa đóng: artifacts chưa được nhập vào đường dẫn chính thức và giới hạn token/lượt gọi thực tế khác kế hoạch cũ. Evaluation còn **0/192 records**, pipeline chính thức còn **0/32 case**. Các demo E3 dưới đây là những lượt lịch sử có producer riêng, không thay cho phép đo pipeline32 bằng E0 đã chọn.
 
-Khóa lựa chọn trong archive chọn **E0**. Tuy nhiên, mốc nghiệm thu calibration **chưa đóng**: artifact chưa được nhập vào đường dẫn chính thức trên master và cấu hình chạy thực tế khác kế hoạch cũ về giới hạn token/lượt gọi. Evaluation vẫn **0/192**, pipeline chính thức **0/32**. Các demo E3 ở phần sau là lượt lịch sử với phiên bản mã nguồn riêng; chúng không thay cho phép đo pipeline32 bằng cấu hình E0 được chọn.
+## 5. Theo một câu hỏi từ đầu đến cuối — 4 phút
 
-Nguồn: [service](../../vinsoc_text2sql/service.py), [DB tools](../../evaluation/r2_cross_domain_v1/tool_schemas.py), [selection verifier](../../evaluation/finalization/query_runtime_validation.py), [receipt trạng thái](../../results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/blocked_receipt.json). Điểm calibration là kết quả của bộ này, không phải điểm tổng quát trên mọi DB hoặc điểm Spider chính thức.
+*Mở Luồng query và chọn COUNT · IP chung.*
 
-## 5. Đi trọn một luồng thật: COUNT — 4 phút
-
-**Mở Luồng query → COUNT · IP chung.** Dùng record trong bộ bốn demo đã lưu, producer `0d81337…`, run [38338493466](https://github.com/Whats-up-pro/VinSOC/actions/runs/38338493466). Record này có **7 calls**, chi phí **$0.00739705**. Không trộn nó với lượt COUNT Live UI mới có 8 calls.
-
-**Câu hỏi gốc:**
+Câu hỏi gốc là:
 
 > Count distinct destination IPs receiving TCP flows after 2011-08-15 17:00:00 in CTU scenario 5 and after 2011-08-16 14:00:00 in scenario 7; use strict time boundaries.
 
-Diễn giải: đếm IP đích khác nhau có TCP flow trong **cả hai scenario**, sau hai mốc thời gian riêng, dùng biên nghiêm ngặt.
+Người dùng muốn đếm số IP đích khác nhau có TCP flow trong cả hai scenario, sau hai mốc thời gian riêng. Từ “after” và yêu cầu “strict time boundaries” có nghĩa SQL phải dùng dấu `>` ở cả hai mốc.
 
-| Điểm dừng trên màn hình | Giải thích khi trình bày |
-|---|---|
-| Câu hỏi và tool call | Model chọn `network_query`; arguments giữ nguyên câu hỏi. Đây là quyết định model thật, không phải script tự gán tên tool |
-| Schema/value trajectory | Model làm việc với `network_flows`, `dst_ip`, `protocol`, `source_dataset`, `event_time`. Scenario được biểu diễn bằng `source_dataset`, khác với nhãn hành vi `label` |
-| SQL | `COUNT(DISTINCT dst_ip)` tránh đếm lặp; hai `EXISTS` nối bằng `AND` giữ phép giao S5/S7; từng nhánh giữ TCP và mốc `>` riêng |
-| Typed result | Worker trả một hàng, một cột `BIGINT`, giá trị **459**, không bị cắt |
-| Evidence và assessment | Kết quả tổng hợp liên kết snapshot, SQL hash, result hash và evidence ID; model nhận định dựa trên dẫn chứng đó |
-| Kiểm chứng và review | EX, nguồn và dữ kiện đạt; người duyệt vẫn pending. Không tự tạo identity, decision, rationale hoặc UTC |
+Trên màn hình đầu tiên, ta thấy mô hình chọn `network_query` và giữ nguyên câu hỏi trong arguments. Công cụ sau đó gọi R2. Ở bước liên kết schema, các trường liên quan gồm `dst_ip`, `protocol`, `source_dataset` và `event_time` trong bảng `network_flows`. Scenario được xác định qua `source_dataset`; trường `label` lại biểu diễn nhãn hành vi của flow.
 
-**Nói khi kết quả 459 hiện ra:**
+Sang phần SQL, truy vấn dùng `COUNT(DISTINCT dst_ip)` để tránh đếm lặp. Hai mệnh đề `EXISTS`, nối bằng `AND`, yêu cầu cùng một IP xuất hiện trong S5 và S7 theo điều kiện riêng của từng scenario. Cả hai nhánh đều giữ TCP và biên thời gian nghiêm ngặt.
 
-> Đây là số IP thỏa điều kiện truy vấn, chưa phải 459 IP độc hại. Phép đo EX kiểm SQL có trả lời đúng câu hỏi hay không; kiểm dữ kiện kiểm nhận định có khớp kết quả hay không. Để kết luận an ninh còn cần CTI, endpoint context và quyết định của người thật.
+Worker chạy truy vấn trên dữ liệu thật và trả về một hàng, một cột `BIGINT`, giá trị **459**, không bị cắt. Kết quả này được lưu cùng snapshot, SQL hash và result hash, rồi chuyển thành dẫn chứng trong `EvidenceStore`. Mô hình dựa vào dẫn chứng đó để viết nhận định.
 
-Record thật chứng minh R2 đã nằm trong public orchestrator: lời gọi `network_query` dẫn tới shared service, worker, EvidenceStore và nhận định. Nó không chỉ là script sinh SQL đứng ngoài hệ thống.
+Ở bước kiểm chứng, EX, nguồn và dữ kiện của record này đều đạt. Tuy nhiên, **459 chỉ là số IP thỏa điều kiện truy vấn**, chưa phải số IP độc hại. Muốn đưa ra kết luận an ninh còn cần CTI, ngữ cảnh endpoint và đánh giá của người phân tích.
 
-Nếu cần chứng minh thao tác từ Live UI, mở execution `liveui-9d9844c08417492a976eb360`: [run 38444497641](https://github.com/Whats-up-pro/VinSOC/actions/runs/38444497641), 8/8 responses, $0.00766320, cũng trả 459. Nói rõ đang xem lại **một execution khác**, không gửi request mới.
+Cuối cùng là bước người duyệt. Hồ sơ vẫn chờ quyết định; form không có danh tính, lý do hay thời gian được điền sẵn. Người duyệt phải tự xem câu hỏi, SQL, kết quả và nhận định trước khi quyết định.
 
-## 6. Ba case còn lại: mạnh/yếu ở đâu — 3 phút
+Ví dụ COUNT cho thấy R2 đã hoạt động bên trong public orchestrator: câu hỏi đi qua lời gọi công cụ, dịch vụ sinh SQL, worker, lưu dẫn chứng và bước nhận định. Hồ sơ cho phép người xem lần ngược từ kết luận về dữ liệu đã dùng.
 
-Bốn ID được chọn trước khi nhìn output. Cả bốn phải được trình bày, kể cả lỗi; đây là bốn ví dụ giải thích hành vi, không dùng 2/4 để suy ra accuracy của toàn hệ thống.
+Record trong bộ bốn demo thuộc run **38338493466**, producer `0d81337…`, có **7 lượt gọi** và chi phí **$0.00739705**. Nếu cần mở lượt COUNT gửi từ Live UI, chọn `liveui-9d9844c08417492a976eb360`: run **38444497641**, **8/8 responses**, **$0.00766320**, cũng trả 459. Đây là hai execution khác nhau; không trộn số liệu hoặc gọi lại mô hình khi mở hồ sơ.
 
-| Case demo | Kết quả quan sát | Vì sao mạnh hoặc yếu; module liên quan |
-|---|---|---|
-| **COUNT** `ctu_cross_708b66575657429a` | 459; EX và kỹ thuật đạt; chờ duyệt | R2 biểu diễn đúng phép giao, DISTINCT và biên thời gian; skill chuyển kết quả tổng hợp thành evidence. Thành công của một câu chưa chứng minh đúng mọi phép tập hợp |
-| **AVG** `ctu_cross_bce6d3679ade4cd6` | Saved run trả `TCP`; EX và kỹ thuật đạt; chờ duyệt | SQL so trung bình từng protocol với trung bình toàn S7. Lượt Live UI sau đó lỗi probe vì biểu thức trong `HAVING` không được group/aggregate: điểm yếu ở SQL model sinh trong bước probe, không phải DB bị thiếu |
-| **NULL** `ctu_cross_3f659571f998adb0` | SQL chạy được nhưng trả 0 hàng; EX false; technical failed | `WHERE` lọc các flow trước `GROUP BY`, làm mất nhóm cần có count 0 theo contract của case. Đây là lỗi ngữ nghĩa SQL; safety gate không chấm được nghĩa câu hỏi. Assessment còn thiếu observations nên bị query policy từ chối |
-| **UDP** `ctu_cross_66b8e92a76c3359b` | Giữ đủ 9.780 hàng, không cắt; EX chưa chấm; incomplete | Rows vượt giới hạn 32 KiB khi đưa sang assessment. Điểm nghẽn nằm ở cách chuyển kết quả qua query policy, không phải chứng cứ SQL sai. Worker có kết quả không có nghĩa bước nhận định xử lý được toàn bộ |
+## 6. Những ví dụ còn lại giúp nhìn rõ giới hạn — 3 phút
 
-**Nói:**
+*Mở lần lượt AVG, NULL và UDP trong Luồng query.*
 
-> NULL cho thấy SQL chạy được vẫn có thể sai nghĩa. UDP cho thấy SQL có thể chạy xong nhưng pipeline vẫn chưa hoàn tất vì kết quả quá lớn. AVG cho thấy một lần thành công không bảo đảm execution khác thành công. Việc lưu lỗi và không bịa assessment là điểm mạnh về kiểm toán; đó không phải bằng chứng model chính xác hơn.
+### AVG và tính ổn định của quá trình sinh SQL
 
-Nguồn: [bốn record và lời giải thích](../../results/evaluation_v1/text2sql_integration_v1/mentor_four_case_demo_20261013/demo_summary.json), [AVG Live UI bị lỗi](https://github.com/Whats-up-pro/VinSOC/actions/runs/38442744166). Bộ đã lưu có 2 case đạt kỹ thuật, 1 incomplete, 1 failed; chưa có human approval.
+AVG hỏi protocol nào ở S7 có trung bình outbound bytes lớn hơn trung bình của toàn scenario. Lượt đã lưu trả **TCP**, đạt EX và hoàn tất kỹ thuật, hiện chờ người duyệt.
 
-## 7. Kết luận và hướng cải tiến — 2 phút
+Tuy nhiên, một lượt Live UI sau đó lại dừng ở SQL probe. Mô hình dùng biểu thức trong `HAVING` mà không group hoặc aggregate phù hợp, nên worker báo lỗi. Lượt này nhận 3 responses, tốn **$0.00139010**, nhưng không có SQL cuối hoặc nhận định hợp lệ.
 
-### Những điểm đã chứng minh và giới hạn
+Hai execution được giữ riêng. Trường hợp này cho thấy hạn chế ở truy vấn do mô hình tạo trong bước probe; nguồn DB vẫn có mặt. Một lần thành công chưa đủ chứng minh quá trình sẽ ổn định ở các lượt khác.
 
-| Điểm | Minh chứng | Kết luận được phép |
-|---|---|---|
-| Chọn công cụ có ích | R1 22/24; multi-tool và no-tool đúng trong các case đã xem | Có kết quả khả quan trên dev; chưa xác nhận khả năng tổng quát trên tập độc lập |
-| Tích hợp R2 vào luồng thật | COUNT/AVG có SQL, typed result, evidence và assessment | Có ví dụ query E2E thật; chưa hoàn tất pipeline32 hoặc cùng lúc đủ ba nguồn SOC |
-| Kiểm toán và cách ly | Request/response IDs, usage/cost; worker được kiểm bằng quan sát kernel; 13 DB đúng checksum | Có cơ chế truy nguồn và giới hạn thực thi; không phải cam kết ngăn mọi kiểu tấn công |
-| Tách các loại đúng/sai | NULL sai EX; UDP incomplete; review pending được giữ | Runtime, EX, dữ kiện và phê duyệt là các tiêu chí khác nhau |
-| Chất lượng R2 chưa ổn định | E3 calibration chỉ 2/24; 21 case không có final SQL | Cần xử lý lỗi đầu ra và controller trước khi tuyên bố E3 cải thiện |
+### NULL và sự khác nhau giữa chạy được với trả lời đúng
 
-### Phát huy và khắc phục theo thứ tự
+Ở case NULL, SQL hợp lệ và thực thi thành công, nhưng trả về **0 hàng**. Điều kiện `WHERE` đã lọc các flow trước `GROUP BY`, làm mất những nhóm protocol cần được giữ với count bằng 0 theo contract của case. Vì vậy EX bằng false.
 
-| Ưu tiên | Việc cần làm | Cách kiểm chứng cải tiến |
-|---|---|---|
-| 1. Hoàn tất phép đo hiện tại | Nhập calibration/selection đúng byte, ghi rõ khác biệt protocol; đủ quyền riêng rồi đo 96 case với cả E0/E3 (192 records), sau đó pipeline32 với E0 đã khóa | Đủ mọi ID, mẫu số không đổi, source/config hash khớp; báo lỗi và chi phí thật |
-| 2. Củng cố R1 | Tách rõ mục đích CTI/network/endpoint; hoàn tất dữ liệu duyệt độc lập và tập kiểm tra chưa dùng | Đo lỗi chọn nguồn, tham số quan trọng, multi-tool/no-tool trên bộ mới; không sửa gold theo prediction |
-| 3. Sửa điểm nghẽn E3 | Tách lỗi parse/schema/value; bảo đảm linker thu đủ bằng chứng giá trị trước khi bộ điều khiển yêu cầu JSON cuối | Giảm số case không có SQL cuối và lỗi hợp đồng, rồi mới đo EX/chi phí; giữ đầu ra lỗi hiện tại để kiểm hồi quy, đo hiệu quả trong đợt mới |
-| 4. Tăng kiểm tra ngữ nghĩa | Kiểm trường hợp nhóm có count 0, NULL, phép giao/hiệu và biên thời gian | Chạy SQL đã lưu và test dữ liệu; không dùng đáp án chuẩn trong runtime. Kiểm an toàn và đúng ngữ nghĩa vẫn tách riêng |
-| 5. Xử lý kết quả lớn | Giữ toàn bộ kết quả trong artifact; đưa phần tổng hợp có thể truy nguồn cùng liên kết tới kết quả đầy đủ vào assessment | Không mất rows; mọi claim kiểm lại được; đo tỷ lệ hoàn tất và payload. Đây là thiết kế đề xuất, chưa có trong demo UDP |
-| 6. Hoàn tất review và mở rộng SOC | Người thật duyệt case hợp lệ; bổ sung CTI/endpoint context khi có nguồn thật | Receipt có identity/decision/rationale/UTC/hash; nghiệm thu từng nguồn, không biến synthetic trace thành dữ liệu sự cố thật |
+Lỗi này thuộc ngữ nghĩa truy vấn. Kiểm tra an toàn có thể chặn thao tác nguy hiểm, nhưng chưa đủ xác định SQL đã diễn đạt đúng câu hỏi. Nhận định của mô hình còn thiếu observations và bị query policy từ chối, nên hồ sơ giữ trạng thái thất bại kỹ thuật.
 
-Các thay đổi model/prompt/công cụ/bộ điều khiển thuộc **đợt cải tiến sau**, có protocol và đánh giá mới. Không sửa runtime sau khi xem kết quả rồi gán điểm cũ cho bản đã sửa; không chạy lại để chọn đầu ra đẹp.
+### UDP và giới hạn khi kết quả lớn
 
-**Lời kết:**
+UDP yêu cầu tìm IP đích có trong S5 nhưng không có trong S7, không lặp. Worker đã trả đủ **9.780 hàng**, không cắt kết quả. Tuy nhiên, dữ liệu gửi sang bước nhận định vượt giới hạn **32 KiB** của query policy, nên pipeline dừng trước call assessment.
 
-> VinSOC đã chứng minh được một đường đi thật từ câu hỏi đến công cụ, SQL, dữ liệu, dẫn chứng và nhận định. Điểm mạnh là tích hợp môđun dùng chung và khả năng kiểm lại từng bước. Điểm yếu hiện tại là độ ổn định của R2 nhiều bước, ngữ nghĩa SQL khó và giới hạn khi kết quả lớn. Bước tiếp theo là hoàn tất phép đo cùng người duyệt, sau đó cải tiến đúng module gây lỗi và đánh giá trên dữ liệu mới.
+Điểm nghẽn ở đây nằm trong cách chuyển kết quả sang bước nhận định. Hồ sơ giữ trạng thái chưa hoàn tất và EX chưa được chấm; chưa có cơ sở kết luận SQL sai. Hướng cần nghiên cứu là giữ kết quả đầy đủ trong artifact, đồng thời cung cấp cho mô hình một phần tổng hợp có thể truy nguồn. Cách này chưa được triển khai trong demo hiện tại.
 
-## Phụ lục: chuẩn bị màn hình và nguồn kiểm chứng
+Bốn ID demo đã được chọn trước khi xem đầu ra. Bộ đã lưu có hai case đạt kỹ thuật, một chưa hoàn tất và một thất bại; chưa có human approval. Chúng giúp giải thích hành vi cụ thể, nhưng không thể dùng tỷ lệ 2/4 để suy ra độ chính xác của toàn hệ thống. Khi một bước lỗi, việc giữ hồ sơ và dừng đúng chỗ giúp người xem biết phần nào đã chạy, phần nào chưa có kết quả.
 
-### A. Chuẩn bị ngắn
+## 7. Kết quả đạt được và hướng phát triển — 2 phút
 
-Đồng bộ master mới nhất, giữ các thay đổi cá nhân; không checkout ngược về producer của một artifact. Khởi động viewer:
+Qua các ví dụ, VinSOC đã có một luồng câu hỏi đi từ lựa chọn công cụ đến SQL, dữ liệu, dẫn chứng và nhận định bằng API cùng database thật. R1 có kết quả khả quan trên bộ dev; R2 đã được đưa vào public orchestrator thông qua dịch vụ dùng chung. Nhật ký request/response, token, thời gian và chi phí giúp kiểm lại từng lượt chạy. Worker cũng đã được kiểm bằng quan sát kernel độc lập, thay vì chỉ tin thông tin do executor tự báo.
+
+Phần cần cải thiện tập trung ở ba điểm: lựa chọn nguồn đôi lúc chưa đúng, E3 thường dừng trước khi có SQL cuối, và kết quả lớn chưa đi hết được bước nhận định. Những lỗi về NULL và nhóm có count bằng 0 còn cho thấy cần kiểm tra ngữ nghĩa truy vấn kỹ hơn. Các cơ chế kiểm chứng hiện tại giúp phát hiện hoặc giữ lại một số lỗi; chúng chưa bảo đảm mọi câu hỏi đều được trả lời đúng.
+
+Trước mắt, cần hoàn tất việc công bố calibration và selection lock, ghi rõ khác biệt protocol, rồi chạy bộ evaluation **96 case với cả E0/E3** và pipeline **32 case với E0 đã chọn** khi đủ điều kiện và quyền ngân sách riêng. Kết quả phải giữ nguyên mẫu số, hồ sơ lỗi và chi phí, đồng thời cần người thật duyệt những case hợp lệ.
+
+Trong đợt cải tiến sau, R1 cần được đo trên bộ kiểm tra chưa dùng để xác định rõ lỗi chọn nguồn và tham số. Với E3, nên tách lỗi parse, schema và giá trị, bảo đảm linker thu đủ bằng chứng trước khi yêu cầu JSON cuối. Hiệu quả của thay đổi phải được đánh giá bằng số case có SQL cuối, EX, thời gian và chi phí; không chỉ bằng việc giảm lỗi định dạng.
+
+Đối với truy vấn khó, cần bổ sung kiểm tra các trường hợp NULL, nhóm rỗng, phép giao/hiệu và biên thời gian. Với kết quả lớn, cần thiết kế cách đưa dữ liệu vào nhận định mà vẫn giữ đủ hàng và cho phép kiểm lại mọi số liệu. Việc mở rộng sang CTI hoặc endpoint phải dựa vào nguồn thật và có nghiệm thu riêng.
+
+Các thay đổi thuật toán, prompt hoặc công cụ phải thuộc một đợt đánh giá mới. Không sửa runtime sau khi xem kết quả rồi gán điểm cũ cho bản đã sửa, cũng không chạy lại để chọn một câu trả lời đẹp hơn.
+
+> Kết quả hiện tại cho thấy VinSOC đã tích hợp được một luồng điều tra có thể kiểm tra lại từ câu hỏi đến nhận định. Bước tiếp theo là hoàn tất phép đo và review, sau đó cải thiện đúng những môđun đang gây lỗi. Em muốn dùng các hồ sơ này để chỉ rõ hệ thống mạnh ở đâu, còn yếu ở đâu và mỗi thay đổi cần được chứng minh như thế nào.
+
+## Phụ lục chuẩn bị demo và đối chiếu nguồn
+
+### Mở giao diện
+
+Đồng bộ master mới nhất và giữ các thay đổi cá nhân. Khởi động giao diện bằng lệnh:
 
 ```powershell
 .\.venv\Scripts\python.exe -m streamlit run scripts/vinsoc_demo_app.py `
   --server.address=127.0.0.1 --server.port=8501
 ```
 
-Mở `http://localhost:8501`. Chuẩn bị **Tổng quan**, **R1 chọn công cụ**, **Luồng query** và bảng bằng chứng. Nếu dùng saved Live UI execution, tải/mở trước giờ demo. Không bấm chạy mới hoặc điền sẵn human review để phục vụ buổi trình bày.
+Mở `http://localhost:8501`, chuẩn bị các trang **Tổng quan**, **R1 chọn công cụ** và **Luồng query**. Nếu trình bày saved Live UI execution, tải và mở trước giờ demo. Không tạo lượt API mới hoặc chuẩn bị sẵn một quyết định approved cho buổi trình bày.
 
-Hướng dẫn cài đặt, sức khỏe UI và vận hành chi tiết: [Mentor Demo Interface](VinSOC_Mentor_Demo_Interface_2026-10-13.md), [Live Interface](VinSOC_Live_Interface_2026-10-14.md).
+### Các ID và hồ sơ dùng trong demo
 
-### B. Cue card
+- COUNT: `ctu_cross_708b66575657429a`.
+- AVG: `ctu_cross_bce6d3679ade4cd6`.
+- NULL: `ctu_cross_3f659571f998adb0`.
+- UDP: `ctu_cross_66b8e92a76c3359b`.
+- [Bốn ID đã khóa](../../results/evaluation_v1/text2sql_integration_v1/demo_selection.json) và [bộ demo đã lưu](../../results/evaluation_v1/text2sql_integration_v1/mentor_four_case_demo_20261013/demo_summary.json).
+- [COUNT của bộ demo](https://github.com/Whats-up-pro/VinSOC/actions/runs/38338493466), [COUNT Live UI](https://github.com/Whats-up-pro/VinSOC/actions/runs/38444497641) và [AVG Live UI bị lỗi](https://github.com/Whats-up-pro/VinSOC/actions/runs/38442744166).
 
-1. Bài toán: chọn nguồn → lấy dữ liệu → kết luận có dẫn chứng.
-2. Kiến trúc: public orchestrator, hai profile, R2 dùng chung, worker và EvidenceStore.
-3. R1: một tool, nhiều tool, no-tool, sai chọn nguồn; 22/24 dev và giới hạn.
-4. R2: E0 trực tiếp; E3 linker/tools/generator; 15/24 so với 2/24 calibration.
-5. COUNT: đúng câu hỏi → native call → SQL → 459 → evidence → assessment → pending review.
-6. AVG/NULL/UDP: lỗi probe, sai ngữ nghĩa, payload lớn; chỉ đúng môđun gây lỗi.
-7. Kết: điều đã chứng minh, phần chưa đạt, cải tiến và cách đo lại trên series mới.
+### Mã nguồn và bằng chứng thực nghiệm
 
-### C. Hồ sơ nguồn và trạng thái tại mốc đọc
+- Kiến trúc: [orchestrator](../../agent/orchestrator.py), [schema R1](../../agent/tools.py), [query policy](../../agent/network_query_policy.py), [query skill](../../skills/network_query_skill.py), [dịch vụ R2](../../vinsoc_text2sql/service.py), [DB tools](../../evaluation/r2_cross_domain_v1/tool_schemas.py).
+- R1: [winner lock cùng giới hạn phép đo](../../evaluation/tool_calling/winner_lock.json) và [24 kết quả](../../results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json).
+- [Calibration run 38507847503](https://github.com/Whats-up-pro/VinSOC/actions/runs/38507847503) và [artifact 11868639648](https://github.com/Whats-up-pro/VinSOC/actions/runs/38507847503/artifacts/11868639648). Archive SHA-256: `9bef410dd8c68a566f62c62b7195118a9dff8e587f9740ac673a9a6c1f15adcd`; selection hash: `1a3dad0ca074aeae1581d178110861d8c2a608e22c8be4ab348855fb9e8dcc94`.
+- [Selection verifier](../../evaluation/finalization/query_runtime_validation.py), [receipt trước công bố](../../results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/blocked_receipt.json), [checkpoint audit](../../results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/telemetry_audit.json) và [quan sát worker độc lập](../../results/evaluation_v1/text2sql_integration_v1/offline_release_20261011/).
+- Calibration nhận 132 responses; 310.479 input, 58.502 output và 116.736 cached tokens. Chi phí lượt này $0.16835815; tổng known cost đã ghi nhận $0.25897065. Các con số này không phải số dư tài khoản hoặc quyền chi tiếp.
+- Mốc mã và hồ sơ đã đối chiếu: `32a0f4bbe12e7bf1d8bea05fffca3548b2b818c8`. [CI 38513077523](https://github.com/Whats-up-pro/VinSOC/actions/runs/38513077523) đạt trên Python 3.11/3.12: mỗi phiên bản có 1.433 passed/7 skipped trong full suite; required guards 137 passed/0 skipped; real-data 13 passed/0 skipped.
+- 13 DB gốc đúng checksum và 120 gold SQL replay đã đạt. Replay kiểm dữ liệu/executor, không phải 120 câu trả lời do model sinh. Calibration có 48 records trong archive nhưng chưa đóng mốc nghiệm thu; evaluation 0/192, pipeline chính thức 0/32 và human approval của bốn demo bằng 0.
+- [Báo cáo Live UI](VinSOC_Live_UI_Acceptance_2026-10-14.md) là hồ sơ lịch sử trước calibration; các số `0/48` trong đó không phản ánh tiến độ mới nhất. Trace SOC dùng dữ liệu synthetic không được dùng làm ví dụ nghiệm thu dữ liệu thật trong kịch bản này.
 
-- Mốc mã/receipts đã đọc: `master@22c9e984d11bbb9a0ac83f004d44f8d2e636b418`. Producer của từng record được giữ riêng.
-- [CI 38510854118](https://github.com/Whats-up-pro/VinSOC/actions/runs/38510854118): mỗi Python 3.11/3.12 có 1.433 passed/7 skipped ở full suite; required guards 137 passed/0 skipped; real-data 13 passed/0 skipped. CI xanh không thay nghiệm thu model.
-- [R1 winner lock](../../evaluation/tool_calling/winner_lock.json) và [artifact R1](../../results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json).
-- [Bốn demo IDs đã khóa](../../results/evaluation_v1/text2sql_integration_v1/demo_selection.json), [bộ demo thật](../../results/evaluation_v1/text2sql_integration_v1/mentor_four_case_demo_20261013/), [kernel observation](../../results/evaluation_v1/text2sql_integration_v1/offline_release_20261011/).
-- [Nghiệm thu Live UI](VinSOC_Live_UI_Acceptance_2026-10-14.md): báo cáo lịch sử trước calibration; các số `0/48` và allocation trong tài liệu đó không phải trạng thái mới nhất.
-- [Calibration artifact 11868639648](https://github.com/Whats-up-pro/VinSOC/actions/runs/38507847503/artifacts/11868639648), archive SHA-256 `9bef410dd8c68a566f62c62b7195118a9dff8e587f9740ac673a9a6c1f15adcd`; selection hash `1a3dad0ca074aeae1581d178110861d8c2a608e22c8be4ab348855fb9e8dcc94`.
-- [Checkpoint audit](../../results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/telemetry_audit.json): calibration 132 responses, 310.479 input/58.502 output/116.736 cached tokens; chi phí $0.16835815, cumulative known $0.25897065. Đây là chi phí đã ghi nhận, không phải số dư provider hay quyền chi tiếp.
-- 13 DB gốc và 120 gold SQL replay đã đạt. Replay kiểm dữ liệu/executor, không tạo 120 model predictions. Calibration có 48 records trong archive nhưng chưa đóng milestone; evaluation 0/192, formal pipeline 0/32, human approval của bốn demo bằng 0.
-- Trace SOC dùng dữ liệu synthetic không nằm trong phần minh họa nghiệm thu dữ liệu thật của kịch bản này.
+Hướng dẫn vận hành chi tiết nằm trong [Mentor Demo Interface](VinSOC_Mentor_Demo_Interface_2026-10-13.md) và [Live Interface](VinSOC_Live_Interface_2026-10-14.md).
