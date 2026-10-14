@@ -1,7 +1,9 @@
 # Kịch bản trình bày VinSOC cho mentor
 
-Ngày chuẩn bị: 14/10/2026  
-Thời lượng chuẩn: 20 phút trình bày + 5–10 phút hỏi đáp  
+Ngày chuẩn bị: 14/10/2026
+
+Thời lượng chuẩn: 20 phút trình bày + 5–10 phút hỏi đáp
+
 Phiên bản hệ thống đã nghiệm thu trước tài liệu này:
 `e8b792006ae6ee04f1696a38f4d51d5d885b68e1`
 
@@ -612,4 +614,3 @@ Nếu cần một bản cực ngắn để đặt cạnh màn hình, dùng thứ
   `results/evaluation_v1/text2sql_integration_v1/mentor_four_case_demo_20261013/`.
 - Selection cố định:
   `results/evaluation_v1/text2sql_integration_v1/demo_selection.json`.
-
