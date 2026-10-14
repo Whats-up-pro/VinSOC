@@ -1,0 +1,40 @@
+{
+  "status": "blocked_before_provider_creation",
+  "source_sha": "c6077a149f08744ce7a8f6bebe4264543dbc7c65",
+  "user_authorization": "User instructed run on 2026-10-14 Asia/Saigon",
+  "review_gate": {
+    "format": "r1_generalization_review_gate_v1",
+    "passed": true,
+    "status": "approved",
+    "reviewed_a": 120,
+    "reviewed_b": 120,
+    "disagreement_case_ids": [],
+    "blocked_case_ids": [],
+    "errors": [],
+    "provider_created": false
+  },
+  "lock_verification": {
+    "passed": true,
+    "errors": [],
+    "case_count": 120,
+    "distribution": {
+      "no_tool": 24,
+      "single_tool": 54,
+      "two_tool": 30,
+      "three_tool": 12
+    },
+    "lock_sha256": "1df9b83ae801d137439c0c0706a9573763f130349d0560cb8fb774ef4cc4bf6e"
+  },
+  "blockers": [
+    "GENERALIZATION_PREFLIGHT_RUN_GATE_NOT_IMPLEMENTED",
+    "GUARDED_ONE_SHOT_WORKFLOW_MISSING",
+    "GENERALIZATION_STATISTICAL_REPORTING_NOT_IMPLEMENTED",
+    "NO_LOCAL_OPENAI_API_KEY_OR_AUTHENTICATED_GH_DISPATCH_CAPABILITY"
+  ],
+  "preflight_command_exit": 2,
+  "preflight_error": "invalid choice: preflight (choose from benchmarks, list, run)",
+  "provider_created": false,
+  "model_calls": 0,
+  "cost_usd": 0,
+  "next_tasks": "Existing approved plan Tasks 6, 7, 8 before paid Task 9; do not bypass via legacy run --split"
+}

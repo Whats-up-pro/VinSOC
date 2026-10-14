@@ -1,0 +1,1640 @@
+[
+  {
+    "case_id": "ctu_cross_0d22a790584f0155",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": "SELECT source_dataset AS dataset,\n       MIN(event_time) AS min_event_time,\n       MAX(event_time) AS max_event_time\nFROM network_flows\nGROUP BY source_dataset\nORDER BY source_dataset;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_0d22a790584f0155",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "895317555862547c507a8ff6a3880a07373ecc95063f574c9bba322fd3a0da52",
+      "predicted_result_sha256": "ae276157243350ad9c49b2ceb88ab6aba9b5bfa05436dffd981de00b5ee2d30e"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_12d2dfbda309cf7a",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": "SELECT nf.label, COUNT(*) AS count\nFROM network_flows nf\nJOIN dataset_provenance dp ON nf.source_dataset = dp.dataset_id\nWHERE dp.source_name ILIKE '%CTU%' AND dp.dataset_id ILIKE '%5%'\nGROUP BY nf.label\nORDER BY count DESC, nf.label ASC\nLIMIT 4;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_12d2dfbda309cf7a",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "86814cfe91c08c9caf53f294020acaa4f305f3b719beca435a90670bdbc3e47a",
+      "predicted_result_sha256": "a883f2d54e10871298ca3f24a402f1c9058634978d5a50c9e10a3bb0d3117ed8"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_5c5ade01fccce004",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": null,
+    "error_category": "SAFETY_REJECTION",
+    "score": {
+      "case_id": "ctu_cross_5c5ade01fccce004",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_94d3c478d5858048",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": "SELECT dp.dataset_id AS dataset,\n       CASE WHEN nf.cnt IS NULL THEN NULL ELSE CAST(nf.n_zero AS DOUBLE) / nf.cnt END AS fraction_zero_outbound\nFROM dataset_provenance dp\nLEFT JOIN (\n  SELECT source_dataset,\n         COUNT(*) AS cnt,\n         SUM(CASE WHEN bytes_out = 0 THEN 1 ELSE 0 END) AS n_zero\n  FROM network_flows\n  GROUP BY source_dataset\n) nf ON dp.dataset_id = nf.source_dataset\nORDER BY dataset;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_94d3c478d5858048",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "971e04671f7bd8086d3868273e1836b99aa5a7a86e661a9a770f77accbd51118",
+      "predicted_result_sha256": "bc3f4462a7a3bbe9280371c5e4886edeb95961c060559af16fb21252420e714c"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": "SELECT dp.dataset_id AS dataset, COALESCE(SUM(CASE WHEN nf.src_port IS NULL AND nf.label LIKE 'flow=From-Normal%' THEN 1 ELSE 0 END), 0) AS count_missing_src_port_flow_from_normal FROM dataset_provenance dp LEFT JOIN network_flows nf ON dp.dataset_id = nf.source_dataset GROUP BY dp.dataset_id ORDER BY dp.dataset_id;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "bf9421a94ea940eea1091c97fe39f539c6622e059f7567245b622c823ab13c05",
+      "predicted_result_sha256": "e75046d9aa0ce7d041035a0f4dc411b8fc1cdd0443676d34e8a7450e5e301b48"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_dda372911befb17e",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": "SELECT COUNT(*) AS distinct_pair_count\nFROM (\n  SELECT DISTINCT src_ip, dst_ip\n  FROM network_flows\n  WHERE source_dataset = 'ctu-7'\n) t;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_dda372911befb17e",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "5692aaf2f34870a3dca75d70f7f7d41a3cc20ddc0e60b5dfafeb56decfbc99b5",
+      "predicted_result_sha256": "f5e150ce9c71ed12b2540a82f740b5510bd981cdd95ed1f4a4d173fe7d3cd094"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_e36ee009626c71c2",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": "SELECT\n  nf.protocol,\n  SUM(COALESCE(nf.bytes_out, 0) + COALESCE(nf.bytes_in, 0)) AS total_bytes\nFROM network_flows nf\nJOIN dataset_provenance dp\n  ON nf.source_dataset = dp.dataset_id\nWHERE (\n  LOWER(dp.dataset_id) LIKE '%scenario%5%'\n  OR LOWER(dp.dataset_id) LIKE '%scenario5%'\n  OR (LOWER(dp.source_name) LIKE '%ctu%' AND dp.source_name LIKE '%5%')\n)\nGROUP BY nf.protocol\nORDER BY nf.protocol;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_e36ee009626c71c2",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "5ef979cd5a8229cf7fe844217021219795e34cb0222516b608a14e0d0c6a8930",
+      "predicted_result_sha256": "8e4001854ff71cbfe894d8bc8c6d94421b483d7c597a94e7e487b717df4f41f7"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_feab49e4a48ff3aa",
+    "database_id": "ctu_dev",
+    "condition": "E0",
+    "final_sql": null,
+    "error_category": "SEMANTIC_REJECTION",
+    "score": {
+      "case_id": "ctu_cross_feab49e4a48ff3aa",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E0",
+    "final_sql": "SELECT Template_ID\nFROM Documents\nWHERE Template_ID IS NOT NULL\nGROUP BY Template_ID\nHAVING COUNT(DISTINCT Document_ID) > 1;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "3a824bacbf4d2313f2331a126017f122be219064b7ca1d9c9066abe5e2e585ac",
+      "predicted_result_sha256": "1f081ee55bdbefdf1c729654db9c64f81e38fd3721b624945a8b06bebf7698d3"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E0",
+    "final_sql": "SELECT Template_Type_Description\nFROM Ref_Template_Types\nWHERE Template_Type_Code = 'AD';",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "527b747f5f38ae63977f5c643f75fc2f085fa860ad7dd37047abe214fb4a8ded",
+      "predicted_result_sha256": "527b747f5f38ae63977f5c643f75fc2f085fa860ad7dd37047abe214fb4a8ded"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E0",
+    "final_sql": "SELECT Template_Type_Code, Template_Type_Description\nFROM Ref_Template_Types\nORDER BY Template_Type_Code;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "84370fc505c2378f75923763bb7eb7c0620276acb78ee4a3047b3cc54e7a60cf",
+      "predicted_result_sha256": "e8bed1b0ccb9e4383270abe24c51ae524b2d17a1ac33b259285e2ddbbf85658b"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E0",
+    "final_sql": "SELECT r.Template_Type_Code\nFROM Ref_Template_Types r\nLEFT JOIN Templates t ON t.Template_Type_Code = r.Template_Type_Code\nGROUP BY r.Template_Type_Code\nHAVING COUNT(t.Template_ID) < 3;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "9d223e87f443603a219d796964d8f9847fc5f32104eee931d795df6f8094dba8",
+      "predicted_result_sha256": "9d223e87f443603a219d796964d8f9847fc5f32104eee931d795df6f8094dba8"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E0",
+    "final_sql": "SELECT MAX(transcript_date) AS last_transcript_released FROM Transcripts;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "fbbf4cf721d13a0b0f6debed20d45f1b71dc9b2db1860a189956881d0811ce40",
+      "predicted_result_sha256": "13e31b8a654386947455eb67e8c662b40a9728b2b1572a130367de4bf1138e07"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E0",
+    "final_sql": "SELECT COUNT(*) AS total_courses FROM \"Courses\";",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "9a890e809212cc05fdae4f9e86722092a532639d622907e6b0bd64c4ec0fce4b",
+      "predicted_result_sha256": "057e2b6b986ba68fa74091a1f04fc10dc1c89ba63e0543d69ee3a36be9b5f6d0"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E0",
+    "final_sql": "SELECT section_description FROM Sections WHERE section_name = 'h';",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "1ceac27c22ed7066f73dec1c580753a8d63b5929680e53d405b22bf01b0dbc87",
+      "predicted_result_sha256": "1ceac27c22ed7066f73dec1c580753a8d63b5929680e53d405b22bf01b0dbc87"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E0",
+    "final_sql": "SELECT DISTINCT s.student_id AS id, s.first_name, s.middle_name, s.last_name\nFROM Students s\nJOIN (\n  SELECT student_id, semester_id\n  FROM Student_Enrolment\n  GROUP BY student_id, semester_id\n  HAVING COUNT(DISTINCT degree_program_id) = 2\n) se ON s.student_id = se.student_id;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "719c197aab551657a209aef9949310577dacdd05eb7e93fa7730ebba003a28b2",
+      "predicted_result_sha256": "d12b96af5df770b2002868d47f6436304615640ed18ba4635ddef4a1aa1dba39"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_voter_1_22bc102c818388de",
+    "database_id": "voter_1",
+    "condition": "E0",
+    "final_sql": "SELECT v.created AS create_date, v.state, v.phone_number\nFROM VOTES v\nJOIN CONTESTANTS c ON v.contestant_number = c.contestant_number\nWHERE c.contestant_name = 'Tabatha Gehling';",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_voter_1_22bc102c818388de",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "4b5c91d2d5f9f3725f5dd446cd8e6d16bff57cf15fde89950a18d5b88843de47",
+      "predicted_result_sha256": "59a01ad80db547a2b348e606d8b4e05c426e5078da1da2815128bb5ef001137b"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_voter_1_4426d844af6ad576",
+    "database_id": "voter_1",
+    "condition": "E0",
+    "final_sql": "SELECT MAX(created) AS last_created FROM VOTES WHERE state = 'CA';",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "1affdea6c138af50b9a233f3f4ac5393f11bbb94f72b39cf9d26991bd05d45a6",
+      "predicted_result_sha256": "0570dc59a03a37bc317d7b70cd9773c56747f35bd7cae13438c2ec938eb0d400"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_voter_1_958013b9b7385ffa",
+    "database_id": "voter_1",
+    "condition": "E0",
+    "final_sql": "SELECT MAX(area_code) AS max_area_code, MIN(area_code) AS min_area_code FROM AREA_CODE_STATE;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "9c90f95853cdec6bdc2b4974963141cf5d1b3f1f4213201822b5705706e2c48e",
+      "predicted_result_sha256": "b7a2f9dc0ca6569c95c86a7075888367eb82b29d9e8224830e827c190bc7490b"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_voter_1_f220617d91c88779",
+    "database_id": "voter_1",
+    "condition": "E0",
+    "final_sql": "SELECT COUNT(DISTINCT state) AS num_states FROM AREA_CODE_STATE;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "fe28fcdee3ca351d24c0d3536491851015742451826d559b94fa41610327d874",
+      "predicted_result_sha256": "44a830f572f05e0cdfc0f9eb6da51e6763e826d306b4cb9063127c7c4ea3033f"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_world_1_118fd339fffc525f",
+    "database_id": "world_1",
+    "condition": "E0",
+    "final_sql": "SELECT Name, SurfaceArea\nFROM country\nWHERE SurfaceArea > (\n  SELECT MAX(SurfaceArea) FROM country WHERE Continent = 'Europe'\n)\nORDER BY SurfaceArea DESC;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "5c4dcf748ee8d979714edfcedeca4da3d5ebfb63a540d1a9d0ff25be04bc2ac0",
+      "predicted_result_sha256": "070af1af5735875a04da75400adbc973e87500f44f2bf1362926e1ea4c4e6a3d"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_world_1_329e92f0874dea47",
+    "database_id": "world_1",
+    "condition": "E0",
+    "final_sql": "SELECT AVG(LifeExpectancy) AS avg_life_expectancy FROM country WHERE Continent = 'Africa' AND GovernmentForm LIKE '%Republic%';",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_world_1_329e92f0874dea47",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "f01cdf6d64e018f208dc22ba52e331f72ce0d7ddc7c9291e50c40eeb67d78b82",
+      "predicted_result_sha256": "11ffae933cf628b02eb9bd45e2fbd08206c71b7717c1efe260531b0db6ec61e3"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_world_1_c16f04754e67aa3c",
+    "database_id": "world_1",
+    "condition": "E0",
+    "final_sql": "SELECT DISTINCT c.Name AS Country, cl.Language AS OfficialLanguage\nFROM country AS c\nJOIN countrylanguage AS cl\n  ON c.Code = cl.CountryCode\nWHERE cl.IsOfficial = 'T'\n  AND cl.Language IN ('English', 'Dutch');",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "4468c8b08c6e693c86b715c3cd0bb92a3936ba38c489bc599852c9a258e76b8b",
+      "predicted_result_sha256": "e6b0629348f8aba287caa8715c418bc462d1b0734f17c142ec965bea72229ef3"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_world_1_c87de933bb535d25",
+    "database_id": "world_1",
+    "condition": "E0",
+    "final_sql": "SELECT Continent,\n       AVG(LifeExpectancy) AS avg_life_expectancy,\n       SUM(Population) AS total_population\nFROM country\nWHERE LifeExpectancy IS NOT NULL\nGROUP BY Continent\nHAVING AVG(LifeExpectancy) < 72;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "986ac0020d1cf58fa11914211a658b88a79864b1da522e8ffc886f4223da4123",
+      "predicted_result_sha256": "a228278db39d44cb6b26d29f746e0524f3439fe3a3686e800b48952015b90f76"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "ctu_cross_0d22a790584f0155",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "ctu_cross_0d22a790584f0155",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "ctu_cross_12d2dfbda309cf7a",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "ctu_cross_12d2dfbda309cf7a",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "ctu_cross_5c5ade01fccce004",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": "SELECT\n  source_dataset,\n  CAST(EXTRACT(EPOCH FROM (MAX(event_time) - MIN(event_time))) AS BIGINT) AS event_time_span_seconds\nFROM network_flows\nWHERE event_time IS NOT NULL\nGROUP BY source_dataset\nORDER BY source_dataset;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_5c5ade01fccce004",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "91ab371f79d26158d8917e98db3424e6202c6f3d23b40149ccf1aa36ab5fa34b",
+      "predicted_result_sha256": "687d966870d49420586f59b9523a67182bf0002c0e9d413e0d2bd081b30ff9bb"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": 0,
+      "schema_linker": {
+        "tables": {
+          "correct": 1,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        },
+        "columns": {
+          "correct": 2,
+          "predicted": 4,
+          "required": 2,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        },
+        "relationships": {
+          "correct": 0,
+          "predicted": 0,
+          "required": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "case_success": false,
+        "valid_relationship_path": true
+      },
+      "value_grounding": {
+        "predicates": {
+          "correct": 0,
+          "predicted": 2,
+          "required": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "case_success": false,
+        "witness_precision": {
+          "correct": 2,
+          "total": 2,
+          "precision": 1.0
+        },
+        "provenance_status": "VERIFIED_CONTEXT",
+        "unsupported_literal_rate": {
+          "unsupported": 0,
+          "total": 2,
+          "rate": 0.0
+        }
+      }
+    },
+    "attempted_calls": 6,
+    "response_count": 6
+  },
+  {
+    "case_id": "ctu_cross_94d3c478d5858048",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "ctu_cross_94d3c478d5858048",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "ctu_cross_dda372911befb17e",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": "SELECT COUNT(DISTINCT (src_ip, dst_ip)) AS distinct_src_dst_pairs\nFROM network_flows\nWHERE source_dataset = 'ctu13_s7'",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_dda372911befb17e",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "5692aaf2f34870a3dca75d70f7f7d41a3cc20ddc0e60b5dfafeb56decfbc99b5",
+      "predicted_result_sha256": "a9c3eee73f54a4e9b6462934f3083548ddda19ea3627abe0f219fc52d7d2daca"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": 0,
+      "schema_linker": {
+        "tables": {
+          "correct": 1,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        },
+        "columns": {
+          "correct": 3,
+          "predicted": 4,
+          "required": 3,
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.8571428571428571
+        },
+        "relationships": {
+          "correct": 0,
+          "predicted": 0,
+          "required": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "case_success": false,
+        "valid_relationship_path": true
+      },
+      "value_grounding": {
+        "predicates": {
+          "correct": 0,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "case_success": false,
+        "witness_precision": {
+          "correct": 2,
+          "total": 2,
+          "precision": 1.0
+        },
+        "provenance_status": "VERIFIED_CONTEXT",
+        "unsupported_literal_rate": {
+          "unsupported": 0,
+          "total": 2,
+          "rate": 0.0
+        }
+      }
+    },
+    "attempted_calls": 6,
+    "response_count": 6
+  },
+  {
+    "case_id": "ctu_cross_e36ee009626c71c2",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": "SELECT protocol,\n       SUM(COALESCE(bytes_out, 0) + COALESCE(bytes_in, 0)) AS total_bytes\nFROM network_flows\nWHERE source_dataset = 'ctu13_s5'\nGROUP BY protocol\nORDER BY protocol;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_e36ee009626c71c2",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "5ef979cd5a8229cf7fe844217021219795e34cb0222516b608a14e0d0c6a8930",
+      "predicted_result_sha256": "8e4001854ff71cbfe894d8bc8c6d94421b483d7c597a94e7e487b717df4f41f7"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": 0,
+      "schema_linker": {
+        "tables": {
+          "correct": 1,
+          "predicted": 1,
+          "required": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "columns": {
+          "correct": 4,
+          "predicted": 4,
+          "required": 4,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "relationships": {
+          "correct": 0,
+          "predicted": 0,
+          "required": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "case_success": true,
+        "valid_relationship_path": true
+      },
+      "value_grounding": {
+        "predicates": {
+          "correct": 0,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "case_success": false,
+        "witness_precision": {
+          "correct": 1,
+          "total": 1,
+          "precision": 1.0
+        },
+        "provenance_status": "VERIFIED_CONTEXT",
+        "unsupported_literal_rate": {
+          "unsupported": 0,
+          "total": 1,
+          "rate": 0.0
+        }
+      }
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "ctu_cross_feab49e4a48ff3aa",
+    "database_id": "ctu_dev",
+    "condition": "E3",
+    "final_sql": "SELECT COUNT(*) AS missing_dst_port_count\nFROM network_flows\nWHERE source_dataset = 'ctu13_s7' AND dst_port IS NULL;",
+    "error_category": "OK",
+    "score": {
+      "case_id": "ctu_cross_feab49e4a48ff3aa",
+      "execution_accurate": false,
+      "execution_success": true,
+      "scoring_error_category": "RESULT_MISMATCH",
+      "gold_result_sha256": "438faf43bfc1ac29dd54f07b28f4f645422ad3c1c7df76396b0600a155352aef",
+      "predicted_result_sha256": "27d10d6a0b38df04dedc19354ebad3cccb83a9afe858e33156e9b001cc122ce0"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": 0,
+      "schema_linker": {
+        "tables": {
+          "correct": 1,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        },
+        "columns": {
+          "correct": 3,
+          "predicted": 4,
+          "required": 3,
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.8571428571428571
+        },
+        "relationships": {
+          "correct": 0,
+          "predicted": 0,
+          "required": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "case_success": false,
+        "valid_relationship_path": true
+      },
+      "value_grounding": {
+        "predicates": {
+          "correct": 1,
+          "predicted": 3,
+          "required": 2,
+          "precision": 0.3333333333333333,
+          "recall": 0.5,
+          "f1": 0.4
+        },
+        "case_success": false,
+        "witness_precision": {
+          "correct": 2,
+          "total": 2,
+          "precision": 1.0
+        },
+        "provenance_status": "VERIFIED_CONTEXT",
+        "unsupported_literal_rate": {
+          "unsupported": 0,
+          "total": 2,
+          "rate": 0.0
+        }
+      }
+    },
+    "attempted_calls": 6,
+    "response_count": 6
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+    "database_id": "cre_Doc_Template_Mgt",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E3",
+    "final_sql": "SELECT section_description FROM Sections WHERE section_name = 'h';",
+    "error_category": "OK",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+      "execution_accurate": true,
+      "execution_success": true,
+      "scoring_error_category": "OK",
+      "gold_result_sha256": "1ceac27c22ed7066f73dec1c580753a8d63b5929680e53d405b22bf01b0dbc87",
+      "predicted_result_sha256": "1ceac27c22ed7066f73dec1c580753a8d63b5929680e53d405b22bf01b0dbc87"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": 0,
+      "schema_linker": {
+        "tables": {
+          "correct": 1,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        },
+        "columns": {
+          "correct": 2,
+          "predicted": 6,
+          "required": 2,
+          "precision": 0.3333333333333333,
+          "recall": 1.0,
+          "f1": 0.5
+        },
+        "relationships": {
+          "correct": 0,
+          "predicted": 1,
+          "required": 0,
+          "precision": 0.0,
+          "recall": null,
+          "f1": 0.0
+        },
+        "case_success": false,
+        "valid_relationship_path": true
+      },
+      "value_grounding": {
+        "predicates": {
+          "correct": 0,
+          "predicted": 2,
+          "required": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "case_success": false,
+        "witness_precision": {
+          "correct": 2,
+          "total": 2,
+          "precision": 1.0
+        },
+        "provenance_status": "VERIFIED_CONTEXT",
+        "unsupported_literal_rate": {
+          "unsupported": 0,
+          "total": 2,
+          "rate": 0.0
+        }
+      }
+    },
+    "attempted_calls": 6,
+    "response_count": 6
+  },
+  {
+    "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+    "database_id": "student_transcripts_tracking",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "TOOL_FAILURE",
+    "score": {
+      "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 1,
+    "response_count": 1
+  },
+  {
+    "case_id": "external_voter_1_22bc102c818388de",
+    "database_id": "voter_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "external_voter_1_22bc102c818388de",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_voter_1_4426d844af6ad576",
+    "database_id": "voter_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_voter_1_4426d844af6ad576",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_voter_1_958013b9b7385ffa",
+    "database_id": "voter_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_voter_1_958013b9b7385ffa",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_voter_1_f220617d91c88779",
+    "database_id": "voter_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "external_voter_1_f220617d91c88779",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_world_1_118fd339fffc525f",
+    "database_id": "world_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "INVALID_LINKED_SCHEMA",
+    "score": {
+      "case_id": "external_world_1_118fd339fffc525f",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_world_1_329e92f0874dea47",
+    "database_id": "world_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_world_1_329e92f0874dea47",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_world_1_c16f04754e67aa3c",
+    "database_id": "world_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_world_1_c16f04754e67aa3c",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  },
+  {
+    "case_id": "external_world_1_c87de933bb535d25",
+    "database_id": "world_1",
+    "condition": "E3",
+    "final_sql": null,
+    "error_category": "MODEL_PARSE_ERROR",
+    "score": {
+      "case_id": "external_world_1_c87de933bb535d25",
+      "execution_accurate": false,
+      "execution_success": false,
+      "scoring_error_category": "NO_FINAL_SQL"
+    },
+    "modules": {
+      "policy": {
+        "version": "module_metrics_v2",
+        "empty_set": "NA_rates_exact_set_success",
+        "alternative": "max_joint_item_f1_stable_first",
+        "coverage": "stage_present_over_all_cases",
+        "numeric_constraints_are_stored_values": false,
+        "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+      },
+      "selected_alternative": null,
+      "schema_linker": null,
+      "value_grounding": null
+    },
+    "attempted_calls": 5,
+    "response_count": 5
+  }
+]

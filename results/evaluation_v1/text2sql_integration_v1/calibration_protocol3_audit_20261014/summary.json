@@ -1,0 +1,323 @@
+{
+  "scope": "calibration",
+  "source_run_id": 38532017308,
+  "producer_sha": "c6077a149f08744ce7a8f6bebe4264543dbc7c65",
+  "artifact_id": 11879481406,
+  "archive_sha256": "f881f318f2166e35ce9259ac0c712056f3869e3c89f117058633d1e9f114709a",
+  "records": 48,
+  "unique_questions": 24,
+  "evaluation_records": 0,
+  "evaluation_status": "NOT_RUN_IN_THIS_ARTIFACT",
+  "attempted": 144,
+  "received": 144,
+  "current_run_cost_usd": "0.17346330000000000006",
+  "metrics": {
+    "E0": {
+      "coverage": {
+        "received": 24,
+        "planned": 24,
+        "missing_case_ids": []
+      },
+      "module_metrics": {
+        "schema_linker": {
+          "coverage": {
+            "available": 0,
+            "total": 24
+          },
+          "case_success": {
+            "correct": 0,
+            "total": 0
+          },
+          "tables": {
+            "correct": 0,
+            "predicted": 0,
+            "required": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "columns": {
+            "correct": 0,
+            "predicted": 0,
+            "required": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "relationships": {
+            "correct": 0,
+            "predicted": 0,
+            "required": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "value_grounding": {
+          "coverage": {
+            "available": 0,
+            "total": 24
+          },
+          "case_success": {
+            "correct": 0,
+            "total": 0
+          },
+          "predicates": {
+            "correct": 0,
+            "predicted": 0,
+            "required": 0,
+            "precision": null,
+            "recall": null,
+            "f1": null,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      },
+      "primary_errors": {
+        "OK": 15,
+        "NO_FINAL_SQL": 2,
+        "SEMANTIC_MISMATCH": 7
+      },
+      "attribution_policy": "observable_failure_order_not_causal_diagnosis",
+      "cost": {
+        "known_usd": 0.01428825,
+        "complete": true,
+        "total_usd": 0.01428825
+      },
+      "requests": {
+        "attempted": 24,
+        "received": 24,
+        "valid_usage": 24,
+        "input_tokens": 36185,
+        "output_tokens": 5069
+      },
+      "safety_false_rejection_rate": {
+        "correct": 0,
+        "total": 0,
+        "rate": null
+      },
+      "tool_safety": {
+        "sql_attempts": 0,
+        "rejected_attempts": 0,
+        "cases_rejected": 0
+      },
+      "final_sql_safety_rejection_rate": {
+        "correct": 1,
+        "total": 24,
+        "rate": 0.041666666666666664
+      },
+      "witness_precision": {
+        "correct": 0,
+        "total": 0,
+        "unavailable_cases": 24,
+        "rate": null
+      },
+      "synthetic_records": 0,
+      "sql_generation": {
+        "final_sql_coverage": {
+          "correct": 22,
+          "total": 24,
+          "rate": 0.9166666666666666
+        },
+        "no_final_sql": 2,
+        "db_calls_known": 0,
+        "latency_seconds": {
+          "available": 24,
+          "planned": 24,
+          "total": 128.21435035999994,
+          "mean": 5.342264598333331
+        }
+      },
+      "execution_accuracy": {
+        "correct": 15,
+        "total": 24,
+        "rate": 0.625
+      },
+      "syntax_validity": {
+        "correct": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "execution_success": {
+        "correct": 22,
+        "total": 24,
+        "rate": 0.9166666666666666
+      },
+      "semantic_test_accuracy": {
+        "status": "NOT_MEASURED",
+        "reason": "Original and normalized records lack this measurement; reporter default false is not an executed semantic result"
+      },
+      "safety_rejection_rate": {
+        "correct": 1,
+        "total": 24,
+        "rate": 0.041666666666666664
+      }
+    },
+    "E3": {
+      "coverage": {
+        "received": 24,
+        "planned": 24,
+        "missing_case_ids": []
+      },
+      "module_metrics": {
+        "schema_linker": {
+          "coverage": {
+            "available": 5,
+            "total": 24
+          },
+          "case_success": {
+            "correct": 1,
+            "total": 5
+          },
+          "tables": {
+            "correct": 5,
+            "predicted": 9,
+            "required": 5,
+            "precision": 0.5555555555555556,
+            "recall": 1.0,
+            "f1": 0.7142857142857143,
+            "tp": 5,
+            "fp": 4,
+            "fn": 0
+          },
+          "columns": {
+            "correct": 14,
+            "predicted": 22,
+            "required": 14,
+            "precision": 0.6363636363636364,
+            "recall": 1.0,
+            "f1": 0.7777777777777778,
+            "tp": 14,
+            "fp": 8,
+            "fn": 0
+          },
+          "relationships": {
+            "correct": 0,
+            "predicted": 1,
+            "required": 0,
+            "precision": 0.0,
+            "recall": null,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "value_grounding": {
+          "coverage": {
+            "available": 5,
+            "total": 24
+          },
+          "case_success": {
+            "correct": 0,
+            "total": 5
+          },
+          "predicates": {
+            "correct": 1,
+            "predicted": 11,
+            "required": 5,
+            "precision": 0.09090909090909091,
+            "recall": 0.2,
+            "f1": 0.125,
+            "tp": 1,
+            "fp": 10,
+            "fn": 4
+          }
+        }
+      },
+      "primary_errors": {
+        "NO_FINAL_SQL": 19,
+        "SCHEMA_LINKING_MISMATCH": 4,
+        "GROUNDING_MISMATCH": 1
+      },
+      "attribution_policy": "observable_failure_order_not_causal_diagnosis",
+      "cost": {
+        "known_usd": 0.15917504999999998,
+        "complete": true,
+        "total_usd": 0.15917504999999998
+      },
+      "requests": {
+        "attempted": 120,
+        "received": 120,
+        "valid_usage": 120,
+        "input_tokens": 302009,
+        "output_tokens": 62990
+      },
+      "safety_false_rejection_rate": {
+        "correct": 0,
+        "total": 0,
+        "rate": null
+      },
+      "tool_safety": {
+        "sql_attempts": 15,
+        "rejected_attempts": 0,
+        "cases_rejected": 0
+      },
+      "final_sql_safety_rejection_rate": {
+        "correct": 0,
+        "total": 24,
+        "rate": 0.0
+      },
+      "witness_precision": {
+        "correct": 9,
+        "total": 9,
+        "unavailable_cases": 19,
+        "rate": 1.0
+      },
+      "synthetic_records": 0,
+      "sql_generation": {
+        "final_sql_coverage": {
+          "correct": 5,
+          "total": 24,
+          "rate": 0.20833333333333334
+        },
+        "no_final_sql": 19,
+        "db_calls_known": 52,
+        "latency_seconds": {
+          "available": 24,
+          "planned": 24,
+          "total": 944.7417157640002,
+          "mean": 39.364238156833345
+        }
+      },
+      "execution_accuracy": {
+        "correct": 4,
+        "total": 24,
+        "rate": 0.16666666666666666
+      },
+      "syntax_validity": {
+        "correct": 5,
+        "total": 24,
+        "rate": 0.20833333333333334
+      },
+      "execution_success": {
+        "correct": 5,
+        "total": 24,
+        "rate": 0.20833333333333334
+      },
+      "semantic_test_accuracy": {
+        "status": "NOT_MEASURED",
+        "reason": "Original and normalized records lack this measurement; reporter default false is not an executed semantic result"
+      },
+      "safety_rejection_rate": {
+        "correct": 0,
+        "total": 24,
+        "rate": 0.0
+      }
+    }
+  },
+  "source_official_eligible": false,
+  "new_model_calls_by_audit": 0,
+  "new_cost_usd": 0
+}

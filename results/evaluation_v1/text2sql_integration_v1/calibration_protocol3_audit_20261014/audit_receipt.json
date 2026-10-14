@@ -1,0 +1,19 @@
+{
+  "status": "artifact_consistency_verified",
+  "source_run_id": 38532017308,
+  "checks": {
+    "archive_digest": true,
+    "exact_calibration_inventory": true,
+    "48_binding_record_matches": true,
+    "144_unique_request_response_ids": true,
+    "case_events_bound": true,
+    "cost_sum": true
+  },
+  "limitations": [
+    "No new SQL replay or semantic instance execution",
+    "This artifact is calibration, not 192-record evaluation",
+    "No new selection lock or official promotion"
+  ],
+  "model_calls": 0,
+  "cost_usd": 0
+}
