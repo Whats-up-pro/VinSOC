@@ -56,9 +56,9 @@ def test_second_demo_uses_a_distinct_immutable_window():
 
 def test_corrected_official_scopes_use_a_new_immutable_release_series():
     from evaluation.finalization.query_runtime_validation import window_id_for
-    assert window_id_for('calibration') == 'text2sql-integration-20261014-protocol2-calibration'
-    assert window_id_for('evaluation') == 'text2sql-integration-20261014-protocol2-evaluation'
-    assert window_id_for('pipeline') == 'text2sql-integration-20261014-protocol2-pipeline'
+    assert window_id_for('calibration') == 'text2sql-integration-20261014-protocol3-calibration'
+    assert window_id_for('evaluation') == 'text2sql-integration-20261014-protocol3-evaluation'
+    assert window_id_for('pipeline') == 'text2sql-integration-20261014-protocol3-pipeline'
 
 
 def test_denied_release_cannot_claim_window(tmp_path):

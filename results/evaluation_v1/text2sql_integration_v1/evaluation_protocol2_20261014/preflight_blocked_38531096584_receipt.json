@@ -1,0 +1,19 @@
+{
+  "version": "evaluation_preflight_blocker_v1",
+  "status": "blocked_before_model",
+  "run_id": 38531096584,
+  "artifact_id": 11877657701,
+  "artifact_sha256": "b81b8fe9af25fd27fd79c3ee4ca3333a2cec5bf9a5ff9c307104934ace3de9d6",
+  "producer_sha": "287c61897d71e72d163bf7499068cd09b1f9b4cf",
+  "execution_id": "liveui-25dea1a7d6a9412a88614be1",
+  "failure": "CALIBRATION_SELECTION_LOCK_REQUIRED",
+  "root_cause": "strict source binding detected the post-calibration cloud adapter fix",
+  "changed_source": [
+    "scripts/run_query_live_ui_cloud.py"
+  ],
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "window_claimed": false,
+  "current_run_cost_usd": 0.0
+}

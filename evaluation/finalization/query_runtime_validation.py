@@ -64,7 +64,7 @@ def window_id_for(scope, case_id=None, execution_id=None):
     # whose token/request limits did not conform to the frozen protocol.
     # Keep that evidence immutable and use one successor series for the
     # corrected calibration, evaluation, and pipeline sequence.
-    return 'text2sql-integration-20261014-protocol2-'+scope
+    return 'text2sql-integration-20261014-protocol3-'+scope
 
 
 def verify_scope_unused(scope, case_id=None, execution_id=None):

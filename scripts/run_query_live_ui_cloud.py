@@ -36,7 +36,7 @@ class LiveUiStore(QueryDemoGitHubStore):
     @staticmethod
     def _tag_component(window_id):
         if not re.fullmatch(
-                r'text2sql-integration-(?:20261008-demo-[A-Za-z0-9_-]+|20261014-protocol2-(?:calibration|evaluation|pipeline))',
+                r'text2sql-integration-(?:20261008-demo-[A-Za-z0-9_-]+|20261014-protocol[23]-(?:calibration|evaluation|pipeline))',
                 window_id):
             raise ValueError('CLOUD_WINDOW_ID_INVALID')
         return 'vinsoc-query-ui-'+window_id
