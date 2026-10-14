@@ -1,0 +1,185 @@
+{
+  "version": "calibration_promotion_blocked_receipt_v1",
+  "status": "blocked",
+  "calibration_milestone_closed": false,
+  "producer_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+  "execution_id": "liveui-1bf374a4a8c8473ca2008532",
+  "scope": "offline_calibration_artifact_promotion_only",
+  "verified": {
+    "ci": {
+      "run_id": 38507365645,
+      "head_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "conclusion": "success",
+      "full_suite_per_python": {
+        "passed": 1433,
+        "skipped": 7
+      },
+      "required_guards_per_python": {
+        "passed": 137,
+        "skipped": 0
+      },
+      "required_real_data_per_python": {
+        "passed": 13,
+        "skipped": 0
+      },
+      "python_versions": [
+        "3.11",
+        "3.12"
+      ]
+    },
+    "preflight": {
+      "run_id": 38507633240,
+      "head_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "conclusion": "success",
+      "status": "preflight_pass",
+      "attempted": 0,
+      "received": 0,
+      "client_created": false,
+      "window_claimed": false,
+      "cost_ceiling_usd": 19.968
+    },
+    "live": {
+      "run_id": 38507847503,
+      "head_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "conclusion": "success",
+      "status": "completed",
+      "attempted": 132,
+      "received": 132,
+      "cost_unknown": false,
+      "current_run_cost_usd": 0.16835815,
+      "cumulative_known_cost_usd": 0.25897065
+    },
+    "checkpoint_audit": {
+      "source": "GitHub annotated end-checkpoint tags, not model execution or calibration artifact audit",
+      "responses": 132,
+      "unique_request_ids": 132,
+      "unique_provider_request_ids": 132,
+      "unique_response_ids": 132,
+      "unique_case_condition_pairs": 48,
+      "unique_cases": 24,
+      "valid_usage": 132,
+      "valid_latency": 132,
+      "received": 132,
+      "transmitted": 132,
+      "models": [
+        "gpt-5-mini-2025-08-07"
+      ],
+      "producer_shas": [
+        "0a00770278fbd53f517677026b13166345eb38eb"
+      ],
+      "runs": [
+        "38507847503"
+      ],
+      "conditions": {
+        "E0": {
+          "calls": 24,
+          "cases": 24,
+          "cost_usd": 0.01872625,
+          "input_tokens": 36185,
+          "output_tokens": 4840,
+          "cached_tokens": 0
+        },
+        "E3": {
+          "calls": 108,
+          "cases": 24,
+          "cost_usd": 0.1496319,
+          "input_tokens": 274294,
+          "output_tokens": 53662,
+          "cached_tokens": 116736
+        }
+      },
+      "total_cost_usd": 0.16835815,
+      "input_tokens": 310479,
+      "output_tokens": 58502,
+      "cached_tokens": 116736
+    },
+    "artifact_metadata": {
+      "artifact_id": 11868639648,
+      "size_in_bytes": 1357555,
+      "expired": false,
+      "github_digest": "sha256:9bef410dd8c68a566f62c62b7195118a9dff8e587f9740ac673a9a6c1f15adcd",
+      "archive_rehashed_by_this_session": false
+    }
+  },
+  "user_report_not_independently_recomputed_in_this_session": {
+    "binding_files": 48,
+    "selection_sha256": "1a3dad0ca074aeae1581d178110861d8c2a608e22c8be4ab348855fb9e8dcc94",
+    "selected_condition": "E0",
+    "selection_status": "verified",
+    "execution_accuracy": {
+      "E0": {
+        "correct": 15,
+        "n": 24
+      },
+      "E3": {
+        "correct": 2,
+        "n": 24
+      }
+    },
+    "git_linux_selection_verification_reported": true
+  },
+  "blockers": [
+    {
+      "code": "LOCAL_EXECUTION_ENVIRONMENT_UNAVAILABLE",
+      "detail": "Environment connection failed; no shell/filesystem execution tool is available in this session. The GitHub artifact download tool returned a file reference, but its ZIP bytes cannot be extracted or rehashed here."
+    },
+    {
+      "code": "CALIBRATION_ARTIFACT_AUDIT_PENDING",
+      "detail": "Original selection_lock.json and 48 binding files are not on master. Their exact bytes and recomputation were not verified in this session."
+    },
+    {
+      "code": "PROTOCOL_DEVIATION_DECISION_PENDING",
+      "detail": "Published plan still specifies output cap 1000 and E3 at most 6 requests/case. Producer uses output cap 2000 and larger role caps; independent checkpoint data confirms actual deviations.",
+      "observed": {
+        "plan_max_completion_tokens": 1000,
+        "producer_max_completion_tokens": 2000,
+        "plan_r2_request_ceiling": 168,
+        "producer_r2_request_ceiling": 192,
+        "plan_E3_requests_per_case": 6,
+        "observed_max_E3_requests_per_case": 7,
+        "E3_cases_exceeding_plan_request_cap": [
+          {
+            "case_id": "ctu_cross_feab49e4a48ff3aa",
+            "model_calls": 7
+          },
+          {
+            "case_id": "external_voter_1_22bc102c818388de",
+            "model_calls": 7
+          }
+        ],
+        "responses_exceeding_plan_output_cap": 11
+      }
+    }
+  ],
+  "session_actions": {
+    "new_model_attempts": 0,
+    "new_model_responses": 0,
+    "new_inference_cost_usd": 0,
+    "new_human_review_receipts": 0,
+    "selection_lock_created": false,
+    "original_records_reconstructed": false,
+    "paid_workflow_dispatched": false,
+    "production_source_changed": false
+  },
+  "pending_commands": {
+    "selection_lock_recomputation": "not_run",
+    "binding_sha256_verification": "not_run",
+    "targeted_tests": "not_run_in_this_session",
+    "compile": "not_run_in_this_session",
+    "preservation": "not_run_in_this_session",
+    "git_diff_check": "not_run_in_this_session"
+  },
+  "telemetry_artifact": {
+    "path": "results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/telemetry_audit.json",
+    "sha256": "75d5cc1afdc2164f6592699b70c40408bf4da1a46bb21fec95ce40060570a583"
+  },
+  "next_steps": [
+    "Restore a functioning execution workspace and fetch latest master without rollback.",
+    "Download artifact 11868639648; independently verify archive SHA-256 against GitHub digest.",
+    "Preserve exact public artifact bytes; do not publish private gates, raw SDK journals, credentials or personal paths.",
+    "Recompute selection from 48 original binding files using producer-identical runtime and Git blob bytes.",
+    "Record the protocol-deviation decision without rewriting historical plan, producer config or saved outputs. No model rerun.",
+    "Commit only audited calibration outputs, selection lock, receipt and manifest; require exact-SHA CI on Python 3.11 and 3.12.",
+    "Do not transmit evaluation or pipeline requests using calibration budget authority."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": "offline_calibration_promotion_manifest_v1",
+  "status": "blocked_not_calibration_complete",
+  "files": [
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/telemetry_audit.json",
+      "sha256": "75d5cc1afdc2164f6592699b70c40408bf4da1a46bb21fec95ce40060570a583"
+    },
+    {
+      "path": "results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/blocked_receipt.json",
+      "sha256": "a35d7c208937be73098d3a04262446a64035cb3bc7c1178be99c6b6383d4e8c5"
+    }
+  ]
+}

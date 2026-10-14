@@ -1,0 +1,3748 @@
+{
+  "version": "calibration_checkpoint_audit_v1",
+  "scope": "offline_public_checkpoint_audit_not_calibration_record_acceptance",
+  "producer_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+  "live_run_id": 38507847503,
+  "summary": {
+    "source": "GitHub annotated end-checkpoint tags, not model execution or calibration artifact audit",
+    "responses": 132,
+    "unique_request_ids": 132,
+    "unique_provider_request_ids": 132,
+    "unique_response_ids": 132,
+    "unique_case_condition_pairs": 48,
+    "unique_cases": 24,
+    "valid_usage": 132,
+    "valid_latency": 132,
+    "received": 132,
+    "transmitted": 132,
+    "models": [
+      "gpt-5-mini-2025-08-07"
+    ],
+    "producer_shas": [
+      "0a00770278fbd53f517677026b13166345eb38eb"
+    ],
+    "runs": [
+      "38507847503"
+    ],
+    "conditions": {
+      "E0": {
+        "calls": 24,
+        "cases": 24,
+        "cost_usd": 0.01872625,
+        "input_tokens": 36185,
+        "output_tokens": 4840,
+        "cached_tokens": 0
+      },
+      "E3": {
+        "calls": 108,
+        "cases": 24,
+        "cost_usd": 0.1496319,
+        "input_tokens": 274294,
+        "output_tokens": 53662,
+        "cached_tokens": 116736
+      }
+    },
+    "total_cost_usd": 0.16835815,
+    "input_tokens": 310479,
+    "output_tokens": 58502,
+    "cached_tokens": 116736
+  },
+  "checkpoints": [
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-1-end",
+      "tag_sha": "ee99fc9ad1d8cd53ad1747ef3848ac464952bb00",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_0d22a790584f0155",
+        "condition": "E0",
+        "cost_usd": 0.00048975,
+        "latency_seconds": 2.7057489149999867,
+        "provider_request_id": "req_d7888abad0554f10bbdc7d66c2c50e42",
+        "received": true,
+        "request_id": "713a09660022471f91c15e2490076dab",
+        "request_sha256": "0f128e173b91603b3e9a2c4cdb744107262353eabb09229a144292a92c57d8a2",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFJpKH9CZM5HTHFCYovSDExSUgL",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 999,
+          "output_tokens": 120
+        }
+      },
+      "phase": "end",
+      "request_number": 1,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-2-end",
+      "tag_sha": "dc0fceb69e926c6844945b71f0002118767710ca",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E0",
+        "cost_usd": 0.0007715,
+        "latency_seconds": 2.463717887999991,
+        "provider_request_id": "req_55607ebec490484aa58f6424cdcf0481",
+        "received": true,
+        "request_id": "95419ce638914c52b1d6e41da53edeeb",
+        "request_sha256": "5b6f6e07dbfc079497ab20bcc49bff96e4ad9ff4cbed13c094e106d25a6ebd8a",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFNv0gRMrDTiFPOsfZ87CMrzDix",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1006,
+          "output_tokens": 260
+        }
+      },
+      "phase": "end",
+      "request_number": 2,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-3-end",
+      "tag_sha": "0b7eb0169bb3f517f649be3f9fface7d6cf7908f",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_5c5ade01fccce004",
+        "condition": "E0",
+        "cost_usd": 0.000624,
+        "latency_seconds": 2.1187211669999897,
+        "provider_request_id": "req_e8c51851c1424d6895fb1688e75d40a5",
+        "received": true,
+        "request_id": "46bdc781da4142769552405d22e1dd74",
+        "request_sha256": "fcb0481cea6c120e4f6a80ffdb1e2c8c8862c9a304ec63305dbbd4800035b624",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFSJliqqiN4Nc525CyzmqUUpRaq",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1000,
+          "output_tokens": 187
+        }
+      },
+      "phase": "end",
+      "request_number": 3,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-4-end",
+      "tag_sha": "2e58829505b54063f029907ba39b1b08dad67789",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_94d3c478d5858048",
+        "condition": "E0",
+        "cost_usd": 0.001275,
+        "latency_seconds": 3.8704145940000103,
+        "provider_request_id": "req_271fc57aff014bde9bf570b19bb1710a",
+        "received": true,
+        "request_id": "d8725cc03a564524957a2311c47afe34",
+        "request_sha256": "002010deeb21b2b2e86628aeb9eac907728ed643105a9cf49420baf73eeb5e1c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFWb07uzPHJsvV2z9n5CGqWpErB",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1012,
+          "output_tokens": 511
+        }
+      },
+      "phase": "end",
+      "request_number": 4,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-5-end",
+      "tag_sha": "369d5290f02981cc1dff9eb675959bacce292f01",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+        "condition": "E0",
+        "cost_usd": 0.000622,
+        "latency_seconds": 2.2623238539999875,
+        "provider_request_id": "req_a3761d9abbba467e898155a845df345f",
+        "received": true,
+        "request_id": "fbf7c2d2072a4c7baf68835f26e5427b",
+        "request_sha256": "0fb51d755de4521dc66f73bacc8c38008f577d268a50a6d9c05405f3aa321b46",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFddhZyNLc4jJAnayeghpBMwovO",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1008,
+          "output_tokens": 185
+        }
+      },
+      "phase": "end",
+      "request_number": 5,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-6-end",
+      "tag_sha": "3c61ffc02644922b9bfdc9b5384bd3552fd722c1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_dda372911befb17e",
+        "condition": "E0",
+        "cost_usd": 0.0014585,
+        "latency_seconds": 4.487035954999982,
+        "provider_request_id": "req_867b33824f6d4d2289d676e4300d30cf",
+        "received": true,
+        "request_id": "1478dde98471419a8f941d8e84ba56bd",
+        "request_sha256": "a870de02346620ae0d9ca4b2e7dcdb4229f0c2b5d6eaa236c0ccfc55d1ed50b9",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFi4owqmjZQVbkyYO8yNY2HoGup",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1010,
+          "output_tokens": 603
+        }
+      },
+      "phase": "end",
+      "request_number": 6,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-7-end",
+      "tag_sha": "d244f5c6d8732c7f060bd4ea17c8551e48be07a1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_e36ee009626c71c2",
+        "condition": "E0",
+        "cost_usd": 0.0015565,
+        "latency_seconds": 4.651461274999974,
+        "provider_request_id": "req_dfea42c13f1f4741bf2a77492f31f04b",
+        "received": true,
+        "request_id": "07ad6155581e40a7a55ce5f9f2739aa3",
+        "request_sha256": "75128f9aca75ade4b089561fa59903bf7b5b4f689b6ca21a0e34b828579bf9f3",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFpRoYIJtQpzDcN68G2BC47dJ9b",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1010,
+          "output_tokens": 652
+        }
+      },
+      "phase": "end",
+      "request_number": 7,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-8-end",
+      "tag_sha": "115b733d3786371aa8bb81b03f1e8ebd2fa3c355",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E0",
+        "cost_usd": 0.00088275,
+        "latency_seconds": 3.1576777409999863,
+        "provider_request_id": "req_6cd7ed1bc63a4738ae79d7a5463f2b28",
+        "received": true,
+        "request_id": "2451986716ec46b2bcade168a49487b9",
+        "request_sha256": "89de91816c0b9a474c02ac05cef2a9740446d0545a0832657d861dec614118ca",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkFwQRhMJ88qJrmD6uEJu0F7hqBx",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1003,
+          "output_tokens": 316
+        }
+      },
+      "phase": "end",
+      "request_number": 8,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-9-end",
+      "tag_sha": "678ce594338c9e6b935f4c22b6ae687d10a66411",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "condition": "E0",
+        "cost_usd": 0.0005295,
+        "latency_seconds": 1.4008209660000261,
+        "provider_request_id": "req_0753e8f4602c4d7788c5fef481d288dc",
+        "received": true,
+        "request_id": "5aabec9f33594fe9a8574d9ced9c5536",
+        "request_sha256": "14b559df48dd4e8d9605266f0ba58f7326e63b3abbfb70af0b17b3cea2ec11d9",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkG1Ztz5mah3FkbKmtSpw1r2zI5A",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1206,
+          "output_tokens": 114
+        }
+      },
+      "phase": "end",
+      "request_number": 9,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-10-end",
+      "tag_sha": "eb7aa823399e200ec28acacf3400434d95cfcafb",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+        "condition": "E0",
+        "cost_usd": 0.000495,
+        "latency_seconds": 1.244864081000003,
+        "provider_request_id": "req_9111ad6b555d447dbb773a14e07301be",
+        "received": true,
+        "request_id": "211b8ef4ebdb42af9299fe8daa3afa24",
+        "request_sha256": "a904a061e2807d323c9a9c0218deee46a6c5c4fd893db7364df0eb933c59a8d2",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkG5H7RVBVCxgwGgpWyUrPpaDY5s",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1204,
+          "output_tokens": 97
+        }
+      },
+      "phase": "end",
+      "request_number": 10,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-11-end",
+      "tag_sha": "24ab7c67e092cee7547491daccd72be34b471445",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+        "condition": "E0",
+        "cost_usd": 0.0004985,
+        "latency_seconds": 1.2338698830000112,
+        "provider_request_id": "req_fa8a2ba34ed14dada91f835182c0ae8b",
+        "received": true,
+        "request_id": "1aca56d8d0f04b5d906babf2fd10f6a1",
+        "request_sha256": "9bd0afc6158526672a9c8b222b95c9bb925a6b17e40bb2ce1d1d9b3992ae50c5",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkG98vVgfK65i0oZPlxJfsqaAAS9",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1202,
+          "output_tokens": 99
+        }
+      },
+      "phase": "end",
+      "request_number": 11,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-12-end",
+      "tag_sha": "2779bd8f4cf6e0dc36e0d813b3d287de4666d0f6",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "condition": "E0",
+        "cost_usd": 0.00054725,
+        "latency_seconds": 1.699359094000016,
+        "provider_request_id": "req_20c7b5c1466247f69e585980136ca81b",
+        "received": true,
+        "request_id": "c9126f3e6c114112abf66e74c1bfa44a",
+        "request_sha256": "b41362b56b207676bbca38f8ba32e76bb325b54835864aced7f4603e14bd66da",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGDe5sVWoVmTBqWriupMRY78svF",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1205,
+          "output_tokens": 123
+        }
+      },
+      "phase": "end",
+      "request_number": 12,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-13-end",
+      "tag_sha": "a96e0ef585dad57b23e90e09410839fbff1047d1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+        "condition": "E0",
+        "cost_usd": 0.001077,
+        "latency_seconds": 1.2907194450000077,
+        "provider_request_id": "req_04fe4f6f0ef540ea9e6f5c883875d668",
+        "received": true,
+        "request_id": "2d57ce86d19c45a3a9e028b05bb38af8",
+        "request_sha256": "dd1234c0974169682aab6156ba35f012092c12a51152b387c2f0410a8da9151f",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGIi7Dy3ehSa43VRgKLFVIxFyQB",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3564,
+          "output_tokens": 93
+        }
+      },
+      "phase": "end",
+      "request_number": 13,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-14-end",
+      "tag_sha": "583f6ce45fce92c78db0309d3674a1e6ab709e38",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+        "condition": "E0",
+        "cost_usd": 0.00093525,
+        "latency_seconds": 1.1049352930000111,
+        "provider_request_id": "req_a67963a67a004fc09f95000abb1ee76a",
+        "received": true,
+        "request_id": "acb750526dd54089afe391c4868fd4b1",
+        "request_sha256": "cc4b8caf541551d367e7b3c7c416bfd9f4a8a691f2e0f7d76f989ccd08e31f65",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGLqtNFeqUIR8Ud9k0lK6iHKrdd",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3565,
+          "output_tokens": 22
+        }
+      },
+      "phase": "end",
+      "request_number": 14,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-15-end",
+      "tag_sha": "c69339d322283aa8f70efa4b8923fde3b845fca3",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+        "condition": "E0",
+        "cost_usd": 0.00107775,
+        "latency_seconds": 2.387593594000009,
+        "provider_request_id": "req_b74fa4beee3e4ca695f6258c3a497874",
+        "received": true,
+        "request_id": "467b611290c44c32a28cf2c60f7537b9",
+        "request_sha256": "903d10e9047b16443e61655b6296db08bc1664550eda0ef94c276f63be0fa55e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGQRzNq1KMJiItG5DpDAwptYJyI",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3567,
+          "output_tokens": 93
+        }
+      },
+      "phase": "end",
+      "request_number": 15,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-16-end",
+      "tag_sha": "b7420ff99d8ed8d52601085408b60a6fe2b5550d",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "condition": "E0",
+        "cost_usd": 0.00145175,
+        "latency_seconds": 2.92180669199999,
+        "provider_request_id": "req_3cdd0e8f2fde4e5098595f9ad9253785",
+        "received": true,
+        "request_id": "48508323d47d43478ea08c2f14659d38",
+        "request_sha256": "f411cb42c16fdd492de51115a613544af219fb5e223da235d190e427997c7e23",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGVMiuAjHnCqfzyfykOYlbbdwJK",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3583,
+          "output_tokens": 278
+        }
+      },
+      "phase": "end",
+      "request_number": 16,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-17-end",
+      "tag_sha": "749040ff83aef068a615315e4b599d42e0b86a45",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E0",
+        "cost_usd": 0.00044375,
+        "latency_seconds": 1.5273114459999988,
+        "provider_request_id": "req_fd9df49e665b427d97dc35a0d4714c63",
+        "received": true,
+        "request_id": "b4f161f2b69740b38b3962a12bf08c9b",
+        "request_sha256": "db3aadc4ed1ffed82da414020eb8a48360493a8250a94346d060bbbc9d381d39",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGaJpjg4J26Rhw6MVFDnVCmdRi4",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 759,
+          "output_tokens": 127
+        }
+      },
+      "phase": "end",
+      "request_number": 17,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-18-end",
+      "tag_sha": "82dc5e32d5efe6b8014a607c4cde8b8ec228f4d4",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_4426d844af6ad576",
+        "condition": "E0",
+        "cost_usd": 0.0003725,
+        "latency_seconds": 1.8311387390000107,
+        "provider_request_id": "req_4723ae5a330e4d69aafc6f81cd176e21",
+        "received": true,
+        "request_id": "211f8ea6401c4c9795bcb21b15641259",
+        "request_sha256": "ce39066566271d2728b45164a5a444008b4f9a7929c45abe9471361365995c81",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGfRNCFgYDSnU717nq9u2mWlxcL",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 746,
+          "output_tokens": 93
+        }
+      },
+      "phase": "end",
+      "request_number": 18,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-19-end",
+      "tag_sha": "994a698497b58fb65bda4a6a28cdd4caa4c0ef68",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "condition": "E0",
+        "cost_usd": 0.00038575,
+        "latency_seconds": 1.3249641760000088,
+        "provider_request_id": "req_a62acd0e3ec045eb976993c79b80e974",
+        "received": true,
+        "request_id": "39ff743449ff4fe68ef97694966a2a03",
+        "request_sha256": "ff57cd25f6bebea188ef3d8d5d0b7dde627f4b2c3a2eb83c576027819c702a7b",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGkSCIXH4zzGmrhsCuxXPwIjbFR",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 743,
+          "output_tokens": 100
+        }
+      },
+      "phase": "end",
+      "request_number": 19,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-20-end",
+      "tag_sha": "4516ae2a9da79d53a0e57e37afc8f3bc1f3d12dd",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E0",
+        "cost_usd": 0.0003685,
+        "latency_seconds": 1.3804025299999978,
+        "provider_request_id": "req_135014d5e20a48ff9146f26278625bd1",
+        "received": true,
+        "request_id": "7a8f8409af2841138f488be46d505717",
+        "request_sha256": "ddaf7633bb994cca8816ffee3d771f81c964477918a2a461fec3b1853370b8ca",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGoSf6gcAKX3RGl7UFqk5Mg396F",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 738,
+          "output_tokens": 92
+        }
+      },
+      "phase": "end",
+      "request_number": 20,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-21-end",
+      "tag_sha": "fa4cd2468b74537cbfea0c8e4b0b1455481d3471",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_118fd339fffc525f",
+        "condition": "E0",
+        "cost_usd": 0.00073975,
+        "latency_seconds": 1.797005597000009,
+        "provider_request_id": "req_dff2c95645f041ecbbab9361b5c777f9",
+        "received": true,
+        "request_id": "f648051ed2624e80a6ec1892a3147991",
+        "request_sha256": "bc796ca542c7eae16aa7f582ddc5a394a71ef31ee982da8e2607cda69bc2afe1",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGsByaJmn6OV3cFM99CK1aY8NAu",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1511,
+          "output_tokens": 181
+        }
+      },
+      "phase": "end",
+      "request_number": 21,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-22-end",
+      "tag_sha": "221c866795ff0560095801f4b2456196044853da",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_329e92f0874dea47",
+        "condition": "E0",
+        "cost_usd": 0.000602,
+        "latency_seconds": 1.6689857949999976,
+        "provider_request_id": "req_884f0357f6be45c7a399bbbcabfe983b",
+        "received": true,
+        "request_id": "70f27fc94f2d4f8c918a248cc662f080",
+        "request_sha256": "e30d8cc5530f4c6d329d25b87333e075f6813a6000683ad4c1e577d6bfb46411",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkGwFBgo1RnmrgnW5whI5l2A0MsU",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1512,
+          "output_tokens": 112
+        }
+      },
+      "phase": "end",
+      "request_number": 22,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-23-end",
+      "tag_sha": "3fc3e043ccd47898f6db3fdabfba9f295b3a7261",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "condition": "E0",
+        "cost_usd": 0.00076,
+        "latency_seconds": 1.885675936000041,
+        "provider_request_id": "req_3d61ba6a5e54402785964882faac95bb",
+        "received": true,
+        "request_id": "a16ef231bd584f9e82d01465f0ea0691",
+        "request_sha256": "b5d8a3cea9aa8bce94bcf6886d85db9543051cd4b760201d3f9f92a53fa3b369",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkH1ZxZYBxXfy7Xy209wpugyg1yK",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1512,
+          "output_tokens": 191
+        }
+      },
+      "phase": "end",
+      "request_number": 23,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-24-end",
+      "tag_sha": "85c2584fb1de969d4acf0c185c9a7aafdd28ac9d",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c87de933bb535d25",
+        "condition": "E0",
+        "cost_usd": 0.000762,
+        "latency_seconds": 2.443494266000016,
+        "provider_request_id": "req_3ed449d6dd5149f296dc5f036581b8a8",
+        "received": true,
+        "request_id": "4d7eb4f0fdb748189d2b58c05cc7b6bd",
+        "request_sha256": "6eeaccd7ac3c2fcdce46422eb51a27a54f3093c5eae327b48e2102c8dbff1c87",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkH5R0hy6JU78XKxSLXFATaoJrsV",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1520,
+          "output_tokens": 191
+        }
+      },
+      "phase": "end",
+      "request_number": 24,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-25-end",
+      "tag_sha": "0ef1b60e8e964a1a9cbfee4b1276b4cb4cb822e7",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_0d22a790584f0155",
+        "condition": "E3",
+        "cost_usd": 0.00061875,
+        "latency_seconds": 1.671056147999991,
+        "provider_request_id": "req_155099e8992d441f9efe050df4f481f5",
+        "received": true,
+        "request_id": "37011e8e031c4005b0b8a2def4322f8f",
+        "request_sha256": "5d6175123d186a3aa718a7a6e945c1a82c8558e184cb1c636f81bfbc2ac7480c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkHAv8yM32WnPK6o34700ChvTDhT",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1491,
+          "output_tokens": 123
+        }
+      },
+      "phase": "end",
+      "request_number": 25,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-26-end",
+      "tag_sha": "51de69847a738f6700a219af86898628d5f2527e",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_0d22a790584f0155",
+        "condition": "E3",
+        "cost_usd": 0.00379425,
+        "latency_seconds": 14.067672480999988,
+        "provider_request_id": "req_4d60006ec42346b9960c188b7667d9e5",
+        "received": true,
+        "request_id": "aad7e95013e141dcabb1016ffc02aeaf",
+        "request_sha256": "948cb76a502ef138533743be443eb65598b749fb941a3c111ddd56d2edfab28c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkHE0kMaRXbjG43gi7BUrJZVaJmr",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 1721,
+          "output_tokens": 1826
+        }
+      },
+      "phase": "end",
+      "request_number": 26,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-27-end",
+      "tag_sha": "87ae96bb717ac244ab722955462b122044cb0fcf",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_0d22a790584f0155",
+        "condition": "E3",
+        "cost_usd": 0.0007854,
+        "latency_seconds": 2.0434296829999994,
+        "provider_request_id": "req_d4f4000db9304bde823597909afe8cbe",
+        "received": true,
+        "request_id": "b8079523312c4356ace49f39115c3c85",
+        "request_sha256": "de01477b43ebad7972e10d6e8dfde86ef979b8c10fcd6fc7b7c4cb5fae5d3043",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkHVZhKZ67NPJYDxlbaOukiLJojV",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 3156,
+          "output_tokens": 171
+        }
+      },
+      "phase": "end",
+      "request_number": 27,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-28-end",
+      "tag_sha": "cba11100bfa101494c3489266fbef2b03c537113",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_0d22a790584f0155",
+        "condition": "E3",
+        "cost_usd": 0.00426175,
+        "latency_seconds": 12.075907938,
+        "provider_request_id": "req_81232cebef6f4c9b806de1ad49dc94f6",
+        "received": true,
+        "request_id": "b3e8e998beb84f4aba7e3b3281088978",
+        "request_sha256": "97dfde8ec87bbfa3f0edba15c5f3907d39209356d34c7afb3ba9b3c1112a680a",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkHZ7078KorM4YRK7PJtSbtpMLsv",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3575,
+          "output_tokens": 1684
+        }
+      },
+      "phase": "end",
+      "request_number": 28,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-29-end",
+      "tag_sha": "e72f2de0689d1394fe72b1bb3d0c9f5f88ae890f",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_0d22a790584f0155",
+        "condition": "E3",
+        "cost_usd": 0.0030154,
+        "latency_seconds": 9.249171470000022,
+        "provider_request_id": "req_1c9ccc6610844a9b890a4391674036bd",
+        "received": true,
+        "request_id": "bd6494be14864c928c57289d3a2b7cac",
+        "request_sha256": "d24c5e599d4b32c50f5eb41c28cda74eb278bd9adaa33c92874471eeebe17671",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkHnRr3wGP7ZLUI0t8JOWZzNZe32",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3456,
+          "input_tokens": 4996,
+          "output_tokens": 1272
+        }
+      },
+      "phase": "end",
+      "request_number": 29,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-30-end",
+      "tag_sha": "1356711bb31518fd52a8a0b636705f1ea6e72533",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E3",
+        "cost_usd": 0.0007105,
+        "latency_seconds": 1.625375699000017,
+        "provider_request_id": "req_f8eb2e33cac3481d89ca82c309427db3",
+        "received": true,
+        "request_id": "607aede30a8542298360f3c36f5ce8b5",
+        "request_sha256": "27eb3166886d4f883687c4ea4bcdcf17a1351ecc8b3297f92724744e18c57437",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkHzYO7G92FzKKpagN4fSO2LrZEc",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1498,
+          "output_tokens": 168
+        }
+      },
+      "phase": "end",
+      "request_number": 30,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-31-end",
+      "tag_sha": "a6dcdeade993b7e500ec4c2f34f249d5e333555e",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E3",
+        "cost_usd": 0.00044825,
+        "latency_seconds": 2.1884287050000353,
+        "provider_request_id": "req_3cce4cc53c354e25925bfac6738bd0dd",
+        "received": true,
+        "request_id": "2b57dc9fe3d648ca928769405e662dcb",
+        "request_sha256": "82431261bd2c66b1de6e6e6a88d66e7eafd863323abe09b7d9d8a60544a530ce",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkI3Z4EyiKrBqXevxFWiyHbugGzS",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 1929,
+          "output_tokens": 127
+        }
+      },
+      "phase": "end",
+      "request_number": 31,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-32-end",
+      "tag_sha": "1665c0aa259491d33aecd60295e643e6f43a54f1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E3",
+        "cost_usd": 0.00118655,
+        "latency_seconds": 5.249096971000029,
+        "provider_request_id": "req_ca61369b309f4aa4b6326851bfb94e2b",
+        "received": true,
+        "request_id": "205e75b514e14ee4be88b3ee1ef6efb4",
+        "request_sha256": "19f2ec501e12e350aeb9f764ea66aeb4f29d57dbf7676a4084c6300ad1bb6b65",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkI7WLEIKolHNVvIP41rpmt2m0FG",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 2135,
+          "output_tokens": 528
+        }
+      },
+      "phase": "end",
+      "request_number": 32,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-33-end",
+      "tag_sha": "67dba7d590b5281673b1346faea58733d8fba898",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E3",
+        "cost_usd": 0.00135725,
+        "latency_seconds": 3.0645136589999993,
+        "provider_request_id": "req_79d4c65d19e84f8688a42635cc57dd58",
+        "received": true,
+        "request_id": "e7082c8619814c63a72559f699db01e3",
+        "request_sha256": "a10937aaf17b4ab3fd9a0e0aed75e648d96367796b6bb621a79ebe02d3415a7c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIFlWSavxOuLjX2JkC4hIMXeR5J",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2381,
+          "output_tokens": 381
+        }
+      },
+      "phase": "end",
+      "request_number": 33,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-34-end",
+      "tag_sha": "342e3d058d474ca7ddd67e0473f9168eb184d942",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E3",
+        "cost_usd": 0.00075325,
+        "latency_seconds": 3.0291611249999733,
+        "provider_request_id": "req_83db631213ad47629e1e86ad62df9180",
+        "received": true,
+        "request_id": "fd617ec6b98d485386a380d7124e17bd",
+        "request_sha256": "23141165e0e9f8924d4e2e35a8b70c248aa0499c754be1e57f2cf0948e9b11f5",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIKYUPL6K1oxQIjsbqCnWKlzQDH",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1517,
+          "output_tokens": 187
+        }
+      },
+      "phase": "end",
+      "request_number": 34,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-35-end",
+      "tag_sha": "82da97924c465e74d5bb707737a0835105e0c975",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_12d2dfbda309cf7a",
+        "condition": "E3",
+        "cost_usd": 0.00046719999999999997,
+        "latency_seconds": 1.7353168250000408,
+        "provider_request_id": "req_eeb951e9a85546429316a126c0a023b9",
+        "received": true,
+        "request_id": "f30291bd2e77417b9e3ffedd7a84f791",
+        "request_sha256": "6e97168ff4c7ecb01f6453d413e9e49199d8c6e37c13777efabd136e139af212",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIPCOST4JYeFAvmpUxeGof0aHzF",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1408,
+          "input_tokens": 1640,
+          "output_tokens": 187
+        }
+      },
+      "phase": "end",
+      "request_number": 35,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-36-end",
+      "tag_sha": "473f724cd772bd0b83e178475821225877066835",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_5c5ade01fccce004",
+        "condition": "E3",
+        "cost_usd": 0.000827,
+        "latency_seconds": 1.9930378399999995,
+        "provider_request_id": "req_3a8b47f9c95b4e51af71961998690890",
+        "received": true,
+        "request_id": "ad4345ef66b04acebab498f14a096667",
+        "request_sha256": "4e639e6906e72cc9d2568428fece47bece9e22b5ee022cadd293a646114b2464",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIUAnCesH4i0R5kvaSBSEZRYeWi",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1492,
+          "output_tokens": 227
+        }
+      },
+      "phase": "end",
+      "request_number": 36,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-37-end",
+      "tag_sha": "49b6ac6bb08a491d4ac0b5ed23c2fe15f528f2c0",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_5c5ade01fccce004",
+        "condition": "E3",
+        "cost_usd": 0.000582,
+        "latency_seconds": 2.129935957999976,
+        "provider_request_id": "req_b2524b8bf4d142c09f7e866a24210f91",
+        "received": true,
+        "request_id": "291db49c6cd94f11a9d5d25f96bb383d",
+        "request_sha256": "d42b7fe35a7a8472899f3fcda935ad03bf554dec914e555912bd9f4a6c093351",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIYoNxRel9ylNuuax7oSu0c8dcB",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 1656,
+          "output_tokens": 228
+        }
+      },
+      "phase": "end",
+      "request_number": 37,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-38-end",
+      "tag_sha": "732cd17be6b5584c05cfde635abfc97b6c48d321",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_5c5ade01fccce004",
+        "condition": "E3",
+        "cost_usd": 0.0002624,
+        "latency_seconds": 0.9919724610000458,
+        "provider_request_id": "req_f11564b487324de7822223ab6d58a9de",
+        "received": true,
+        "request_id": "99260aa6c51b491585db27aad3d91c39",
+        "request_sha256": "446347eb342ec96838128ffa2c57359020e1d1182ce83a4181d33cd968a9c5e2",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIdTwozoG7c1YEcga1E04e6zWOV",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 1784,
+          "output_tokens": 81
+        }
+      },
+      "phase": "end",
+      "request_number": 38,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-39-end",
+      "tag_sha": "ff78900a234388246c83aeb2d8e9c265b84cf8df",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_94d3c478d5858048",
+        "condition": "E3",
+        "cost_usd": 0.000696,
+        "latency_seconds": 1.9289913889999752,
+        "provider_request_id": "req_4886fcd66e78470b84d6c9d8a93b6d3a",
+        "received": true,
+        "request_id": "06b8ba1d47714005beb5bffc614d510b",
+        "request_sha256": "65d814cba68c804c346cd022d23fce8f9fb26901eface28ac39801023c6c8fbb",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIgoOfIb5vQZAJYuftDPhEGsD59",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1504,
+          "output_tokens": 160
+        }
+      },
+      "phase": "end",
+      "request_number": 39,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-40-end",
+      "tag_sha": "9fa16e38ae3bf97631c715d192c44f8643ad930b",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_94d3c478d5858048",
+        "condition": "E3",
+        "cost_usd": 0.00018875,
+        "latency_seconds": 0.8108203649999837,
+        "provider_request_id": "req_34befdd66b4d4705b23054807935d01d",
+        "received": true,
+        "request_id": "cdec955374914391989d1b9dfcdfdda9",
+        "request_sha256": "47b0dabfbf1b93d17f48c3c2ec6a6b985962ee82e5ec5b231dcd4ca837311d78",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIkixSnh0QM8dMgv4TfhaE00FxJ",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 1643,
+          "output_tokens": 33
+        }
+      },
+      "phase": "end",
+      "request_number": 40,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-41-end",
+      "tag_sha": "8e20a53de0b316ddcee4d600015f780fbf1217be",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_94d3c478d5858048",
+        "condition": "E3",
+        "cost_usd": 0.0017481500000000002,
+        "latency_seconds": 5.329318739999962,
+        "provider_request_id": "req_171658a685534a86949cff3ef2402b00",
+        "received": true,
+        "request_id": "4787f4c242574dd9a85341ea4c96c999",
+        "request_sha256": "91630c447eabcf70365c7cf1d0fa67e6b7917a862e90e617926b0aa4cc6ba1e2",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkInSnUgJJjYC2VGBCGHFwrwqZRY",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 1807,
+          "output_tokens": 821
+        }
+      },
+      "phase": "end",
+      "request_number": 41,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-42-end",
+      "tag_sha": "289e04280ccfd0faca5a76f4c16751ce5e2f97b6",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_94d3c478d5858048",
+        "condition": "E3",
+        "cost_usd": 0.001395,
+        "latency_seconds": 3.5992565239999976,
+        "provider_request_id": "req_5ed49441784d404f8526f0edbe3d0453",
+        "received": true,
+        "request_id": "abec3950007f48cb976d61053b13a948",
+        "request_sha256": "e0241a52f80cbb39919f573fa975d82e7e6e6c33368c91e09eff594899f81d07",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkIu5E7avRpBdmBpL9q5FQdZqZYn",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2092,
+          "output_tokens": 436
+        }
+      },
+      "phase": "end",
+      "request_number": 42,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-43-end",
+      "tag_sha": "31fb15f40c859ba7d816e1cebdfa5e6d502c8603",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_94d3c478d5858048",
+        "condition": "E3",
+        "cost_usd": 0.00072975,
+        "latency_seconds": 2.6621440969999526,
+        "provider_request_id": "req_85d04cf2c0b34f63900d4611df8c8c3e",
+        "received": true,
+        "request_id": "ed1e373170d14519a0dc4b6d2a04a625",
+        "request_sha256": "19ae6b3d1f02e48d1653dc825c4dfdebec3d55a68c940373282f39f5f55f35b8",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJ0zpmMjxKHrhgnmTjzsHP5GgS9",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1920,
+          "input_tokens": 2247,
+          "output_tokens": 300
+        }
+      },
+      "phase": "end",
+      "request_number": 43,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-44-end",
+      "tag_sha": "25b3255a13cb8d7462d0cf4bd521da960bc51c36",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+        "condition": "E3",
+        "cost_usd": 0.000587,
+        "latency_seconds": 1.0953769920000127,
+        "provider_request_id": "req_ee21c49ea8404012bce0a0c284c1dfc7",
+        "received": true,
+        "request_id": "382383fe8be84b79a0db3dd61fa53d37",
+        "request_sha256": "9a031913ce846767a0c40acf50f6548dcfab856b39f958ce8fecd315a27ffc3e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJ5BuL8MJ8dG42MPH4jLr6dbbwM",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1500,
+          "output_tokens": 106
+        }
+      },
+      "phase": "end",
+      "request_number": 44,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-45-end",
+      "tag_sha": "1014e2434dc59f3ab0f11d74bc3ed43a78b7be58",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+        "condition": "E3",
+        "cost_usd": 0.0029765,
+        "latency_seconds": 8.494493463000026,
+        "provider_request_id": "req_398a4955b90c45c1bc57eb236e52d4a5",
+        "received": true,
+        "request_id": "25478b61e6eb4f22a6208ba2955d2f79",
+        "request_sha256": "f3216d794566ca701fbabc20202b346d25e8dad1a968ae311bffd66839a41905",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJ93Pg7G38s9gkyEheLUIe9IAVb",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 2754,
+          "output_tokens": 1288
+        }
+      },
+      "phase": "end",
+      "request_number": 45,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-46-end",
+      "tag_sha": "9ef11f6609a866026eb57095c2733a8a72fae31c",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+        "condition": "E3",
+        "cost_usd": 0.0016665,
+        "latency_seconds": 4.653861741000014,
+        "provider_request_id": "req_c7e407f66f9948538823206107f081b6",
+        "received": true,
+        "request_id": "b9d98bfc40ea421eb85446762a30cf8e",
+        "request_sha256": "08971e67d0edab4faebb96432412041fe1ca2b41f52f6d9d2a73aec45bc94d3e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJJ5Rkf4VJOQeO24iQdjw6LObUT",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2560,
+          "input_tokens": 3714,
+          "output_tokens": 657
+        }
+      },
+      "phase": "end",
+      "request_number": 46,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-47-end",
+      "tag_sha": "7051e1dabc46333d6135714b16b11a14ac9a8e1c",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+        "condition": "E3",
+        "cost_usd": 0.0019205,
+        "latency_seconds": 3.9887736239999754,
+        "provider_request_id": "req_2af3c19ab53544d5b40cf34d5c7d0354",
+        "received": true,
+        "request_id": "7f84eed0c9d3488693533af7a77068f2",
+        "request_sha256": "e36e01a8bc197f477ae8e7cba3ba8b470e9bcf41706652cfe0b1d02acba760cd",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJQXQJd3GbizRRpd4MEbJNAYEsd",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3962,
+          "output_tokens": 465
+        }
+      },
+      "phase": "end",
+      "request_number": 47,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-48-end",
+      "tag_sha": "cca121c88314da4a8bcacbcf1cf643a402275c50",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_97cc9c9d5d2fdd3b",
+        "condition": "E3",
+        "cost_usd": 0.00115475,
+        "latency_seconds": 4.326840642000036,
+        "provider_request_id": "req_8735312f33c64553b08708143644b107",
+        "received": true,
+        "request_id": "2a424a69d0e1417084e9553af968349c",
+        "request_sha256": "21a8465f526ab68c94beff12b0d7402ba7d178fefeff202afa540d2e9a6a9a2e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJXlt24gvL47LSQwe6WYp008egd",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3840,
+          "input_tokens": 4355,
+          "output_tokens": 465
+        }
+      },
+      "phase": "end",
+      "request_number": 48,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-49-end",
+      "tag_sha": "1829bc6301d25ac4e7c6a92e4d2ca1f2208c4b76",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_dda372911befb17e",
+        "condition": "E3",
+        "cost_usd": 0.0005895,
+        "latency_seconds": 1.2487258090000068,
+        "provider_request_id": "req_efcc90c89d974a918af9bf902a9a6e9d",
+        "received": true,
+        "request_id": "711a8387b40349b1825c10b492c824f3",
+        "request_sha256": "37618a1697151f934105ad303c44b1e544330fc7ab6c32267ed19d661f9eb6a3",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJee9wWoAiKFhqiYCvDarSpmdZI",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1502,
+          "output_tokens": 107
+        }
+      },
+      "phase": "end",
+      "request_number": 49,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-50-end",
+      "tag_sha": "5b255d8e5e21fe3fda95fdf8785bb821dcc39965",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_dda372911befb17e",
+        "condition": "E3",
+        "cost_usd": 0.0021645,
+        "latency_seconds": 6.611674478999987,
+        "provider_request_id": "req_95c3dd1d54d942fc8947ded8f56ffd0a",
+        "received": true,
+        "request_id": "ed8f8213330e4a85a5e9782d19f98e9f",
+        "request_sha256": "9f24984a1f9f2025b57250b60b75ce8a3fc0d2f3eb7c763959700afa122ec22e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJhQPQ8kDfdXkGhK9WvNqse3PgS",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1938,
+          "output_tokens": 840
+        }
+      },
+      "phase": "end",
+      "request_number": 50,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-51-end",
+      "tag_sha": "3e2643b6de50aff4b5b0ff4a58b38aa554554c23",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_dda372911befb17e",
+        "condition": "E3",
+        "cost_usd": 0.00179655,
+        "latency_seconds": 8.825984379999966,
+        "provider_request_id": "req_253db2cc05724ed49c9d053710a1bbe5",
+        "received": true,
+        "request_id": "63989a253d2f44cd9e2a99cad28fa88f",
+        "request_sha256": "6f096484d4eefebd2f8ecdb8349c57834ad85baf250a9ff107492876f761b6ce",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkJrMpyeeSrTN4bWPBsHRr6h8aHp",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 2511,
+          "output_tokens": 786
+        }
+      },
+      "phase": "end",
+      "request_number": 51,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-52-end",
+      "tag_sha": "5afcc48fb8dcc8665b7b4ab5b9cd0fd6466e61c1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_dda372911befb17e",
+        "condition": "E3",
+        "cost_usd": 0.00171125,
+        "latency_seconds": 4.040954305000014,
+        "provider_request_id": "req_cfe96aa9a0a0451c9189cf8026984bd3",
+        "received": true,
+        "request_id": "12bc408d72114493883d988478a75f41",
+        "request_sha256": "3dcadaa0b2ff08727a1d10888df55e855b844715bf1ff9fb7cf27f0958b368e0",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkK2KZC0LHBOyUnKftr4dU2Lmmmr",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2757,
+          "output_tokens": 511
+        }
+      },
+      "phase": "end",
+      "request_number": 52,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-53-end",
+      "tag_sha": "63ce63bd67e9220b2134056092ec9ddc7d7ec678",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_dda372911befb17e",
+        "condition": "E3",
+        "cost_usd": 0.0012174500000000001,
+        "latency_seconds": 3.7346583309999914,
+        "provider_request_id": "req_16fec9cddcba478e96c64018f7c8d7ed",
+        "received": true,
+        "request_id": "1a8758c45e864989bb25e3225249dd44",
+        "request_sha256": "06053d9367b37c47ebf1e404e6fbd1a4dc6047b19bc9969b996968cada1109c4",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkK8iIxlFl3Ey1S2m3lt8OR0zQIj",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2688,
+          "input_tokens": 3193,
+          "output_tokens": 512
+        }
+      },
+      "phase": "end",
+      "request_number": 53,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-54-end",
+      "tag_sha": "c2bfa16cf5d52e65d33ca31bc1e41474ac151f4f",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_e36ee009626c71c2",
+        "condition": "E3",
+        "cost_usd": 0.0005855,
+        "latency_seconds": 1.6707512930000235,
+        "provider_request_id": "req_4e90298026aa4f259111ece0bc375395",
+        "received": true,
+        "request_id": "fbe5115dfcff4177a648051cd6efda75",
+        "request_sha256": "96eac8251dddbcd110b2e8d7512d0edbf8e940a0aa8e6bfd4d82cb08dac92eec",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKFatkLezz128GnJYt6o4idtjec",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1502,
+          "output_tokens": 105
+        }
+      },
+      "phase": "end",
+      "request_number": 54,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-55-end",
+      "tag_sha": "f102cfac3d82394c029e631506833eff30432e0a",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_e36ee009626c71c2",
+        "condition": "E3",
+        "cost_usd": 0.00213075,
+        "latency_seconds": 5.212068067000018,
+        "provider_request_id": "req_9fe4ba15cd4146b6a961910ad59c8e34",
+        "received": true,
+        "request_id": "62632d6b6a054a628f526cb21a44b4e5",
+        "request_sha256": "73ae1cd8fb48fa9d6d0ade9f6dcf5e7e0acb380cf2ed6fab79b32d5614587eee",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKJl5kPGLyZ75BMq0I9zESpRHLj",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2203,
+          "output_tokens": 790
+        }
+      },
+      "phase": "end",
+      "request_number": 55,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-56-end",
+      "tag_sha": "5ff956ed7a91378c36af9f9c1dd757a45ed51dc2",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_e36ee009626c71c2",
+        "condition": "E3",
+        "cost_usd": 0.00140095,
+        "latency_seconds": 4.177442783000004,
+        "provider_request_id": "req_5240323fef7b42a5ba21269099d555de",
+        "received": true,
+        "request_id": "0bbb8044275640b4a8debd046d63e602",
+        "request_sha256": "6d12247524c887be3d961337f87cb687553f8d4b6a960ba6b94ce214a9072bd0",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKRt5grNoEXdSybw0ChhEkn7XrM",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2048,
+          "input_tokens": 2663,
+          "output_tokens": 598
+        }
+      },
+      "phase": "end",
+      "request_number": 56,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-57-end",
+      "tag_sha": "a0d019c4a6ab028ba5879d2f65bc4b04d94569a4",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_e36ee009626c71c2",
+        "condition": "E3",
+        "cost_usd": 0.0018125,
+        "latency_seconds": 4.263721273999977,
+        "provider_request_id": "req_b38dc3d0da9e444dafe89263ee94bd2f",
+        "received": true,
+        "request_id": "1014a73207b14126bf4c732e89eba61e",
+        "request_sha256": "c1843dc78507954eb06f5f77511ffc77677a4e7cd987a3666c85601f09803d2c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKYtGiZdIXCUf82n3jfksGT1tii",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2978,
+          "output_tokens": 534
+        }
+      },
+      "phase": "end",
+      "request_number": 57,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-58-end",
+      "tag_sha": "78c9fad20a52ed43d22c560b40500c4b2709af86",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_e36ee009626c71c2",
+        "condition": "E3",
+        "cost_usd": 0.0005999,
+        "latency_seconds": 1.7650506129999712,
+        "provider_request_id": "req_28966d15bc344e14b714c5a9ebd95479",
+        "received": true,
+        "request_id": "d4d653822feb492eb09b11ae7e3ba096",
+        "request_sha256": "ff2ad49760435643f38bad7b5cd5f21bd873d409fa77f17851e336ffb4f6a862",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKfdkTp0bXm4ArRpuYfLMf6QFVG",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2816,
+          "input_tokens": 3438,
+          "output_tokens": 187
+        }
+      },
+      "phase": "end",
+      "request_number": 58,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-59-end",
+      "tag_sha": "0dc1335672edcfe4ec5700cf2fb2e46de28eb14f",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.00059575,
+        "latency_seconds": 1.4781246339999825,
+        "provider_request_id": "req_b6fd373a077d4d8ea4126e659ce9ffd3",
+        "received": true,
+        "request_id": "7999ef6496034ba4bd64165d81ae8c41",
+        "request_sha256": "324a1b094af7bfaca0a300baf70aed706b0ace529ee89946fc2ad1467a253ddb",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKjCbTKsMDTHHwiWRtwpPgDZ4YS",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1495,
+          "output_tokens": 111
+        }
+      },
+      "phase": "end",
+      "request_number": 59,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-60-end",
+      "tag_sha": "ed1077095be3bf253e610c3656ab69e3cd269108",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.000221,
+        "latency_seconds": 0.7613074459999893,
+        "provider_request_id": "req_185d70db832e4e489b252a536296bc4b",
+        "received": true,
+        "request_id": "8b411557554a438ba3b1d94a9040d0f6",
+        "request_sha256": "f48630994254fe1e372268c7542d75c315f6f886c96319b9a2695c671df80460",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKnrUSdJHB7n75zTPNO6bCE45Mv",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 1732,
+          "output_tokens": 38
+        }
+      },
+      "phase": "end",
+      "request_number": 60,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-61-end",
+      "tag_sha": "e1ac5e67f1a4c234cacdd9d9985b4f55eb5e50cb",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.0002219,
+        "latency_seconds": 0.7971693879999862,
+        "provider_request_id": "req_04601ea2280947ffb41b13d62b9d3a95",
+        "received": true,
+        "request_id": "a9c6a94a51074c1080cb701456aea2ec",
+        "request_sha256": "633b7636d8692cecfc8a984029beb655781c06b98b52443c2519dfda85cb3c72",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKraRZXOUUCAYt8t7X5bE9SzOE5",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 1966,
+          "output_tokens": 38
+        }
+      },
+      "phase": "end",
+      "request_number": 61,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-62-end",
+      "tag_sha": "c2fe40c6058f364f7e170ba0acf75c604b54126b",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.001748,
+        "latency_seconds": 5.595582826999987,
+        "provider_request_id": "req_82ab973ca971402e8a3e2161b9a0708d",
+        "received": true,
+        "request_id": "e7a4b363b1e84a48b20328a3bdd46cb7",
+        "request_sha256": "3cc54cfffd5ccee8c1a209c52bd6d8a9fb0c99f2a3afe3aed215a428ae5165d7",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkKuFcTZLOE358JhmcFrGDOCpsS4",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2256,
+          "output_tokens": 592
+        }
+      },
+      "phase": "end",
+      "request_number": 62,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-63-end",
+      "tag_sha": "ec09858ba13ae18421d9d5b37dc9351c6ae826bc",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.00076675,
+        "latency_seconds": 1.6739315639999859,
+        "provider_request_id": "req_3425caaf491545f294d965a2b1e99dc9",
+        "received": true,
+        "request_id": "5c64f5dd435a4b47a6c674ee931fad2e",
+        "request_sha256": "d757ec45a0df9ae7a6e0a15b2d46722a4cdeef806ae831c8cb8fad25e49feee8",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkL2vTPvD2WRGxihzUw8SyaUIUm8",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1579,
+          "output_tokens": 186
+        }
+      },
+      "phase": "end",
+      "request_number": 63,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-64-end",
+      "tag_sha": "f98bede4d6ca48e8b70f819ea3b2294278e78fcc",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.0007457000000000001,
+        "latency_seconds": 2.7788730120000196,
+        "provider_request_id": "req_d26c88cbfb3c4eb4ba41bcbd3968a70e",
+        "received": true,
+        "request_id": "8c5bbd55d3844aa7bbf49888c0b2f200",
+        "request_sha256": "da4b8a3cb9f67345c991df368b88874b8f3c975d0207192298b47fabab954453",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkL6lIcUmCjACI4JMKVUMcMozSsG",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1408,
+          "input_tokens": 1738,
+          "output_tokens": 314
+        }
+      },
+      "phase": "end",
+      "request_number": 64,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-65-end",
+      "tag_sha": "5858e2db0feb0424ba9ea2a46fc056a76d63cceb",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "ctu_cross_feab49e4a48ff3aa",
+        "condition": "E3",
+        "cost_usd": 0.00093025,
+        "latency_seconds": 2.2224960089999968,
+        "provider_request_id": "req_27dbe608e5364949b4867bea5ca6cf7d",
+        "received": true,
+        "request_id": "5c31cc2097b84b26b9e02f9d83000981",
+        "request_sha256": "17be15e24090bce7f8087642c8f54ae6d5090d63a30d2f2bdc7c9ace759f83a4",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLCi4ih3awcN3lUl2zy9dNaAFMd",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1721,
+          "output_tokens": 250
+        }
+      },
+      "phase": "end",
+      "request_number": 65,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-66-end",
+      "tag_sha": "21ef47c85097f44a7fd82628966fe02ef76948cc",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "condition": "E3",
+        "cost_usd": 0.0005585,
+        "latency_seconds": 1.1912697340000022,
+        "provider_request_id": "req_ad290bd5cad2408bab7de346bbbffe7c",
+        "received": true,
+        "request_id": "d6a1527bf89a48e385d5ae01e2cb416b",
+        "request_sha256": "1b0b5c61cff1a405f8dfa17c46591c145a47c63a79a83d4e0ae69e13555f388a",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLH2mNHztcbkOENC7noysJPIgg3",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1698,
+          "output_tokens": 67
+        }
+      },
+      "phase": "end",
+      "request_number": 66,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-67-end",
+      "tag_sha": "94e0f2132fac429a75cbb525e378f336a5b9c874",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "condition": "E3",
+        "cost_usd": 0.0019899,
+        "latency_seconds": 6.647091832000001,
+        "provider_request_id": "req_0fcf84670c7140028cd66f6ffc4ca0ee",
+        "received": true,
+        "request_id": "8641f91769b746799b28632e3e076e3e",
+        "request_sha256": "3e89e785cac7b9fd3e6bf473fdc89dd636e742c01027144c0aff710135959ad6",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLLfTKkAgmArPuuME0ySJenFBI0",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 1862,
+          "output_tokens": 935
+        }
+      },
+      "phase": "end",
+      "request_number": 67,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-68-end",
+      "tag_sha": "da9d8532f6fb4b8749ca3e12b60bc3779b145b6a",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "condition": "E3",
+        "cost_usd": 0.00134675,
+        "latency_seconds": 2.9529584489999934,
+        "provider_request_id": "req_a880440ce2364fb88d2d1900c072ff09",
+        "received": true,
+        "request_id": "df3b4207c3e541378010b1c11c8bfe65",
+        "request_sha256": "67e8cb50bf2b1ef7cba343d0636c97ffb1300c839139d16a5d319614427ec655",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLUxv02LJSed6JWL6LJDaBnn6Tt",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2467,
+          "output_tokens": 365
+        }
+      },
+      "phase": "end",
+      "request_number": 68,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-69-end",
+      "tag_sha": "3e7e1d2c6992b3704bf92e2871d3068a79559145",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "condition": "E3",
+        "cost_usd": 0.00225675,
+        "latency_seconds": 5.573303872999986,
+        "provider_request_id": "req_1ee21fb6b5254bf58bb9b7cac201f809",
+        "received": true,
+        "request_id": "ffb808e9b8d14fb98ef06b9ae62cb479",
+        "request_sha256": "c07592cb21ff13b5bb9d9ecf5e8acf0e6b8292a74d699c9b05e16f4b29b6fcdd",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLZ8naX2DPJdBLKy7UdS5gxENYm",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2787,
+          "output_tokens": 780
+        }
+      },
+      "phase": "end",
+      "request_number": 69,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-70-end",
+      "tag_sha": "ad26c57cf42f1ea412da567bf1c5cd791506cf78",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_90f685508b260d35",
+        "condition": "E3",
+        "cost_usd": 0.0020384500000000002,
+        "latency_seconds": 7.262353527999949,
+        "provider_request_id": "req_b255204e1791401ba6ef1e9b3577fb52",
+        "received": true,
+        "request_id": "a1c83202c99b470597b4125ce23910cd",
+        "request_sha256": "b1e8361433bf64b43339020a9920b852fd237005cf62d10ef9c6813a2507b13f",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLhz9kFHOPicI8L9UN4gHbtgVen",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2688,
+          "input_tokens": 3429,
+          "output_tokens": 893
+        }
+      },
+      "phase": "end",
+      "request_number": 70,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-71-end",
+      "tag_sha": "85adbe165d75d9f456668670aaf552690d7da6bb",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+        "condition": "E3",
+        "cost_usd": 0.000506,
+        "latency_seconds": 0.9206323480000265,
+        "provider_request_id": "req_b06f878fd81c48c29b6bfb3f0634ea65",
+        "received": true,
+        "request_id": "ca34d95ea59d4faa8a691672d834534b",
+        "request_sha256": "a07bc45d2cbb4cd4330eb70cbf56adda16eea43347878f92ee82a7d431be8f73",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLrLL1DVSwmOQr83nx3LVkJ1qOy",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1696,
+          "output_tokens": 41
+        }
+      },
+      "phase": "end",
+      "request_number": 71,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-72-end",
+      "tag_sha": "9da8d14eb29d669de62cff1b6c0e9c13f44ad0cb",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b09d57548c5ae624",
+        "condition": "E3",
+        "cost_usd": 0.00134565,
+        "latency_seconds": 4.343331275999958,
+        "provider_request_id": "req_370d60b53cb946918632700b763a1b57",
+        "received": true,
+        "request_id": "cb2c63429a984febb0fc7ac6af83f4de",
+        "request_sha256": "aa080b25575e1073dd46c853c67506ac45feffa0feb0aca098fdef8c7707184b",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkLv99fnZe8tA1BtMil1ssLijC4Y",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 2637,
+          "output_tokens": 516
+        }
+      },
+      "phase": "end",
+      "request_number": 72,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-73-end",
+      "tag_sha": "b2c63fc4606a12d6f15fc0d03ba130b9a39a9bf0",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+        "condition": "E3",
+        "cost_usd": 0.0006255,
+        "latency_seconds": 1.3120175379999637,
+        "provider_request_id": "req_b1b28bac06c74edabc6d0b4af38e8069",
+        "received": true,
+        "request_id": "592d27e89af342ce8f2ea1b30122e73d",
+        "request_sha256": "b54982ee6c1534d0ff74a18c8f61ead9de07ea833212c76fe1147f8f99fb01cb",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkM1wnLwkQX07ZK9JCxiiXEdckWg",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1694,
+          "output_tokens": 101
+        }
+      },
+      "phase": "end",
+      "request_number": 73,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-74-end",
+      "tag_sha": "7ae54eae0adddc2006ee3260cb7574365137c36c",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+        "condition": "E3",
+        "cost_usd": 0.00196365,
+        "latency_seconds": 6.464994341000079,
+        "provider_request_id": "req_1255e4009d4741ea8bb21995ce5b650a",
+        "received": true,
+        "request_id": "f5c59fc92c9c4e7aa13627b8be68c151",
+        "request_sha256": "07c6137cd608472957625dd0f122f39f71db457d8570cb4107de4ad7a0bb3c04",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkM5SLV37eFEj1l9MvaGMamG3vyP",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 1845,
+          "output_tokens": 924
+        }
+      },
+      "phase": "end",
+      "request_number": 74,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-75-end",
+      "tag_sha": "4100829d88761584d208f9d91470cf26cc4b6b09",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_b984c822618acc41",
+        "condition": "E3",
+        "cost_usd": 0.00103385,
+        "latency_seconds": 3.6539297450000277,
+        "provider_request_id": "req_2cd86ddf7a50495f9beb52f1846f9a54",
+        "received": true,
+        "request_id": "0ffd263a29904889817af358b86113bb",
+        "request_sha256": "ea569cc279affdbda52d3417f7d111daa92d9e4e140e89473e7c7775e6f73811",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMEdWpv8OjN20WZBlWpFfbDEqRD",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1664,
+          "input_tokens": 2313,
+          "output_tokens": 415
+        }
+      },
+      "phase": "end",
+      "request_number": 75,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-76-end",
+      "tag_sha": "5b91e7c2fdc97cd0dc7dca28111765de42a840a2",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "condition": "E3",
+        "cost_usd": 0.00053225,
+        "latency_seconds": 1.2686127480000096,
+        "provider_request_id": "req_93ae0ee4139e46759d6aedb4ce46f620",
+        "received": true,
+        "request_id": "5f61c11a9b6a4d4bba4d93859f80dcea",
+        "request_sha256": "4c1c84c0fc24cc72bbbb5ccdd833462aeb5331252e80736f1ef5c0f541a39b72",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMLo3tqWuGnLiF30HmjE7GKjOlT",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1697,
+          "output_tokens": 54
+        }
+      },
+      "phase": "end",
+      "request_number": 76,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-77-end",
+      "tag_sha": "3400d612e88f875bb05f72ec0e760def278c3e67",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "condition": "E3",
+        "cost_usd": 0.0015076500000000001,
+        "latency_seconds": 4.701587590000031,
+        "provider_request_id": "req_48d73ec52513438baff9fbb85bd5de8b",
+        "received": true,
+        "request_id": "9411fd9d3c8d49dbb5b786285e0f4883",
+        "request_sha256": "c0d522d5388e22f0cbb8af05f9a4a40c8f59f6def45ab8f6fe7353c8510b4a61",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMPe8ZQ26QkxnB3PJBNpzNzOE4q",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1536,
+          "input_tokens": 1837,
+          "output_tokens": 697
+        }
+      },
+      "phase": "end",
+      "request_number": 77,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-78-end",
+      "tag_sha": "c0b4c4df267039856502569c02899fc66d6eb4ff",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "condition": "E3",
+        "cost_usd": 0.0004126,
+        "latency_seconds": 1.5844257270000526,
+        "provider_request_id": "req_7fb55aed1a5e4d9fab21ab5a3563db88",
+        "received": true,
+        "request_id": "39cce925e53f48078ed7c296a90158e4",
+        "request_sha256": "81157a95a87e08c9315183b5b71794c8a87aa76c2c279af2cf3632da609d549e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMWV97GjAnvhe6tVh1nxkiBeeNG",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1664,
+          "input_tokens": 2332,
+          "output_tokens": 102
+        }
+      },
+      "phase": "end",
+      "request_number": 78,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-79-end",
+      "tag_sha": "a0d23818f90f46d78ee25156a68756c96293c45e",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "condition": "E3",
+        "cost_usd": 0.00212775,
+        "latency_seconds": 5.545956108000041,
+        "provider_request_id": "req_2939ebc50d6b4ecdbbbfbbc26d37a159",
+        "received": true,
+        "request_id": "fb9803c245c44fc4af3f6746f0a5c148",
+        "request_sha256": "6e0dac7cde84d9611f9161e35779cd3404e44456e8faa93bd8a8a13245fceaf1",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMarycpSONuJWpVM11gHDK1qr6c",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3103,
+          "output_tokens": 676
+        }
+      },
+      "phase": "end",
+      "request_number": 79,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-80-end",
+      "tag_sha": "917c924c8e50f3255cc42b8fdfca5d51f4f7e613",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_cre_Doc_Template_Mgt_ef44290ad6270a09",
+        "condition": "E3",
+        "cost_usd": 0.00222385,
+        "latency_seconds": 7.443808272999945,
+        "provider_request_id": "req_38d01d0ede784849862e50671ce3545a",
+        "received": true,
+        "request_id": "8a327aef49cb42d28837ddf342e8eb24",
+        "request_sha256": "b1bb65954704255d81287c9455158e84190dac5f8272249c1e77a8f7516f6a39",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMiRqg9ow6AYeS8kBgsHe11kMwS",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2944,
+          "input_tokens": 3577,
+          "output_tokens": 996
+        }
+      },
+      "phase": "end",
+      "request_number": 80,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-81-end",
+      "tag_sha": "b69d783e7603d0af147cd6e0fe86063f32b7f31a",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+        "condition": "E3",
+        "cost_usd": 0.001118,
+        "latency_seconds": 1.1195822070000077,
+        "provider_request_id": "req_be527e0569b84132b384324cd4506209",
+        "received": true,
+        "request_id": "a9ca154f748a4a1ab0bda0cdb3a2badd",
+        "request_sha256": "6943b2a26e1225102bc3bf92a7ef1d3d14b336dfcb67066a87ae6675387daf36",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMsmu4WFIxSc2PFdAqpLitoLKM7",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4056,
+          "output_tokens": 52
+        }
+      },
+      "phase": "end",
+      "request_number": 81,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-82-end",
+      "tag_sha": "e5bb975dcd61be2e44995a6f2239a88e9e1d5d8b",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_088b4f272f7580e1",
+        "condition": "E3",
+        "cost_usd": 0.00159125,
+        "latency_seconds": 5.36864729499996,
+        "provider_request_id": "req_84930eb1dcad4a37a1a9ea128afb594d",
+        "received": true,
+        "request_id": "52cecf93316a41cb8348384def5b4292",
+        "request_sha256": "7875c09d0ddb610ec524fc4541981281a2ee3dcaadd59d4d13331ba738e0a770",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkMwabUYQO0CzSQXQ8Or6wumCitd",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3840,
+          "input_tokens": 4205,
+          "output_tokens": 702
+        }
+      },
+      "phase": "end",
+      "request_number": 82,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-83-end",
+      "tag_sha": "bb9cdc88a4b60786b0d84ad14788c317b83b975c",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+        "condition": "E3",
+        "cost_usd": 0.00107625,
+        "latency_seconds": 1.0209854529999802,
+        "provider_request_id": "req_fd5f8955a2f64f119d2de1c0de568674",
+        "received": true,
+        "request_id": "79dfc9b8aa464ced8754f80e666fa381",
+        "request_sha256": "e7dee72cbc14cc63564f91eff0e9f4f3342608def71b54ee3c13ed20ba6cac0b",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkN4zMB4KPeLixinSs226Lx382VD",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4057,
+          "output_tokens": 31
+        }
+      },
+      "phase": "end",
+      "request_number": 83,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-84-end",
+      "tag_sha": "f2ab0e5b9407bac537063d90f86a8fba30a88de0",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_1325bbd55bd47c1b",
+        "condition": "E3",
+        "cost_usd": 0.002169,
+        "latency_seconds": 6.959709768000039,
+        "provider_request_id": "req_f7da62377bcd4719a25dd30ac19854c9",
+        "received": true,
+        "request_id": "8eb92149b35b43faa29d8cfa88e894cb",
+        "request_sha256": "05ee9a8ea3d5cd244a448a3d0f560b83b9ab7932d344d2eef96d7f699a5a6506",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkN8Fs890Jdr7xtRyZvxRA1UL9H3",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3840,
+          "input_tokens": 4164,
+          "output_tokens": 996
+        }
+      },
+      "phase": "end",
+      "request_number": 84,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-85-end",
+      "tag_sha": "4306e7e64415d90de6af307d1d62b3a13c327fcb",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+        "condition": "E3",
+        "cost_usd": 0.00121675,
+        "latency_seconds": 1.4449408360000007,
+        "provider_request_id": "req_ad4a8a735f2249bd9d20a062c68737eb",
+        "received": true,
+        "request_id": "eb951a4f91654342a6e4cf53ad51888c",
+        "request_sha256": "ed06825fc074ed3a83aecb91c8c8cccad6c21c6f1809347503eaeaebf91b5de5",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNHNSZYVfghMaArusI7WLtIIyH5",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4059,
+          "output_tokens": 101
+        }
+      },
+      "phase": "end",
+      "request_number": 85,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-86-end",
+      "tag_sha": "308828e6dc7c134078fd03e1850bb5bb63febf59",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+        "condition": "E3",
+        "cost_usd": 0.00031575,
+        "latency_seconds": 0.9569281029999956,
+        "provider_request_id": "req_a87e1f9fe2704ce68ab43fb75b1e4342",
+        "received": true,
+        "request_id": "6799e3fedb0049418b8af041b4631787",
+        "request_sha256": "1468583b94dac94f60c88cce5087c173e14e7a9cda2d41ee585ab2006526e19c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNLOsiTgGIPwR7lHK8gQDyEic0v",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3840,
+          "input_tokens": 4367,
+          "output_tokens": 44
+        }
+      },
+      "phase": "end",
+      "request_number": 86,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-87-end",
+      "tag_sha": "25df8a701b7932ddc9a5e710530ea2b63f57449c",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+        "condition": "E3",
+        "cost_usd": 0.0020166,
+        "latency_seconds": 6.154896196999971,
+        "provider_request_id": "req_ad28ae1c8e164fd9b08aeb0ed2b970c6",
+        "received": true,
+        "request_id": "07fcd28d29e8483eb46c8b906c7926a6",
+        "request_sha256": "bee7c7317e04822abe30f1b62452489012df0a99b72d68f8435295d887fa9392",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNPsupehsr5umXlu9M13VlhdzR5",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 4224,
+          "input_tokens": 4500,
+          "output_tokens": 921
+        }
+      },
+      "phase": "end",
+      "request_number": 87,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-88-end",
+      "tag_sha": "bef10f805d72ff829e53f5a5f89b4e59159bd066",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_8895afc977f48f4f",
+        "condition": "E3",
+        "cost_usd": 0.0014965,
+        "latency_seconds": 1.7178152210000235,
+        "provider_request_id": "req_48b36b8d856846d8987e2e247b2791a6",
+        "received": true,
+        "request_id": "01b90d0b93bd4b34aab0f14a69ebe572",
+        "request_sha256": "88219f46152846fb363b573dfbe9d7d6e7912aef4a4cd0892c9e82ecbb2a1bf5",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNYlvLWCZQaYv0UT1EdvOcZe0It",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4754,
+          "output_tokens": 154
+        }
+      },
+      "phase": "end",
+      "request_number": 88,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-89-end",
+      "tag_sha": "e864e0f6d10042c76f633ab1ff234670bac8ed87",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "condition": "E3",
+        "cost_usd": 0.00135275,
+        "latency_seconds": 1.5732915809999213,
+        "provider_request_id": "req_28ea81fe6826459dadb991b2577e52a1",
+        "received": true,
+        "request_id": "28675bdcda884459b164596c4680da32",
+        "request_sha256": "6a63431d5b764a56c4cec46e3035a2f1dedb0614d20dcd18513d2f92f04caea9",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNcLrPVT6NZUKqLBUYp4ptCXO5M",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4075,
+          "output_tokens": 167
+        }
+      },
+      "phase": "end",
+      "request_number": 89,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-90-end",
+      "tag_sha": "44f732f6dd55edee39d31d3b576b31082be62307",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "condition": "E3",
+        "cost_usd": 0.00342975,
+        "latency_seconds": 7.359332257999995,
+        "provider_request_id": "req_1cf56ca1fbff44bbbd25fe7b9a6c53a2",
+        "received": true,
+        "request_id": "23472f02cd574cea9c166be906429957",
+        "request_sha256": "7b4fd322d2d9d140ccd037e0293f94f6e156eaa4ad61d959a300bea26ed45b33",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNg565IF0G7z7WXwrVmAqTIghi8",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4279,
+          "output_tokens": 1180
+        }
+      },
+      "phase": "end",
+      "request_number": 90,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-91-end",
+      "tag_sha": "0f4e0d55d8b16e0f61b212606623834d87d8a9cc",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "condition": "E3",
+        "cost_usd": 0.00062225,
+        "latency_seconds": 1.3198081160001038,
+        "provider_request_id": "req_6e32cbfb75134db3bea3f679d28d2a2e",
+        "received": true,
+        "request_id": "a32307569d7d4530aacaf4b97d0905fe",
+        "request_sha256": "0f425b8eb9598aa810dc49510196acfa34279b092340186aaa9edb115fc99c95",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNqNU8FVqOe3XRqoqz2qkw83PUy",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3840,
+          "input_tokens": 5129,
+          "output_tokens": 102
+        }
+      },
+      "phase": "end",
+      "request_number": 91,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-92-end",
+      "tag_sha": "eb82252bb8aac4c522bdb8b822a64af9e955e72e",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "condition": "E3",
+        "cost_usd": 0.00465325,
+        "latency_seconds": 10.040821655000059,
+        "provider_request_id": "req_7aeb6c40dab64460a4e7555d1c814155",
+        "received": true,
+        "request_id": "696cb95acae0486a9c8b733027fb1b01",
+        "request_sha256": "2b987862230847efd96c6bfb54b4cdce8937de6c6e94bc16829a7faa412ad1fd",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkNuZgjsRyNE28c2ZqgGa1Egt0Pt",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 5309,
+          "output_tokens": 1663
+        }
+      },
+      "phase": "end",
+      "request_number": 92,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-93-end",
+      "tag_sha": "ffcc04a3c5dd6b9a9e44a9804904f7c58d1422c3",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_student_transcripts_tracking_c43a7ff8be72f773",
+        "condition": "E3",
+        "cost_usd": 0.0021801,
+        "latency_seconds": 5.69742046600004,
+        "provider_request_id": "req_3d1a434a172145f0ad6faa1252054e07",
+        "received": true,
+        "request_id": "bfe9b76a0fd54d1bb86b1a1f97b689eb",
+        "request_sha256": "c32c5160a0ab7219949dfae08d0d7650d79002810dc7e2a68899567ee94b40fd",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkO6rTL5cRYZRcjtjelZOxCIamBK",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 4864,
+          "input_tokens": 5938,
+          "output_tokens": 895
+        }
+      },
+      "phase": "end",
+      "request_number": 93,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-94-end",
+      "tag_sha": "b00d4154683eabc9c8312ca9279785f3deeefb5d",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.00047675,
+        "latency_seconds": 1.3161241179999479,
+        "provider_request_id": "req_bf331644b6234cf08dfff03a5f6a08c2",
+        "received": true,
+        "request_id": "d6d4ca3992894539b2263bd46e5066a4",
+        "request_sha256": "ffd40cff8feb48f651816c674eb1b07b009cecc990b753e86f3b10b7b55dead4",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOEjLKsduyNuOrLCkeGLYZ4QuWl",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1251,
+          "output_tokens": 82
+        }
+      },
+      "phase": "end",
+      "request_number": 94,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-95-end",
+      "tag_sha": "652a341b387a2e6bb85f0bc3b27699ac02c5c552",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.0022258499999999997,
+        "latency_seconds": 7.06815041599998,
+        "provider_request_id": "req_cf44451d208346adaaa18c4c1c02f5f3",
+        "received": true,
+        "request_id": "9de534bf919341e783df7ea6dd4d0c51",
+        "request_sha256": "4dbec0b1a5a9cd67bfea49bdbf4d187815783c72e3c92ba53b11f5bf8c7d919b",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOIRWokQq3nmAdrXwECc8jDfozq",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1024,
+          "input_tokens": 1433,
+          "output_tokens": 1049
+        }
+      },
+      "phase": "end",
+      "request_number": 95,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-96-end",
+      "tag_sha": "961b2d45b23e12e8b81620fcb31fbc1a0b3e56fc",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.00044875,
+        "latency_seconds": 1.1571490840000251,
+        "provider_request_id": "req_22d46134958541cf8acdbcb40d39e72f",
+        "received": true,
+        "request_id": "496db93561c3426780714de1786eed53",
+        "request_sha256": "1475a4239605432cffbcdc1bfed23c21252a42f1a89f6489389bc50a52c2b832",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOSjYRG5pCxBjzyDkC1iGJycA26",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 2091,
+          "output_tokens": 107
+        }
+      },
+      "phase": "end",
+      "request_number": 96,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-97-end",
+      "tag_sha": "e6d1fbc5dbef16cd9a6139d26d8bb8231beaa892",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.002307,
+        "latency_seconds": 5.541540986999962,
+        "provider_request_id": "req_2ae188f74e314c21b845e0dc9c6ccc4c",
+        "received": true,
+        "request_id": "14cf8f9da4ce4ef580bf37f4574a460d",
+        "request_sha256": "4729c7a35c9b588fcc9482b63ec5ccc75bc7f68976acb71c7a35fc7167ecb11b",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOWOfw4WAuWHMPjL7Ss5GjVs2zg",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2292,
+          "output_tokens": 867
+        }
+      },
+      "phase": "end",
+      "request_number": 97,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-98-end",
+      "tag_sha": "77a1f6a1dbbbd4a7f51f26a11e722087d0af85db",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.0020224,
+        "latency_seconds": 5.730941680000001,
+        "provider_request_id": "req_4e0b5715735b485b825d0919385293a0",
+        "received": true,
+        "request_id": "4201fdeda4974207900e195c158fcbf5",
+        "request_sha256": "eb7ba44229ec95da17f4ef3401c619078294a684f96e2556058812f41bce31f2",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOejTeGKKW0yRjFNO6yS6wdtjpb",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2176,
+          "input_tokens": 2960,
+          "output_tokens": 886
+        }
+      },
+      "phase": "end",
+      "request_number": 98,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-99-end",
+      "tag_sha": "fc0c09064d261496035ce03e70433d20c860aa1b",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.0007205,
+        "latency_seconds": 1.4730343899999525,
+        "provider_request_id": "req_4cae7453131743548969596c3f124846",
+        "received": true,
+        "request_id": "6226e74ca15f403cac39bdc006b37d9a",
+        "request_sha256": "3ee7d4a92c5ba329361179b7fbc41838eb724d83bb16d874fce44e5588277e54",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOmBTGzyFIL0fAXdcnwy6QNJp0E",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1426,
+          "output_tokens": 182
+        }
+      },
+      "phase": "end",
+      "request_number": 99,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-100-end",
+      "tag_sha": "93eb033619d57d35e843dd6aba72dbcb35aa0da1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_22bc102c818388de",
+        "condition": "E3",
+        "cost_usd": 0.000462,
+        "latency_seconds": 1.8546469509999497,
+        "provider_request_id": "req_79d1ecf4ccf6498d8faa021f1b6ec3fe",
+        "received": true,
+        "request_id": "3dffa7e9ac6f4b2ab8a0cfcf19d6d67d",
+        "request_sha256": "b54137fb7dac06189c36c04952d505ed18e80e5c5fa53f285d7b780e848f07c3",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOqybX8C54qdaLPOoQVhqGn27h5",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1280,
+          "input_tokens": 1544,
+          "output_tokens": 182
+        }
+      },
+      "phase": "end",
+      "request_number": 100,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-101-end",
+      "tag_sha": "d5525c4af10192ee0514d58618c79aa286e97ab7",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_4426d844af6ad576",
+        "condition": "E3",
+        "cost_usd": 0.0003855,
+        "latency_seconds": 0.9373027039999897,
+        "provider_request_id": "req_8edcc1b1830440c49c983b0e80f720ab",
+        "received": true,
+        "request_id": "9eead08e00f848bf9144f3fad240637f",
+        "request_sha256": "827c8aa67d3c18817325f1c57ee6e6519fccd5369dd0d272c5ab62482c878da6",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOvRoPiJTSv9t6ujBetPNfVhxrS",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1238,
+          "output_tokens": 38
+        }
+      },
+      "phase": "end",
+      "request_number": 101,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-102-end",
+      "tag_sha": "9bc9dd6addb282c3849fa33717f86456ae3b51b1",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_4426d844af6ad576",
+        "condition": "E3",
+        "cost_usd": 0.0018820999999999998,
+        "latency_seconds": 5.54683332500008,
+        "provider_request_id": "req_d00c725959a4429c94701f2476877b0d",
+        "received": true,
+        "request_id": "09334939a1f84cbfb07102ae5ffe0662",
+        "request_sha256": "cb4e8cd40b449b3154e939d2fbcfd1c2cd1b0e4453125a3774a945b87e7827a4",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkOz11MCPGOFQdIV7wqRAY1k5AsJ",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1024,
+          "input_tokens": 1362,
+          "output_tokens": 886
+        }
+      },
+      "phase": "end",
+      "request_number": 102,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-103-end",
+      "tag_sha": "0ae581ccb097717168911657b859b1d3f4fc226a",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "condition": "E3",
+        "cost_usd": 0.00039875,
+        "latency_seconds": 1.2616601199999877,
+        "provider_request_id": "req_b1bd725497ae48b3ba4a8b3234851ae7",
+        "received": true,
+        "request_id": "cf2d4188d028414faa3099146a0f425d",
+        "request_sha256": "d744a1cbf78ac589ae70c44295bf42a017ebdbc41e608ccf15ea95e5c1d75452",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkP7Tc5DJSbh6rkDwr6BfWFYJKus",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1235,
+          "output_tokens": 45
+        }
+      },
+      "phase": "end",
+      "request_number": 103,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-104-end",
+      "tag_sha": "33e1a0285a56318361739f92ec7c36902d133c24",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "condition": "E3",
+        "cost_usd": 0.00203835,
+        "latency_seconds": 6.001528809999968,
+        "provider_request_id": "req_ab201cde69c84a9b9c7a62411c7bf097",
+        "received": true,
+        "request_id": "689aa7e690a748a6adaeaf69d08e208a",
+        "request_sha256": "a5e4b4d85a409df7b5b79754bc8d892b6667dd7b192d0a28f117e04600b24290",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPBTxwnwCawgcq5AkP86NQfQVwE",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1024,
+          "input_tokens": 1363,
+          "output_tokens": 964
+        }
+      },
+      "phase": "end",
+      "request_number": 104,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-105-end",
+      "tag_sha": "cdbc6579fd48519eb8d3ba62e1eab1d4a5fcf974",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "condition": "E3",
+        "cost_usd": 0.0006667999999999999,
+        "latency_seconds": 1.9063822900000105,
+        "provider_request_id": "req_832a60f1f3294ba19df65cf080195b25",
+        "received": true,
+        "request_id": "466eedcc5725498aa4ebad3f7455984c",
+        "request_sha256": "1cd8ace30cb88876e1ade04a8c4407b27f7c37a751a2c2f629f54f69babd6638",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPJHI80gi8TZCWHsxpOdATmfzcW",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1152,
+          "input_tokens": 2000,
+          "output_tokens": 213
+        }
+      },
+      "phase": "end",
+      "request_number": 105,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-106-end",
+      "tag_sha": "a21e9e74e9427e754ff3616812fcb4312787ad8e",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "condition": "E3",
+        "cost_usd": 0.002304,
+        "latency_seconds": 5.789708205000011,
+        "provider_request_id": "req_c3bd59d350084df0b532a47db7e24bf8",
+        "received": true,
+        "request_id": "8131173d2c594682a5345f12572ea014",
+        "request_sha256": "8ec1694137f448666a4653dca9fe5ffba0e43725663634573340e34b4f05c0a8",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPOEi0ZsB74OjXankg142Jf3eM6",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2176,
+          "output_tokens": 880
+        }
+      },
+      "phase": "end",
+      "request_number": 106,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-107-end",
+      "tag_sha": "52795d4202cc64ad609023137a792a1d7124230f",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_958013b9b7385ffa",
+        "condition": "E3",
+        "cost_usd": 0.0018694500000000001,
+        "latency_seconds": 5.462724331000004,
+        "provider_request_id": "req_51f680df747f445ca97378eaf7cfe1cc",
+        "received": true,
+        "request_id": "df0d57243219422ab14d14ce6c83ba2f",
+        "request_sha256": "8cca50ed7bdc8d0fa567fd293dcc64ff0eec3fc98ac16d02d8a9c1b38931ca9f",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPWwOerVf6gfMJARph2NOhsRDVH",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2048,
+          "input_tokens": 2793,
+          "output_tokens": 816
+        }
+      },
+      "phase": "end",
+      "request_number": 107,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-108-end",
+      "tag_sha": "91922a35b1c2b7620f6522ed267b0b0e09a706e3",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E3",
+        "cost_usd": 0.0006375,
+        "latency_seconds": 1.5094804540000268,
+        "provider_request_id": "req_2e121f90e16a40f8ab328237cccb804a",
+        "received": true,
+        "request_id": "b12022603bf0446081ebd576287489c7",
+        "request_sha256": "4c15ce26bcdb45a183633dc844f2423963d61e5cfb8bb034a2048a8dde8e4f0e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPeoI4aaTcgExBYbZ6DmItQL4DO",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1230,
+          "output_tokens": 165
+        }
+      },
+      "phase": "end",
+      "request_number": 108,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-109-end",
+      "tag_sha": "eecdf9fb9d83b8e7d1499e39654ff8aa5bc44893",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E3",
+        "cost_usd": 0.00211325,
+        "latency_seconds": 5.537534563000008,
+        "provider_request_id": "req_0fbd4e60f5a24d2daf915ae0659e4b7f",
+        "received": true,
+        "request_id": "b31e54a7d3c447e28a8c4d61a4efb87a",
+        "request_sha256": "d8b3494a0630bb4b6bcb4156da724ef63662d2d7c5b9a49ef2beff333f84bdcc",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPiv6lGufyXabQA5rerXlKkGVhM",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1341,
+          "output_tokens": 889
+        }
+      },
+      "phase": "end",
+      "request_number": 109,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-110-end",
+      "tag_sha": "f0cd9601845543dcf03acef47e8cebef8aad04f6",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E3",
+        "cost_usd": 0.00068935,
+        "latency_seconds": 2.184363024999925,
+        "provider_request_id": "req_11112f691025433d991f7f9bac09cd3e",
+        "received": true,
+        "request_id": "46a8c673ec9e4ec389a935099feff7ba",
+        "request_sha256": "aafc5738e78aa66e5d032a3dfc4861dc8b2270c9384211c8b0a4dfebcd2b6916",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPqNiQWUgwweL5QCaHbNSGZKNoE",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1024,
+          "input_tokens": 1839,
+          "output_tokens": 230
+        }
+      },
+      "phase": "end",
+      "request_number": 110,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-111-end",
+      "tag_sha": "2401e61852a5fe9d61d8e872b30a0ee128cfda94",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E3",
+        "cost_usd": 0.0020605,
+        "latency_seconds": 4.997547628000007,
+        "provider_request_id": "req_87da0168a29d49339c3e2516fc14adde",
+        "received": true,
+        "request_id": "488580efd45f4b3dad01815a2a1e6d2f",
+        "request_sha256": "38f1af0aff73c255f892dc27e945dcdf4573a59c33cbecbe944e39f78f8d5476",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkPvnvXvwpwMyVui9OoHFttK8i5k",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1954,
+          "output_tokens": 786
+        }
+      },
+      "phase": "end",
+      "request_number": 111,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-112-end",
+      "tag_sha": "178fa1f6f7d861af0736d86faeebea7a99f1f2ed",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E3",
+        "cost_usd": 0.0005245,
+        "latency_seconds": 1.2804568540000218,
+        "provider_request_id": "req_d4e2c0fa3c634d72bb569b6b338d9e18",
+        "received": true,
+        "request_id": "45f1b3bde64b4522a5dfb0ebf2933b6b",
+        "request_sha256": "fd41c0c0d2db26e581f83c1ae71104534610289b47eebc19be3e949af07a50d0",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQ3TfyoXq8RRatqPGiHMEGIZNaM",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 1362,
+          "output_tokens": 92
+        }
+      },
+      "phase": "end",
+      "request_number": 112,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-113-end",
+      "tag_sha": "01a63a9fbae8798044bf68bd8b7dfbb1369ff716",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_voter_1_f220617d91c88779",
+        "condition": "E3",
+        "cost_usd": 0.0005562999999999999,
+        "latency_seconds": 1.8057023159999517,
+        "provider_request_id": "req_d94951bbdfd54c0f9ad95fb2c67b3c59",
+        "received": true,
+        "request_id": "d9359410b82d498ea0e64710d13e035e",
+        "request_sha256": "ce05af68e415f800d3434b2754060966864139719d8d594a52f30d3c4929e679",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQ7cMlix3DLR1I3qTxRovZa8i3x",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1152,
+          "input_tokens": 1454,
+          "output_tokens": 226
+        }
+      },
+      "phase": "end",
+      "request_number": 113,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-114-end",
+      "tag_sha": "e48edcdc98ce6bfc7146b1a762c62e64f10ebd3c",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_118fd339fffc525f",
+        "condition": "E3",
+        "cost_usd": 0.00058875,
+        "latency_seconds": 1.0285966449999933,
+        "provider_request_id": "req_c51afd4a8a554c28aff8baaf2ac3cc70",
+        "received": true,
+        "request_id": "6886b66af1c94e27a600fe99ba187a56",
+        "request_sha256": "d8d422c3a221e36feefa6ae84c3550bf05b73441fb9dc2eb3a8850a5ea1aed38",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQBDdSms7YWp0SBBk4xiMJOX1ko",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2003,
+          "output_tokens": 44
+        }
+      },
+      "phase": "end",
+      "request_number": 114,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-115-end",
+      "tag_sha": "f6fbe4331afee4e8cb7a078672e5d9570b79ee9b",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_118fd339fffc525f",
+        "condition": "E3",
+        "cost_usd": 0.0004803,
+        "latency_seconds": 1.9865741539999817,
+        "provider_request_id": "req_9b73f0cfaf3a4307885565549bf6e75c",
+        "received": true,
+        "request_id": "075dde19fdd74d90b16ff32b3ddf170c",
+        "request_sha256": "c50d3958488565a4120e5488870844289a2e1a7580ce0fc9e66b8a0d466bea32",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQFbqDENz3wUN0nQujzksBd71hs",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 2134,
+          "output_tokens": 175
+        }
+      },
+      "phase": "end",
+      "request_number": 115,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-116-end",
+      "tag_sha": "1445c7c6fd90d7ed3f49279213bad1f0409207b2",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_118fd339fffc525f",
+        "condition": "E3",
+        "cost_usd": 0.0013845,
+        "latency_seconds": 4.077042569000014,
+        "provider_request_id": "req_903d773ba3734954b36b3a405b7beace",
+        "received": true,
+        "request_id": "05d86282e78e4218adba0a51b291d3cd",
+        "request_sha256": "fd8f8365d0134813f2b2198306b44410aacb465e4f4f4fba2a4bdcb3129cdb3e",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQKrm3yW0ZNFitUuYAKFVfUSyUM",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1920,
+          "input_tokens": 2266,
+          "output_tokens": 625
+        }
+      },
+      "phase": "end",
+      "request_number": 116,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-117-end",
+      "tag_sha": "4d11bcb7b39aa1b8277c76ef2cc72f2aaec45561",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_118fd339fffc525f",
+        "condition": "E3",
+        "cost_usd": 0.0026505,
+        "latency_seconds": 6.257594122,
+        "provider_request_id": "req_217067a3269048ca82fd93d80d185468",
+        "received": true,
+        "request_id": "62ab7d4c08684387851299389fb41261",
+        "request_sha256": "6a424fcb5886ee55cb6681d6e395619736a81c31caa65d4ab7a135a579656478",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQQVD4SLGuzywKZHH5C3yNX6Qbt",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2610,
+          "output_tokens": 999
+        }
+      },
+      "phase": "end",
+      "request_number": 117,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-118-end",
+      "tag_sha": "26f1f2fdaf0a54077286069a1993ef902a32bdb2",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_118fd339fffc525f",
+        "condition": "E3",
+        "cost_usd": 0.0006052999999999999,
+        "latency_seconds": 1.2454723270000159,
+        "provider_request_id": "req_2cfc346f1c9c4b5f92e0116b4216f42f",
+        "received": true,
+        "request_id": "aa6ed5254d78464eaf3b8e00cfdf34c9",
+        "request_sha256": "0257413a8a16c74b780e6240b3a6e8b7aff52e489b4a9b60ddc7d8b6e6602433",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQZuuvcre4pKd63fMvcNCFuGNtZ",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 3090,
+          "output_tokens": 118
+        }
+      },
+      "phase": "end",
+      "request_number": 118,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-119-end",
+      "tag_sha": "056cb698ecdd3cfa74b1467b556aba820bc02830",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_329e92f0874dea47",
+        "condition": "E3",
+        "cost_usd": 0.000731,
+        "latency_seconds": 1.415982195999959,
+        "provider_request_id": "req_732efa7c81954369b2871e386412c0e2",
+        "received": true,
+        "request_id": "6eadb07dacc24f8786151a8cdc3acb27",
+        "request_sha256": "9c5b5c9b441578331ab5132d9a2ce11ccddc04a9e3723c0d990fc4fd90c8a58c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQdj74SYu75eHtDMW4sV1KRI9LP",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2004,
+          "output_tokens": 115
+        }
+      },
+      "phase": "end",
+      "request_number": 119,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-120-end",
+      "tag_sha": "5ee9237d830d10c02c79d4dc896edee48e6165f9",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_329e92f0874dea47",
+        "condition": "E3",
+        "cost_usd": 0.00037855,
+        "latency_seconds": 1.1496655659999533,
+        "provider_request_id": "req_b135231b5c784e46b3a8cc962b1e039d",
+        "received": true,
+        "request_id": "b0a69d3a48b946c7a4969f3322391fc8",
+        "request_sha256": "6dc28d24bb8965f3ddc819b2b3d08b06012d50bd2843325d853d40f5863d9cfa",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQhalQGZVLtKeFvYV5PDVToBEcF",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 2223,
+          "output_tokens": 113
+        }
+      },
+      "phase": "end",
+      "request_number": 120,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-121-end",
+      "tag_sha": "9a71351c47dd884968763b415008c119b5339caf",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_329e92f0874dea47",
+        "condition": "E3",
+        "cost_usd": 0.0018832,
+        "latency_seconds": 6.676632122000001,
+        "provider_request_id": "req_c7de9afed81046c9937af2a9ade9db1f",
+        "received": true,
+        "request_id": "6a59310c43ff411a997ca70ada1b2e16",
+        "request_sha256": "72b2a5f7fc0651278c9c82f7765d38c042e95446f8570492c9ed56932fdfa36c",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQkR8huaw06Xkvwtm3xLm8XOzv3",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2048,
+          "input_tokens": 2360,
+          "output_tokens": 877
+        }
+      },
+      "phase": "end",
+      "request_number": 121,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-122-end",
+      "tag_sha": "ebff8917fc2457c456cb3eb94b94e3bc1efb0c52",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_329e92f0874dea47",
+        "condition": "E3",
+        "cost_usd": 0.003085,
+        "latency_seconds": 7.358208998000009,
+        "provider_request_id": "req_ed765cc635f442d0a125e0323ac0c0d7",
+        "received": true,
+        "request_id": "0b5a7c51186041eca8fcc462d500e004",
+        "request_sha256": "827722639646c5d1eeb2ef1f45718bd7090848abf109f3e3d9db2b9cd2b63a41",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkQtvqzezcLfeJoo4mW6J9vGcGk6",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2828,
+          "output_tokens": 1189
+        }
+      },
+      "phase": "end",
+      "request_number": 122,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-123-end",
+      "tag_sha": "5e4ea6e279498290f82c088e3be71b0820e49eee",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "condition": "E3",
+        "cost_usd": 0.000781,
+        "latency_seconds": 1.4060326750000058,
+        "provider_request_id": "req_151f04043697446a9827b61024882986",
+        "received": true,
+        "request_id": "e7339e924b00499a94b21bd0f5fc5769",
+        "request_sha256": "622808da47f9700e21df044e258e052b610d678326181070a318b346123431df",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkR4LT4nn9dH9dIj6KEkIi1TxoYC",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2004,
+          "output_tokens": 140
+        }
+      },
+      "phase": "end",
+      "request_number": 123,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-124-end",
+      "tag_sha": "7358e4e5b06e61e2617bec6ad184d1a025b7b273",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "condition": "E3",
+        "cost_usd": 0.00212705,
+        "latency_seconds": 6.9741123779999725,
+        "provider_request_id": "req_9bcac1396964423a88ddc711122d53df",
+        "received": true,
+        "request_id": "45c860b0acc1484eb14587a4b5322d8c",
+        "request_sha256": "5320286ec991981f6c0756e2a56bdd5403fd2437a203efc49fb6d20d27c57533",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkR8ii0G5s8OzyMn4vrNzD15Fyoi",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 2457,
+          "output_tokens": 958
+        }
+      },
+      "phase": "end",
+      "request_number": 124,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-125-end",
+      "tag_sha": "2b08ab606ded5ce48c2e38563138737672a582ff",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "condition": "E3",
+        "cost_usd": 0.00034285,
+        "latency_seconds": 1.0135158109999338,
+        "provider_request_id": "req_4f7efe05c9e64005aaf8241030ed6cc1",
+        "received": true,
+        "request_id": "bc8dff01dbb84ee2b44719984cc8c4db",
+        "request_sha256": "d6657cdbfe48321a46f42af705e59e67bf60826eff8e95d17c616cd0c67a3aeb",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRHbxahTE9v9AKowqd6URz0ljBr",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2304,
+          "input_tokens": 3149,
+          "output_tokens": 37
+        }
+      },
+      "phase": "end",
+      "request_number": 125,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-126-end",
+      "tag_sha": "195e51d1fa7281ad17d687ebf3e100f9c4a2009d",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "condition": "E3",
+        "cost_usd": 0.002693,
+        "latency_seconds": 6.015361159999998,
+        "provider_request_id": "req_b648c806f3e54bff9d74c5401d09bb41",
+        "received": true,
+        "request_id": "3eb49afbb137460cb60ede5710d59da6",
+        "request_sha256": "d5d67eb9c4d5fb5b87d2087e20b533782b0928c5a064fbcdbd84e1939949d5b8",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRLBk9iK79RahlZCWfvUJ7V1h0T",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 3276,
+          "output_tokens": 937
+        }
+      },
+      "phase": "end",
+      "request_number": 126,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-127-end",
+      "tag_sha": "94438206c1c797a8074be603ffae4599a9eec5a2",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c16f04754e67aa3c",
+        "condition": "E3",
+        "cost_usd": 0.00154275,
+        "latency_seconds": 4.497426171000029,
+        "provider_request_id": "req_08e12da5bb3f45aaa489c008b875d94f",
+        "received": true,
+        "request_id": "f015c2bfd1f0496e9ecc38ddf91944b8",
+        "request_sha256": "acf74bbd366724552425efda35e600e71af9341ece789c7fff3abcd945e21cfc",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRUu7b14CvvNwWohw5oQDrCCrQt",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3200,
+          "input_tokens": 3691,
+          "output_tokens": 670
+        }
+      },
+      "phase": "end",
+      "request_number": 127,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-128-end",
+      "tag_sha": "072bc80a11827ead36a531fd9dc1b35841b8a548",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c87de933bb535d25",
+        "condition": "E3",
+        "cost_usd": 0.000767,
+        "latency_seconds": 1.4438313050000033,
+        "provider_request_id": "req_bce5d1ffd3944d8fb081aaa032b37c49",
+        "received": true,
+        "request_id": "4531ee2277d940c4b526f5e9f71457f9",
+        "request_sha256": "a5e0316885cf8d10496c8099d9d9da0c75c1efb3291cc4a23c5f350c60eb1ff6",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRbS0OyJamFnEeR93TL3qmQbuUn",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 2012,
+          "output_tokens": 132
+        }
+      },
+      "phase": "end",
+      "request_number": 128,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-129-end",
+      "tag_sha": "1a8740a269c1327f0c8f7b0e5503fefc0dc3b6c3",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c87de933bb535d25",
+        "condition": "E3",
+        "cost_usd": 0.0023860500000000002,
+        "latency_seconds": 7.118013466999969,
+        "provider_request_id": "req_7e880607a9024a719a4cb5b16cc623e9",
+        "received": true,
+        "request_id": "31f94c49c75d44f382d30bc8193b7a45",
+        "request_sha256": "d4ae663438f26a55b9a3c7fae2906e3d1a65b6440df0d0698ec4f6e4780226f3",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRf2kNe9Yk7dCwx1hgpwyJsmgnf",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 1792,
+          "input_tokens": 2237,
+          "output_tokens": 1115
+        }
+      },
+      "phase": "end",
+      "request_number": 129,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-130-end",
+      "tag_sha": "1ee9629f8ea8c90836efd0cdc6055a1769e18bf6",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c87de933bb535d25",
+        "condition": "E3",
+        "cost_usd": 0.0006252,
+        "latency_seconds": 1.792205695000007,
+        "provider_request_id": "req_46adf0188f564c0bb9815d4af8643dd1",
+        "received": true,
+        "request_id": "3d5d4e625ff748bbbd5f2b4c324669f5",
+        "request_sha256": "5148813751ac5909adf1f0762ffb07c538a0f1a196371e4c180b18ba06b3fbf3",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRpxyJaw3omIzhXSrhsZ4zona1i",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 2048,
+          "input_tokens": 3024,
+          "output_tokens": 165
+        }
+      },
+      "phase": "end",
+      "request_number": 130,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-131-end",
+      "tag_sha": "cca15c40b332a46f316ec02b0d4d5a8af0d7fa3f",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c87de933bb535d25",
+        "condition": "E3",
+        "cost_usd": 0.00346075,
+        "latency_seconds": 7.244174688000044,
+        "provider_request_id": "req_553f1a6710914c2196b99708a141bbe5",
+        "received": true,
+        "request_id": "c5ec50b336104c8f900653028923f1df",
+        "request_sha256": "e09c3910f28b2660fc6214a484ad9d5b8857d41d23857a039d2456d7b8d694a5",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkRu1RIr2sLn8tJ33XwSpqDBnqAq",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 0,
+          "input_tokens": 4083,
+          "output_tokens": 1220
+        }
+      },
+      "phase": "end",
+      "request_number": 131,
+      "run_id": "38507847503"
+    },
+    {
+      "ref": "refs/tags/vinsoc-query-ui-text2sql-integration-20261008-calibration-request-132-end",
+      "tag_sha": "f9e1a0c19620a148ee285478d766165d18a79881",
+      "commit_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+      "event": {
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "case_id": "external_world_1_c87de933bb535d25",
+        "condition": "E3",
+        "cost_usd": 0.0032511999999999997,
+        "latency_seconds": 9.340132427999947,
+        "provider_request_id": "req_bdd1947b16cb411ba75ad73a64cfb5fe",
+        "received": true,
+        "request_id": "152a6795e839475883771b01fd595f7b",
+        "request_sha256": "3690ec2bd8124ef0d7cecf8e14e7a09c471f209654c3e0258fc289e8b67964b6",
+        "reserved_usd": 0.104,
+        "response_id": "chatcmpl-EYkS3fF1lrbl2T5ZbZWAyf1Vp8Z0f",
+        "role": "r2",
+        "transmitted": true,
+        "usage": {
+          "cached_tokens": 3968,
+          "input_tokens": 4912,
+          "output_tokens": 1458
+        }
+      },
+      "phase": "end",
+      "request_number": 132,
+      "run_id": "38507847503"
+    }
+  ]
+}
