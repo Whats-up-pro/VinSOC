@@ -1,0 +1,48 @@
+{
+  "version": "calibration_promotion_audit_update_v1",
+  "created_at_utc": "2026-10-14T06:30:06.1996182Z",
+  "status": "blocked_protocol_deviation",
+  "producer_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+  "execution_id": "liveui-1bf374a4a8c8473ca2008532",
+  "resolved_blockers": [
+    {
+      "code": "LOCAL_EXECUTION_ENVIRONMENT_UNAVAILABLE",
+      "evidence": "A functioning Windows workspace and detached canonical-byte producer checkout were used."
+    },
+    {
+      "code": "CALIBRATION_ARTIFACT_AUDIT_PENDING",
+      "evidence": "Artifact 11868639648 was independently downloaded and rehashed; 48 binding hashes and the producer selection lock were recomputed successfully."
+    }
+  ],
+  "open_blockers": [
+    {
+      "code": "PROTOCOL_DEVIATION_DECISION_PENDING",
+      "detail": "The plan caps R2 output at 1000 tokens, calibration at 168 requests, and E3 at 6 requests per case. The producer contract used 2000 output tokens and reserved 192 requests; two E3 cases used 7 requests and 11 responses exceeded 1000 output tokens. No decision accepting these deviations has been recorded."
+    }
+  ],
+  "verification": {
+    "artifact_id": 11868639648,
+    "archive_bytes": 1357555,
+    "github_archive_sha256": "9bef410dd8c68a566f62c62b7195118a9dff8e587f9740ac673a9a6c1f15adcd",
+    "independent_archive_sha256": "9bef410dd8c68a566f62c62b7195118a9dff8e587f9740ac673a9a6c1f15adcd",
+    "binding_files": 48,
+    "binding_records_loaded": 48,
+    "unique_case_condition_pairs": 48,
+    "selection_signature_valid": true,
+    "selection_recomputed_on_producer_checkout": true,
+    "selection_sha256": "1a3dad0ca074aeae1581d178110861d8c2a608e22c8be4ab348855fb9e8dcc94",
+    "candidate_selected_condition": "E0",
+    "model_calls": 132,
+    "model_responses": 132,
+    "actual_cost_usd": 0.16835815,
+    "unknown_exposure_usd": 0.0
+  },
+  "publication": {
+    "candidate_directory": "results/evaluation_v1/text2sql_integration_v1/calibration_promotion_20261014/candidate",
+    "canonical_selection_lock_installed": false,
+    "new_model_calls": 0,
+    "new_model_cost_usd": 0.0,
+    "historical_artifacts_modified": false
+  },
+  "next_action": "Record an explicit protocol-deviation decision. Until then, keep calibration and the selection gate NOT_VERIFIED and do not dispatch evaluation or pipeline paid requests."
+}

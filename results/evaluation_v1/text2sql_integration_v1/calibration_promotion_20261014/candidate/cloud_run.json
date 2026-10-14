@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "attempted": 132,
+  "received": 132,
+  "client_created": true,
+  "cost_unknown": false,
+  "window_claimed": true,
+  "new_run": true,
+  "request": {
+    "version": "vinsoc_live_ui_v1",
+    "scope": "calibration",
+    "case_id": null,
+    "question": null,
+    "condition": "E3",
+    "head_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+    "ci_run_id": 38507365645,
+    "execution_id": "liveui-1bf374a4a8c8473ca2008532",
+    "limit_usd": 21.0,
+    "confirmed_utc": "2026-10-14T03:45:00.352101+00:00",
+    "live_consent": true
+  },
+  "implementation_sha": "0a00770278fbd53f517677026b13166345eb38eb",
+  "ci_run_id": 38507365645,
+  "prior_cost_usd": 0.09061250000000003,
+  "known_usd": 0.25897065000000014,
+  "remaining_cap_usd": 20.74102935,
+  "current_run_cost_usd": 0.1683581500000001,
+  "preflight_status": "preflight_pass",
+  "gate_reasons": [],
+  "cost_ceiling_usd": 19.968,
+  "role_caps": {
+    "routing": 0,
+    "r2": 192,
+    "assessment": 0
+  },
+  "window_id": "text2sql-integration-20261008-calibration",
+  "official_eligible": false
+}
