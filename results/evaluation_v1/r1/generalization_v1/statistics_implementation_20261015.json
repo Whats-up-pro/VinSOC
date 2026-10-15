@@ -1,0 +1,53 @@
+{
+  "status": "IMPLEMENTED_AWAITING_EXACT_SHA_CI",
+  "scope": "r1-generalization-v1",
+  "previous_milestone_sha": "207d1f6b4bb34a72a4cbfd28905eb8487ed1b453",
+  "previous_ci": {
+    "run_id": 38689073997,
+    "conclusion": "success",
+    "full_tests_each_python": {
+      "passed": 1456,
+      "skipped": 7
+    },
+    "required_guard_tests_each_python": {
+      "passed": 140,
+      "skipped": 0
+    },
+    "required_real_data_tests_each_python": {
+      "passed": 13,
+      "skipped": 0
+    }
+  },
+  "targeted_tests": {
+    "passed": 37,
+    "skipped": 0,
+    "paths": [
+      "tests/test_r1_generalization_reporting.py",
+      "tests/test_tool_calling_evaluator.py"
+    ]
+  },
+  "verified_examples": {
+    "wilson_22_of_24": [
+      0.7415,
+      0.9768
+    ],
+    "wilson_5_of_5": [
+      0.5655,
+      1.0
+    ],
+    "exact_mcnemar_4_vs_1": 0.375,
+    "historical_required_coverage": "37/41",
+    "historical_critical_coverage": "29/31"
+  },
+  "denominators_separate": [
+    24,
+    120
+  ],
+  "no_records_metric_status": "NOT_MEASURED",
+  "missing_predictions_created": false,
+  "scorer_changed": false,
+  "model_calls_this_r1_scope": 0,
+  "new_r1_cost_usd": 0,
+  "live_status": "NOT_RUN",
+  "created_utc": "2026-10-15T05:55:56.336747+00:00"
+}
