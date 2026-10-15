@@ -1,0 +1,12 @@
+{
+  "attempted": 120,
+  "client_created": true,
+  "cost_unknown": false,
+  "cost_usd": 0.04673479999999999,
+  "human_review": "NOT_PERFORMED_BY_RUNNER",
+  "official_eligible": true,
+  "pending_exposure_usd": 0.0,
+  "received": 120,
+  "status": "completed",
+  "window_claimed": true
+}

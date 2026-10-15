@@ -1,0 +1,41 @@
+{
+  "authorization_sha256": "da89e4adc71c0d8615607992f98cde9707c3a9ab1167d764a38be3445b33a4ab",
+  "candidate_sha256": "5632d78e27d71279a758e4918f8ab0ac3aa4d12fb036ebb1d8a6f988a5592a77",
+  "case_count": 120,
+  "cost_usd": 0,
+  "format": "r1_generalization_run_gate_v1",
+  "generalization_lock_sha256": "1df9b83ae801d137439c0c0706a9573763f130349d0560cb8fb774ef4cc4bf6e",
+  "git": {
+    "branch": "master",
+    "ci_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+    "ci_success": true,
+    "commit_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+    "remote_master_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+    "working_tree_clean": true
+  },
+  "lock_verification": {
+    "case_count": 120,
+    "distribution": {
+      "no_tool": 24,
+      "single_tool": 54,
+      "three_tool": 12,
+      "two_tool": 30
+    },
+    "errors": [],
+    "lock_sha256": "1df9b83ae801d137439c0c0706a9573763f130349d0560cb8fb774ef4cc4bf6e",
+    "passed": true
+  },
+  "model_calls": 0,
+  "passed": true,
+  "provider_created": false,
+  "reasons": [],
+  "review_file_sha256": {
+    "reviewer_a.jsonl": "dfae5d09e4cddc0dcd5cda01adbd75a34061c63af4dc9bf381f7132f8f7f02e7",
+    "reviewer_b.jsonl": "d07c58d103a894d755312b8b87f17df248367fb896ca43f8a7f31e79647feccc"
+  },
+  "reviewer_ids": [
+    "Whats-up-pro",
+    "openai-codex-reviewer-b"
+  ],
+  "split_sha256": "87a84a4f958e3c7638f4554f78c8d3f621e7de40796922b858a1d9da4cd6aba7"
+}

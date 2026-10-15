@@ -1,0 +1,21 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "REPORT.md": "0bfc4e01e9dab57d66b40d1bd324b54f52a96ae6839af9df72fc4a38803ccc59",
+    "audit_summary.json": "52168eb817113eab7e3e2a49098a879aa0ddf9fba96ffc12041bdfd5d44ae326",
+    "authorization.json": "6b91f582708c7261dc73882c31a362c012b66737b1d1c881e35f4f28527d6d8e",
+    "claim.json": "d9b6a573be8122f82b8c9b344cd6980e6d133c55f34a7008770ea80dd298d777",
+    "client_created.json": "e24f3f61c5a1b16dbe1c4cd5eddb00ad2bec94c9e7256882f51b3438fbe54d4e",
+    "cloud_run.json": "b13e77a2c577d665cfe4672e1fe445b194a00677fc661fb06d94a0f70741ba36",
+    "gate.json": "85e285b8a9dee6c650bf1bacca3ff87dabec232398b953f7d021bbf3f18447e4",
+    "journal.json": "325ec52ba993c32bc243b4ec73f10ef442853ca9451694ace869807d3d5c4894",
+    "model_document.md": "78cab23e43e747d199df10854f27a0bc8ebe1af2bdd66642fe34462e1f680537",
+    "native_io.zip": "1716c08b0523057e566ecad590ac1b66d75f5ca1593c64a5478b95a83382d8f8",
+    "native_io_hashes.json": "0a147529095590f31b6023f44b08c819af286b79b2fa78222aed29fc03029f01",
+    "preflight.json": "85e285b8a9dee6c650bf1bacca3ff87dabec232398b953f7d021bbf3f18447e4",
+    "receipt.json": "58b5666f7101a888bbf9463fd95461ee44c5dc03cffd49d432132fbb73182bfb",
+    "remote_terminal_receipt.json": "d14164335c07d40c34e9ea44c4fa715fe37de111581ace428b2bbe73597a0258",
+    "report.json": "82def6a451b53050172fbb5520f42dafb9db86e0975be10d798517c62df26bae",
+    "verify.py": "ed59ed9eeb13c2c3ac71f7d228fa3ae9312830b63dd418ea9b96ca3ab36999a9"
+  }
+}

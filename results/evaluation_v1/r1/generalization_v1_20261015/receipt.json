@@ -1,0 +1,62 @@
+{
+  "status": "VERIFIED_OFFLINE_AWAITING_EVIDENCE_CI",
+  "producer_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+  "producer_ci": 38698148403,
+  "preflight_run": 38698592384,
+  "live_run": 38699129318,
+  "run_attempt": 1,
+  "scope": "r1-generalization-v1",
+  "window": "vinsoc-r1-generalization-v1-once",
+  "artifact_id": 11955662061,
+  "artifact_size_bytes": 380024,
+  "original_archive_sha256": "ed8c130071b9d4e3752fb6319d261b41a0a6d01afdaada0118229d0f30ef23cb",
+  "independent_archive_digest_matched": true,
+  "cases": 120,
+  "attempted": 120,
+  "received": 120,
+  "unique_request_ids": 120,
+  "unique_provider_request_ids": 120,
+  "unique_response_ids": 120,
+  "tokens": {
+    "cached_tokens": 0,
+    "input_tokens": 88185,
+    "output_tokens": 7163
+  },
+  "known_cost_usd": "0.04673480",
+  "unknown_cost": false,
+  "pending_exposure_usd": 0,
+  "success": {
+    "rate": 0.9916666666666667,
+    "successes": 119,
+    "total": 120,
+    "wilson_95": [
+      0.9543037087549505,
+      0.998527444266658
+    ]
+  },
+  "zero_retries": true,
+  "frozen_scorer_and_native_predictions_recomputed": true,
+  "full_denominator_argument_coverage": {
+    "critical": {
+      "matched": 154,
+      "rate": 0.9935483870967742,
+      "total": 155
+    },
+    "required": {
+      "matched": 154,
+      "rate": 0.9935483870967742,
+      "total": 155
+    }
+  },
+  "human_reviews_signed": 0,
+  "production_tools_executed": 0,
+  "limitations": [
+    "Decision-only native tool selection; production tools are not executed.",
+    "Historical dev-v2 gold includes 11/24 cases adjudicated after model outputs; dev is not independent held-out evidence.",
+    "The added split is authored and reviewed, not a representative random SOC population sample.",
+    "Wilson intervals describe binomial uncertainty under independence assumptions; overlapping families/templates limit population claims.",
+    "Reviewer identities are reproduced from the existing lock; the runner does not certify either as human.",
+    "Dev and generalization denominators remain separate; missing cases are not discarded."
+  ],
+  "created_utc": "2026-10-15T07:46:54.257622+00:00"
+}

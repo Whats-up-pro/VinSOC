@@ -1,0 +1,76 @@
+{
+  "status": "VERIFIED_OFFLINE",
+  "producer_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+  "producer_ci": 38698148403,
+  "live_run": 38699129318,
+  "records": 120,
+  "responses": 120,
+  "native_io_files": 240,
+  "success": {
+    "rate": 0.9916666666666667,
+    "successes": 119,
+    "total": 120,
+    "wilson_95": [
+      0.9543037087549505,
+      0.998527444266658
+    ]
+  },
+  "usage": {
+    "cached_tokens": 0,
+    "input_tokens": 88185,
+    "output_tokens": 7163
+  },
+  "cost_usd": "0.04673480",
+  "cost_unknown": false,
+  "pending_exposure_usd": 0,
+  "request_response_provider_ids_unique": true,
+  "native_predictions_and_frozen_scorer_recomputed": true,
+  "report_recomputed_equal_except_legacy_wall_clock_latency": true,
+  "legacy_wall_clock_latency_fields_not_reconstructable_from_case_result": [
+    "mean_latency_ms",
+    "p95_latency_ms"
+  ],
+  "sdk_latency_seconds_recomputed": {
+    "count": 120,
+    "p50": 0.9592225070000495,
+    "p95": 1.7137029040000016
+  },
+  "critical_argument_mismatches": [
+    {
+      "case_id": "gen_096",
+      "critical_argument_mismatches_recomputed": 1,
+      "legacy_saved_critical_arg_errors": 0,
+      "matches": [
+        {
+          "critical_arg_match": false,
+          "expected_call_id": "call_2",
+          "expected_tool": "cti_enrichment",
+          "match_type": "partial",
+          "matched_critical_args": [],
+          "mismatched_critical_args": [
+            "indicator"
+          ],
+          "predicted_tool": "cti_enrichment",
+          "required_arg_match": false
+        },
+        {
+          "critical_arg_match": true,
+          "expected_call_id": "call_1",
+          "expected_tool": "endpoint_investigation",
+          "match_type": "exact",
+          "matched_critical_args": [
+            "host"
+          ],
+          "mismatched_critical_args": [],
+          "predicted_tool": "endpoint_investigation",
+          "required_arg_match": true
+        }
+      ]
+    }
+  ],
+  "legacy_error_summary_preserved": {},
+  "interpretation": "119/120 decision-only; no production SOC tools executed; authored suite, correlated families, not a random held-out SOC population.",
+  "new_model_calls": 0,
+  "new_tool_executions": 0,
+  "human_reviews_signed": 0
+}

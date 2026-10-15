@@ -1,0 +1,21 @@
+{
+  "approved": true,
+  "authorized_by": "Whats-up-pro",
+  "checked_utc": "2026-10-15T07:30:17.850585+00:00",
+  "ci_run_id": 38698148403,
+  "cost_ceiling_usd": 50.475648,
+  "implementation_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+  "limit_usd": "100",
+  "max_retries": 0,
+  "maximum_output_tokens": 1000,
+  "maximum_requests": 120,
+  "model": "gpt-4.1-mini-2025-04-14",
+  "model_document": {
+    "path": "/home/runner/work/VinSOC/VinSOC/.vinsoc/r1-inputs/gpt-4.1-mini.md",
+    "sha256": "78cab23e43e747d199df10854f27a0bc8ebe1af2bdd66642fe34462e1f680537",
+    "source_url": "https://developers.openai.com/api/docs/models/gpt-4.1-mini.md"
+  },
+  "reference": "explicit-user-all-remaining-experiments-20261015",
+  "scope": "r1-generalization-v1",
+  "split_sha256": "87a84a4f958e3c7638f4554f78c8d3f621e7de40796922b858a1d9da4cd6aba7"
+}
