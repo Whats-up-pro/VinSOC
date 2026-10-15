@@ -1,0 +1,60 @@
+{
+  "version": "mentor_report_revision_v1",
+  "date": "2026-10-15",
+  "checks": {
+    "pages": 10,
+    "all_pages_visually_verified": true,
+    "unchanged_pages_after_final_edit": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      9,
+      10
+    ],
+    "final_changed_page_visually_verified": 8,
+    "code_snippets_in_report": false,
+    "commit_details_in_report": false,
+    "all_nine_tools_described": true,
+    "pdf_exported_from_delivered_docx": true,
+    "native_editable_docx": true,
+    "unmeasured_120_96_scores_not_fabricated": true,
+    "new_model_calls": 0,
+    "new_cost_usd": 0
+  },
+  "measured_scope": {
+    "r1_dev": {
+      "correct": 22,
+      "n": 24,
+      "exact_call_f1": 0.9508,
+      "no_tool_correct": 5,
+      "no_tool_n": 5
+    },
+    "r1_generalization": {
+      "n": 120,
+      "result": "NOT_RUN"
+    },
+    "r2_ctu_dev": {
+      "correct": 7,
+      "n": 8
+    },
+    "r2_evaluation": {
+      "n": 96,
+      "result": "NOT_RUN"
+    }
+  },
+  "source_artifacts": [
+    "results/evaluation_v1/r1/r1_a1_dev_v2_852e543.json",
+    "results/evaluation_v1/ctu_network_public/r2_phase2_live/20261001_3f9d72d/suite/report.json",
+    "results/evaluation_v1/text2sql_integration_v1/calibration_protocol2_20261014/acceptance_receipt.json",
+    "results/evaluation_v1/text2sql_integration_v1/calibration_protocol3_audit_20261014/summary.json"
+  ],
+  "files": {
+    "md": "1c94f308a0d2a48dadfc4f3540ea11c8e02fd0bd7559dc4ec6889fa6efbb3abe",
+    "docx": "4bf350aae184f39488c03efe82465a02f5719a4642b49335d3726fc6451c7294",
+    "pdf": "58aeba7feea77a03308947ad5aad8769d6f80abc2caa8497393c179a76d50a4e"
+  }
+}
