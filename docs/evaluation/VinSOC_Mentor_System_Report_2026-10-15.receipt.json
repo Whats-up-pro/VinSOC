@@ -4,18 +4,6 @@
   "checks": {
     "pages": 10,
     "all_pages_visually_verified": true,
-    "unchanged_pages_after_final_edit": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      9,
-      10
-    ],
-    "final_changed_page_visually_verified": 8,
     "code_snippets_in_report": false,
     "commit_details_in_report": false,
     "all_nine_tools_described": true,
@@ -23,7 +11,18 @@
     "native_editable_docx": true,
     "unmeasured_120_96_scores_not_fabricated": true,
     "new_model_calls": 0,
-    "new_cost_usd": 0
+    "new_cost_usd": 0,
+    "editorial_review": "Formal project report; no reader-directed drafting instructions",
+    "final_changed_pages_visually_verified": [
+      1,
+      2,
+      4,
+      5,
+      7,
+      8,
+      9,
+      10
+    ]
   },
   "measured_scope": {
     "r1_dev": {
@@ -53,8 +52,9 @@
     "results/evaluation_v1/text2sql_integration_v1/calibration_protocol3_audit_20261014/summary.json"
   ],
   "files": {
-    "md": "1c94f308a0d2a48dadfc4f3540ea11c8e02fd0bd7559dc4ec6889fa6efbb3abe",
-    "docx": "4bf350aae184f39488c03efe82465a02f5719a4642b49335d3726fc6451c7294",
-    "pdf": "58aeba7feea77a03308947ad5aad8769d6f80abc2caa8497393c179a76d50a4e"
-  }
+    "md": "b707e5c9636a32ec41244f70fd2bb03ec6105a4a679180bb1f43a8aa3225ae9a",
+    "docx": "741b3056d7ce0dd8d91638f015ea3cc7b98d2a09fe81c82c61e138f37473e5b6",
+    "pdf": "fb3409bd603eac89cdb099f7598054964423fe8dffdd46b7433a5e183895852d"
+  },
+  "report_title": "Trợ lý điều tra SOC dựa trên bằng chứng"
 }

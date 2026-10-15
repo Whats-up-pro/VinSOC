@@ -1,4 +1,4 @@
-# Báo cáo hệ thống VinSOC
+# Trợ lý điều tra SOC dựa trên bằng chứng
 
 Công việc đã thực hiện và kết quả thực nghiệm
 
@@ -23,11 +23,11 @@ Triage ban đầu hiện dựa trên quy tắc phân loại văn bản, chưa b�
 
 # 1 Triage và phạm vi điều tra
 
-## Triage hiện tại làm gì
+## Cơ chế triage hiện tại
 
 Luồng IOC cũ ghép chỉ báo và ngữ cảnh cảnh báo, nhận diện cụm từ bằng quy tắc, xử lý phủ định rồi gán nhãn benign, suspicious hoặc needs investigation. Đây là bước sàng lọc theo nội dung được cung cấp, chưa phải kết luận hình thành từ bằng chứng CTI, lưu lượng hay hoạt động máy trạm.
 
-Nếu nhãn ban đầu là benign và có human review, hệ thống hỏi người phân tích có đóng cảnh báo hay tiếp tục điều tra. Khi không cấu hình human review, nhánh cũ vẫn có thể tự đóng trước enrichment. Vì vậy, nhận xét của mentor về việc triage quá sớm là có cơ sở; các công cụ điều tra đã có chưa giải quyết hoàn toàn điểm này.
+Nếu nhãn ban đầu là benign và có human review, hệ thống hỏi người phân tích có đóng cảnh báo hay tiếp tục điều tra. Khi không cấu hình human review, nhánh cũ vẫn có thể tự đóng trước enrichment. Việc kết luận từ nội dung cảnh báo trước khi thu thập bằng chứng làm hạn chế chất lượng điều tra. Các công cụ phân tích ở bước sau chưa khắc phục nhánh đóng sớm này.
 
 ## Các bước điều tra đã được triển khai
 
@@ -39,9 +39,9 @@ Khi tiếp tục điều tra, bộ điều phối lựa chọn công cụ theo y
 | Bằng chứng thu thập | Cho biết IOC có trong nguồn CTI không, máy nào đã kết nối, hành vi nào xuất hiện và thời điểm liên quan. |
 | Nhận định sau điều tra | Tổng hợp bằng chứng ủng hộ, mâu thuẫn và phần còn thiếu; người phân tích xem xét quyết định cuối. |
 
-## Điều kiện để triage đáp ứng yêu cầu mentor
+## Hạn chế và hướng hoàn thiện triage
 
-Cần tách tiếp nhận và ưu tiên xử lý khỏi kết luận cuối. Không đóng benign chỉ vì một từ khóa trong cảnh báo. Kết luận cần dựa trên nguồn đã tra và dữ liệu hành vi phù hợp; khi thiếu dữ liệu phải giữ trạng thái chưa đủ bằng chứng. Luồng triage sau enrichment còn là phần cần hoàn thiện, không được tính là đã nghiệm thu chỉ bằng việc sửa mô tả.
+Hướng hoàn thiện là tách bước tiếp nhận và ưu tiên xử lý khỏi kết luận cuối. Kết luận benign cần có bằng chứng phù hợp từ các nguồn đã tra và dữ liệu hành vi, thay vì chỉ dựa vào từ khóa. Khi thiếu dữ liệu, hồ sơ cần giữ trạng thái chưa đủ bằng chứng. Việc chuyển triage sang quyết định sau enrichment chưa được hoàn tất trong luồng IOC hiện tại.
 
 Luồng câu hỏi Text-to-SQL chỉ xác thực câu hỏi và phạm vi dữ liệu trước truy vấn. Bước đó không thực hiện phân loại đe dọa và không thay thế triage cảnh báo.
 
@@ -72,7 +72,7 @@ Network hiện tra theo IPv4. Tra cứu chỉ bằng tên miền và tương qua
 
 VinSOC có chín tên công cụ được cung cấp cho mô hình trong các profile khác nhau. Không có một lượt điều tra nào mặc định được quyền dùng toàn bộ công cụ. R1 hiện chỉ chấm ba công cụ điều tra ở nhóm đầu.
 
-| Công cụ | Chức năng và đầu vào dễ hiểu |
+| Công cụ | Chức năng và đầu vào |
 | --- | --- |
 | cti_enrichment | Tra thông tin CTI cho IP, tên miền, URL hoặc hash theo khả năng nguồn. Trả bản ghi khớp, ngữ cảnh đe dọa và nguồn; không dùng để tra hostname máy trạm. |
 | network_investigation | Nhận IPv4 và khoảng thời gian để tìm flow, thống kê kết nối, cổng và đích, kiểm định kỳ, quét và lưu lượng. Không nhận SQL từ mô hình ở lớp điều phối. |
@@ -85,7 +85,7 @@ VinSOC có chín tên công cụ được cung cấp cho mô hình trong các pr
 
 Công cụ chỉ đọc dữ liệu trong phạm vi được cấp. Một yêu cầu có thể cần một, nhiều hoặc không cần công cụ. Thiếu IP, host hoặc phạm vi thời gian cần thiết phải dẫn đến hỏi thêm hoặc nêu giới hạn, thay vì tự tạo thông tin.
 
-Các công cụ SOC traces phục vụ luồng thí nghiệm riêng và không phải kết nối trực tiếp đến một SIEM sản xuất. Các adapter dự kiến cho Google SecOps, GTI và SCC hiện là khung tích hợp, chưa được trình bày như dịch vụ đã kết nối vận hành.
+Các công cụ SOC traces phục vụ luồng thí nghiệm trên dữ liệu tổng hợp, chưa kết nối trực tiếp đến SIEM sản xuất. Adapter cho Google SecOps, GTI và SCC mới ở dạng khung tích hợp, chưa có kết nối vận hành được xác minh.
 
 # 4 Công cụ dữ liệu và hạ tầng hỗ trợ
 
@@ -106,7 +106,7 @@ Các công cụ SOC traces phục vụ luồng thí nghiệm riêng và không p
 | URLhaus | Tra IOC trong dữ liệu URLhaus cục bộ khi đã cung cấp tệp nguồn. |
 | MITRE ATT&CK | Ánh xạ phần mềm và malware sang kỹ thuật từ dữ liệu STIX cục bộ. Đây là cơ sở tri thức, không phải dịch vụ chấm uy tín IP. |
 
-Có adapter chưa có nghĩa mọi nguồn đã hoạt động trong mọi demo. Nguồn CTI cần cấu hình và quyền truy cập phù hợp; không có nguồn thì công cụ báo lỗi hoặc thiếu dữ liệu, không tạo kết quả thay thế.
+Các nguồn CTI chỉ hoạt động khi đã được cấu hình dữ liệu và quyền truy cập phù hợp. Khi nguồn chưa khả dụng, công cụ trả trạng thái lỗi hoặc thiếu dữ liệu. Các demo hiện có chưa xác minh đồng thời toàn bộ nguồn CTI.
 
 ## Thành phần thực thi
 
@@ -142,7 +142,7 @@ Evaluation ngoài SOC lấy từ Spider, gồm tám database thuộc bảy lĩnh
 
 Nguồn CTU dùng snapshot S5 và S7 có 243.906 flow. Đã kiểm dữ liệu và thực thi 120 truy vấn gold để kiểm tính hợp lệ của bộ mới; đây là kiểm bộ đo, không phải 120 câu mô hình trả lời đúng. Pipeline tích hợp 32 câu CTU là phép đo riêng.
 
-# 6 R1 kết quả đã đo
+# 6 Kết quả đánh giá R1
 
 Kết quả đã đo dưới đây thuộc bộ phát triển 24 ca, dùng GPT-4.1 mini trong một lượt quyết định native tool call. Phép đo kiểm tool và tham số được chọn, không thực thi các công cụ để chấm thành công điều tra.
 
@@ -154,7 +154,7 @@ Kết quả đã đo dưới đây thuộc bộ phát triển 24 ca, dùng GPT-4
 | Tool Set Exact Match | 22/24 = 91,67% | Tập tên tool dự đoán khớp tập cần dùng. |
 | Forbidden Tool Rate | 0/24 = 0% | Không có ca gọi tool bị cấm trong lượt này. |
 
-## Điều đã làm được
+## Kết quả triển khai
 
 Bộ chấm phân biệt chọn sai nguồn, thiếu tool, gọi thừa, lặp lời gọi và sai tham số. Các ca nhiều tool kiểm khả năng phối hợp CTI, network và endpoint; các ca không tool kiểm khả năng dừng khi yêu cầu chỉ mang tính khái niệm hoặc thiếu căn cứ.
 
@@ -164,7 +164,7 @@ Bộ chấm phân biệt chọn sai nguồn, thiếu tool, gọi thừa, lặp l
 
 Bộ 120 ca mở rộng được giữ riêng để tạo bằng chứng tốt hơn về khả năng khái quát. Trạng thái hiện tại là đã chuẩn bị và khóa bộ ca; chưa có điểm đầy đủ trên 120 ca. Khi có lượt chạy hợp lệ sẽ báo số đúng trên 120, khoảng tin cậy và các nhóm hành vi, không ghép với 22/24.
 
-# 7 R2 kết quả đã đo
+# 7 Kết quả đánh giá R2
 
 ## Kết quả phát triển CTU trước khi mở rộng
 
@@ -190,11 +190,11 @@ Lượt chọn cấu hình có E0 chạy SQL thành công 23/24 và E3 5/24; chi
 
 Execution Success cho biết truy vấn chạy được; Execution Accuracy còn yêu cầu kết quả đúng gold. Ở lượt chọn cấu hình, E0 có tám truy vấn chạy được nhưng trả kết quả khác đáp án. E3 thường dừng trước SQL cuối vì lỗi liên kết schema, đầu ra không hợp lệ hoặc truy vấn thử thất bại.
 
-Chưa có kết quả đầy đủ 192 record để công bố EX trên evaluation 96 câu. Kiểm ngữ nghĩa bằng các bộ dữ liệu phản ví dụ cũng chưa được đo cho các lượt calibration này; giá trị mặc định trong báo cáo tự động không được coi là kết quả thực nghiệm.
+Evaluation 96 câu chưa có đủ 192 record kết quả để tổng hợp Execution Accuracy. Các lượt calibration trên cũng chưa có phép đo ngữ nghĩa bằng dữ liệu phản ví dụ; chỉ số này hiện chưa được xác lập.
 
 # 8 Luồng đầu cuối và kết quả demo
 
-## Một câu hỏi đi qua hệ thống như thế nào
+## Luồng xử lý câu hỏi mạng
 
 Người dùng hỏi số IP đích nhận TCP flow trong cả hai scenario CTU sau hai mốc thời gian riêng. Bộ điều phối giữ nguyên câu hỏi khi gọi network_query. Dịch vụ R2 tạo truy vấn, worker chạy trên snapshot được cấp và trả bảng kết quả. Kho dẫn chứng lưu kết quả cùng nguồn; assessment diễn giải con số và nêu giới hạn trước khi đưa cho người phân tích review.
 
@@ -211,11 +211,11 @@ Bốn demo cho thấy hai ca đạt kiểm kỹ thuật, một ca sai và một 
 
 ## Luồng cảnh báo ngoài Text-to-SQL
 
-Hệ thống cũng đã chạy một ca SOC traces bằng API thật: mô hình gọi tìm sự kiện và lấy ngữ cảnh; các công cụ trả không khớp hoặc không có dữ liệu. Báo cáo cuối giữ kết luận chưa đủ bằng chứng, thay vì suy ra benign. Nguồn này là dữ liệu tổng hợp; demo không được trình bày như một sự cố sản xuất thật hay một benchmark C2 đã hoàn tất.
+Hệ thống cũng đã chạy một ca SOC traces bằng API thật. Mô hình tìm sự kiện và lấy ngữ cảnh; các công cụ trả không khớp hoặc không có dữ liệu. Kết luận cuối là chưa đủ bằng chứng. Ca này sử dụng dữ liệu tổng hợp, không phản ánh một sự cố sản xuất thực tế. Khả năng xác nhận C2 đầu cuối chưa được đánh giá trên một bộ sự cố riêng.
 
 # 9 Đánh giá và công việc tiếp theo
 
-## Những phần đã hình thành
+## Kết quả triển khai và đánh giá
 
 VinSOC đã kết nối quyết định gọi công cụ với thu thập dữ liệu, Text-to-SQL, kết quả truy vấn, dẫn chứng, nhận định và review. Các lỗi được giữ lại theo đúng bước phát sinh, giúp phân biệt lỗi lựa chọn nguồn, lỗi sinh SQL, lỗi giới hạn dữ liệu và thiếu thông tin điều tra.
 
