@@ -1,0 +1,54 @@
+{
+  "report_title": "Trợ lý điều tra SOC dựa trên bằng chứng",
+  "subtitle": "Kiến trúc, phương pháp và đánh giá thực nghiệm",
+  "generated_at_utc": "2026-10-15T02:37:25.942800Z",
+  "files": {
+    "docx": {
+      "path": "docs/evaluation/Evidence_Based_SOC_Investigation_Assistant_Report_2026-10-15.docx",
+      "sha256": "78136d8631090f7c740fabf39d7e2495a842cb1d6b9661f1aabf7a4c1d85e2bd",
+      "bytes": 642300
+    },
+    "pdf": {
+      "path": "docs/evaluation/Evidence_Based_SOC_Investigation_Assistant_Report_2026-10-15.pdf",
+      "sha256": "2a182af02888ed38f20191d84a93e40d3df095a26bd3bc9433b6afd93d1504e8",
+      "bytes": 965800
+    }
+  },
+  "layout": {
+    "paper": "A4 portrait",
+    "body_font": "Times New Roman 13 pt",
+    "line_spacing": 1.15,
+    "pages": 22
+  },
+  "content": {
+    "extracted_words": 6394,
+    "numbered_tables": 16,
+    "figures": 4,
+    "tool_names_documented": 9,
+    "references": 13
+  },
+  "scope_assertions": {
+    "r1_development": "22/24 case success; Exact-Call F1 95.08%; no-tool 5/5; tool-set EM 22/24",
+    "r1_generalization": "120 cases reviewed and locked; no complete model run reported",
+    "r2_historical_ctu": "7/8 execution accuracy, execution success and syntax validity; 0/8 safety rejection",
+    "r2_calibration": "24 questions per configuration; E0 15/24 and E3 5/24 in selection run",
+    "r2_evaluation": "96 questions prepared; no complete evaluation result reported"
+  },
+  "qa": {
+    "all_22_pages_visually_inspected": true,
+    "no_clipping_overlap_or_broken_tables": true,
+    "toc_page_numbers_verified": true,
+    "a11y_findings": {
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "filename_contains_mentor": false,
+    "report_text_contains_mentor": false,
+    "report_text_contains_commit_history": false,
+    "report_contains_source_code": false,
+    "docx_pdf_same_rendered_content": true,
+    "evaluation_model_calls": 0,
+    "evaluation_model_cost_usd": 0.0
+  }
+}
