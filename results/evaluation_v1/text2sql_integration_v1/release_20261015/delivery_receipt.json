@@ -1,0 +1,69 @@
+{
+  "status": "PARTIAL_DELIVERY_NOT_FINAL_RELEASE",
+  "created_utc": "2026-10-15T08:11:36.235120+00:00",
+  "source_implementation_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+  "source_ci": 38698148403,
+  "evaluation_evidence_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+  "evaluation_evidence_ci": 38698148403,
+  "r1_evidence_sha": "aea0b9b2197db69ba45727142b2fd5c5c3dbd58f",
+  "r1_evidence_ci": 38701290199,
+  "calibration_promotion_sha": "2f8234a3db086fb634b91dc2e5ba50d1a77db4fe",
+  "calibration_promotion_ci": 38684701741,
+  "pipeline_live_run": 38699219559,
+  "pipeline_workflow_conclusion": "failure",
+  "pipeline_acceptance": "NOT_COMPLETE",
+  "selection_hash": "6c54e629889cc029f1a49bb810434c29c582682ff8a830d32a8016093d143218",
+  "selected_condition": "E0",
+  "deliverables": {
+    "D1": "VERIFIED_SOURCE_PRESERVED",
+    "D2": "VERIFIED_13_ORIGINAL_DB_REQUIRED_CI",
+    "D3": "VERIFIED_48_ACTUAL_RECORDS_E0_SELECTION",
+    "D4": "VERIFIED_192_ACTUAL_EVALUATION_RECORDS",
+    "D5": "PARTIAL_16_COMPLETED_1_PARTIAL_15_MISSING",
+    "D6": "PENDING_0_HUMAN_REVIEWS",
+    "D7": "OFFLINE_VIEWER_READY_WITH_TRUE_PARTIAL_STATUS",
+    "D8": "UPDATED_8_PAGE_PDF_AND_MARKDOWN",
+    "D9": "OFFLINE_AUDITORS_AND_HASH_MANIFESTS_READY",
+    "D10": "KNOWN_USAGE_COST_AND_BLOCKERS_PRESERVED"
+  },
+  "local_verification": {
+    "full_suite": {
+      "passed": 1467,
+      "skipped": 5,
+      "failed": 0,
+      "seconds": 164.93
+    },
+    "r1_targeted": {
+      "passed": 27,
+      "skipped": 0
+    },
+    "evaluation_targeted": {
+      "passed": 22,
+      "skipped": 0
+    },
+    "auditors": "verified R1_120/evaluation192/pipeline_partial; no new SDK or SQL",
+    "compile": true,
+    "protected_files_unchanged": 3640,
+    "diff_check": true
+  },
+  "pdf": {
+    "path": "docs/evaluation/VinSOC_Official_Experiments_Report_2026-10-15.pdf",
+    "pages": 8,
+    "paper": "A4",
+    "body_font": "DejaVu Serif13pt",
+    "visual_render_review": "all8pages inspected; no clipping/orphan pages"
+  },
+  "human_reviews_signed": 0,
+  "models_rerun_to_rescue_outputs": false,
+  "model_calls_by_report_or_viewer": 0,
+  "evidence_publication_ci": "Must verify the exact commit containing this delivery in GitHub Actions. Publication does not turn partial pipeline into complete.",
+  "remaining": [
+    "payload projection and row/cell/empty-result contract need a new frozen protocol",
+    "15 cases unexecuted and1partial; no rescue window opened",
+    "fixed4demo:COUNTmissing/UDPpartial/NULLfailed/AVGmissing",
+    "actual human review:0/3 eligible cases; none of fixed4eligible",
+    "SOC128blocked:0/12 source reviews and missingSOC_E2E_GATES_JSON; no model calls",
+    "independent holdout and matched8 remain deferred"
+  ],
+  "r1_analysis_correction": "gen096 has64-character gold hash and66-character native prediction, two extra e characters;119/120 unchanged"
+}

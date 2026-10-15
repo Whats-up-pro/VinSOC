@@ -1,0 +1,13 @@
+{
+  "case_id": "gen_096",
+  "original_analysis_claim": "one character changed",
+  "correction": "two extra e characters;64-character gold hash versus66-character native prediction",
+  "expected": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee01",
+  "actual": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee01",
+  "expected_length": 64,
+  "actual_length": 66,
+  "native_response_id": "chatcmpl-EZAJDYznhS32LZUaTm4IGUND5jwKW",
+  "native_response_sha256": "01a8b21d75aee218859f36270cb2664aa178271f1842f31076368e6ab9be0d0b",
+  "model_score_unchanged": "119/120",
+  "new_model_calls": 0
+}

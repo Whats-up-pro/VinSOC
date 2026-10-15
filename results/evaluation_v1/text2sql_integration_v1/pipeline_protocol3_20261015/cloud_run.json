@@ -1,0 +1,39 @@
+{
+  "status": "partial",
+  "attempted": 50,
+  "received": 50,
+  "client_created": true,
+  "cost_unknown": false,
+  "window_claimed": true,
+  "new_run": true,
+  "request": {
+    "version": "vinsoc_live_ui_v1",
+    "scope": "pipeline",
+    "case_id": null,
+    "question": null,
+    "condition": "E0",
+    "head_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+    "ci_run_id": 38698148403,
+    "execution_id": "liveui-fb1ba48a3e2b4f10898e24d9",
+    "limit_usd": 150,
+    "confirmed_utc": "2026-10-15T07:22:11.534247+00:00",
+    "live_consent": true
+  },
+  "implementation_sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+  "ci_run_id": 38698148403,
+  "prior_cost_usd": 1.2957151999999987,
+  "known_usd": 1.3338190999999997,
+  "remaining_cap_usd": 148.6661809,
+  "current_run_cost_usd": 0.03810390000000097,
+  "preflight_status": "preflight_pass",
+  "gate_reasons": [],
+  "cost_ceiling_usd": 30.1843456,
+  "role_caps": {
+    "routing": 32,
+    "r2": 32,
+    "assessment": 32
+  },
+  "window_id": "text2sql-integration-20261014-protocol3-pipeline",
+  "official_eligible": false,
+  "failure_category": "ValueError"
+}

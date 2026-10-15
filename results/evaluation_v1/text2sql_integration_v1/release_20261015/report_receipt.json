@@ -1,0 +1,15 @@
+{
+  "pages": 8,
+  "files": {
+    "docs/evaluation/VinSOC_Official_Experiments_Report_2026-10-15.pdf": {
+      "sha256": "e9eec39ede3441f8f4597d5826d97ec1c70623e41ef422a53c1fca573a38fbc8",
+      "bytes": 69339
+    },
+    "docs/evaluation/VinSOC_Official_Experiments_Report_2026-10-15.md": {
+      "sha256": "3e50bab2b7e3065e7259c41615bbd36183b02d066912cead37983bbaab7a3315",
+      "bytes": 16014
+    }
+  },
+  "uses_authentic_artifacts_only": true,
+  "no_auto_human_approval": true
+}

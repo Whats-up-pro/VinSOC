@@ -1,0 +1,136 @@
+{
+  "kind": "offline_diagnostic_from_authentic_saved_records",
+  "model_calls": 0,
+  "sql_executions": 0,
+  "native_assessment_reparse": [
+    {
+      "case_id": "ctu_cross_09368110b7091cb8",
+      "response_id": "chatcmpl-EZAEu3Y9sF7xneGWsWFNrxxQ36OfO",
+      "parser_replay_error": null,
+      "saved_termination": "FINAL_ASSESSMENT",
+      "rows": 1
+    },
+    {
+      "case_id": "ctu_cross_0b9805ee5f7a7aca",
+      "response_id": "chatcmpl-EZAF9FqxISZNA1L0thzKtgVYc48rF",
+      "parser_replay_error": null,
+      "saved_termination": "FINAL_ASSESSMENT",
+      "rows": 1
+    },
+    {
+      "case_id": "ctu_cross_111e791fb862cf30",
+      "response_id": "chatcmpl-EZAFOKKuNSTCiGOO8r9bVxVjtnKSQ",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 3
+    },
+    {
+      "case_id": "ctu_cross_116e46aecde5564d",
+      "response_id": "chatcmpl-EZAFecfFkMd2xZ7bvvhc1rqamSbpR",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 103
+    },
+    {
+      "case_id": "ctu_cross_179231c51f8af53e",
+      "response_id": "chatcmpl-EZAFsIKZGjMI2VqowpAZI5k4f58vA",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 20
+    },
+    {
+      "case_id": "ctu_cross_1dc9e35510939cd9",
+      "response_id": "chatcmpl-EZAG7qCObXOgUKpbGvufnmQvVEVeX",
+      "parser_replay_error": "MISSING_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 0
+    },
+    {
+      "case_id": "ctu_cross_2e05412218fcc02f",
+      "response_id": "chatcmpl-EZAGMNr49JA0CCnjUAnFZVAKoW9RH",
+      "parser_replay_error": null,
+      "saved_termination": "FINAL_ASSESSMENT",
+      "rows": 0
+    },
+    {
+      "case_id": "ctu_cross_3f659571f998adb0",
+      "response_id": "chatcmpl-EZAGaEq2BUzB7frWrUlgkdV6SAhjd",
+      "parser_replay_error": "MISSING_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 0
+    },
+    {
+      "case_id": "ctu_cross_3f83eeb648a43168",
+      "response_id": "chatcmpl-EZAGoAHl6zbWEsjQA87Z3ianc8PmZ",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 10
+    },
+    {
+      "case_id": "ctu_cross_493dba43b24b2e81",
+      "response_id": "chatcmpl-EZAH1UQAtv78EJtSuTHWUSCKLXoof",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 148
+    },
+    {
+      "case_id": "ctu_cross_4b4f065c0737c540",
+      "response_id": "chatcmpl-EZAHGG9dDgKM8l9CqRz4HRyqGY2k9",
+      "parser_replay_error": null,
+      "saved_termination": "FINAL_ASSESSMENT",
+      "rows": 1
+    },
+    {
+      "case_id": "ctu_cross_4bd089aa77684ec3",
+      "response_id": "chatcmpl-EZAHU7sbHJqrbbjUKMwXBnBCOaCkg",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 14
+    },
+    {
+      "case_id": "ctu_cross_4dfbfa87ef9eacfa",
+      "response_id": "chatcmpl-EZAHooyi9Qqx7S7wS65LVISbPqPd4",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 83
+    },
+    {
+      "case_id": "ctu_cross_5ba944b403f6456d",
+      "response_id": "chatcmpl-EZAI3ij4ZuWbA6dRsMGThQZIPaDXO",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 159
+    },
+    {
+      "case_id": "ctu_cross_6113c639deae1326",
+      "response_id": "chatcmpl-EZAIIxNvkFVdqVxuMxJ1bSNoF7TkG",
+      "parser_replay_error": null,
+      "saved_termination": "FINAL_ASSESSMENT",
+      "rows": 0
+    },
+    {
+      "case_id": "ctu_cross_6122c96211b2bfa8",
+      "response_id": "chatcmpl-EZAIXgVcvFbpFm3tqn9DyhpLVfGOp",
+      "parser_replay_error": "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION",
+      "saved_termination": "ASSESSMENT_VALIDATION_FAILED",
+      "rows": 4
+    }
+  ],
+  "error_counts": {
+    "OK": 5,
+    "UNKNOWN_OR_DUPLICATE_QUERY_OBSERVATION": 9,
+    "MISSING_QUERY_OBSERVATION": 2
+  },
+  "stopping_case": {
+    "case_id": "ctu_cross_66b8e92a76c3359b",
+    "question": "List UDP destination IPs present in CTU scenario 5 but absent from UDP in scenario 7, without duplicates.",
+    "row_count": 9780,
+    "result_truncated": false,
+    "result_sha256": "b3bf98cd4a2e176d41fc7fbcc2bb6b5365d601bab4091bc332af09deb48d9fe4",
+    "minimum_result_payload_bytes": 177205,
+    "policy_max_response_bytes": 32768,
+    "producer_recorded_exception": "ValueError",
+    "inference": "The saved result subset alone exceeds the unconditional policy limit. The traced tool_response branch raises ASSESSMENT_EVIDENCE_PAYLOAD_LIMIT before assessment. The original runner preserved only the exception class, not the exception message/stack.",
+    "original_runtime_or_artifacts_modified": false
+  }
+}

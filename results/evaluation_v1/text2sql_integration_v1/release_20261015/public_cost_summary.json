@@ -1,0 +1,45 @@
+{
+  "scopes": {
+    "calibration_protocol3": {
+      "records": 48,
+      "responses": 144,
+      "cost_usd": "0.17346330",
+      "status": "VERIFIED",
+      "live_run": 38532017308
+    },
+    "evaluation": {
+      "records": 192,
+      "responses": 578,
+      "cost_usd": "0.69569845",
+      "status": "VERIFIED",
+      "live_run": 38687383299
+    },
+    "r1_generalization": {
+      "records": 120,
+      "responses": 120,
+      "cost_usd": "0.04673480",
+      "status": "VERIFIED",
+      "live_run": 38699129318
+    },
+    "pipeline": {
+      "planned": 32,
+      "completed": 16,
+      "partial": 1,
+      "missing": 15,
+      "responses": 50,
+      "cost_usd": "0.03810390",
+      "status": "PARTIAL_NOT_COMPLETE",
+      "live_run": 38699219559
+    }
+  },
+  "responses_across_four_listed_scopes": 892,
+  "cost_across_four_listed_scopes_usd": "0.95400045",
+  "new_requests_after_this_resume": 170,
+  "new_cost_after_this_resume_usd": "0.08483870",
+  "query_canonical_ledger_usd": "1.33381910",
+  "new_r1_separate_ledger_usd": "0.04673480",
+  "unknown_cost": false,
+  "pending_exposure_usd": 0,
+  "not_entire_project_historical_billing": true,
+  "allocation_balance_is_not_a_provider_wallet_balance": true
+}

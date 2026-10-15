@@ -1,0 +1,90 @@
+{
+  "format": "exact_sha_ci_receipts_v1",
+  "evaluation": {
+    "sha": "ff37425719b3009d33d166ae3faa19ccc35a09e8",
+    "ci_run": 38698148403,
+    "conclusion": "success",
+    "jobs": [
+      {
+        "job": "cloud-input-availability",
+        "id": 116299536077,
+        "lines": []
+      },
+      {
+        "job": "query-real-data (3.11)",
+        "id": 116299536160,
+        "lines": [
+          "2026-10-15T07:22:11.6241673Z assert not root.findall('.//skipped'), 'REQUIRED_TEST_SKIP_FORBIDDEN'",
+          "2026-10-15T07:23:26.3603065Z 13 passed in 73.58s (0:01:13)"
+        ]
+      },
+      {
+        "job": "test (3.12)",
+        "id": 116299536172,
+        "lines": [
+          "2026-10-15T07:23:21.7687599Z 1465 passed, 7 skipped, 5264 warnings in 86.55s (0:01:26)",
+          "2026-10-15T07:23:22.2367003Z python -m scripts.verify_query_preservation > .vinsoc/offline-release-ci/preservation.json",
+          "2026-10-15T07:23:29.2423857Z 140 passed in 6.43s"
+        ]
+      },
+      {
+        "job": "test (3.11)",
+        "id": 116299536254,
+        "lines": [
+          "2026-10-15T07:23:26.1432022Z 1465 passed, 7 skipped in 94.63s (0:01:34)",
+          "2026-10-15T07:23:26.7322834Z python -m scripts.verify_query_preservation > .vinsoc/offline-release-ci/preservation.json",
+          "2026-10-15T07:23:34.1643476Z 140 passed in 6.84s"
+        ]
+      },
+      {
+        "job": "query-real-data (3.12)",
+        "id": 116299536483,
+        "lines": [
+          "2026-10-15T07:22:23.7886771Z assert not root.findall('.//skipped'), 'REQUIRED_TEST_SKIP_FORBIDDEN'",
+          "2026-10-15T07:23:41.2570843Z 13 passed in 76.29s (0:01:16)"
+        ]
+      }
+    ]
+  },
+  "r1": {
+    "sha": "aea0b9b2197db69ba45727142b2fd5c5c3dbd58f",
+    "ci_run": 38701290199,
+    "conclusion": "success",
+    "jobs": [
+      {
+        "job": "test (3.11)",
+        "id": 116309832142,
+        "lines": [
+          "2026-10-15T07:51:03.8696486Z 1465 passed, 7 skipped in 87.39s (0:01:27)",
+          "2026-10-15T07:51:11.1242763Z 140 passed in 6.35s"
+        ]
+      },
+      {
+        "job": "query-real-data (3.12)",
+        "id": 116309832496,
+        "lines": [
+          "2026-10-15T07:50:08.6605422Z assert not root.findall('.//skipped'), 'REQUIRED_TEST_SKIP_FORBIDDEN'",
+          "2026-10-15T07:51:29.5927416Z 13 passed in 78.97s (0:01:18)"
+        ]
+      },
+      {
+        "job": "test (3.12)",
+        "id": 116309832501,
+        "lines": [
+          "2026-10-15T07:51:25.3188254Z 1465 passed, 7 skipped, 5264 warnings in 96.52s (0:01:36)",
+          "2026-10-15T07:51:31.7618870Z 140 passed in 5.89s"
+        ]
+      },
+      {
+        "job": "query-real-data (3.11)",
+        "id": 116309832930,
+        "lines": [
+          "2026-10-15T07:49:59.4843397Z assert not root.findall('.//skipped'), 'REQUIRED_TEST_SKIP_FORBIDDEN'",
+          "2026-10-15T07:51:15.1630939Z 13 passed in 74.75s (0:01:14)"
+        ]
+      }
+    ]
+  },
+  "required_jobs_skipped": 0,
+  "model_calls_from_ci": 0
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "review_queue_only_not_review_receipts",
+  "human_reviews_signed": 0,
+  "case_count": 3,
+  "cases": [
+    {
+      "case_id": "ctu_cross_09368110b7091cb8",
+      "question": "Count distinct source/destination IP pairs for UDP in CTU scenario 5, retaining NULL-containing pairs according to DuckDB tuple DISTINCT semantics.",
+      "artifact": "live/E0_ctu_cross_09368110b7091cb8.json",
+      "sha256": "2c77860d104dbc26770d274c1e3eeea12948e91b5bfb9c8c74d8166cabfc1dbb",
+      "status": "awaiting_actual_human",
+      "review_command": "python -m scripts.review_vinsoc_query_case vinsoc_offline_demo/live/E0_ctu_cross_09368110b7091cb8.json --output reviews/ctu_cross_09368110b7091cb8.json"
+    },
+    {
+      "case_id": "ctu_cross_0b9805ee5f7a7aca",
+      "question": "Count the latest flow per source IP in CTU scenario 7, selecting by event time descending then source row ID descending within each source IP.",
+      "artifact": "live/E0_ctu_cross_0b9805ee5f7a7aca.json",
+      "sha256": "b329196f789a60617df0286bd307b6ccb5f8b64d5c7c4b28481db5dffd26a5df",
+      "status": "awaiting_actual_human",
+      "review_command": "python -m scripts.review_vinsoc_query_case vinsoc_offline_demo/live/E0_ctu_cross_0b9805ee5f7a7aca.json --output reviews/ctu_cross_0b9805ee5f7a7aca.json"
+    },
+    {
+      "case_id": "ctu_cross_4b4f065c0737c540",
+      "question": "How many distinct destination ports occur in TCP flows in CTU scenario 7?",
+      "artifact": "live/E0_ctu_cross_4b4f065c0737c540.json",
+      "sha256": "6de25302cb66fbb79aee2b959b5212f5350d7dece7fe5926260c2093bed9a339",
+      "status": "awaiting_actual_human",
+      "review_command": "python -m scripts.review_vinsoc_query_case vinsoc_offline_demo/live/E0_ctu_cross_4b4f065c0737c540.json --output reviews/ctu_cross_4b4f065c0737c540.json"
+    }
+  ]
+}
