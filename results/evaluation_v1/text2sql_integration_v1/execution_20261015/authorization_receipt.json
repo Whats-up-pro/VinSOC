@@ -1,0 +1,30 @@
+{
+  "version": "vinsoc_explicit_execution_authorization_v1",
+  "recorded_at_utc": "2026-10-15T04:59:53.718930+00:00",
+  "source": "direct_user_instruction_in_this_conversation_20261015",
+  "scope": [
+    "R1_generalization_v1",
+    "R2_evaluation_96_E0_E3",
+    "query_pipeline_32_selected_E0",
+    "remaining_approved_SOC_experiments_subject_to_source_review"
+  ],
+  "user_authorized_api_calls": true,
+  "user_confirmed_adequate_budget": true,
+  "execution_caps_remain_enforced": {
+    "R2_evaluation": {
+      "requests_max": 672,
+      "cumulative_limit_usd": 100
+    },
+    "query_pipeline_E0": {
+      "requests_max": 96,
+      "cumulative_limit_usd": 150
+    }
+  },
+  "current_calibration": "protocol3_20261014",
+  "calibration_rerun_authorized_or_required": false,
+  "factual_account_balance_claimed_by_agent": false,
+  "no_retries_or_output_based_reruns": true,
+  "no_mock_or_automatic_human_review": true,
+  "api_keys_or_private_ledgers_included": false,
+  "new_model_calls_in_this_receipt": 0
+}

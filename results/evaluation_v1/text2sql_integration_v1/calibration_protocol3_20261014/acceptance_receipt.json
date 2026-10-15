@@ -1,0 +1,84 @@
+{
+  "version": "calibration_protocol3_acceptance_v1",
+  "status": "verified",
+  "scope": "calibration",
+  "producer_sha": "c6077a149f08744ce7a8f6bebe4264543dbc7c65",
+  "ci_run_id": 38531475195,
+  "preflight_run_id": 38531818653,
+  "live_run_id": 38532017308,
+  "execution_id": "liveui-f5bb655cad604185b70a97b4",
+  "workflow_conclusion": "success",
+  "artifact_id": 11879481406,
+  "artifact_size_bytes": 1382500,
+  "artifact_sha256": "f881f318f2166e35ce9259ac0c712056f3869e3c89f117058633d1e9f114709a",
+  "preflight_zero_call": {
+    "attempted": 0,
+    "received": 0,
+    "client_created": false,
+    "window_claimed": false
+  },
+  "records": {
+    "required": 48,
+    "received": 48,
+    "E0": 24,
+    "E3": 24
+  },
+  "api": {
+    "attempted": 144,
+    "received": 144,
+    "valid_usage": 144,
+    "cost_unknown": false,
+    "pending_exposure_usd": 0.0
+  },
+  "cost_usd": {
+    "current_run": 0.17346330000000032,
+    "prior_verified": 0.42655345000000056,
+    "cumulative_verified": 0.6000167500000009
+  },
+  "acceptance": {
+    "binding_artifacts": 48,
+    "binding_hash_mismatches": 0,
+    "request_ids_unique": true,
+    "response_ids_unique": true,
+    "provider_request_ids_unique": true,
+    "request_response_case_condition_role_bound": true,
+    "protocol_max_completion_tokens": 1000,
+    "protocol_max_e3_calls_per_case": 6,
+    "current_runtime_source_matches_producer": true
+  },
+  "selection": {
+    "selected_condition": "E0",
+    "producer_selection_sha256": "441fd65c0c3d78fc7d0f5c08e22573060ffd8ca06bee13b5b6a0ab8f2ef0b481",
+    "canonical_selection_sha256": "6c54e629889cc029f1a49bb810434c29c582682ff8a830d32a8016093d143218",
+    "totals": {
+      "E0": {
+        "correct": 15,
+        "n": 24,
+        "cost_usd": 0.01428825,
+        "calls": 24,
+        "latency_seconds": 128.21435035999994
+      },
+      "E3": {
+        "correct": 4,
+        "n": 24,
+        "cost_usd": 0.15917504999999998,
+        "calls": 120,
+        "latency_seconds": 944.7417157640002
+      }
+    },
+    "rule": "EX,cost,calls,latency,E0"
+  },
+  "preserved_previous_canonical": {
+    "path": "selection_lock_protocol2_preserved_20261014.json",
+    "sha256": "bee0d818a06d78098cca0172273e9c677ac8ae5812880f42fff303ff86892338"
+  },
+  "human_review_performed": false,
+  "new_model_calls_during_promotion": 0,
+  "new_model_cost_usd": 0,
+  "notes": [
+    "Producer public artifacts are byte-for-byte copies; official_eligible=false is preserved.",
+    "This receipt verifies calibration completeness and selection only; it does not manufacture human review or new semantic tests.",
+    "Protocol2 historical artifacts and prior active lock are preserved.",
+    "Evaluation must use E0 selected condition while still running both E0 and E3 paired records; pipeline uses E0."
+  ]
+}
