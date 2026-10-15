@@ -1,0 +1,40 @@
+{
+  "version": "query_official_operational_entrypoint_v1",
+  "status": "offline_verified_pending_exact_sha_ci",
+  "workflow": ".github/workflows/query-official-experiments.yml",
+  "calibration_producer_sha": "c6077a149f08744ce7a8f6bebe4264543dbc7c65",
+  "selection_sha256": "6c54e629889cc029f1a49bb810434c29c582682ff8a830d32a8016093d143218",
+  "selected_condition": "E0",
+  "calibrated_runtime_source_files_unchanged": true,
+  "original_workflow_bytes_unchanged": true,
+  "execution_steps_from_install_through_artifact_upload_identical": true,
+  "changes": {
+    "manual_scope_choices": [
+      "evaluation",
+      "pipeline"
+    ],
+    "job_timeout_minutes": 180,
+    "scope_mismatch_blocked_before_install": true
+  },
+  "not_changed": [
+    "model",
+    "prompt",
+    "scorer",
+    "DB",
+    "case inventory",
+    "worker isolation and timeout",
+    "per-request output cap",
+    "per-case request cap",
+    "canonical consumed windows"
+  ],
+  "tests": {
+    "red": "2 workflow tests failed because entrypoint did not exist",
+    "targeted": "20 passed",
+    "initial_full_suite": "1438 passed, 6 skipped, 1 LOCAL_SNAPSHOT_REQUIRED failure",
+    "snapshot_failure_resolution": "Restored exact existing bundle and configured VINSOC_LOCAL_SNAPSHOT; previously failing test now passed",
+    "full_suite_after_resolution": "1440 passed, 5 skipped; VINSOC_LOCAL_SNAPSHOT points to exact restored CTU snapshot",
+    "full_suite_seconds": 150.7
+  },
+  "new_model_calls": 0,
+  "new_model_cost_usd": 0
+}
