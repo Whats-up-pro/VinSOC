@@ -1,0 +1,32 @@
+{
+  "status": "IMPLEMENTED_AWAITING_EXACT_SHA_CI",
+  "scope": "r1-generalization-v1",
+  "implementation_parent_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+  "entrypoint": "evaluation.tool_calling.generalization_cli",
+  "plan_adjustment": "Add an adapter reusing unchanged DecisionRunner/scorer; historical CLI/runner are protected by the post-calibration preservation gate. Legacy CLI is unsupported for official generalization.",
+  "targeted_tests": {
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "path": "tests/test_r1_generalization_run.py",
+    "kind": "offline regression tests, not model evaluation"
+  },
+  "source_lock": {
+    "case_count": 120,
+    "lock_sha256": "1df9b83ae801d137439c0c0706a9573763f130349d0560cb8fb774ef4cc4bf6e",
+    "split_sha256": "87a84a4f958e3c7638f4554f78c8d3f621e7de40796922b858a1d9da4cd6aba7"
+  },
+  "preservation": {
+    "protected_files": 3640,
+    "changed": [],
+    "query_runtime_matches_calibration_lock": true,
+    "historical_r1_runner_unchanged": true,
+    "historical_scorer_unchanged": true
+  },
+  "provider_created": false,
+  "model_calls_this_r1_scope": 0,
+  "new_r1_cost_usd": 0,
+  "live_status": "NOT_RUN",
+  "human_review_signed_by_runner": false,
+  "created_utc": "2026-10-15T05:50:54.968873+00:00"
+}
