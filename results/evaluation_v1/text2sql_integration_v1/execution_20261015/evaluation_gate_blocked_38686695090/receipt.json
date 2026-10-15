@@ -1,0 +1,37 @@
+{
+  "status": "BLOCKED_BEFORE_CLIENT",
+  "run_id": 38686695090,
+  "job_id": 116263072996,
+  "implementation_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+  "ci_run_id": 38685818952,
+  "execution_id": "liveui-ef617ff7e5d54d0c8caaee7a",
+  "scope": "evaluation",
+  "window_id": "text2sql-integration-20261014-protocol3-evaluation",
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "window_claimed": false,
+  "current_run_cost_usd": 0,
+  "unknown_cost": false,
+  "failure_category": "LIVE_UI_PREFLIGHT_BLOCKED",
+  "diagnostics": [
+    {
+      "gate": "code_ci",
+      "error_class": "HTTPError"
+    }
+  ],
+  "http_status": "NOT_CAPTURED_BY_FROZEN_RUNTIME",
+  "root_cause": "GitHub HTTP request failed during independent runtime/CI verification; exact HTTP status unavailable. No runtime or CI mismatch is established.",
+  "artifact_id": 11950771844,
+  "archive_sha256": "cd436052a3716f8cff058db3e34047669d4e5033e780cb24be1f257c47b9b075",
+  "scope_claim_refs_observed": 0,
+  "master_observed": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+  "model_retry": false,
+  "next_action": "New invocation of same unclaimed execution, retaining all preflight gates; no window reset, model retry or calibration rerun.",
+  "human_review": "NOT_PERFORMED",
+  "created_utc": "2026-10-15T05:32:27.279838+00:00",
+  "file_sha256": {
+    "cloud_run.json": "ab8fceff4f69e3809659f12066964424e7c2e1d311f597f8b752e8164e6235c0",
+    "preflight.json": "4073defb759d2152c5708e775e0e54a32efa6c42c744a6d1a9e5127881c9836f"
+  }
+}

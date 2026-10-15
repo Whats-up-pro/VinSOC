@@ -1,0 +1,20 @@
+{
+  "gpt-5-mini-2025-08-07": {
+    "input_usd_per_million": 0.25,
+    "cached_input_usd_per_million": 0.025,
+    "output_usd_per_million": 2.0,
+    "input_token_ceiling": 400000,
+    "checked_utc": "2026-10-15T05:34:14.291730+00:00",
+    "source_url": "https://developers.openai.com/api/docs/models/gpt-5-mini.md",
+    "source_sha256": "80d97d66caf01b48b1e87df3758df383dea417c8cc4fe76dd05493b2f51f7a9d"
+  },
+  "gpt-4.1-mini-2025-04-14": {
+    "input_usd_per_million": 0.4,
+    "cached_input_usd_per_million": 0.1,
+    "output_usd_per_million": 1.6,
+    "input_token_ceiling": 1047576,
+    "checked_utc": "2026-10-15T05:34:14.291730+00:00",
+    "source_url": "https://developers.openai.com/api/docs/models/gpt-4.1-mini.md",
+    "source_sha256": "78cab23e43e747d199df10854f27a0bc8ebe1af2bdd66642fe34462e1f680537"
+  }
+}

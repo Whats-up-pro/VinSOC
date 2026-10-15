@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "attempted": 578,
+  "received": 578,
+  "client_created": true,
+  "cost_unknown": false,
+  "window_claimed": true,
+  "new_run": true,
+  "request": {
+    "version": "vinsoc_live_ui_v1",
+    "scope": "evaluation",
+    "case_id": null,
+    "question": null,
+    "condition": "E0",
+    "head_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+    "ci_run_id": 38685818952,
+    "execution_id": "liveui-ef617ff7e5d54d0c8caaee7a",
+    "limit_usd": 100,
+    "confirmed_utc": "2026-10-15T05:32:48.064Z",
+    "live_consent": true
+  },
+  "implementation_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+  "ci_run_id": 38685818952,
+  "prior_cost_usd": 0.6000167500000009,
+  "known_usd": 1.2957151999999987,
+  "remaining_cap_usd": 98.7042848,
+  "current_run_cost_usd": 0.6956984499999979,
+  "preflight_status": "preflight_pass",
+  "gate_reasons": [],
+  "cost_ceiling_usd": 68.544,
+  "role_caps": {
+    "routing": 0,
+    "r2": 672,
+    "assessment": 0
+  },
+  "window_id": "text2sql-integration-20261014-protocol3-evaluation",
+  "official_eligible": false
+}

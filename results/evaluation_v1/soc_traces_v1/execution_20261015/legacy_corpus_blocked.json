@@ -1,0 +1,10 @@
+{
+  "status": "blocked",
+  "attempted_calls": 0,
+  "responses_received": 0,
+  "client_created": false,
+  "new_inference_cost_usd": 0,
+  "blockers": [
+    "SOC_IMPORTER_RECEIPT_CHANGED"
+  ]
+}

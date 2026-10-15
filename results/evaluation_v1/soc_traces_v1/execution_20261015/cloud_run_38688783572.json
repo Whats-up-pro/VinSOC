@@ -1,0 +1,1 @@
+{"attempted_calls":0,"client_created":false,"cost_unknown":false,"failure_category":"SOC_CLOUD_PRIVATE_INPUTS_MISSING","human_approval":false,"missing_inputs":["SOC_E2E_GATES_JSON"],"mode":"preflight","new_inference_cost_usd":0,"responses_received":0,"scope":"soc-traces-20261008-v1","status":"blocked","window_claimed":false}

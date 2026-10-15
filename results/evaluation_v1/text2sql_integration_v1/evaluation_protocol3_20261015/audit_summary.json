@@ -1,0 +1,107 @@
+{
+  "scope": "evaluation",
+  "records": 192,
+  "unique_cases": 96,
+  "paired_cases": 96,
+  "attempted": 578,
+  "received": 578,
+  "unique_provider_request_ids": 578,
+  "unique_response_ids": 578,
+  "cost_unknown": false,
+  "pending_exposure_usd": 0,
+  "current_run_cost_usd": "0.69569845",
+  "query_cumulative_cost_usd": "1.29571520",
+  "input_tokens": 1240069,
+  "output_tokens": 251607,
+  "cached_tokens": 522368,
+  "conditions": {
+    "E0": {
+      "records": 96,
+      "correct": 69,
+      "calls": 96,
+      "cost_usd": "0.07442350",
+      "tokens": {
+        "input_tokens": 122414,
+        "output_tokens": 21910,
+        "cached_tokens": 0
+      },
+      "generation_errors": {
+        "OK": 95,
+        "SEMANTIC_REJECTION": 1
+      },
+      "scoring_errors": {
+        "OK": 69,
+        "RESULT_MISMATCH": 25,
+        "NO_FINAL_SQL": 1,
+        "SQL_EXECUTION_FAILED": 1
+      }
+    },
+    "E3": {
+      "records": 96,
+      "correct": 17,
+      "calls": 482,
+      "cost_usd": "0.62127495",
+      "tokens": {
+        "input_tokens": 1117655,
+        "output_tokens": 229697,
+        "cached_tokens": 522368
+      },
+      "generation_errors": {
+        "MODEL_PARSE_ERROR": 21,
+        "OK": 20,
+        "INVALID_LINKED_SCHEMA": 52,
+        "TOOL_FAILURE": 2,
+        "SAFETY_REJECTION": 1
+      },
+      "scoring_errors": {
+        "NO_FINAL_SQL": 76,
+        "OK": 17,
+        "RESULT_MISMATCH": 3
+      }
+    }
+  },
+  "paired_statistics": {
+    "complete": true,
+    "reasons": [],
+    "planned": 96,
+    "matched": 96,
+    "wins": 2,
+    "losses": 54,
+    "ties": 40,
+    "delta": -0.5416666666666666,
+    "cluster_intervals": {
+      "database": {
+        "interval": [
+          -0.6527777777777778,
+          -0.4375
+        ],
+        "clusters": 9,
+        "replicates": 10000,
+        "seed": 20261007,
+        "method": "cluster_resampling_case_weighted_mean",
+        "reason": null
+      },
+      "family": {
+        "interval": [
+          -0.6494845360824743,
+          -0.43157894736842106
+        ],
+        "clusters": 93,
+        "replicates": 10000,
+        "seed": 20261007,
+        "method": "cluster_resampling_case_weighted_mean",
+        "reason": null
+      }
+    }
+  },
+  "metrics_recomputed_equal": true,
+  "producer_report_sha256": "64207412535ccd22c5e2aaff543d2c786ef3c163efc2b500f3303fd46c58a405",
+  "producer_metrics_canonical_sha256": "ee0048e75ffab2bac7c6473d417325744c0ef7817abc02da82f4af765f74e949",
+  "selected_condition": "E0",
+  "selection_sha256": "6c54e629889cc029f1a49bb810434c29c582682ff8a830d32a8016093d143218",
+  "semantic_test_accuracy": "NOT_MEASURED; producer defaults are not a semantic test-suite result",
+  "isolation_evidence": "Independent required real-data jobs from exact producer CI; executor isolation field is not used by this audit.",
+  "new_model_calls_by_verifier": 0,
+  "sql_executions_by_verifier": 0,
+  "human_review_signed_by_verifier": false
+}

@@ -1,0 +1,31 @@
+{
+  "status": "BLOCKED_BEFORE_CLIENT",
+  "implementation_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+  "source_revision": "fe94a95dadbd188c2bf137a9785b82cb5f7865c2",
+  "planned_records": 128,
+  "attempted": 0,
+  "received": 0,
+  "client_created": false,
+  "new_cost_usd": 0,
+  "source_reviews_observed": 0,
+  "source_reviews_required": 12,
+  "corpus_used": "data/soc_traces_v1/final/corpus.duckdb",
+  "corpus_rebuilt": false,
+  "human_review_fabricated": false,
+  "scope": "soc-traces-20261008-v1",
+  "user_authorization": "Explicit instruction to continue all experiments on 2026-10-15; technical/source review evidence is still required.",
+  "next_action": "Verify cloud preflight with existing private gate bundle; preserve missing gates and continue independent R1/query work.",
+  "created_utc": "2026-10-15T05:47:41.149794+00:00",
+  "sha256": {
+    "legacy_corpus_blocked.json": "04886cbf99038c54b67eb75b6b524e551fc67f01a169606eeed8fcec9c952057",
+    "preflight.json": "fa3c686fde303bf74bd3a15f9e7e36237c9ce3d3f3f353e4acac2c749f535aae"
+  },
+  "cloud_run_id": 38688783572,
+  "cloud_artifact_id": 11951340713,
+  "cloud_archive_sha256": "f4811800d04cbca420697dacadf201d0fdb1ad52de792ac0533997c2f5f49092",
+  "cloud_missing_inputs": [
+    "SOC_E2E_GATES_JSON"
+  ],
+  "cloud_client_created": false,
+  "cloud_window_claimed": false
+}

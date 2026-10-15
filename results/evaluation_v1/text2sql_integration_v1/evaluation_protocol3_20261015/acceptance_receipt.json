@@ -1,0 +1,73 @@
+{
+  "status": "VERIFIED_OFFLINE_AWAITING_EVIDENCE_SHA_CI",
+  "scope": "evaluation",
+  "producer_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd",
+  "producer_ci_run_id": 38685818952,
+  "preflight_run_id": 38686134129,
+  "live_run_id": 38687383299,
+  "live_run_attempt": 1,
+  "execution_id": "liveui-ef617ff7e5d54d0c8caaee7a",
+  "window_id": "text2sql-integration-20261014-protocol3-evaluation",
+  "artifact": {
+    "id": 11953127514,
+    "size_bytes": 3756239,
+    "archive_sha256": "4c79fe3543ef17151e8bfabfebf9e5ab63fbfad7e89d1de87cdad16f09d868dd",
+    "independent_download_hash_matched_github_digest": true
+  },
+  "records": 192,
+  "unique_cases": 96,
+  "conditions": {
+    "E0": 96,
+    "E3": 96
+  },
+  "attempted": 578,
+  "received": 578,
+  "unique_request_ids": 578,
+  "unique_response_ids": 578,
+  "unique_provider_request_ids": 578,
+  "usage_records": 578,
+  "tokens": {
+    "input_tokens": 1240069,
+    "output_tokens": 251607,
+    "cached_tokens": 522368
+  },
+  "current_run_cost_usd": "0.69569845",
+  "verified_prior_query_cost_usd": "0.60001675",
+  "verified_cumulative_query_cost_usd": "1.29571520",
+  "cost_unknown": false,
+  "pending_exposure_usd": 0,
+  "selection_sha256": "6c54e629889cc029f1a49bb810434c29c582682ff8a830d32a8016093d143218",
+  "selected_condition": "E0",
+  "selection_recomputed_from_actual_48_calibration_records": true,
+  "calibration_rerun": false,
+  "producer_report": {
+    "path": "live/report.json.gz",
+    "compression": "gzip, mtime=0; lossless archival of original producer JSON",
+    "uncompressed_sha256": "64207412535ccd22c5e2aaff543d2c786ef3c163efc2b500f3303fd46c58a405",
+    "producer_flags_preserved": true,
+    "official_eligible_original": false,
+    "independent_metrics_recomputation_equal": true
+  },
+  "validation": {
+    "complete_locked_inventory": true,
+    "case_question_database_identity": true,
+    "source_data_scorer_match_calibrated_runtime": true,
+    "native_generator_response_contains_every_retained_final_sql": true,
+    "typed_execution_hashes_verified": true,
+    "counts_cost_usage_and_ids_verified": true,
+    "per_case_role_request_response_cost_binding_verified": true,
+    "output_request_caps_verified": true,
+    "executor_isolation_field_used_as_evidence": false,
+    "isolation_proof": "Producer CI required real-data jobs on Python 3.11/3.12 passed, zero skips; independent namespace/cgroup/readonly/no-secret observations remain in exact-source CI artifacts."
+  },
+  "semantic_test_accuracy": "NOT_MEASURED; default false flags in original report are not a measured test-suite result",
+  "human_review_signed": false,
+  "new_model_calls_by_audit": 0,
+  "new_sql_executions_by_audit": 0,
+  "remaining_gates": [
+    "evidence-publication exact-SHA CI",
+    "official pipeline 32-case preflight and live run",
+    "human review for technical-valid pipeline cases"
+  ],
+  "created_utc": "2026-10-15T07:11:13.773811+00:00"
+}

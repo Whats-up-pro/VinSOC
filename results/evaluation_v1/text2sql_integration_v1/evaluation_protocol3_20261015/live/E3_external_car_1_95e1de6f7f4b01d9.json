@@ -1,0 +1,1061 @@
+{
+  "case_id": "external_car_1_95e1de6f7f4b01d9",
+  "database_id": "car_1",
+  "condition": "E3",
+  "final_sql": "SELECT c.CountryName\nFROM countries c\nLEFT JOIN car_makers m ON m.Country = c.CountryId\nWHERE m.Id IS NULL;",
+  "attempted_calls": 6,
+  "response_count": 6,
+  "responses": [
+    {
+      "role": "linker",
+      "response": {
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_4CoPiygOHkiSyC9QMoz721bQ",
+            "function": {
+              "arguments": "{\"sql\":\"SELECT c.CountryName FROM countries c LEFT JOIN car_makers m ON m.Country = c.CountryId WHERE m.Id IS NULL ORDER BY c.CountryName;\"}",
+              "name": "sql_probe"
+            },
+            "type": "function"
+          }
+        ],
+        "model": "gpt-5-mini-2025-08-07",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "response_id": "chatcmpl-EZ8qnWtd1b3wg5J9kaSzRttjyeLd8",
+        "finish_reason": "tool_calls",
+        "usage": {
+          "input_tokens": 2019,
+          "output_tokens": 53,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.00061075
+      }
+    },
+    {
+      "role": "linker",
+      "response": {
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_f625QeBo2qPeMn7eXEAEhpiQ",
+            "function": {
+              "arguments": "{\"table\":\"countries\",\"column\":\"CountryName\",\"query\":\"australia\",\"match_kind\":\"exact\"}",
+              "name": "value_search"
+            },
+            "type": "function"
+          }
+        ],
+        "model": "gpt-5-mini-2025-08-07",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "response_id": "chatcmpl-EZ8qsAzzGeAnVsYuMNiSP0CfnNMuU",
+        "finish_reason": "tool_calls",
+        "usage": {
+          "input_tokens": 2175,
+          "output_tokens": 231,
+          "cached_tokens": 1792
+        },
+        "cost_usd": 0.00060255
+      }
+    },
+    {
+      "role": "linker",
+      "response": {
+        "content": "",
+        "tool_calls": [],
+        "model": "gpt-5-mini-2025-08-07",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "response_id": "chatcmpl-EZ8qxZ02I5At6uQ9N2MdHvTLsu9wc",
+        "finish_reason": "length",
+        "usage": {
+          "input_tokens": 2500,
+          "output_tokens": 1000,
+          "cached_tokens": 2048
+        },
+        "cost_usd": 0.0021642
+      }
+    },
+    {
+      "role": "linker",
+      "response": {
+        "content": "{\n  \"tables\": [\"countries\", \"car_makers\"],\n  \"columns\": [\n    {\"table\": \"countries\", \"column\": \"CountryName\"},\n    {\"table\": \"countries\", \"column\": \"CountryId\"},\n    {\"table\": \"car_makers\", \"column\": \"Country\"},\n    {\"table\": \"car_makers\", \"column\": \"Id\"}\n  ],\n  \"relationships\": [\n    {\"from_table\": \"car_makers\", \"from_column\": \"Country\", \"to_table\": \"countries\", \"to_column\": \"CountryId\"}\n  ],\n  \"grounded_values\": [\n    {\"evidence_id\": \"catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b\", \"operator\": \"=\"}\n  ],\n  \"constraints\": [\n    {\"kind\": \"domain_predicate\", \"table\": \"countries\", \"column\": \"CountryName\", \"operator\": \"contains\", \"value\": \"australia\", \"evidence_id\": \"catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b\"},\n    {\"kind\": \"null_test\", \"table\": \"car_makers\", \"column\": \"Id\", \"operator\": \"is_null\"}\n  ]\n}",
+        "tool_calls": [],
+        "model": "gpt-5-mini-2025-08-07",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "response_id": "chatcmpl-EZ8rCMJsYwrLGYQFxM0cj5MIWOP8L",
+        "finish_reason": "stop",
+        "usage": {
+          "input_tokens": 2386,
+          "output_tokens": 884,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.0023645
+      }
+    },
+    {
+      "role": "generator",
+      "response": {
+        "content": "{\"sql\":\"SELECT c.CountryName\\nFROM countries c\\nLEFT JOIN car_makers m ON m.Country = c.CountryId\\nWHERE m.Id IS NULL;\"}",
+        "tool_calls": [],
+        "model": "gpt-5-mini-2025-08-07",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "response_id": "chatcmpl-EZ8rNsLRxhb7CbbNqH1F5DrbXUdWQ",
+        "finish_reason": "stop",
+        "usage": {
+          "input_tokens": 2101,
+          "output_tokens": 170,
+          "cached_tokens": 0
+        },
+        "cost_usd": 0.00086525
+      }
+    },
+    {
+      "role": "generator",
+      "response": {
+        "content": "{\"sql\":\"SELECT c.CountryName\\nFROM countries c\\nLEFT JOIN car_makers m ON m.Country = c.CountryId\\nWHERE m.Id IS NULL;\"}",
+        "tool_calls": [],
+        "model": "gpt-5-mini-2025-08-07",
+        "actual_model": "gpt-5-mini-2025-08-07",
+        "response_id": "chatcmpl-EZ8rS4wmVxeg7osUfhhTdsu89O9hD",
+        "finish_reason": "stop",
+        "usage": {
+          "input_tokens": 2062,
+          "output_tokens": 170,
+          "cached_tokens": 1408
+        },
+        "cost_usd": 0.0005387
+      }
+    }
+  ],
+  "trajectory": [
+    {
+      "tool": "sql_probe",
+      "arguments": {
+        "sql": "SELECT c.CountryName FROM countries c LEFT JOIN car_makers m ON m.Country = c.CountryId WHERE m.Id IS NULL ORDER BY c.CountryName;"
+      },
+      "result": {
+        "database_id": "car_1",
+        "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+        "columns": [
+          "CountryName"
+        ],
+        "rows": [
+          [
+            "australia"
+          ],
+          [
+            "brazil"
+          ],
+          [
+            "egypt"
+          ],
+          [
+            "mexico"
+          ],
+          [
+            "new zealand"
+          ],
+          [
+            "nigeria"
+          ],
+          [
+            "russia"
+          ]
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "tool": "value_search",
+      "arguments": {
+        "table": "countries",
+        "column": "CountryName",
+        "query": "australia",
+        "match_kind": "exact"
+      },
+      "result": {
+        "database_id": "car_1",
+        "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+        "table": "countries",
+        "column": "CountryName",
+        "type": "VARCHAR",
+        "resolution": "matched",
+        "matches": [
+          {
+            "database_id": "car_1",
+            "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+            "table": "countries",
+            "column": "CountryName",
+            "type": "VARCHAR",
+            "value": "australia",
+            "evidence_id": "catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b"
+          }
+        ],
+        "domain_witnesses": [],
+        "domain": [
+          "australia",
+          "brazil",
+          "egypt",
+          "france",
+          "germany",
+          "italy",
+          "japan",
+          "korea",
+          "mexico",
+          "new zealand",
+          "nigeria",
+          "russia",
+          "sweden",
+          "uk",
+          "usa"
+        ],
+        "domain_complete": true
+      }
+    }
+  ],
+  "error_category": "OK",
+  "linked_schema": {
+    "tables": [
+      "countries",
+      "car_makers"
+    ],
+    "columns": [
+      {
+        "table": "countries",
+        "column": "CountryName"
+      },
+      {
+        "table": "countries",
+        "column": "CountryId"
+      },
+      {
+        "table": "car_makers",
+        "column": "Country"
+      },
+      {
+        "table": "car_makers",
+        "column": "Id"
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "car_makers",
+        "from_column": "Country",
+        "to_table": "countries",
+        "to_column": "CountryId"
+      }
+    ],
+    "grounded_values": [
+      {
+        "database_id": "car_1",
+        "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+        "table": "countries",
+        "column": "CountryName",
+        "type": "VARCHAR",
+        "value": "australia",
+        "evidence_id": "catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b",
+        "operator": "="
+      }
+    ],
+    "constraints": [
+      {
+        "kind": "domain_predicate",
+        "table": "countries",
+        "column": "CountryName",
+        "operator": "contains",
+        "value": "australia",
+        "evidence_id": "catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b"
+      },
+      {
+        "kind": "null_test",
+        "table": "car_makers",
+        "column": "Id",
+        "operator": "is_null"
+      }
+    ],
+    "database_id": "car_1",
+    "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5"
+  },
+  "evidence_kind": "openai_live",
+  "db_calls": 2,
+  "wall_seconds": 47.04868588399995,
+  "question": "What are the names of the countries with no car makers?",
+  "runtime_version": "shared_text2sql_v1",
+  "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+  "execution": {
+    "status": "OK",
+    "columns": [
+      {
+        "name": "CountryName",
+        "type": "VARCHAR"
+      }
+    ],
+    "rows": [
+      [
+        "australia"
+      ],
+      [
+        "brazil"
+      ],
+      [
+        "russia"
+      ],
+      [
+        "mexico"
+      ],
+      [
+        "nigeria"
+      ],
+      [
+        "egypt"
+      ],
+      [
+        "new zealand"
+      ]
+    ],
+    "truncated": false,
+    "row_count": 7,
+    "result_sha256": "569b36bd14f194390ca5024d8ec73b9588e05eb4915bb28f685f854ff020ea06",
+    "database_id": "car_1",
+    "snapshot_binary_sha256": "b63545a40f1419c0dba60806434763eb2967c97c1a554c4b99aa3f6167e1e2a2",
+    "snapshot_logical_sha256": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+    "sql": "SELECT c.CountryName\nFROM countries c\nLEFT JOIN car_makers m ON m.Country = c.CountryId\nWHERE m.Id IS NULL;",
+    "sql_sha256": "5a183fcd1811c0eb6978ee43e7b925233baccb19bf8588eb65d63fb024565c22",
+    "executor_version": "text2sql_namespace_cgroup_executor_v2",
+    "wall_seconds": 0.13215028100012205,
+    "isolation": {
+      "backend": "bubblewrap",
+      "network": "unshared",
+      "secrets": "absent",
+      "snapshot_mount": "read_only",
+      "memory_bytes": 536870912,
+      "cpu_count": 1,
+      "timeout_seconds": 10
+    }
+  },
+  "generation": {
+    "case_id": "external_car_1_95e1de6f7f4b01d9",
+    "database_id": "car_1",
+    "condition": "E3",
+    "final_sql": "SELECT c.CountryName\nFROM countries c\nLEFT JOIN car_makers m ON m.Country = c.CountryId\nWHERE m.Id IS NULL;",
+    "attempted_calls": 6,
+    "response_count": 6,
+    "responses": [
+      {
+        "role": "linker",
+        "response": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_4CoPiygOHkiSyC9QMoz721bQ",
+              "function": {
+                "arguments": "{\"sql\":\"SELECT c.CountryName FROM countries c LEFT JOIN car_makers m ON m.Country = c.CountryId WHERE m.Id IS NULL ORDER BY c.CountryName;\"}",
+                "name": "sql_probe"
+              },
+              "type": "function"
+            }
+          ],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EZ8qnWtd1b3wg5J9kaSzRttjyeLd8",
+          "finish_reason": "tool_calls",
+          "usage": {
+            "input_tokens": 2019,
+            "output_tokens": 53,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.00061075
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_f625QeBo2qPeMn7eXEAEhpiQ",
+              "function": {
+                "arguments": "{\"table\":\"countries\",\"column\":\"CountryName\",\"query\":\"australia\",\"match_kind\":\"exact\"}",
+                "name": "value_search"
+              },
+              "type": "function"
+            }
+          ],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EZ8qsAzzGeAnVsYuMNiSP0CfnNMuU",
+          "finish_reason": "tool_calls",
+          "usage": {
+            "input_tokens": 2175,
+            "output_tokens": 231,
+            "cached_tokens": 1792
+          },
+          "cost_usd": 0.00060255
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": "",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EZ8qxZ02I5At6uQ9N2MdHvTLsu9wc",
+          "finish_reason": "length",
+          "usage": {
+            "input_tokens": 2500,
+            "output_tokens": 1000,
+            "cached_tokens": 2048
+          },
+          "cost_usd": 0.0021642
+        }
+      },
+      {
+        "role": "linker",
+        "response": {
+          "content": "{\n  \"tables\": [\"countries\", \"car_makers\"],\n  \"columns\": [\n    {\"table\": \"countries\", \"column\": \"CountryName\"},\n    {\"table\": \"countries\", \"column\": \"CountryId\"},\n    {\"table\": \"car_makers\", \"column\": \"Country\"},\n    {\"table\": \"car_makers\", \"column\": \"Id\"}\n  ],\n  \"relationships\": [\n    {\"from_table\": \"car_makers\", \"from_column\": \"Country\", \"to_table\": \"countries\", \"to_column\": \"CountryId\"}\n  ],\n  \"grounded_values\": [\n    {\"evidence_id\": \"catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b\", \"operator\": \"=\"}\n  ],\n  \"constraints\": [\n    {\"kind\": \"domain_predicate\", \"table\": \"countries\", \"column\": \"CountryName\", \"operator\": \"contains\", \"value\": \"australia\", \"evidence_id\": \"catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b\"},\n    {\"kind\": \"null_test\", \"table\": \"car_makers\", \"column\": \"Id\", \"operator\": \"is_null\"}\n  ]\n}",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EZ8rCMJsYwrLGYQFxM0cj5MIWOP8L",
+          "finish_reason": "stop",
+          "usage": {
+            "input_tokens": 2386,
+            "output_tokens": 884,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.0023645
+        }
+      },
+      {
+        "role": "generator",
+        "response": {
+          "content": "{\"sql\":\"SELECT c.CountryName\\nFROM countries c\\nLEFT JOIN car_makers m ON m.Country = c.CountryId\\nWHERE m.Id IS NULL;\"}",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EZ8rNsLRxhb7CbbNqH1F5DrbXUdWQ",
+          "finish_reason": "stop",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 170,
+            "cached_tokens": 0
+          },
+          "cost_usd": 0.00086525
+        }
+      },
+      {
+        "role": "generator",
+        "response": {
+          "content": "{\"sql\":\"SELECT c.CountryName\\nFROM countries c\\nLEFT JOIN car_makers m ON m.Country = c.CountryId\\nWHERE m.Id IS NULL;\"}",
+          "tool_calls": [],
+          "model": "gpt-5-mini-2025-08-07",
+          "actual_model": "gpt-5-mini-2025-08-07",
+          "response_id": "chatcmpl-EZ8rS4wmVxeg7osUfhhTdsu89O9hD",
+          "finish_reason": "stop",
+          "usage": {
+            "input_tokens": 2062,
+            "output_tokens": 170,
+            "cached_tokens": 1408
+          },
+          "cost_usd": 0.0005387
+        }
+      }
+    ],
+    "trajectory": [
+      {
+        "tool": "sql_probe",
+        "arguments": {
+          "sql": "SELECT c.CountryName FROM countries c LEFT JOIN car_makers m ON m.Country = c.CountryId WHERE m.Id IS NULL ORDER BY c.CountryName;"
+        },
+        "result": {
+          "database_id": "car_1",
+          "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+          "columns": [
+            "CountryName"
+          ],
+          "rows": [
+            [
+              "australia"
+            ],
+            [
+              "brazil"
+            ],
+            [
+              "egypt"
+            ],
+            [
+              "mexico"
+            ],
+            [
+              "new zealand"
+            ],
+            [
+              "nigeria"
+            ],
+            [
+              "russia"
+            ]
+          ],
+          "truncated": false
+        }
+      },
+      {
+        "tool": "value_search",
+        "arguments": {
+          "table": "countries",
+          "column": "CountryName",
+          "query": "australia",
+          "match_kind": "exact"
+        },
+        "result": {
+          "database_id": "car_1",
+          "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+          "table": "countries",
+          "column": "CountryName",
+          "type": "VARCHAR",
+          "resolution": "matched",
+          "matches": [
+            {
+              "database_id": "car_1",
+              "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+              "table": "countries",
+              "column": "CountryName",
+              "type": "VARCHAR",
+              "value": "australia",
+              "evidence_id": "catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b"
+            }
+          ],
+          "domain_witnesses": [],
+          "domain": [
+            "australia",
+            "brazil",
+            "egypt",
+            "france",
+            "germany",
+            "italy",
+            "japan",
+            "korea",
+            "mexico",
+            "new zealand",
+            "nigeria",
+            "russia",
+            "sweden",
+            "uk",
+            "usa"
+          ],
+          "domain_complete": true
+        }
+      }
+    ],
+    "error_category": "OK",
+    "linked_schema": {
+      "tables": [
+        "countries",
+        "car_makers"
+      ],
+      "columns": [
+        {
+          "table": "countries",
+          "column": "CountryName"
+        },
+        {
+          "table": "countries",
+          "column": "CountryId"
+        },
+        {
+          "table": "car_makers",
+          "column": "Country"
+        },
+        {
+          "table": "car_makers",
+          "column": "Id"
+        }
+      ],
+      "relationships": [
+        {
+          "from_table": "car_makers",
+          "from_column": "Country",
+          "to_table": "countries",
+          "to_column": "CountryId"
+        }
+      ],
+      "grounded_values": [
+        {
+          "database_id": "car_1",
+          "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+          "table": "countries",
+          "column": "CountryName",
+          "type": "VARCHAR",
+          "value": "australia",
+          "evidence_id": "catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b",
+          "operator": "="
+        }
+      ],
+      "constraints": [
+        {
+          "kind": "domain_predicate",
+          "table": "countries",
+          "column": "CountryName",
+          "operator": "contains",
+          "value": "australia",
+          "evidence_id": "catalog_2d8bd1f1ca86007312680154c7c2837e0337c06e0b3650e65eb280a082029e3b"
+        },
+        {
+          "kind": "null_test",
+          "table": "car_makers",
+          "column": "Id",
+          "operator": "is_null"
+        }
+      ],
+      "database_id": "car_1",
+      "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5"
+    },
+    "evidence_kind": "openai_live",
+    "db_calls": 2,
+    "wall_seconds": 47.04868588399995,
+    "question": "What are the names of the countries with no car makers?",
+    "runtime_version": "shared_text2sql_v1",
+    "snapshot_identity": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5"
+  },
+  "score": {
+    "case_id": "external_car_1_95e1de6f7f4b01d9",
+    "execution_accurate": true,
+    "execution_success": true,
+    "scoring_error_category": "OK",
+    "gold_result_sha256": "50d3e75ee7cfec76e8b5718d411a601cfdf4e1e829514e14a76fe87b888d512c",
+    "predicted_result_sha256": "569b36bd14f194390ca5024d8ec73b9588e05eb4915bb28f685f854ff020ea06"
+  },
+  "modules": {
+    "policy": {
+      "version": "module_metrics_v2",
+      "empty_set": "NA_rates_exact_set_success",
+      "alternative": "max_joint_item_f1_stable_first",
+      "coverage": "stage_present_over_all_cases",
+      "numeric_constraints_are_stored_values": false,
+      "predicate_scope": "Typed literal/operator mappings; Boolean structure and semantic equivalence are separate execution diagnostics"
+    },
+    "selected_alternative": 0,
+    "schema_linker": {
+      "tables": {
+        "correct": 2,
+        "predicted": 2,
+        "required": 2,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "columns": {
+        "correct": 3,
+        "predicted": 4,
+        "required": 3,
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8571428571428571
+      },
+      "relationships": {
+        "correct": 1,
+        "predicted": 1,
+        "required": 1,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "case_success": false,
+      "valid_relationship_path": true
+    },
+    "value_grounding": {
+      "predicates": {
+        "correct": 0,
+        "predicted": 2,
+        "required": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0
+      },
+      "case_success": false,
+      "witness_precision": {
+        "correct": 1,
+        "total": 1,
+        "precision": 1.0
+      },
+      "provenance_status": "VERIFIED_CONTEXT",
+      "unsupported_literal_rate": {
+        "unsupported": 0,
+        "total": 1,
+        "rate": 0.0
+      }
+    }
+  },
+  "runtime_source_sha256": {
+    ".github/workflows/ci.yml": "78f4875e9c8a4a9017f0e51fb4dadf9a89ce2bcebd15e7998b43dce8f5e0a879",
+    ".github/workflows/query-demo-once.yml": "198ad9f88ed2538b59dc9e1d241fb7e865b638836d3139718e686e00e4b8f813",
+    ".github/workflows/query-live-ui.yml": "d288abaa9752128ad4376f99b17b423a783a2fdc7e511247e6d1b61e59ff3280",
+    "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
+    "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+    "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+    "agent/integrations.py": "dff3d800215329b4719c8cbf86ede1ac2b17e77bbb1e4178f55f1967a235adbc",
+    "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+    "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+    "agent/network_query_policy.py": "9ebfbfa982a0a2ebb68085ab83888634c5d5b9b3137532f368ab9ad69e908429",
+    "agent/orchestrator.py": "ddbabd451f93616ebc95d11e4896208f3acd2d1ed20aff90341444b9dc137cb2",
+    "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+    "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+    "agent/soc_investigation_policy.py": "390dc7228ccce2d8222636da87118b758daa179beb14e0f28ae49f44f1007db8",
+    "agent/soc_provider.py": "01fa7b405eaafb914753a69d1dbb2a65e5f1a79dcc9bdafec6ada16cc3ac76d0",
+    "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+    "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+    "cli/main.py": "d8bd46f2a13dd460eff702fca60d869fe650d0c081635a311a9df61e8dbba25d",
+    "evaluation/finalization/__init__.py": "8479c108d265ef93ca754baa7ba51bebeb7b91ca09e007cf70348ecea84fe756",
+    "evaluation/finalization/cloud_window.py": "8db52ee113dc280e702de0dcb2f96cb9eff571ab80db76f9700285a4d36ddb1f",
+    "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+    "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+    "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+    "evaluation/finalization/query_cloud.py": "9db0a488328da0c7ef704aeed160f97182a41c5ecba5eee52e7cf9fb8d920e63",
+    "evaluation/finalization/query_pipeline_contract.py": "550174c154f9b9015e1b3534320f4fab40e42744ca5b671bfce885053ed48ced",
+    "evaluation/finalization/query_pipeline_reporting.py": "a59ec5d1c2b7335f1b940dcb87a3c7d4563b26046edc00b3e69136697ac2b36a",
+    "evaluation/finalization/query_record_normalization.py": "f53a35b7ac15c2d0c114a431118b3c337a234b8ca18fc4d599442043e068a846",
+    "evaluation/finalization/query_reporting.py": "0da468aa27739c6336d31d7a21c97102d9a7041c57a954e596fc16cf54678edd",
+    "evaluation/finalization/query_runtime_validation.py": "7bb9cc9308839cc8ab18d138a05f1f0464b7ab4a3123e08632072ca424e129a0",
+    "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "evaluation/finalization/query_token_bound.py": "97858f39537d02b169cd7750338dbc5e17c82b14f388d7d7ed48223995c134c3",
+    "evaluation/finalization/query_view.py": "84dfb5e4918414a8c5cee907c3cd778bf35dd12949f920497763fa54da90cd9d",
+    "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+    "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+    "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+    "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+    "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+    "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+    "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+    "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+    "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+    "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+    "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+    "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+    "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+    "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+    "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+    "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+    "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+    "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+    "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+    "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+    "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+    "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+    "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+    "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+    "requirements-demo.txt": "2ac1e56fb2039c8b2245fb45e87412aa7f866e33113bb4231a563c5b66f34128",
+    "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
+    "results/evaluation_v1/text2sql_integration_v1/demo_selection.json": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+    "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0",
+    "scripts/prepare_query_budget.py": "3fbedb9a326eb31c2f558a355b35b2a4f30318b41068080234ba948366a95136",
+    "scripts/render_query_pipeline_report.py": "f69cf0d4fecd66445b770674a0c05b8da686ab14dd015ee5e9bd3ee789ccd8ef",
+    "scripts/review_vinsoc_query_case.py": "f5576ddfac72cbcfffd0315a6669219a662e1d421ebb56984aee5397ea8b5cd3",
+    "scripts/run_query_demo_cloud.py": "fa418198a77645d6b4b1748834b970ea61fd4d807591230c0304351ceec2f2fa",
+    "scripts/run_query_live_ui_cloud.py": "986a31c091e5ecc2473428b02d000e7fe3f442503bc0a7c9b12186fc78e8c147",
+    "scripts/run_query_real_data_checks.py": "f466226df5ddcf4ca3f5d0d26be99d2f7b45624616c5722336d3b6e217b12c3f",
+    "scripts/run_query_remaining_demo_cloud.py": "81e0c93f82d156563f71519ed22e7a99bde0db66754f39a970ad33e35eafe22d",
+    "scripts/run_vinsoc_query_acceptance.py": "fba0afe09a9c155e61424a032b30e25e5976a41ef7616f85e1588bc8588c0ce9",
+    "scripts/verify_query_preservation.py": "82d9d8de85574c4512cbe0721ad6dcf0a27fb71bccfc565e0469d97d649dbd47",
+    "scripts/vinsoc_demo_app.py": "845cb6a5a16975f95372cc30fbf99ef86bffdc7227f1099a628f15f04cfde809",
+    "scripts/vinsoc_demo_data.py": "228b12a19a4adaa16974ab8eb3c5bb7f8d534e3c1149ca0c49cda6b3d1fd1c77",
+    "scripts/vinsoc_live_protocol.py": "a3fc978ac192b645bc749648337b21f8bc66029024ad6272de699a802e8cc8b8",
+    "scripts/vinsoc_live_ui.py": "bfc2331e25125dfd4b69cb01d451b88a77f01410e55c807c255ab0d65a56b8a2",
+    "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
+    "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+    "skills/cti_providers.py": "1341b71972450b06ff8fd4030aaec33d44da8ff4e2bc120b17fa953bdc3c2342",
+    "skills/cti_skill.py": "7438ff3db5e62dcaaecf29416749610a6c5cb3117a63c6de7348ab2fc4c5f944",
+    "skills/endpoint_skill.py": "2f98787b6a5766e893f67c90eff93d1b1ce74209eb4a6d375a94beab5d859021",
+    "skills/network_query_skill.py": "1a857c9cb26c982aef6cf0e7bdc5079e3b312301782f1da036d36328ffc2cd12",
+    "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+    "skills/soc_corpus_skill.py": "9104fa0a2a6b2a0aa68a4755f648da7cee430ed093fc4404f4952ae135ab1ff5",
+    "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+    "telemetry/network/__init__.py": "247b2b7d30283e515084e44199c263078847f6dd311dc9988578253d2dc7c3f3",
+    "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+    "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+    "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+    "telemetry/network/suricata.py": "acec544916e83e5b6f5f2f695dd5ce35b0765a60e3ed8ef0725ad562c06993e2",
+    "telemetry/network/zeek.py": "9865864f81324141e7022d5045479c5dc4e2afd49a530d05782a6bd0630efd3f",
+    "vinsoc_data/__init__.py": "c3bc2e18d845daf05a375212f6f5e27f6359078ffe286c01043660ddb6d87a25",
+    "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+    "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+    "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
+    "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+    "vinsoc_text2sql/__init__.py": "00295daa9c8901515fa2012a2080c586b3e326f45449531356603d02b42dde47",
+    "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+    "vinsoc_text2sql/accounting.py": "05a30d6aa4b715b342295266bae0e2bab70bbe775ce4709545cbf50aa4f5c783",
+    "vinsoc_text2sql/executor.py": "721025a1d8452bcf62055ae6ba1d097201a3a4daf413995291d60f0ed8b6c039",
+    "vinsoc_text2sql/process_group.py": "b528ad72567e2cd424367a812a03c63718a065b6ef7911f7493c6e97b66160c1",
+    "vinsoc_text2sql/provider.py": "5cba63a1d70c4d4d6c520e0e4f1cd3eb2f391d74508867111f7f417e1cf22cbe",
+    "vinsoc_text2sql/service.py": "6a654c7561baf012ae3eb0ecfef0e050b948838abeeaa67c929027c1ae0d1565"
+  },
+  "identities": {
+    "runtime_source_sha256": {
+      ".github/workflows/ci.yml": "78f4875e9c8a4a9017f0e51fb4dadf9a89ce2bcebd15e7998b43dce8f5e0a879",
+      ".github/workflows/query-demo-once.yml": "198ad9f88ed2538b59dc9e1d241fb7e865b638836d3139718e686e00e4b8f813",
+      ".github/workflows/query-live-ui.yml": "d288abaa9752128ad4376f99b17b423a783a2fdc7e511247e6d1b61e59ff3280",
+      "agent/__init__.py": "74a4b5aebbde96b1a6870158426186b183e6e124bd79b451da245a36b2c2b0e1",
+      "agent/evidence.py": "26e82d17f94a372842e152aa01052c6340f31a41c3a757c1e43009c7cb8e5461",
+      "agent/hitl.py": "3304f921b5fcc1ad4d64e27b964c51ab7c32138240d9a5ee76fa2f127f50ab46",
+      "agent/integrations.py": "dff3d800215329b4719c8cbf86ede1ac2b17e77bbb1e4178f55f1967a235adbc",
+      "agent/investigation_policy.py": "b5ebdae0f8f46bb42e15cc191ddb1f38d01a58d43501637098916721ce233168",
+      "agent/network_investigation_policy.py": "44ab741476cc1014757d8ab5dfa62403d22e97b3317007265b3b74a9606efbb9",
+      "agent/network_query_policy.py": "9ebfbfa982a0a2ebb68085ab83888634c5d5b9b3137532f368ab9ad69e908429",
+      "agent/orchestrator.py": "ddbabd451f93616ebc95d11e4896208f3acd2d1ed20aff90341444b9dc137cb2",
+      "agent/provider.py": "5a3f8a02ae6002c8690e451b423b305033a3cc92c7d4923fb6afc72f43326608",
+      "agent/runbooks.py": "87eb669046c417a22a898b69e0842a5b55c2d9b90c066911ab29efd63d00390d",
+      "agent/soc_investigation_policy.py": "390dc7228ccce2d8222636da87118b758daa179beb14e0f28ae49f44f1007db8",
+      "agent/soc_provider.py": "01fa7b405eaafb914753a69d1dbb2a65e5f1a79dcc9bdafec6ada16cc3ac76d0",
+      "agent/tools.py": "bead39d0f4afb9db33d6b157f6c7cfa932b616e55cff3df921faa7f9e807fa27",
+      "agent/triage.py": "bfd7bc421d485f0e8820bad29d6a11c7889de2b59391bcafc465c57992ef05c0",
+      "cli/main.py": "d8bd46f2a13dd460eff702fca60d869fe650d0c081635a311a9df61e8dbba25d",
+      "evaluation/finalization/__init__.py": "8479c108d265ef93ca754baa7ba51bebeb7b91ca09e007cf70348ecea84fe756",
+      "evaluation/finalization/cloud_window.py": "8db52ee113dc280e702de0dcb2f96cb9eff571ab80db76f9700285a4d36ddb1f",
+      "evaluation/finalization/contract.py": "4aa6e254390829d8f6e938d0c2ee22c01bd710117835ab3f8ef0559d979db83f",
+      "evaluation/finalization/live_window.py": "c80f656da65a5bde1f21709a04d1ab2cf1bdb7c0d1911408adffc3195536909a",
+      "evaluation/finalization/network_contract.py": "e5086239b254354fa36a089ecd1397a3819e8b7d246109b95d290fc9551fffe1",
+      "evaluation/finalization/query_cloud.py": "9db0a488328da0c7ef704aeed160f97182a41c5ecba5eee52e7cf9fb8d920e63",
+      "evaluation/finalization/query_pipeline_contract.py": "550174c154f9b9015e1b3534320f4fab40e42744ca5b671bfce885053ed48ced",
+      "evaluation/finalization/query_pipeline_reporting.py": "a59ec5d1c2b7335f1b940dcb87a3c7d4563b26046edc00b3e69136697ac2b36a",
+      "evaluation/finalization/query_record_normalization.py": "f53a35b7ac15c2d0c114a431118b3c337a234b8ca18fc4d599442043e068a846",
+      "evaluation/finalization/query_reporting.py": "0da468aa27739c6336d31d7a21c97102d9a7041c57a954e596fc16cf54678edd",
+      "evaluation/finalization/query_runtime_validation.py": "7bb9cc9308839cc8ab18d138a05f1f0464b7ab4a3123e08632072ca424e129a0",
+      "evaluation/finalization/query_scoring.py": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+      "evaluation/finalization/query_token_bound.py": "97858f39537d02b169cd7750338dbc5e17c82b14f388d7d7ed48223995c134c3",
+      "evaluation/finalization/query_view.py": "84dfb5e4918414a8c5cee907c3cd778bf35dd12949f920497763fa54da90cd9d",
+      "evaluation/r2_cross_domain_v1/__init__.py": "26ce48a0b51a0c2c290f8d223b8e86c21855fd109d5491ac24d1b28c71df362b",
+      "evaluation/r2_cross_domain_v1/annotations.py": "f46f8aeecaa14f0a29fd434bc292d2f11b42ad5739e096bab09a57e3f4f37712",
+      "evaluation/r2_cross_domain_v1/benchmark.py": "4620c5f7768d57bddb4b01db82ce0d9a0cefe06dd3f82e2b380abc267eea2611",
+      "evaluation/r2_cross_domain_v1/benchmark_lock.py": "15bc986622a1a21ee248e5b40c3dbb7f5412be952fea1058d1c59351a7c83bc6",
+      "evaluation/r2_cross_domain_v1/case_preparation.py": "a971070b72c512c7494e3fc275c11dddcc2ed486d194adc65f34250c9d15c8ee",
+      "evaluation/r2_cross_domain_v1/controller.py": "0c912624b13975edb9299fc5e2994b0a9ac6efa207d2a04a6cc2cbc31868be43",
+      "evaluation/r2_cross_domain_v1/ctu_cases.py": "bcdf44e07d53e76487c1a494e82139810f1b917ef3c56b17b05172995b57dc2d",
+      "evaluation/r2_cross_domain_v1/data.py": "087efbc86b231c56f1eadc8f6c55353904bfe30e31a244b9b8b1d6d51e91fcd6",
+      "evaluation/r2_cross_domain_v1/fixture_generation.py": "1dac1bae2cda065af8c7dd3bcb0813f50bccb614e570d0d7fe559da6760937f4",
+      "evaluation/r2_cross_domain_v1/grounding.py": "4a5baea93cdc4511a53f1c60431f5bf415cc51a3783061897d7e09066fa7ea4e",
+      "evaluation/r2_cross_domain_v1/live.py": "571eed8257ce1bd012f26b5d1a523c916627ddf3b81443a363eef2158dfafb89",
+      "evaluation/r2_cross_domain_v1/models.py": "89b582a90605578c84776621cce68b93fdaa272819c97e594529c47aae340119",
+      "evaluation/r2_cross_domain_v1/module_metrics.py": "1f32af5d63e6b06e94adb1e17d36a2a7647c2f65dd882104e1a6c0f34bd3d03d",
+      "evaluation/r2_cross_domain_v1/prompts.py": "bb90c9ed934010206d18ac1c89caf83ac1dfb1fc62a8bee9c533eb228675a39f",
+      "evaluation/r2_cross_domain_v1/release.py": "5485401197062c9a335e04f249b336cd1f1d9e49afb8ef64a52837bff9bfee6b",
+      "evaluation/r2_cross_domain_v1/reporting.py": "9891109c9e45806444fe0154e694e72a3c3abe2af85a2f613b7e88a4a1e83552",
+      "evaluation/r2_cross_domain_v1/safety.py": "70300f9076d656ef80ddee1cd59ba71f0321ca51d5a06fbb12960a3ab68d6fbb",
+      "evaluation/r2_cross_domain_v1/selection.py": "75d87a81801568b40dc47eecab4102c8a85b91f4c78d86dd792834ddfe4922ae",
+      "evaluation/r2_cross_domain_v1/semantic_instances.py": "a0b8e464892d545773eeb4afa97e446c625c44200896c24cd1ae422ebeed2147",
+      "evaluation/r2_cross_domain_v1/semantic_scoring.py": "88ff1e76c444ad09599c69fe18cc13c79eaac0b43287f3e07791c636492ebab0",
+      "evaluation/r2_cross_domain_v1/statistics.py": "74271234cfcb34a28940678c702b4445d96840d323a4cb7a34134e80bc4b4102",
+      "evaluation/r2_cross_domain_v1/tool_schemas.py": "2fabc133245cffe0fc7c550485fb050b6d7cf14d40059b3bce980f1b6ce8b26d",
+      "evaluation/r2_cross_domain_v1/tools.py": "733fb92bc3b77971edefdf242062f10f2113844f7f1c7ea762bde690d4a80fa0",
+      "pyproject.toml": "afb1623ed27aa2996dd7a78ae03d7c61a0d8a1d82f8bce98197bf21d6dafa182",
+      "requirements-demo.txt": "2ac1e56fb2039c8b2245fb45e87412aa7f866e33113bb4231a563c5b66f34128",
+      "requirements.txt": "b37f5302632f8c35db22a4e8f723059671f660d2c7981900f5ea2f27d4351342",
+      "results/evaluation_v1/text2sql_integration_v1/demo_selection.json": "c031c7a44d288e7f4c3318359716d1a2c83d3fccfdf088bed91200e41be00569",
+      "schemas/query_investigation_case.json": "c60505220ae195b29fdfd2e0225c35106441a9e361aff12aaf1093ef56ab87b0",
+      "scripts/prepare_query_budget.py": "3fbedb9a326eb31c2f558a355b35b2a4f30318b41068080234ba948366a95136",
+      "scripts/render_query_pipeline_report.py": "f69cf0d4fecd66445b770674a0c05b8da686ab14dd015ee5e9bd3ee789ccd8ef",
+      "scripts/review_vinsoc_query_case.py": "f5576ddfac72cbcfffd0315a6669219a662e1d421ebb56984aee5397ea8b5cd3",
+      "scripts/run_query_demo_cloud.py": "fa418198a77645d6b4b1748834b970ea61fd4d807591230c0304351ceec2f2fa",
+      "scripts/run_query_live_ui_cloud.py": "986a31c091e5ecc2473428b02d000e7fe3f442503bc0a7c9b12186fc78e8c147",
+      "scripts/run_query_real_data_checks.py": "f466226df5ddcf4ca3f5d0d26be99d2f7b45624616c5722336d3b6e217b12c3f",
+      "scripts/run_query_remaining_demo_cloud.py": "81e0c93f82d156563f71519ed22e7a99bde0db66754f39a970ad33e35eafe22d",
+      "scripts/run_vinsoc_query_acceptance.py": "fba0afe09a9c155e61424a032b30e25e5976a41ef7616f85e1588bc8588c0ce9",
+      "scripts/verify_query_preservation.py": "82d9d8de85574c4512cbe0721ad6dcf0a27fb71bccfc565e0469d97d649dbd47",
+      "scripts/vinsoc_demo_app.py": "845cb6a5a16975f95372cc30fbf99ef86bffdc7227f1099a628f15f04cfde809",
+      "scripts/vinsoc_demo_data.py": "228b12a19a4adaa16974ab8eb3c5bb7f8d534e3c1149ca0c49cda6b3d1fd1c77",
+      "scripts/vinsoc_live_protocol.py": "a3fc978ac192b645bc749648337b21f8bc66029024ad6272de699a802e8cc8b8",
+      "scripts/vinsoc_live_ui.py": "bfc2331e25125dfd4b69cb01d451b88a77f01410e55c807c255ab0d65a56b8a2",
+      "skills/__init__.py": "b45c99ad1dac132f02956617719f7e60a3fa9bee552c3d8459b68a650625b775",
+      "skills/base.py": "766cd7780d81687551a308d506e33bf0f98b51b082617ff995027356dadcfff3",
+      "skills/cti_providers.py": "1341b71972450b06ff8fd4030aaec33d44da8ff4e2bc120b17fa953bdc3c2342",
+      "skills/cti_skill.py": "7438ff3db5e62dcaaecf29416749610a6c5cb3117a63c6de7348ab2fc4c5f944",
+      "skills/endpoint_skill.py": "2f98787b6a5766e893f67c90eff93d1b1ce74209eb4a6d375a94beab5d859021",
+      "skills/network_query_skill.py": "1a857c9cb26c982aef6cf0e7bdc5079e3b312301782f1da036d36328ffc2cd12",
+      "skills/network_skill.py": "4ab5b958f5b4ebed63808824e9087cce5527f96bd56d68165486a1d01a139d42",
+      "skills/soc_corpus_skill.py": "9104fa0a2a6b2a0aa68a4755f648da7cee430ed093fc4404f4952ae135ab1ff5",
+      "skills/validators.py": "341b7aab20c5acadc9b2d6169f51fe3e96b961d15a0ced04345fe142c577e624",
+      "telemetry/network/__init__.py": "247b2b7d30283e515084e44199c263078847f6dd311dc9988578253d2dc7c3f3",
+      "telemetry/network/base.py": "058bcaae49f6a29fd0c633a3bdd417ead62d53f0536319ec00fd01375247f923",
+      "telemetry/network/models.py": "365c22dc8e2ffef67ad58f3a4b41409f484d41fff5c85b63d76cf6fa49feb6be",
+      "telemetry/network/query.py": "6380db2f8c9dd103b6a28ae8da0b5b0443bed27ef49d04004d596a941311d310",
+      "telemetry/network/suricata.py": "acec544916e83e5b6f5f2f695dd5ce35b0765a60e3ed8ef0725ad562c06993e2",
+      "telemetry/network/zeek.py": "9865864f81324141e7022d5045479c5dc4e2afd49a530d05782a6bd0630efd3f",
+      "vinsoc_data/__init__.py": "c3bc2e18d845daf05a375212f6f5e27f6359078ffe286c01043660ddb6d87a25",
+      "vinsoc_data/domain_queries.py": "88b217033143c30e3ef9039469b240a846073e05cc216c84a81b9973db23edef",
+      "vinsoc_data/duckdb_store.py": "61322cd146c8a4e50aaa7dd205a2f231e9d9778165034b6d1d2648575a160a9b",
+      "vinsoc_data/network_source.py": "6b12ab41cc7de7ed55c0b3e3add2fde37379572c3dca6e0388b9baadcbd5f03d",
+      "vinsoc_data/soc_corpus.py": "4dcf0f8cfc7091bacf82c561d611de987dfd0157cf554b5ccf7b4d6ad2f2b053",
+      "vinsoc_text2sql/__init__.py": "00295daa9c8901515fa2012a2080c586b3e326f45449531356603d02b42dde47",
+      "vinsoc_text2sql/_worker.py": "86d7e0849abd65a382295702d675dc13490a6f36621025577bd6f477b05eef67",
+      "vinsoc_text2sql/accounting.py": "05a30d6aa4b715b342295266bae0e2bab70bbe775ce4709545cbf50aa4f5c783",
+      "vinsoc_text2sql/executor.py": "721025a1d8452bcf62055ae6ba1d097201a3a4daf413995291d60f0ed8b6c039",
+      "vinsoc_text2sql/process_group.py": "b528ad72567e2cd424367a812a03c63718a065b6ef7911f7493c6e97b66160c1",
+      "vinsoc_text2sql/provider.py": "5cba63a1d70c4d4d6c520e0e4f1cd3eb2f391d74508867111f7f417e1cf22cbe",
+      "vinsoc_text2sql/service.py": "6a654c7561baf012ae3eb0ecfef0e050b948838abeeaa67c929027c1ae0d1565"
+    },
+    "benchmark_identity": "10e124eab0bb918d69595811619990a57e626f64ee23997648cbf79f07029f7d",
+    "scorer_identity": "0350449898f20a201e58ceaa11aede5b50f468b5523845b263fc6164d991d1c1",
+    "snapshot_identities": {
+      "student_transcripts_tracking": "1e67561a28678f76f8384083fed3b719a09abe3a6b2299425c1acc9c6ceafd61",
+      "cre_Doc_Template_Mgt": "f43360705e2f29b76cc732471d1cc84ab98b3cd248ffcf2fe469e175a5f5820c",
+      "world_1": "e1727c32b7b9237832a8c70ae0a489abeb8ddf177c3cc2ab1a0e0ad44b2eb46b",
+      "voter_1": "128ee52e470201fb9a26e23ac691d605d7bd73d61f9ca0131cffa0910aec8848",
+      "dog_kennels": "ae22e5a53507ec69c67d5d1003c67d78565485e2613e6708c231e614e9bdc0c0",
+      "orchestra": "ec1a2de4f236730e3a620e579d2643fe28697423ecf3b467272c1980fe4aa00b",
+      "concert_singer": "162aa6d6f90b9c5ddf19c527d4abd086fa5b5078e729b4a04a7a34210c4f8ed7",
+      "car_1": "3e5c50a9a6289772ffde6abced5781086602f0d8104242be65faa1750518c4d5",
+      "flight_2": "92f28b85624096e4843e6f0ed35b3b01d56520403680d98267d48b3d43e4d900",
+      "course_teach": "e3c737ac520862b9580161aa1d3793aa0a5b205f208e3d1fdc2535d2db0278f3",
+      "poker_player": "1860584ccc727c068cd7865771d5b001bd6c094bbcf6360207c737d832400ea0",
+      "tvshow": "46ca48d68e98417223a2682c6f5e0fbf0481642ce001b587871cd40d97f0678d",
+      "ctu_dev": "0d50327eef0a50b70f9db2fd34d953cabe7baf7a27c4a9b21c4c9e24879bbea0"
+    },
+    "implementation_sha": "3c3ce816ed2f5dbf04c35433267b599b31d8c2bd"
+  },
+  "cost_events": [
+    {
+      "role": "r2",
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "condition": "E3",
+      "request_id": "14417b777e1649acafff6142cd15c319",
+      "request_sha256": "6d68f3146f27ee4e265e1062c94d1d27d8df4faf77b656579f515a3cbff880e3",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.00061075,
+      "usage": {
+        "input_tokens": 2019,
+        "output_tokens": 53,
+        "cached_tokens": 0
+      },
+      "transmitted": true,
+      "latency_seconds": 1.6773647239999718,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EZ8qnWtd1b3wg5J9kaSzRttjyeLd8",
+      "provider_request_id": "req_1558f7084b214e39a12e7b7e0a406733",
+      "native_tool_calls": [
+        {
+          "id": "call_4CoPiygOHkiSyC9QMoz721bQ",
+          "function": {
+            "arguments": "{\"sql\":\"SELECT c.CountryName FROM countries c LEFT JOIN car_makers m ON m.Country = c.CountryId WHERE m.Id IS NULL ORDER BY c.CountryName;\"}",
+            "name": "sql_probe"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "condition": "E3",
+      "request_id": "829f25ea932749829dc5c525e058af3f",
+      "request_sha256": "aa32794c5a3988a177483b023a66c06968eabc0f3b5cec2170e513084be08eeb",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.00060255,
+      "usage": {
+        "input_tokens": 2175,
+        "output_tokens": 231,
+        "cached_tokens": 1792
+      },
+      "transmitted": true,
+      "latency_seconds": 2.141935450999881,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EZ8qsAzzGeAnVsYuMNiSP0CfnNMuU",
+      "provider_request_id": "req_1d455f35dc284ef2abac2f0ee23659a7",
+      "native_tool_calls": [
+        {
+          "id": "call_f625QeBo2qPeMn7eXEAEhpiQ",
+          "function": {
+            "arguments": "{\"table\":\"countries\",\"column\":\"CountryName\",\"query\":\"australia\",\"match_kind\":\"exact\"}",
+            "name": "value_search"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "r2",
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "condition": "E3",
+      "request_id": "cd56adaaf48947b3ba2df43210742370",
+      "request_sha256": "efa09e93e916c7d813539b1502c77a5c33a1b26ebb83ae1d5e69937cc128d858",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0021642,
+      "usage": {
+        "input_tokens": 2500,
+        "output_tokens": 1000,
+        "cached_tokens": 2048
+      },
+      "transmitted": true,
+      "latency_seconds": 8.080714953000097,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EZ8qxZ02I5At6uQ9N2MdHvTLsu9wc",
+      "provider_request_id": "req_de104367677a4cfcb8b5f57df7cc08fe",
+      "native_tool_calls": []
+    },
+    {
+      "role": "r2",
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "condition": "E3",
+      "request_id": "773faa7aa47d47d4be46efe9a0ff828b",
+      "request_sha256": "03ea8460fcd8c6f8ba13655c26b9b363939b1c90bf6e3b8da06a3ba4aa263efd",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0023645,
+      "usage": {
+        "input_tokens": 2386,
+        "output_tokens": 884,
+        "cached_tokens": 0
+      },
+      "transmitted": true,
+      "latency_seconds": 7.247814321000078,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EZ8rCMJsYwrLGYQFxM0cj5MIWOP8L",
+      "provider_request_id": "req_3ff2358cdd82405184bd0eca62cab5f6",
+      "native_tool_calls": []
+    },
+    {
+      "role": "r2",
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "condition": "E3",
+      "request_id": "6060eb790be240d18bdee2eeb2259c39",
+      "request_sha256": "39ab3446792265133562d0094f68a7b51bc41db066bd0884cf3898d7ad82481d",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.00086525,
+      "usage": {
+        "input_tokens": 2101,
+        "output_tokens": 170,
+        "cached_tokens": 0
+      },
+      "transmitted": true,
+      "latency_seconds": 1.9878555070001767,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EZ8rNsLRxhb7CbbNqH1F5DrbXUdWQ",
+      "provider_request_id": "req_cd9fd9e851494a40b9d5a0770833fa71",
+      "native_tool_calls": []
+    },
+    {
+      "role": "r2",
+      "case_id": "external_car_1_95e1de6f7f4b01d9",
+      "condition": "E3",
+      "request_id": "e5c52ac61c144ceaaf3fd42c193eced1",
+      "request_sha256": "210cb1c65ce72b0d9a0028f1ffcd7103a87ad42c0eef335fe01f2f9cb5ab4d94",
+      "received": true,
+      "reserved_usd": 0.102,
+      "cost_usd": 0.0005387,
+      "usage": {
+        "input_tokens": 2062,
+        "output_tokens": 170,
+        "cached_tokens": 1408
+      },
+      "transmitted": true,
+      "latency_seconds": 2.2560394919999,
+      "actual_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-EZ8rS4wmVxeg7osUfhhTdsu89O9hD",
+      "provider_request_id": "req_c86a976b24584f56aacd14cbde806348",
+      "native_tool_calls": []
+    }
+  ],
+  "cost_unknown": false
+}
