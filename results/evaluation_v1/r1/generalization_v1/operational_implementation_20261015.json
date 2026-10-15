@@ -1,0 +1,72 @@
+{
+  "status": "OFFLINE_IMPLEMENTED_AWAITING_EXACT_SHA_CI",
+  "scope": "r1-generalization-v1",
+  "implementation_parent_sha": "12d0bed67cd1d3161aa43f32ad89038f44ab3429",
+  "previous_ci": {
+    "run_id": 38689521153,
+    "sha": "12d0bed67cd1d3161aa43f32ad89038f44ab3429",
+    "conclusion": "success",
+    "full_each_python": {
+      "passed": 1460,
+      "skipped": 7
+    },
+    "required_guards_each_python": {
+      "passed": 140,
+      "skipped": 0
+    },
+    "required_real_data_each_python": {
+      "passed": 13,
+      "skipped": 0
+    }
+  },
+  "local_verification": {
+    "targeted_passed": 139,
+    "targeted_skipped": 0,
+    "full_passed": 1467,
+    "full_skipped": 5,
+    "full_failures": 0,
+    "compile_exit": 0,
+    "preservation_exit": 0,
+    "protected_files": 3640,
+    "protected_changes": [],
+    "query_runtime_matches_calibration_lock": true
+  },
+  "local_preflight": {
+    "status": "blocked_before_client",
+    "reason": "Real local working tree is dirty and GitHub CI cannot be independently queried without an available GitHub token. Cloud preflight must pass after publication.",
+    "provider_created": false,
+    "model_calls": 0,
+    "cost_usd": 0,
+    "receipt_sha256": "762b69a66b6c6ed1b2d1c7d0a247e53af7a05399174b56f5b965fa8145d2bea3"
+  },
+  "transport_contract": {
+    "maximum_requests": 120,
+    "max_retries": 0,
+    "max_completion_tokens": 1000,
+    "model": "gpt-4.1-mini-2025-04-14",
+    "native_response_and_usage_persisted_before_parse": true,
+    "per_case_atomic_checkpoint": true,
+    "remote_once_claim": "vinsoc-r1-generalization-v1-once",
+    "unknown_cost_stops": true,
+    "truncation_stops": true,
+    "source_and_exact_ci_rechecked_before_each_transmission": true
+  },
+  "pricing": {
+    "source_url": "https://developers.openai.com/api/docs/models/gpt-4.1-mini.md",
+    "source_sha256": "78cab23e43e747d199df10854f27a0bc8ebe1af2bdd66642fe34462e1f680537",
+    "input_token_ceiling": 1047576,
+    "input_usd_per_million": 0.4,
+    "cached_input_usd_per_million": 0.1,
+    "output_usd_per_million": 1.6,
+    "whole_suite_ceiling_usd": 50.475648,
+    "authorized_operational_cap_usd": 100,
+    "account_balance_claimed": false
+  },
+  "test_fixtures_are_model_evidence": false,
+  "live_status": "NOT_RUN",
+  "model_calls_this_r1_scope": 0,
+  "new_r1_cost_usd": 0,
+  "human_review_signed_by_runner": false,
+  "self_review_only_no_additional_agents": true,
+  "created_utc": "2026-10-15T06:02:13.631045+00:00"
+}

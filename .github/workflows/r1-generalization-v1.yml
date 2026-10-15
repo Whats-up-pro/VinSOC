@@ -1,0 +1,89 @@
+name: VinSOC R1 generalization v1
+run-name: VinSOC R1 120 ${{ inputs.mode }} / ${{ github.sha }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [preflight, live]
+        default: preflight
+        required: true
+      model:
+        type: string
+        default: gpt-4.1-mini-2025-04-14
+        required: true
+      budget_usd:
+        type: string
+        required: true
+      split_sha256:
+        type: string
+        required: true
+      ci_run_id:
+        type: string
+        required: true
+      max_retries:
+        type: string
+        default: '0'
+        required: true
+      approved:
+        type: boolean
+        default: false
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vinsoc-r1-generalization-v1-once
+  cancel-in-progress: false
+
+jobs:
+  generalization:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    env:
+      VINSOC_R1_REQUEST: ${{ toJSON(inputs) }}
+      VINSOC_R1_MODEL_DOCUMENT: .vinsoc/r1-inputs/gpt-4.1-mini.md
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements-demo.txt
+      - name: Fetch current official pricing and token bounds
+        run: |
+          mkdir -p .vinsoc/r1-inputs
+          curl --fail --silent --show-error --location https://developers.openai.com/api/docs/models/gpt-4.1-mini.md --output "$VINSOC_R1_MODEL_DOCUMENT"
+      - name: Normalize explicit zero-retry input
+        run: |
+          python - <<'PY'
+          import json, os
+          request = json.loads(os.environ['VINSOC_R1_REQUEST'])
+          if request['max_retries'] != '0': raise ValueError('R1_ZERO_RETRIES_REQUIRED')
+          request['max_retries'] = 0
+          with open(os.environ['GITHUB_ENV'], 'a') as out:
+              out.write('VINSOC_R1_REQUEST='+json.dumps(request, separators=(',',':'))+'\n')
+          PY
+      - name: Independent full preflight without OpenAI secret
+        run: python -m scripts.run_r1_generalization_cloud --mode preflight --output .vinsoc/r1-cloud/preflight
+      - name: Exactly one authentic 120-case suite
+        if: inputs.mode == 'live'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python -m scripts.run_r1_generalization_cloud --mode live --output .vinsoc/r1-cloud/execution
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r1-generalization-${{ github.sha }}-${{ github.run_id }}
+          path: |
+            .vinsoc/r1-cloud/
+            .vinsoc/r1-inputs/
+          if-no-files-found: error
+          retention-days: 90

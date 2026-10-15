@@ -130,6 +130,8 @@ def build_generalization_report(cases, results, journal, gate, *, failed_case_id
             'paired_statistics': {'status': 'NOT_APPLICABLE', 'reason': 'one model, one locked suite; dev and added split are not paired'},
             'human_review': {'status': 'NOT_PERFORMED_BY_RUNNER'},
             'limitations': ['Decision-only native tool selection; production tools are not executed.',
+                            'Historical dev-v2 gold includes 11/24 cases adjudicated after model outputs; dev is not independent held-out evidence.',
                             'The added split is authored and reviewed, not a representative random SOC population sample.',
+                            'Wilson intervals describe binomial uncertainty under independence assumptions; overlapping families/templates limit population claims.',
                             'Reviewer identities are reproduced from the existing lock; the runner does not certify either as human.',
                             'Dev and generalization denominators remain separate; missing cases are not discarded.']}

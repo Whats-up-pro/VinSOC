@@ -21,6 +21,8 @@ Evidence gồm `OBSERVED`, `DERIVED`, `EXTERNAL_INTEL`; nhận định phải tr
 
 Các kết quả dev không chứng minh generalization trên holdout. Xem [đính chính frozen](docs/evaluation/frozen_comparison_results.md), [protocol audit](docs/evaluation/ctu_frozen_protocol_audit_2026-09-30.md) và [remediation status](docs/evaluation/r2_remediation_status.md).
 
+Bộ R1 mở rộng `generalization_v1` bổ sung 120 ca qua cùng DecisionRunner/scorer, có lock, kiểm trước provider, journal và báo cáo thống kê riêng. [Hướng dẫn chạy và giới hạn kết luận](docs/evaluation/R1_Generalization_V1_Execution.md). Chỉ artifact API thật kèm receipt mới được dùng làm kết quả; lock và preflight không được tính thành điểm mô hình.
+
 Trạng thái: **DEV_VERIFIED / HOLDOUT_PENDING**. JSON S1/S4 mới thiếu execution-scoring và verified run identity; pipeline `OK` không phải EX. [Báo cáo đính chính](docs/evaluation/FINAL_EVALUATION_REPORT.md) và [plan Task 0+1](docs/superpowers/plans/2026-10-05-vinsoc-finalization-fix.md) giữ frozen closed và cung cấp offline scorer/audit không gọi API.
 
 Remediation giữ adapter source metadata, một controller fail-closed, telemetry trước parse, locked scorer và output append-only. Tasks 1-7 đã nghiệm thu offline; Tasks 8-10 được duyệt riêng và đã chạy một smoke + một suite E3 trên exact-SHA CI xanh. Tổng live cost từ usage $0.02185315; [trace, lỗi từng case và hashes](docs/evaluation/r2_remediation_live_results.md). Series live đã consumed; CLI offline cũ và frozen entrypoints vẫn closed. **STOP FOR HUMAN REVIEW**, không tự chạy tiếp thí nghiệm hoặc demo.
